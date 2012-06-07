@@ -51,7 +51,7 @@
                     <button string="Cancel" special="cancel"/>
                 </header>
                 <sheet layout="auto">
-                    <group>
+                    <group col="4">
                         <group name="config_sale" colspan="4"/>
 
                         <!-- this part is necessary to allow the plugins to extend the view -->
@@ -59,11 +59,11 @@
                         <group name="config_fetchmail" colspan="4" attrs="{'invisible': [('module_crm','=',False)]}">
                             <separator string="Emails"/>
                         </group>
-                        <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
                         <newline/>
-                        <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
-
-                        <group name="config_crm" colspan="4"/>
+                        <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)],'readonly': [('module_plugin_thunderbird','=',False)]}"/>
+                        <newline/>
+                        <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)],'readonly': [('module_plugin_outlook','=',False)]}"/>
+                        <group name="config_crm"/>
                     </group>
                 </sheet>
             </form>
