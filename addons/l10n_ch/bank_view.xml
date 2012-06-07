@@ -85,7 +85,7 @@
         <!-- Sales -> Configuration -> Address Book -> Bank accounts -->
         <!-- Invoice -> Bank account -->
 
-        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_acc_number_hide_frominvoice">
+       <!-- <record model="ir.ui.view" id="l10nch_view_res_partner_bank_acc_number_hide_frominvoice">
             <field name="name">res.partner_bank.form.hide.acc_number.frominvoice</field>
             <field name="model">res.partner.bank</field>
             <field name="type">form</field>
@@ -96,7 +96,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_hide_bank_frominvoice2">
+         <record model="ir.ui.view" id="l10nch_view_res_partner_bank_hide_bank_frominvoice2">
             <field name="name">res.partner_bank.form.hide.bank.frominvoice</field>
             <field name="model">res.partner.bank</field>
             <field name="type">form</field>
@@ -105,7 +105,7 @@
                 <field name="bank" position="replace"> 
                 </field>
             </field>
-        </record>
+        </record> -->
 
         <record model="ir.ui.view" id="l10nch_view_res_partner_bank_from_invoice">
             <field name="name">res.partner_bank.form.hide.frominvoice</field>
@@ -153,7 +153,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="//page/field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
+                <xpath expr="//field[@name='bank_ids']//field[@name='acc_number']" position="before">
                     <field name="state" />
                     <field name="bank" />
                 </xpath>
