@@ -27,7 +27,7 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_invoice_so_lines': fields.boolean('Based on Sales Orders',
+        'group_invoice_so_lines': fields.boolean('Based on Sale Orders',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
         'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
