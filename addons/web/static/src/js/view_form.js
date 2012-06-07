@@ -802,6 +802,7 @@ openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
                 ids: [parseInt($e.attr('data-id'))]
             }, function(r) {
                 $e.parent().remove();
+                self.do_update()
                 self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
             });
         }
