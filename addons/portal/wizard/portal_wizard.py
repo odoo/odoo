@@ -200,7 +200,7 @@ class wizard(osv.osv_memory):
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
             if removeuser  : 
-                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id], {'users': [(3, removeuser[0])]}, context0)                
+                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id], {'users': [(3,0, removeuser)]}, context0)                
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
