@@ -847,23 +847,4 @@ class mail_thread(osv.Model):
         return self.write(cr, uid, ids, {'message_thread_read': False}, context=context)
 
 
-class ir_needaction_mixin(osv.Model):
-    """ Update of res.users class
-        - add a preference about sending emails about notificatoins
-        - make a new user follow itself
-    """
-    _name = 'ir.needaction_mixin'
-    _inherit = ['ir.needaction_mixin']
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        """ Returns the user_ids that have to perform an action
-            :return: dict { record_id: [user_ids], }
-        """
-        result = super(ir_needaction_mixin, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_thread_read == False and obj.user_id:
-                result[obj.id].add(obj.user_id.id)
-        return result
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
