@@ -305,7 +305,6 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
         this.$records = null;
 
         this.records = [];
-        this.ids = [];
         this.$has_been_started.then(function() {
             self.do_add_records(records);
         });
@@ -348,9 +347,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
             var rec = new openerp.web_kanban.KanbanRecord(self, record);
             rec.insertBefore(self.$records.find('.oe_kanban_show_more'));
             self.records.push(rec);
-            self.ids.push(rec.id);
         });
-        this.view.dataset.ids = _.union(this.view.dataset.ids, self.ids);
         this.$records.find('.oe_kanban_show_more').toggle(this.records.length < this.dataset.size())
             .find('.oe_kanban_remaining').text(this.dataset.size() - this.records.length);
     },
@@ -392,6 +389,9 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
     },
     set_record: function(record) {
         this.id = record.id;
+        if(!(this.id in this.view.dataset.ids)){
+            this.view.dataset.ids.push(this.id)
+        }
         this.record = this.transform_record(record);
     },
     start: function() {
