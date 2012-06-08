@@ -10,7 +10,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page[@name='information']/group[@name='right_column']/field[@name='struct_id']" position="after">
+                 <xpath expr="//page[@name='information']/group/group[@name='right_column']/field[@name='advantages']" position="after">
                     <field name="travel_reimbursement_amount"/>
                     <field name="car_company_amount"/>
                     <field name="misc_onss_deduction"/>
@@ -20,7 +20,7 @@
                     <field name="additional_net_amount"/>
                     <field name="retained_net_amount"/>
                  </xpath>
-                 <xpath expr="/form/notebook/page/group/field[@name='trial_date_end']" position="after">
+                 <xpath expr="//field[@name='trial_date_end']" position="after">
                     <group colspan="2" col="2">
                         <separator string="by Worker" colspan="2"/>
                         <field name="insurance_employee_deduction"/>
@@ -54,14 +54,14 @@
                 <!-- <xpath expr="/form/notebook/page/group/field[@name='birthday']" position="after">
                     <field name="marital" required="True"/>
                 </xpath> -->
-                <xpath expr="/form/notebook/page/group/field[@name='gender']" position="before">
+                <xpath expr="//field[@name='gender']" position="before">
                     <field name="resident_bool" eval="False"/> 
                 </xpath>
-                <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
+                <xpath expr="//field[@name='marital']" position="after">
                     <field name="spouse_fiscal_status" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
                     <field name="disabled_spouse_bool" attrs="{'invisible':[('marital','!=','married')]}" colspan="1"/>
                 </xpath>
-                <xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
+                <xpath expr="//field[@name='children']" position="after">
                     <field name="disabled_children_bool"/>
                     <field name="disabled_children_number" attrs="{'invisible':[('disabled_children_bool','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
                 </xpath>
