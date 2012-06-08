@@ -163,7 +163,9 @@ class stock_return_picking(osv.osv_memory):
             new_type = 'out'
         else:
             new_type = 'internal'
-        new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s-return' % pick.name,
+        seq_obj_name = 'stock.picking.' + pick.type
+        seq_name = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
+        new_picking = pick_obj.copy(cr, uid, pick.id, {'name': seq_name + '-return',
                 'move_lines':[], 'state':'draft', 'type':new_type,
                 'date':date_cur, 'invoice_state':data['invoice_state'],})
         
@@ -175,6 +177,11 @@ class stock_return_picking(osv.osv_memory):
             move = move_obj.browse(cr, uid, mov_id, context=context)
             new_location = move.location_dest_id.id
             returned_qty = move.product_qty
+            if new_qty > returned_qty:
+                precision = '%0.' + str(dp.get_precision('Product UoM')(cr)[1] or 0) + 'f'
+                raise osv.except_osv(_('Returning Error'),
+                    _('Returning quantity %s for %s is larger than the available quantity %s !')\
+                    % (precision % new_qty, move.product_id.name, precision % returned_qty))
             for rec in move.move_history_ids2:
                 returned_qty -= rec.product_qty
 
