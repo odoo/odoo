@@ -39,7 +39,7 @@ class document_ftp_browse(osv.osv_memory):
             data_pool = self.pool.get('ir.model.data')
             aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
             aid = data_pool.browse(cr, uid, aid, context=context).res_id
-            ftp_url = self.pool.get('ir.actions.url').browse(cr, uid, aid, context=context)
+            ftp_url = self.pool.get('ir.actions.act_url').browse(cr, uid, aid, context=context)
             url = ftp_url.url and ftp_url.url.split('ftp://') or []
             if url:
                 url = url[1]
