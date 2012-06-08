@@ -114,12 +114,13 @@ class product_pricelist(report_sxw.rml_parse):
     def _get_price(self,pricelist_id, product_id,qty):
         sale_price_digits = self.get_digits(dp='Sale Price')
         pool = pooler.get_pool(self.cr.dbname)
+        currency_record = self.pool.get('product.pricelist').browse(self.cr, self.uid, [pricelist_id], context=self.localcontext)[0]
         price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)
         if price_dict[pricelist_id]:
-            price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits)
+            price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits, currency_obj=currency_record.currency_id)
         else:
             res = pool.get('product.product').read(self.cr, self.uid, [product_id])
-            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits)
+            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=currency_record.currency_id)
         return price
 
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)
