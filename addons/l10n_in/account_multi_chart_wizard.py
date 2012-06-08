@@ -44,7 +44,7 @@ class account_multi_charts_wizard(osv.osv_memory):
         if data.name == 'India - Chart of Accounts for Public Firm':
             res['value'].update({'sales_tax': True,'vat':True, 'service_tax':True, 'excise_duty': True})
         elif data.name == 'India - Chart of Accounts for Partnership/Private Firm':
-            res['value'].update({'sales_tax': True,'vat':True})
+            res['value'].update({'sales_tax': True,'vat':True, 'service_tax':False, 'excise_duty': False})
         return res
     
     def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
@@ -52,58 +52,37 @@ class account_multi_charts_wizard(osv.osv_memory):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_temp = self.pool.get('account.tax.template')
         obj_tax = self.pool.get('account.tax')
-        if obj_wizard.sales_tax == False and obj_wizard.excise_duty == False and obj_wizard.vat == False and obj_wizard.service_tax == False:
-            raise osv.except_osv(_('Error !'), _('Select Tax to Install'))
+        tax_temp_ids = []
         if obj_wizard.chart_template_id.name == 'India - Chart of Accounts for Public Firm':
             # Unlink the Tax for current company
             tax_ids = obj_tax.search(cr, uid, [('company_id','=',company_id)], context=context)
             obj_tax.unlink(cr, uid, tax_ids, context=context)
             #Create new Tax as per selected from wizard            
             if obj_wizard.sales_tax:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['Sale Tax - 15%','Sale Tax - 12%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['Sale Tax - 15%','Sale Tax - 12%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
             if obj_wizard.vat:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['VAT - 5%','VAT - 15%','VAT - 8%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['VAT - 5%','VAT - 15%','VAT - 8%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
             if obj_wizard.service_tax:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['Service Tax','Service Tax - %2','Service Tax - %1']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['Service Tax', 'Service Tax - %2', 'Service Tax - %1']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
             if obj_wizard.excise_duty:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['Excise Duty','Excise Duty - %2','Excise Duty - 1%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['Excise Duty', 'Excise Duty - %2', 'Excise Duty - 1%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
         elif obj_wizard.chart_template_id.name == 'India - Chart of Accounts for Partnership/Private Firm':
             # Unlink the Tax for current company
             tax_ids = obj_tax.search(cr, uid, [('company_id','=',company_id)], context=context)
             obj_tax.unlink(cr, uid, tax_ids, context=context)
             #Create new Tax as per selected from wizard            
             if obj_wizard.sales_tax:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['Sale Tax - 15%','Sale Tax - 12%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['Sale Tax - 15%','Sale Tax - 12%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
             if obj_wizard.vat:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['VAT - 5%','VAT - 15%','VAT - 8%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['VAT - 5%','VAT - 15%','VAT - 8%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
             if obj_wizard.service_tax:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['Service Tax', 'Service Tax - %2', 'Service Tax - %1']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['Service Tax', 'Service Tax - %2', 'Service Tax - %1']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
             if obj_wizard.excise_duty:
-                tax_temp_ids = obj_tax_temp.search(cr, uid, [('name','in',['Excise Duty', 'Excise Duty - %2', 'Excise Duty - 1%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context)
-                tax_temp_data = obj_tax_temp.browse(cr, uid, tax_temp_ids, context=context)
-                taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
-                self._tax_account(cr, uid, account_ref, taxes_ref, context=context)                                                
+                tax_temp_ids.append(obj_tax_temp.search(cr, uid, [('name','in',['Excise Duty', 'Excise Duty - %2', 'Excise Duty - 1%']),('chart_template_id','=',obj_wizard.chart_template_id.id)], context=context))
+        for temp in tax_temp_ids:
+            tax_temp_data = obj_tax_temp.browse(cr, uid, temp, context=context)          
+            taxes_ref = obj_tax_temp._generate_tax(cr, uid, tax_temp_data, tax_code_ref, company_id, context=context)
+            self._tax_account(cr, uid, account_ref, taxes_ref, context=context)                                                  
         return account_ref, taxes_ref, tax_code_ref
     
     def _tax_account(self, cr, uid, account_ref, taxes_ref, context=None):
