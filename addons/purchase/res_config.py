@@ -32,7 +32,7 @@ class purchase_config_settings(osv.osv_memory):
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
              ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
-            ], 'Invoicing Method', required=True, default_model='purchase.order'),
+            ], 'Default Invoicing Control Method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist':fields.boolean("Pricelist per Supplier",
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
@@ -58,11 +58,11 @@ class purchase_config_settings(osv.osv_memory):
         'module_purchase_double_validation': fields.boolean("Two Levels of Approval",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),
-        'module_purchase_requisition': fields.boolean("Use Purchase Requisition",
+        'module_purchase_requisition': fields.boolean("Manage Purchase Requisitions",
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products. 
             You can configure per product if you directly do a Request for Quotation 
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
-        'decimal_precision': fields.integer('Decimal Precision on Price'),                
+        'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
     }
 
     _defaults = {

@@ -52,13 +52,13 @@ class sale_configuration(osv.osv_memory):
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
             'Default Method', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
-        'module_delivery': fields.boolean('Charge Shipping Cost',
+        'module_delivery': fields.boolean('Allow Charging Shipping Costs',
             help ="""Allows you to add delivery methods in sale orders and delivery orders.
                 You can define your own carrier and delivery grids for prices.
                 This installs the module delivery."""),
         'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
-        'default_picking_policy' : fields.boolean("Deliver all Products at Once",
-            help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
+        'default_picking_policy' : fields.boolean("Configurable Shipping Policy",
+            help = "You will be able to configure, per sale order, if you deliver all  products at once or if you deliver each product when it is available.  This may have an impact on the shipping price."),
         'group_sale_pricelist':fields.boolean("Pricelist per Customer",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers. 
@@ -101,7 +101,7 @@ class sale_configuration(osv.osv_memory):
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
-        'decimal_precision': fields.integer('Decimal Precision on Price'),
+        'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
     }
 
     def default_get(self, cr, uid, fields, context=None):

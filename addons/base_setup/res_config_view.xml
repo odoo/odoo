@@ -16,13 +16,18 @@
                         <field name="module_multi_company"/>
 
                         <separator string="Others" colspan="4"/>
-                        <label string="Outgoing Mail Servers"/>
+                        <b><label string="Outgoing Mail Servers"/></b>
                         <button type="action" name="%(base.action_ir_mail_server_list)d"
                             string="Configure" icon="gtk-execute"/>
                         <newline/>
                         <field name="module_share"/>
                         <newline/>
                         <field name="module_portal"/>
+                        <group col="4" colspan="4" >
+                            <p>You will also find several configuration options on your company data; address for the header and footer, overdue payments texts, etc.</p>
+                            <newline/>
+                            <p><button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/></p>
+                        </group>
                     </sheet>
                 </form>
             </field>
