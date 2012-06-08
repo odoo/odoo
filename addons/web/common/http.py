@@ -593,7 +593,7 @@ class LocalConnector(openerplib.Connector):
         except Exception,e:
         # TODO change the except to raise LibException instead of their emulated xmlrpc fault
             if isinstance(e, openerp.osv.osv.except_osv):
-                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+                fault = xmlrpclib.Fault('warning -- ' + str(e.name) + '\n\n' + str(e.value), '')
             elif isinstance(e, openerp.exceptions.Warning):
                 fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
             elif isinstance(e, openerp.exceptions.AccessError):
