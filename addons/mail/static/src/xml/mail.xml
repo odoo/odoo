@@ -72,27 +72,27 @@
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
             <t t-if="params.thread_level > 0">
-                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+                <a href="#" class="intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             </t>
             <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
             <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t><br/>
             <ul>
               <t t-if="display['show_reply']">
-                <li><a href="#" class="oe_mail_msg_reply oe_mail_oe_intlink">Reply</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
+                <li><a href="#" class="oe_mail_msg_reply">Reply</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
               </t>
               <t t-if="display['show_delete']">
                 <t t-if="thread._is_author(record.user_id[0])">
-                  <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink">Delete</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
+                  <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
                 </t>
               </t>
               <t t-if="display['show_hide']">
                 <t t-if="!(thread._is_author(record.user_id[0]))">
-                  <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
+                  <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
                 </t>
               </t>
               <li>
                 <span class="oe_fade"><t t-raw="record.date"/>
-                  by <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                  by <a href="#" class="intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 </span>
               </li>
             </ul>
@@ -102,7 +102,7 @@
     <t t-name="EmailDisplay">
         <p class="oe_mail_msg oe_mail_msg_p_email_header">
             <t t-if="params.thread_level > 0">
-                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+                <a href="#" class="intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             </t>
         </p>
         <p><span class="oe_mail_oe_bold">From:</span> <t t-esc="record.email_from"/></p>
@@ -115,12 +115,12 @@
         <ul>
           <t t-if="display['show_delete']">
             <t t-if="thread._is_author(record.user_id[0])">
-              <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink">Delete</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
+              <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
             </t>
           </t>
           <t t-if="display['show_hide']">
             <t t-if="!(thread._is_author(record.user_id[0]))">
-              <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
+              <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
             </t>
           </t>
           <li>

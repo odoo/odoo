@@ -95,7 +95,7 @@ openerp.mail = function(session) {
             this.params = params;
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
-            this.params.msg_more_limit = this.params.msg_more_limit || 100;
+            this.params.msg_more_limit = this.params.msg_more_limit || 290;
             this.params.limit = this.params.limit || 100;
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
@@ -282,8 +282,8 @@ openerp.mail = function(session) {
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
             if (record.tr_body) {
-                var node_body = this.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
-                var node_body_short = this.$element.find('span.oe_mail_msg_body_short:last').append(' <a href="#" class="expand">[ ... Show more]</a>');
+                var node_body = this.$element.find('span.oe_mail_msg_body:last').append('... <a href="#" class="reduce">Less</a>');
+                var node_body_short = this.$element.find('span.oe_mail_msg_body_short:last').append('... <a href="#" class="expand">More</a>');
                 node_body.hide();
                 node_body.find('a:last').click(function() { node_body.hide(); node_body_short.show(); return false; });
                 node_body_short.find('a:last').click(function() { node_body_short.hide(); node_body.show(); return false; });
@@ -613,6 +613,7 @@ openerp.mail = function(session) {
         start: function () {
             this._super.apply(this, arguments);
             var self = this;
+            this.display_current_user();
             // add events
             this.add_event_handlers();
             // load mail.message search view
@@ -672,6 +673,14 @@ openerp.mail = function(session) {
             });
         },
 
+        display_current_user: function () {
+            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.session.uid));
+        },
+        
+        thread_get_avatar: function(model, field, id) {
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        },
+        
         /**
          * Initializes the wall and calls fetch_comments
          * @param {Number} limit: number of notifications to fetch
