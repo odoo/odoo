@@ -90,11 +90,10 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P6" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -175,7 +174,7 @@
         </tr>
       </blockTable>
       <para style="P4">
-        <font face="Helvetica" size="11.0">Validity</font>
+        <font face="Helvetica">Validity</font>
       </para>
       <blockTable colWidths="190.0,190.0,158.0" style="Table1">
         <tr>
@@ -204,58 +203,68 @@
       <para style="P1">
         <font color="white"> </font>
       </para>
-      <blockTable colWidths="158.0,95.0,95.0,95.0,95.0" style="Table8">
+      <blockTable colWidths="170.0,85.0,85.0,85.0,113.0" style="Table8">
         <tr>
           <td>
-            <para style="terp_tblheader_Details_Centre">Invoicing</para>
+            <para style="terp_tblheader_Details">Invoicing</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Total Cost</para>
+            <para style="terp_tblheader_Details_Right">Total Cost</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Invoiced</para>
+            <para style="terp_tblheader_Details_Right">Invoiced</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Remaining</para>
+            <para style="terp_tblheader_Details_Right">Remaining</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Ready To Invoice</para>
+            <para style="terp_tblheader_Details_Right">Ready To Invoice</para>
           </td>
         </tr>
       </blockTable>
       <section>
         <para style="terp_default_1">[[repeatIn(get_lines(account),'line')]]</para>
-        <blockTable colWidths="158.0,95.0,95.0,95.0,95.0" style="Table6">
+        <blockTable colWidths="170.0,85.0,85.0,85.0,113.0" style="Table6">
           <tr>
             <td>
-              <para style="P2">[[ line[0] ]]</para>
+              <para style="terp_default_8">[[ line[0] ]]</para>
             </td>
             <td>
-              <para style="terp_default_Centre_8">[[ formatLang(line[1]) ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang(line[1]) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Centre_8">[[ formatLang(line[2]) ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang(line[2]) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Centre_8">[[ formatLang(line[3]) ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang(line[3]) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Centre_8">[[ formatLang(line[4]) ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang(line[4]) ]]</para>
             </td>
           </tr>
         </blockTable>
       </section>
-      <para style="terp_header">Terms &amp; Conditions</para>
+      <para style="terp_tblheader_Details">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_tblheader_Details">Terms &amp; Conditions</para>
       <blockTable colWidths="539.0" style="Table2">
         <tr>
           <td>
-            <para style="P5">[[ account.description ]]</para>
+            <para style="P3">[[ account.description ]]</para>
           </td>
         </tr>
       </blockTable>
       <para style="Standard">
         <font color="white"> </font>
       </para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_default_9">Signature</para>
     </section>
   </story>
 </document>
