@@ -135,8 +135,9 @@ class ir_values(osv.osv):
     def onchange_action_id(self, cr, uid, ids, action_id, context=None):
         if not action_id: return {}
         act = self.pool.get('ir.actions.actions').browse(cr, uid, action_id, context=context)
+        model = act.type if act.type != 'ir.actions.act_url' else 'ir.actions.url'
         return {
-                'value': {'value_unpickle': act.type+','+str(act.id)}
+                'value': {'value_unpickle': "%s,%d" % (model, act.id)}
         }
 
     _columns = {
