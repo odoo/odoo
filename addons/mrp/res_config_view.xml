@@ -12,27 +12,24 @@
                         <button string="Cancel" special="cancel"/>
                     </header>
                     <sheet layout="auto">
+                    <group>	
                         <separator string="Manufacturing Order" colspan="4"/>
-                        <group>
-                        	<field name="module_mrp_operations"/>
-                        	<field name="module_stock_planning"/>
-                        	<field name="module_mrp_subproduct"/>
-                        	<field name="module_mrp_repair"/>
-						</group>
+                        <field name="module_mrp_operations"/>
+                        <field name="module_stock_planning"/>
+                        <field name="module_mrp_subproduct"/>
+                        <field name="module_mrp_repair"/>
+                        
                         <separator string="Logistics" colspan="4"/>
-                        <group>
                         	<field name="module_mrp_jit"/>
                         	<field name="module_stock_no_autopicking"/>
-                        </group>	
+                        		
                         <separator string="Bill Of Material" colspan="4"/>
-                        <group>
                         	<field name="group_mrp_routings"/>
                         	<field name="group_mrp_properties"/>
-                        </group>
+                        	
                         <separator string="Products" colspan="4"/>
-                        <group>
              				<field name="module_product_manufacturer"/>
-             			</group>
+             		</group>		
                     </sheet>
                 </form>
             </field>
