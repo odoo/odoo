@@ -208,8 +208,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             }
         }
     },
-    do_show: function () {
+    do_show: function (options) {
         var self = this;
+        options = options || {};
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
@@ -233,6 +234,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
                 }).pipe(self.on_record_loaded);
             }
             result.pipe(function() {
+                if (options.editable) {
+                    self.set({mode: "edit"});
+                }
                 self.$element.css('visibility', 'visible');
             });
             return result;
@@ -495,7 +499,8 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-        	instance.web.dialog($(QWeb.render("CrashManagerWarning", result.warning)), {
+        	instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+                title:result.warning.title,
                 modal: true,
                 buttons: [
                     {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -521,6 +526,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
     switch_mode: function() {
         var self = this;
         if(this.get("mode") == "view") {
+            self.$element.removeClass('oe_form_editable').addClass('oe_form_readonly');
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
             self.$sidebar.show();
@@ -528,6 +534,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
                 field.set({"force_readonly": true});
             });
         } else {
+            self.$element.removeClass('oe_form_readonly').addClass('oe_form_editable');
             self.$buttons.find('.oe_form_buttons_edit').show();
             self.$buttons.find('.oe_form_buttons_view').hide();
             self.$sidebar.hide();
@@ -640,6 +647,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
+                for (var f in self.fields) {
+                    self.fields[f]._check_css_flags();
+                }
                 first_invalid_field.focus();
                 self.on_invalid();
                 return $.Deferred().reject();
@@ -919,9 +929,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         //       but one day, we will have to get rid of xml2json
         var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
-        if (this.fvg.arch.attrs && this.fvg.arch.attrs['layout'] !== 'manual') {
-            this.$form.attr('layout', 'auto');
-        }
 
         this.fields_to_init = [];
         this.tags_to_init = [];
@@ -953,16 +960,13 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var obj = self.tags_registry.get_object(tag_name);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             w.replace($elem);
-        })
+        });
         // TODO: return a deferred
     },
-    render_element: function(template, layout/* dictionaries */) {
-        var dicts = [].slice.call(arguments).slice(2);
-        dicts.unshift({ 'layout' : layout });
+    render_element: function(template /* dictionaries */) {
+        var dicts = [].slice.call(arguments).slice(1);
         var dict = _.extend.apply(_, dicts);
         dict['classnames'] = dict['class'] || ''; // class is a reserved word and might caused problem to Safari when used from QWeb
-        var alt_template = template + '.' + layout;
-        template = QWeb.has_template(alt_template) ? alt_template : template;
         return $(QWeb.render(template, dict));
     },
     alter_field: function(field) {
@@ -977,10 +981,8 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         this.$target.toggleClass('oe_layout_debugging');
     },
-    process: function($tag, layout) {
+    process: function($tag) {
         var self = this;
-        layout = $tag.attr('layout') || layout || 'auto';
-        $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
         if (this.tags_registry.contains(tagname)) {
             this.tags_to_init.push($tag);
@@ -990,39 +992,45 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         if (fn) {
             var args = [].slice.call(arguments);
             args[0] = $tag;
-            args[1] = layout;
             return fn.apply(self, args);
         } else {
             // generic tag handling, just process children
             $tag.children().each(function() {
-                self.process($(this), layout);
+                self.process($(this));
             });
             self.handle_common_properties($tag, $tag);
             $tag.removeAttr("modifiers");
             return $tag;
         }
     },
-    process_sheet: function($sheet, layout) {
-        var $new_sheet = this.render_element('FormRenderingSheet', layout, $sheet.getAttributes());
+    process_sheet: function($sheet) {
+        var $new_sheet = this.render_element('FormRenderingSheet', $sheet.getAttributes());
         this.handle_common_properties($new_sheet, $sheet);
-        var $dst = (layout === 'auto') ? $new_sheet.find('group:first') : $new_sheet.find('.oe_form_sheet');
-        $sheet.children().appendTo($dst);
+        var $dst = $new_sheet.find('.oe_form_sheet');
+        $sheet.contents().appendTo($dst);
         $sheet.before($new_sheet).remove();
-        this.process($new_sheet, layout);
+        this.process($new_sheet);
     },
-    process_form: function($form, layout) {
-        var $new_form = this.render_element('FormRenderingForm', layout, $form.getAttributes());
+    process_form: function($form) {
+        if ($form.find('> sheet').length === 0) {
+            $form.addClass('oe_form_nosheet');
+        }
+        var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
         this.handle_common_properties($new_form, $form);
-        var $dst = (layout === 'auto') ? $new_form.find('group:first') : $new_form;
-        $form.children().appendTo($dst);
+        $form.contents().appendTo($new_form);
         if ($form[0] === this.$form[0]) {
             // If root element, replace it
             this.$form = $new_form;
         } else {
             $form.before($new_form).remove();
         }
-        this.process($new_form, layout);
+        this.process($new_form);
     },
+    /*
+     * Used by direct <field> children of a <group> tag only
+     * This method will add the implicit <label...> for every field
+     * in the <group>
+    */
     preprocess_field: function($field) {
         var self = this;
         var name = $field.attr('name'),
@@ -1048,6 +1056,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
             "string": $field.attr('string'),
             "help": $field.attr('help'),
+            "class": $field.attr('class'),
         });
         $label.insertBefore($field);
         if (field_colspan > 1) {
@@ -1055,31 +1064,34 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         return $label;
     },
-    process_field: function($field, layout) {
-        var $label = this.preprocess_field($field);
-        if ($label)
-            this.process($label, layout);
+    process_field: function($field) {
+        if ($field.parent().is('group')) {
+            // No implicit labels for normal fields, only for <group> direct children
+            var $label = this.preprocess_field($field);
+            if ($label) {
+                this.process($label);
+            }
+        }
         this.fields_to_init.push($field);
         return $field;
     },
-    process_group: function($group, layout) {
+    process_group: function($group) {
         var self = this;
-        if ($group.parent().is('.oe_form_group_cell')) {
-            $group.parent().addClass('oe_form_group_nested');
-        }
         $group.children('field').each(function() {
             self.preprocess_field($(this));
         });
-        var $new_group = this.render_element('FormRenderingGroup', layout, $group.getAttributes()),
-            $table;
-        if ($new_group.is('table')) {
+        var $new_group = this.render_element('FormRenderingGroup', $group.getAttributes());
+        var $table;
+        if ($new_group.first().is('table.oe_form_group')) {
             $table = $new_group;
+        } else if ($new_group.filter('table.oe_form_group').length) {
+            $table = $new_group.filter('table.oe_form_group').first();
         } else {
-            $table = $new_group.find('table:first');
+            $table = $new_group.find('table.oe_form_group').first();
         }
-        $table.addClass('oe_form_group');
+
         var $tr, $td,
-            cols = parseInt($group.attr('col') || 4, 10),
+            cols = parseInt($group.attr('col') || 2, 10),
             row_cols = cols;
 
         var children = [];
@@ -1089,6 +1101,8 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var tagName = $child[0].tagName.toLowerCase();
             var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             var newline = tagName === 'newline';
+
+            // Note FME: those classes are used in layout debug mode
             if ($tr && row_cols > 0 && (newline || row_cols < colspan)) {
                 $tr.addClass('oe_form_group_row_incomplete');
                 if (newline) {
@@ -1118,7 +1132,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         $group.before($new_group).remove();
 
-        // Now compute width of cells
         $table.find('> tbody > tr').each(function() {
             var to_compute = [],
                 row_cols = cols,
@@ -1131,13 +1144,14 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                         if ($child.attr('orientation') === 'vertical') {
                             $td.addClass('oe_vertical_separator').attr('width', '1');
                             $td.empty();
-                            row_cols--;
+                            row_cols-= $td.attr('colspan') || 1;
+                            total--;
                         }
                         break;
                     case 'label':
                         if ($child.attr('for')) {
                             $td.attr('width', '1%').addClass('oe_form_group_cell_label');
-                            row_cols--;
+                            row_cols-= $td.attr('colspan') || 1;
                             total--;
                         }
                         break;
@@ -1154,20 +1168,22 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                             }
                             $td.attr('width', width);
                             $child.removeAttr('width');
-                            row_cols--;
+                            row_cols-= $td.attr('colspan') || 1;
                         } else {
                             to_compute.push($td);
                         }
 
                 }
             });
-            var unit = Math.floor(total / row_cols);
-            if (!$(this).is('.oe_form_group_row_incomplete')) {
-                _.each(to_compute, function($td, i) {
-                    var width = parseInt($td.attr('colspan'), 10) * unit;
-                    $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
-                    total -= width;
-                });
+            if (row_cols) {
+                var unit = Math.floor(total / row_cols);
+                if (!$(this).is('.oe_form_group_row_incomplete')) {
+                    _.each(to_compute, function($td, i) {
+                        var width = parseInt($td.attr('colspan'), 10) * unit;
+                        $td.attr('width', width + '%');
+                        total -= width;
+                    });
+                }
             }
         });
         _.each(children, function(el) {
@@ -1176,37 +1192,57 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.handle_common_properties($new_group, $group);
         return $new_group;
     },
-    process_notebook: function($notebook, layout) {
+    process_notebook: function($notebook) {
         var self = this;
         var pages = [];
         $notebook.find('> page').each(function() {
             var $page = $(this);
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
-            pages.push(page_attrs);
-            var $new_page = self.render_element('FormRenderingNotebookPage', layout, page_attrs);
-            var $dst = (layout === 'auto') ? $new_page.find('group:first') : $new_page;
-            $page.children().appendTo($dst);
+            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
+            $page.contents().appendTo($new_page);
             $page.before($new_page).remove();
-            self.handle_common_properties($new_page, $page);
+            var ic = self.handle_common_properties($new_page, $page).invisibility_changer;
+            page_attrs.__page = $new_page;
+            page_attrs.__ic = ic;
+            pages.push(page_attrs);
+            
+            $new_page.children().each(function() {
+                self.process($(this));
+            });
         });
-        var $new_notebook = this.render_element('FormRenderingNotebook', layout, { pages : pages });
-        $notebook.children().appendTo($new_notebook);
+        var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
+        $notebook.contents().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
-        $new_notebook.children().each(function() {
-            self.process($(this));
-        });
+        self.process($($new_notebook.children()[0]));
+        //tabs and invisibility handling
         $new_notebook.tabs();
+        _.each(pages, function(page, i) {
+            if (! page.__ic)
+                return;
+            page.__ic.on("change:effective_invisible", null, function() {
+                var current = $new_notebook.tabs("option", "selected");
+                if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
+                    return;
+                var first_visible = _.find(_.range(pages.length), function(i2) {
+                    return (! pages[i2].__ic) || (! pages[i2].__ic.get("effective_invisible"));
+                });
+                if (first_visible !== undefined) {
+                    $new_notebook.tabs('select', first_visible);
+                }
+            });
+        });
+                
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
-    process_separator: function($separator, layout) {
-        var $new_separator = this.render_element('FormRenderingSeparator', layout, $separator.getAttributes());
+    process_separator: function($separator) {
+        var $new_separator = this.render_element('FormRenderingSeparator', $separator.getAttributes());
         $separator.before($new_separator).remove();
         this.handle_common_properties($new_separator, $separator);
         return $new_separator;
     },
-    process_label: function($label, layout) {
+    process_label: function($label) {
         var name = $label.attr("for"),
             field_orm = this.fvg.fields[name];
         var dict = {
@@ -1223,7 +1259,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             align = 'center';
         }
         dict.align = align;
-        var $new_label = this.render_element('FormRenderingLabel', layout, dict);
+        var $new_label = this.render_element('FormRenderingLabel', dict);
         $label.before($new_label).remove();
         this.handle_common_properties($new_label, $label);
         if (name) {
@@ -1234,10 +1270,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     handle_common_properties: function($new_element, $node) {
         var str_modifiers = $node.attr("modifiers") || "{}"
         var modifiers = JSON.parse(str_modifiers);
+        var ic = null;
         if (modifiers.invisible !== undefined)
-            new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
+            ic = new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
         $new_element.addClass($node.attr("class") || "");
         $new_element.attr('style', $node.attr('style'));
+        return {invisibility_changer: ic,};
     },
 });
 
@@ -1375,15 +1413,11 @@ instance.web.form.InvisibilityChangerMixin = {
         _.bind(check, this)();
     },
     start: function() {
-        var check_visibility = function() {
-            if (this.get("effective_invisible")) {
-                this.$element.hide();
-            } else {
-                this.$element.show();
-            }
-        };
-        this.on("change:effective_invisible", this, check_visibility);
-        _.bind(check_visibility, this)();
+        this.on("change:effective_invisible", this, this._check_visibility);
+        this._check_visibility();
+    },
+    _check_visibility: function() {
+        this.$element.toggleClass('oe_form_invisible', this.get("effective_invisible"));
     },
 };
 
@@ -1730,6 +1764,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
             this.on("change:required", this, this._set_required);
             this._set_required();
         }
+        this._check_visibility();
+        this._check_css_flags();
     },
     /**
      * Private. Do not use.
@@ -1832,6 +1868,7 @@ instance.web.form.ReinitializeFieldMixin =  {
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
+    widget_class: 'oe_form_field_char',
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
@@ -1869,7 +1906,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function() {
         this.delay_focus(this.$element.find('input:first'));
@@ -1936,6 +1973,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
 
 instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     is_field_number: true,
+    widget_class: 'oe_form_field_float',
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.set({'value': 0});
@@ -1955,7 +1993,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
 });
 
 instance.web.DateTimeWidget = instance.web.OldWidget.extend({
-    template: "web.datetimepicker",
+    template: "web.datepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
     init: function(parent) {
@@ -2040,7 +2078,7 @@ instance.web.DateWidget = instance.web.DateTimeWidget.extend({
 });
 
 instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
-    template: "EmptyComponent",
+    template: "FieldDatetime",
     build_widget: function() {
         return new instance.web.DateTimeWidget(this);
     },
@@ -2077,7 +2115,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function() {
         if (this.datewidget && this.datewidget.$input)
@@ -2086,6 +2124,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
 }));
 
 instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
+    template: "FieldDate",
     build_widget: function() {
         return new instance.web.DateWidget(this);
     }
@@ -2126,7 +2165,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function($element) {
         this.delay_focus(this.$textarea);
@@ -2744,9 +2783,12 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 }
                 view.options.not_interactible_on_create = true;
             } else if (view.view_type === "kanban") {
+                view.options.confirm_on_delete = false;
                 if (self.get("effective_readonly")) {
                     view.options.action_buttons = false;
                     view.options.quick_creatable = false;
+                    view.options.creatable = false;
+                    view.options.read_only_mode = true;
                 }
             }
             views.push(view);
@@ -3096,7 +3138,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        self. $text = $("textarea", this.$element);
+        self.$text = $("textarea", this.$element);
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
             autocomplete: {
@@ -3148,19 +3190,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     return _.extend(el, {index:i});
                 })});
             });
-        }).bind('tagClick', function(e, tag, value, callback) {
-            var pop = new instance.web.form.FormOpenPopup(self.view);
-            pop.show_element(
-                self.field.relation,
-                value.id,
-                self.build_context(),
-                {
-                    title: _t("Open: ") + (self.string || self.name)
-                }
-            );
-            pop.on_write_completed.add_last(function() {
-                self.render_value();
-            });
         }).bind('hideDropdown', function() {
             self._drop_shown = false;
         }).bind('showDropdown', function() {
@@ -3168,7 +3197,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         });
         self.tags = self.$text.textext()[0].tags();
         $("textarea", this.$element).focusout(function() {
-            $("textarea", this.$element).val("");
+            self.$text.trigger("setInputData", "");
         }).keydown(function(e) {
             if (event.keyCode === 9 && self._drop_shown) {
                 self.$text.textext()[0].autocomplete().selectFromDropdown();
@@ -3204,17 +3233,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
-                $(".oe_form_field_many2manytags_box", self.$element).click(function() {
-                    var index = Number($(this).data("index"));
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value")[index],
-                        context: self.build_context(),
-                        views: [[false, 'form']],
-                        target: 'current'
-                    });
-                });
             }
         };
         if (! self.get('values') || self.get('values').length > 0) {
@@ -3276,6 +3294,9 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         self.reload_content();
         this.is_setted.resolve();
     },
+    get_value: function() {
+        return [commands.replace_with(this.get('value'))];
+    },
     load_view: function() {
         var self = this;
         this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
@@ -3305,7 +3326,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         });
     },
     dataset_changed: function() {
-        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+        this.set({'value': this.dataset.ids});
     },
 });
 
@@ -3407,6 +3428,8 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                     'create_text': _t("Add"),
                     'creatable': self.get("effective_readonly") ? false : true,
                     'quick_creatable': self.get("effective_readonly") ? false : true,
+                    'read_only_mode': self.get("effective_readonly") ? true : false,
+                    'confirm_on_delete': false,
             });
         var embedded = (this.field.views || {}).kanban;
         if (embedded) {
@@ -3553,6 +3576,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         var self = this;
         self.$text.val("");
         self.trigger('added', id);
+        this.m2m.dataset_changed();
     },
 });
 }
@@ -3607,7 +3631,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
             width: '90%',
             min_width: '800px',
             close: function() {
-                self.check_exit();
+                self.check_exit(true);
             },
             title: this.options.title || "",
         }, this.$element).open();
@@ -3665,9 +3689,10 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     },
     on_select_elements: function(element_ids) {
     },
-    check_exit: function() {
+    check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
             this.on_select_elements(this.created_elements);
+            this.created_elements = [];
         }
         this.destroy();
     },
@@ -3756,7 +3781,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
-                        'selectable': !self.options.disable_multiple_selection
+                        'selectable': !self.options.disable_multiple_selection,
+                        'read_only': true,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($(".oe-select-create-popup-view-list", self.$element)).pipe(function() {
@@ -4049,11 +4075,11 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
     initialize_content: function() {
         this._super();
-        this.$placeholder = $(".oe_form_field-binary-image-placeholder", this.$element);
-        if (!this.get("effective_readonly"))
-            this.$element.find('.oe-binary').show();
-        else
-            this.$element.find('.oe-binary').hide();
+        if (!this.get("effective_readonly")) {
+            this.$element.find('.oe_form_field_image_controls').show();
+        } else {
+            this.$element.find('.oe_form_field_image_controls').hide();
+        }
     },
     set_value: function(value_) {
         this._super.apply(this, arguments);
@@ -4069,8 +4095,9 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         } else {
             url = "/web/static/src/img/placeholder.png";
         }
-        var rendered = QWeb.render("FieldBinaryImage-img", {widget: this, url: url});;
-        this.$placeholder.html(rendered);
+        var img = QWeb.render("FieldBinaryImage-img", { widget: this, url: url });
+        this.$element.find('> img').remove();
+        this.$element.prepend(img);
     },
     on_file_change: function() {
         this.render_value();
@@ -4088,68 +4115,121 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 });
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
-    template: "EmptyComponent",
+    tagName: "span",
     start: function() {
         this._super();
         this.selected_value = null;
-
-        this.render_list();
+        // preview in start only for selection fields, because of the dynamic behavior of many2one fields.
+        if (this.field.type in ['selection']) {
+            this.render_list();
+        }
     },
     set_value: function(value_) {
+        var self = this;
         this._super(value_);
-        this.selected_value = value_;
-
-        this.render_list();
+        // find selected value:
+        // - many2one: [2, "New"] -> 2
+        // - selection: new -> new
+        if (this.field.type == "many2one") {
+            this.selected_value = value_[0];
+        } else {
+            this.selected_value = value_;
+        }
+        // trick to be sure all values are loaded in the form, therefore
+        // enabling the evaluation of dynamic domains
+        $.async_when().then(function() {
+            return self.render_list();
+        });
     },
+
+    /** Get the status list and render them
+     *  to_show: [[identifier, value_to_display]] where
+     *   - identifier = key for a selection, id for a many2one
+     *   - display_val = label that will be displayed
+     *   - ex: [[0, "New"]] (many2one) or [["new", "In Progress"]] (selection)
+     */
     render_list: function() {
+        var self = this;
+        // get selection values, filter them and render them
+        var selection_done = this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
+    },
+
+    /** Get the selection list to be displayed in the statusbar widget.
+     *  For selection fields: this is directly given by this.field.selection
+     *  For many2one fields :
+     *  - perform a search on the relation of the many2one field (given by
+     *    field.relation )
+     *  - get the field domain for the search
+     *    - self.build_domain() gives the domain given by the view or by
+     *      the field
+     *    - if the optional statusbar_fold attribute is set to true, make
+     *      an AND with build_domain to hide all 'fold=true' columns
+     *    - make an OR with current value, to be sure it is displayed,
+     *      with the correct order, even if it is folded
+     */
+    get_selection: function() {
+        var self = this;
+        if (this.field.type == "many2one") {
+            this.selection = [];
+            // get fold information from widget
+            var fold = ((this.node.attrs || {}).statusbar_fold || true);
+            // build final domain: if fold option required, add the 
+            if (fold == true) {
+                var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]]);
+            } else {
+                var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            }
+            // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
+            var model_ext = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
+            // fetch selection
+            var read_defer = model_ext.read_slice(['name'], {}).pipe( function (records) {
+                _(records).each(function (record) {
+                    self.selection.push([record.id, record.name]);
+                });
+            });
+        } else {
+            this.selection = this.field.selection;
+            var read_defer = new $.Deferred().resolve();
+        }
+        return read_defer;
+    },
+
+    /** Filters this.selection, according to values coming from the statusbar_visible
+     *  attribute of the field. For example: statusbar_visible="draft,open"
+     *  Currently, the key of (key, label) pairs has to be used in the
+     *  selection of visible items. This feature is not meant to be used
+     *  with many2one fields.
+     */
+    filter_selection: function() {
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
-
+        
         if (shown.length == 0) {
-            this.to_show = this.field.selection;
+            this.to_show = this.selection;
         } else {
-            this.to_show = _.select(this.field.selection, function(x) {
+            this.to_show = _.select(this.selection, function(x) {
                 return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
+    },
 
+    /** Renders the widget. This function also checks for statusbar_colors='{"pending": "blue"}'
+     *  attribute in the widget. This allows to set a given color to a given
+     *  state (given by the key of (key, label)).
+     */
+    render_elements: function () {
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
 
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
-            var elem = this.$element.find("li.oe-arrow-list-selected span");
-            elem.css("border-color", color);
-            if (this.check_white(color))
-                elem.css("color", "white");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
-            elem.css("border-left-color", "rgba(0,0,0,0)");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
-            elem.css("border-color", "rgba(0,0,0,0)");
-            elem.css("border-left-color", color);
+            var elem = this.$element.find("li.oe_form_steps_active span");
+            elem.css("color", color);
         }
     },
-    check_white: function(color) {
-        var div = $("<div></div>");
-        div.css("display", "none");
-        div.css("color", color);
-        div.appendTo($("body"));
-        var ncolor = div.css("color");
-        div.remove();
-        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
-        if (!res) {
-            return false;
-        }
-        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
-        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
-        if (lum < 128) {
-            return true;
-        }
-        return false;
-    }
 });
 
 /**
