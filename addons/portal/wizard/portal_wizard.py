@@ -172,9 +172,8 @@ class wizard(osv.osv_memory):
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
                   ' to send emails.'))
-        
+
         portal_obj = self.pool.get('res.portal')
-        all_portal_user = self.get_all_portal_user(cr)
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
             portal_user=[user.id for user in wiz.portal_id.group_id.users]
@@ -208,12 +207,14 @@ class wizard(osv.osv_memory):
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
 
-            for data in removeuser:
-                #delete the user relationship from portal.
+            #delete the user relationship from portal.
+            if removeuser:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(3, data)]}, context0)
+                    {'users': [(3, user_data) for user_data in removeuser]}, context0)
                 
-                #unlink res user when portal user not in any portal.
+            #unlink res user when portal user not in any portal.
+            all_portal_user = self.get_all_portal_user(cr)
+            for data in removeuser:
                 if data not in all_portal_user:
                     user_obj.unlink(cr, ROOT_UID, [data])
 
