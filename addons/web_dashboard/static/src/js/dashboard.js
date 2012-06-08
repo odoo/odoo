@@ -251,11 +251,13 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.$element.html(rendered);
     },
     no_result: function () {
-        this.$element.prepend(
-            $('<div class="oe_view_nocontent">')
-                .append($('<img>', { src: '/web_dashboard/static/src/img/view_todo_arrow.png' }))
-                .append($('<div>').html(this.view.options.action.help || " "))
-        );
+        if (this.view.options.action.help){
+            this.$element.append(
+                $('<div class="oe_view_nocontent">')
+                    .append($('<img>', { src: '/web_dashboard/static/src/img/view_todo_arrow.png' }))
+                    .append($('<div>').html(this.view.options.action.help || " "))
+            );
+        }
     },
     do_reload: function() {
         var view_manager = this.view.getParent(),
