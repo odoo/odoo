@@ -237,13 +237,13 @@ class account_analytic_account(osv.osv):
             curr_node = node[0]
             if context.get('default_type') == 'contract':
                 curr_node.set('string', 'Contract/Project Name')
-                curr_node.set('placeholder', 'Contract or Project name')
+                curr_node.set('placeholder', 'Contract or Project Name')
             elif context.get('default_type') == 'template':
                 curr_node.set('string', 'Template Name')
-                curr_node.set('placeholder', 'Template name')
+                curr_node.set('placeholder', 'Template Name')
             else:
                 curr_node.set('string', 'Account Name')
-                curr_node.set('placeholder', 'Account name')
+                curr_node.set('placeholder', 'Account Name')
         res['arch'] = etree.tostring(doc)
         return res
 
