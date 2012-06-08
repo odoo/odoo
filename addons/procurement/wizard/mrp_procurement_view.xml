@@ -10,14 +10,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters">
-                    <label string="This wizard will schedule procurements." colspan="4" align="0.0"/>
-                    <newline/>
-                    <group col="2" colspan="4">
-                        <button icon='gtk-cancel' special="cancel"
-                            string="Cancel" />
+                    <header>
                         <button name="procure_calculation" string="Compute Procurements"
-                            colspan="1" type="object" icon="gtk-ok" />
-                    </group>
+                            type="object" icon="gtk-ok" />
+                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
+                    </header>
+                    <label string="This wizard will schedule procurements."/>
                 </form>
             </field>
         </record>

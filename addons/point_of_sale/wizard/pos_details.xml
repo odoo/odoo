@@ -3,27 +3,23 @@
     <data>
         <!--   pos.details -->
 
-		<record id="view_pos_details" model="ir.ui.view">
+        <record id="view_pos_details" model="ir.ui.view">
             <field name="name">POS Details</field>
             <field name="model">pos.details</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS Details">
-                    <group col="4" colspan="4">
-                        <separator string="Dates" colspan="4"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <separator string="User" colspan="4"/>
-                        <field name="user_ids" nolabel="1" colspan="4"/>
-                        <separator string="" colspan="4"/>
-                        <label string="" colspan="2"/>
-                        <group colspan="2" col="2">
+                    <header>
                             <button icon='gtk-cancel' special="cancel"
                                     string="Close" />
                             <button name="print_report" string="Print Report"
                                     colspan="1" type="object" icon="gtk-print" />
-                        </group>
+                    </header>
+                    <group col="4" string="Dates">
+                        <field name="date_start"/>
+                        <field name="date_end"/>
                     </group>
+                    <field name="user_ids"/>
                 </form>
             </field>
         </record>
@@ -39,5 +35,5 @@
         </record>
 
 
-	</data>
+    </data>
 </openerp>
