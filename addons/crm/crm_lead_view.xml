@@ -170,7 +170,7 @@
             <field name="model">crm.lead</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+                <tree string="Leads" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel', 'done')">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
@@ -297,6 +297,10 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
+                <filter icon="terp-mail-message-new"
+                    string="Inbox"
+                    name="needaction_pending"
+                    domain="[('needaction_pending','=',True)]"/>
                 <filter icon="terp-check"
                     string="New"
                     name="new" help="New Leads"
@@ -305,10 +309,6 @@
                     string="Open"
                     name="open"
                     domain="[('state','=','open')]"/>
-                <filter icon="terp-gtk-media-pause"
-                    string="Pending"
-                    name="pending"
-                    domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
                 <filter icon="terp-go-today" string="Today"
@@ -508,7 +508,7 @@
             <field name="model">crm.lead</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="needaction_pending" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
@@ -540,6 +540,10 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
+                <filter icon="terp-mail-message-new"
+                    string="Inbox"
+                    name="needaction_pending"
+                    domain="[('needaction_pending','=',True)]"/>
                 <filter icon="terp-check"
                     string="New"  help="New Opportunities"
                     name="new"
@@ -548,10 +552,6 @@
                     string="Open"  help="Open Opportunities"
                     name="open"
                     domain="[('state','=','open')]"/>
-                <filter icon="terp-gtk-media-pause"
-                    string="Pending"  help="Pending Opportunities"
-                    name="pending"
-                    domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>

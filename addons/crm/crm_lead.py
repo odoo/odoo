@@ -40,7 +40,7 @@ class crm_lead(base_stage, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin', 'mail.thread', 'res.partner']
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
