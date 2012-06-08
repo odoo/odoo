@@ -107,8 +107,8 @@
                         <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
                         <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_form_button_hi"/>
                         <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
-                        <button name="order_confirm" states="draft" string="Confirm"/>
-                        <button name="order_confirm" states="sent" string="Confirm" class="oe_form_button_hi"/>
+                        <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
+                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_form_button_hi" type="object"/>
                         <button name="action_view_invoice" string="Open Invoice" type="object" 
                         attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                         <button name="action_view_delivery" string="Open Delivery Order" type="object" 
@@ -126,11 +126,10 @@
                             <field name="name"/>
                             <field name="date_order"/>
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
-                            <field name="client_order_ref"/>
                         </group>
                         <group col="2" colspan="2">
-                            <field name="invoiced"/>
-                            <field name="shipped"/>
+                            <field name="invoiced" invisible="True"/>
+                            <field name="shipped" invisible="True"/>
                         </group>
                     </group>
                     <notebook colspan="5">
@@ -155,7 +154,7 @@
  
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                name="product_uom_qty"
+                                                name="product_uom_qty" string="Quantity"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                             <group colspan="1">
                                                 <field name="product_uom" nolabel="1" groups="product.group_uom"
@@ -236,6 +235,7 @@
                                 <separator string="References" colspan="2"/>
                                 <field name="user_id"/>
                                 <field groups="base.group_no_one" name="origin"/>
+                                <field name="client_order_ref"/>
                             </group>
                             <group name="sale_pay" colspan="2" col="2">
                                 <separator string="Conditions" colspan="2"/>
@@ -346,6 +346,13 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help">
+                Click here to create a new quotation.
+                &lt;p&gt;
+                The "Quotation" is the first step of the Sales flow.  Manage your sales from quotation to invoice.
+                &lt;p&gt;
+                You will be able to sell products (manage deliveries) as well as services (create projects).
+            </field>
         </record>
 
         <menuitem id="menu_sale_quotations"
