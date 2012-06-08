@@ -83,16 +83,5 @@ class account_config_settings(osv.osv_memory):
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
     }
-class stock_config_settings(osv.osv_memory):
-    _inherit = 'stock.config.settings'
-    _columns = {
-        'module_product_manufacturer': fields.boolean("Define Manufacturers on Products",
-            help="""This allows you to define the following for a product:
-                    * Manufacturer
-                    * Manufacturer Product Name
-                    * Manufacturer Product Code
-                    * Product Attributes.
-                This installs the module product_manufacturer."""),
-     }           
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
