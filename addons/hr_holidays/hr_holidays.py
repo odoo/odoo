@@ -280,6 +280,7 @@ class hr_holidays(osv.osv):
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
+                    'leave_id': record.id,
                 }
                 case_id = meeting_obj.create(cr, uid, vals)
                 self._create_resource_leave(cr, uid, [record], context=context)
@@ -517,4 +518,9 @@ class hr_employee(osv.osv):
 
 hr_employee()
 
+class crm_meeting(osv.osv):
+    _inherit = 'crm.meeting'
+    _columns = {
+        'leave_id': fields.many2one('hr.holidays','Leave Meeting'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
