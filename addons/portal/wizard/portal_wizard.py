@@ -126,11 +126,12 @@ class wizard(osv.osv_memory):
     }
 
     def get_all_portal_user(self, cr):
+        all_portal_user_ids = []
         portal_obj = self.pool.get('res.portal')
         all_portals = portal_obj.browse(cr, ROOT_UID, portal_obj.search(cr, ROOT_UID, []))
         all_portal_user = [p.group_id.users for p in all_portals]
         for portal_user_id in all_portal_user:
-            all_portal_user_ids = [all_user.id for all_user in portal_user_id]
+            all_portal_user_ids.extend([all_user.id for all_user in portal_user_id])
         return all_portal_user_ids
 
     def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
@@ -200,10 +201,16 @@ class wizard(osv.osv_memory):
                             'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
                             'partner_id': u.partner_id and u.partner_id.id,
                         } )
-            if new_users_data:
+                    
+            for data in new_users_data:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(0, 0, data) for data in new_users_data]}, context0)
-            if add_users and add_users not in portal_user :
+                    {'users': [(0, 0, data)]}, context0)
+                
+                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', data['login'])])
+                add_users.append(created_user[0])
+                    
+                    
+            if add_users and add_users not in portal_user:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
 
