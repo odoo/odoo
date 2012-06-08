@@ -14,7 +14,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="/form/notebook/page[@string='Personal Information']" position="after">
+                <xpath expr="//page[@string='Personal Information']" position="after">
                     <page string="Miscellaneous" groups="base.group_hr_user">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
@@ -45,11 +45,11 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="/form/notebook/page/group/separator[@name='advantages']" position="before">
+                <xpath expr="//group[@name='right_column']" position="before">
                     <separator string="Payslip Info" colspan="2"/>
                     <field name="struct_id" required="1"/>
                 </xpath>
-                 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
+                 <xpath expr="//field[@name='working_hours']" position="after">
                     <field name="schedule_pay"/>
                 </xpath>
             </data>
@@ -266,9 +266,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <label for="employee_id" class="oe_form_readonly_hidden">
+                    <label for="employee_id" class="oe_form_readonly_hidden"/>
                     <h1><field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/></h1>
-                    <label for="date_from" class="oe_form_readonly_hidden" string="Period">
+                    <label for="date_from" class="oe_form_readonly_hidden" string="Period"/>
                     <h2>
                         from <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         to <field name="date_to"/>
@@ -368,6 +368,7 @@
                             </group>
                             <group string="Notes">
                             <field name="note"/>
+                            </group>
                        </page>
                     </notebook>
                     </sheet>
