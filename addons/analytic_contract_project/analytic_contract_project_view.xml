@@ -50,8 +50,8 @@
 									<td class="oe_th_110px oe_border_right"><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
 									<td class="oe_th_110px"><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
 									<td width="10px"></td>
-									<td><button class= "oe_btn_width" name="%(account_analytic_analysis.action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-									<td><button class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+									<td><button icon="terp-check" class= "oe_btn_width" name="%(account_analytic_analysis.action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+									<td><button icon="terp-dolar_ok!" class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
 								</tr>
 								<tr>
 									<th class="oe_border_right">Invoice On Timesheets</th>
@@ -61,20 +61,10 @@
 									<td class="oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 									<td class="oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 									<td width="10px"></td>
-									<td><button class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-									<td><button class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+									<td><button icon="terp-go-week" class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+									<td><button icon="terp-dolar" class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 								</tr>
-<!--								<tr>
-									<th class="oe_border_right">Charge Expenses</th>
-									<td><field name="charge_expenses" nolabel="1"/></td>
-									<td><field class="oe_th_110px" name="expense_max" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-									<td class="oe_th_110px"><field name="expense_invoiced" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-									<td class="oe_th_110px oe_border_right"><field name="remaining_expense" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-									<td class="oe_th_110px"><field name="expense_to_invoice" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-									<td width="10px"></td>
-									<td><button class= "oe_btn_width" name="account_analytic_analysis.open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-									<td><button class= "oe_btn_width" name="account_analytic_analysis.hr_to_invoiced_expense" string="Invoice Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-								</tr>-->
+								<div name="end_of_tabl_hook"/>
 								<tr>
 									<th class="oe_border_right">Total</th>
 									<td width="10px"></td>

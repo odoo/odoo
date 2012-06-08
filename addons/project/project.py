@@ -221,6 +221,7 @@ class project(osv.osv):
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
         'privacy_visibility': fields.selection([('public','Public'), ('follower','Followers Only')], 'Privacy / Visibility', select=True),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
      }
     
     def dummy(self, cr, uid, ids, context):
@@ -241,6 +242,7 @@ class project(osv.osv):
     _order = "sequence"
     _defaults = {
         'active': True,
+        'state': 'open',
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
