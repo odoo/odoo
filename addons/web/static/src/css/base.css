@@ -2049,30 +2049,40 @@
 .openerp .oe-listview-content {
   width: 100%;
 }
+.openerp .oe-listview-content td:first-child, .openerp .oe-listview-content th:first-child {
+  width: 17px;
+}
+.openerp .oe-listview-content td:first-child:after, .openerp .oe-listview-content th:first-child:after {
+  border-width: 0;
+}
 .openerp .oe-listview-content > thead {
   border-bottom: 2px solid #cacaca;
   background: #eeeeee;
   vertical-align: top;
 }
-.openerp .oe-listview-content > thead td, .openerp .oe-listview-content > thead th {
+.openerp .oe-listview-content > thead th {
+  position: relative;
+}
+.openerp .oe-listview-content td, .openerp .oe-listview-content th {
   padding: 3px 6px;
   line-height: 18px;
 }
-.openerp .oe-listview-content > thead th:after {
+.openerp .oe-listview-content th:after {
+  position: absolute;
+  right: 6px;
   content: "";
-  float: right;
   margin-top: 7px;
   border-width: 0 4px 4px;
   border-style: solid;
   border-color: black transparent;
   visibility: hidden;
 }
-.openerp .oe-listview-content > thead th.sortup:after {
+.openerp .oe-listview-content th.sortup:after {
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe-listview-content > thead th.sortdown:after {
+.openerp .oe-listview-content th.sortdown:after {
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;

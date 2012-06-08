@@ -1670,32 +1670,39 @@ $colour4: #8a89ba
     // ListView {{{
     .oe-listview-content
         width: 100%
+        td:first-child, th:first-child
+            width: 17px
+            &:after
+                border-width: 0
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
-            td, th
-                padding: 3px 6px
-                line-height: 18px
-            th:after
-                content: ""
-                float: right
-                margin-top: 7px
-                border-width: 0 4px 4px
-                border-style: solid
-                border-color: #000 transparent
-                visibility: hidden
-            th.sortup:after
-                visibility: visible
-                @include opacity(0.6)
-            th.sortdown:after
-                border-bottom: none
-                border-left: 4px solid transparent
-                border-right: 4px solid transparent
-                border-top: 4px solid #000
-                visibility: visible
-                @include box-shadow(none)
-                @include opacity(0.6)
+            th
+                position: relative
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        th:after
+            position: absolute
+            right: 6px
+            content: ""
+            margin-top: 7px
+            border-width: 0 4px 4px
+            border-style: solid
+            border-color: #000 transparent
+            visibility: hidden
+        th.sortup:after
+            visibility: visible
+            @include opacity(0.6)
+        th.sortdown:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
             // TODO mit
             //th:hover:after
             //    border-bottom: none
