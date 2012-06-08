@@ -41,7 +41,7 @@ class crm_meeting(base_state, osv.Model):
         # base_state required fields
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
-                        select=True, help='Sales team to which Case belongs to.'),
+                        select=True, groups='base.group_sale_salesman_all_leads,base.group_sale_manager', help='Sales team to which Case belongs to.'),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Write Date' , readonly=True),

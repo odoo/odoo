@@ -312,7 +312,7 @@ class hr_applicant(base_stage, osv.Model):
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
             res = data_obj.read(cr, uid, result, ['res_id'], context=context)
             id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+            id2 = data_obj._get_id(cr, uid, 'hr_recruitment', 'crm_case_form_view_meet1')
             id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
             if id1:
                 id1 = data_obj.browse(cr, uid, id1, context=context).res_id
@@ -320,12 +320,15 @@ class hr_applicant(base_stage, osv.Model):
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+            cate_id = self.pool.get('crm.case.categ').search(cr,uid,[('name','=','Interview')])
 
             context.update({
                 'default_applicant_id': opp.id,
+                'default_department_id': opp.department_id.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
+                'default_categ_id':cate_id and cate_id[0],
                 'default_name': opp.name
             })
             value = {
@@ -582,6 +585,7 @@ class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
     _columns = {
         'applicant_id': fields.many2one('hr.applicant','Applicant Meeting'),
+        'department_id': fields.many2one('hr.department', 'Department',groups="base.group_hr_user,base.group_hr_manager"),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
