@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+<!--
+    <data noupdate="1">
+-->
         <!-- Demo Leads -->
         <record id="crm_case_itisatelesalescampaign0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead1"/>
@@ -21,7 +24,6 @@
             <field eval="'Plan to Attend a Training'" name="name"/>
             <field eval="'0033 769 703-274'" name="phone"/>
         </record>
-
         <record id="crm_case_electonicgoodsdealer0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead7"/>
             <field eval="'4'" name="priority"/>
@@ -76,7 +78,6 @@
             <field eval="'(514) 698-4118'" name="phone"/>
             <field eval="'hmc@thgascompany.com'" name="email_from"/>
         </record>
-
         <record id="crm_case_itdeveloper0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead4"/>
             <field eval="'3'" name="priority"/>
@@ -96,7 +97,6 @@
             <field eval="'(855) 924-4364'" name="phone"/>
             <field eval="'helle@stonageit.be'" name="email_from"/>
         </record>
-        
         <record id="crm_case_mgroperations0" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead3"/>
@@ -209,7 +209,15 @@
 
         <!--        Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="case_cancel"
-            eval="[ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'), ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')], {'install_mode': True}"
+            eval="[ ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'),
+                    ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')],
+                  {'install_mode': True}"
+        />
+        <!--        Call Function to set the leads as Unread -->
+        <function model="crm.lead" name="message_mark_as_unread"
+            eval="[ ref('crm_case_imported_contact0'), ref('crm_case_employee0'),
+                    ref('crm_case_business_card0'), ref('crm_case_webvisitor0')],
+                  {'install_mode': True}"
         />
 
         <!-- Demo Opportunities -->
