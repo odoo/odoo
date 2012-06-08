@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="//page[@name='information']/group/group[@name='right_column']/field[@name='advantages']" position="after">
+                 <xpath expr="//page[@name='information']/group/group[@name='right_column']" position="before">
                     <field name="travel_reimbursement_amount"/>
                     <field name="car_company_amount"/>
                     <field name="misc_onss_deduction"/>
