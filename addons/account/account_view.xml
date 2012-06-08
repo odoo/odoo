@@ -2356,18 +2356,9 @@
                 <form position="attributes">
                   <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <separator string="title" position="attributes">
-                <attribute name="string">Generate Your Chart of Accounts from a Chart Template</attribute>
-                  </separator>
-                  <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
-                    <attribute name="width">150</attribute>
-                  </xpath>
-                  <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                          <attribute name='rowspan'>15</attribute>
-                          <attribute name='string'></attribute>
-                  </xpath>
                 <group string="res_config_contents" position="replace">
+                	<label string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" width="150"/>
+                	<separator string="Generate Your Chart of Accounts from a Chart Template"/>
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     <field name="code_digits" groups="account.group_account_user"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
