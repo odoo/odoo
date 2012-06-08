@@ -50,7 +50,12 @@
             <field name="view_id" ref="board_account_form"/>
         </record>
 
-        <menuitem action="open_board_account" icon="terp-graph" id="menu_board_account" parent="base.menu_reporting_dashboard" groups="group_account_user,group_account_manager" sequence="35"/>
+        <menuitem id="menu_board_account"
+                  action="open_board_account" 
+                  icon="terp-graph"  
+                  parent="base.menu_reporting_dashboard" 
+                  groups="group_account_user,group_account_manager" 
+                  sequence="45"/>
 
     </data>
 </openerp>
