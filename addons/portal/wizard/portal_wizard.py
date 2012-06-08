@@ -105,7 +105,6 @@ class wizard(osv.osv_memory):
                 'lang': address.parent_id and address.parent_id.lang or 'en_US',
                 'partner_id': address.parent_id and address.parent_id.id,
                 'has_portal_user':has_portal,
-                'portal_id': context.get('portal_id', False)
             }
         
         user_ids = []
@@ -125,6 +124,14 @@ class wizard(osv.osv_memory):
     _defaults = {
         'user_ids': _default_user_ids
     }
+
+    def get_all_portal_user(self, cr, uid, context):
+        portal_obj = self.pool.get('res.portal')
+        all_portals = portal_obj.browse(cr, ROOT_UID, portal_obj.search(cr, ROOT_UID, []))
+        all_portal_user = [p.group_id.users for p in all_portals]
+        for portal_user_id in all_portal_user:
+            all_portal_user_ids = [all_user.id for all_user in portal_user_id]
+        return all_portal_user_ids
 
     def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
         if not portal_id:
@@ -199,9 +206,16 @@ class wizard(osv.osv_memory):
             if add_users and add_users not in portal_user :
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
-            if removeuser:
+
+            for data in removeuser:
+                #delete the user relationship from portal.
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(3, data) for data in removeuser]}, context0)
+                    {'users': [(3, data)]}, context0)
+                
+                #unlink res user when portal user not in any portal.
+                if data not in self.get_all_portal_user(cr, uid, context=context):
+                    user_obj.unlink(cr, ROOT_UID, [data])
+
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
