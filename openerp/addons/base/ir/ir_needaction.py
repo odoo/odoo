@@ -129,13 +129,20 @@ class ir_needaction_mixin(osv.osv):
         for id in ids:
             res[id] = uid in needaction_user_ids[id]
         return res
+
+    def search_needaction_pending(self, cr, uid, self_again, field_name, criterion, context=None):
+        ids = self.needaction_get_record_ids(
+            cr, uid, uid, limit=False, context=context)
+        return [('id', 'in', ids)]
     
     _columns = {
-        'needaction_pending': fields.function(get_needaction_pending, type='boolean',
-                        string='Need action pending',
-                        help='If True, this field states that users have to perform an action. \
-                                This field comes from the needaction mechanism. Please refer \
-                                to the ir.needaction_mixin class.'),
+        'needaction_pending': fields.function(
+            get_needaction_pending, type='boolean',
+            fnct_search=search_needaction_pending,
+            string='Need action pending',
+            help="If True, this field states that users have to perform an action." \
+                 " This field comes from the needaction mechanism." \
+                 " Please refer to the ir.needaction_mixin class."),
     }
     
     #------------------------------------------------------
