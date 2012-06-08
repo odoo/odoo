@@ -28,7 +28,7 @@ class mrp_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_planning': fields.boolean('Master Manufacturing Order Schedule',
+        'module_stock_planning': fields.boolean('Master Production Schedule',
             help ="""This allows to create a manual procurement plan apart of the normal MRP scheduling,
                 which works automatically based on minimum stock rules.
                 This installs the module stock_planning."""),

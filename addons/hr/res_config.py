@@ -46,4 +46,27 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_payroll."""),
     }
 
+    def onchange_hr_timesheet(self, cr, uid, ids, timesheet, context=None):
+        if timesheet:
+            vals =  {'value': {
+                'module_hr_timesheet': timesheet,
+                'module_hr_attendance': timesheet,
+            }}
+        if timesheet == False:
+            vals =  {'value': {
+            'module_hr_timesheet': timesheet,
+        }}
+        return vals
+    
+    def onchange_hr_attendance(self, cr, uid, ids, attendance, context=None):
+        if attendance:
+            vals =  {'value': {
+                'module_hr_attendance': attendance,
+            }}
+        if attendance == False:
+            vals =  {'value': {
+            'module_hr_attendance': attendance,
+            'module_hr_timesheet': attendance,
+        }}
+        return vals
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
