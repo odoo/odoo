@@ -54,8 +54,7 @@ openerp.web.list_editable = function (instance) {
             // view' @editable is handled separately as we have not yet
             // fetched and processed the view at this point.
             this.options.editable = (
-                    (force && "bottom")
-                    || this.defaults.editable);
+                    ! this.options.read_only && ((force && "bottom") || this.defaults.editable));
         },
         /**
          * Replace do_search to handle editability process
@@ -79,7 +78,7 @@ openerp.web.list_editable = function (instance) {
         },
         on_loaded: function (data, grouped) {
             // tree/@editable takes priority on everything else if present.
-            this.options.editable = data.arch.attrs.editable || this.options.editable;
+            this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             return this._super(data, grouped);
         },
         /**

@@ -21,6 +21,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         'action_buttons': true,
+        // if true, the view can't be editable, ignoring the view's and the context's
+        // instructions
+        'read_only': false,
     },
     /**
      * Core class for list-type displays.
@@ -339,6 +342,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_items('other', [
+                { label: _t("Import"), callback: this.on_sidebar_import },
+                { label: _t("Export"), callback: this.on_sidebar_export },
                 { label: _t('Delete'), callback: this.do_delete_selected },
             ]);
             this.sidebar.add_toolbar(this.fields_view.toolbar);

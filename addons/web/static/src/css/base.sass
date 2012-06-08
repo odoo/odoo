@@ -1287,7 +1287,7 @@ $colour4: #8a89ba
             font-weight: bold 
             color: #b33630
     .oe_form_readonly
-        header.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
+        button.oe_form_button_hi
             color: white
             background: #DC5F59
             background: -moz-linear-gradient(#DC5F59, #B33630)
@@ -1296,7 +1296,7 @@ $colour4: #8a89ba
             -moz-box-shadow: none
             -webkit-box-shadow: none
             -box-shadow: none
-        header.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
+        button.oe_form_button_hi:hover
             background: #DF6B66
             background: -moz-linear-gradient( #DF6B66, #BF3A33)
             background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
@@ -1321,12 +1321,13 @@ $colour4: #8a89ba
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     // }}}
     // FormView.layout {{{
+    .oe_form_invisible
+        display: none
     .oe_form_editable .oe_form_editable_hidden
         display: none
-    .oe_form_readonly .oe_form_readonly_hidden
-        display: none
-    .oe_form_readonly .oe_form_field:empty
-        display: none
+    .oe_form_readonly
+        .oe_form_readonly_hidden, .oe_form_field:empty
+            display: none
     .oe_form
         .oe_form_field_text
             width: 100%
@@ -1376,8 +1377,7 @@ $colour4: #8a89ba
             resize: vertical
         .oe_form_field
             width: 100%
-            // Using !important because jQuery's $.fn.show() will set display to 'inline' for spans
-            display: inline-block !important
+            display: inline-block
             padding: 2px 2px 2px 0px
             line-height: 18px
             input
