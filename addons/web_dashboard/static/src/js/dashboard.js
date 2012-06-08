@@ -232,14 +232,13 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     },
     renderElement: function() {
         var self = this;
-        //to Check dash contains any action if not then show the action help
-        var array= [];
-        _.each(this.node.children, function(column, column_index) {
-            array.push(_.include(_.pluck(column.children,"tag"),"action"));
+        var check = _.detect(this.node.children, function(column, column_index) {
+            return _.detect(column.children,function(element){
+                return element.tag === "action"? element: false;
+            });
         });
-        if (! _.include(array,true)){
+        if (!check)
             return self.no_result();
-        }
         // We should start with three columns available
         for (var i = this.node.children.length; i < 3; i++) {
             this.node.children.push({
@@ -252,14 +251,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.$element.html(rendered);
     },
     no_result: function () {
-        if (!this.view.options.action
-            || !this.view.options.action.help) {
-                return;
-        }
         this.$element.prepend(
             $('<div class="oe_view_nocontent">')
                 .append($('<img>', { src: '/web_dashboard/static/src/img/view_todo_arrow.png' }))
-                .append($('<div>').html(this.view.options.action.help))
+                .append($('<div>').html(this.view.options.action.help || " "))
         );
     },
     do_reload: function() {
