@@ -34,10 +34,6 @@ class analytic_account(report_sxw.rml_parse):
         res.insert(0,('Fix Price Invoices',analytic_account.amount_max,analytic_account.ca_invoiced,analytic_account.remaining_ca,analytic_account.ca_to_invoice))
         res.insert(1,('Invoice On Timesheets',analytic_account.hours_qtt_est,analytic_account.hours_qtt_invoiced,analytic_account.remaining_hours,analytic_account.hours_qtt_non_invoiced))
         return res
-        #return res.append(
-        #    ('Fix Price Invoices',analytic_account.amount_max,analytic_account.ca_invoiced,analytic_account.remaining_ca,analytic_account.ca_to_invoice),
-        #    ('Invoice On Timesheets',analytic_account.hours_qtt_est,analytic_account.hours_qtt_invoiced,analytic_account.remaining_hours,analytic_account.hours_qtt_non_invoiced)
-        #)
 
 report_sxw.report_sxw(
     'report.analytic.account',
