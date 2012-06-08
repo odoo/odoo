@@ -139,6 +139,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     options_bar: function (data) {
+        var min = _(data.data).chain()
+            .map(function (record) {
+                return _.min(record.data, function (item) {
+                    return item[1];
+                })[1];
+            }).min().value();
         return {
             bars : {
                 show : true,
@@ -153,11 +159,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 outline : "sw",
             },
             yaxis : {
-                ticks: this.orientation ? data.ticks : false
+                ticks: this.orientation ? data.ticks : false,
+                min: !this.orientation ? (min < 0 ? min : 0) : null
             },
             xaxis : {
                 labelsAngle: 45,
-                ticks: this.orientation ? false : data.ticks
+                ticks: this.orientation ? false : data.ticks,
+                min: this.orientation ? (min < 0 ? min : 0) : null
             }
         };
     },
