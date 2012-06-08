@@ -669,32 +669,36 @@ instance.web.Menu =  instance.web.Widget.extend({
      *
      * @param {Number} id the menu_id
      */
-    menu_click: function(id) {
-        if (id) {
-            this.do_hide_more();
-            // find back the menuitem in dom to get the action
-            var $item = this.$element.find('a[data-menu=' + id + ']');
-            if (!$item.length) {
-                $item = this.$secondary_menus.find('a[data-menu=' + id + ']');
-            }
-            var action_id = $item.data('action-id');
-            // If first level menu doesnt have action trigger first leaf
-            if (!action_id) {
-                if(this.$element.has($item).length) {
-                    $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + id + ']');
-                    $items = $sub_menu.find('a[data-action-id]').filter('[data-action-id!=""]');
-                    if($items.length) {
-                        action_id = $items.data('action-id');
-                        id = $items.data('menu');
-                    }
+    menu_click: function(id, needaction) {
+        if (!id) { return; }
+
+        this.do_hide_more();
+        // find back the menuitem in dom to get the action
+        var $item = this.$element.find('a[data-menu=' + id + ']');
+        if (!$item.length) {
+            $item = this.$secondary_menus.find('a[data-menu=' + id + ']');
+        }
+        var action_id = $item.data('action-id');
+        // If first level menu doesnt have action trigger first leaf
+        if (!action_id) {
+            if(this.$element.has($item).length) {
+                var $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + id + ']');
+                var $items = $sub_menu.find('a[data-action-id]').filter('[data-action-id!=""]');
+                if($items.length) {
+                    action_id = $items.data('action-id');
+                    id = $items.data('menu');
                 }
             }
-            this.open_menu(id);
-            this.current_menu = id;
-            this.session.active_id = id;
-            if (action_id) {
-                this.trigger('menu_click', action_id, id, $item);
-            }
+        }
+        this.open_menu(id);
+        this.current_menu = id;
+        this.session.active_id = id;
+        if (action_id) {
+            this.trigger('menu_click', {
+                action_id: action_id,
+                needaction: needaction,
+                id: id
+            }, $item);
         }
     },
     /**
@@ -703,7 +707,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Event} ev the jquery event
      */
     on_menu_click: function(ev) {
-        this.menu_click($(ev.currentTarget).data('menu'));
+        var needaction = !!$(ev.target).filter('div.oe_menu_counter').length;
+        this.menu_click($(ev.currentTarget).data('menu'), needaction);
         ev.stopPropagation();
         return false;
     },
@@ -988,8 +993,16 @@ instance.web.WebClient = instance.web.Widget.extend({
         this._current_state = _.clone(state);
         $.bbq.pushState(url);
     },
-    on_menu_action: function(action) {
-        this.action_manager.do_action(action);
+    on_menu_action: function(options) {
+        var self = this;
+        this.rpc("/web/action/load", { action_id: options.action_id })
+            .then(function (result) {
+                var action = result.result;
+                if (options.needaction) {
+                    action.context.search_default_needaction_pending = true;
+                }
+                self.action_manager.do_action(action);
+            });
     },
     do_action: function(action) {
         var self = this;
