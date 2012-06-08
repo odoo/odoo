@@ -385,6 +385,10 @@
                     <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" />
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" />
                     <button name="case_cancel" string="Cancel" states="draft" type="object" />
+                    <button name="message_mark_as_unread" string="Mark Unread" type="object"
+                            attrs="{'invisible':[('message_thread_read', '==', False)]}"/>
+                    <button name="message_mark_as_read" string="Mark Read" type="object"
+                            attrs="{'invisible':[('message_thread_read', '==', True)]}"/>
                     <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet>
@@ -399,6 +403,9 @@
                     <div class="oe_form_title">
                         <label for="name" class="oe_form_readonly_hidden"/>
                         <h1><field name="name"/></h1>
+                        <newline/>
+                        <field name="message_thread_read"/>
+                        <newline/>
 
                         <label for="planned_revenue" class="oe_form_readonly_hidden"/>
                         <h2>
