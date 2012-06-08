@@ -12,17 +12,9 @@
               <form position="attributes">
                 <attribute name="string">Specify Your Terminology</attribute>
               </form>
-            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
-                  <attribute name="string">Specify Your Terminology</attribute>
-            </xpath>
-            <xpath expr="//label[@string='description']" position="attributes">
-              <attribute name="string">You can use this wizard to change the terminologies for customers in the whole application.</attribute>
-            </xpath>
-            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                  <attribute name="string"/>
-                 <attribute name="rowspan">12</attribute>
-            </xpath>
              <group string="res_config_contents" position="replace">
+             	<label string="You can use this wizard to change the terminologies for customers in the whole application."/>
+                	<separator string="Specify Your Terminology"/>
                     <group colspan="4">
                         <field colspan="4" name="partner"/>
                   </group>
