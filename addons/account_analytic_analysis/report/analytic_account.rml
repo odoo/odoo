@@ -178,7 +178,6 @@
     <images/>
   </stylesheet>
   <story>
-    <section>
       <para style="terp_header_Centre">Analytic Account</para>
       <para style="terp_header_Centre">[[repeatIn(objects,'account')]]</para>
       <para style="terp_header_Centre">
@@ -304,76 +303,28 @@
           </td>
         </tr>
       </blockTable>
+      <section>
+        <para style="terp_default_1">[[repeatIn(get_lines(account),'line')]]</para>
       <blockTable colWidths="121.0,86.0,85.0,87.0,102.0" style="Table2">
         <tr>
           <td>
-            <para style="terp_default_8">Fix Price Invoices</para>
+            <para style="terp_default_8">[[ line[0] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.amount_max) ]]</para>
+            <para style="terp_default_Centre_8">[[ formatLang(line[1]) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.ca_invoiced) ]]</para>
+            <para style="terp_default_Centre_8">[[ formatLang(line[2]) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.remaining_ca) ]]</para>
+            <para style="terp_default_Centre_8">[[ formatLang(line[3]) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.ca_to_invoice) ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_8">Invoice on Timesheet</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.quantity_max) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.hours_qtt_invoiced) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.remaining_hours) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[ formatLang(account.hours_qtt_non_invoiced) ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_8">Charge Expenses</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[formatLang(account.expense_max) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[formatLang(account.expense_invoiced) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[formatLang(account.expense_max) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_8">[[formatLang(account.expense_to_invoice) ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_Centre_9_Bold">Total</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_9_Bold">[[ formatLang(account.est_total) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_9_Bold">[[ formatLang(account.invoiced_total) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_9_Bold">[[ formatLang(account.remaining_total) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_9_Bold">[[ formatLang(account.toinvoice_total) ]]</para>
+            <para style="terp_default_Centre_8">[[ formatLang(line[4]) ]]</para>
           </td>
         </tr>
       </blockTable>
+      </section>
       <para style="Standard">
         <font color="white"> </font>
       </para>
@@ -412,7 +363,6 @@
       <para style="Standard">
         <font color="white"> </font>
       </para>
-    </section>
   </story>
 </document>
 

@@ -336,7 +336,7 @@ class account_analytic_account(osv.osv):
     def _get_total_estimation(self, account):
         tot_est = 0.0
         if account.fix_price_invoices:
-            total_est += account.amount_max 
+            tot_est += account.amount_max 
         if account.invoice_on_timesheets:
             tot_est += account.hours_qtt_est
         return tot_est

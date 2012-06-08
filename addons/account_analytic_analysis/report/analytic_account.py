@@ -27,9 +27,20 @@ class analytic_account(report_sxw.rml_parse):
         super(analytic_account, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
+            'get_lines': self.get_lines,
         })
+    def get_lines(self, analytic_account):
+        res = []
+        res.insert(0,('Fix Price Invoices',analytic_account.amount_max,analytic_account.ca_invoiced,analytic_account.remaining_ca,analytic_account.ca_to_invoice))
+        res.insert(1,('Invoice On Timesheets',analytic_account.hours_qtt_est,analytic_account.hours_qtt_invoiced,analytic_account.remaining_hours,analytic_account.hours_qtt_non_invoiced))
+        return res
+        #return res.append(
+        #    ('Fix Price Invoices',analytic_account.amount_max,analytic_account.ca_invoiced,analytic_account.remaining_ca,analytic_account.ca_to_invoice),
+        #    ('Invoice On Timesheets',analytic_account.hours_qtt_est,analytic_account.hours_qtt_invoiced,analytic_account.remaining_hours,analytic_account.hours_qtt_non_invoiced)
+        #)
+
 report_sxw.report_sxw(
-    'report.analytic_account',
+    'report.analytic.account',
     'account.analytic.account',
     'addons/account_analytic_analysis/report/analytic_account.rml',
     parser=analytic_account
