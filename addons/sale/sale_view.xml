@@ -97,42 +97,45 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="order_confirm" states="draft" string="Confirm Order"/>
-                    <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
-                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
-                    <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
-                    <button name="ship_recreate" states="shipping_except" string="Recreate Packing"/>
-                    <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                    <button name="%(report_sale_order)d" string="Print Order" type="action" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
-                    <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
-                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                    <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
-                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" states="draft"/>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="draft,manual"/>
-                    <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
-                    <button name="cancel" states="draft" string="Cancel Order"/>
-                    <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <header>
+                        <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
+                        <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
+                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
+                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
+                        <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_form_button_hi"/>
+                        <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
+                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
+                        <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_form_button_hi"/>
+                        <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
+                        <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
+                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_form_button_hi" type="object"/>
+                        <button name="action_view_invoice" string="Open Invoice" type="object" 
+                        attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
+                        <button name="action_view_delivery" string="Open Delivery Order" type="object" 
+                        attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
+                        <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="manual"/>
+                        <button name="cancel" states="draft,sent" string="Cancel"/>
+                        <button name="action_cancel" states="manual,progress" string="Cancel" type="object"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel"/>
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                </header>
                 <sheet string="Sales Order" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <group col="4" colspan="4">
                             <field name="name"/>
                             <field name="date_order"/>
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
-                            <field name="client_order_ref"/>
                         </group>
                         <group col="2" colspan="2">
-                            <field name="invoiced"/>
-                            <field name="shipped"/>
+                            <field name="invoiced" invisible="True"/>
+                            <field name="shipped" invisible="True"/>
                         </group>
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
+                        <group col="4">
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" />
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
@@ -147,11 +150,11 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_id"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
-                                            <field name="name"/>
-
+                                            <field name="name" placeholder="Porduct/Service characteristics"/>
+ 
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                name="product_uom_qty"
+                                                name="product_uom_qty" string="Quantity"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                             <group colspan="1">
                                                 <field name="product_uom" nolabel="1" groups="product.group_uom"
@@ -208,22 +211,17 @@
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-
-                            <div class="oe_form_subtotal_footer" colspan="4">
-                                <div>
-                                    <field name="amount_untaxed" sum="Untaxed amount"/>
-                                </div>
-                                <div>
-                                    <field name="amount_tax"/>
-                                </div>
-                                <div class="oe_form_subtotal_footer_separator">
-                                    <field name="amount_total"/>
-                                </div>
-                            </div>
-                            <div class="oe_clear"/>
+                            <group colspan="3" col="4" name="bellow_the_lines_hook">
+                            </group>
+                            <group class="oe_form_subtotal_footer" colspan="1" col="2">
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
+                                <field name="amount_total" class="oe_form_subtotal_footer_separator"/>
+                            </group>
 
                             <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <field colspan="4" name="note" nolabel="1" placeholder="Our quotation is valid for 30 days..."/>
+                        </group>
                         </page>
                         <page string="Other Information">
                             <group colspan="2" col="2" name="logistics">
@@ -237,6 +235,7 @@
                                 <separator string="References" colspan="2"/>
                                 <field name="user_id"/>
                                 <field groups="base.group_no_one" name="origin"/>
+                                <field name="client_order_ref"/>
                             </group>
                             <group name="sale_pay" colspan="2" col="2">
                                 <separator string="Conditions" colspan="2"/>
@@ -269,7 +268,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_form_bottom">
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
             </field>
@@ -281,7 +280,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
+                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
@@ -347,6 +346,13 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help">
+                Click here to create a new quotation.
+                &lt;p&gt;
+                The "Quotation" is the first step of the Sales flow.  Manage your sales from quotation to invoice.
+                &lt;p&gt;
+                You will be able to sell products (manage deliveries) as well as services (create projects).
+            </field>
         </record>
 
         <menuitem id="menu_sale_quotations"

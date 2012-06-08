@@ -476,10 +476,12 @@ openerp.mail = function(session) {
         // QWeb template to use when rendering the object
         template: 'RecordThread',
 
-        init: function() {
+       init: function() {
             this._super.apply(this, arguments);
             this.see_subscribers = true;
             this.thread = null;
+            this.params = this.get_definition_options();
+            this.params.thread_level = this.params.thread_level || 0;
             // datasets
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -520,12 +522,8 @@ openerp.mail = function(session) {
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.destroy();
-            // hack: for groups and users
-            if (this.view.model == 'mail.group') thread_level = 1;
-            if (this.view.model == 'res.users') thread_level = 1;
-            else thread_level = 0;
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
-                                                    'thread_level': thread_level, 'show_post_comment': true, 'limit': 15});
+                                                    'thread_level': this.params.thread_level, 'show_post_comment': true, 'limit': 15});
             var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
             return fetch_sub_done && thread_done;
         },

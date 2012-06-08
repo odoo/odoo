@@ -16,12 +16,6 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Expected hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-ok"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                	<button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" states="open,draft,close,cancel"
-                                	string="Burndown Chart" type="action" icon="gtk-print"/>
              	</tree>
             </field>
         </record>
@@ -114,8 +108,6 @@
                     <field name="progress" widget="progressbar"/>
                     <field name="effective_hours"  widget="float_time"/>
                     <field name="expected_hours"  widget="float_time"/>
-                	<button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
-                                	string="Burndown Chart" type="action" icon="gtk-print"/>
              	</tree>
             </field>
         </record>
