@@ -263,9 +263,9 @@
                     <field name="type"/>
                     <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
                            context="{'default_model_id':object_id}" />
-                    <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"    />
-                    <field name="report_id" attrs="{'required':[('type','=','report')]}" context="{'object_id':object_id}"  attrs="{ 'invisible':[('type','!=','report')]}" />
-                    <field name="report_directory_id" attrs="{'required':[('type','=','report')]}"  attrs="{ 'invisible':[('type','!=','report')]}"  />
+                    <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
+                    <field name="report_id" attrs="{'required':[('type','=','report')]}" context="{'object_id':object_id}">
+                    <field name="report_directory_id" attrs="{'required':[('type','=','report')]}"  attrs="{ 'invisible':[('type','!=','report')]}"/>
                 </group>
                 <separator string="Transitions"/>
                 <field name="from_ids" mode="tree,form" context="{'default_activity_to_id': active_id}">
