@@ -57,10 +57,7 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget {
-  font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
-  font-size: 13px
-}
+.ui-widget {   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:13px; }
 .ui-widget .ui-widget { font-size: 1em; }
 /*.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1em; }*/
 .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(images/ui-bg_glass_75_ffffff_1x400.png) 50% 50% repeat-x; color: #404040; }
@@ -487,11 +484,12 @@
 	margin-top: -3px;
 }
 .ui-menu .ui-menu-item {
-	margin:0 8px 0 0;
-	padding: 0 0 0 12px;
+	margin:0;
+	padding: 0;
 	zoom: 1;
 	float: left;
 	clear: left;
+	width: 100%;
 }
 .ui-menu .ui-menu-item a {
 	text-decoration:none;
@@ -503,8 +501,10 @@
 .ui-menu .ui-menu-item a.ui-state-hover,
 .ui-menu .ui-menu-item a.ui-state-active {
 	font-weight: normal;
-  background:#f0f0fa;
+  background:#0064CD;
+  color:#fff
 }
+
 
 /*
  * jQuery UI Button 1.8.16
