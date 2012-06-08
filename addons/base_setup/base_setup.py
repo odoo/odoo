@@ -105,7 +105,7 @@ class sale_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
     _columns = {
         'module_crm': fields.boolean('CRM'),
-        'module_plugin_thunderbird': fields.boolean('Thunderbird Plugin', readonly= False,
+        'module_plugin_thunderbird': fields.boolean('Thunderbird Plugin',
             help="""The plugin allows you archive email and its attachments to the selected
                 OpenERP objects. You can select a partner, or a lead and 
                 attach the selected mail as a .eml file in
