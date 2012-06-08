@@ -179,7 +179,7 @@ class wizard(osv.osv_memory):
             # determine existing users
             portal_user=[user.id for user in wiz.portal_id.group_id.users]
             add_users=[]
-            removeuser=[]
+            remove_users=[]
             new_users_data = []
             for u in wiz.user_ids:
                 login_cond = [('login', 'in', [u.user_email])]
@@ -189,7 +189,7 @@ class wizard(osv.osv_memory):
                 if existing_uids and existing_uids[0] not in portal_user or existing_uids and u.has_portal_user:
                     add_users.append(existing_uids[0])
                 if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
-                    removeuser.append(existing_uids[0])
+                    remove_users.append(existing_uids[0])
                 if u.user_email not in existing_logins:
                     new_users_data.append({
                             'name': u.name,
@@ -206,24 +206,21 @@ class wizard(osv.osv_memory):
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(0, 0, data)]}, context0)
                 
-                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', data['login'])])
+                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', data['login']),('partner_id','=', data['partner_id'])])
                 add_users.append(created_user[0])
-                    
-                    
+                
+            #add the user relationship in portal.        
             if add_users and add_users not in portal_user:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
 
             #delete the user relationship from portal.
-            if removeuser:
-                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(3, user_data) for user_data in removeuser]}, context0)
+            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                {'users': [(3, user_data) for user_data in remove_users]}, context0)
                 
             #unlink res user when portal user not in any portal.
             all_portal_user = self.get_all_portal_user(cr)
-            for data in removeuser:
-                if data not in all_portal_user:
-                    user_obj.unlink(cr, ROOT_UID, [data])
+            user_obj.unlink(cr, ROOT_UID, [remove_user for remove_user in remove_users if remove_user not in all_portal_user])
 
             data = {
                 'company': user.company_id.name,
