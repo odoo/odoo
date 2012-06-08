@@ -225,6 +225,8 @@ class account_analytic_account(osv.osv):
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
+        
         res = super(account_analytic_account, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         
         doc = etree.XML(res['arch'])
