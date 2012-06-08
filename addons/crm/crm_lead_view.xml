@@ -298,9 +298,10 @@
         <field name="arch" type="xml">
             <search string="Search Leads">
                 <filter icon="terp-mail-message-new"
-                    string="Inbox"
+                    string="Inbox" help="Unread messages"
                     name="needaction_pending"
                     domain="[('needaction_pending','=',True)]"/>
+                <separator orientation="vertical"/>
                 <filter icon="terp-check"
                     string="New"
                     name="new" help="New Leads"
@@ -309,7 +310,6 @@
                     string="Open"
                     name="open"
                     domain="[('state','=','open')]"/>
-
                 <separator orientation="vertical"/>
                 <filter icon="terp-go-today" string="Today"
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
@@ -548,15 +548,16 @@
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                 <filter icon="terp-mail-message-new"
-                    string="Inbox"
+                    string="Inbox" help="Unread messages"
                     name="needaction_pending"
                     domain="[('needaction_pending','=',True)]"/>
+                <separator orientation="vertical"/>
                 <filter icon="terp-check"
-                    string="New"  help="New Opportunities"
+                    string="New" help="New Opportunities"
                     name="new"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
-                    string="Open"  help="Open Opportunities"
+                    string="Open" help="Open Opportunities"
                     name="open"
                     domain="[('state','=','open')]"/>
                 <separator orientation="vertical"/>
