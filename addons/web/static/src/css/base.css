@@ -25,6 +25,20 @@
   position: relative;
 }
 
+.ui-widget {
+  font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+  font-size: 13px;
+}
+
+.ui-menu .ui-menu-item {
+  margin: 0 8px 0 0;
+  padding: 0 0 0 12px;
+  width: auto;
+}
+.ui-menu .ui-menu-item a.ui-state-active {
+  background: #f0f0fa;
+}
+
 .openerp {
   padding: 0;
   margin: 0;
@@ -103,6 +117,12 @@
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
+}
+.openerp img {
+  vertical-align: middle;
+}
+.openerp h4 {
+  margin: 4px 0;
 }
 .openerp .oe_i {
   font-family: "mnmliconsRegular" !important;
@@ -495,9 +515,9 @@
   width: 24px;
   height: 24px;
   margin: -2px 2px 0 0;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 .openerp .oe_topbar .oe_topbar_avatar {
   vertical-align: top;
@@ -845,96 +865,6 @@
 }
 .openerp .oe_application a:hover {
   text-decoration: underline;
-}
-.openerp .oe-view-manager-header {
-  border-top: 1px solid #cacaca;
-  border-bottom: 1px solid #cacaca;
-  background-color: #fcfcfc;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
-  background-image: -webkit-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -moz-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
-  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-  -box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-}
-.openerp .oe-view-manager-header h2 {
-  float: left;
-  font-size: 18px;
-  margin: 1px 0;
-}
-.openerp .oe-view-manager-header h2 a {
-  color: #8a89ba;
-}
-.openerp .oe-view-manager-header .buttons {
-  padding-right: 8px;
-}
-.openerp .oe-view-manager-header .buttons li {
-  float: left;
-  margin-right: 12px;
-}
-.openerp .oe-view-manager-header .filter {
-  vertical-align: top;
-}
-.openerp .oe-view-manager-header .filter li {
-  height: 24px;
-  line-height: 24px;
-  padding: 0 8px;
-}
-.openerp .oe-view-manager-header .header-row {
-  height: 26px;
-  line-height: 26px;
-  margin: 8px;
-  clear: both;
-  text-shadow: 0 1px 1px white;
-}
-.openerp .oe-view-manager-header .header-row .dropdown-toggle:after {
-  margin-top: 7px;
-  margin-left: 6px;
-  border-top-color: #404040;
-}
-.openerp .oe-view-manager-header .oe_vm_switch li {
-  padding-left: 1px;
-  text-align: center;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-}
-.openerp .oe-view-manager-header .pagination li {
-  height: 24px;
-  line-height: 24px;
-  padding: 0 8px;
-}
-.openerp .oe-view-manager-header .button-group {
-  display: inline-block;
-  border: 1px solid #ababab;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-.openerp .oe-view-manager-header .button-group li {
-  float: left;
-  border-right: 1px solid #ababab;
-}
-.openerp .oe-view-manager-header .button-group li:last-child {
-  border: none;
-}
-.openerp .oe-view-manager-header .button-group a {
-  color: #4c4c4c;
-}
-.openerp .oe-view-manager-header .button-group a:hover {
-  text-decoration: none;
-}
-.openerp .oe-view-manager-header .button-group .active {
-  width: 100%;
-  background: #999999;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 .openerp .oe_view_manager_header {
   width: 100%;
@@ -1485,14 +1415,12 @@
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened form {
   display: block;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete {
-  position: absolute;
-  left: 4px;
-  top: 3px;
-}
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .searchview_extended_delete_prop {
+  display: inline-block;
   width: 12px;
   height: 12px;
+  line-height: 12px;
+  padding: 1px;
   color: #8786b7;
   line-height: 8px;
   text-align: center;
@@ -1507,6 +1435,23 @@
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete {
+  display: none;
+  position: absolute;
+  bottom: 1px;
+  right: 4px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_private:hover .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_public:hover .oe_searchview_custom_delete {
+  display: inline-block;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_public:after {
+  content: ",";
+  font-family: "entypoRegular" !important;
+  font-size: 22px;
+  font-weight: 300 !important;
+  margin: 0 0 0 4px;
+  padding: 0;
 }
 .openerp .oe_view_nocontent > img {
   float: left;
@@ -2121,30 +2066,40 @@
 .openerp .oe-listview-content {
   width: 100%;
 }
+.openerp .oe-listview-content td:first-child, .openerp .oe-listview-content th:first-child {
+  width: 17px;
+}
+.openerp .oe-listview-content td:first-child:after, .openerp .oe-listview-content th:first-child:after {
+  border-width: 0;
+}
 .openerp .oe-listview-content > thead {
   border-bottom: 2px solid #cacaca;
   background: #eeeeee;
   vertical-align: top;
 }
-.openerp .oe-listview-content > thead td, .openerp .oe-listview-content > thead th {
+.openerp .oe-listview-content > thead th {
+  position: relative;
+}
+.openerp .oe-listview-content td, .openerp .oe-listview-content th {
   padding: 3px 6px;
   line-height: 18px;
 }
-.openerp .oe-listview-content > thead th:after {
+.openerp .oe-listview-content th:after {
+  position: absolute;
+  right: 6px;
   content: "";
-  float: right;
   margin-top: 7px;
   border-width: 0 4px 4px;
   border-style: solid;
   border-color: black transparent;
   visibility: hidden;
 }
-.openerp .oe-listview-content > thead th.sortup:after {
+.openerp .oe-listview-content th.sortup:after {
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe-listview-content > thead th.sortdown:after {
+.openerp .oe-listview-content th.sortdown:after {
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
@@ -2242,6 +2197,27 @@
 .openerp.oe_tooltip .oe_tooltip_technical_title {
   font-weight: bold;
 }
+.openerp .oe_view_editor {
+  width: 100%;
+  border-collapse: collapse;
+  margin-left: -12px;
+  width: 100%;
+  background-color: white;
+  border-spacing: 0;
+}
+.openerp .oe_view_editor td {
+  text-align: center;
+  white-space: nowrap;
+  border: 1px solid #d8d8d8;
+  cursor: pointer;
+  font-size: 90%;
+}
+.openerp .oe_view_editor_field td {
+  border: 0px !important;
+}
+.openerp .oe_view_editor tr:hover {
+  background-color: #ecebf2;
+}
 .openerp .oe_layout_debugging .oe_form_group {
   outline: 2px dashed green;
 }
@@ -2281,28 +2257,6 @@
   width: 49%;
   float: right;
   color: #333333;
-}
-
-.openerp .oe_view_editor {
-  width: 100%;
-  border-collapse: collapse;
-  margin-left: -12px;
-  width: 100%;
-  background-color: white;
-  border-spacing: 0;
-}
-.openerp .oe_view_editor td {
-  text-align: center;
-  white-space: nowrap;
-  border: 1px solid #d8d8d8;
-  cursor: pointer;
-  font-size: 90%;
-}
-.openerp .oe_view_editor_field td {
-  border: 0px !important;
-}
-.openerp .oe_view_editor tr:hover {
-  background-color: #ecebf2;
 }
 
 .kitten-mode-activated {
