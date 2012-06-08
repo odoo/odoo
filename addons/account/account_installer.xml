@@ -10,21 +10,10 @@
                 <form position="attributes">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Chart of Accounts</attribute>
-                </separator>
-                
-				<xpath expr="//label[@string='description']" position="attributes">
-				   <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
-                </xpath>
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
                 </xpath>
-				<xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-				   <attribute name="rowspan">23</attribute>
-				   <attribute name="string"/>
-                </xpath>
-                <group colspan="8" position="inside">
+                <xpath expr="//separator[@string='title']" position="after">
                     <group colspan="4" width="600">
                             <field name="charts"/>
                             <group colspan="4" groups="account.group_account_user">
@@ -36,7 +25,11 @@
                                 <field name="period" colspan="4"/>
                             </group>
                         </group>
-                    </group>
+                    </xpath>
+                <separator string="title" position="attributes">
+                    <attribute name="string">Configure Your Chart of Accounts</attribute>
+                    <label string="The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default."/>
+                </separator>
                 </data>
             </field>
         </record>
