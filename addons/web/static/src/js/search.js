@@ -819,6 +819,9 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                 val);
         }
         return _.extend({}, domain, {own_values: {self: val}});
+    },
+    clear: function () {
+        this.$element.removeAttr('value');
     }
 });
 /**
@@ -835,9 +838,6 @@ openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends opene
     default_operator: 'ilike',
     get_value: function () {
         return this.$element.val();
-    },
-    clear: function () {
-        this.$element.removeAttr('value');
     }
 });
 openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends openerp.web.search.NumberField# */{
