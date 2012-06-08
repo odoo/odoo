@@ -105,7 +105,6 @@ class wizard(osv.osv_memory):
                 'lang': address.parent_id and address.parent_id.lang or 'en_US',
                 'partner_id': address.parent_id and address.parent_id.id,
                 'has_portal_user':has_portal,
-                'portal_id': context.get('portal_id', False)
             }
         
         user_ids = []
@@ -125,6 +124,15 @@ class wizard(osv.osv_memory):
     _defaults = {
         'user_ids': _default_user_ids
     }
+
+    def get_all_portal_user(self, cr):
+        all_portal_user_ids = []
+        portal_obj = self.pool.get('res.portal')
+        all_portals = portal_obj.browse(cr, ROOT_UID, portal_obj.search(cr, ROOT_UID, []))
+        all_portal_user = [p.group_id.users for p in all_portals]
+        for portal_user_id in all_portal_user:
+            all_portal_user_ids.extend([all_user.id for all_user in portal_user_id])
+        return all_portal_user_ids
 
     def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
         if not portal_id:
@@ -165,7 +173,7 @@ class wizard(osv.osv_memory):
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
                   ' to send emails.'))
-        
+
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
@@ -178,7 +186,7 @@ class wizard(osv.osv_memory):
                 existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
                 existing_logins = [user.login for user in existing_users]
-                if existing_uids and existing_uids[0] not in portal_user or u.has_portal_user:
+                if existing_uids and existing_uids[0] not in portal_user or existing_uids and u.has_portal_user:
                     add_users.append(existing_uids[0])
                 if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
                     removeuser.append(existing_uids[0])
@@ -193,15 +201,30 @@ class wizard(osv.osv_memory):
                             'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
                             'partner_id': u.partner_id and u.partner_id.id,
                         } )
-            if new_users_data:
+                    
+            for data in new_users_data:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(0, 0, data) for data in new_users_data]}, context0)
-            if add_users and add_users not in portal_user :
+                    {'users': [(0, 0, data)]}, context0)
+                
+                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', data['login'])])
+                add_users.append(created_user[0])
+                    
+                    
+            if add_users and add_users not in portal_user:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
+
+            #delete the user relationship from portal.
             if removeuser:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(3, data) for data in removeuser]}, context0)
+                    {'users': [(3, user_data) for user_data in removeuser]}, context0)
+                
+            #unlink res user when portal user not in any portal.
+            all_portal_user = self.get_all_portal_user(cr)
+            for data in removeuser:
+                if data not in all_portal_user:
+                    user_obj.unlink(cr, ROOT_UID, [data])
+
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
