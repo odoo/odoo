@@ -1511,18 +1511,27 @@ class Binary(openerpweb.Controller):
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"
 
+    # For most actions, the type attribute and the model name are the same, but
+    # there are exceptions. This dict is used to remap action type attributes
+    # to the "real" model name when they differ.
+    action_mapping = {
+        "ir.actions.act_url": "ir.actions.url",
+    }
+
     @openerpweb.jsonrequest
     def load(self, req, action_id, do_not_eval=False):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
-        action_type = Actions.read([action_id], ['type'], context)
-        if action_type:
+        base_action = Actions.read([action_id], ['type'], context)
+        if base_action:
             ctx = {}
-            if action_type[0]['type'] == 'ir.actions.report.xml':
+            action_type = base_action[0]['type']
+            if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
             ctx.update(context)
-            action = req.session.model(action_type[0]['type']).read([action_id], False, ctx)
+            action_model = self.action_mapping.get(action_type, action_type)
+            action = req.session.model(action_model).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0], do_not_eval)
         return {'result': value}
