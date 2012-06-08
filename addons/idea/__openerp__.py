@@ -35,7 +35,7 @@ The managers can obtain an easy view of best ideas from all the users.
 Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['base_tools'],
+    'depends': ['base_tools','mail'],
     'init_xml': [],
     'update_xml': [
         'security/idea_security.xml',
