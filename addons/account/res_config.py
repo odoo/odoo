@@ -111,8 +111,8 @@ class account_config_settings(osv.osv_memory):
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
-        'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
-        'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
+        'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax', help="Selected tax will be applied by default to Product's Sale Tax, while creating a new product"),
+        'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax', help="Selected tax will be applied by default to Product's Purchase Tax, while creating a new product"),
         'decimal_precision': fields.integer('Decimal Precision',
             help="""Set the decimal precision for rounding results in accounting."""),
     }

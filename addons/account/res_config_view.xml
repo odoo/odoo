@@ -21,9 +21,10 @@
                         <button string="Cancel" special="cancel"/>
                     </header>
                     <sheet layout="auto">
-                        <field name="has_default_company" invisible="1" />
+                        <separator string="Accounting Details of Company" colspan="4"/>
+                        <field name="has_default_company" invisible="1"/>
                         <field name="has_chart_of_accounts" invisible="1"/>
-                        <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" on_change="onchange_company_id(company_id)"
                             attrs="{'invisible': [('has_default_company', '=', True)]}"/>
                         <field name="expects_chart_of_accounts"/>
 

@@ -190,5 +190,13 @@ class account_config_settings(osv.osv_memory):
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sale orders."),
     }
+    
+    def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
+        res = {}
+        if module_sale_analytic_plans:
+            res['value'] = {'group_analytic_account_for_sales': True}
+        else:
+            res['value'] = {'group_analytic_account_for_sales': False}
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
