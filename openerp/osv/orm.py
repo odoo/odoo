@@ -1100,7 +1100,7 @@ class BaseModel(object):
                     if not model_data.search(cr, uid, [('name', '=', n)]):
                         break
                     postfix += 1
-                model_data.create(cr, uid, {
+                model_data.create(cr, SUPERUSER_ID, {
                     'name': n,
                     'model': self._name,
                     'res_id': r['id'],
