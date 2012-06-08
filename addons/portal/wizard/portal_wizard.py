@@ -125,7 +125,7 @@ class wizard(osv.osv_memory):
         'user_ids': _default_user_ids
     }
 
-    def get_all_portal_user(self, cr, uid, context):
+    def get_all_portal_user(self, cr):
         portal_obj = self.pool.get('res.portal')
         all_portals = portal_obj.browse(cr, ROOT_UID, portal_obj.search(cr, ROOT_UID, []))
         all_portal_user = [p.group_id.users for p in all_portals]
@@ -174,6 +174,7 @@ class wizard(osv.osv_memory):
                   ' to send emails.'))
         
         portal_obj = self.pool.get('res.portal')
+        all_portal_user = self.get_all_portal_user(cr)
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
             portal_user=[user.id for user in wiz.portal_id.group_id.users]
@@ -185,7 +186,7 @@ class wizard(osv.osv_memory):
                 existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
                 existing_logins = [user.login for user in existing_users]
-                if existing_uids and existing_uids[0] not in portal_user or u.has_portal_user:
+                if existing_uids and existing_uids[0] not in portal_user or existing_uids and u.has_portal_user:
                     add_users.append(existing_uids[0])
                 if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
                     removeuser.append(existing_uids[0])
@@ -213,7 +214,7 @@ class wizard(osv.osv_memory):
                     {'users': [(3, data)]}, context0)
                 
                 #unlink res user when portal user not in any portal.
-                if data not in self.get_all_portal_user(cr, uid, context=context):
+                if data not in all_portal_user:
                     user_obj.unlink(cr, ROOT_UID, [data])
 
             data = {
