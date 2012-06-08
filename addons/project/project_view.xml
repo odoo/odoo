@@ -479,9 +479,9 @@
                                             <a name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close"/>
                                         </div>
                                         <div class="oe_kanban_right">
-                                            <a name="set_kanban_state_blocked" string="Mark as Blocked" kanban_states="normal,done" type="object" icon="kanban-stop"/>
-                                            <a name="set_kanban_state_normal" string="Normal" kanban_states="blocked,done" type="object" icon="gtk-media-play"/>
-                                            <a name="set_kanban_state_done" string="Done" kanban_states="blocked,normal" type="object" icon="kanban-apply"/>
+                                            <a name="set_kanban_state_blocked" string="Mark as Blocked" attrs="{'invisible' : [('kanban_state', 'not in', ('normal', 'done'))]}" type="object" icon="kanban-stop"/>
+                                            <a name="set_kanban_state_normal" string="Normal" attrs="{'invisible' : [('kanban_state', 'not in', ('blocked', 'done'))]}" type="object" icon="gtk-media-play"/>
+                                            <a name="set_kanban_state_done" string="Done" attrs="{'invisible' : [('kanban_state', 'not in', ('blocked', 'normal'))]}" type="object" icon="kanban-apply"/>
                                         </div>
                                         <div class="oe_kanban_clear"/>
                                     </div>
