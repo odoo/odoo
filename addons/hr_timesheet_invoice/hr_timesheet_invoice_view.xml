@@ -41,9 +41,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@string="Invoicing"]' position='after'>
-                    <field name="to_invoice"/>
-                    <field name="invoice_id"/>
+                <xpath expr="//group[@string='Accounting']" position='after'>
+                    <group string="Invoicing">
+                        <field name="to_invoice"/>
+                        <field name="invoice_id"/>
+                    </group>
                 </xpath>
             </field>
         </record>
