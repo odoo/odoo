@@ -4,6 +4,22 @@ openerp.mail = function(session) {
     
     var mail = session.mail = {};
 
+    /**
+     * Global variables for the Chatter
+     */
+
+    /**
+     * mail_int_mapping: structure to keep a trace of internal links mapping
+     *      mail_int_mapping['model'] = {
+     *          'name_get': [[id,label], [id,label], ...]
+     *          'fetch_ids': [id, id, ...] } */
+    var mail_int_mapping = mail.chatter_internal_mapping = {};
+    
+    /**
+     * mail_msg_struct: structure to orrganize chatter messages
+     */
+    var mail_msg_struct = mail.chatter_message_structure = {}; // TODO: USE IT OR NOT :)
+
     /** 
      * Thread widget: this widget handles the display of a thread of
      * messages. The [thread_level] parameter sets the thread level number:
@@ -47,6 +63,7 @@ openerp.mail = function(session) {
             this.params.is_wall = this.params.is_wall || this.params.records || false;
             this.params.msg_more_limit = this.params.msg_more_limit || 150;
             this.params.limit = this.params.limit || 100;
+            this.params.limit = 3; // tmp for testing
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             // datasets and internal vars
@@ -63,8 +80,6 @@ openerp.mail = function(session) {
             this.display.show_hide = this.params.is_wall;
             this.display.show_reply_by_email = ! this.params.is_wall;
             this.display.show_more = (this.params.thread_level == 0);
-            // internal links mapping
-            this.intlinks_mapping = {};
         },
         
         start: function() {
@@ -333,8 +348,23 @@ openerp.mail = function(session) {
 
         /**
          *    CONTENT MANIPULATION
+         * 
+         * Regular expressions
+         * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
+         *   logins that are emails
+         *      1. '(void')
+         *      2. login@log.log
+         * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
+         *   for internal links to model ir.attachment, id=3, and with
+         *   optional label 'My Label'. Note that having a '|Label' is not
+         *   mandatory, because the regex should still be correct.
+         *      1. '(void)'
+         *      2. 'ir'
+         *      3. 'attachment'
+         *      4. '3'
+         *      5. 'My Label'
          */
-        
+
         /**
          * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
          * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
@@ -389,11 +419,13 @@ openerp.mail = function(session) {
             }
         },
         
+        /** Removes html tags, except b, em, br */
         do_clean_text: function (string) {
             var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /)\\s*&gt;', 'gi'), '<$1$2>');
             return html;
         },
         
+        /** Replaces line bracks by html line breaks (br) */
         do_text_nl2br: function (str, is_xhtml) {   
             var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
             return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
