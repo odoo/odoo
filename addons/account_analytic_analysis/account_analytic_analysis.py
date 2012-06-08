@@ -432,7 +432,7 @@ class account_analytic_account(osv.osv):
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
     }
 
-    def on_change_template(self, cr, uid, id, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
         if not template_id:
             return {}
         res = {'value':{}}
