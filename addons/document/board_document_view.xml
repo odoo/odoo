@@ -28,7 +28,7 @@
 
 
         <record model="ir.actions.act_window" id="open_board_document_manager">
-            <field name="name">Document Dashboard</field>
+            <field name="name">Knowledge Dashboard</field>
              <field name="res_model">board.board</field>
              <field name="view_type">form</field>
              <field name="view_mode">form</field>
@@ -36,13 +36,11 @@
          </record>
 
         
-         <menuitem
-                name="Knowledge Dashboard"
-                id="menu_reports_document"
-                parent="base.menu_reporting_dashboard"
-                sequence="45"
-                action="open_board_document_manager"
-                icon="terp-graph"/>
+         <menuitem id="menu_reports_document"
+                   parent="base.menu_reporting_dashboard"
+                   sequence="55"
+                   action="open_board_document_manager"
+                   icon="terp-graph"/>
 
      </data>
  </openerp>
