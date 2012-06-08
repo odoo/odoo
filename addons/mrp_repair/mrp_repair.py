@@ -230,10 +230,9 @@ class mrp_repair(osv.osv):
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
             if move.partner_id:
-                data['value']['partner_id'] = move.partner_id and move.partner_id.id
+                data['value']['partner_id'] = move.partner_id.id
             else:
                 data['value']['partner_id'] = False
-            data['value']['partner_id'] = move.partner_id and move.partner_id.id
             d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['partner_id'])
             data['value'].update(d['value'])
         return data
