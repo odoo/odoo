@@ -6,16 +6,16 @@
             <field name="model">account.partner.reconcile.process</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Reconciliation">
-                    <field name="progress" widget="progressbar" colspan="4"/>
-                    <field name="today_reconciled"/>
-                    <field name="to_reconcile"/>
-                    <newline/>
-                    <field name="next_partner_id" colspan="4"/>
-                    <newline/>
-                    <group colspan="4" col="4">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                <form string="Partner Reconciliation" version="7.0">
+                    <header>
                         <button name="next_partner" icon="terp-gtk-jump-to-ltr" type="object" string="Go to Next Partner" />
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <header>
+                    <group col="4">
+                        <field name="next_partner_id"/>
+                        <field name="progress" widget="progressbar" colspan="4"/>
+                        <field name="today_reconciled"/>
+                        <field name="to_reconcile"/>
                     </group>
                </form>
             </field>

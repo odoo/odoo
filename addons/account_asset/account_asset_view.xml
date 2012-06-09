@@ -10,7 +10,7 @@
         <field name="model">account.asset.category</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Asset category">
+            <form string="Asset category" version="7.0">
                 <group>
                     <group>
                         <field name="name"/>
@@ -79,7 +79,7 @@
         <field name="model">account.asset.asset</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Asset">
+            <form string="Asset" version="7.0">
                 <header>
                     <button name="validate" states="draft" string="Confirm Asset" type="object"/>
                     <button name="set_to_close" states="open" string="Set to Close" type="object"/>
@@ -225,7 +225,7 @@
         <field name="model">account.asset.history</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Asset History">
+            <form string="Asset History" version="7.0">
                 <group>
                     <group>
                         <field name="name"/>

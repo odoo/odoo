@@ -50,7 +50,7 @@
             <field name="model">account.invoice.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invoice Line">
+                <form string="Invoice Line" version="7.0">
                     <group col="4">
                         <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                         <field name="name"/>
@@ -94,7 +94,7 @@
             <field name="model">account.invoice.tax</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manual Invoice Taxes">
+                <form string="Manual Invoice Taxes" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>

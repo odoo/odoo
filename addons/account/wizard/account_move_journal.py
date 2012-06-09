@@ -107,20 +107,19 @@ class account_move_journal(osv.osv_memory):
             open_string = _("Open")
             view = """<?xml version="1.0" encoding="utf-8"?>
             <form string="Standard entries">
-                <separator string="%s" colspan="4"/>
-                <field name="target_move" />
-                <newline/>
+                <header>
+                    <button icon="terp-gtk-go-back-rtl" string="%s" name="action_open_window" default_focus="1" type="object"/>
+                    <button icon="gtk-cancel" special="cancel" string="%s"/>
+                </header>
+                <group string="%s" colspan="4">
+                    <field name="target_move" />
+                </group>
                 <group colspan="4" >
                     <label width="300" string="%s"/>
                     <newline/>
                     <label width="300" string="%s"/>
                 </group>
-                <group colspan="4" col="4">
-                    <label string ="" colspan="2"/>
-                    <button icon="gtk-cancel" special="cancel" string="%s"/>
-                    <button icon="terp-gtk-go-back-rtl" string="%s" name="action_open_window" default_focus="1" type="object"/>
-                </group>
-            </form>""" % (separator_string, journal_string, period_string, cancel_string, open_string)
+            </form>""" % (open_string, cancel_string, separator_string, journal_string, period_string)
     
             view = etree.fromstring(view.encode('utf8'))
             xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)

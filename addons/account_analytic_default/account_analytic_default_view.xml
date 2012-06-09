@@ -24,7 +24,7 @@
             <field name="model">account.analytic.default</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Analytic Defaults">
+                <form string="Analytic Defaults" version="7.0">
                     <group col="4">
                         <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                         <field name="sequence"/>

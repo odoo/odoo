@@ -55,7 +55,7 @@
             <field name="model">account.budget.post</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Budgetary Position">
+                <form string="Budgetary Position" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -79,11 +79,11 @@
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
                                     <field name="planned_amount" sum="Planned Amount"/>
-                                    <field name="practical_amount" select="1" sum="Practical Amount" />
+                                    <field name="practical_amount" sum="Practical Amount" />
                                     <field name="theoritical_amount" sum="Theoretical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines">
+                                <form string="Budget Lines" version="7.0">
                                     <group col="4">
                                         <field name="crossovered_budget_id"/>
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
@@ -91,7 +91,7 @@
                                         <field name="date_to"/>
                                         <field name="paid_date"/>
                                         <field name="planned_amount"/>
-                                        <field name="practical_amount" select="1"/>
+                                        <field name="practical_amount"/>
                                         <field name="theoritical_amount"/>
                                         <field name="percentage"/>
                                     </group>
@@ -108,19 +108,19 @@
             <field name="model">crossovered.budget</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button string="Confirm" name="confirm" states="draft" type="workflow" />
                     <button string="Approve" name="validate" states="confirm" type="workflow"/>
                     <button string="Done" name="done" states="validate" type="workflow"   />
                     <button name="draft" states="cancel" string="Reset to Draft" type="workflow"/>
                     <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
-                    <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Budget">
                     <group col="4">
-                            <field name="name" colspan="1" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="code" colspan="1" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="name" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="code" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="date_from" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -138,14 +138,14 @@
                                     <field name="theoritical_amount" sum="Theoretical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines">
+                                <form string="Budget Lines" version="7.0">
                                     <group col="4">
-                                        <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                                        <field name="general_budget_id" select="1"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="general_budget_id"/>
                                         <field name="date_from"/>
                                         <field name="date_to"/>
-                                        <field name="paid_date" select="1"/>
-                                        <field name="planned_amount" select="1"/>
+                                        <field name="paid_date"/>
+                                        <field name="planned_amount"/>
                                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                     </group>
                                 </form>
@@ -230,7 +230,7 @@
             <field name="model">crossovered.budget.lines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Budget Lines">
+                <form string="Budget Lines" version="7.0">
                     <group col="4">
                         <field name="crossovered_budget_id"/>
                         <field name="analytic_account_id"/>
@@ -288,7 +288,7 @@
                                     <field name="theoritical_amount" sum="Theoritical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines">
+                                <form string="Budget Lines" version="7.0">
                                     <group col="4">
                                         <field name="crossovered_budget_id"/>
                                         <field name="general_budget_id"/>
