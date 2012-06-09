@@ -37,14 +37,14 @@
             <field name="model">res.currency</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Currency">
+                <form string="Currency" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="rate"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
 
-                    <group col="3">
+                    <group>
                         <group string="Price Accuracy">
                             <field name="rounding"/>
                             <field name="accuracy"/>
@@ -88,8 +88,10 @@
             <field name="model">res.currency.rate.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Currency Rate Type">
-                    <field name="name"/>
+                <form string="Currency Rate Type" version="7.0">
+                    <group>
+                        <field name="name"/>
+                    </group>
                 </form>
             </field>
         </record>

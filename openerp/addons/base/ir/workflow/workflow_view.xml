@@ -14,7 +14,7 @@
       <field name="model">workflow</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="Workflow">
+          <form string="Workflow" version="7.0">
               <group col="4">
                   <field name="name"/>
                   <field name="osv"/>
@@ -92,7 +92,7 @@
       <field name="model">workflow.activity</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Activity">
+        <form string="Activity" version="7.0">
             <group>
                 <group>
                     <field name="name"/>
@@ -201,7 +201,7 @@
       <field name="model">workflow.transition</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Transition">
+        <form string="Transition" version="7.0">
             <group col="6">
                 <field name="act_from"/>
                 <field name="act_to"/>
@@ -262,7 +262,7 @@
       <field name="model">workflow.instance</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Workflow Instances">
+        <form string="Workflow Instances" version="7.0">
           <group col="4">
               <field name="wkf_id"/>
               <field name="res_id"/>
@@ -322,7 +322,7 @@
       <field name="model">workflow.workitem</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Workflow Workitems">
+        <form string="Workflow Workitems" version="7.0">
           <group col="4">
               <field name="wkf_id"/>
               <field name="act_id"/>

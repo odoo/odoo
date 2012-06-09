@@ -5,7 +5,7 @@
       <field name="model">res.config</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form>
+          <form version="7.0">
              <header>
                <button name="action_skip" icon="gtk-jump-to" special="cancel"
                        type="object" string="Cancel" colspan="1"/>
@@ -22,7 +22,7 @@
       <field name="model">ir.actions.configuration.wizard</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Next Configuration Step">
+        <form string="Next Configuration Step" version="7.0">
             <header>
                 <button name="action_next" icon="gtk-go-forward"
                         type="object" string="Continue"/>
@@ -37,7 +37,7 @@
       <field name="model">res.config.installer</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form>
+        <form version="7.0">
             <header>
                 <button name="action_skip" icon="gtk-jump-to" special="cancel"
                         type="object" string="Cancel" colspan="1"/>

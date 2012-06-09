@@ -7,11 +7,10 @@
             <field name="model">res.bank</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Bank">
-                    <group col="6">
-                        <field name="name" select="1"/>
-                        <field name="bic" select="1"/>
-                        <field name="active" select="2"/>
+                <form string="Bank" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="bic"/>
                     </group>
                     <group>
                         <group string="Address">
@@ -31,6 +30,7 @@
                             <field name="phone"/>
                             <field name="fax"/>
                             <field name="email" widget="email"/>
+                            <field name="active"/>
                         </group>
                     </group>
                 </form>
@@ -63,7 +63,7 @@
             <field name="model">res.partner.bank.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Bank Account Type">
+                <form string="Bank Account Type" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -79,8 +79,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Bank Account Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </tree>
             </field>
         </record>
@@ -90,7 +90,7 @@
             <field name="model">res.partner.bank</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Bank account">
+                <form string="Bank account" version="7.0">
                     <group col="4">
                         <field name="state"/>
                         <field name="acc_number"/>

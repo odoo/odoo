@@ -8,7 +8,7 @@
             <field name="model">ir.values</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Action Bindings">
+                <form string="Action Bindings" version="7.0">
                     <group>
                         <group string="Action Binding">
                             <field name="name"/>
@@ -31,7 +31,7 @@
             <field name="model">ir.values</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="User-defined Defaults">
+                <form string="User-defined Defaults" version="7.0">
                     <label for="name" class="oe_form_readonly_hidden"/>
                     <h1><field name="name"/></h1>
                     <group>
@@ -136,10 +136,10 @@
             <field name="model">ir.sequence</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sequences">
+                <form string="Sequences" version="7.0">
                     <group col="4">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
+                        <field name="name"/>
+                        <field name="code"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="active" groups="base.group_no_one"/>
                     </group>
@@ -205,7 +205,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -228,7 +228,7 @@
             <field name="model">ir.sequence.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sequence Type">
+                <form string="Sequence Type" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -255,8 +255,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </search>
             </field>
         </record>
@@ -280,7 +280,7 @@
             <field name="model">ir.actions.actions</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Action">
+                <form string="Action" version="7.0">
                     <group>
                         <field name="name"/>
                         <field name="type"/>
@@ -332,13 +332,13 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Report">
+                <form string="Report" version="7.0">
                     <group col="6">
-                        <field name="name" select="1"/>
-                        <field name="model" select="1"/>
+                        <field name="name"/>
+                        <field name="model"/>
                         <field name="usage"/>
 
-                        <field name="report_name" select="1"/>
+                        <field name="report_name"/>
                         <field name="report_type"/>
                         <field name="report_file"/>
                     </group>
@@ -436,12 +436,12 @@
             <field name="model">ir.actions.act_window</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Open a Window">
+                <form string="Open a Window" version="7.0">
                     <group col="6">
-                        <field name="name" select="1"/>
-                        <field name="res_model" select="1"/>
+                        <field name="name"/>
+                        <field name="res_model"/>
                         <field name="type" readonly="1"/>
-                        <field name="src_model" select="2"/>
+                        <field name="src_model"/>
                         <field name="usage"/>
                         <field name="target"/>
                     </group>
@@ -468,7 +468,7 @@
                             </group>
                             <group string="Views">
                                 <field colspan="2" name="view_ids" nolabel="1">
-                                    <form string="Views">
+                                    <form string="Views" version="7.0">
                                         <group>
                                             <field colspan="4" name="sequence"/>
                                             <field name="view_mode"/>
@@ -536,8 +536,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wizard">
-                    <field name="name" select="1"/>
-                    <field name="wiz_name" select="1"/>
+                    <field name="name"/>
+                    <field name="wiz_name"/>
                     <field name="multi"/>
                 </tree>
             </field>
@@ -548,7 +548,7 @@
             <field name="model">ir.actions.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wizards">
+                <form string="Wizards" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="type"/>
@@ -615,17 +615,19 @@
             <field name="model">ir.ui.view</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Views">
+                <form string="Views" version="7.0">
                     <group>
-                        <field name="name"/>
-                        <field name="type"/>
-                        <field name="model"/>
-                        <field name="priority"/>
-                    </group>
-                    <group>
-                        <field name="field_parent"/>
-                        <field name="inherit_id"/>
-                        <field name="xml_id"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="model"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="field_parent"/>
+                            <field name="inherit_id"/>
+                            <field name="xml_id"/>
+                        </group>
                     </group>
                     <field name="arch"/>
                 </form>
@@ -704,7 +706,7 @@
             <field name="model">ir.ui.view.custom</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Customized Views">
+                <form string="Customized Views" version="7.0">
                     <group col="4">
                         <field name="user_id"/>
                         <field name="ref_id"/>
@@ -739,13 +741,13 @@
             <field name="model">ir.attachment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Attachments">
+                <form string="Attachments" version="7.0">
                     <group col="4">
                         <field name="name" />
                         <field name="type"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                     <page string="Attachment">
                         <group>
                             <group attrs="{'invisible':[('type','=','url')]}" string="Data">
@@ -840,7 +842,7 @@
             <field name="model">ir.model</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Model Description">
+                <form string="Model Description" version="7.0">
                     <group col="6">
                         <field name="name"/>
                         <field name="model"/>
@@ -860,7 +862,7 @@
                                     <field name="select_level"/>
                                     <field name="state"/>
                                 </tree>
-                                <form string="Fields Description">
+                                <form string="Fields Description" version="7.0">
                                     <group col="4">
                                         <field name="name"/>
                                         <field name="state"/>
@@ -969,9 +971,9 @@
             <field name="model">ir.model.fields</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Fields">
+                <form string="Fields" version="7.0">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" />
+                        <field name="name" />
                         <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
                         <field name="field_description"/>
                         <field name="state"/>
@@ -1059,7 +1061,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="External Identifiers">
+                <form string="External Identifiers" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="module"/>
@@ -1153,9 +1155,9 @@
                         string="Untranslated"
                         domain="['|',('value', '=', False),('value','=','')]"/>
                     <separator orientation="vertical"/>
-                    <field name="lang" select="1"/>
-                    <field name="src" select="1"/>
-                    <field name="value" select="1"/>
+                    <field name="lang"/>
+                    <field name="src"/>
+                    <field name="value"/>
                 </search>
             </field>
         </record>
@@ -1165,7 +1167,7 @@
             <field name="model">ir.translation</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Translations">
+                <form string="Translations" version="7.0">
                     <group>
                         <group>
                             <field name="name"/>
@@ -1219,7 +1221,7 @@
             <field name="model">ir.ui.view_sc</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Shortcut">
+                <form string="Shortcut" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>
@@ -1257,7 +1259,7 @@
             <field name="model">ir.ui.menu</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Menu">
+                <form string="Menu" version="7.0">
                     <group>
                         <group>
                             <field name="name"/>
@@ -1337,7 +1339,7 @@
             <field name="model">ir.cron</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Scheduled Actions">
+                <form string="Scheduled Actions" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -1436,7 +1438,7 @@
             <field name="model">ir.model.access</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Access Controls">
+                <form string="Access Controls" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -1493,7 +1495,7 @@
             <field name="model">ir.rule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Record rules">
+                <form string="Record rules" version="7.0">
                     <group>
                         <group string="General">
                             <field colspan="4" name="name"/>
@@ -1590,7 +1592,7 @@
             <field name="model">ir.actions.server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Server Action">
+                <form string="Server Action" version="7.0">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -1642,7 +1644,7 @@
                                         <field name="type"/>
                                         <field name="value" colspan="4"/>
                                     </tree>
-                                    <form string="Field Mapping">
+                                    <form string="Field Mapping" version="7.0">
                                         <group col="4">
                                             <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
                                             <field name="type"/>
@@ -1742,7 +1744,7 @@
             <field name="name">Config Wizard Steps</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Config Wizard Steps">
+                <form string="Config Wizard Steps" version="7.0">
                     <group col="4">
                         <field name="action_id"/>
                         <field name="type"/>
@@ -1816,7 +1818,7 @@
             <field name="model">ir.actions.todo.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wizard Category">
+                <form string="Wizard Category" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>
@@ -1859,7 +1861,7 @@
             <field name="model">ir.mail_server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Outgoing Mail Servers">
+                <form string="Outgoing Mail Servers" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>

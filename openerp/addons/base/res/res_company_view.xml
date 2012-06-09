@@ -18,7 +18,7 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Company">
+                <form string="Company" version="7.0">
                   <sheet>
                     <div class="oe_right oe_form_avatar">
                         <field name="logo" nolabel="1" widget="image"/>
@@ -148,7 +148,7 @@
             <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <form string="Multi Company">
+                <form string="Multi Company" version="7.0">
                     <group col="6" colspan="4">
                         <field name="name" colspan="6"/>
                         <separator string="Matching" colspan="6"/>
@@ -171,10 +171,10 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
-                    <field name="company_dest_id" select="1" widget="selection"/>
-                    <field name="object_id" select="1"/>
+                    <field name="name"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="company_dest_id" widget="selection"/>
+                    <field name="object_id"/>
                 </search>
             </field>
         </record>

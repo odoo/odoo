@@ -7,7 +7,7 @@
             <field name="model">base.module.upgrade</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="System Update">
+                <form string="System Update" version="7.0">
                     <header>
                         <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
@@ -43,7 +43,7 @@
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Apply Scheduled Upgrades">
+                <form string="Apply Scheduled Upgrades" version="7.0">
                     <header>
                         <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
