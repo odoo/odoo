@@ -921,6 +921,11 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     set_fields_registry: function(fields_registry) {
         this.fields_registry = fields_registry;
     },
+    // Backward compatibility tools, current default version: v6.1
+    process_version: function() {
+        selector = 'form[version!="7.0"] page,form[version!="7.0"]';
+        this.$form.find(selector).add(this.$form.filter(selector)).wrapInner('<group col="4"/>');
+    },
     render_to: function($target) {
         var self = this;
         this.$target = $target;
@@ -929,6 +934,8 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         //       but one day, we will have to get rid of xml2json
         var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
+
+        this.process_version()
 
         this.fields_to_init = [];
         this.tags_to_init = [];
