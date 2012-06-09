@@ -12,42 +12,42 @@
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_receivable_tva_fr">
-		<field name="name">Taxes à recevoir</field>
+		<field name="name">Taxes payées</field>
 		<field name="parent_id" ref="vat_code_balance_net_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_receivable_tps_fr">
-		<field name="name">TPS à recevoir</field>
+		<field name="name">TPS payée</field>
 		<field name="parent_id" ref="vat_code_receivable_tva_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_receivable_tvp_fr">
-		<field name="name">TVP/TVQ à recevoir</field>
+		<field name="name">TVP/TVQ payée</field>
 		<field name="parent_id" ref="vat_code_receivable_tva_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_receivable_tvh_fr">
-		<field name="name">TVH à recevoir</field>
+		<field name="name">TVH payée</field>
 		<field name="parent_id" ref="vat_code_receivable_tva_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_payable_fr">
-		<field name="name">Taxes à payer</field>
+		<field name="name">Taxes reçues</field>
 		<field name="parent_id" ref="vat_code_balance_net_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_payable_tps_fr">
-		<field name="name">TPS à payer</field>
+		<field name="name">TPS reçue</field>
 		<field name="parent_id" ref="vat_code_payable_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_payable_tvp_fr">
-		<field name="name">TVP/TVQ à payer</field>
+		<field name="name">TVP/TVQ reçue</field>
 		<field name="parent_id" ref="vat_code_payable_fr"/>
 	</record>
 
 	<record model="account.tax.code.template" id="vat_code_payable_tvh_fr">
-		<field name="name">TVH à payer</field>
+		<field name="name">TVH reçue</field>
 		<field name="parent_id" ref="vat_code_payable_fr"/>
 	</record>
 
