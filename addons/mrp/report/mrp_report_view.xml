@@ -63,9 +63,11 @@
             <field name="model">report.mrp.inout</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock value variation" type="bar">
-                    <field name="date" select="1"/>
-                    <field name="value" select="1"/>
+                <form string="Stock value variation" version="7.0">
+                    <group col="4">
+                        <field name="date"/>
+                        <field name="value"/>
+                    </group>
                 </form>
             </field>
         </record>
