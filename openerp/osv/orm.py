@@ -2564,13 +2564,15 @@ class BaseModel(object):
 
         order = orderby or groupby
         data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
+        
         # the IDS of records that have groupby field value = False or '' should be sorted too
-        data_ids += filter(lambda x:x not in data_ids, alldata.keys())
+        data_ids += set(alldata.keys()).difference(data_ids)    
         data = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
-        # restore order of the search as read() uses the default _order (this is only for groups, so the size of data_read shoud be small):
-        data.sort(lambda x,y: cmp(data_ids.index(x['id']), data_ids.index(y['id'])))
+        # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
+        data_dict = dict((d['id'], d[groupby]) for d in data) 
+        result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
 
-        for d in data:
+        for d in result:
             if groupby:
                 d['__domain'] = [(groupby, '=', alldata[d['id']][groupby] or False)] + domain
                 if not isinstance(groupby_list, (str, unicode)):
@@ -2589,11 +2591,11 @@ class BaseModel(object):
             del d['id']
 
         if groupby and groupby in self._group_by_full:
-            data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
-                                                 aggregated_fields, data, read_group_order=order,
-                                                 context=context)
+            result = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
+                                                   aggregated_fields, result, read_group_order=order,
+                                                   context=context)
 
-        return data
+        return result
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
         """
