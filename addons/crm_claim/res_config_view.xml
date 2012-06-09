@@ -10,8 +10,11 @@
             <field name="priority" eval="12"/>       <!-- to put fetchmail_lead before fetchmail_claim -->
             <field name="arch" type="xml">
                 <group name="config_fetchmail" position="after">
+                   <newline/>
                     <field name="fetchmail_claim"/>
-                    <button colspan="2" type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-execute"/>
+                    <group attrs="{'invisible': [('fetchmail_claim','=',False)]}">
+                        <button colspan="2" type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-execute"/>
+                    </group>
                 </group>
             </field>
         </record>

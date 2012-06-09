@@ -22,29 +22,30 @@
 from osv import fields
 from osv import osv
 import addons
-
 import base64
 
 class outlook_installer(osv.osv_memory):
     _name = 'outlook.installer'
     _inherit = 'res.config.installer'
-
     _columns = {
         'name':fields.char('Outlook Plug-in 32bits', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
         'name2':fields.char('Outlook Plug-in 64bits', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
         'description':fields.text('Description', readonly=True)
     }
-
-    _defaults = {
-        'name' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi',
-        'name2' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi',
-        'description' : """
-Click on icon next to the link above to download the installer either for 32 or 64 bits and execute it.
-
-System requirements:
-    1.  MS Outlook 2005 or above.
-    2.  MS .Net Framework 3.5 or above.
-"""
-        }
-
+    
+    def default_get(self, cr, uid, fields, context=None):
+        res = {}
+        plugin_32bit_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')  + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi'
+        plugin_64bit_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')  + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi'
+        description = """
+            Click on icon next to the link above to download the installer either for 32 or 64 bits and execute it.
+            
+            System requirements:
+                1.  MS Outlook 2005 or above.
+                2.  MS .Net Framework 3.5 or above.
+            """
+        res['name'] = plugin_32bit_url
+        res['name2'] = plugin_64bit_url
+        res['description'] = description
+        return res
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

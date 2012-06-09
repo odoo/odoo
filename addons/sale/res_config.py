@@ -27,7 +27,7 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_invoice_so_lines': fields.boolean('Based on Sales Orders',
+        'group_invoice_so_lines': fields.boolean('Based on Sale Orders',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
         'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
@@ -103,7 +103,16 @@ class sale_configuration(osv.osv_memory):
         'module_project': fields.boolean("Project"),
         'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
     }
-
+    def _check_decimal(self, cr, uid, ids, context=None):
+        for decimal in self.browse(cr, uid, ids, context=context):
+            if decimal.decimal_precision > 20:
+                return False
+        return True
+    
+    _constraints = [
+        (_check_decimal, 'Digits must be between 0 to 20 ', ['decimal_precision']),
+    ]
+    
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
