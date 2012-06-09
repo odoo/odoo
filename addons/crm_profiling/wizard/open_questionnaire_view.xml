@@ -8,13 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Questionnaires">
-                    <field name="questionnaire_id" required="1"/>
-                    <newline/>
-                    <separator string="" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <group col="2" colspan="2"/>
-                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
+                    <header>
                         <button name="build_form" string="Open Questionnaire" icon="terp-camera_test" type="object"/>
+                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
+                    </header>
+                    <group>
+                        <field name="questionnaire_id"/>
                     </group>
                 </form>
             </field>
