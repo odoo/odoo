@@ -63,7 +63,7 @@
             <field name="type">form</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form layout="manual" version="7.0">
                 <header>
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
@@ -112,7 +112,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Allocation Request">
+                <form string="Allocation Request" version="7.0">
                 <header>
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
@@ -178,7 +178,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Leaves Management">
+                <form string="Leaves Management" version="7.0">
                     <header>
                         <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
@@ -369,7 +369,7 @@
             <field name="model">hr.holidays.status</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Leave Type">
+                <form string="Leave Type" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="color_name"/>

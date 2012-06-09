@@ -20,7 +20,7 @@
             <field name="model">delivery.carrier</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Carrier">
+                <form string="Carrier" version="7.0">
                     <group col="4" name="general">
                         <field name="name"/>
                         <field name="partner_id"/>
@@ -41,7 +41,7 @@
                               <field name="sequence"/>
                               <field name="name"/>
                          </tree>
-                        <form string="Delivery grids">
+                        <form string="Delivery grids" version="7.0">
                              <group col="4">
                                  <field name="name"/>
                                  <field name="active"/>
@@ -99,7 +99,7 @@
             <field name="model">delivery.grid</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery grids">
+                <form string="Delivery grids" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -139,8 +139,8 @@
             <field name="model">delivery.grid.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Grid Lines">
-                    <field colspan="4" name="name" select="1"/>
+                <form string="Grid Lines" version="7.0">
+                    <field colspan="4" name="name"/>
                     <div>
                         <label string="condition" for="type"/>
                         <field name="type" class="oe_form_inline"/>

@@ -23,7 +23,7 @@
             <field name="name">Order</field>
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
                     <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
@@ -105,7 +105,7 @@
             <field name="name">Cashboxes</field>
             <field name="model">lunch.cashbox</field>
             <field name="arch" type="xml">
-                <form string="Cashboxes">
+                <form string="Cashboxes" version="7.0">
                     <field name="name"/>
                     <field name="manager"/>
                 </form>
@@ -145,7 +145,7 @@
             <field name="name">CashMove</field>
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
-                <form string="CashMove">
+                <form string="CashMove" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="user_cashmove"/>
@@ -219,7 +219,7 @@
             <field name="name"> Category of product </field>
             <field name="model">lunch.category</field>
             <field name="arch" type="xml">
-                <form string="Category">
+                <form string="Category" version="7.0">
                     <separator string="Category Related to Products" colspan="4"/>
                     <field name="name"/>
                 </form>
@@ -253,7 +253,7 @@
             <field name="type">form</field>
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
-                <form string="Products">
+                <form string="Products" version="7.0">
                      <group col="6">
                           <field name="name"/>
                           <field name="category_id"/>
@@ -349,7 +349,7 @@
             <field name="model">report.lunch.amount</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Box Amount by User">
+                <form string="Box Amount by User" version="7.0">
                     <group col="4">
                         <field name="user_id"/>
                         <field name="box"/>

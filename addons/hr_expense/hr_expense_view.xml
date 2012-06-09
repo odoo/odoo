@@ -63,7 +63,7 @@
             <field name="type">form</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <form string="Expenses Sheet">
+                <form string="Expenses Sheet" version="7.0">
                 <header>
                     <button name="confirm" states="draft" string="Submit to Manager" type="workflow"/>
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
@@ -85,7 +85,7 @@
                     <notebook>
                         <page string="Description">
                             <field name="line_ids" context="{'currency_id': currency_id}">
-                                <form string="Expense Lines">
+                                <form string="Expense Lines" version="7.0">
                                     <group col="6" colspan="4">
                                         <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
                                         <field name="name" colspan="4"/>

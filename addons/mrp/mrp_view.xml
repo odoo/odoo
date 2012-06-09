@@ -141,7 +141,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Work Center">
-                    <group col="6" colspan="4">
+                    <group col="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="active"/>
@@ -149,7 +149,7 @@
                         <field name="calendar_id" widget="selection"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="General Information">
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Capacity Information"/>

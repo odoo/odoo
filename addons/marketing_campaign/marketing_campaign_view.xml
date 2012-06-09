@@ -15,7 +15,7 @@
         <field name="model">marketing.campaign</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form>
+            <form version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft"/>
                 <button name="state_done_set" string="Done" states="running"/>
@@ -133,7 +133,7 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+            <form layout="manual" version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft"/>
                 <button name="state_done_set" string="Close" states="running"/>
@@ -240,7 +240,7 @@
         <field name="model">marketing.campaign.activity</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Activities">
+            <form string="Activities" version="7.0">
                 <group>
                     <group string="Activity">
                         <field name="name"/>
@@ -275,7 +275,7 @@
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
-                    <form string="Incoming Transitions">
+                    <form string="Incoming Transitions" version="7.0">
                         <group col="4">
                             <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
                             <field name='trigger'/>
@@ -291,7 +291,7 @@
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
-                    <form string="Outgoing Transitions">
+                    <form string="Outgoing Transitions" version="7.0">
                         <group col="4">
                             <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
                             <field name='trigger'/>
@@ -352,7 +352,7 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Marketing Campaign Activities">
+            <form string="Marketing Campaign Activities" version="7.0">
             <header>
                 <button string="Process" states="todo" name="process" type="object"/>
                 <button string="Reset" states="exception,cancelled" name="button_draft" type="object"/>
