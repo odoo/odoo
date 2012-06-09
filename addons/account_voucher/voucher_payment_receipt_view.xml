@@ -72,17 +72,17 @@
             <field name="type">form</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Bill Payment">
+                <form string="Bill Payment" version="7.0">
                     <group col="6">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Supplier" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'invoice_currency': currency_id}" />
                         <field name="amount" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
-                            widget="selection" select="1"
+                            widget="selection"
                             on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" string="Payment Ref"/>
+                        <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                        <field name="reference" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
                             widget="selection"
@@ -143,7 +143,7 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
@@ -158,11 +158,11 @@
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
-                            widget="selection" select="1"
+                            widget="selection"
                             on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                        <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
@@ -295,7 +295,7 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
@@ -314,11 +314,11 @@
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
-                            widget="selection" select="1"
+                            widget="selection"
                             on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                        <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"

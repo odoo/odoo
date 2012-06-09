@@ -60,7 +60,7 @@
         <field name="model">crm.lead</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Leads Form">
+            <form string="Leads Form" version="7.0">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             states="draft,open,pending" help="Convert to Opportunity"/>
@@ -129,8 +129,8 @@
                                 <field name="company_id"
                                     groups="base.group_multi_company"
                                     widget="selection" colspan="2" />
-                                <field name="type_id" select="1" widget="selection"/>
-                                <field name="channel_id" select="1" widget="selection"/>
+                                <field name="type_id" widget="selection"/>
+                                <field name="channel_id" widget="selection"/>
                                 <field name="referred"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
@@ -361,7 +361,7 @@
         <field name="type">form</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <form string="Opportunities" validate="0">
+            <form string="Opportunities" validate="0" version="7.0">
                 <header>
                     <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" />
                     <button name="case_open" string="Open" states="draft,pending" type="object" />
@@ -417,7 +417,7 @@
                             <field name="section_id" colspan="1" widget="selection"/>
                         </group>
                         <group>
-                            <field name="categ_id" select="1"
+                            <field name="categ_id"
                                 string="Category" widget="selection"
                                 domain="[('object_id.model', '=', 'crm.lead')]" />
 

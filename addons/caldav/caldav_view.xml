@@ -7,7 +7,7 @@
             <field name="priority">40</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Calendar Collections">
+                <form string="Calendar Collections" version="7.0">
                     <group col="4">
                         <field name="name" colspan="4"/>
                         <field name="user_id"/>
@@ -80,7 +80,7 @@
             <field name="model">basic.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Calendar">
+                <form string="Calendar" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="type"/>
@@ -93,7 +93,7 @@
                     <notebook>
                         <page string="Calendar Lines">
                             <field name="line_ids" mode="form,tree" colspan="4" nolabel="1">
-                                <form string="Calendar Lines">
+                                <form string="Calendar Lines" version="7.0">
                                     <group col="4">
                                         <field name="name" required="1"/>
                                         <field name="object_id" required="1"/>
@@ -106,7 +106,7 @@
                                             <field name="field_id" required="1" domain="[('model_id', '=', parent.object_id)]" />
                                             <field name="expr" />
                                         </tree>
-                                        <form string="Attributes Mapping">
+                                        <form string="Attributes Mapping" version="7.0">
                                             <group col="4">
                                                 <field name="name" required="1" domain="[('type', '=', parent.name)]"/>
                                                 <field name="field_id" domain="[('model_id', '=', parent.object_id)]"

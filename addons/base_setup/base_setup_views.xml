@@ -9,7 +9,7 @@
           <field name="inherit_id" ref="base.res_config_view_base"/>
          <field name="arch" type="xml">
             <data>
-              <form position="attributes">
+              <form position="attributes" version="7.0">
                 <attribute name="string">Specify Your Terminology</attribute>
               </form>
              <group string="res_config_contents" position="replace">
@@ -37,7 +37,7 @@
         <field name="model">sale.config.settings</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Configure Sales">
+            <form string="Configure Sales" version="7.0">
                 <header>
                     <button string="Apply" type="object" name="execute"/>
                     <button string="Cancel" special="cancel"/>

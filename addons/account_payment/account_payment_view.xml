@@ -76,7 +76,7 @@
             <field name="model">payment.mode</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payment Mode">
+                <form string="Payment Mode" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="journal"/>
@@ -102,7 +102,7 @@
             <field name="model">payment.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="open" states="draft" string="Confirm Payments" />
                     <button name="set_done" states="open" string="Make Payments" type="object"/>
@@ -122,11 +122,11 @@
                           type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     </group>
                     <field name="line_ids" context="{'order_id': active_id or False}" >
-                        <form string="Payment Line">
+                        <form string="Payment Line" version="7.0">
                             <notebook>
                                 <page string="Payment">
                                     <group col="4">
-                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
                                         <separator colspan="4" string="Transaction Information"/>
                                         <field name="date"/>
                                         <label for="amount_currency"/>
@@ -134,7 +134,7 @@
                                             <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_form_inline"/>
                                             <field name="currency" nolabel="1" class="oe_form_inline"/>
                                         </div>
-                                        <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)" select="1"/>
+                                        <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)"/>
                                         <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
                                         <separator colspan="2" string="Owner Account"/>
                                         <separator colspan="2" string="Destination Account"/>
@@ -164,7 +164,7 @@
                         </form>
                         <tree string="Payment Line">
                             <field name="ml_inv_ref" />
-                            <field name="partner_id" select="1"/>
+                            <field name="partner_id"/>
                             <field name="communication"/>
                             <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                             <field name="ml_maturity_date"/>
@@ -249,7 +249,7 @@
             <field name="model">payment.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payment Line">
+                <form string="Payment Line" version="7.0">
                     <notebook>
                         <page string="Payment">
                             <group col="4">
@@ -262,7 +262,7 @@
                                     <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_form_inline"/>
                                     <field name="currency" class="oe_form_inline"/>
                                 </div>
-                                <field name="partner_id" on_change="onchange_partner(partner_id, False)" select="1"/>
+                                <field name="partner_id" on_change="onchange_partner(partner_id, False)"/>
                                 <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
                                 <separator colspan="2" string="Owner Account"/>
                                 <separator colspan="2" string="Desitination Account"/>
@@ -300,7 +300,7 @@
                     <field name="order_id"/>
                     <field name="ml_inv_ref" />
                     <field name="ml_maturity_date"/>
-                    <field name="partner_id" select="1"/>
+                    <field name="partner_id"/>
                     <field name="communication"/>
                     <field name="amount" sum="Amount Total"/>
                     <field name="amount_currency" sum="Currency Amount Total"/>

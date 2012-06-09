@@ -25,7 +25,7 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings">
+            <form string="Meetings" version="7.0">
                 <header>
                     <button name="case_open" string="Confirm" type="object"
                             states="draft"/>
@@ -115,7 +115,7 @@
                                     states="needs-action,tentative,declined,accepted"
                                     context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
-                            <form string="Invitation details">
+                            <form string="Invitation details" version="7.0">
                                 <notebook colspan="4">
                                     <page string="Details">
                                         <field name="email" />
