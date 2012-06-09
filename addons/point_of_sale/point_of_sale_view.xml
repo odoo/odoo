@@ -16,7 +16,7 @@
             <field name="model">pos.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Orders">
+                <form string="PoS Orders" version="7.0">
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" type="action" states="draft"/>
                     <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
@@ -46,7 +46,7 @@
                                     <field name="price_subtotal"/>
                                     <field name="price_subtotal_incl"/>
                                 </tree>
-                                <form string="Order lines">
+                                <form string="Order lines" version="7.0">
                                     <group col="4">
                                         <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
                                         <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
@@ -71,7 +71,7 @@
                                     <field name="statement_id" />
                                     <field name="amount"/>
                                 </tree>
-                                <form string="Statement lines">
+                                <form string="Statement lines" version="7.0">
                                     <group col="4">
                                         <field name="account_id"/>
                                         <field name="amount"/>
@@ -204,7 +204,7 @@
             <field name="model">pos.order.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS Order line">
+                <form string="POS Order line" version="7.0">
                     <group col="4">
                         <field name="product_id" />
                         <field name="qty" />
@@ -253,7 +253,7 @@
             <field name="model">report.transaction.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
+                <form string="POS " version="7.0">
                     <group col="4">
                         <field name="user_id"/>
                         <field name="journal_id"/>
@@ -346,7 +346,7 @@
             <field name="model">report.sales.by.user.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
+                <form string="POS " version="7.0">
                     <grouop col="4">
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
@@ -414,7 +414,7 @@
             <field name="model">report.sales.by.user.pos.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
+                <form string="POS " version="7.0">
                     <group col="4">
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
@@ -482,7 +482,7 @@
             <field name="model">report.sales.by.margin.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
+                <form string="POS " version="7.0">
                     <group col="4">
                         <field name="user_id"/>
                         <field name="product_name"/>
@@ -551,7 +551,7 @@
             <field name="model">report.sales.by.margin.pos.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
+                <form string="POS " version="7.0">
                     <group col="4">
                         <field name="user_id"/>
                         <field name="product_name"/>
@@ -650,7 +650,7 @@
             <field name="model">pos.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Categories">
+                <form string="PoS Categories" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>

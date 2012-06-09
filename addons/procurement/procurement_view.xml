@@ -46,7 +46,7 @@
             <field name="model">procurement.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Procurement">
+                <form string="Procurement" version="7.0">
                     <header>
                         <button name="button_confirm" states="draft" string="Confirm"/>
                         <button name="button_check" states="confirmed" string="Run Procurement"/>
@@ -206,7 +206,7 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reordering Rules">
+                <form string="Reordering Rules" version="7.0">
                     <group col="2" colspan="2">
                         <separator string="General Information" colspan="2" />
                         <field name="name" />
