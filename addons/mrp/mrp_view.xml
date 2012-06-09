@@ -154,21 +154,22 @@
                     <notebook>
                         <page string="General Information">
                             <group>
-                            <group string="Capacity Information">
-                                <field name="time_efficiency"/>
-                                <field name="capacity_per_cycle"/>
-                                <field name="time_cycle" widget="float_time"/>
-                                <field name="time_start" widget="float_time"/>
-                                <field name="time_stop" widget="float_time"/>
-                            </group>
-                            <group string="Costing Information">
-                                <field name="product_id" on_change="on_change_product_cost(product_id)"/>
-                                <field name="costs_hour"/>
-                                <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
-                                <field name="costs_cycle"/>
-                                <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
-                                <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
-                                <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
+                                <group string="Capacity Information">
+                                    <field name="time_efficiency"/>
+                                    <field name="capacity_per_cycle"/>
+                                    <field name="time_cycle" widget="float_time"/>
+                                    <field name="time_start" widget="float_time"/>
+                                    <field name="time_stop" widget="float_time"/>
+                                </group>
+                                <group string="Costing Information">
+                                    <field name="product_id" on_change="on_change_product_cost(product_id)"/>
+                                    <field name="costs_hour"/>
+                                    <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="costs_cycle"/>
+                                    <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
+                                    <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
+                                </group>
                             </group>
                             <label for="note"/>
                             <field name="note"/>
@@ -754,7 +755,7 @@
                                 <field name="date_start"/>
                                 <field name="date_finished"/>
                                 <field name="picking_id"/>
-                                <field name="move_prod_id"/><
+                                <field name="move_prod_id"/>
                             </group>
                         </page>
                     </notebook>
@@ -905,10 +906,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="/form/sheet/notebook/page/field[@name='move_id']" position="before">
+                <xpath expr="//field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
-                <xpath expr="/form/sheet/notebook/page/field[@name='close_move']" position="after">
+                <xpath expr="//field[@name='close_move']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
                     <separator colspan="4" string="Properties" />
                     <field colspan="4" name="property_ids" nolabel="1"/>
