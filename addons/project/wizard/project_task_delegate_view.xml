@@ -11,17 +11,17 @@
                     <header>
                         <button icon="gtk-ok" name="delegate" string="_Delegate" type="object"/>
                         <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                    <header>
+                    </header>
                     <group>
-                            <group colspan="2" col="2">
-                        <field name="project_id" on_change="onchange_project_id(project_id)"/>
+                        <group>
+                            <field name="project_id" on_change="onchange_project_id(project_id)"/>
                             <separator string="Delegated Task" colspan="2"/>
                             <field name="name"/>
                             <field name="planned_hours"/>
                             <separator string="New Task Description" colspan="2"/>
                             <field name="new_task_description" colspan="2" nolabel="1"/>
                         </group>
-                        <group colspan="2" col="2">
+                        <group>
                             <field name="user_id"/>
                             <separator string="Validation Task" colspan="2"/>
                             <field name="prefix" string="Validation Task Title"/>
