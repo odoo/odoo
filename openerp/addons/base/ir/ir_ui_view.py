@@ -124,9 +124,26 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
-        cr.execute("""SELECT arch, id FROM ir_ui_view WHERE inherit_id=%s AND model=%s
-                      ORDER BY priority""",
-                      (view_id, model))
+        if self.pool._init:
+            cr.execute("""SELECT
+                    arch, id
+                FROM
+                    ir_ui_view
+                WHERE
+                    inherit_id=%s AND model=%s
+                ORDER BY priority""", (view_id, model))
+        else:
+            cr.execute("""SELECT
+                    v.arch, v.id
+                FROM
+                    ir_ui_view v
+                LEFT JOIN
+                    ir_model_data d ON (d.res_id=v.id AND d.model='ir.ui.view')
+                LEFT JOIN
+                    ir_module_module m ON (m.state='installed' AND m.name=d.module)
+                WHERE
+                    inherit_id=%s AND model=%s
+                ORDER BY priority""", (view_id, model))
         return cr.fetchall()
 
     def write(self, cr, uid, ids, vals, context=None):
