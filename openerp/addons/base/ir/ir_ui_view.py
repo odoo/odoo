@@ -78,8 +78,7 @@ class view(osv.osv):
             if not record.inherit_id:
                 return record
             else:
-                parent = self.browse(cr, uid, record.inherit_id.id, context)
-                return root_view(parent)
+                return root_view(record.inherit_id)
         def call_view(record):
             try:
                 root = root_view(record)
@@ -124,26 +123,13 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
-        if self.pool._init:
-            cr.execute("""SELECT
-                    arch, id
-                FROM
-                    ir_ui_view
-                WHERE
-                    inherit_id=%s AND model=%s
-                ORDER BY priority""", (view_id, model))
-        else:
-            cr.execute("""SELECT
-                    v.arch, v.id
-                FROM
-                    ir_ui_view v
-                LEFT JOIN
-                    ir_model_data d ON (d.res_id=v.id AND d.model='ir.ui.view')
-                LEFT JOIN
-                    ir_module_module m ON (m.state='installed' AND m.name=d.module)
-                WHERE
-                    inherit_id=%s AND model=%s
-                ORDER BY priority""", (view_id, model))
+        cr.execute("""SELECT
+                arch, id
+            FROM
+                ir_ui_view
+            WHERE
+                inherit_id=%s AND model=%s
+            ORDER BY priority""", (view_id, model))
         return cr.fetchall()
 
     def write(self, cr, uid, ids, vals, context=None):
