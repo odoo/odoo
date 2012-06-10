@@ -12,6 +12,7 @@
                     <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2" default_focus="1" />
                     <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
                 </header>
+                <label string=""/>  <!-- binding for inherited views -->
                 <group col="4">
                    <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
                    <field name="company_id" invisible="1"/>
