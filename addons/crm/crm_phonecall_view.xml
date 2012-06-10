@@ -94,25 +94,18 @@
                     <field name="section_id" colspan="1" widget="selection" />
                 </group>
 
-                <group col="3" colspan="2">
-                    <separator colspan="3" string="Contacts" />
-                    <field name="partner_id"
-                        on_change="onchange_partner_id(partner_id)" />
-                    <button string="Create a Partner"
-                        icon="terp-partner"
-                        name="%(action_crm_phonecall2partner)d"
-                        type="action"
-                        attrs="{'invisible':[('partner_id','!=',False)]}"
-                        groups="base.group_partner_manager"/>
-                    <newline/>
-                    <field name="partner_mobile" />
-                </group>
-                <group col="2" colspan="2">
-                    <separator colspan="2" string="Categorization" />
-                    <field name="categ_id" widget="selection"
-                        domain="[('object_id.model', '=', 'crm.phonecall')]"/>
-                    <field name="priority"/>
-                    <field name="opportunity_id"/>
+                <group>
+                    <group string="Contacts">
+                        <field name="partner_id"
+                            on_change="onchange_partner_id(partner_id)" />
+                        <field name="partner_mobile"/>
+                    </group>
+                    <group string="Categorization">
+                        <field name="categ_id" widget="selection"
+                            domain="[('object_id.model', '=', 'crm.phonecall')]"/>
+                        <field name="priority"/>
+                        <field name="opportunity_id"/>
+                    </group>
                 </group>
                 <separator string="Description"/>
                 <field name="description"/>
