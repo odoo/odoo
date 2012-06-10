@@ -1067,16 +1067,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/header/button[@name='%(act_stock_return_picking)d']" position="replace">
+                    <xpath expr="//button[@name='%(act_stock_return_picking)d']" position="replace">
                         <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" />
                     </xpath>
-                    <xpath expr="/form/header/button[@name='draft_validate']" position="replace">
+                    <xpath expr="//button[@name='draft_validate']" position="replace">
                         <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object"/>
                     </xpath>
-                    <xpath expr="/form/header/button[@name='action_process']" position="replace">
+                    <xpath expr="//button[@name='action_process']" position="replace">
                         <button name="action_process" states="assigned" string="Receive" type="object"/>
                     </xpath>
-                    <xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="replace">
+                    <xpath expr="//field[@name='partner_id']" position="replace">
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Supplier"/>
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
