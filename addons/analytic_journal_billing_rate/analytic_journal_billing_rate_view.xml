@@ -72,7 +72,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Information']/group/field[@name='journal_id']" position="replace">
+                <xpath expr="//page[@string='Information']//field[@name='journal_id']" position="replace">
                     <field name="journal_id" select="1" required="1" on_change="on_change_journal_id(journal_id, account_id)"/>
                 </xpath>
             </field>
