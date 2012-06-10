@@ -162,10 +162,6 @@
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                            <label string="Address"/>
-                            <div>
-                                <p>Put multi-line address function field here</p>
-                            </div>
                             <field name="fiscal_position" widget="selection"/>
                         </group>
                         <group>
@@ -306,11 +302,6 @@
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer': 1}"
                                 domain="[('customer', '=', True)]"/>
-
-                            <label string="Address"/>
-                            <div>
-                                <p>Put multi-line address function field here</p>
-                            </div>
                             <field name="fiscal_position" widget="selection" options='{"quick_create": false}'/>
                             <field name="payment_term" widget="selection"/>
 
