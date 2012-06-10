@@ -3062,7 +3062,7 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr, context["module"])
+        self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
@@ -3189,7 +3189,7 @@ class BaseModel(object):
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
-    def _add_sql_constraints(self, cr, module):
+    def _add_sql_constraints(self, cr):
         """
 
         Modify this model's database table constraints so they match the one in
