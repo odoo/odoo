@@ -42,7 +42,7 @@
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                        <group></group>
+                        </group><group>
                             <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="progress_rate" widget="progressbar"/>
@@ -89,7 +89,9 @@
                                 <field name="warn_footer" nolabel="1" colspan="2"/>
                             </group>
                             <group col="3">
-                                <separator string="Automatic variables for headers and footer. Use exactly the same notation." colspan="4"/>
+                                <b>
+                                    <label string="Variables you can use for headers and footer." colspan="3"/>
+                                </b>
                                 <label string="Task: %%(name)s"/>
                                 <label string="User: %%(user_id)s"/>
                                 <label string="ID: %%(task_id)s"/>
