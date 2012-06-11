@@ -8,7 +8,9 @@ $(document).ready(function () {
             instance.web.qweb = new QWeb2.Engine();
             instance.web.qweb.add_template('<no><t t-name="test.widget.template">' +
                 '<ol>' +
-                    '<li t-foreach="5" t-as="counter">' +
+                    '<li t-foreach="5" t-as="counter" ' +
+                        't-attf-class="class-#{counter}">' +
+                        '<input/>' +
                         '<t t-esc="counter"/>' +
                     '</li>' +
                 '</ol>' +
@@ -162,5 +164,50 @@ $(document).ready(function () {
 
         ok(w.$('li:eq(3)').is(w.$el.find('li:eq(3)')),
            "should do the same thing as calling find on the widget root");
+    });
+
+    module('Widget.events', mod);
+    test('delegate', function () {
+        var a = [];
+        var w = new (instance.web.Widget.extend({
+            template: 'test.widget.template',
+            events: {
+                'click': function () {
+                    a[0] = true;
+                    strictEqual(this, w, "should trigger events in widget")
+                },
+                'click li.class-3': 'class3',
+                'change input': function () { a[2] = true; }
+            },
+            class3: function () { a[1] = true; }
+        }));
+        w.renderElement();
+
+        w.$el.click();
+        w.$('li:eq(3)').click();
+        w.$('input:last').val('foo').change();
+
+        for(var i=0; i<3; ++i) {
+            ok(a[i], "should pass test " + i);
+        }
+    });
+    test('undelegate', function () {
+        var clicked = false, newclicked = false;
+        var w = new (instance.web.Widget.extend({
+            template: 'test.widget.template',
+            events: { 'click li': function () { clicked = true; } }
+        }));
+        w.renderElement();
+        w.$el.on('click', 'li', function () { newclicked = true });
+
+        w.$('li').click();
+        ok(clicked, "should trigger bound events");
+        ok(newclicked, "should trigger bound events");
+        clicked = newclicked = false;
+
+        w.undelegateEvents();
+        w.$('li').click();
+        ok(!clicked, "undelegate should unbind events delegated");
+        ok(newclicked, "undelegate should only unbind events it created");
     });
 });
