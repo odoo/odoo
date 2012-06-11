@@ -292,10 +292,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
             this.pos_widget.set_cashier_controls_visible(cashier_mode);
-            this.pos_widget.action_bar.set_total_visible(this.show_total);
-            this.pos_widget.action_bar.set_help_visible(!cashier_mode, function(){ self.help_button_action(); });
-            this.pos_widget.action_bar.set_logout_visible(cashier_mode, function(){ self.logout_button_action(); });
-            this.pos_widget.action_bar.set_close_visible(cashier_mode);
+            this.pos_widget.action_bar.set_element_visible('total', this.show_total);
+            this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });
+            this.pos_widget.action_bar.set_element_visible('logout-button', cashier_mode, function(){ self.logout_button_action(); });
+            this.pos_widget.action_bar.set_element_visible('close-button', cashier_mode);
 
             this.pos.barcode_reader.set_action_callback({
                 'cashier': self.barcode_cashier_action ? function(ean){ self.barcode_cashier_action(ean); } : undefined ,

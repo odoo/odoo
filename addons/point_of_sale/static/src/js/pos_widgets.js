@@ -337,25 +337,17 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.logout_visibility  = true;
             this.close_visibility  = true;
         },
-        set_element_visible: function(button, visible, action){
-            if(visible != this.visibility[button]){
-                this.visibility[button] = visible;
+        set_element_visible: function(element, visible, action){
+            if(visible != this.visibility[element]){
+                this.visibility[element] = visible;
                 if(visible){
-                    this.$('.'+button).show();
+                    this.$('.'+element).show();
                 }else{
-                    this.$('.'+button).hide();
+                    this.$('.'+element).hide();
                 }
             }
             if(visible && action){
-                this.$('.'+button).off('click').click(action);
-            }
-        },
-        set_all_elements_invisible: function(){
-            for(el in this.visibility){
-                if(this.visibility[el]){
-                    this.visibility[el] = false;
-                    this.$('.'+el).hide();
-                }
+                this.$('.'+element).off('click').click(action);
             }
         },
         set_total_value: function(value){
@@ -380,55 +372,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
             return undefined;
-        },
-        set_total_visible: function(visible){
-            if(visible !== this.total_visibility){
-                this.total_visibility = visible;
-                if(visible){
-                    this.$element.find('.total').show();
-                }else{
-                    this.$element.find('.total').hide();
-                }
-            }
-        },
-        set_help_visible: function(visible,action){
-            if(visible !== this.help_visibility){
-                this.help_visibility = visible;
-                if(visible){
-                    this.$element.find('.help-button').show();
-                }else{
-                    this.$element.find('.help-button').hide();
-                }
-            }
-            if(visible && action){
-                this.$element.find('.help-button').off('click').click(action);
-            }
-        },
-        set_logout_visible: function(visible,action){
-            if(visible !== this.logout_visibility){
-                this.logout_visibility = visible;
-                if(visible){
-                    this.$element.find('.logout-button').show();
-                }else{
-                    this.$element.find('.logout-button').hide();
-                }
-            }
-            if(visible && action){
-                this.$element.find('.logout-button').off('click').click(action);
-            }
-        },
-        set_close_visible: function(visible,action){
-            if(visible !== this.close_visibility){
-                this.close_visibility = visible;
-                if(visible){
-                    this.$element.find('.close-button').show();
-                }else{
-                    this.$element.find('.close-button').hide();
-                }
-            }
-            if(visible && action){
-                this.$element.find('.close-button').off('click').click(action);
-            }
         },
     });
 
