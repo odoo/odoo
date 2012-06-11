@@ -1,0 +1,160 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-06-08 17:09+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-06-09 05:39+0000\n"
+"X-Generator: Launchpad (build 15376)\n"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr "製造ロット"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "ハム"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "牛乳"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr "製品有効時間"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
+msgstr "危険に陥ることなくロットの悪化が始まる日付"
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr "製品使用時間"
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr "シリアル番号と内部参照番号は固有である必要があります。"
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr "ロットが削除されるべき日"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "製品"
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr "製造ロットについて警告が知らされるべきまでの日数"
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr "製品の撤去時間"
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "撤去日"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr "ロットが危険になり消費されるべきでなくなる日付"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "パン"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr ""
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "日付"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "消費期限"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "賞味期限"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "フランスのカマンベールチーズ"
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid "The number of days before a production lot should be removed."
+msgstr "製造ロットが撤去されるまでの日数"
+
+#. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "警告日"
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid ""
+"The number of days before a production lot starts deteriorating without "
+"becoming dangerous."
+msgstr "製造ロットが危険にならず悪化を開始するまでの日数"
+
+#. module: product_expiry
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "エラー：無効な商品識別番号です。"
+
+#. module: product_expiry
+#: help:product.product,life_time:0
+msgid ""
+"The number of days before a production lot may become dangerous and should "
+"not be consumed."
+msgstr "製品ロットが危険になり消費されるべきでなくなる日数"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr "製造ロットについて警告が知らされるべき日付"
+
+#. module: product_expiry
+#: field:product.product,alert_time:0
+msgid "Product Alert Time"
+msgstr "製品警告時間"
