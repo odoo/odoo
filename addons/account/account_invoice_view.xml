@@ -290,7 +290,7 @@
                         <label string="Draft Invoice " attrs="{'invisible': [('state','not in',('draft',))]}"/>
                         <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
                         <label string="Invoice " attrs="{'invisible': [('state','in',('draft','proforma','proforma2'))]}"/>
-                        <field name="number" readonly="1"/>
+                        <field name="number" readonly="1" class="oe_form_inline"/>
                     </h1>
                     <label string="Concerns" for="name" class="oe_form_readonly_hidden"/>
                     <h2>
