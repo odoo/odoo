@@ -177,18 +177,20 @@ class wizard(osv.osv_memory):
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
-            portal_user=[user.id for user in wiz.portal_id.group_id.users]
+            portal_users=[portal_user.id for portal_user in wiz.portal_id.group_id.users]
             add_users=[]
             remove_users=[]
             new_users_data = []
+            login_conds = []
             for u in wiz.user_ids:
                 login_cond = [('login', 'in', [u.user_email])]
                 existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
-                existing_logins = [user.login for user in existing_users]
-                if existing_uids and existing_uids[0] not in portal_user or existing_uids and u.has_portal_user:
+                existing_logins = [existing_login.login for existing_login in existing_users]
+                if existing_uids and existing_uids[0] not in portal_users or existing_uids and u.has_portal_user:
+                    login_conds.append(login_cond[0])
                     add_users.append(existing_uids[0])
-                if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
+                if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_users:
                     remove_users.append(existing_uids[0])
                 if u.user_email not in existing_logins:
                     new_users_data.append({
@@ -202,18 +204,18 @@ class wizard(osv.osv_memory):
                             'partner_id': u.partner_id and u.partner_id.id,
                         } )
                     
-            for data in new_users_data:
+            for new_user_data in new_users_data:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(0, 0, data)]}, context0)
+                    {'users': [(0, 0, new_user_data)]}, context0)
                 
-                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', data['login']),('partner_id','=', data['partner_id'])])
+                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', new_user_data['login']),('partner_id','=', new_user_data['partner_id'])])
                 add_users.append(created_user[0])
                 
             #add the user relationship in portal.        
-            if add_users and add_users not in portal_user:
+            if add_users and add_users not in portal_users:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
-
+                
             #delete the user relationship from portal.
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                 {'users': [(3, user_data) for user_data in remove_users]}, context0)
@@ -228,9 +230,14 @@ class wizard(osv.osv_memory):
                 'url': wiz.portal_id.url or _("(missing url)"),
                 'db': cr.dbname,
             }
+            dest_uids = []
+            dest_users = []
             mail_message_obj = self.pool.get('mail.message')
-            dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
-            dest_users = user_obj.browse(cr, ROOT_UID, dest_uids)
+            for login_cond in login_conds:
+                dest_uids.append(user_obj.search(cr, ROOT_UID, [login_cond])[0])
+            for dest_uid in dest_uids:
+                dest_users.append(user_obj.browse(cr, ROOT_UID, dest_uid))
+                
             for dest_user in dest_users:
                 context['lang'] = dest_user.context_lang
                 data['login'] = dest_user.login
@@ -249,8 +256,6 @@ class wizard(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 wizard()
-
-
 
 class wizard_user(osv.osv_memory):
     """
@@ -292,8 +297,5 @@ class wizard_user(osv.osv_memory):
         }
     
 wizard_user()
-
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
