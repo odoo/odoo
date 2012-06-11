@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 class project_configuration(osv.osv_memory):
     _name = 'project.config.settings'
@@ -46,7 +47,8 @@ class project_configuration(osv.osv_memory):
         'module_project_issue': fields.boolean("Issues and Bug Tracking",
             help="""Provides management of issues/bugs in projects.
                 This installs the module project_issue."""),
-        'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
+        'time_unit': fields.many2one('product.uom', 'Working Time Unit', required=True, 
+            help="""This will set the unit of measure used in projects and tasks."""),
         'module_project_issue_sheet': fields.boolean("Track and Invoice Issues Working Time",
             help="""Provides timesheet support for the issues/bugs management in project.
                 This installs the module project_issue_sheet."""),
@@ -57,5 +59,27 @@ class project_configuration(osv.osv_memory):
             implied_group='project.group_time_work_estimation_tasks',
             help="Allows you to compute Time Estimation on tasks."),                                
     }
+    
+    def default_get(self, cr, uid, fields, context=None):
+        res = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        res['time_unit'] = user.company_id.project_time_mode_id.id
+        return res
+    
+    def _get_default_time_unit(self, cr, uid, context=None):
+        product_uom_obj = self.pool.get('product.uom')
+        ids = product_uom_obj.search(cr, uid, [('name', '=', _('Hour'))], context=context)
+        return ids and ids[0] or False
+
+    _defaults = {
+        'time_unit': _get_default_time_unit,
+    }
+    
+    def set_project_defaults(self, cr, uid, ids, context=None):
+        wizard = self.browse(cr, uid, ids)[0]
+        if wizard.time_unit:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
