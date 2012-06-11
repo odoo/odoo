@@ -82,8 +82,12 @@ class view(osv.osv):
         def call_view(record):
             try:
                 root = root_view(record)
-                # Temporarily commented, waiting for being fixed
-                self.pool.get(root.model).fields_view_get(cr, uid, view_id=root.id, view_type=root.type, context=context)
+                # Temporarily commented, waiting fixes; it breaks most updates because
+                # when you update modules, all views are in the database, but only
+                # fields of loaded objects are on the objects. This breaks the
+                # fields_view_get calls. (field exists in view but not in the object)
+                #
+                # self.pool.get(root.model).fields_view_get(cr, uid, view_id=root.id, view_type=root.type, context=context)
 
                 return True
             except:
