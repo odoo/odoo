@@ -3,8 +3,9 @@
 -->
 <templates id="template" xml:space="preserve">
 
-   <t t-extend="ViewManager">
-          <t t-jquery=".oe-view-manager-header" t-operation="before">
+   <t t-extend="ViewManagerAction">
+          <t t-jquery=".oe_view_manager_header" t-operation="after">
+          <div class='.oe_extended_form_view'></div>
           </t>
    </t>
 
