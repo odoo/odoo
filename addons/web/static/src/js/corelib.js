@@ -510,7 +510,7 @@ instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
     proxy: function (method) {
         var self = this;
         return function () {
-            var fn = (method instanceof String) ? self[method] : method;
+            var fn = (typeof method === 'string') ? self[method] : method;
             return fn.apply(self, arguments);
         }
     }
