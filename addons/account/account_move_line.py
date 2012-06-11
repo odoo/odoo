@@ -1188,7 +1188,9 @@ class account_move_line(osv.osv):
         result = cr.fetchall()
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed journal.'))
+                journal = journal_obj.read(cr, uid, journal_id, ['name'])
+                period = period_obj.read(cr, uid, period_id, ['name'])
+                 raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period['name'],journal['name'])))
         if not result:
             journal = journal_obj.browse(cr, uid, journal_id, context=context)
             period = period_obj.browse(cr, uid, period_id, context=context)
