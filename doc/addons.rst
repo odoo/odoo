@@ -113,103 +113,6 @@ initializing the addon.
 Creating new standard roles
 ---------------------------
 
-Widget
-++++++
-
-This is the base class for all visual components. It provides a number of
-services for the management of a DOM subtree:
-
-* Rendering with QWeb
-
-* Parenting-child relations
-
-* Life-cycle management (including facilitating children destruction when a
-  parent object is removed)
-
-* DOM insertion, via jQuery-powered insertion methods. Insertion targets can
-  be anything the corresponding jQuery method accepts (generally selectors,
-  DOM nodes and jQuery objects):
-
-  :js:func:`~openerp.base.Widget.appendTo`
-    Renders the widget and inserts it as the last child of the target, uses
-    `.appendTo()`_
-
-  :js:func:`~openerp.base.Widget.prependTo`
-    Renders the widget and inserts it as the first child of the target, uses
-    `.prependTo()`_
-
-  :js:func:`~openerp.base.Widget.insertAfter`
-    Renders the widget and inserts it as the preceding sibling of the target,
-    uses `.insertAfter()`_
-
-  :js:func:`~openerp.base.Widget.insertBefore`
-    Renders the widget and inserts it as the following sibling of the target,
-    uses `.insertBefore()`_
-
-:js:class:`~openerp.base.Widget` inherits from
-:js:class:`~openerp.base.SessionAware`, so subclasses can easily access the
-RPC layers.
-
-Subclassing Widget
-~~~~~~~~~~~~~~~~~~
-
-:js:class:`~openerp.base.Widget` is subclassed in the standard manner (via the
-:js:func:`~openerp.base.Class.extend` method), and provides a number of
-abstract properties and concrete methods (which you may or may not want to
-override). Creating a subclass looks like this:
-
-.. code-block:: javascript
-
-    var MyWidget = openerp.base.Widget.extend({
-        // QWeb template to use when rendering the object
-        template: "MyQWebTemplate",
-
-        init: function(parent) {
-            this._super(parent);
-            // insert code to execute before rendering, for object
-            // initialization
-        },
-        start: function() {
-            this._super();
-            // post-rendering initialization code, at this point
-            // ``this.$element`` has been initialized
-            this.$element.find(".my_button").click(/* an example of event binding * /);
-
-            // if ``start`` is asynchronous, return a promise object so callers
-            // know when the object is done initializing
-            return this.rpc(/* … */)
-        }
-    });
-
-The new class can then be used in the following manner:
-
-.. code-block:: javascript
-
-    // Create the instance
-    var my_widget = new MyWidget(this);
-    // Render and insert into DOM
-    my_widget.appendTo(".some-div");
-
-After these two lines have executed (and any promise returned by ``appendTo``
-has been resolved if needed), the widget is ready to be used.
-
-.. note:: the insertion methods will start the widget themselves, and will
-          return the result of :js:func:`~openerp.base.Widget.start()`.
-
-          If for some reason you do not want to call these methods, you will
-          have to first call :js:func:`~openerp.base.Widget.render()` on the
-          widget, then insert it into your DOM and start it.
-
-If the widget is not needed anymore (because it's transient), simply terminate
-it:
-
-.. code-block:: javascript
-
-    my_widget.stop();
-
-will unbind all DOM events, remove the widget's content from the DOM and
-destroy all widget data.
-
 Views
 +++++
 
@@ -540,18 +443,6 @@ Python
 
 .. _promise object:
     http://api.jquery.com/deferred.promise/
-
-.. _.appendTo():
-    http://api.jquery.com/appendTo/
-
-.. _.prependTo():
-    http://api.jquery.com/prependTo/
-
-.. _.insertAfter():
-    http://api.jquery.com/insertAfter/
-
-.. _.insertBefore():
-    http://api.jquery.com/insertBefore/
 
 .. _Rosetta:
 .. _Launchpad's own translation tool:
