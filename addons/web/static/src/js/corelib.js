@@ -762,8 +762,8 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      */
     make: function (tagName, attributes, content) {
         var el = document.createElement(tagName);
-        if (attributes) {
-            $(el).attrs(attributes);
+        if (!_.isEmpty(attributes)) {
+            $(el).attr(attributes);
         }
         if (content) {
             $(el).html(content);

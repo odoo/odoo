@@ -64,4 +64,72 @@ $(document).ready(function () {
         fn(42);
         equal(w.executed, 42, "should be passed the proxy's arguments");
     });
+
+    module('Widget.renderElement', mod);
+    test('no template, default', function () {
+        var w = new (instance.web.Widget.extend({ }));
+
+        ok(!w.$el, "should not initially have a root element");
+        w.renderElement();
+        ok(w.$el, "should have generated a root element");
+        strictEqual(w.$element, w.$el, "should provide $element alias");
+        ok(w.$el.is(w.el), "should provide raw DOM alias");
+
+        equal(w.el.nodeName, 'DIV', "should have generated the default element");
+        equal(w.el.attributes.length, 0, "should not have generated any attribute");
+        ok(_.isEmpty(w.$el.html(), "should not have generated any content"));
+    });
+    test('no template, custom tag', function () {
+        var w = new (instance.web.Widget.extend({
+            tagName: 'ul'
+        }));
+        w.renderElement();
+
+        equal(w.el.nodeName, 'UL', "should have generated the custom element tag");
+    });
+    test('no template, @id', function () {
+        var w = new (instance.web.Widget.extend({
+            id: 'foo'
+        }));
+        w.renderElement();
+
+        equal(w.el.attributes.length, 1, "should have one attribute");
+        equal(w.$el.attr('id'), 'foo', "should have generated the id attribute");
+        equal(w.el.id, 'foo', "should also be available via property");
+    });
+    test('no template, @className', function () {
+        var w = new (instance.web.Widget.extend({
+            className: 'oe_some_class'
+        }));
+        w.renderElement();
+
+        equal(w.el.className, 'oe_some_class', "should have the right property");
+        equal(w.$el.attr('class'), 'oe_some_class', "should have the right attribute");
+    });
+    test('no template, bunch of attributes', function () {
+        var w = new (instance.web.Widget.extend({
+            attributes: {
+                'id': 'some_id',
+                'class': 'some_class',
+                'data-foo': 'data attribute',
+                'clark': 'gable',
+                'spoiler': 'snape kills dumbledore'
+            }
+        }));
+        w.renderElement();
+
+        equal(w.el.attributes.length, 5, "should have all the specified attributes");
+
+        equal(w.el.id, 'some_id');
+        equal(w.$el.attr('id'), 'some_id');
+
+        equal(w.el.className, 'some_class');
+        equal(w.$el.attr('class'), 'some_class');
+
+        equal(w.$el.attr('data-foo'), 'data attribute');
+        equal(w.$el.data('foo'), 'data attribute');
+
+        equal(w.$el.attr('clark'), 'gable');
+        equal(w.$el.attr('spoiler'), 'snape kills dumbledore');
+    });
 });
