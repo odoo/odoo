@@ -292,7 +292,7 @@
                         <page string="Invoice">
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
                             <group col="1" colspan="2">
-                                <field name="tax_line" nolabel="1" widget="many2many_tags">
+                                <field name="tax_line" nolabel="1">
                                     <tree editable="bottom" string="Taxes">
                                         <field name="name"/>
                                         <field name="account_id" groups="account.group_account_user"/>
@@ -311,7 +311,7 @@
                                 </group>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
-                                <field name="amount_tax"/>
+                                <field name="amount_tax" widget="many2many_tags"/>
                                 <field name="reconciled" groups="base.group_no_one"/>
                                 <field name="amount_total"/>
                                 <field name="residual" groups="account.group_account_user"/>
