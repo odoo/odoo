@@ -188,7 +188,6 @@ class wizard(osv.osv_memory):
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
                 existing_logins = [existing_login.login for existing_login in existing_users]
                 if existing_uids and existing_uids[0] not in portal_users or existing_uids and u.has_portal_user:
-                    login_conds.append(login_cond[0])
                     add_users.append(existing_uids[0])
                 if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_users:
                     remove_users.append(existing_uids[0])
@@ -213,6 +212,7 @@ class wizard(osv.osv_memory):
                 
             #add the user relationship in portal.        
             if add_users and add_users not in portal_users:
+                login_conds.append(login_cond[0])
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
                 
@@ -230,12 +230,10 @@ class wizard(osv.osv_memory):
                 'url': wiz.portal_id.url or _("(missing url)"),
                 'db': cr.dbname,
             }
-            dest_uids = []
-            dest_users = []
+
             mail_message_obj = self.pool.get('mail.message')
-            for login_cond in login_conds:
-                dest_uids.append(user_obj.search(cr, ROOT_UID, [login_cond])[0])
-            for dest_uid in dest_uids:
+            dest_users = []
+            for dest_uid in add_users:
                 dest_users.append(user_obj.browse(cr, ROOT_UID, dest_uid))
                 
             for dest_user in dest_users:
