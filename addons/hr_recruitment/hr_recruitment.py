@@ -324,7 +324,6 @@ class hr_applicant(base_stage, osv.Model):
 
             context.update({
                 'default_applicant_id': opp.id,
-                'default_department_id': opp.department_id.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
@@ -585,7 +584,6 @@ class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
     _columns = {
         'applicant_id': fields.many2one('hr.applicant','Applicant Meeting'),
-        'department_id': fields.many2one('hr.department', 'Department',groups="base.group_hr_user,base.group_hr_manager"),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

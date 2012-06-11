@@ -117,7 +117,7 @@ class report_custom(report_rml):
             else:
                 holiday_type=('validate')
         else:
-            type="Confirmed and Validated"
+            type="Confirmed and Approved"
             holiday_type=('confirm','validate')
         date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))
