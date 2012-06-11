@@ -1335,6 +1335,10 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
     }
 });
 
+openerp.web.form.WidgetImage = openerp.web.form.Widget.extend({
+    template: 'WidgetImage',
+});
+
 openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.form.Field# */{
     /**
      * @constructs openerp.web.form.Field
@@ -3428,6 +3432,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'separator' : 'openerp.web.form.WidgetSeparator',
     'label' : 'openerp.web.form.WidgetLabel',
     'button' : 'openerp.web.form.WidgetButton',
+    'image': 'openerp.web.form.WidgetImage',
     'char' : 'openerp.web.form.FieldChar',
     'id' : 'openerp.web.form.FieldID',
     'email' : 'openerp.web.form.FieldEmail',
@@ -3446,7 +3451,6 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'integer': 'openerp.web.form.FieldFloat',
     'float_time': 'openerp.web.form.FieldFloat',
     'progressbar': 'openerp.web.form.FieldProgressBar',
-    'image': 'openerp.web.form.FieldBinaryImage',
     'binary': 'openerp.web.form.FieldBinaryFile',
     'statusbar': 'openerp.web.form.FieldStatus',
     'html': 'openerp.web.form.WidgetHtml'

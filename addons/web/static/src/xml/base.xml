@@ -988,6 +988,9 @@
         </li>
     </ul>
 </t>
+<t t-name="WidgetImage">
+    <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.node.attrs.name}.png" t-attf-onerror="this.src='#{_s}/web/static/src/img/placeholder.png'; return void(0);"/>
+</t>
 <t t-name="WidgetParagraph">
     <p t-attf-class="oe_form_paragraph oe_align_#{widget.align} #{widget.multilines ? 'oe_multilines' : ''}"><t t-esc="widget.string"/></p>
 </t>
