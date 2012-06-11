@@ -132,4 +132,24 @@ $(document).ready(function () {
         equal(w.$el.attr('clark'), 'gable');
         equal(w.$el.attr('spoiler'), 'snape kills dumbledore');
     });
+
+    test('template', function () {
+        instance.web.qweb = new QWeb2.Engine();
+        instance.web.qweb.add_template('<no><t t-name="test.widget.template">' +
+            '<ol>' +
+                '<li t-foreach="5" t-as="counter">' +
+                    '<t t-esc="counter"/>' +
+                '</li>' +
+            '</ol>' +
+        '</t></no>');
+
+        var w = new (instance.web.Widget.extend({
+            template: 'test.widget.template'
+        }));
+        w.renderElement();
+
+        equal(w.el.nodeName, 'OL');
+        equal(w.$el.children().length, 5);
+        equal(w.el.textContent, '01234');
+    });
 });
