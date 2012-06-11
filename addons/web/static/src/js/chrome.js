@@ -9,8 +9,7 @@ instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
     init: function() {
         this._super.apply(this, arguments);
-        // move to instance.web.notification
-        instance.notification = this;
+        instance.web.notification = this;
     },
     start: function() {
         this._super.apply(this, arguments);
