@@ -73,42 +73,54 @@ class view(osv.osv):
     }
     _order = "priority,name"
 
-    def _check_xml(self, cr, uid, ids, context=None):
-        def root_view(record):
-            if not record.inherit_id:
-                return record
-            else:
-                return root_view(record.inherit_id)
-        def call_view(record):
-            try:
-                root = root_view(record)
-                # Temporarily commented, waiting fixes; it breaks most updates because
-                # when you update modules, all views are in the database, but only
-                # fields of loaded objects are on the objects. This breaks the
-                # fields_view_get calls. (field exists in view but not in the object)
-                #
-                # self.pool.get(root.model).fields_view_get(cr, uid, view_id=root.id, view_type=root.type, context=context)
+    # Holds the RNG schema
+    _relaxng_validator = None  
 
-                return True
-            except:
-                _logger.exception("Can't obtain view description for model: %s (view id: %s).", record.model, record.id)
-                return False
-        for view in self.browse(cr, uid, ids, context):
-            return call_view(view)
-
-            # TODO The following code should be executed (i.e. no early return above).
-            # TODO The view.rng file can be read only once!
-            eview = etree.fromstring(view.arch.encode('utf8'))
+    def _relaxng(self):
+        if not self._relaxng_validator:
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
             try:
                 relaxng_doc = etree.parse(frng)
-                relaxng = etree.RelaxNG(relaxng_doc)
-                if not relaxng.validate(eview):
-                    for error in relaxng.error_log:
-                        _logger.error(tools.ustr(error))
-                    return False
+                self._relaxng_validator = etree.RelaxNG(relaxng_doc)
+            except Exception:
+                _logger.exception('Failed to load RelaxNG XML schema for views validation')
             finally:
                 frng.close()
+        return self._relaxng_validator
+        
+        
+    def _check_render_view(self, cr, uid, view, context=None):
+        """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
+           its inherited views, by rendering it using ``fields_view_get()``.
+           
+           @param browse_record view: view to validate
+           @return: True if the view hierarchy was rendered without any error, False if an error occurred.  
+        """
+        try:
+            self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            return True
+        except:
+            _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
+            return False
+
+    def _check_xml(self, cr, uid, ids, context=None):
+        for view in self.browse(cr, uid, ids, context):
+            # RNG-based validation is not possible anymore with 7.0 forms
+            # TODO 7.0: provide alternative assertion-based validation!
+            view_docs = [etree.fromstring(view.arch.encode('utf8'))]
+            if view_docs[0].tag == 'data':
+                # A <data> element is a wrapper for multiple root nodes
+                view_docs = view_docs[0]
+            validator = self._relaxng()
+            for view_arch in view_docs:
+                if (view_arch.get('version') < '7.0') and validator and not validator.validate(view_arch):
+                    for error in validator.error_log:
+                        _logger.error(tools.ustr(error))
+                    return False
+
+            # Second sanity check: the view should not break anything upon rendering!
+            if not self._check_render_view(cr, uid, view, context=context):
+                return False
         return True
 
     _constraints = [
@@ -122,20 +134,31 @@ class view(osv.osv):
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
 
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
-        """Retrieves the architecture of views that inherit from the given view.
+        """Retrieves the architecture of views that inherit from the given view, from the sets of
+           views that should currently be used in the system. During the module upgrade phase it
+           may happen that a view is present in the database but the fields it relies on are not
+           fully loaded yet. This method only considers views that belong to modules whose code
+           is already loaded. Custom views defined directly in the database are loaded only
+           after the module initialization phase is completely finished.
 
            :param int view_id: id of the view whose inheriting views should be retrieved
            :param str model: model identifier of the view's related model (for double-checking)
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
-        cr.execute("""SELECT
-                arch, id
-            FROM
-                ir_ui_view
-            WHERE
-                inherit_id=%s AND model=%s
-            ORDER BY priority""", (view_id, model))
+        if self.pool._init:
+            # Module init currently in progress, only consider views from modules whose code was already loaded 
+            query = """SELECT v.arch, v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                       WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
+                       ORDER BY priority"""
+            query_params = (view_id, model, tuple(self.pool._init_modules))
+        else:
+            # Modules fully loaded, consider all views
+            query = """SELECT v.arch, v.id FROM ir_ui_view v
+                       WHERE v.inherit_id=%s AND v.model=%s  
+                       ORDER BY priority"""
+            query_params = (view_id, model)
+        cr.execute(query, query_params)
         return cr.fetchall()
 
     def write(self, cr, uid, ids, vals, context=None):
