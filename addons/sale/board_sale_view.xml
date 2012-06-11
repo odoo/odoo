@@ -63,7 +63,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Dashboard" layout="manual">
+                <form string="Sales Dashboard" version="7.0">
                     <board style="2-1">
                         <column>
                             <action name="%(action_quotation_for_sale)d" string="My Quotations" creatable="true"/>
@@ -92,7 +92,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Manager Dashboard" layout="manual">
+                <form string="Sales Manager Dashboard" layout="manual" version="7.0">
                     <board style="2-1">
                         <column>
                             <action name="%(sale.action_quotation_for_sale)d" string="Quotations" creatable="true"/>

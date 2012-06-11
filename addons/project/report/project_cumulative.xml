@@ -15,7 +15,6 @@
                     <field name="user_id"/>
                     <field name="remaining_hours"/>
                     <field name="kanban_state"/>
-                    <field name="stage_id"/>
                     <field name="state" groups="base.group_no_one"/>
                 </tree>
             </field>
@@ -32,18 +31,21 @@
                 </graph>
             </field>
         </record>
-        <record id="view_task_history_burndown_graph" model="ir.ui.view">
-            <field name="name">project.task.history.burndown.graph</field>
-            <field name="model">project.task.history.burndown</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Burndown Chart of Tasks" type="bar">
-                    <field name="date"/>
-                    <field name="remaining_hours" operator="+"/>
-                    <field name="type_id" group="True"/>
-                </graph>
-            </field>
-        </record>
+        
+        <!-- Where is this object in py file ? -->
+        
+        <!--<record id="view_task_history_burndown_graph" model="ir.ui.view">-->
+        <!--    <field name="name">project.task.history.burndown.graph</field>-->
+        <!--    <field name="model">project.task.history.burndown</field>-->
+        <!--    <field name="type">graph</field>-->
+        <!--    <field name="arch" type="xml">-->
+        <!--        <graph string="Burndown Chart of Tasks" type="bar">-->
+        <!--            <field name="date"/>-->
+        <!--            <field name="remaining_hours" operator="+"/>-->
+        <!--            <field name="type_id" group="True"/>-->
+        <!--        </graph>-->
+        <!--    </field>-->
+        <!--</record>-->
 
 
         <record id="view_task_history_search" model="ir.ui.view">
@@ -86,18 +88,18 @@
             parent="project_report_task" />
 
 
-        <record id="action_view_task_history_burndown" model="ir.actions.act_window">
-            <field name="name">Burndown Chart</field>
-            <field name="res_model">project.task.history.cumulative</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_task_history_burndown_graph"/>
-            <field eval="False" name="filter"/>
-            <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>
-        </record>
-        <menuitem action="action_view_task_history_burndown"
-            id="menu_action_view_task_history_burndown"
-            parent="project_report_task" />
+        <!--<record id="action_view_task_history_burndown" model="ir.actions.act_window">-->
+        <!--    <field name="name">Burndown Chart</field>-->
+        <!--    <field name="res_model">project.task.history.cumulative</field>-->
+        <!--    <field name="view_type">form</field>-->
+        <!--    <field name="view_mode">graph,tree</field>-->
+        <!--    <field name="view_id" ref="view_task_history_burndown_graph"/>-->
+        <!--    <field eval="False" name="filter"/>-->
+        <!--    <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>-->
+        <!--</record>-->
+        <!--<menuitem action="action_view_task_history_burndown"-->
+        <!--    id="menu_action_view_task_history_burndown"-->
+        <!--    parent="project_report_task" />-->
 
 
     </data>
