@@ -83,5 +83,11 @@ class account_config_settings(osv.osv_memory):
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
     }
+    
+    def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
+        if not module_purchase_analytic_plans:
+            return {'value':{'group_analytic_account_for_purchases': False} }
+        return {'value': {'group_analytic_account_for_purchases': True}}
+        
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
