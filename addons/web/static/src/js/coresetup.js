@@ -19,15 +19,15 @@ instance.web.OldWidget = instance.web.Widget.extend({
         this._super(parent);
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId('widget-');
+
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
+        this.setElement(tmp || this.make(this.tagName));
     },
     renderElement: function() {
         var rendered = this.render();
         if (rendered) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
+            var $el = $(rendered);
+            this.setElement($el);
         }
         return this;
     },
