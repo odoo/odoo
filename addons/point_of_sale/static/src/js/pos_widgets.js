@@ -330,10 +330,36 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function(parent, options){
             this._super(parent,options);
             this.button_list = [];
+            this.fake_buttons  = {};
+            this.visibility = {};
             this.total_visibility = true;
             this.help_visibility  = true;
             this.logout_visibility  = true;
             this.close_visibility  = true;
+        },
+        set_element_visible: function(button, visible, action){
+            if(visible != this.visibility[button]){
+                this.visibility[button] = visible;
+                if(visible){
+                    this.$('.'+button).show();
+                }else{
+                    this.$('.'+button).hide();
+                }
+            }
+            if(visible && action){
+                this.$('.'+button).off('click').click(action);
+            }
+        },
+        set_all_elements_invisible: function(){
+            for(el in this.visibility){
+                if(this.visibility[el]){
+                    this.visibility[el] = false;
+                    this.$('.'+el).hide();
+                }
+            }
+        },
+        set_total_value: function(value){
+            this.$('.value').html(value);
         },
         destroy_buttons:function(){
             for(var i = 0; i < this.button_list.length; i++){
@@ -403,9 +429,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible && action){
                 this.$element.find('.close-button').off('click').click(action);
             }
-        },
-        set_total_value: function(value){
-            this.$element.find('.value').html(value);
         },
     });
 
@@ -791,6 +814,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             
             this.pos = new module.PosModel(this.session);
             window.pos = this.pos;
+            window.pos_widget = this;
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
@@ -919,10 +943,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.order_widget = new module.OrderWidget(this, {});
             this.order_widget.replace($('#placeholder-OrderWidget'));
 
-            /*this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
+            this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
                 'keyboard_model': 'simple'
             });
-            this.onscreen_keyboard.appendTo($(".point-of-sale #content")); */
+            this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
             
             // --------  Screen Selector ---------
 
@@ -949,6 +973,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 default_cashier_screen: 'products',
                 default_mode: this.pos.use_selfcheckout ?  'client' : 'cashier',
             });
+            this.screen_selector.set_default_screen();
 
             window.screen_selector = this.screen_selector; //DEBUG
 

@@ -20,6 +20,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
+            console.log("ScreenSelector Initialized");
             this.pos = options.pos;
 
             this.screen_set = options.screen_set || {};
@@ -29,34 +30,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.default_client_screen = options.default_client_screen;
             this.default_cashier_screen = options.default_cashier_screen;
 
-            this.current_client_screen = this.screen_set[this.default_client_screen];
-            
-            this.current_cashier_screen = this.screen_set[this.default_cashier_screen];
-
             this.current_popup = null;
 
             this.current_mode = options.default_mode || 'client';
 
-            this.current_screen = this.current_mode === 'client' ? 
-                this.current_client_screen:
-                this.current_cashier_screen;
+            this.current_screen = null; 
 
-            var current = null;
             for(screen_name in this.screen_set){
-                var screen = this.screen_set[screen_name];
-                if(screen === this.current_screen){
-                    current = screen;
-                }else{
-                    screen.hide();
-                }
+                this.screen_set[screen_name].hide();
             }
             
             for(popup_name in this.popup_set){
                 this.popup_set[popup_name].hide();
-            }
-
-            if(current){
-                current.show();
             }
 
             this.selected_order = this.pos.get('selectedOrder');
@@ -73,12 +58,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.screen_set[screen_name] = screen;
             return this;
         },
-        show_popup: function(name,message){
+        show_popup: function(name){
             if(this.current_popup){
                 this.close_popup();
             }
             this.current_popup = this.popup_set[name];
-            this.current_popup.set_message(message);
             this.current_popup.show();
         },
         close_popup: function(){
@@ -122,15 +106,20 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             if(screen && screen !== this.current_screen){
                 if(this.current_screen){
+                    this.current_screen.close();
                     this.current_screen.hide();
                 }
                 this.current_screen = screen;
                 this.current_screen.show();
             }
         },
+        set_default_screen: function(){
+            this.set_current_screen(this.current_mode === 'client' ? this.default_client_screen : this.default_cashier_screen);
+        },
     });
 
     module.ScreenWidget = module.PosBaseWidget.extend({
+
         init: function(parent,options){
             this._super(parent,options);
             this.hidden = false;
@@ -153,6 +142,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.pos_widget.action_bar.destroy_buttons();
             }
         },
+        close: function(){
+        },
         // we need this because some screens re-render themselves when they are hidden
         // (due to some events, or magic, or both...)  we must make sure they remain hidden.
         // the good solution would probably be to make them not re-render themselves when they
@@ -166,18 +157,21 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
     });
+    
 
-    module.PopUpWidget = module.ScreenWidget.extend({
+    module.PopUpWidget = module.PosBaseWidget.extend({
+        show: function(){
+            if(this.$element){
+                this.$element.show();
+            }
+        },
         hide: function(){
             if(this.$element){
                 this.$element.hide();
             }
         },
-        set_message: function(message){
-            this.message = message || '';
-            this.renderElement();
-        },
     });
+
 
     module.HelpPopupWidget = module.PopUpWidget.extend({
         template:'HelpPopupWidget',
@@ -219,7 +213,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.pos.barcode_reader.save_callbacks();
             this.pos.barcode_reader.reset_action_callbacks();
-            this.pos.barcode_reader.set_action_callbacks({
+            this.pos.barcode_reader.set_action_callback({
                 'cashier': function(ean){
                     clearInterval(this.intervalID);
                     self.pos.proxy.cashier_mode_activated();
@@ -227,7 +221,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 },
             });
         },
-        hide:function(){
+        close:function(){
             this._super();
             this.pos.proxy.help_canceled();
             this.pos.barcode_reader.restore_callbacks();
@@ -277,7 +271,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             );
 
-            this.pos.barcode_reader.set_action_callbacks({
+            this.pos.barcode_reader.set_action_callback({
                 'cashier': function(ean){
                     self.pos.proxy.cashier_mode_activated();
                     self.pos_widget.screen_selector.set_user_mode('cashier');
@@ -292,7 +286,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 },
             });
         },
-        hide: function(){
+        close: function(){
             this._super();
             clearInterval(this.intervalID);
         },
@@ -337,7 +331,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         }
                     }
                 );
-                this.pos.barcode_reader.set_action_callbacks({
+                this.pos.barcode_reader.set_action_callback({
                     'cashier': function(ean){
                         self.pos.proxy.cashier_mode_activated();
                         self.pos_widget.screen_selector.set_user_mode('cashier');
@@ -386,7 +380,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             },500);
         },
-        hide: function(){
+        close: function(){
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);
@@ -453,7 +447,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             );
 
-            this.pos.barcode_reader.set_action_callbacks({
+            this.pos.barcode_reader.set_action_callback({
                 'cashier': function(ean){
                     clearInterval(this.intervalID);
                     self.pos.proxy.cashier_mode_activated();
@@ -461,7 +455,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 },
             });
         },
-        hide: function(){
+        close: function(){
             this._super();
             clearInterval(this.intervalID);
         },
@@ -492,7 +486,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     });
             }
 
-            this.pos.barcode_reader.set_action_callbacks({
+            this.pos.barcode_reader.set_action_callback({
                 'product': function(ean){
                     self.pos.proxy.transaction_start(); 
                     if(self.pos_widget.scan_product(ean)){
@@ -519,11 +513,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     }
                 },
             });
-        },
-        hide: function(){
-            this._super();
-            this.pos.barcode_reader.reset_action_callbacks();
-            this.pos_widget.action_bar.destroy_buttons();
         },
     });
 
@@ -559,7 +548,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     }
                 });
 
-            this.pos.barcode_reader.set_action_callbacks({
+            this.pos.barcode_reader.set_action_callback({
                 'product': function(ean){
                     if(self.pos_widget.scan_product(ean)){
                         self.pos.proxy.scan_item_success();
@@ -621,7 +610,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     });
             }
 
-            this.pos.barcode_reader.set_action_callbacks({
+            this.pos.barcode_reader.set_action_callback({
                 'product': function(ean){
                     if(self.pos_widget.scan_product(ean)){
                         self.pos.proxy.scan_item_success();
@@ -642,7 +631,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 },
             });
         },
-        hide: function(){
+        close: function(){
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);
@@ -755,7 +744,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     },
                 });
         },
-        hide: function(){
+        close: function(){
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);

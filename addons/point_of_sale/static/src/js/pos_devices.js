@@ -207,15 +207,15 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     // and deactivate the barcode reader. Use set_action_callbacks to tell it
     // what to do when it reads a barcode.
     module.BarcodeReader = instance.web.Class.extend({
-
+        actions:[
+            'product',
+            'cashier',
+            'client',
+            'discount',
+        ],
         init: function(attributes){
             this.pos = attributes.pos;
-            this.action_callback = {
-                'product': undefined,   
-                'cashier': undefined,
-                'client':  undefined,
-                'discount': undefined,
-            };
+            this.action_callback = {};
 
             this.action_callback_stack = [];
 
@@ -250,9 +250,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // possible actions include : 
         // 'product' | 'cashier' | 'client' | 'discount' 
     
-        set_action_callbacks: function(callbacks){
-            for(action in callbacks){
-                this.action_callback[action] = callbacks[action];
+        set_action_callback: function(action, callback){
+            if(arguments.length == 2){
+                this.action_callback[action] = callback;
+            }else{
+                for(action in arguments[0]){
+                    this.set_action_callback(action,arguments[0][action]);
+                }
             }
         },
 
@@ -395,12 +399,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         console.log('BARCODE:',parse_result);
 
                         if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                            $(QWeb.render('pos-scan-warning')).dialog({
-                                resizable: false,
-                                height:220,
-                                modal: true,
-                                title: "Warning",
-                            });
+                            console.log('ERROR: barcode checksum error:',parse_result);
                         }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
                             if(self.action_callback['product']){
                                 self.action_callback['product'](parse_result);
