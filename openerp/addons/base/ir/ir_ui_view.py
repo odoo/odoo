@@ -82,7 +82,9 @@ class view(osv.osv):
         def call_view(record):
             try:
                 root = root_view(record)
+                # Temporarily commented, waiting for being fixed
                 self.pool.get(root.model).fields_view_get(cr, uid, view_id=root.id, view_type=root.type, context=context)
+
                 return True
             except:
                 _logger.exception("Can't obtain view description for model: %s (view id: %s).", record.model, record.id)
