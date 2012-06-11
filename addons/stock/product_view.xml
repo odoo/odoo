@@ -8,11 +8,10 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                   <field name="pricelist_id" position="before">
-                       <field name="location_id" widget="selection" context="{'location': self}"/>
-                       <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
-                       <separator orientation="vertical"/>
-                   </field>
+                <field name="pricelist_id" position="before">
+                    <field name="location_id" widget="selection" context="{'location': self}"/>
+                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                </field>
             </field>
         </record>
 
@@ -22,9 +21,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <form position="inside">
-                    <group col="2" colspan="2">
-                        <separator string="Accounting Stock Properties" colspan="2"/>
+                <form position="inside" version="7.0">
+                    <group string="Accounting Stock Properties">
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
@@ -42,13 +40,15 @@
             <field name="arch" type="xml">
                 <page position="after" string="Information">
                     <page string="Properties">
-                        <separator string="Counter-Part Locations Properties" groups="stock.group_locations" colspan="4"/>
-                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
-                        <separator string="Accounting Entries" colspan="4"/>
-                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <group string="Counter-Part Locations Properties" groups="stock.group_locations">
+                            <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                        </group>
+                        <group string="Accounting Entries">
+                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
                     </page>
                 </page>
             </field>

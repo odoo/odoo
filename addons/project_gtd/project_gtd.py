@@ -101,6 +101,7 @@ class project_task(osv.osv):
         return True
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context: context = {}
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
