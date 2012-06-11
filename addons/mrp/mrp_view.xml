@@ -324,7 +324,7 @@
                         <field name="code" select="1" string="Reference"/>
                         <newline/>
                         <field name="product_qty"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="product.group_uom"/>
                         <field name="routing_id"  groups="mrp.group_mrp_routings"/>
                         <newline/>
                         <field name="product_uos_qty" groups="product.group_uos" />
@@ -339,7 +339,7 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
                                     <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
@@ -351,7 +351,7 @@
                                     <field name="code" select="1" string="Reference"/>
                                     <newline/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
                                     <field name="routing_id"  groups="mrp.group_mrp_routings"/>
                                     <newline/>
                                     <field name="product_uos_qty" groups="product.group_uos" />
@@ -367,7 +367,7 @@
                                             <tree string="Components" editable="bottom">
                                                 <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                                                 <field name="product_qty"/>
-                                                <field name="product_uom"/>
+                                                <field name="product_uom" groups="product.group_uom"/>
                                                 <field name="name" invisible="1"/>
                                                 <field name="date_start"/>
                                                 <field name="date_stop"/>
@@ -455,7 +455,7 @@
                     <field name="code"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="type"/>
                     <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
@@ -477,7 +477,7 @@
                     <field name="product_id" string="Component Product"/>
                     <field name="bom_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="type"/>
                     <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
@@ -633,9 +633,9 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <header>
-                    <button name="button_confirm" states="draft" string="Confirm Production"/>
-                    <button name="button_produce" states="ready" string="Start Production"/>
-                    <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" type="action"/>
+                    <button name="button_confirm" states="draft" string="Confirm Production" class="oe_form_button_hi"/>
+                    <button name="button_produce" states="ready" string="Start Production" class="oe_form_button_hi"/>
+                    <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" type="action" class="oe_form_button_hi"/>
                     <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                     <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
@@ -650,11 +650,11 @@
                         <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]"/>
                         <field name="product_qty"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="product.group_uom"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
-                            string="Change Qty" states="ready,confirmed" />
+                            string="Change Quantity" states="ready,confirmed" />
                     </group>
                     <group colspan="4" col="4">
                         <label string="" colspan="2"/>
@@ -667,17 +667,17 @@
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings" select="1"/>
-                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)" groups="stock.group_locations"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
                             <separator string="" colspan="4"/>
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
                                 <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
-                                    <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="Unit of Measure"/>
-                                    <field name="location_id"  string="Source Loc."/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
+                                    <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
@@ -699,8 +699,8 @@
                                        widget="one2many_list" mode="tree,form" height="275">
                                    <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
-                                       <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="Unit of Measure"/>
+                                       <field name="product_qty" readonly="1"/>
+                                       <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -785,7 +785,7 @@
                             <field name="date_start"/>
                             <field name="date_finished"/>
                             <field name="picking_id"/>
-                            <field name="move_prod_id"/>
+                            <field name="move_prod_id" groups="stock.group_locations"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -844,7 +844,9 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{}</field>
-            <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumption of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
+            <field name="help">Click here to create a new Manufacturing Order
+                &lt;p&gt;
+                To process the production, don't forget to create a Bill of Material. Manufacturing Order can be automatically generated based on procurement rules specified on the product</field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action"
             parent="menu_mrp_manufacturing" sequence="1"/>
@@ -934,7 +936,7 @@
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
                     <field name="product_uos" groups="product.group_uos"/>
                 </form>
@@ -948,7 +950,7 @@
                 <tree string="Scheduled Products">
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
                     <field name="product_uos" groups="product.group_uos"/>
                 </tree>
@@ -987,7 +989,17 @@
             <field name="arch" type="xml">
                 <group name="misc" position="after">
                     <separator string="Bill of Materials" colspan="4"/>
-                    <field name="bom_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                    <field name="bom_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"  widget="one2many_list" 
+                            mode="tree,form">
+                                <tree string="Bill of Materials">
+                                     <field name="name" string="Component Name"/>
+                                    <field name="bom_id"/>
+                                    <field name="product_qty" string="Quantity of Product"/>
+                                    <field name="type"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                            </field>
                 </group>
             </field>
         </record>

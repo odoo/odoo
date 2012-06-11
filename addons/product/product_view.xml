@@ -557,7 +557,7 @@
                     <field name="product_name"/>
                     <field name="product_code"/>
                     <field name="min_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="delay"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="product.group_sale_pricelist" name="pricelist_ids" nolabel="1" widget="one2many_list">
@@ -715,7 +715,7 @@
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
-                            <separator string="Description"/>
+                            <separator string="Internal Description"/>
                             <field colspan="4" name="description" nolabel="1"/>
                             <separator string="Sale Description"/>
                             <field colspan="4" name="description_sale" nolabel="1"/>
