@@ -128,6 +128,12 @@ module named account_voucher.
         "res_config_view.xml",
         "account_pre_install.yml"
     ],
+    'js': [
+        'static/src/js/account.js',
+    ],
+    'qweb' : [
+        "static/src/xml/*",
+    ],
     'demo_xml': [
         'demo/account_demo.xml',
         'project/project_demo.xml',
