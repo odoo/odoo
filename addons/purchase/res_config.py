@@ -48,13 +48,7 @@ class purchase_config_settings(osv.osv_memory):
             help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier. 
             Example: Product: this product is deprecated, do not purchase more than 5.
                     Supplier: don't forget to ask for an express delivery."""),
-        'module_product_manufacturer': fields.boolean("Define Manufacturers on Products",
-            help="""This allows you to define the following for a product:
-                    * Manufacturer
-                    * Manufacturer Product Name
-                    * Manufacturer Product Code
-                    * Product Attributes.
-                This installs the module product_manufacturer."""),
+        
         'module_purchase_double_validation': fields.boolean("Two Levels of Approval",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),

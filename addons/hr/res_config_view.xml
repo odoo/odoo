@@ -20,6 +20,7 @@
                         <button string="Cancel" special="cancel"/>
                     </header>
                     <sheet layout="auto">
+                      <group colspan="4" col="4">
                         <separator string="Additional Features" colspan="4"/>
                         <field name="module_hr_expense"/>
                         <field name="module_hr_recruitment"/>
@@ -35,8 +36,8 @@
                         <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)"/>
                         <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)"/>
                         <field name="module_hr_timesheet_sheet"/>
-
                         <group name="config_recruitment" colspan="4"/>
+                      </group>
                     </sheet>
                 </form>
             </field>

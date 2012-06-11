@@ -12,7 +12,9 @@
                     <field name="module_document_ftp"/>
                     <newline/>
                     <field name="fetchmail_applicants"/>
-                    <button colspan="2" type="object" name="configure_fetchmail_applicants" string="Configure" icon="gtk-execute"/>
+                     <group attrs="{'invisible': [('fetchmail_applicants','=',False)]}">
+                        <button colspan="2" type="object" name="configure_fetchmail_applicants" string="Configure" icon="gtk-execute"/>
+                     </group>
                 </group>
             </field>
         </record>
