@@ -57,7 +57,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" select="1"/>
+                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                 </field>
             </field>
         </record>
@@ -160,7 +160,7 @@
             <field name="model">hr_timesheet_invoice.factor</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Type of invoicing">
+                <form string="Type of invoicing" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="customer_name"/>

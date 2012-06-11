@@ -35,11 +35,11 @@
       <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Bank Account Configuration">
-          <field name="name" select="1"/>
+          <field name="name"/>
           <field name="bank_id"/>
           <field name="currency"/>
           <field name="description1"/>
-          <field name="journal" select="1"/>
+          <field name="journal"/>
           <field name="state"/>
         </tree>
       </field>
@@ -49,9 +49,9 @@
       <field name="model">coda.bank.account</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="CODA Bank Account Configuration">
+        <form string="CODA Bank Account Configuration" version="7.0">
             <group col="4">
-                <field name="name" select="1" colspan="4"/>
+                <field name="name" colspan="4"/>
                 <field name="bank_id" domain="[('partner_id.ref_companies', 'in', [company_id])]"/>
                 <field name="description1"/>
                 <field name="currency"/>
@@ -99,7 +99,7 @@
       <field name="model">account.coda.trans.type</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="CODA Transaction Type">
+          <form string="CODA Transaction Type" version="7.0">
               <group col="4">
                   <field name="type"/>
                   <field name="parent_id"/>
@@ -136,7 +136,7 @@
       <field name="model">account.coda.trans.code</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="CODA Transaction Code">
+          <form string="CODA Transaction Code" version="7.0">
               <group col="4">
                   <field name="code"/>
                   <field name="type"/>
@@ -173,7 +173,7 @@
       <field name="model">account.coda.trans.category</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="CODA Transaction Category">
+          <form string="CODA Transaction Category" version="7.0">
               <field name="category"/>
               <field name="description"/>
           </form>
@@ -205,7 +205,7 @@
       <field name="model">account.coda.comm.type</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="CODA Structured Communication Type">
+          <form string="CODA Structured Communication Type" version="7.0">
               <field name="code"/>
               <field name="description"/>
           </form>
@@ -245,7 +245,7 @@
       <field name="model">account.coda</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="CODA File">
+          <form string="CODA File" version="7.0">
               <group col="4">
                   <field name="coda_creation_date"/>
                   <field name="name"/>
@@ -321,7 +321,7 @@
       <field name="model">coda.bank.statement</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-          <form string="CODA Bank Statement">
+          <form string="CODA Bank Statement" version="7.0">
               <group col="4">
                   <field name="name"/>
                   <field name="date"/>
@@ -349,7 +349,7 @@
                       <field name="globalisation_amount" string="Glob. Amount"/>
                       <field name="globalisation_id" string="Glob. Id"/>
                     </tree>
-                    <form string="CODA Statement Lines">
+                    <form string="CODA Statement Lines" version="7.0">
                       <group col="4">
                           <field name="sequence" string="Seq"/>
                           <field name="date"/>
@@ -445,7 +445,7 @@
       <field name="model">coda.bank.statement.line</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="CODA Statement Line">
+        <form string="CODA Statement Line" version="7.0">
             <group col="4">
                 <field name="statement_id"/>
                 <field name="coda_bank_account_id"/>

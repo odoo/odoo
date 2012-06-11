@@ -22,7 +22,7 @@
             <field name="model">hr.employee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee">
+                <form string="Employee" version="7.0">
                     <sheet>
                     <div class="oe_right oe_form_button_box">
                         <!-- Put here related buttons -->
@@ -112,7 +112,7 @@
                     <field name="department_id" widget="selection">
                     </field>
                     <field name="job_id" widget="selection"/>
-                    <field name="category_ids" select="1"/>
+                    <field name="category_ids"/>
                     <field name="parent_id"/>
                     <newline />
                     <group expand="0" string="Group By...">
@@ -274,7 +274,7 @@
             <field name="model">hr.employee.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Category">
+                <form string="Employee Category" version="7.0">
                     <group>
                         <field name="name" />
                         <field name="parent_id" />
@@ -349,7 +349,7 @@
             <field name="model">hr.job</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Job">
+                <form string="Job" version="7.0">
                     <header>
                         <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
                         <button name="job_open" string="In Position" states="old,recruit" type="object"/>

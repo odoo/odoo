@@ -37,7 +37,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
-                    <field name="uos_id"/>
+                    <field name="uos_id" groups="product.group_uom"/>
                     <field name="price_unit"/>
                     <field name="discount"/>
                     <field name="price_subtotal"/>
@@ -50,7 +50,7 @@
             <field name="model">account.invoice.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invoice Line">
+                <form string="Invoice Line" version="7.0">
                     <group col="4">
                         <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                         <field name="name"/>
@@ -94,7 +94,7 @@
             <field name="model">account.invoice.tax</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manual Invoice Taxes">
+                <form string="Manual Invoice Taxes" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>
@@ -146,7 +146,7 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="invoice_open" states="draft,proforma2" string="Validate"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid'/>
@@ -156,23 +156,16 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Supplier Invoice">
-                    <h1>
-                        <field name="state" class="oe_form_inline"/>
-                        <field name="number"/>
-                    </h1>
                     <group>
                         <group>
                             <field string="Supplier" name="partner_id"
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                            <label string="Address"/>
-                            <div>
-                                <p>Put multi-line address function field here</p>
-                            </div>
                             <field name="fiscal_position" widget="selection"/>
                         </group>
                         <group>
+                            <field name="number"/>
                             <field name="date_invoice"/>
                             <field name="period_id" domain="[('state', '=', 'draft')]"
                                 groups="account.group_account_user" widget="selection"/>
@@ -209,7 +202,7 @@
                                 </tree>
                             </field>
                             <group>
-                                <group>
+                                <div>
                                     <field name="tax_line">
                                         <tree editable="bottom" string="Taxes">
                                             <field name="name"/>
@@ -224,7 +217,7 @@
                                         </tree>
                                     </field>
                                     <button name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
-                                </group>
+                                </div>
                                 <group class="oe_form_subtotal_footer">
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
@@ -279,7 +272,7 @@
             <field name="model">account.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="action_invoice_sent" type="object" string="Send by Email" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
                     <button name="invoice_print" string="Print Invoice" type="object" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
@@ -309,11 +302,6 @@
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer': 1}"
                                 domain="[('customer', '=', True)]"/>
-
-                            <label string="Address"/>
-                            <div>
-                                <p>Put multi-line address function field here</p>
-                            </div>
                             <field name="fiscal_position" widget="selection" options='{"quick_create": false}'/>
                             <field name="payment_term" widget="selection"/>
 

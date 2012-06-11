@@ -19,7 +19,7 @@
             <field name="model">hr_timesheet_sheet.sheet.account</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet by Accounts">
+                <form string="Timesheet by Accounts" version="7.0">
                     <group col="4">
                         <field name="sheet_id"/>
                         <field name="name" groups="analytic.group_analytic_accounting"/>
@@ -62,7 +62,7 @@
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet">
+                <form string="Timesheet" version="7.0">
                 <header>
                     <button name="button_confirm" states="draft" string="Submited to Manager" type="object"/>
                     <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
@@ -81,7 +81,7 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="department_id"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="user_id" invisible="1"/>
                     </group>
                     <notebook>
@@ -122,7 +122,7 @@
                                     <field invisible="1" name="general_account_id"/>
                                     <field invisible="1" name="user_id" required="1"/>
                                 </tree>
-                                <form string="Timesheet Lines">
+                                <form string="Timesheet Lines" version="7.0">
                                     <field name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                                     <field name="name"/>
@@ -239,7 +239,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
                 <field name="date" position="after">
-                    <field name="sheet_id" select="1"/>
+                    <field name="sheet_id"/>
                 </field>
             </field>
         </record>
@@ -255,7 +255,7 @@
             <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
             <field name="arch" type="xml">
                 <field name="action" position="after">
-                    <field name="sheet_id" select="1" />
+                    <field name="sheet_id" />
                 </field>
             </field>
         </record>

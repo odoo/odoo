@@ -20,7 +20,7 @@
             <field name="model">delivery.carrier</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Carrier">
+                <form string="Carrier" version="7.0">
                     <group col="4" name="general">
                         <field name="name"/>
                         <field name="partner_id"/>
@@ -41,7 +41,7 @@
                               <field name="sequence"/>
                               <field name="name"/>
                          </tree>
-                        <form string="Delivery grids">
+                        <form string="Delivery grids" version="7.0">
                              <group col="4">
                                  <field name="name"/>
                                  <field name="active"/>
@@ -99,7 +99,7 @@
             <field name="model">delivery.grid</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery grids">
+                <form string="Delivery grids" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -139,8 +139,8 @@
             <field name="model">delivery.grid.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Grid Lines">
-                    <field colspan="4" name="name" select="1"/>
+                <form string="Grid Lines" version="7.0">
+                    <field colspan="4" name="name"/>
                     <div>
                         <label string="condition" for="type"/>
                         <field name="type" class="oe_form_inline"/>
@@ -230,9 +230,8 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <group colspan="2" col="2" position="after">
-                    <group colspan="2" col="2">
-                        <separator string="Weights" colspan="2"/>
+                <group name="picking" position="after">
+                    <group string="Weights">
                         <field name="weight"/>
                         <field name="weight_net"/>
                     </group>
@@ -246,9 +245,8 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
             <field name="arch" type="xml">
-                <group colspan="2" col="2" position="after">
-                    <group colspan="2" col="2">
-                        <separator string="Weights" colspan="2"/>
+                <group name="picking" position="after">
+                    <group string="Weights">
                         <field name="weight"/>
                         <field name="weight_net"/>
                     </group>
@@ -262,11 +260,15 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='bellow_the_lines_hook']" position="inside">
-                    <separator string="Delivery Costs" colspan="4"/>
-                    <field name="carrier_id" context="{'order_id':active_id or False}" colspan="2"/>
-                    <button name="delivery_set" states="draft" string="Add Now on the Sale Order" type="object" icon="gtk-add" colspan="2"/>
-                    <label string="if you don't click on 'Add Now', the delivery cost won't be added on the Sale Order, but will be added on the Delivery Order only" colspan="4"/>
+                <xpath expr="//group[@name='sale_total']" position="after">
+                    <group>
+                        <label for="carrier_id"/>
+                        <div>
+                            <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_form_inline"/>
+                            <button name="delivery_set" states="draft" string="Add to Sale Order" type="object"/>
+                        </div>
+                        <label string="If you do not 'Add to Sale Order', the delivery charges will be added based on the delivery order."/>
+                    </group>
                 </xpath>
             </field>
         </record>

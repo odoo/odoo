@@ -44,9 +44,11 @@
             <field name="model">product.manufacturer.attribute</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Product Template Name">
-                    <field name="name"/>
-                    <field name="value"/>
+                <form string="Product Template Name" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="value"/>
+                    </group>
                 </form>
             </field>
         </record>
