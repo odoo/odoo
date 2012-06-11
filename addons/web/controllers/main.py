@@ -1390,6 +1390,17 @@ class Binary(openerpweb.Controller):
     def placeholder(self, req):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+    def content_disposition(self, filename, req):
+        filename = filename.encode('utf8')
+        escaped = urllib2.quote(filename)
+        browser = req.httprequest.user_agent.browser
+        version = int((req.httprequest.user_agent.version or '0').split('.')[0])
+        if browser == 'msie' and version < 9:
+            return "attachment; filename=%s" % escaped
+        elif browser == 'safari':
+            return "attachment; filename=%s" % filename
+        else:
+            return "attachment; filename*=UTF-8''%s" % escaped
 
     @openerpweb.httprequest
     def saveas(self, req, model, field, id=None, filename_field=None, **kw):
@@ -1425,7 +1436,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', 'attachment; filename="%s"' % filename)])
+                 ('Content-Disposition', self.content_disposition(filename, req))])
 
     @openerpweb.httprequest
     def saveas_ajax(self, req, data, token):
@@ -1455,7 +1466,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', 'attachment; filename="%s"' % filename)],
+                        ('Content-Disposition', self.content_disposition(filename, req))],
                 cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
