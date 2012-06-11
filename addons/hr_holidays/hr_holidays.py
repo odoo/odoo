@@ -397,11 +397,11 @@ class hr_holidays(osv.osv):
         for obj in self.browse(cr, uid, ids):
             if obj.holiday_status_id.double_validation:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request has been <b>validated</b>. A second validation is necessary and is now pending.")
+                    _("The %s request has been <b>Approved</b>. A second validation is necessary and is now pending.")
                     % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
             else:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request has been <b>validated</b>. The validation process is now over.")
+                    _("The %s request has been <b>Approved</b>. The validation process is now over.")
                     % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
     
     def holidays_valid2_notificate(self, cr, uid, ids, context=None):
