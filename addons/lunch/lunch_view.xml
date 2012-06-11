@@ -23,20 +23,22 @@
             <field name="name">Order</field>
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form version="7.0">
                 <header>
                     <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
                     <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
-                <sheet string="Order" layout="auto">
-                    <field name="user_id" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="product" select="1" on_change="onchange_product(product)"/>
-                    <field name="category"/>
-                    <field name="descript"/>
-                    <field name="price"/>
-                    <field name="cashmove"/>
+                <sheet string="Order">
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="date"/>
+                        <field name="product" on_change="onchange_product(product)"/>
+                        <field name="category"/>
+                        <field name="descript"/>
+                        <field name="price"/>
+                        <field name="cashmove"/>
+                    </group>
                 </sheet>
                 </form>
             </field>
@@ -103,9 +105,9 @@
             <field name="name">Cashboxes</field>
             <field name="model">lunch.cashbox</field>
             <field name="arch" type="xml">
-                <form string="Cashboxes">
-                    <field name="name" select="1"/>
-                    <field name="manager" select="1"/>
+                <form string="Cashboxes" version="7.0">
+                    <field name="name"/>
+                    <field name="manager"/>
                 </form>
             </field>
         </record>
@@ -118,9 +120,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Cashboxes" colors="red:sum_remain&lt;=0">
-                    <field name="name" select="1"/>
-                    <field name="manager" select="1"/>
-                    <field name="sum_remain" select="1"/>
+                    <field name="name"/>
+                    <field name="manager"/>
+                    <field name="sum_remain"/>
                 </tree>
             </field>
         </record>
@@ -143,13 +145,15 @@
             <field name="name">CashMove</field>
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
-                <form string="CashMove">
-                    <field name="name" select="1"/>
-                    <field name="user_cashmove" select="1"/>
-                    <field name="amount"/>
-                    <field name="box" select="1"/>
-                    <field name="create_date" select="1"/>
-                    <field name="active" select="1"/>
+                <form string="CashMove" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="user_cashmove"/>
+                        <field name="amount"/>
+                        <field name="box"/>
+                        <field name="create_date"/>
+                        <field name="active"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -163,10 +167,10 @@
             <field name="arch" type="xml">
                 <tree string="CashMove" editable="top">
                     <field name="create_date"/>
-                    <field name="box" select="1"/>
-                    <field name="name" select="1" required="1"/>
-                    <field name="user_cashmove" select="1"/>
-                    <field name="amount" select="1" sum="Total amount"/>
+                    <field name="box"/>
+                    <field name="name" required="1"/>
+                    <field name="user_cashmove"/>
+                    <field name="amount" sum="Total amount"/>
                 </tree>
             </field>
         </record>
@@ -215,9 +219,9 @@
             <field name="name"> Category of product </field>
             <field name="model">lunch.category</field>
             <field name="arch" type="xml">
-                <form string="Category">
+                <form string="Category" version="7.0">
                     <separator string="Category Related to Products" colspan="4"/>
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                 </form>
             </field>
         </record>
@@ -230,7 +234,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Order">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
@@ -249,9 +253,9 @@
             <field name="type">form</field>
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
-                <form string="Products">
+                <form string="Products" version="7.0">
                      <group col="6">
-                          <field name="name" select="1"/>
+                          <field name="name"/>
                           <field name="category_id"/>
                           <field name="price" />
                      </group>
@@ -331,9 +335,9 @@
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>
-                    <field name="box" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="amount" select="1" sum="Total box" />
+                    <field name="box"/>
+                    <field name="user_id"/>
+                    <field name="amount" sum="Total box" />
                 </tree>
             </field>
         </record>
@@ -345,10 +349,12 @@
             <field name="model">report.lunch.amount</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Box Amount by User">
-                    <field name="user_id" select="1"/>
-                    <field name="box" select="1"/>
-                    <field name="amount" select="1"/>
+                <form string="Box Amount by User" version="7.0">
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="box"/>
+                        <field name="amount"/>
+                    </group>
                 </form>
             </field>
         </record>

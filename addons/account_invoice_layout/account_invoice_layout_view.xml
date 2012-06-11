@@ -12,7 +12,7 @@
                 <field name="name" position="before">
                     <field name="state" on_change="onchange_invoice_line_view(state)" />
                     <field name="sequence"/>
-            	</field>
+                </field>
             </field>
         </record>
 
@@ -95,12 +95,13 @@
         <field name="model">notify.message</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Messages">
-                <separator string="Write a notification or a wishful message." colspan="4"/>
-                <field name="name" colspan="2" />
-                <newline/>
-                <separator string="Special Message" colspan="4"/>
-                <field name="msg" nolabel="1" colspan="2"/>
+            <form string="Messages" version="7.0">
+                <group string="Write a notification or a wishful message.">
+                    <field name="name"/>
+                </group>
+                <group string="Special Message">
+                    <field name="msg"/>
+                </group>
             </form>
         </field>
     </record>
