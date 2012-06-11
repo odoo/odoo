@@ -275,14 +275,14 @@
         <field name="arch" type="xml">
                 <search string="Search Meetings">
                        <group>
-                           <field name="name" string="Meeting / Partner"
-                               filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
-                           <field name="user_id">
-                               <filter string="My Meetings"
+                           <filter string="My Meetings"
                                    icon="terp-personal"
                                    domain="[('user_id','=',uid)]"
                                    help="My Meetings" />
-                           </field>
+                           <separator orientation="vertical"/>
+                           <field name="name" string="Meeting / Partner"
+                               filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
+                           <field name="user_id"/>
                            <field name="partner_id"/>
                        </group>
                 </search>

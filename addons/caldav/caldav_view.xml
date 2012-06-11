@@ -162,11 +162,11 @@
                     <filter string="Event" icon="terp-calendar" domain="[('type', '=', 'vevent')]"/>
                     <filter string="Todo" icon="terp-calendar" domain="[('type', '=', 'vtodo')]"/>
                     <separator orientation="vertical"/>
+                    <filter string="My Calendar(s)" icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)"/>
+                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="user_id" widget="selection">
-                        <filter  string="My Calendar(s)" icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)"/>
-                    </field>
+                    <field name="user_id" widget="selection"/>
                     <field name="collection_id"/>
                 </search>
             </field>

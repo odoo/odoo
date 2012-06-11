@@ -99,18 +99,16 @@
                             string="Closed"
                             domain="[('state','=','done')]"
                             help="Leads/Opportunities which are in done state"/>
-
                         <separator orientation="vertical" />
-                        <field name="section_id"
-                            context="{'invisible_section': False}">
-                            <filter string="My Sales Team(s)" icon="terp-personal+"
+                        <filter string="My Sales Team(s)" icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)" />
-                        </field>
-                        <field name="user_id" string="Salesperson">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
+                                help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
+                        <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
+                        <separator orientation="vertical" />
+                        <field name="section_id"
+                            context="{'invisible_section': False}"/>
+                        <field name="user_id" string="Salesperson"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters...">

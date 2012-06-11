@@ -296,28 +296,27 @@
                     domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
-                <field name="name" string="Lead / Customer"
-                    filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
-                <field name="user_id">
-                    <filter string="Unassigned Leads"
+                <filter string="Unassigned Leads"
                         icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
-                </field>
-                <field name="subjects"/>
-                <field name="section_id" widget="selection"
-                    context="{'invisible_section': False}">
-                    <filter string="My Sales Team(s)"
+                <filter string="Leads Assigned to Me or My Team(s)"
                         icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                        help="My Sales Team(s)"/>
-                    <filter string="Show Sales Team"
+                        help="Leads that are assigned to one of the sale teams I manage, or to me"/>
+                <separator orientation="vertical"/>
+                <filter string="Show Sales Team"
                         icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="[]"
                         help="Show Sales Team"/>
-                </field>
+                <field name="name" string="Lead / Customer"
+                    filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                <field name="user_id"/>
+                <field name="subjects"/>
+                <field name="section_id" widget="selection"
+                    context="{'invisible_section': False}"/>
                 <separator orientation="vertical"/>
                 <field name="country_id" context="{'invisible_country': False}">
                     <filter string="Show Countries" icon="terp-personal+" context="{'invisible_country': False}" help="Show Countries"/>
@@ -535,30 +534,33 @@
             <search string="Search Opportunities">
                 <filter icon="terp-check"
                     string="New"  help="New Opportunities"
+                    name="new"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
+                    name="open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"  help="Pending Opportunities"
+                    name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
-                <field name="name" string="Opportunity / Customer"
-                    filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                <field name="user_id">
-                    <filter string="Unassigned Opportunities"
+                <filter string="Unassigned Opportunities"
                         icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
-                </field>
+               <filter string="Opportunities Assigned to Me or My Team(s)"  icon="terp-personal+"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        context="{'invisible_section': False}"
+                        help="Opportunities that are assigned to either me or one of the sale teams I manage" />
+                <separator orientation="vertical"/>
+                <field name="name" string="Opportunity / Customer"
+                    filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
+                <field name="user_id"/>
                 <field name="country"/>
                 <field name="partner_id"/>
                 <field name="section_id"
                     context="{'invisible_section': False, 'default_section_id': self}">
-                    <filter string="My Sales Team(s)"  icon="terp-personal+"
-                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                        context="{'invisible_section': False}"
-                        help="My Sales Team(s)" />
                     <filter string="Show Sales Team"
                         icon="terp-personal+"
                         context="{'invisible_section': False}"

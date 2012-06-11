@@ -26,17 +26,14 @@
                         <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]"
                             name="renew"
                             help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
-
+                        <separator orientation="vertical"/>
+                        <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
+                        <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
                         <separator orientation="vertical"/>
                         <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
-                        <field name="partner_id">
-                            <filter string="Partner on analytic account" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
-                        </field>
-                        <field name="user_id">
-                            <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
-                        </field>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
                         <field name="date"/>
-
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

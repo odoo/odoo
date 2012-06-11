@@ -35,11 +35,10 @@
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
               <group>
+                    <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id" />
-                    <field name="user_id">
-                    <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
-                    </field>
+                    <field name="user_id"/>
                     <field name="date"/>
                     <field name="day"/>
                 </group>

@@ -411,13 +411,13 @@
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
+                        <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal" />
+                        <separator orientation="vertical"/>
                         <field name="number"
                             string="Reference"
                             filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
                         <field name="partner_id"/>
-                        <field name="user_id" widget="selection" string="Salesperson">
-                            <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal" />
-                        </field>
+                        <field name="user_id" widget="selection" string="Salesperson"/>
                     </group>
                     <newline/>
                     <group>
