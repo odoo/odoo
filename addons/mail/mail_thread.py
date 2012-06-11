@@ -143,7 +143,10 @@ class mail_thread(osv.Model):
         
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
-        
+
+        # Set as unread if writer is not the document responsible
+        #model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
+
         # special: if install mode, do not push (demo data: avoid crowdy Wall)
         if context.get('install_mode', False):
             return msg_id
@@ -192,7 +195,7 @@ class mail_thread(osv.Model):
             parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
             parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
             notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
-        
+
         # remove duplicate entries
         notif_user_ids = list(set(notif_user_ids))
         return notif_user_ids
@@ -880,7 +883,7 @@ class mail_thread(osv.Model):
         for subscription_id in subscription_ids:
             subscription_hide_obj.create(cr, uid, {'subscription_id': subscription_id, 'subtype': subtype}, context=context)
         return True
-    
+
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
@@ -977,10 +980,15 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
     # Thread_state
     #------------------------------------------------------
-    
+
     def message_mark_as_read(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_thread_read': True}, context=context)
-    
+
+    def message_create_mark_as_unread(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
+                self.mark_as_unread(cr, uid, [obj.id], context=None)
+
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_thread_read': False}, context=context)
 

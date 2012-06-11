@@ -506,13 +506,6 @@ class hr_applicant(base_stage, osv.Model):
                 user_ids.append(obj.user_id.id)
         return user_ids
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         if not stage_id: return True

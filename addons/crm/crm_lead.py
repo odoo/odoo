@@ -40,7 +40,7 @@ class crm_lead(base_stage, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin', 'mail.thread', 'res.partner']
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -258,13 +258,6 @@ class crm_lead(base_stage, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
     }
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_thread_read == False and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
