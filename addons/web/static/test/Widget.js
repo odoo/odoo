@@ -4,6 +4,15 @@ $(document).ready(function () {
         setup: function () {
             instance = window.openerp.init([]);
             window.openerp.web.corelib(instance);
+
+            instance.web.qweb = new QWeb2.Engine();
+            instance.web.qweb.add_template('<no><t t-name="test.widget.template">' +
+                '<ol>' +
+                    '<li t-foreach="5" t-as="counter">' +
+                        '<t t-esc="counter"/>' +
+                    '</li>' +
+                '</ol>' +
+            '</t></no>');
         }
     };
     var instance;
@@ -134,15 +143,6 @@ $(document).ready(function () {
     });
 
     test('template', function () {
-        instance.web.qweb = new QWeb2.Engine();
-        instance.web.qweb.add_template('<no><t t-name="test.widget.template">' +
-            '<ol>' +
-                '<li t-foreach="5" t-as="counter">' +
-                    '<t t-esc="counter"/>' +
-                '</li>' +
-            '</ol>' +
-        '</t></no>');
-
         var w = new (instance.web.Widget.extend({
             template: 'test.widget.template'
         }));
@@ -151,5 +151,16 @@ $(document).ready(function () {
         equal(w.el.nodeName, 'OL');
         equal(w.$el.children().length, 5);
         equal(w.el.textContent, '01234');
+    });
+
+    module('Widget.$', mod);
+    test('basic-alias', function () {
+        var w = new (instance.web.Widget.extend({
+            template: 'test.widget.template'
+        }));
+        w.renderElement();
+
+        ok(w.$('li:eq(3)').is(w.$el.find('li:eq(3)')),
+           "should do the same thing as calling find on the widget root");
     });
 });
