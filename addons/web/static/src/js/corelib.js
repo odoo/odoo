@@ -734,14 +734,12 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     setElement: function (element) {
         if (this.$el) {
             this.undelegateEvents();
-            this.unbindElements();
             this.$el.replaceWith(element);
         }
 
         this.$element = this.$el = (element instanceof $) ? element : $(element);
         this.el = this.$el[0];
 
-        this.bindElements();
         this.delegateEvents();
 
         return this;
@@ -795,28 +793,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     },
     undelegateEvents: function () {
         this.$el.off('.delegated-events' + this._uid);
-    },
-    elements: {},
-    bindElements: function () {
-        var elements = getValue(this, 'elements');
-        if (_.isEmpty(elements)) { return; }
-
-        for (var selector in elements) {
-            if (!elements.hasOwnProperty(selector)) { continue; }
-
-            // TODO: ensure at least one element matched?
-            this[elements[selector]] = this.$(selector);
-        }
-    },
-    unbindElements: function () {
-        var elements = getValue(this, 'elements');
-        if (_.isEmpty(elements)) { return; }
-
-        for (var selector in elements) {
-            if (!elements.hasOwnProperty(selector)) { continue; }
-
-            delete this[elements[selector]];
-        }
     },
     /**
      * Shortcut for ``this.$el.find(selector)``
