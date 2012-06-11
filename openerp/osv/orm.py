@@ -1859,6 +1859,24 @@ class BaseModel(object):
                 etree.SubElement(view, 'newline')
         return view
 
+    def _get_default_search_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, using _rec_name if
+        it's one of the columns or the first column it finds otherwise
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
+        _rec_name = self._rec_name
+        if _rec_name not in self._columns:
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+
+        view = etree.Element('search', string=self._description)
+        etree.SubElement(view, 'field', name=_rec_name)
+        return view
+
     def _get_default_tree_view(self, cr, user, context=None):
         """ Generates a single-field tree view, using _rec_name if
         it's one of the columns or the first column it finds otherwise
@@ -1927,38 +1945,6 @@ class BaseModel(object):
                     _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
 
         return view
-
-    def _get_default_search_view(self, cr, uid, context=None):
-        """
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
-        :returns: an lxml document of the view
-        :rtype: etree._Element
-        """
-        form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
-        tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
-
-        # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
-        fields = self.fields_get(cr, uid, context=context)
-        fields_to_search = set(
-            field for field, descriptor in fields.iteritems()
-            if descriptor.get('select'))
-
-        for view in (form_view, tree_view):
-            view_root = etree.fromstring(view['arch'])
-            # Only care about select=1 in xpath below, because select=2 is covered
-            # by the custom advanced search in clients
-            fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
-
-        tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
-
-        field_group = etree.SubElement(search_view, "group")
-        for field_name in fields_to_search:
-            etree.SubElement(field_group, "field", name=field_name)
-
-        return search_view
 
     #
     # if view_id, view_type is not required
