@@ -372,14 +372,24 @@
         <field name="arch" type="xml">
             <form string="Opportunities" validate="0">
                 <header>
-                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" />
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" />
-                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" />
-                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" />
-                    <button name="case_cancel" string="Cancel" states="draft" type="object" />
-                    <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    <button name="case_mark_won" string="Mark Won" type="object"
+                            states="draft,open,pending"/>
+                    <button name="case_open" string="Open" type="object"
+                            states="draft,pending"/>
+                    <button name="case_escalate" string="Escalate" type="object"
+                            states="open"/>
+                    <button name="case_mark_lost" string="Mark Lost" type="object"
+                            states="draft,open"/>
+                    <button name="case_reset" string="Reset to Draft" type="object"
+                            states="done,cancel"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft"/>
+                    <button name="stage_previous" string="Previous" type="object"
+                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
+                    <button name="stage_next" string="Next" type="object"  
+                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
+                    <field name="stage_id" nolabel="1" widget="statusbar"
+                            on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_form_button_box">
@@ -480,6 +490,8 @@
                                 <field name="day_open" groups="base.group_no_one"/>
                                 <field name="day_close" groups="base.group_no_one"/>
                                 <field name="referred"/>
+                                <field name="state" groups="base.group_no_one"/>
+                                <field name="type" invisible="1"/>
                             </group>
                             <group string="References">
                                 <field name="ref"/>
