@@ -287,8 +287,10 @@
                 </header>
                 <sheet string="Invoice">
                     <h1>
-                        <field name="state" class="oe_form_inline"/>
-                        <field name="number"/>
+                        <label string="Draft Invoice " attrs="{'invisible': [('state','not in',('draft',))]}"/>
+                        <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
+                        <label string="Invoice " attrs="{'invisible': [('state','in',('draft','proforma','proforma2'))]}"/>
+                        <field name="number" readonly="1"/>
                     </h1>
                     <label string="Concerns" for="name" class="oe_form_readonly_hidden"/>
                     <h2>
@@ -333,8 +335,8 @@
                         <page string="Invoice">
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
                             <group>
-                                <group>
-                                    <field name="tax_line">
+                                <div>
+                                    <field name="tax_line" nolabel="1">
                                         <tree editable="bottom" string="Taxes">
                                             <field name="name"/>
                                             <field name="account_id" groups="account.group_account_invoice"/>
@@ -349,7 +351,7 @@
                                     <button name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes"
                                         type="object" groups="account.group_account_user" icon="terp-stock_format-scientific"
                                         help="This action will erase taxes"/>
-                                </group>
+                                </div>
                                 <group class="oe_form_subtotal_footer">
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
