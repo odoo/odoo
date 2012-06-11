@@ -68,7 +68,7 @@ def initialize(cr):
         category_id = create_categories(cr, categories)
 
         if info['installable']:
-            if info['auto_install']:
+            if info['auto_install'] and not info['depends']:
                 state = 'to install'
             else:
                 state = 'uninstalled'
