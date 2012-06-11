@@ -89,9 +89,23 @@ $colour4: #8a89ba
 
 // }}}
 
+
 .openerp.openerp-web-client-container
     height: 100%
     position: relative
+
+// Jquery ui Overrides {{{
+.ui-widget
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    font-size: 13px
+.ui-menu
+    .ui-menu-item
+        margin: 0 8px 0 0
+        padding: 0 0 0 12px
+        width: auto
+        a.ui-state-active
+            background: #f0f0fa
+// }}}
 
 .openerp
     // Global style {{{
@@ -142,6 +156,10 @@ $colour4: #8a89ba
     input, textarea
         border: 1px solid #ccc
         @include radius(3px)
+    img
+        vertical-align: middle
+    h4
+        margin: 4px 0
 
     // }}}
     // Generic classes {{{
@@ -415,7 +433,7 @@ $colour4: #8a89ba
             width: 24px
             height: 24px
             margin: -2px 2px 0 0
-            @include radius(4px)
+            @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
         .oe_dropdown_toggle:after
@@ -683,71 +701,6 @@ $colour4: #8a89ba
             color: $colour4
             &:hover
                 text-decoration: underline
-    // }}}
-    // Content Header MIT {{{
-    .oe-view-manager-header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        h2
-            float: left
-            font-size: 18px
-            margin: 1px 0
-            a
-                color: $colour4
-        .buttons
-            padding-right: 8px
-            li
-                float: left
-                margin-right: 12px
-        .filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .header-row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_vm_switch
-            li
-                padding-left: 1px
-                text-align: center
-                width: 24px
-                height: 24px
-                line-height: 24px
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .button-group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                width: 100%
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                color: #fff
-                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
     // }}}
     // ViewManager.header {{{
     .oe_view_manager_header
@@ -1172,13 +1125,12 @@ $colour4: #8a89ba
                     display: block
 
             // delete buttons
-            .oe_searchview_custom_delete
-                position: absolute
-                left: 4px
-                top: 3px
             .oe_searchview_custom_delete, .searchview_extended_delete_prop
+                display: inline-block
                 width: 12px
                 height: 12px
+                line-height: 12px
+                padding: 1px
                 color: #8786b7
                 line-height: 8px
                 text-align: center
@@ -1190,6 +1142,24 @@ $colour4: #8a89ba
                     background: #8786b7
                     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
                     @include radius(2px)
+            .oe_searchview_custom_delete
+                display: none
+                position: absolute
+                bottom: 1px
+                right: 4px
+            .oe_searchview_custom_private, .oe_searchview_custom_public
+                &:hover
+                    .oe_searchview_custom_delete
+                        display: inline-block
+            .oe_searchview_custom_public:after
+                content: ","
+                font-family: "entypoRegular" !important
+                font-size: 22px
+                font-weight: 300 !important
+                margin: 0 0 0 4px
+                padding: 0
+
+                    
     // }}}
     // Views Common {{{
     .oe_view_nocontent
@@ -1736,32 +1706,39 @@ $colour4: #8a89ba
     // ListView {{{
     .oe-listview-content
         width: 100%
+        td:first-child, th:first-child
+            width: 17px
+            &:after
+                border-width: 0
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
-            td, th
-                padding: 3px 6px
-                line-height: 18px
-            th:after
-                content: ""
-                float: right
-                margin-top: 7px
-                border-width: 0 4px 4px
-                border-style: solid
-                border-color: #000 transparent
-                visibility: hidden
-            th.sortup:after
-                visibility: visible
-                @include opacity(0.6)
-            th.sortdown:after
-                border-bottom: none
-                border-left: 4px solid transparent
-                border-right: 4px solid transparent
-                border-top: 4px solid #000
-                visibility: visible
-                @include box-shadow(none)
-                @include opacity(0.6)
+            th
+                position: relative
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        th:after
+            position: absolute
+            right: 6px
+            content: ""
+            margin-top: 7px
+            border-width: 0 4px 4px
+            border-style: solid
+            border-color: #000 transparent
+            visibility: hidden
+        th.sortup:after
+            visibility: visible
+            @include opacity(0.6)
+        th.sortdown:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
             // TODO mit
             //th:hover:after
             //    border-bottom: none
@@ -1830,6 +1807,25 @@ $colour4: #8a89ba
         .oe_tooltip_technical_title
             font-weight: bold
     // }}}
+    // View Editor {{{
+    .oe_view_editor
+        width: 100%
+        border-collapse: collapse
+        margin-left: -12px
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        td
+            text-align: center
+            white-space: nowrap
+            border: 1px solid #D8D8D8
+            cursor: pointer
+            font-size: 90%
+    .oe_view_editor_field td
+        border: 0px !important
+    .oe_view_editor tr:hover
+        background-color: #ecebf2
+    // }}}
     // Debugging stuff {{{
     .oe_layout_debugging
         .oe_form_group
@@ -1865,32 +1861,15 @@ $colour4: #8a89ba
         float: right
         color: #333
     // }}}
-//view editor
-.openerp
-    .oe_view_editor
-        width: 100%
-        border-collapse: collapse
-        margin-left: -12px
-        width: 100%
-        background-color: white
-        border-spacing: 0
-        td
-            text-align: center
-            white-space: nowrap
-            border: 1px solid #D8D8D8
-            cursor: pointer
-            font-size: 90%
-    .oe_view_editor_field td
-        border: 0px !important
-    .oe_view_editor tr:hover
-        background-color: #ecebf2
 
+// Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
     background-size: cover
     background-attachment: fixed
     >*
         opacity: 0.70
+// }}}
 
 // Transitional overrides for old styles {{{
 .openerp
