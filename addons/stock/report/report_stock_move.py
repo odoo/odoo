@@ -153,7 +153,7 @@ class report_stock_inventory(osv.osv):
         'date': fields.datetime('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September')]),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September')],'Month'),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
@@ -173,6 +173,8 @@ class report_stock_inventory(osv.osv):
 CREATE OR REPLACE view report_stock_inventory AS (
     (SELECT
         min(m.id) as id, m.date as date,
+        to_char(m.date, 'YYYY') as year,
+        to_char(m.date, 'MM') as month,
         m.partner_id as partner_id, m.location_id as location_id,
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
@@ -195,6 +197,8 @@ CREATE OR REPLACE view report_stock_inventory AS (
 ) UNION ALL (
     SELECT
         -m.id as id, m.date as date,
+        to_char(m.date, 'YYYY') as year,
+        to_char(m.date, 'MM') as month,
         m.partner_id as partner_id, m.location_dest_id as location_id,
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
