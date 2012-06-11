@@ -102,26 +102,32 @@ class payroll_advice(osv.osv):
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice Note'
     _columns = {
-        'name':fields.char('Name', size=2048, required=True, readonly=False),
+        'name':fields.char('Name', size=16, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
-        'date': fields.date('Date'),
+        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]},),
         'state':fields.selection([
             ('draft','Draft Sheet'),
             ('confirm','Confirm Sheet'),
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
-        'number':fields.char('Number', size=64, required=False, readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', required=False),
-        'chaque_nos':fields.char('Chaque Nos', size=256, required=False, readonly=False),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'bank_id':fields.many2one('res.bank', 'Bank', required=False, help="Select the Bank Address from whcih the salary is going to be paid"),
+        'number':fields.char('Number', size=16, readonly=True),
+        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary'),
+        'chaque_nos':fields.char('Chaque Nos', size=256),
+        'company_id':fields.many2one('res.company', 'Company',required=True),
+        'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank Address from whcih the salary is going to be paid"),
     }
+    
+    def _get_bank(self, cr, uid, context=None):
+        bank_ids = self.pool.get('res.bank').search(cr, uid, [('name', '=', 'Reserve')])
+        return bank_ids and bank_ids[0] or False
+    
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'bank_id': _get_bank
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
@@ -157,16 +163,13 @@ class payroll_advice(osv.osv):
         self.write(cr, uid, ids, {'number':number}, context=context)
 
     def confirm_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'confirm'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'draft'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'draft'}, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
 
     def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         res = {}
@@ -188,10 +191,11 @@ class payroll_advice_line(osv.osv):
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
-        'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
-        'name':fields.char('Bank Account No.', size=64, required=True, readonly=False),
+        'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice',),
+        'name':fields.char('Bank Account No.', size=16, required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
+        'company_id': fields.related('advice_id','company_id', type='many2one', required=True,relation='res.company', string='Company'),
     }
 
 payroll_advice_line()
