@@ -110,7 +110,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'),('recruit', 'In Recruitement'),('done', 'Done')], 'Status', readonly=True, required=True, help='By default all job are \'In position\', set it \'In Recruitment\' if recruitment process is going on for this job position.'),
+        'state': fields.selection([('open', 'In Position'),('recruit', 'In Recruitement')], 'Status', readonly=True, required=True, help='By default all job are \'In position\', set it \'In Recruitment\' if recruitment process is going on for this job position.'),
     }
     _defaults = {
         'expected_employees': 1,
@@ -136,10 +136,6 @@ class hr_job(osv.osv):
 
     def job_open(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
-        return True
-
-    def job_done(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'done', 'no_of_recruitment': 0})
         return True
 
 hr_job()
