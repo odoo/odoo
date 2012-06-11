@@ -18,16 +18,16 @@
             <field name="model">survey</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form string="Survey">
                 <header>
                     <button name="survey_open" string="Open" states="cancel,close" type="object"/>
                     <button name="survey_close" string="Close" states="open" type="object"/>
                     <button name="survey_cancel" string="Cancel" states="open" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                 </header>
-                <sheet string="Survey" layout="auto">
-                    <field name="title" select="1"/>
+                <sheet>
                     <group col="6" colspan="6">
+                    <field name="title" select="1"/>
                         <field name="responsible_id"/>
                         <field name="id" invisible="1"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
@@ -38,7 +38,7 @@
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                             string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Survey">
                             <field name="page_ids" colspan="4" nolabel="1" mode="form,tree">
                                 <form string="Survey Page">
@@ -1056,7 +1056,7 @@
             <field name="model">survey.request</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form version="7.0">
                 <header>
                     <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object"/>
                     <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object"/>

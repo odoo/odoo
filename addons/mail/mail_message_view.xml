@@ -25,18 +25,20 @@
             <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Message">
-                    <group colspan="2" col="2">
-                        <field name="subject"/>
-                        <field name="date"/>
-                        <field name="type"/>
-                        <field name="body_text"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <field name="user_id" string="User" readonly="0"/>
-                        <field name="model"/>
-                        <field name="res_id"/>
-                        <field name="parent_id"/>
+                <form string="Message" version="7.0">
+                    <group>
+                        <group>
+                            <field name="subject"/>
+                            <field name="date"/>
+                            <field name="type"/>
+                            <field name="body_text"/>
+                        </group>
+                        <group>
+                            <field name="user_id" string="User"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="parent_id"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -99,52 +101,47 @@
             <field name="model">mail.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email message">
-                    <group colspan="4" col="6">
-                        <field name="subject" colspan="4"/>
-                        <field name="date"/>
-                        <field name="user_id" string="User"/>
+                <form string="Email message" version="7.0">
+                    <label for="subject" class="oe_form_readonly_hidden"/>
+                    <h1><field name="subject"/></h1>
+                    <label for="user_id"/>
+                    <h2><field name="user_id" class="oe_form_inline" string="User"/> on <field name="date" class="oe_form_inline"/></h2>
+                    <group col="4">
                         <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
                         <field name="type"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
-                            <group col="2" colspan="2">
-                                <separator string="Recipients" colspan="4"/>
+                            <group string="Recipients">
                                 <field name="email_from"/>
                                 <field name="email_to"/>
                                 <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
                                 <field name="email_bcc" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
                                 <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
                             </group>
-                            <group col="4" colspan="2">
-                                <separator string="Message Details" colspan="4"/>
+                            <group col="4" string="Message Details">
                                 <field name="model"/>
                                 <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"
                                     attrs="{'invisible':['|', ('model', '=', ''), ('res_id', '=', False)]}"/>
                                 <field name="res_id"/>
                             </group>
-                            <notebook colspan="4">
+                            <notebook>
                                 <page string="Body (Rich)" attrs="{'invisible':[('content_subtype','=','plain')]}">
-                                    <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
+                                    <field name="body_html" widget="text_html"/>
                                 </page>
                                 <page string="Body (Plain)">
-                                    <field name="body_text" colspan="4" widget="text" nolabel="1"/>
+                                    <field name="body_text" widget="text"/>
                                 </page>
                             </notebook>
-                            <separator string="" colspan="4"/>
-                            <group col="6" colspan="6">
+                            <group col="5">
                                 <field name="state" colspan="2"/>
                                 <field name="content_subtype" attrs="{'invisible':[('content_subtype', '=', False)]}"/>
-                                <group colspan="2">
-                                    <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                     context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
-                                </group>
                             </group>
                         </page>
                         <page string="Attachments">
-                            <separator string="Attachments" colspan="4"/>
-                            <field name="attachment_ids" nolabel="1" colspan="4"/>
+                            <field name="attachment_ids"/>
                         </page>
                         <page string="Advanced" groups="base.group_no_one">
                             <group col="2" colspan="4">

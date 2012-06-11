@@ -811,7 +811,7 @@ class task(base_stage, osv.osv):
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
-
+        if context is None: context = {}
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
         obj_tm = users_obj.browse(cr, 1, uid, context=context).company_id.project_time_mode_id
@@ -916,7 +916,6 @@ class task(base_stage, osv.osv):
     
     def case_close(self, cr, uid, ids, context=None):
         """ Closes Task """
-        request = self.pool.get('res.request')
         if not isinstance(ids, list): ids = [ids]
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
@@ -949,7 +948,6 @@ class task(base_stage, osv.osv):
         return self.case_cancel(cr, uid, ids, context=context)
     
     def case_cancel(self, cr, uid, ids, context=None):
-        request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:

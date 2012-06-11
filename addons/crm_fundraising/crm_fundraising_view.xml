@@ -61,7 +61,7 @@
             <field name="model">crm.fundraising</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form version="7.0">
                 <header>
                     <button name="case_close" string="Done" states="open,pending" type="object" />
                     <button name="case_open" string="Open" states="draft,pending" type="object" />
@@ -72,57 +72,55 @@
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet string="Funds Form" layout="auto">
-                    <group colspan="4" col="6" class="oe_form_header">
-                        <field name="name" select="1" string="Name"/>
+                    <group col="4">
+                        <field name="name" string="Name"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="user_id" string="Responsible"/>
                         <field name="date"/>
-                        <field name="categ_id" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        <field name="type_id" string="Payment Mode" select="1" widget="selection"/>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                        <field name="type_id" string="Payment Mode" widget="selection"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Funds">
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Communication"/>
-                                <field name="partner_id" select="1"
-                                    on_change="onchange_partner_id(partner_id, email_from)"
-                                    colspan="2" />
-                                <field name="email_from" colspan="2"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Estimates"/>
-                                <field name="planned_cost"/>
-                                <field name="planned_revenue"/>
-                                <field name="probability"/>
+                            <group>
+                                <group string="Communication">
+                                    <field name="partner_id"
+                                        on_change="onchange_partner_id(partner_id, email_from)"
+                                        />
+                                    <field name="email_from"/>
+                                </group>
+                                <group string="Estimates">
+                                    <field name="planned_cost"/>
+                                    <field name="planned_revenue"/>
+                                    <field name="probability"/>
+                                </group>
                             </group>
                             <separator colspan="4" string="Notes"/>
-                                <field name="description" nolabel="1" colspan="4"/>
+                            <field name="description"/>
                         </page>
                         <page string="Extra Info">
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Misc"/>
-                                <field name="active"/>
-                                <field name="id" select="1"/>
-                                <field name="priority" string="Priority"/>
-                            </group>
-                            <group col="2" colspan="2" groups="base.group_no_one">
-                                <separator colspan="4" string="Dates"/>
-                                <field name="create_date"/>
-                                <field name="date_closed"/>
-                                <field name="duration"/>
-                            </group>
-                            <newline/>
-                            <group colspan="4" col="2">
-                                <separator colspan="4" string="References"/>
-                                <field colspan="4" name="ref"/>
-                                <field colspan="4" name="ref2"/>
+                            <group>
+                                <group string="Misc">
+                                    <field name="active"/>
+                                    <field name="id"/>
+                                    <field name="priority" string="Priority"/>
+                                </group>
+                                <group groups="base.group_no_one" string="Dates">
+                                    <field name="create_date"/>
+                                    <field name="date_closed"/>
+                                    <field name="duration"/>
+                                </group>
+                                <group string="References">
+                                    <field name="ref"/>
+                                    <field name="ref2"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <footer>
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
+                </footer>
                 </form>
             </field>
         </record>

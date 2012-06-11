@@ -82,7 +82,7 @@ class account_analytic_plan_line(osv.osv):
     _description = "Analytic Plan Line"
     _order = "sequence, id"
     _columns = {
-        'plan_id': fields.many2one('account.analytic.plan','Analytic Plan'),
+        'plan_id': fields.many2one('account.analytic.plan','Analytic Plan',required=True),
         'name': fields.char('Plan Name', size=64, required=True, select=True),
         'sequence': fields.integer('Sequence'),
         'root_analytic_id': fields.many2one('account.analytic.account', 'Root Account', help="Root account of this plan.", required=False),
