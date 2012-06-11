@@ -322,7 +322,7 @@
                             <field name="photo" widget='image' nolabel="1"/>
                         </group>
                         <group colspan="4">
-                            <h2><field name="name" required="1" nolabel="1" colspan="4"/></h2><newline/>
+                            <h2><field name="name" required="1" nolabel="1" colspan="4" placeholder="Customer Name"/></h2><newline/>
                                 <field name="function" attrs="{'invisible': [('is_company', '=', True)]}"/>
                                 <field name="title" size="0" domain="[('domain', '=', 'contact')]"/>
                                 <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
@@ -354,11 +354,11 @@
                             </group>
                             <group colspan="2">
                                 <separator string="Communication" colspan="4"/>
-                                <field name="phone" colspan="4"/>
+                                <field name="phone" colspan="4" placeholder="+32.81.81.37.00"/>
                                 <field name="mobile" colspan="4"/>
                                 <field name="fax" colspan="4"/>
                                 <field name="email" widget="email" colspan="4"/>
-                                <field name="website" widget="url" colspan="4"/>
+                                <field name="website" widget="url" colspan="4" placeholder="www.openerp.com"/>
                                 <field name="ref" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
@@ -431,7 +431,7 @@
                             <field name="category_id" colspan="4" nolabel="1" widget="many2many_tags"/>
                         </page>
                         <page string="Notes">
-                            <field name="comment" colspan="4" nolabel="1"/>
+                            <field name="comment" colspan="4" nolabel="1" placeholder="Internal notes about this customer..."/>
                         </page>
                     </notebook>
                 </form>

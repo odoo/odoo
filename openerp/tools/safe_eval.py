@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    Copyright (C) 2004-2010 OpenERP s.a. (<http://www.openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP s.a. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -238,6 +238,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'set' : set
             }
     )
-    return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    try:
+        return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    except Exception:
+        _logger.exception('Cannot eval %r', expr)
+        raise
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
