@@ -48,6 +48,10 @@ class Registry(object):
         self._store_function = {}
         self._init = True
         self._init_parent = {}
+        
+        # modules fully loaded (maintained during init phase by `loading` module)
+        self._init_modules = set()
+
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
 
