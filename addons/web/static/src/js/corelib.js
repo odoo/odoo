@@ -239,6 +239,20 @@ instance.web.ParentedMixin = {
 };
 
 /**
+ * Utility function for APIs which can take either a value or a function which
+ * returns a value
+ *
+ * @param {Object} object
+ * @param {String} property
+ * @returns {Object}
+ */
+var getValue = function (object, property) {
+    if (object == null) { return null; }
+    var value = object[property];
+    return _.isFunction(value) ? value.call(object) : value;
+};
+
+/**
  * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
  *
  * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
@@ -490,23 +504,19 @@ instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
      *
      * The semantics of this precisely replace closing over the method call.
      *
-     * @param {String} method_name name of the method to invoke
+     * @param {String|Function} method function or name of the method to invoke
      * @returns {Function} proxied method
      */
-    proxy: function (method_name) {
+    proxy: function (method) {
         var self = this;
         return function () {
-            return self[method_name].apply(self, arguments);
+            var fn = (method instanceof String) ? self[method] : method;
+            return fn.apply(self, arguments);
         }
     }
 });
 
 instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
-    /**
-     * Tag name when creating a default $element.
-     * @type string
-     */
-    tagName: 'div',
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
@@ -516,14 +526,9 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
-     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
-     * to bind the current Widget to an already existing part of the DOM, which is not compatible
-     * with the DOM insertion methods provided by the current implementation of Widget. So
-     * for new components this argument should not be provided any more.
      */
     init: function(parent) {
         instance.web.CallbackEnabledMixin.init.call(this);
-        this.$element = $(document.createElement(this.tagName));
         this.setParent(parent);
     },
     /**
@@ -533,8 +538,8 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
-        if(this.$element != null) {
-            this.$element.remove();
+        if(this.$el) {
+            this.$el.remove();
         }
         instance.web.PropertiesMixin.destroy.call(this);
     },
@@ -546,7 +551,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     appendTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.appendTo(t);
+            self.$el.appendTo(t);
         }, target);
     },
     /**
@@ -557,7 +562,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     prependTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.prependTo(t);
+            self.$el.prependTo(t);
         }, target);
     },
     /**
@@ -568,7 +573,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertAfter: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.insertAfter(t);
+            self.$el.insertAfter(t);
         }, target);
     },
     /**
@@ -579,7 +584,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertBefore: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.insertBefore(t);
+            self.$el.insertBefore(t);
         }, target);
     },
     /**
@@ -589,7 +594,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     replace: function(target) {
         return this.__widgetRenderAndInsert(_.bind(function(t) {
-            this.$element.replaceAll(t);
+            this.$el.replaceAll(t);
         }, this), target);
     },
     __widgetRenderAndInsert: function(insertion, target) {
@@ -612,6 +617,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      * @returns {jQuery.Deferred}
      */
     start: function() {
+        return $.when();
     }
 });
 
@@ -688,12 +694,9 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
-     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
-     * to bind the current Widget to an already existing part of the DOM, which is not compatible
-     * with the DOM insertion methods provided by the current implementation of Widget. So
-     * for new components this argument should not be provided any more.
      */
     init: function(parent) {
+        this._uid = _.uniqueId('-widget-');
         instance.web.WidgetMixin.init.call(this,parent);
         this.session = instance.connection;
     },
@@ -703,20 +706,126 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * key that references `this`.
      */
     renderElement: function() {
-        var rendered = null;
-        if (this.template)
-            rendered = instance.web.qweb.render(this.template, {widget: this});
-        if (_.str.trim(rendered)) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
+        var $el;
+        if (this.template) {
+            $el = $(_.str.trim(instance.web.qweb.render(
+                this.template, {widget: this})));
+        } else {
+            var attrs = _.extend({}, getValue(this, 'attributes') || {});
+            if (this.id) { attrs.id = this.id; }
+            if (this.className) { attrs['class'] = this.className; }
+            $el = $(this.make(this.tagName, attrs))
+        }
+        this.setElement($el);
+    },
+
+    /**
+     * Re-sets the widget's root element (el/$el/$element).
+     *
+     * Includes:
+     * * re-delegating events
+     * * re-binding sub-elements
+     * * if the widget already had a root element, replacing the pre-existing
+     *   element in the DOM
+     *
+     * @param {HTMLElement | jQuery} element new root element for the widget
+     * @return {*}
+     */
+    setElement: function (element) {
+        if (this.$el) {
+            this.undelegateEvents();
+            this.unbindElements();
+            this.$el.replaceWith(element);
+        }
+
+        this.$element = this.$el = (element instanceof $) ? element : $(element);
+        this.el = this.$el[0];
+
+        this.bindElements();
+        this.delegateEvents();
+
+        return this;
+    },
+
+    // Backbone-ish API
+    tagName: 'div',
+    id: null,
+    className: null,
+    attributes: {},
+    /**
+     * Utility function to build small DOM elements.
+     *
+     * @param {String} tagName name of the DOM element to create
+     * @param {Object} [attributes] map of DOM attributes to set on the element
+     * @param {String} [content] HTML content to set on the element
+     * @return {Element}
+     */
+    make: function (tagName, attributes, content) {
+        var el = document.createElement(tagName);
+        if (attributes) {
+            $(el).attrs(attributes);
+        }
+        if (content) {
+            $(el).html(content);
+        }
+        return el;
+    },
+    events: {},
+    delegateEvents: function () {
+        var events = getValue(this, 'events');
+        if (_.isEmpty(events)) { return; }
+
+        for(var key in events) {
+            if (!events.hasOwnProperty(key)) { continue; }
+
+            var method = this.proxy(events[key]);
+
+            var match = /^(\S+)(\s+(.*))?$/.exec(key);
+            var event = match[1];
+            var selector = match[3];
+
+            // add namespace for easy un-delegation
+            event += '.delegated-events' + this._uid;
+            if (!selector) {
+                this.$el.on(event, method);
+            } else {
+                this.$el.on(event, selector, method);
+            }
+        }
+    },
+    undelegateEvents: function () {
+        this.$el.off('.delegated-events' + this._uid);
+    },
+    elements: {},
+    bindElements: function () {
+        var elements = getValue(this, 'elements');
+        if (_.isEmpty(elements)) { return; }
+
+        for (var selector in elements) {
+            if (!elements.hasOwnProperty(selector)) { continue; }
+
+            // TODO: ensure at least one element matched?
+            this[elements[selector]] = this.$(selector);
+        }
+    },
+    unbindElements: function () {
+        var elements = getValue(this, 'elements');
+        if (_.isEmpty(elements)) { return; }
+
+        for (var selector in elements) {
+            if (!elements.hasOwnProperty(selector)) { continue; }
+
+            delete this[elements[selector]];
         }
     },
     /**
-     * Shortcut for $element.find() like backbone
+     * Shortcut for ``this.$el.find(selector)``
+     *
+     * @param {String} selector CSS selector, rooted in $el
+     * @returns {jQuery} selector match
      */
-    "$": function() {
-        return this.$element.find.apply(this.$element,arguments);
+    $: function(selector) {
+        return this.$el.find(selector);
     },
     /**
      * Informs the action manager to do an action. This supposes that
