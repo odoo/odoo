@@ -728,7 +728,6 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
             }
-            //instance.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }

@@ -140,7 +140,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     on_resized: function() {
-        //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     destroy: function () {
         this.close();
