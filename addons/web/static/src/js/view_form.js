@@ -2790,6 +2790,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 view.options.not_interactible_on_create = true;
             } else if (view.view_type === "kanban") {
                 view.options.confirm_on_delete = false;
+                view.options.sortable = false;
                 if (self.get("effective_readonly")) {
                     view.options.action_buttons = false;
                     view.options.quick_creatable = false;
@@ -3309,6 +3310,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
+                    'sortable': false,
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
