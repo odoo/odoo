@@ -159,8 +159,6 @@ class payroll_advice(osv.osv):
                             'bysal':line.total
                             }
                 id = advice_line_pool.create(cr, uid, advice_line, context=context)
-        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
-        self.write(cr, uid, ids, {'number':number}, context=context)
 
     def confirm_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)

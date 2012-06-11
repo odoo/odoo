@@ -46,7 +46,6 @@ Indian Payroll Rules.
     'update_xml': [
          'l10n_in_hr_payroll_view.xml',
          'l10n_in_hr_payroll_data.xml',
-         'l10n_in_hr_payroll_sequence.xml',
          'data/hr.salary.rule.csv',
          'l10n_in_hr_payroll_report.xml',
      ],
