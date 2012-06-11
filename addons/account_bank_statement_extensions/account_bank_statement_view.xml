@@ -9,26 +9,28 @@
       <field name="model">account.bank.statement.line.global</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Batch Payment Info">
-          <field name="name"/>
-          <field name="amount"/>
-          <field name="code"/>
-          <field name="parent_id"/>
-          <field name="type"/>
-          <notebook colspan="4">
-            <page string="Transactions">
-              <field colspan="4" name="bank_statement_line_ids" nolabel="1"/>
-            </page>
-            <page string="Child Batch Payments">
-              <field colspan="4" name="child_ids" nolabel="1">
-                <tree string="Child Batch Payments">
-                  <field name="name"/>
-                  <field name="amount"/>
-                  <field name="code"/>
-                </tree>
-              </field>
-            </page>
-          </notebook>
+        <form string="Batch Payment Info" version="7.0">
+            <group col="4">
+                <field name="name"/>
+                <field name="amount"/>
+                <field name="code"/>
+                <field name="parent_id"/>
+                <field name="type"/>
+            </group>
+            <notebook>
+                <page string="Transactions">
+                  <field name="bank_statement_line_ids"/>
+                </page>
+                <page string="Child Batch Payments">
+                  <field name="child_ids">
+                    <tree string="Child Batch Payments">
+                      <field name="name"/>
+                      <field name="amount"/>
+                      <field name="code"/>
+                    </tree>
+                  </field>
+                </page>
+            </notebook>
         </form>
       </field>
     </record>
@@ -49,10 +51,10 @@
             <field name="globalisation_id" string="Glob. Id"/>
             <field name="state" invisible="1"/>
           </xpath>
-          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='date']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='date']" position="after">
             <field name="val_date"/>
           </xpath>
-          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='amount']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
             <field name="globalisation_id"/>
             <field name="state" invisible="1"/>
           </xpath>
@@ -92,23 +94,25 @@
       <field name="model">account.bank.statement.line</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Statement Line">
-          <field name="statement_id"/>
-          <field name="journal_id"/>
-          <field name="date"/>
-          <field name="val_date"/>
-          <field name="name"/>
-          <field name="ref" readonly="0"/>
-          <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-          <field name="type" on_change="onchange_type(partner_id, type)"/>
-          <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
-          <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
-          <field name="amount"/>
-          <field name="globalisation_id"/>
-          <field name="sequence" readonly="0"/>
-          <field name="state"/>
-          <separator colspan="4" string="Notes"/>
-          <field colspan="4" name="note" nolabel="1"/>
+        <form string="Statement Line" version="7.0">
+          <group col="4">
+              <field name="statement_id"/>
+              <field name="journal_id"/>
+              <field name="date"/>
+              <field name="val_date"/>
+              <field name="name"/>
+              <field name="ref" readonly="0"/>
+              <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+              <field name="type" on_change="onchange_type(partner_id, type)"/>
+              <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+              <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
+              <field name="amount"/>
+              <field name="globalisation_id"/>
+              <field name="sequence" readonly="0"/>
+              <field name="state"/>
+          </group>
+          <separator string="Notes"/>
+          <field name="note"/>
         </form>
       </field>
     </record>

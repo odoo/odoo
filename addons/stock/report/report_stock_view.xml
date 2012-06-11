@@ -53,9 +53,11 @@
             <field name="model">report.stock.lines.date</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Dates of Inventories">
-                    <field name="product_id"/>
-                    <field name="date"/>
+                <form string="Dates of Inventories" version="7.0">
+                    <group>
+                        <field name="product_id"/>
+                        <field name="date"/>
+                    </group>
                 </form>
             </field>
         </record>
