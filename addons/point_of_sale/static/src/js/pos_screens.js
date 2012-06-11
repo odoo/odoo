@@ -236,18 +236,82 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template:'ErrorNoSessionPopupWidget',
     });
 
-    module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
-        template:'ScaleInviteScreenWidget',
+    module.BaseScreenWidget = module.ScreenWidget.extend({
+
+        show_numpad:     true,
+        show_leftpane:   true,
+        show_total:      true,
+
+        help_button_action: function(){
+            this.pos_widget.screen_selector.show_popup('help');
+        },
+
+        logout_button_action: function(){
+            this.pos_widget.screen_selector.set_user_mode('client');
+        },
+
+        barcode_cashier_action: function(ean){
+            this.pos.proxy.cashier_mode_activated();
+            this.pos_widget.screen_selector.set_user_mode('cashier');
+        },
+
+        barcode_product_screen:         'scan',
+        barcode_product_error_popup:    'error',
+        barcode_product_action: function(ean){
+            if(this.pos_widget.scan_product(ean)){
+                this.pos.proxy.scan_item_success();
+                if(this.barcode_product_screen){ 
+                    this.pos_widget.screen_selector.set_current_screen(this.barcode_product_screen);
+                }
+            }else{
+                if(this.barcode_product_error_popup){
+                    this.pos_widget.screen_selector.show_popup(this.barcode_product_error_popup);
+                }
+            }
+        },
+
+        barcode_client_action: function(ean){
+            this.pos.proxy.transaction_start(); 
+            //TODO 'log the client'
+            this.pos_widget.screen_selector.show_popup('receipt');
+        },
+
+        barcode_discount_action: function(ean){
+            var currentOrder = this.pos.get('selectedOrder');
+            var last_orderline = currentOrder.last_orderline;
+            if(last_orderline){
+                last_orderline.set_discount(ean.value)
+            }
+        },
+
         show: function(){
             this._super();
             var self = this;
+            var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
 
-            this.pos_widget.set_numpad_visible(false);
-            this.pos_widget.set_leftpane_visible(true);
-            this.pos_widget.set_cashier_controls_visible(false);
-            this.pos_widget.action_bar.set_total_visible(true);
-            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
-            this.pos_widget.action_bar.set_logout_visible(false);
+            this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
+            this.pos_widget.set_leftpane_visible(this.show_leftpane);
+            this.pos_widget.set_cashier_controls_visible(cashier_mode);
+            this.pos_widget.action_bar.set_total_visible(this.show_total);
+            this.pos_widget.action_bar.set_help_visible(!cashier_mode, function(){ self.help_button_action(); });
+            this.pos_widget.action_bar.set_logout_visible(cashier_mode, function(){ self.logout_button_action(); });
+            this.pos_widget.action_bar.set_close_visible(cashier_mode);
+
+            this.pos.barcode_reader.set_action_callback({
+                'cashier': self.barcode_cashier_action ? function(ean){ self.barcode_cashier_action(ean); } : undefined ,
+                'product': self.barcode_product_action ? function(ean){ self.barcode_product_action(ean); } : undefined ,
+                'client' : self.barcode_client_action ?  function(ean){ self.barcode_client_action(ean);  } : undefined ,
+                'discount': self.barcode_discount_action ? function(ean){ self.barcode_discount_action(ean); } : undefined,
+            });
+        },
+    });
+
+    module.ScaleInviteScreenWidget = module.BaseScreenWidget.extend({
+        template:'ScaleInviteScreenWidget',
+
+        show: function(){
+            this._super();
+            var self = this;
 
             self.pos.proxy.weighting_start();
 
@@ -270,21 +334,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     }
                 }
             );
-
-            this.pos.barcode_reader.set_action_callback({
-                'cashier': function(ean){
-                    self.pos.proxy.cashier_mode_activated();
-                    self.pos_widget.screen_selector.set_user_mode('cashier');
-                },
-                'product': function(ean){
-                    if(self.pos_widget.scan_product(ean)){
-                        self.pos.proxy.scan_item_success();
-                        self.pos_widget.screen_selector.set_current_screen('scan');
-                    }else{
-                        self.pos_widget.screen_selector.show_popup('error');
-                    }
-                },
-            });
         },
         close: function(){
             this._super();
@@ -292,7 +341,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ScaleProductScreenWidget = module.ScreenWidget.extend({
+    module.ScaleProductScreenWidget = module.BaseScreenWidget.extend({
         template:'ScaleProductSelectionScreenWidget',
         start: function(){
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{
@@ -309,65 +358,28 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+
+            this.product_categories_widget.reset_category();
+            this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
+
             if(this.pos_widget.screen_selector.get_user_mode() === 'client'){
-                this.pos_widget.set_numpad_visible(false);
-                this.pos_widget.set_leftpane_visible(true);
-                this.pos_widget.set_cashier_controls_visible(false);
-                this.pos_widget.action_bar.set_total_visible(true);
-                this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
-                this.pos_widget.action_bar.set_logout_visible(false);
-                this.pos_widget.action_bar.set_close_visible(false);
-                //this.pos_widget.onscreen_keyboard.connect();
-
-                this.product_categories_widget.reset_category();
-
-                this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
-                this.pos_widget.action_bar.add_new_button(
-                    {
+                this.pos_widget.action_bar.add_new_button({
                         label: 'back',
                         icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                         click: function(){
                             self.pos_widget.screen_selector.set_current_screen('scan');
                         }
-                    }
-                );
-                this.pos.barcode_reader.set_action_callback({
-                    'cashier': function(ean){
-                        self.pos.proxy.cashier_mode_activated();
-                        self.pos_widget.screen_selector.set_user_mode('cashier');
-                    },
-                    'product': function(ean){
-                        if(self.pos_widget.scan_product(ean)){
-                            self.pos.proxy.scan_item_success();
-                            self.pos_widget.screen_selector.set_current_screen('scan');
-                        }else{
-                            self.pos_widget.screen_selector.show_popup('error');
-                    }
-                },
-                });
+                    });
                 this.product_list_widget.set_next_screen('scan');
-            }else{  // user_mode === 'cashier'
-                this.pos_widget.set_numpad_visible(true);
-                this.pos_widget.set_leftpane_visible(true);
-                this.pos_widget.set_cashier_controls_visible(true);
-                this.pos_widget.action_bar.set_total_visible(true);
-                this.pos_widget.action_bar.set_help_visible(false);
-                this.pos_widget.action_bar.set_close_visible(false);
-                //this.pos_widget.onscreen_keyboard.connect();
-
-                this.product_categories_widget.reset_category();
-                
-                this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
-                this.pos_widget.action_bar.add_new_button(
-                    {
+            }else{
+                this.pos_widget.action_bar.add_new_button({
                         label: 'back',
                         icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                         click: function(){
                             self.pos_widget.screen_selector.set_current_screen('products');
                         }
-                    }
-                );
-                this.product_list_widget.set_next_screen('undefined');
+                    });
+                this.product_list_widget.set_next_screen('products');
             }
 
             this.pos.proxy.weighting_start();
@@ -389,19 +401,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ClientPaymentScreenWidget =  module.ScreenWidget.extend({
+    module.ClientPaymentScreenWidget =  module.BaseScreenWidget.extend({
         template:'ClientPaymentScreenWidget',
         show: function(){
             this._super();
             var self = this;
-
-            this.pos_widget.set_numpad_visible(false);
-            this.pos_widget.set_leftpane_visible(true);
-            this.pos_widget.set_cashier_controls_visible(false);
-            this.pos_widget.action_bar.set_total_visible(true);
-            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
-            this.pos_widget.action_bar.set_logout_visible(false);
-            this.pos_widget.action_bar.set_close_visible(false);
 
             this.pos.proxy.payment_request(this.pos.get('selectedOrder').getDueLeft(),'card','info');    //TODO TOTAL
 
@@ -446,14 +450,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     }
                 }
             );
-
-            this.pos.barcode_reader.set_action_callback({
-                'cashier': function(ean){
-                    clearInterval(this.intervalID);
-                    self.pos.proxy.cashier_mode_activated();
-                    self.pos_widget.screen_selector.set_user_mode('cashier');
-                },
-            });
         },
         close: function(){
             this._super();
@@ -461,22 +457,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.WelcomeScreenWidget = module.ScreenWidget.extend({
+    module.WelcomeScreenWidget = module.BaseScreenWidget.extend({
         template:'WelcomeScreenWidget',
+
+        show_numpad:     false,
+        show_leftpane:   false,
+        show_total:      false,
+        
         show: function(){
             this._super();
             var self = this;
 
-            this.pos_widget.set_numpad_visible(false);
-            this.pos_widget.set_leftpane_visible(false);
-            this.pos_widget.set_cashier_controls_visible(false);
-            this.pos_widget.action_bar.set_total_visible(false);
-            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
-            this.pos_widget.action_bar.set_logout_visible(false);
-            this.pos_widget.action_bar.set_close_visible(false);
-
             if(this.pos.use_scale){
-                console.log('welcome weight');
                 this.pos_widget.action_bar.add_new_button({
                         label: 'weight',
                         icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
@@ -485,56 +477,25 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         }
                     });
             }
-
-            this.pos.barcode_reader.set_action_callback({
-                'product': function(ean){
-                    self.pos.proxy.transaction_start(); 
-                    if(self.pos_widget.scan_product(ean)){
-                        self.pos.proxy.scan_item_success();
-                        self.pos_widget.screen_selector.set_current_screen('scan');
-                    }else{
-                        self.pos_widget.screen_selector.show_popup('error');
-                    }
-                },
-                'cashier': function(ean){
-                    self.pos.proxy.cashier_mode_activated();
-                    self.pos_widget.screen_selector.set_user_mode('cashier');
-                },
-                'client': function(ean){
-                    self.pos.proxy.transaction_start(); 
-                    //TODO 'log the client'
-                    self.pos_widget.screen_selector.show_popup('receipt');
-                },
-                'discount': function(ean){
-                    var currentOrder = self.pos.get('selectedOrder');
-                    var last_orderline = currentOrder.last_orderline;
-                    if(last_orderline){
-                        last_orderline.set_discount(ean.value)
-                    }
-                },
-            });
         },
     });
 
-    module.ScanProductScreenWidget = module.ScreenWidget.extend({
+    module.ScanProductScreenWidget = module.BaseScreenWidget.extend({
         template:'ScanProductScreenWidget',
+
+        show_numpad:     false,
+        show_leftpane:   true,
+        show_total:      true,
+
         show: function(){
             this._super();
             var self = this;
-
-            this.pos_widget.set_numpad_visible(false);
-            this.pos_widget.set_leftpane_visible(true);
-            this.pos_widget.set_cashier_controls_visible(false);
-            this.pos_widget.action_bar.set_total_visible(true);
-            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
-            this.pos_widget.action_bar.set_logout_visible(false);
-            this.pos_widget.action_bar.set_close_visible(false);
 
             if(self.pos.use_scale){
                 this.pos_widget.action_bar.add_new_button({
                         label: 'weight',
                         icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
-                        click: function(){  //TODO Go to ask for weighting screen
+                        click: function(){
                             self.pos_widget.screen_selector.set_current_screen('scale_invite');
                         }
                     });
@@ -544,35 +505,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     label: 'pay',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function(){
-                        self.pos_widget.screen_selector.set_current_screen('client_payment'); //TODO what stuff ?
+                        self.pos_widget.screen_selector.set_current_screen('client_payment');
                     }
                 });
-
-            this.pos.barcode_reader.set_action_callback({
-                'product': function(ean){
-                    if(self.pos_widget.scan_product(ean)){
-                        self.pos.proxy.scan_item_success();
-                    }else{
-                        self.pos_widget.screen_selector.show_popup('error');
-                    }
-                },
-                'cashier': function(ean){
-                    self.pos.proxy.cashier_mode_activated();
-                    self.pos_widget.screen_selector.set_user_mode('cashier');
-                },
-                'discount': function(ean){
-                    var currentOrder = self.pos.get('selectedOrder');
-                    var last_orderline = currentOrder.last_orderline;
-                    if(last_orderline){
-                        last_orderline.set_discount(ean.value)
-                    }
-                },
-            });
         },
     });
     
-    module.SearchProductScreenWidget = module.ScreenWidget.extend({
+    module.SearchProductScreenWidget = module.BaseScreenWidget.extend({
         template:'SearchProductScreenWidget',
+
+        show_numpad:     true,
+        show_leftpane:   true,
+        show_total:      true,
+
         start: function(){
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{});
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
@@ -580,23 +525,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_list_widget = new module.ProductListWidget(this,{});
             this.product_list_widget.replace($('.placeholder-ProductListWidget'));
         },
+
         show: function(){
             this._super();
             var self = this;
 
-            this.pos_widget.set_numpad_visible(true);
-            this.pos_widget.set_leftpane_visible(true);
-            this.pos_widget.set_cashier_controls_visible(true);
-            this.pos_widget.action_bar.set_total_visible(true);
-            this.pos_widget.action_bar.set_help_visible(false);
-            this.pos_widget.action_bar.set_close_visible(false);
-
-                this.pos_widget.action_bar.set_logout_visible(true, function(){ 
-                    self.pos_widget.screen_selector.set_user_mode('client');
-                });
-
             this.product_categories_widget.reset_category();
-            //this.pos_widget.onscreen_keyboard.connect();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
 
@@ -609,28 +543,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         }
                     });
             }
-
-            this.pos.barcode_reader.set_action_callback({
-                'product': function(ean){
-                    if(self.pos_widget.scan_product(ean)){
-                        self.pos.proxy.scan_item_success();
-                    }else{
-                        self.pos_widget.screen_selector.show_popup('error');
-                    }
-                },
-                'cashier': function(ean){
-                    self.pos.proxy.cashier_mode_activated();
-                    self.pos_widget.screen_selector.set_user_mode('cashier');
-                },
-                'discount': function(ean){
-                    var currentOrder = self.pos.get('selectedOrder');
-                    var last_orderline = currentOrder.last_orderline;
-                    if(last_orderline){
-                        last_orderline.set_discount(ean.value)
-                    }
-                },
-            });
         },
+
         close: function(){
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
@@ -639,8 +553,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     });
 
-    module.ReceiptScreenWidget = module.ScreenWidget.extend({
+    module.ReceiptScreenWidget = module.BaseScreenWidget.extend({
         template: 'ReceiptScreenWidget',
+
+        show_numpad:     true,
+        show_leftpane:   true,
+        show_total:      true,
+
         init: function(parent, options) {
             this._super(parent,options);
             this.model = options.model;
@@ -655,16 +574,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
-
-            this.pos_widget.set_numpad_visible(true);
-            this.pos_widget.set_leftpane_visible(true);
-            this.pos_widget.set_cashier_controls_visible(true);
-            this.pos_widget.action_bar.set_total_visible(true);
-            this.pos_widget.action_bar.set_help_visible(false);
-            this.pos_widget.action_bar.set_close_visible(false);
-            this.pos_widget.action_bar.set_logout_visible(true, function(){ 
-                self.pos_widget.screen_selector.set_user_mode('client');
-            });
 
             this.pos_widget.action_bar.add_new_button({
                     label: 'Print',
@@ -703,7 +612,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.PaymentScreenWidget = module.ScreenWidget.extend({
+    module.PaymentScreenWidget = module.BaseScreenWidget.extend({
         template: 'PaymentScreenWidget',
         init: function(parent, options) {
             this._super(parent,options);
@@ -715,16 +624,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
-
-            this.pos_widget.set_numpad_visible(true);
-            this.pos_widget.set_leftpane_visible(true);
-            this.pos_widget.set_cashier_controls_visible(true);
-            this.pos_widget.action_bar.set_total_visible(true);
-            this.pos_widget.action_bar.set_help_visible(false);
-            this.pos_widget.action_bar.set_close_visible(false);
-            this.pos_widget.action_bar.set_logout_visible(true, function(){ 
-                self.pos_widget.screen_selector.set_user_mode('client');
-            });
 
             this.set_numpad_state(this.pos_widget.numpad.state);
             
