@@ -363,7 +363,7 @@
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
                             <field name="child_ids" context="{'default_parent_id': active_id}" nolabel="1" mode="kanban,list">
-                                <kanban>
+                                <kanban quick_create="true" create="false">
                                     <field name="color"/>
                                     <field name="name"/>
                                     <field name="title"/>
@@ -383,7 +383,8 @@
                                     <templates>
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
-                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')" style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_module_vignette">
                                                 <a type="edit">
                                                     <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_form_avatar oe_kanban_avatar_toto"/>
@@ -401,6 +402,7 @@
                                                                         <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
                                                                             <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
                                                                         </a>
+                                                                        
                                                                     </td>
                                                                 </tr>
                                                             </table>
