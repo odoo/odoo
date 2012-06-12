@@ -1324,8 +1324,9 @@
   width: 100%;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_section > div {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
   display: table-cell;
   width: 50%;
@@ -1488,12 +1489,16 @@
 .openerp .oe_form_button_save_dirty {
   color: white;
   background: #dc5f59;
-  background: -moz-linear-gradient(#dc5f59, #b33630);
-  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
-  background: -webkit-linear-gradient(#dc5f59, #b33630);
+  background-color: #dc5f59;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
+  background-image: -webkit-linear-gradient(top, #dc5f59, #b33630);
+  background-image: -moz-linear-gradient(top, #dc5f59, #b33630);
+  background-image: -ms-linear-gradient(top, #dc5f59, #b33630);
+  background-image: -o-linear-gradient(top, #dc5f59, #b33630);
+  background-image: linear-gradient(to bottom, #dc5f59, #b33630);
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -box-shadow: none;
+  box-shadow: none;
   font-weight: bold;
 }
 .openerp .oe_form_button_save_dirty:hover {
@@ -1577,21 +1582,29 @@
 .openerp .oe_form_readonly button.oe_form_button_hi {
   color: white;
   background: #dc5f59;
-  background: -moz-linear-gradient(#dc5f59, #b33630);
-  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
-  background: -webkit-linear-gradient(#dc5f59, #b33630);
+  background-color: #dc5f59;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
+  background-image: -webkit-linear-gradient(top, #dc5f59, #b33630);
+  background-image: -moz-linear-gradient(top, #dc5f59, #b33630);
+  background-image: -ms-linear-gradient(top, #dc5f59, #b33630);
+  background-image: -o-linear-gradient(top, #dc5f59, #b33630);
+  background-image: linear-gradient(to bottom, #dc5f59, #b33630);
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -box-shadow: none;
+  box-shadow: none;
 }
 .openerp .oe_form_readonly button.oe_form_button_hi:hover {
   background: #df6b66;
-  background: -moz-linear-gradient(#df6b66, #bf3a33);
-  background: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
-  background: -webkit-linear-gradient(#df6b66, #bf3a33);
+  background-color: #df6b66;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
+  background-image: -webkit-linear-gradient(top, #df6b66, #bf3a33);
+  background-image: -moz-linear-gradient(top, #df6b66, #bf3a33);
+  background-image: -ms-linear-gradient(top, #df6b66, #bf3a33);
+  background-image: -o-linear-gradient(top, #df6b66, #bf3a33);
+  background-image: linear-gradient(to bottom, #df6b66, #bf3a33);
   -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-  -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
@@ -1702,8 +1715,8 @@
 .openerp .oe_form input[type="file"],
 .openerp .oe_form select,
 .openerp .oe_form textarea {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 2px;
@@ -1766,6 +1779,9 @@
 }
 .openerp .oe_form .oe_form_field_many2manytags .oe_form_field_many2manytags_box {
   border-radius: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
   position: relative;
   float: left;
@@ -1899,8 +1915,8 @@
   text-align: center;
   background: url(/web/static/src/img/form_sheetbg.png);
   border-bottom: 1px dotted black;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -1989,8 +2005,8 @@
 .openerp .oe_form .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
   font-size: 10px;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   border: 1px solid #999999;
