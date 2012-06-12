@@ -66,7 +66,8 @@
                                     <field name="work_location"/>
                                 </group>
                                 <group string="Job Information">
-                                    <field name="job_id" domain="[('state','!=','old')]"/>
+                                    <field name="job_id" domain="[('state','!=','old')]"
+                                        context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                     <field name="coach_id" />
                                 </group>
                             </group>
@@ -435,16 +436,13 @@
             <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Job">
-                    <field name="name" />
-                    <field name="department_id" />
-                    <newline/>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <separator colspan="4" string="Job Description"/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
+                <form string="Job" version="7.0">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="department_id" />
+                    </group>
+                    <label for="description"/>
+                    <field name="description"/>
                 </form>
             </field>
         </record>
