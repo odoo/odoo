@@ -76,12 +76,13 @@
             <field name="model">resource.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Working Time">
-                    <field name="name"/>
-                    <field name="manager"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <separator string="" colspan="4"/>
-                    <field name="attendance_ids" colspan="4" nolabel="1"/>
+                <form string="Working Time" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="manager"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <field name="attendance_ids"/>
                 </form>
             </field>
         </record>
@@ -93,8 +94,8 @@
             <field name="arch" type="xml">
                 <tree string="Working Time">
                     <field name="name"/>
-                    <field name="manager" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="manager"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -128,10 +129,10 @@
             <field name="model">resource.calendar.attendance</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Working Time">
-                    <field colspan="4" name="name" select="1"/>
+                <form string="Working Time" version="7.0">
+                    <field colspan="4" name="name"/>
                     <field name="date_from"/>
-                    <field name="dayofweek" select="1"/>
+                    <field name="dayofweek"/>
                     <field name="hour_from" widget="float_time"/>
                     <field name="hour_to" widget="float_time"/>
                 </form>
@@ -172,8 +173,8 @@
             <field name="model">resource.resource</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Resource">
-                   <group col="6" colspan="4">
+                <form string="Resource" version="7.0">
+                   <group col="4">
                        <field name="name" colspan="4"/>
                        <field name="active"/>
                        <newline/>
@@ -218,18 +219,18 @@
             <field name="model">resource.calendar.leaves</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Leave Detail">
-                    <group colspan="4" col="6">
-                       <group colspan="2" col="2">
+                <form string="Leave Detail" version="7.0">
+                    <group>
+                       <group>
                            <field name="resource_id" on_change="onchange_resource(resource_id)"/>
                            <field name="name" string="Reason"/>
                        </group>
-                       <group colspan="2" col="2">
+                       <group>
                            <field name="date_from"/>
                            <field name="calendar_id" string="Working Period"/>
                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                        </group>
-                       <group colspan="2" col="2">
+                       <group>
                            <field name="date_to"/>
                        </group>
                    </group>

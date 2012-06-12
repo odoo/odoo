@@ -7,8 +7,8 @@
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form  layout="manual">
-                    <sheet string="Analytic account" layout="auto">
+                <form version="7.0">
+                    <sheet string="Analytic account" >
                         <group colspan="4" col="4" class="oe_form_group_label_border">
                             <field name="name"/>
                             <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','!=','template')]}"/>
