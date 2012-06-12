@@ -742,10 +742,14 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
     },
     kanban_image: function(model, field, id) {
         id = id || '';
-        var url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-        if (this.record.__last_update && this.record.__last_update.raw_value) {
-            var time = instance.web.str_to_datetime(this.record.__last_update.raw_value).getTime();
-            url += '&t=' + time;
+        if (typeof(id)=="string" && this.record[field].value && this.record[field].value.substr(0, 10).indexOf(' ') == -1) {
+            url = 'data:image/png;base64,' + this.record[field].value;
+        }else{
+            var url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            if (this.record.__last_update && this.record.__last_update.raw_value) {
+                var time = instance.web.str_to_datetime(this.record.__last_update.raw_value).getTime();
+                url += '&t=' + time;
+            }
         }
         return url;
     },
