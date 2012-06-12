@@ -35,7 +35,7 @@ from base.res.res_users import _lang_get
 WELCOME_EMAIL_SUBJECT = _("Your OpenERP account at %(company)s")
 WELCOME_EMAIL_BODY = _("""Dear %(name)s,
 
-You have been created an OpenERP account at %(url)s.
+You have been created an OpenERP account of %(portal)s at %(url)s.
 
 Your login account data is:
 Database: %(db)s
@@ -116,8 +116,8 @@ class wizard(osv.osv_memory):
                 # add one user per contact, or one user if no contact
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
-                else:
-                    user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
+#                else:
+#                    user_ids.append({'lang': p.lang or 'en_US', 'name': p.name,'user_email':p.user_email, 'parent_id': p.id})
         
         return user_ids
 
@@ -140,8 +140,7 @@ class wizard(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         context.update({'portal_id':portal_id})
         user_list = self._default_user_ids(cr, uid, context=context)
-    
-        contact_user = [u['user_email'] for u in user_list]
+        contact_user = [u['user_email'] for u in user_list if u.get('user_email', False)]
 
         #add active portal user to portal wizard
         portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
@@ -177,19 +176,19 @@ class wizard(osv.osv_memory):
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
-            portal_user=[user.id for user in wiz.portal_id.group_id.users]
+            portal_users=[portal_user.id for portal_user in wiz.portal_id.group_id.users]
             add_users=[]
-            removeuser=[]
+            remove_users=[]
             new_users_data = []
             for u in wiz.user_ids:
                 login_cond = [('login', 'in', [u.user_email])]
                 existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
-                existing_logins = [user.login for user in existing_users]
-                if existing_uids and existing_uids[0] not in portal_user or existing_uids and u.has_portal_user:
+                existing_logins = [existing_login.login for existing_login in existing_users]
+                if existing_uids and existing_uids[0] not in portal_users or existing_uids and u.has_portal_user:
                     add_users.append(existing_uids[0])
-                if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
-                    removeuser.append(existing_uids[0])
+                if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_users:
+                    remove_users.append(existing_uids[0])
                 if u.user_email not in existing_logins:
                     new_users_data.append({
                             'name': u.name,
@@ -202,38 +201,40 @@ class wizard(osv.osv_memory):
                             'partner_id': u.partner_id and u.partner_id.id,
                         } )
                     
-            for data in new_users_data:
+            for new_user_data in new_users_data:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(0, 0, data)]}, context0)
+                    {'users': [(0, 0, new_user_data)]}, context0)
                 
-                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', data['login'])])
+                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', new_user_data['login']),('partner_id','=', new_user_data['partner_id'])])
                 add_users.append(created_user[0])
-                    
-                    
-            if add_users and add_users not in portal_user:
+                
+            #add the user relationship in portal.        
+            if add_users and add_users not in portal_users:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
-
+                
             #delete the user relationship from portal.
-            if removeuser:
-                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(3, user_data) for user_data in removeuser]}, context0)
+            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                {'users': [(3, user_data) for user_data in remove_users]}, context0)
                 
             #unlink res user when portal user not in any portal.
             all_portal_user = self.get_all_portal_user(cr)
-            for data in removeuser:
-                if data not in all_portal_user:
-                    user_obj.unlink(cr, ROOT_UID, [data])
+            user_obj.unlink(cr, ROOT_UID, [remove_user for remove_user in remove_users if remove_user not in all_portal_user])
 
             data = {
+                'portal':wiz.portal_id.name,
                 'company': user.company_id.name,
                 'message': wiz.message or "",
                 'url': wiz.portal_id.url or _("(missing url)"),
                 'db': cr.dbname,
             }
+
             mail_message_obj = self.pool.get('mail.message')
-            dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
-            dest_users = user_obj.browse(cr, ROOT_UID, dest_uids)
+            dest_users = []
+            for dest_uid in add_users:
+                if dest_uid not in portal_users:
+                    dest_users.append(user_obj.browse(cr, ROOT_UID, dest_uid))
+                
             for dest_user in dest_users:
                 context['lang'] = dest_user.context_lang
                 data['login'] = dest_user.login
@@ -252,8 +253,6 @@ class wizard(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 wizard()
-
-
 
 class wizard_user(osv.osv_memory):
     """
@@ -295,8 +294,5 @@ class wizard_user(osv.osv_memory):
         }
     
 wizard_user()
-
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
