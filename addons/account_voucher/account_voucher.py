@@ -323,7 +323,7 @@ class account_voucher(osv.osv):
         'amount': _get_amount,
         'type':_get_type,
         'state': 'draft',
-        'pay_now': 'pay_later',
+        'pay_now': 'pay_now',
         'name': '',
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
@@ -556,7 +556,7 @@ class account_voucher(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         def _remove_noise_in_o2m():
-            """if the line is partially reconciled, then we must pay attention to display it only once and 
+            """if the line is partially reconciled, then we must pay attention to display it only once and
                 in the good o2m.
                 This function returns True if the line is considered as noise and should not be displayed
             """

@@ -82,8 +82,8 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft"/>
-                    <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_form_button_hi"/>
+                    <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_form_button_hi"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -93,7 +93,7 @@
                     <group col="6">
                         <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
                         <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
-                        <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
+                        <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
                         <field name="number"/>
                         <field name="name" colspan="2"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -104,7 +104,7 @@
                         <page string="Sales Information">
                             <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection" groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -157,6 +157,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -171,7 +174,11 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
-            <field name="help">When you sell products to a customer, you can give him a sales receipt or an invoice. When the sales receipt is confirmed, it creates journal items automatically and you can record the customer payment related to this sales receipt.</field>
+            <field name="help">
+                Click here to create a sale receipt.
+                &lt;p&gt;
+                When the sales receipt is confirmed, you can record the customer payment related to this sales receipt.
+            </field>
         </record>
         <record id="action_sale_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -277,6 +284,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
