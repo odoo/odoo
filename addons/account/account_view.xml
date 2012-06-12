@@ -1139,6 +1139,22 @@
                 </graph>
             </field>
         </record>
+ 
+    <record id="view_move_line_form_new_test_rge" model="ir.ui.view">
+            <field name="name">account.move.line.form</field>
+            <field name="model">account.move.line</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Journal Item">
+                    <group col="6" colspan="4">
+                         <field name="partner_id"/><newline/>
+                         <button string="Reconcile"/>
+                         <button string="Nothing to Reconcile"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">Journal Items</field>
@@ -1161,9 +1177,7 @@
                         <field name="move_id" string="Number (Move)"/>
                         <field name="date"/>
                         <field name="account_id"/>
-                        <field name="partner_id">
-                            <filter help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
-                        </field>
+                        <field name="partner_id"/>
                     </group>
                     <newline/>
                     <group>
@@ -1192,7 +1206,9 @@
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help">This view can be used by accountants in order to quickly record entries in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account. OpenERP will propose to you automatically the Tax related to this account and the counterpart "Account Payable".</field>
-        </record>
+           <field name="extended_form_view_id" ref="view_move_line_form_new_test_rge"/>
+
+		</record>
 
         <menuitem
             action="action_account_moves_all_a"
@@ -1212,15 +1228,17 @@
             <field eval="False" name="view_id"/>
             <field eval="True" name="filter"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
+           <field name="extended_form_view_id" ref="view_move_line_form_new_test_rge"/>
         </record>
 
         <record id="action_move_line_select" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
+            <field name="name">Journal sssssdfdsItems</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
+           <field name="extended_form_view_id" ref="view_move_line_form_new_test_rge"/>
             <field name="context">{'search_default_account_id': [active_id]}</field>
         </record>
 
@@ -1456,13 +1474,14 @@
             src_model="account.move"/>
 
         <record id="action_move_line_search" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
+            <field name="name">Journssssal Items</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
+        <field name="extended_form_view_id" ref="view_move_line_form_new_test_rge"/>
         </record>
         <record id="action_move_line_search_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -1900,12 +1919,13 @@
         </record>
 
         <record id="action_move_line_tree1" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
+            <field name="name">Journal Itemaaaaas</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('account_id','child_of', [active_id]),('state','&lt;&gt;','draft')]</field>
             <field name="context">{'account_id':active_id}</field>
+           <field name="extended_form_view_id" ref="view_account_financial_report_form"/>
         </record>
 
         <record id="view_move_line_tax_tree" model="ir.ui.view">
@@ -1933,7 +1953,7 @@
         </record>
 
         <record id="action_tax_code_line_open" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
+            <field name="name">Jouffffffffrnal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
