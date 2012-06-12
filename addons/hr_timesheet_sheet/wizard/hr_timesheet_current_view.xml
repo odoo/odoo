@@ -6,12 +6,12 @@
         <field name="model">hr.timesheet.current.open</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="My Current Timesheet">
-               <separator string="It will open your current timesheet" colspan="4" />
-               <group colspan="4" col="6">
+            <form string="My Current Timesheet" version="7.0">
+               <header>
                     <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
                     <button  icon="terp-camera_test" name="open_timesheet" string="Open" type="object"/>
-               </group>
+               </header>
+               <separator string="It will open your current timesheet"/>
            </form>
         </field>
     </record>

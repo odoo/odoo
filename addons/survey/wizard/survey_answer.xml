@@ -1,17 +1,15 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-
 		<!--
 			Survey Question Wizard
 		 -->
-
+    <data>
 		<record id="view_survey_question_message" model="ir.ui.view">
 			<field name="name">Answer Survey</field>
 			<field name="model">survey.question.wiz</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Your Messages">
+				<form string="Your Messages"  version="7.0">
 					<field name="name" nolabel="1" colspan="4" />
 				</form>
 			</field>
@@ -40,3 +38,4 @@
 
 	</data>
 </openerp>
+

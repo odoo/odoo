@@ -910,7 +910,7 @@ class crm_lead(base_stage, osv.osv):
         if action == 'log': prefix = 'Logged'
         else: prefix = 'Scheduled'
         message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
-        return self. message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):

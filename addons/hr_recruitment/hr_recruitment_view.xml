@@ -79,7 +79,7 @@
         <field name="model">hr.applicant</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+         <form string="Jobs - Recruitment Form" version="7.0">
             <header>
                 <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
                         states="open,pending"/>
@@ -97,7 +97,7 @@
                         states="open" icon="gtk-go-forward"/>
                 <field name="stage_id" widget="statusbar" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
             </header>
-            <sheet string="Jobs - Recruitment Form" layout="auto">
+            <sheet >
                 <group colspan="4" col="10">
                     <h1><field name="name" colspan="4" nolabel="1"/></h1>
 					<h1><button name="action_makeMeeting" type="object" colspan="2" string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
@@ -361,7 +361,7 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Stage">
+            <form string="Stage" version="7.0">
                 <group colspan="4" col="6">
                     <separator string="Stage Definition" colspan="6"/>
                     <field name="name" select="1"/>
@@ -413,7 +413,7 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Degree">
+            <form string="Degree" version="7.0">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
             </form>
@@ -474,7 +474,7 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings" layout="manual">
+            <form string="Meetings"  version="7.0">
                 <header>
                     <button name="case_open" string="Confirm" type="object"
                             states="draft"/>
@@ -486,7 +486,7 @@
                             states="draft,open"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
-                <sheet layout="auto">
+                <sheet>
                 <group col="6" colspan="4">
                     <field name="name" select="1" string="Title"
                            required="1" />
