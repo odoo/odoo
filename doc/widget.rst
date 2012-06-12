@@ -95,7 +95,17 @@ The DOM root can also be defined programmatically by overridding
     Any override to :js:func:`~openerp.web.Widget.renderElement` which
     does not call its ``_super`` **must** call
     :js:func:`~openerp.web.Widget.setElement` with whatever it
-    generated or the widget's behavior is undefined.
+    generated or the widget's behavior is undefined.r
+
+    .. note::
+
+        The default :js:func:`~openerp.web.Widget.renderElement` can
+        be called repeatedly, it will *replace* the previous DOM root
+        (using ``replaceWith``). However, this requires that the
+        widget correctly sets and unsets its events (and children
+        widgets). Generally,
+        :js:func:`~openerp.web.Widget.renderElement` should not be
+        called repeatedly unless the widget advertizes this feature.
 
 Accessing DOM content
 ~~~~~~~~~~~~~~~~~~~~~

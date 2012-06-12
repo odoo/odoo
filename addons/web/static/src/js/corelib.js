@@ -716,7 +716,11 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             if (this.className) { attrs['class'] = this.className; }
             $el = $(this.make(this.tagName, attrs))
         }
+        var $oldel = this.$el;
         this.setElement($el);
+        if ($oldel && !$oldel.is(this.$el)) {
+            $oldel.replaceWith(this.$el);
+        }
     },
 
     /**
@@ -734,7 +738,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     setElement: function (element) {
         if (this.$el) {
             this.undelegateEvents();
-            this.$el.replaceWith(element);
         }
 
         this.$element = this.$el = (element instanceof $) ? element : $(element);

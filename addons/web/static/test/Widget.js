@@ -6,15 +6,21 @@ $(document).ready(function () {
             window.openerp.web.corelib(instance);
 
             instance.web.qweb = new QWeb2.Engine();
-            instance.web.qweb.add_template('<no><t t-name="test.widget.template">' +
-                '<ol>' +
-                    '<li t-foreach="5" t-as="counter" ' +
-                        't-attf-class="class-#{counter}">' +
-                        '<input/>' +
-                        '<t t-esc="counter"/>' +
-                    '</li>' +
-                '</ol>' +
-            '</t></no>');
+            instance.web.qweb.add_template(
+            '<no>' +
+                '<t t-name="test.widget.template">' +
+                    '<ol>' +
+                        '<li t-foreach="5" t-as="counter" ' +
+                            't-attf-class="class-#{counter}">' +
+                            '<input/>' +
+                            '<t t-esc="counter"/>' +
+                        '</li>' +
+                    '</ol>' +
+                '</t>' +
+                '<t t-name="test.widget.template-value">' +
+                    '<p><t t-esc="widget.value"/></p>' +
+                '</t>' +
+            '</no>');
         }
     };
     var instance;
@@ -220,5 +226,23 @@ $(document).ready(function () {
         w.$('li').click();
         ok(!clicked, "undelegate should unbind events delegated");
         ok(newclicked, "undelegate should only unbind events it created");
+    });
+
+    module('Widget.renderElement', mod);
+    test('repeated', function () {
+        var w = new (instance.web.Widget.extend({
+            template: 'test.widget.template-value'
+        }));
+        w.value = 42;
+        w.appendTo($fix)
+            .always(start)
+            .done(function () {
+                equal($fix.find('p').text(), '42', "DOM fixture should contain initial value");
+                equal(w.$el.text(), '42', "should set initial value");
+                w.value = 36;
+                w.renderElement();
+                equal($fix.find('p').text(), '36', "DOM fixture should use new value");
+                equal(w.$el.text(), '36', "should set new value");
+            });
     });
 });
