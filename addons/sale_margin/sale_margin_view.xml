@@ -8,9 +8,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <field name="amount_total" position="after">
-                <field name="margin"/>
-            </field>
+            <xpath expr="//group[@class='oe_form_subtotal_footer']" position="inside">
+                <group>
+                    <field name="margin"/>
+                </group>
+            </xpath>
         </field>
     </record>
     

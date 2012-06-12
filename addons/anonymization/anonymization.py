@@ -289,6 +289,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
+        
+        if context is None:
+            context = {}
+        
         step = context.get('step', 'new_window')
 
         res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
