@@ -12,7 +12,7 @@
             <field name="model">stock.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                     <header>
                         <button name="button_open" string="Open" states="draft" type="object"/>
                         <button name="button_close" string="Close" states="open" type="object"/>
@@ -81,7 +81,7 @@
             <field name="model">stock.sale.forecast</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="action_validate" string="Approve" states="draft" type="object" />
                     <field name="state" widget="statusbar"/>
