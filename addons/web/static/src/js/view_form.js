@@ -2741,6 +2741,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.$element.addClass('oe_form_field_one2many');
 
         var self = this;
 
