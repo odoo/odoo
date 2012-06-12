@@ -6,12 +6,13 @@
             <field name="model">purchase.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Purchases" layout="manual">
+                <form string="Configure Purchases" version="7.0">
                     <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
                     </header>
-                    <sheet layout="auto">
+                    <sheet>
+                    <group col="4">
                         <separator string="Invoicing" colspan="4"/>
                         <field name="default_invoice_method"/>
                         <field name="decimal_precision"/>
@@ -26,6 +27,7 @@
 
                         <separator string="Products" colspan="4"/>
                         <field name="module_product_manufacturer"/>
+                    </group>
                     </sheet>
                 </form>
             </field>

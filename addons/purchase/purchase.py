@@ -173,7 +173,7 @@ class purchase_order(osv.osv):
         'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
-        'notes': fields.text('Notes'),
+        'notes': fields.text('Terms and Conditions'),
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id', 'invoice_id', 'Invoices', help="Invoices generated for a purchase order"),
         'picking_ids': fields.one2many('stock.picking.in', 'purchase_id', 'Picking List', readonly=True, help="This is the list of incomming shipments that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
