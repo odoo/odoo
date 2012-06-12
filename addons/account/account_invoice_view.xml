@@ -37,7 +37,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
-                    <field name="uos_id"/>
+                    <field name="uos_id" groups="product.group_uom"/>
                     <field name="price_unit"/>
                     <field name="discount"/>
                     <field name="price_subtotal"/>
@@ -50,23 +50,25 @@
             <field name="model">account.invoice.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invoice Line">
-                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
-                    <field colspan="2" name="name"/>
-                    <label string="Quantity" for="quantity" align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="quantity" nolabel="1"/>
-                        <field name="uos_id" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)" nolabel="1"/>
+                <form string="Invoice Line" version="7.0">
+                    <group col="4">
+                        <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
+                        <field name="name"/>
+                        <label string="Quantity" for="quantity" align="1.0"/>
+                        <div>
+                            <field name="quantity" class="oe_form_inline"/>
+                            <field name="uos_id" class="oe_form_inline"
+                              on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
+                        </div>
+                        <field name="price_unit"/>
+                        <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
+                        <field name="discount"/>
+                        <field name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
+                        <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     </group>
-                    <field name="price_unit"/>
-                    <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
-                    <field name="discount"/>
-                    <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                    <separator string="Notes" colspan="4"/>
-                    <field colspan="4" name="note" nolabel="1"/>
-                    <separator colspan="4" string="Taxes"/>
-                    <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" nolabel="1"/>
+                    <separator string="Notes"/>
+                    <field name="note"/>
                 </form>
             </field>
         </record>
@@ -92,20 +94,22 @@
             <field name="model">account.invoice.tax</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manual Invoice Taxes">
-                    <field name="name"/>
-                    <field name="sequence"/>
-                    <field name="account_id"/>
-                    <field name="manual"/>
-                    <field name="amount"/>
-                    <field name="base" readonly="0"/>
-                    <separator colspan="4" string="Tax Codes"/>
-                    <field name="base_code_id"/>
-                    <field name="base_amount"/>
-                    <field name="tax_code_id"/>
-                    <field name="tax_amount"/>
-                    <field name="factor_base" invisible="True"/>
-                    <field name="factor_tax" invisible="True"/>
+                <form string="Manual Invoice Taxes" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="account_id"/>
+                        <field name="manual"/>
+                        <field name="amount"/>
+                        <field name="base" readonly="0"/>
+                        <separator colspan="4" string="Tax Codes"/>
+                        <field name="base_code_id"/>
+                        <field name="base_amount"/>
+                        <field name="tax_code_id"/>
+                        <field name="tax_amount"/>
+                        <field name="factor_base" invisible="True"/>
+                        <field name="factor_tax" invisible="True"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -142,39 +146,48 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form version="7.0">
                 <header>
                     <button name="invoice_open" states="draft,proforma2" string="Validate"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid'/>
                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                     <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
-                <sheet string="Supplier Invoice" layout="auto">
-                    <group col="8" colspan="4" class="oe_form_header">
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
-                        <field name="number" readonly="1" placeholder="PO0025"/>
-                        <field name="type" invisible="1"/>
-                        <field name="currency_id" width="50"/>
-                        <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
-                        <newline/>
-                        <field string="Supplier" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}' domain="[('supplier', '=', True)]"/>
-                        <field name="fiscal_position" widget="selection"/>
-                        <newline/>
-                        <field name="date_invoice"/>
-                        <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
-                        <group colspan="2" col="1" groups="account.group_account_user">
-                            <label align="0.0" string="(keep empty to use the current period)"/>
+                <sheet string="Supplier Invoice">
+                    <group>
+                        <group>
+                            <field string="Supplier" name="partner_id"
+                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                              context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
+                              domain="[('supplier', '=', True)]"/>
+                            <field name="fiscal_position" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="number"/>
+                            <field name="date_invoice"/>
+                            <field name="period_id" domain="[('state', '=', 'draft')]"
+                                groups="account.group_account_user" widget="selection"/>
+                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"
+                                groups="account.group_account_user"/>
+                            <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
+                                name="account_id" groups="account.group_account_user"/>
+                            <field name="currency_id"/>
+                            <field name="type" invisible="1"/>
+                        </group>
+                        <group>
+                            <label for="reference"/>
+                            <div>
+                                <field name="reference_type"/>
+                                <field name="reference" placeholder="Payment Reference"/>
+                            </div>
+                            <field name="date_due"/>
                         </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Invoice">
-                           <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]" name="account_id" groups="account.group_account_user"/>
-                            <field name="reference_type" nolabel="1" size="0"/>
-                            <field name="reference" nolabel="1" placeholder="Payment Reference"/>
-                            <field name="date_due"/>
-                            <field colspan="4" context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line" nolabel="1">
+                            <field context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line">
                                 <tree string="Invoice lines">
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id,parent.partner_id,parent.type,parent.fiscal_position,account_id)"/>
@@ -188,46 +201,50 @@
                                     <field invisible="True" name="uos_id"/>
                                 </tree>
                             </field>
-                            <group col="1" colspan="2">
-                                <field name="tax_line" nolabel="1">
-                                    <tree editable="bottom" string="Taxes">
-                                        <field name="name"/>
-                                        <field name="account_id" groups="account.group_account_invoice"/>
-                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
-                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
+                            <group>
+                                <div>
+                                    <field name="tax_line">
+                                        <tree editable="bottom" string="Taxes">
+                                            <field name="name"/>
+                                            <field name="account_id" groups="account.group_account_invoice"/>
+                                            <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
+                                            <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
 
-                                        <field invisible="True" name="base_amount"/>
-                                        <field invisible="True" name="tax_amount"/>
-                                        <field name="factor_base" invisible="True"/>
-                                        <field name="factor_tax" invisible="True"/>
-                                    </tree>
-                                </field>
+                                            <field invisible="True" name="base_amount"/>
+                                            <field invisible="True" name="tax_amount"/>
+                                            <field name="factor_base" invisible="True"/>
+                                            <field name="factor_tax" invisible="True"/>
+                                        </tree>
+                                    </field>
+                                    <button name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                                </div>
+                                <group class="oe_form_subtotal_footer">
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax"/>
+                                    <field name="amount_total" class="oe_form_subtotal_footer_separator"/>
+
+                                    <field name="residual" style="margin-top: 10px"/>
+                                    <field name="reconciled" invisible="1"/>
+                                </group>
                             </group>
-                            <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
-                                <field name="amount_untaxed"/>
-                                <label string="" colspan="2"/>
-                                <field name="amount_tax"/>
-                                <field name="reconciled"/>
-                                <field name="amount_total"/>
-                                <field name="residual"/>
-                            </group>
+                            <label for="comment" string="Terms and Conditions"/>
+                            <field name="comment"/>
                         </page>
                         <page string="Other Info">
-                            <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
-                            <newline/>
-                            <field name="payment_term" widget="selection"/>
-                            <field name="name"/>
-                            <newline/>
-                            <field name="origin" placeholder="PO0025"/>
-                            <field name="user_id"/>
-                            <field name="move_id" groups="account.group_account_user"/>
-                            <separator colspan="4" string="Additional Information"/>
-                            <field colspan="4" name="comment" nolabel="1"/>
+                            <group col="4">
+                                <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
+                                <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                <newline/>
+                                <field name="payment_term" widget="selection"/>
+                                <field name="name"/>
+                                <newline/>
+                                <field name="origin" placeholder="PO0025"/>
+                                <field name="user_id"/>
+                                <field name="move_id" groups="account.group_account_user"/>
+                            </group>
                         </page>
                         <page string="Payments">
-                            <field name="payment_ids" colspan="4" nolabel="1" >
+                            <field name="payment_ids">
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
                                     <field name="move_id"/>
@@ -243,9 +260,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
+                <footer>
+                    <field name="message_ids" widget="ThreadView"/>
+                </footer>
                 </form>
             </field>
         </record>
@@ -255,10 +272,10 @@
             <field name="model">account.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form version="7.0">
                 <header>
-                	<button name="action_invoice_sent" type="object" string="Send by Email" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
-                	<button name="invoice_print" string="Print Invoice" type="object" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
+                    <button name="action_invoice_sent" type="object" string="Send by Email" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
+                    <button name="invoice_print" string="Print Invoice" type="object" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
                     <button name="invoice_open" states="draft,proforma2" string="Validate"/>
                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='paid'/>
@@ -268,68 +285,99 @@
                     <!--button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/-->
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
-                <sheet string="Invoice" layout="auto">
-                    <group colspan="4" col="8" class="oe_form_header">
-                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
-                    <field name="number"/>
+                <sheet string="Invoice">
+                    <h1>
+                        <label string="Draft Invoice " attrs="{'invisible': [('state','not in',('draft',))]}"/>
+                        <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
+                        <label string="Invoice " attrs="{'invisible': [('state','in',('draft','proforma','proforma2'))]}"/>
+                        <field name="number" readonly="1" class="oe_form_inline"/>
+                    </h1>
+                    <label string="Concerns" for="name" class="oe_form_readonly_hidden"/>
+                    <h2>
+                        <field name="name" placeholder="Project XYZ"/>
+                    </h2>
                     <field name="type" invisible="1"/>
-                    <field name="currency_id" width="50"/>
-                    <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
-                    <newline/>
-                    <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer': 1}" options='{"quick_create": false}' domain="[('customer', '=', True)]"/>
-                    <field name="fiscal_position" widget="selection" options='{"quick_create": false}'/>
-                    <newline/>
-                    <field name="date_invoice"/>
-                    <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
-                    <field name="payment_term" widget="selection"/>
-                    <newline/>
-                    <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
-                    <field name="name" placeholder="Project XYZ"/>
-                    <field name="sent"/>
+                    <group>
+                        <group>
+
+                            <field string="Customer" name="partner_id"
+                                on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                                groups="base.group_user" context="{'search_default_customer': 1}"
+                                domain="[('customer', '=', True)]"/>
+                            <field name="fiscal_position" widget="selection" options='{"quick_create": false}'/>
+                            <field name="payment_term" widget="selection"/>
+
+                        </group>
+                        <group>
+
+                            <field name="date_invoice"/>
+                            <field name="period_id" domain="[('state', '=', 'draft')]"
+                                groups="account.group_account_user" widget="selection"/>
+                            <field name="journal_id" groups="account.group_account_user"
+                                on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
+
+                            <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
+                                name="account_id" groups="account.group_account_user"/>
+
+                            <label for="currency_id"/>
+                            <div>
+                                <field name="currency_id" class="oe_form_inline"/>
+                                <button name="%(action_account_change_currency)d" type="action"
+                                  icon="terp-stock_effects-object-colorize"
+                                  attrs="{'invisible':[('state','!=','draft')]}"
+                                  groups="account.group_account_user"/>
+                            </div>
+                        </group>
                     </group>
+                    <field name="sent" invisible="1"/>
+
                     <notebook colspan="4">
                         <page string="Invoice">
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
-                            <group col="1" colspan="2">
-                                <field name="tax_line" nolabel="1">
-                                    <tree editable="bottom" string="Taxes">
-                                        <field name="name"/>
-                                        <field name="account_id" groups="account.group_account_invoice"/>
-                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
-                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
-                                        <field invisible="True" name="base_amount"/>
-                                        <field invisible="True" name="tax_amount"/>
-                                        <field name="factor_base" invisible="True"/>
-                                        <field name="factor_tax" invisible="True"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group col="4" colspan="2">
-                                <group colspan="2" col="1">
-                                    <button name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                            <group>
+                                <div>
+                                    <field name="tax_line" nolabel="1">
+                                        <tree editable="bottom" string="Taxes">
+                                            <field name="name"/>
+                                            <field name="account_id" groups="account.group_account_invoice"/>
+                                            <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
+                                            <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
+                                            <field invisible="True" name="base_amount"/>
+                                            <field invisible="True" name="tax_amount"/>
+                                            <field name="factor_base" invisible="True"/>
+                                            <field name="factor_tax" invisible="True"/>
+                                        </tree>
+                                    </field>
+                                    <button name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes"
+                                        type="object" groups="account.group_account_user" icon="terp-stock_format-scientific"
+                                        help="This action will erase taxes"/>
+                                </div>
+                                <group class="oe_form_subtotal_footer">
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax"/>
+                                    <field name="amount_total" class="oe_form_subtotal_footer_separator"/>
+
+                                    <field name="residual" style="margin-top: 10px"/>
+                                    <field name="reconciled" invisible="1"/>
                                 </group>
-                                <field name="amount_untaxed"/>
-                                <label string="" colspan="2"/>
-                                <field name="amount_tax"/>
-                                <field name="reconciled"/>
-                                <field name="amount_total"/>
-                                <field name="residual"/>
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
-                            <newline/>
-                            <field name="date_due"/>
-                            <field name="user_id"/>
-                            <newline/>
-                            <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
-                            <field name="origin" placeholder="SO0032"/>
-                            <field name="move_id" groups="account.group_account_user"/>
-                            <separator colspan="4" string="Additional Information"/>
-                            <field colspan="4" name="comment" nolabel="1"/>
+                            <group col="4">
+                                <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                <newline/>
+                                <field name="date_due"/>
+                                <field name="user_id"/>
+                                <newline/>
+                                <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
+                                <field name="origin" placeholder="SO0032"/>
+                                <field name="move_id" groups="account.group_account_user"/>
+                            </group>
+                            <separator string="Additional Information"/>
+                            <field name="comment"/>
                         </page>
                         <page string="Payments">
-                            <field name="payment_ids" colspan="4" nolabel="1">
+                            <field name="payment_ids">
                                 <tree string="Payments">
                                     <field name="date"/>
                                     <field name="move_id"/>
@@ -345,9 +393,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <footer>
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
+                </footer>
                 </form>
             </field>
         </record>
