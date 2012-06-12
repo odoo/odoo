@@ -15,7 +15,7 @@
         <field name="model">marketing.campaign</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+            <form version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft"/>
                 <button name="state_done_set" string="Done" states="running"/>
@@ -23,27 +23,24 @@
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
-            <sheet string="Campaign" layout="auto">
-                <group colspan="4" col="6">
-                    <group colspan="2" col="2">
-                        <separator string="Campaign" colspan="2" />
-                        <field name="name" select="1"/>
+            <sheet string="Campaign">
+                <group>
+                    <group string="Campaign">
+                        <field name="name"/>
                         <field name="mode"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Resource" colspan="2" />
+                    <group string="Resource">
                         <field name="object_id"/>
                         <field name="partner_field_id"/>
                         <field name="unique_field_id"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Cost" colspan="2" />
+                    <group string="Cost">
                         <field name="fixed_cost"/>
                     </group>
                 </group>
-                <field name="activity_ids" nolabel = "1" colspan="4" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
-              </sheet>
-              </form>
+                <field name="activity_ids" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
+            </sheet>
+            </form>
         </field>
     </record>
 
@@ -53,8 +50,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
-                <field name="name" select="1"/>
-                <field name="object_id" select="1"/>
+                <field name="name"/>
+                <field name="object_id"/>
                 <field name="mode"/>
                 <field name="fixed_cost"/>
                 <field name="state"/>
@@ -136,7 +133,7 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+            <form version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft"/>
                 <button name="state_done_set" string="Close" states="running"/>
@@ -145,28 +142,28 @@
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Segments" layout="auto">
-                <group colspan="2" col="2">
-                    <separator string="Segment" colspan="4"/>
-                    <field name="name"/>
-                    <field name="campaign_id" select="1" on_change="onchange_campaign_id(campaign_id)"/>
-                    <field name="object_id" invisible="1"/>
-                </group>
-                <group colspan="2" col="2">
-                    <separator string="Filter" colspan="4"/>
-                    <field name="ir_filter_id"/>
-                </group>
-                <newline/>
-                <group colspan="2" col="4">
-                   <separator string="Synchronization" colspan="4"/>
-                   <field name="sync_mode" required="True" colspan="4"/>
-                   <field name="sync_last_date" colspan="3"/>
-                   <button string="Synchronize Manually" states="running" name="synchroniz" icon="terp-project" type="object"/>
-                   <field name="date_next_sync" colspan="3"/>
-                </group>
-                <group colspan="2" col="2">
-                    <separator string="History" colspan="2"/>
-                    <field name="date_run" readonly="1"/>
-                    <field name="date_done" readonly="1"/>
+                <group>
+                    <group string="Segment">
+                        <field name="name"/>
+                        <field name="campaign_id" on_change="onchange_campaign_id(campaign_id)"/>
+                        <field name="object_id" invisible="1"/>
+                    </group>
+                    <group string="Filter">
+                        <field name="ir_filter_id"/>
+                    </group>
+                    <group string="Synchronization">
+                       <field name="sync_mode" required="True"/>
+                       <label for="sync_last_date"/>
+                       <div>
+                           <field name="sync_last_date" class="oe_form_inline"/>
+                           <button string="Synchronize Manually" states="running" name="synchroniz" type="object"/>
+                       </div>
+                       <field name="date_next_sync"/>
+                    </group>
+                    <group string="History">
+                        <field name="date_run" readonly="1"/>
+                        <field name="date_done" readonly="1"/>
+                    </group>
                 </group>
             </sheet>
             </form>
@@ -243,52 +240,48 @@
         <field name="model">marketing.campaign.activity</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Activities">
-                <group colspan="2" col="2">
-                    <separator string="Activity" colspan="2"/>
-                    <field name="name" select="1"/>
-                    <field name="signal" groups="base.group_no_one"/>
-                    <field name="start"/>
-                    <field name="object_id" invisible="1"/>
-                    <field name="campaign_id" invisible="1"/>
+            <form string="Activities" version="7.0">
+                <group>
+                    <group string="Activity">
+                        <field name="name"/>
+                        <field name="signal" groups="base.group_no_one"/>
+                        <field name="start"/>
+                        <field name="object_id" invisible="1"/>
+                        <field name="campaign_id" invisible="1"/>
+                    </group>
+                    <group string="Cost / Revenue">
+                        <field name="variable_cost"/>
+                        <field name="revenue"/>
+                    </group>
                 </group>
-                <group colspan="2" col="2">
-                    <separator string="Cost / Revenue" colspan="2"/>
-                    <field name="variable_cost"/>
-                    <field name="revenue"/>
-                </group>
-                <newline/>
-                <group colspan="4" col="4">
-                    <separator string="Condition" colspan="4"/>
+                <group string="Condition" col="4">
                     <field name="condition" widget="char" colspan="4"/>
                     <field name="keep_if_condition_not_met"/>
                 </group>
-                <group colspan="4" col="4">
+                <group col="4">
                     <separator string="Action" colspan="4"/>
                     <field name="type"/>
-                    <group colspan="2" col="2">
-                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
-                               context="{'default_model_id':object_id}" />
-                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"    />
-                        <group attrs="{ 'invisible':[('type','!=','report')]}">
-                            <field name="report_id" attrs="{'required':[('type','=','report')]}" context="{'object_id':object_id}"  />
-                            <field name="report_directory_id" attrs="{'required':[('type','=','report')]}"   />
-                        </group>
-                    </group>
+                    <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                           context="{'default_model_id':object_id}" />
+                    <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
+                    <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
+                    <field name="report_directory_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}"/>
                 </group>
-                <separator string="Transitions" colspan="4"/>
-                <field name="from_ids" nolabel="1" mode="tree,form" context="{'default_activity_to_id': active_id}" colspan="2">
+                <separator string="Transitions"/>
+                <field name="from_ids" mode="tree,form" context="{'default_activity_to_id': active_id}">
                     <tree string="Incoming Transitions" editable="bottom">
                         <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
-                    <form string="Incoming Transitions">
-                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
-                        <field name='trigger'/>
-                        <field name="interval_nbr"/>
-                        <field name="interval_type"/>
+                    <form string="Incoming Transitions" version="7.0">
+                        <group col="4">
+                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </group>
                     </form>
                 </field>
                 <field name="to_ids" nolabel="1" mode="tree,form" context="{'default_activity_from_id': active_id}" colspan="2">
@@ -298,11 +291,13 @@
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
-                    <form string="Outgoing Transitions">
-                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
-                        <field name='trigger'/>
-                        <field name="interval_nbr"/>
-                        <field name="interval_type"/>
+                    <form string="Outgoing Transitions" version="7.0">
+                        <group col="4">
+                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </group>
                     </form>
                 </field>
             </form>
@@ -315,7 +310,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Activities">
-                <field name="name" select="1"/>
+                <field name="name"/>
                 <field name="condition"/>
                 <field name="type"/>
                 <field name="start"/>
@@ -357,36 +352,30 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+            <form string="Marketing Campaign Activities" version="7.0">
             <header>
                 <button string="Process" states="todo" name="process" type="object"/>
                 <button string="Reset" states="exception,cancelled" name="button_draft" type="object"/>
                 <button string="Cancel" states="todo,exception" name="button_cancel" type="object"/>
                 <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
+                <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
             </header>
-            <sheet string="Marketing Campaign Activities" layout="auto">
-                <group colspan="4" col="6">
-                    <group colspan="2" col="2">
-                        <separator string="Campaign Step" colspan="2"/>
-                        <field name="campaign_id" select="1"/>
-                        <field name="segment_id" select="1"/>
-                        <field name="activity_id" context="{'segment_id':segment_id}" select="1"/>
-                    </group><group colspan="2" col="2">
-                        <separator string="Related Resource" colspan="2"/>
+            <sheet>
+                <group>
+                    <group string="Campaign Step">
+                        <field name="campaign_id"/>
+                        <field name="segment_id"/>
+                        <field name="activity_id" context="{'segment_id':segment_id}"/>
+                        <field name="date"/>
+                    </group><group string="Related Resource">
                         <field name="object_id" readonly="True"/>
                         <field name="res_name"/>
                         <field name="res_id"/>
-                        <field name="partner_id" select="1"/>
-                    </group><group colspan="2" col="2">
-                        <separator string="Date" colspan="2"/>
-                        <field name="date"/>
-                        <label string="" colspan="1"/>
-                        <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
+                        <field name="partner_id"/>
                     </group>
                 </group>
-                <group colspan="4" col="4" attrs="{'invisible':[('state','!=','exception')]}">
-                    <separator string="Error Message" colspan="4"/>
-                    <field name="error_msg" nolabel="1" colspan="4"/>
+                <group attrs="{'invisible':[('state','!=','exception')]}" string="Error Message">
+                    <field name="error_msg" nolabel="1" colspan="2"/>
                 </group>
             </sheet>
             </form>
