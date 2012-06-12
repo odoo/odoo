@@ -1859,6 +1859,24 @@ class BaseModel(object):
                 etree.SubElement(view, 'newline')
         return view
 
+    def _get_default_search_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, using _rec_name if
+        it's one of the columns or the first column it finds otherwise
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
+        _rec_name = self._rec_name
+        if _rec_name not in self._columns:
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+
+        view = etree.Element('search', string=self._description)
+        etree.SubElement(view, 'field', name=_rec_name)
+        return view
+
     def _get_default_tree_view(self, cr, user, context=None):
         """ Generates a single-field tree view, using _rec_name if
         it's one of the columns or the first column it finds otherwise
@@ -1928,38 +1946,6 @@ class BaseModel(object):
 
         return view
 
-    def _get_default_search_view(self, cr, uid, context=None):
-        """
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
-        :returns: an lxml document of the view
-        :rtype: etree._Element
-        """
-        form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
-        tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
-
-        # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
-        fields = self.fields_get(cr, uid, context=context)
-        fields_to_search = set(
-            field for field, descriptor in fields.iteritems()
-            if descriptor.get('select'))
-
-        for view in (form_view, tree_view):
-            view_root = etree.fromstring(view['arch'])
-            # Only care about select=1 in xpath below, because select=2 is covered
-            # by the custom advanced search in clients
-            fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
-
-        tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
-
-        field_group = etree.SubElement(search_view, "group")
-        for field_name in fields_to_search:
-            etree.SubElement(field_group, "field", name=field_name)
-
-        return search_view
-
     #
     # if view_id, view_type is not required
     #
@@ -1991,6 +1977,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
+            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -2019,16 +2006,18 @@ class BaseModel(object):
                     if node.get('name') == spec.get('name'):
                         return node
                 return None
-            else:
-                for node in source.getiterator(spec.tag):
-                    good = True
-                    for attr in spec.attrib:
-                        if attr != 'position' and (not node.get(attr) or node.get(attr) != spec.get(attr)):
-                            good = False
-                            break
-                    if good:
-                        return node
-                return None
+
+            for node in source.getiterator(spec.tag):
+                if isinstance(node, SKIPPED_ELEMENT_TYPES):
+                    continue
+                if all(node.get(attr) == spec.get(attr) \
+                        for attr in spec.attrib
+                            if attr not in ('position','version')):
+                    # Version spec should match parent's root element's version 
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        return None
+                    return node
+            return None
 
         def apply_inheritance_specs(source, specs_arch, inherit_id=None):
             """ Apply an inheriting view.
@@ -2094,7 +2083,11 @@ class BaseModel(object):
                         if attr != 'position'
                     ])
                     tag = "<%s%s>" % (spec.tag, attrs)
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
+                                            (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
+                    
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):
@@ -3076,7 +3069,7 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr, context["module"])
+        self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
@@ -3203,7 +3196,7 @@ class BaseModel(object):
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
-    def _add_sql_constraints(self, cr, module):
+    def _add_sql_constraints(self, cr):
         """
 
         Modify this model's database table constraints so they match the one in

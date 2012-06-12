@@ -37,39 +37,32 @@
             <field name="model">res.currency</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Currency">
-                    <group col="6" colspan="4">
+                <form string="Currency" version="7.0">
+                    <group col="4">
                         <field name="name"/>
                         <field name="rate"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
 
-                    <group col="6" colspan="4">
-                        <group col="2" colspan="2">
-                            <separator string="Price Accuracy" colspan="2"/>
+                    <group>
+                        <group string="Price Accuracy">
                             <field name="rounding"/>
                             <field name="accuracy"/>
                         </group>
 
-                        <group col="2" colspan="2">
-                            <separator string="Display" colspan="2"/>
+                        <group string="Display">
                             <field name="symbol"/>
                             <field name="position"/>
                         </group>
 
-                        <group col="2" colspan="2">
-                            <separator string="Miscellaneous" colspan="2"/>
+                        <group string="Miscellaneous">
                             <field name="base"/>
-                            <field name="active" select="1"/>
+                            <field name="active"/>
                         </group>
                     </group>
 
-                    <field colspan="4" mode="tree,form" name="rate_ids" nolabel="1" attrs="{'readonly':[('base','=',True)]}">
-                        <form string="Rates">
-                            <field name="name"/>
-                            <field name="rate"/>
-                        </form>
-                        <tree string="Rates">
+                    <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}">
+                        <tree string="Rates" editable="bottom">
                             <field name="name"/>
                             <field name="rate"/>
                         </tree>
@@ -95,8 +88,10 @@
             <field name="model">res.currency.rate.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Currency Rate Type">
-                    <field name="name"/>
+                <form string="Currency Rate Type" version="7.0">
+                    <group>
+                        <field name="name"/>
+                    </group>
                 </form>
             </field>
         </record>
