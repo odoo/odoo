@@ -13,40 +13,39 @@
             <field name="model">subscription.subscription</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form string="Subscriptions" version="7.0">
                 <header>
                     <button name="set_process" states="draft" string="Process" type="object"/>
                     <button name="set_done" states="running" string="Stop" type="object"/>
                     <button name="set_draft" states="done" string="Set to Draft" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,running"/>
                 </header>
-                <sheet string="Subscriptions" layout="auto">
-                    <group col="6" colspan="4" class="oe_form_header">
-                        <field name="name" select="1"/>
-                        <field name="partner_id" select="1"/>
-                        <field name="user_id" select="1"/>
-                        <field name="active" select="1"/>
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="active"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Subsription Data">
-                            <newline/>
-                            <field name="interval_number"/>
-                            <field name="interval_type"/>
-                            <field name="exec_init"/>
-                            <field name="date_init"/>
-                            <field colspan="4" name="doc_source" widget="reference"/>
-                            <separator string="Notes"  colspan="4"/>
-                            <field colspan="4" name="notes" nolabel="1"/>
-                            <separator colspan="4"/>
-                            <field colspan="4" name="cron_id" readonly="1"/>
+                            <group col="4">
+                                <field name="interval_number"/>
+                                <field name="interval_type"/>
+                                <field name="exec_init"/>
+                                <field name="date_init"/>
+                                <field name="doc_source" widget="reference"/>
+                                <field name="cron_id"/>
+                            </group>
+                            <separator string="Notes"/>
+                            <field name="notes"/>
                         </page>
                         <page string="Documents created">
-                            <field colspan="4" name="doc_lines" nolabel="1" widget="one2many_list"/>
+                            <field name="doc_lines" widget="one2many_list"/>
                         </page>
                         <page string="Notes">
-                            <separator string="Notes" colspan="4"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                    </page>
+                            <field name="note"/>
+                        </page>
                     </notebook>
                     </sheet>
                 </form>
@@ -62,7 +61,7 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="active"/>
-                    <field name="user_id" select="1"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -125,9 +124,11 @@
             <field name="model">subscription.subscription.history</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription History">
-                    <field name="date"/>
-                    <field colspan="4" name="document_id"/>
+                <form string="Subscription History" version="7.0">
+                    <group col="4">
+                        <field name="date"/>
+                        <field name="document_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -137,14 +138,13 @@
             <field name="model">subscription.document</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription Document">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="model" select="1"/>
-                        <field name="active" select="1"/>
+                <form string="Subscription Document" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="active"/>
                     </group>
-                    <newline/>
-                    <field colspan="4" name="field_ids" nolabel="1"/>
+                    <field name="field_ids"/>
                 </form>
             </field>
         </record>
@@ -181,10 +181,11 @@
             <field name="model">subscription.document.fields</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription Document Fields">
-                    <field name="field" select="1"/>
-                    <newline/>
-                    <field name="value"/>
+                <form string="Subscription Document Fields" version="7.0">
+                    <group>
+                        <field name="field"/>
+                        <field name="value"/>
+                    </group>
                 </form>
             </field>
         </record>
