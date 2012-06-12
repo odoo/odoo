@@ -175,6 +175,9 @@ class wizard(osv.osv_memory):
 
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
+            if not wiz.user_ids:
+                raise osv.except_osv(_('User required'),
+                _('Create atleast one user for portal.'))
             # determine existing users
             portal_users=[portal_user.id for portal_user in wiz.portal_id.group_id.users]
             add_users=[]
