@@ -1,20 +1,17 @@
 <openerp>
     <data>
-
         <record id="view_config_settings" model="ir.ui.view">
             <field name="name">project settings</field>
             <field name="model">project.config.settings</field>
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-           
-                <form string="Configure Project" layout="manual">
+                <form string="Configure Project" version="7.0">
                     <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
                     </header>
-                  
-                    <sheet layout="auto">
+                    <sheet>
                       <group> 
                         <separator string="Project" colspan="4"/>
                         <field name="group_time_work_estimation_tasks"/>
@@ -31,9 +28,7 @@
                         <group name="support" colspan="4"/>
                        </group> 
                     </sheet>
-                   
                 </form>
-              
             </field>
         </record>
 

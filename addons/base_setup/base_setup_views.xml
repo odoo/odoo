@@ -9,20 +9,12 @@
           <field name="inherit_id" ref="base.res_config_view_base"/>
          <field name="arch" type="xml">
             <data>
-              <form position="attributes">
+              <form position="attributes" version="7.0">
                 <attribute name="string">Specify Your Terminology</attribute>
               </form>
-            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
-                  <attribute name="string">Specify Your Terminology</attribute>
-            </xpath>
-            <xpath expr="//label[@string='description']" position="attributes">
-              <attribute name="string">You can use this wizard to change the terminologies for customers in the whole application.</attribute>
-            </xpath>
-            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                  <attribute name="string"/>
-                 <attribute name="rowspan">12</attribute>
-            </xpath>
              <group string="res_config_contents" position="replace">
+             	<label string="You can use this wizard to change the terminologies for customers in the whole application."/>
+                	<separator string="Specify Your Terminology"/>
                     <group colspan="4">
                         <field colspan="4" name="partner"/>
                   </group>
@@ -45,18 +37,17 @@
         <field name="model">sale.config.settings</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Configure Sales" layout="manual">
+            <form string="Configure Sales" version="7.0">
                 <header>
                     <button string="Apply" type="object" name="execute"/>
                     <button string="Cancel" special="cancel"/>
                 </header>
-                <sheet layout="auto">
-                    <group colspan="4" col="4">
+                <sheet>
+                    <group>
                         <group name="config_sale" colspan="4"/>
-
                         <!-- this part is necessary to allow the plugins to extend the view -->
                         <field name="module_crm" invisible="1"/>
-                        <group name="config_fetchmail" colspan="4" attrs="{'invisible': [('module_crm','=',False)]}">
+                        <group name="config_fetchmail" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
                             <separator string="Emails"/>
                         </group>
                             <newline/>

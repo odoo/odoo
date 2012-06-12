@@ -6,16 +6,16 @@
             <field name="model">purchase.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Purchases" layout="manual">
+                <form string="Configure Purchases" version="7.0">
                     <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
                     </header>
-                    <sheet layout="auto">
+                    <sheet>
+                    <group col="4">
                         <separator string="Invoicing Control" colspan="4"/>
                         <field name="default_invoice_method"/>
                         <field name="decimal_precision"/>
-                      <group>
                         <separator string="Purchase Order" colspan="4"/>
                         <field name="group_purchase_pricelist"/>
                         <field name="group_uom"/>
@@ -23,7 +23,7 @@
                         <field name="module_purchase_requisition"/>
                         <field name="module_warning"/>
                         <field name="module_purchase_analytic_plans"/>
-                      </group>  
+                    </group>
                     </sheet>
                 </form>
             </field>

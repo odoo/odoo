@@ -6,28 +6,30 @@
             <field name="model">mrp.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Manufacturing" layout="manual">
+                <form string="Configure Manufacturing" version="7.0">
                     <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
                     </header>
                     <sheet layout="auto">
-	                  <group>	
-	                     <separator string="Manufacturing Order" colspan="4"/>
-	                       <field name="module_mrp_operations"/>
-	                       <field name="module_stock_planning"/>
-	                       <field name="module_mrp_subproduct"/>
-	                       <field name="module_mrp_repair"/>
-	                       <separator string="Logistics" colspan="4"/>
-	                          <field name="module_mrp_jit"/>
-	                          <field name="module_stock_no_autopicking"/>
-	                         <separator string="Bill Of Material" colspan="4"/>
-	                           <field name="group_mrp_routings"/>
-	                           <field name="group_mrp_properties"/>
-	                         <separator string="Products" colspan="4"/>
-	                            <field name="module_product_manufacturer"/>
-	                  </group>
-                    </sheet>
+                        <group col="4" string="Manufacturing Order">
+                            <field name="module_mrp_operations"/>
+                            <field name="module_stock_planning"/>
+                            <field name="module_mrp_subproduct"/>
+                            <field name="module_mrp_repair"/>
+                        </group>
+                        <group string="Logistics" col="4">
+                            <field name="module_mrp_jit"/>
+                            <field name="module_stock_no_autopicking"/>
+                        </group>
+                        <group string="Bill Of Material" col="4">
+                            <field name="group_mrp_routings"/>
+                            <field name="group_mrp_properties"/>
+                        </group>
+                       <group string="Products" col="2">
+			    <field name="module_product_manufacturer"/>
+                       </group>
+                     </sheet>
                 </form>
             </field>
         </record>

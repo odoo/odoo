@@ -65,21 +65,26 @@ class synchronize_google(osv.osv_memory):
     _name = 'synchronize.google.import'
 
     def _get_group(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
-        google=self.pool.get('google.login')
-        if not user_obj.gmail_user or not user_obj.gmail_password:
-            raise osv.except_osv(_('Warning !'), _("No Google Username or password Defined for user.\nPlease define in user view"))
-        gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
-        if not gd_client:
-            return [('failed', 'Connection to google fail')]
 
+        # all the selection field which have method are called at load time. why ?
+        
         res = []
-        query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
-        if gd_client:
-            groups = gd_client.GetFeed(query.ToUri())
-            for grp in groups.entry:
-                res.append((grp.id.text, grp.title.text))
-        res.append(('all','All Groups'))
+        if context:
+            user_obj = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+            google=self.pool.get('google.login')
+            if not user_obj.gmail_user or not user_obj.gmail_password:
+                raise osv.except_osv(_('Warning !'), _("No Google Username or password Defined for user.\nPlease define in user view"))
+            gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
+            if not gd_client:
+                return [('failed', 'Connection to google fail')]
+    
+            res = []
+            query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
+            if gd_client:
+                groups = gd_client.GetFeed(query.ToUri())
+                for grp in groups.entry:
+                    res.append((grp.id.text, grp.title.text))
+            res.append(('all','All Groups'))
         return res
 
     def _get_calendars(self, cr, uid, context=None):
