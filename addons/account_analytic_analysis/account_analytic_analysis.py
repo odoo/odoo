@@ -387,7 +387,7 @@ class account_analytic_account(osv.osv):
             digits_compute=dp.get_precision('Account')),
         'ca_to_invoice': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Uninvoiced Amount',
             help="If invoice from analytic account, the remaining amount you can invoice to the customer based on the total costs.",
-            digits_compute=dp.get_precision('Account')),
+            digits_compute=dp.get_precision('Account'),store="True"),
         'ca_theorical': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Theoretical Revenue',
             help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
             digits_compute=dp.get_precision('Account')),

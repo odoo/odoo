@@ -10,14 +10,14 @@
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="end_of_tabl_hook"]' position='before'>
                         <tr>
-                            <th class="oe_border_right">Charge Expenses</th>
+                            <th class="oe_th_160px oe_border_right">Charge Expenses</th>
                             <td><field name="charge_expenses" nolabel="1"/></td>
-                            <td><field class="oe_th_110px" name="est_expenses" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td class="oe_th_110px"><field name="expense_invoiced" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td class="oe_th_110px oe_border_right"><field name="remaining_expense" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+                            <td><field class="oe_th_90px" name="est_expenses" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+                            <td class="oe_th_90px"><field name="expense_invoiced" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+                            <td class="oe_th_90px oe_border_right"><field name="remaining_expense" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
                             <td class="oe_th_110px"><field name="expense_to_invoice" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
                             <td width="10px"></td>
-                            <td><button icon="gtk-select-all" class= "oe_btn_width" name="open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+                            <td><button icon="gtk-select-all" class= "oe_btn_width_120px" name="open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
                             <td><button icon="terp-dolar" class= "oe_btn_width" name="hr_to_invoiced_expense" string="Invoice Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
                         </tr>
                 </xpath>
