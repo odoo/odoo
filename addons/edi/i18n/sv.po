@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-05-22 09:51+0000\n"
+"PO-Revision-Date: 2012-06-05 10:04+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
-"X-Generator: Launchpad (build 15288)\n"
+"X-Launchpad-Export-Date: 2012-06-06 05:30+0000\n"
+"X-Generator: Launchpad (build 15353)\n"
 
 #. module: edi
 #: sql_constraint:res.currency:0
@@ -75,22 +75,25 @@ msgid ""
 "You can install it by connecting as the administrator and opening the "
 "configuration assistant."
 msgstr ""
+"Dokumentet du försöker importera kräver OpenERP `%s`-applikationen. Du kan "
+"installera den genom att ansluta som administratör och öppna "
+"konfigurationsguiden."
 
 #. module: edi
 #: help:edi.document,document:0
 msgid "EDI document content"
-msgstr ""
+msgstr "EDI-dokumentinnehåll"
 
 #. module: edi
 #: model:ir.model,name:edi.model_edi_document
 msgid "EDI Document"
-msgstr ""
+msgstr "EDI-dokument"
 
 #. module: edi
 #: code:addons/edi/models/edi.py:48
 #, python-format
 msgid "'%s' is an invalid external ID"
-msgstr ""
+msgstr "'%s' är otillräckligt som externt ID"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -101,7 +104,7 @@ msgstr "Företag"
 #: code:addons/edi/models/edi.py:152
 #, python-format
 msgid "Missing Application"
-msgstr ""
+msgstr "Saknad applikation"
 
 #. module: edi
 #: field:edi.document,document:0
@@ -121,12 +124,12 @@ msgstr "Importera detta dokument"
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:33
 msgid "Import it into an existing OpenERP instance"
-msgstr ""
+msgstr "Importera till en existerande OpenERP-instans"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:36
 msgid "OpenERP instance address:"
-msgstr ""
+msgstr "OpenERP-instansadress:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:39
@@ -136,17 +139,17 @@ msgstr "Importera"
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:44
 msgid "Import it into a new OpenERP Online instance"
-msgstr ""
+msgstr "Importera till en ny OpenERP molninstans"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:47
 msgid "Create my new OpenERP instance"
-msgstr ""
+msgstr "Skapa min nya OpenERP-instans"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:52
 msgid "Import into another application"
-msgstr ""
+msgstr "Importera till någon annan applikation"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:54
@@ -155,6 +158,8 @@ msgid ""
 "language\n"
 "                            independent"
 msgstr ""
+"OpenERPs Electronic Data Interchange (EDI)-dokument är baserade på generiska "
+"och språkoberoende"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
@@ -173,26 +178,38 @@ msgid ""
 "this and what the content of OpenERP EDI documents\n"
 "                            is like in the"
 msgstr ""
+"serialisering av dokumentets attribut.\n"
+"                                                                             "
+"                                 Det är oftast mycket snabbt och lätt att "
+"skapa en liten plug-in för önskad\n"
+"                                                                             "
+"                                 program som kommer att kunna importera alla "
+"OpenERP EDI dokument.\n"
+"                                                                             "
+"                                 Du hittar mer information om hur du gör "
+"detta och vad innehållet i OpenERP EDI dokument\n"
+"                                                                             "
+"                                 är som i"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:60
 msgid "OpenERP documentation"
-msgstr ""
+msgstr "OpenERP-dokumentation"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:61
 msgid "To get started immediately,"
-msgstr ""
+msgstr "För att kommaigång direkt,"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:62
 msgid "see is all it takes to use this EDI document in Python"
-msgstr ""
+msgstr "det är att som krävs för att använda detta EDI-dokument i Python"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:70
 msgid "You can download the raw EDI document here:"
-msgstr ""
+msgstr "Du kan ladda ned EDI-dokumentet i raw-format här:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:73
@@ -315,19 +332,19 @@ msgstr "Paypal"
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:135
 msgid ""
 "You may directly pay this invoice online via Paypal's secure payment gateway:"
-msgstr ""
+msgstr "Du kan betala denna faktura direkt via Paypal's säkra betalväxel:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:145
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:137
 msgid "Bank Wire Transfer"
-msgstr ""
+msgstr "Banköverföring"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:147
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:139
 msgid "Please transfer"
-msgstr ""
+msgstr "Vänligen överför"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:148
@@ -343,17 +360,21 @@ msgid ""
 "mention the invoice\n"
 "                     reference"
 msgstr ""
+"(postadress i fakturahuvudet)\n"
+"                                                                             "
+"                      använd ett av följande bankkontona, se till att ange "
+"fakturareferens."
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:151
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:143
 msgid "on the transfer:"
-msgstr ""
+msgstr "på överföringen:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:36
 msgid "Order"
-msgstr ""
+msgstr "Order"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:42
@@ -374,7 +395,7 @@ msgstr "Rabatt(%)"
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:127
 msgid ""
 "You may directly pay this order online via Paypal's secure payment gateway:"
-msgstr ""
+msgstr "Du kan betala denna order direkt via Paypals säkra betalväxel:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:141
@@ -384,3 +405,6 @@ msgid ""
 "mention the document\n"
 "                     reference"
 msgstr ""
+"(postadress på orderhuvudet)\n"
+"                                                                             "
+" använd någor av följande bankkonton. Se till att nämna dokumentid."
