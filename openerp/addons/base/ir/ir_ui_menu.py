@@ -255,6 +255,9 @@ class ir_ui_menu(osv.osv):
 
         return res
 
+    def _get_needaction_info(self, cr, uid, id, domain=[], context={}):
+        return [False, 0]
+
     def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
             context = {}
@@ -278,7 +281,7 @@ class ir_ui_menu(osv.osv):
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, 
-            string='Complete Name', type='char', size=128),
+            string='Full Path', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File', size=128),
