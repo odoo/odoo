@@ -726,6 +726,26 @@ class sale_order(osv.osv):
             self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
+    
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
+
+        # redisplay the record as a sale order
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
 
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
@@ -989,29 +1009,6 @@ class sale_order(osv.osv):
             if res:
                 self.delivery_end_send_note(cr, uid, [order.id], context=context)
         return True
-
-    def _log_event(self, cr, uid, ids, factor=0.7, name='Open Order'):
-        invs = self.read(cr, uid, ids, ['date_order', 'partner_id', 'amount_untaxed'])
-        for inv in invs:
-            part = inv['partner_id'] and inv['partner_id'][0]
-            pr = inv['amount_untaxed'] or 0.0
-            partnertype = 'customer'
-            eventtype = 'sale'
-            event = {
-                'name': 'Order: '+name,
-                'som': False,
-                'description': 'Order '+str(inv['id']),
-                'document': '',
-                'partner_id': part,
-                'date': time.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                'user_id': uid,
-                'partner_type': partnertype,
-                'probability': 1.0,
-                'planned_revenue': pr,
-                'planned_cost': 0.0,
-                'type': eventtype
-            }
-            self.pool.get('res.partner.event').create(cr, uid, event)
 
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
