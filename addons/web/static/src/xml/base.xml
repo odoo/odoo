@@ -404,7 +404,7 @@
             <col width="33%"/>
             <col width="33%"/>
             <col width="34%"/>
-            <tr class="oe_header_row">
+            <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
                             <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
@@ -642,8 +642,8 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_list_add oe_form_button_hi" t-if="widget.options.addable">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
+        <button type="button" class="oe_button oe_list_add oe_form_button_hi">
             <t t-esc="widget.options.addable"/>
         </button>
         <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
@@ -1049,7 +1049,7 @@
 </t>
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image">
-        <div class="oe_form_field_image_controls">
+        <div class="oe_form_field_image_controls oe_form_readonly_hidden">
             <div class="oe-binary-file-set">
                 <form class="oe-binary-form" t-att-target="widget.iframe"
                     method="post" enctype="multipart/form-data" action="/web/binary/upload">
@@ -1204,7 +1204,7 @@
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+    <t t-jquery=".oe_header_row_top" t-operation="replace"/>
 
     <t t-jquery=".oe-view-manager-header">
         this.attr('t-if', 'views.length != 1');
@@ -1409,10 +1409,10 @@
         </t>
     </t>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_section">
+<div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
 
 </div>
-<div t-name="SearchView.CustomFilters" class="oe_searchview_section">
+<div t-name="SearchView.CustomFilters" class="oe_searchview_custom oe_searchview_section">
     <div>
         <h3><span class="oe_i">M</span> Custom Filters</h3>
         <ul class="oe_searchview_custom_list"/>

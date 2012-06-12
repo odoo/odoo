@@ -52,7 +52,7 @@ $colour4: #8a89ba
 @mixin box-shadow($bsval: 0px 1px 4px #777)
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
-    -box-shadow: $bsval
+    box-shadow: $bsval
 
 @mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
     -webkit-transition: $transval
@@ -70,10 +70,12 @@ $colour4: #8a89ba
     -moz-background-clip: $clip
     background-clip: $clip
 
-@mixin unscrew-box
-    -moz-box-sizing: border-box
-    -webkit-box-sizing: border-box
-    box-sizing: border-box
+@mixin box-sizing($type: content)
+    // type = border || content || padding
+    -webkit-box-sizing: #{$type}-box
+    -moz-box-sizing: #{$type}-box
+    -ms-box-sizing: #{$type}-box
+    box-sizing: #{$type}-box
 
 // Transforms the (readable) text of an inline element into an mmlicons icon,
 // allows for actual readable text in-code (and in readers?) with iconic looks
@@ -1050,7 +1052,7 @@ $colour4: #8a89ba
                 display: table
                 width: 100%
                 > div
-                    @include unscrew-box
+                    @include box-sizing(border)
                     display: table-cell
                     width: 50%
                 ul
@@ -1190,12 +1192,8 @@ $colour4: #8a89ba
     .oe_form_button_save_dirty
         color: white
         background: #dc5f59
-        background: -moz-linear-gradient(#dc5f59, #b33630)
-        background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630))
-        background: -webkit-linear-gradient(#dc5f59, #b33630)
-        -moz-box-shadow: none
-        -webkit-box-shadow: none
-        -box-shadow: none
+        @include vertical-gradient(#dc5f59, #b33630)
+        @include box-shadow(none)
         font-weight: bold
         &:hover
             background: #ED6F6A
@@ -1260,20 +1258,12 @@ $colour4: #8a89ba
         button.oe_form_button_hi
             color: white
             background: #DC5F59
-            background: -moz-linear-gradient(#DC5F59, #B33630)
-            background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
-            background: -webkit-linear-gradient(#DC5F59, #B33630)
-            -moz-box-shadow: none
-            -webkit-box-shadow: none
-            -box-shadow: none
+            @include vertical-gradient(#dc5f59, #b33630)
+            @include box-shadow(none)
         button.oe_form_button_hi:hover
             background: #DF6B66
-            background: -moz-linear-gradient( #DF6B66, #BF3A33)
-            background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
-            background: -webkit-linear-gradient( #DF6B66, #BF3A33)
-            -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-            -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-            -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+            @include vertical-gradient(#DF6B66, #BF3A33)
+            @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
@@ -1292,12 +1282,12 @@ $colour4: #8a89ba
     // }}}
     // FormView.layout {{{
     .oe_form_invisible
-        display: none
+        display: none !important
     .oe_form_editable .oe_form_editable_hidden
-        display: none
+        display: none !important
     .oe_form_readonly
         .oe_form_readonly_hidden, .oe_form_field:empty
-            display: none
+            display: none !important
     .oe_form
         .oe_form_field_text
             width: 100%
@@ -1375,15 +1365,10 @@ $colour4: #8a89ba
         input[type="file"],
         select,
         textarea
-            -moz-box-sizing: border-box
-            -webkit-box-sizing: border-box
-            -ms-box-sizing: border-box
-            box-sizing: border-box
+            @include box-sizing(border)
             padding: 0 2px
             border: 1px solid #999
-            -moz-border-radius: 3px
-            -webkit-border-radius: 3px
-            border-radius: 3px
+            @include radius(3px)
             background: white
             min-width: 70px
             color: #1f1f1f
@@ -1427,7 +1412,7 @@ $colour4: #8a89ba
                     width: 100% !important
             .oe_form_field_many2manytags_box
                 border-radius: 2px
-                box-sizing: border-box
+                @include box-sizing(border)
                 position: relative
                 float: left
                 border: 1px solid #9DACCC
@@ -1556,17 +1541,14 @@ $colour4: #8a89ba
                 top: 1px
                 padding: 3px 0 0 0
                 margin: 0 1px
-                @include opacity(0.7)
+                display: none
                 width: 99%
                 text-align: center
                 background: url(/web/static/src/img/form_sheetbg.png)
                 border-bottom: 1px dotted black
-                -moz-box-sizing: border-box
-                -webkit-box-sizing: border-box
-                -ms-box-sizing: border-box
-                box-sizing: border-box
+                @include box-sizing(border)
             &:hover .oe_form_field_image_controls
-                @include opacity(1)
+                display: block
     // }}}
     // FormView.separator {{{
     .oe_horizontal_border
@@ -1637,14 +1619,9 @@ $colour4: #8a89ba
         .oe_form_field_progressbar.ui-progressbar
             height: 22px
             font-size: 10px
-            -moz-box-sizing: border-box
-            -webkit-box-sizing: border-box
-            -ms-box-sizing: border-box
-            box-sizing: border-box
+            @include box-sizing(border)
             border: 1px solid #999
-            -moz-border-radius: 3px
-            -webkit-border-radius: 3px
-            border-radius: 3px
+            @include radius(3px)
             background: white
             min-width: 50px
 
@@ -1671,8 +1648,18 @@ $colour4: #8a89ba
                         height: auto
                         line-height: 16px
     .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager
-        display: none
+        display: none !important
 
+    // }}}
+    // FormView.one2many {{{
+    .oe_form .oe_form_field_one2many > .oe_view_manager
+        .oe_list_pager_single_page
+            display: none
+    // }}}
+    // FormView.many2many {{{
+    .oe_form .oe_form_field_many2many > .oe-listview
+        .oe_list_pager_single_page
+            display: none
     // }}}
     // FormView.classes for openerp views {{{
     .oe_form

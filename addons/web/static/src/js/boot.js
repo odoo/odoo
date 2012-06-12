@@ -54,11 +54,6 @@ openerp.web = function(session) {
             openerp.web[files[i]](session);
         }
     }
-    session.log = function() {
-        if (session.connection.debug && window.console) {
-            console.log.apply(console, arguments);
-        }
-    }
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
