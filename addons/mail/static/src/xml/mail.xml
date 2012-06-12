@@ -57,19 +57,21 @@
         </div>
     </ul>
 
-    <li t-name="ThreadMsg" t-attf-class="oe_mail oe_mail_thread_msg">
+<!-- default layout -->
+
+    <li t-name="mail.Thread.default" t-attf-class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
             <img t-if="record.type == 'email'" class="oe_email_icon oe_left" src="/mail/static/src/img/email_icon.png"/>
             <img t-if="record.type == 'notification' || record.type == 'comment'" class="oe_mail_msg_image oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
-                <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
-                <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
+                <t t-if="record.type == 'email'"><t t-call="mail.Thread.default.EmailDisplay"/></t>
+                <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="mail.Thread.default.NoteDisplay" /></t>
             </div>
             <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
         </div>
     </li>
-    
-    <t t-name="NoteDisplay">
+
+    <t t-name="mail.Thread.default.NoteDisplay">
         <p class="oe_mail_msg">
             <t t-if="params.thread_level > 0">
                 <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
@@ -98,8 +100,8 @@
             </ul>
         </p>
     </t>
-    
-    <t t-name="EmailDisplay">
+
+    <t t-name="mail.Thread.default.EmailDisplay">
         <p class="oe_mail_msg oe_mail_msg_p_email_header">
             <t t-if="params.thread_level > 0">
                 <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
@@ -128,5 +130,19 @@
           </li>
         </ul>
     </t>
+
+<!-- blog layout -->
+
+    <li t-name="mail.Thread.blogs" t-attf-class="oe_mail oe_mail_thread_msg">
+        <div t-attf-class="oe_mail_msg_#{record.type}">
+            <img t-if="record.type == 'email'" class="oe_email_icon oe_left" src="/mail/static/src/img/email_icon.png"/>
+            <img t-if="record.type == 'notification' || record.type == 'comment'" class="oe_mail_msg_image oe_left" t-att-src="record.mini_url"/>
+            <div class="oe_mail_msg_content">
+                <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
+                <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
+            </div>
+            <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
+        </div>
+    </li>
 
 </template>
