@@ -107,6 +107,7 @@ class view(osv.osv):
         for view in self.browse(cr, uid, ids, context):
             # RNG-based validation is not possible anymore with 7.0 forms
             # TODO 7.0: provide alternative assertion-based validation!
+            # TODO 7.0: and do the tests on the result of fields_view_get instead of each arch.
             view_docs = [etree.fromstring(view.arch.encode('utf8'))]
             if view_docs[0].tag == 'data':
                 # A <data> element is a wrapper for multiple root nodes
