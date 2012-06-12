@@ -47,9 +47,6 @@
                             <field name="analytic_account_id" invisible="1" required="0"/>
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <field name="privacy_visibility"/>
-                            <!--<field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
-                            <!--<field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
-                            <!--<field name="progress_rate" widget="progressbar"/>-->
                         </group>
                         <group col="2" colspan="2" class="oe_form_group_label_border">
                             <table border="0">
@@ -67,7 +64,7 @@
                         </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="Members">
+                        <page string="Team" attrs="{'invisible':[('use_tasks','=', 0)]}" name="team">
                             <field colspan="4" name="members" nolabel="1" widget="many2many_kanban">
                                 <kanban quick_create="true" create="false">
                                     <field name="name"/>
@@ -102,16 +99,7 @@
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                         </page>
-                        <page name="team" string="Team" attrs="{'invisible':[('use_tasks','=', 0)]}">
-                            <field colspan="4" name="members" nolabel="1" help="Project's members are users who can have an access to the tasks related to this project.">
-                                <tree string="Members">
-                                    <field name="name"/>
-                                    <field name="user_email"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Billing" groups="account.group_account_invoice">
-                            <!--<field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>-->
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
