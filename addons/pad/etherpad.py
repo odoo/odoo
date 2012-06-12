@@ -38,7 +38,6 @@ class EtherpadLiteClient:
         try:
             opener = urllib2.build_opener()
             request = urllib2.Request(url=url, data=data)
-            print params
             response = opener.open(request, timeout=self.TIMEOUT)
             result = response.read()
             response.close()

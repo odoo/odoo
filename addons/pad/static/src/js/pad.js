@@ -19,8 +19,7 @@ instance.web.form.FieldEtherpad = instance.web.form.AbstractField.extend(_.exten
         },
         render_value: function() {            
             var show_value = instance.web.format_value(this.get('value'), this, '');                        
-            if (!this.get("effective_readonly")) {
-                console.log("this is sthis...",this); 
+            if (!this.get("effective_readonly")) {                
                 var pad_username = "noNamed" ;
                 if(this.view.datarecord.hasOwnProperty("pad_username"))
                     pad_username = this.view.datarecord.pad_username;
