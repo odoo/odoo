@@ -124,18 +124,15 @@ openerp.web.list_editable = function (openerp) {
          * Checks if a record is being edited, and if so cancels it
          */
         cancel_pending_edition: function () {
-            var self = this, cancelled = $.Deferred();
+            var self = this, cancelled;
             if (!this.edition) {
-                cancelled.resolve();
-                return cancelled.promise();
+                return $.when();
             }
 
-            if (this.edition_id != null) {
-                this.reload_record(self.records.get(this.edition_id)).then(function () {
-                    cancelled.resolve();
-                });
+            if (this.edition_id) {
+                cancelled = this.reload_record(this.records.get(this.edition_id));
             } else {
-                cancelled.resolve();
+                cancelled = $.when();
             }
             cancelled.then(function () {
                 self.view.unpad_columns();
@@ -146,7 +143,7 @@ openerp.web.list_editable = function (openerp) {
                 delete self.edition;
             });
             this.pad_table_to(5);
-            return cancelled.promise();
+            return cancelled;
         },
         /**
          * Adapts this list's view description to be suitable to the inner form
@@ -242,8 +239,8 @@ openerp.web.list_editable = function (openerp) {
                 });
                 // HA HA
                 self.edition_form.appendTo();
+                // put in $.when just in case  FormView.on_loaded becomes asynchronous
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
-                    // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('> td')
                           .addClass('oe-field-cell')
                           .removeAttr('width')
@@ -307,7 +304,7 @@ openerp.web.list_editable = function (openerp) {
          */
         save_row: function () {
             //noinspection JSPotentiallyInvalidConstructorUsage
-            var self = this, done = $.Deferred();
+            var self = this;
             return this.edition_form
                 .do_save(null, this.options.editable === 'top')
                 .pipe(function (result) {
@@ -327,8 +324,8 @@ openerp.web.list_editable = function (openerp) {
                                 created: result.created || false,
                                 edited_record: edited_record
                             };
-                        }, null);
-                }, null);
+                        });
+                });
         },
         /**
          * If the current list is being edited, ensures it's saved
@@ -338,7 +335,7 @@ openerp.web.list_editable = function (openerp) {
                 return this.save_row();
             }
             //noinspection JSPotentiallyInvalidConstructorUsage
-            return $.Deferred().resolve().promise();
+            return $.when();
         },
         /**
          * Cancels the edition of the row for the current dataset index
