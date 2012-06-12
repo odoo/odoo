@@ -31,16 +31,17 @@
                     <div class="oe_form_title">
                         <label for="name" class="oe_form_readonly_hidden"/>
                         <h1><field name="name"/></h1>
+
+                        <label for="company_id" class="oe_form_readonly_hidden" groups="base.group_multi_company"/>
+                        <h2><field name="company_id" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h2>
+
                         <label for="department_id" class="oe_form_readonly_hidden"/>
-                        <h2>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>,
-                            <field name="department_id" on_change="onchange_department_id(department_id)" />
-                        </h2>
+                        <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                     </div>
                     <notebook>
                         <page string="Personal Information">
                             <group>
-                                <group>
+                                <group string="General">
                                     <field name="user_id" on_change="onchange_user(user_id)"/>
                                     <field name="active"/>
                                     <field name="parent_id" />
@@ -71,7 +72,7 @@
                             </group>
                         </page>
                         <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids" colspan="4" nolabel="1" widget="many2many_tags"/>
+                            <field name="category_ids" widget="many2many_tags"/>
                         </page>
                         <page string="Notes" groups="base.group_hr_user">
                             <field name="notes"/>
