@@ -6,6 +6,7 @@
  'category': 'Tools',
  'website': 'http://www.openerp.com',
  'installable': True,
+ 'depends': ['web'],
  'data': [
     'anonymous.xml',
  ],
