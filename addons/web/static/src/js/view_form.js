@@ -913,6 +913,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     set_fields_view: function(fvg) {
         this.fvg = fvg;
+        this.version = parseFloat(this.fvg.arch.attrs.version);
+        if (isNaN(this.version)) {
+            this.version = 6.1;
+        }
     },
     set_tags_registry: function(tags_registry) {
         this.tags_registry = tags_registry;
@@ -922,8 +926,15 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     // Backward compatibility tools, current default version: v6.1
     process_version: function() {
+        if (this.version < 7.0) {
+            this.$form.find('form:first').wrapInner('<group col="4"/>');
+            this.$form.find('page').each(function() {
+                if (!$(this).parents('field').length) {
+                    $(this).wrapInner('<group col="4"/>');
+                }
+            });
+        }
         selector = 'form[version!="7.0"] page,form[version!="7.0"]';
-        this.$form.find(selector).add(this.$form.filter(selector)).wrapInner('<group col="4"/>');
     },
     render_to: function($target) {
         var self = this;
@@ -934,7 +945,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
 
-        this.process_version()
+        this.process_version();
 
         this.fields_to_init = [];
         this.tags_to_init = [];
