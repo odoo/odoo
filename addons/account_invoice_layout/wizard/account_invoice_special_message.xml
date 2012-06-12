@@ -7,14 +7,13 @@
             <field name="model">account.invoice.special.msg</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Select Message">
-                    <group colspan="4" col="6">
-                        <field name="message"/>
-                    </group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                <form string="Select Message" version="7.0">
+                    <header>
                         <button name="check_report" string="Print" type="object" icon="gtk-print"/>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    </header>
+                    <group>
+                        <field name="message"/>
                     </group>
                 </form>
             </field>
