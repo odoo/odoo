@@ -1045,6 +1045,18 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
 
         this._current_state = null;
     },
+    _get_version_label: function() {
+        if (this.session.openerp_entreprise) {
+            return 'OpenERP';
+        } else {
+            return _t("OpenERP - Unsupported/Community Version");
+        }
+    },
+    set_title: function(title) {
+        title = _.str.clean(title);
+        var sep = _.isEmpty(title) ? '' : ' - ';
+        document.title = title + sep + 'OpenERP';
+    },
     start: function() {
         var self = this;
         this.$element = $(document.body);
@@ -1069,11 +1081,11 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
             self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
-            var version_label = _t("OpenERP - Unsupported/Community Version");
             if (!self.session.openerp_entreprise) {
+                var version_label = self._get_version_label();
                 self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
-                document.title = version_label;
             }
+            self.set_title();
         });
     },
     show_login: function() {
@@ -1182,6 +1194,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         this._current_state = state;
     },
     do_push_state: function(state) {
+        this.set_title(state.title);
         var url = '#' + $.param(state);
         this._current_state = _.clone(state);
         $.bbq.pushState(url);
