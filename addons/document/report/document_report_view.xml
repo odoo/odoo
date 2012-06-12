@@ -124,6 +124,26 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_files_by_user_graph">
+            <field name="name">report.file.user.graph</field>
+            <field name="model">report.document.user</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Files by User" type="pie">
+                    <field name="user" />
+                    <field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_files_by_user_graph">
+            <field name="name">Files by User</field>
+            <field name="res_model">report.document.user</field>
+            <field name="view_id" ref="view_files_by_user_graph"></field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_view_files_by_month_graph">
             <field name="name">Files by Month</field>
             <field name="res_model">report.document.user</field>
@@ -132,18 +152,5 @@
             <field name="view_mode">tree</field>
         </record>
 
-
-        <record model="ir.ui.view" id="view_files_by_partner_graph">
-            <field name="name">view.files.partner.graph</field>
-            <field name="model">report.files.partner</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Files By Partner" type="bar">
-                    <field name="partner"/>
-                    <field name="nbr"/>
-
-                </graph>
-            </field>
-        </record>
     </data>
 </openerp>
