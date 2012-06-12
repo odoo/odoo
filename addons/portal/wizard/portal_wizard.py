@@ -35,7 +35,7 @@ from base.res.res_users import _lang_get
 WELCOME_EMAIL_SUBJECT = _("Your OpenERP account at %(company)s")
 WELCOME_EMAIL_BODY = _("""Dear %(name)s,
 
-You have been created an OpenERP account at %(url)s.
+You have been created an OpenERP account of %(portal)s at %(url)s.
 
 Your login account data is:
 Database: %(db)s
@@ -116,8 +116,8 @@ class wizard(osv.osv_memory):
                 # add one user per contact, or one user if no contact
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
-                else:
-                    user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
+#                else:
+#                    user_ids.append({'lang': p.lang or 'en_US', 'name': p.name,'user_email':p.user_email, 'parent_id': p.id})
         
         return user_ids
 
@@ -140,8 +140,7 @@ class wizard(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         context.update({'portal_id':portal_id})
         user_list = self._default_user_ids(cr, uid, context=context)
-    
-        contact_user = [u['user_email'] for u in user_list]
+        contact_user = [u['user_email'] for u in user_list if u.get('user_email', False)]
 
         #add active portal user to portal wizard
         portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
@@ -181,7 +180,6 @@ class wizard(osv.osv_memory):
             add_users=[]
             remove_users=[]
             new_users_data = []
-            login_conds = []
             for u in wiz.user_ids:
                 login_cond = [('login', 'in', [u.user_email])]
                 existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
@@ -212,7 +210,6 @@ class wizard(osv.osv_memory):
                 
             #add the user relationship in portal.        
             if add_users and add_users not in portal_users:
-                login_conds.append(login_cond[0])
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
                 
@@ -225,6 +222,7 @@ class wizard(osv.osv_memory):
             user_obj.unlink(cr, ROOT_UID, [remove_user for remove_user in remove_users if remove_user not in all_portal_user])
 
             data = {
+                'portal':wiz.portal_id.name,
                 'company': user.company_id.name,
                 'message': wiz.message or "",
                 'url': wiz.portal_id.url or _("(missing url)"),
@@ -234,7 +232,8 @@ class wizard(osv.osv_memory):
             mail_message_obj = self.pool.get('mail.message')
             dest_users = []
             for dest_uid in add_users:
-                dest_users.append(user_obj.browse(cr, ROOT_UID, dest_uid))
+                if dest_uid not in portal_users:
+                    dest_users.append(user_obj.browse(cr, ROOT_UID, dest_uid))
                 
             for dest_user in dest_users:
                 context['lang'] = dest_user.context_lang
