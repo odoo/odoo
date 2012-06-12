@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
-"PO-Revision-Date: 2012-06-07 01:31+0000\n"
+"PO-Revision-Date: 2012-06-08 02:52+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-07 04:41+0000\n"
-"X-Generator: Launchpad (build 15353)\n"
+"X-Launchpad-Export-Date: 2012-06-09 05:38+0000\n"
+"X-Generator: Launchpad (build 15376)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -112,7 +112,7 @@ msgstr "部品表の検索"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable products and consumables"
-msgstr "在庫可能製品と消耗品"
+msgstr "在庫可能製品と売り切り品"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
@@ -569,7 +569,7 @@ msgstr "単位当りの仕入価格"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "作業センタの経路のリストを表示する時の順序を与えて下さい。"
+msgstr "作業センタの経路のリストを表示する時の順序を与えます。"
 
 #. module: mrp
 #: constraint:stock.move:0
@@ -1530,7 +1530,7 @@ msgstr "消費製品"
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr "生産"
+msgstr "製造"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
@@ -1607,7 +1607,7 @@ msgstr "属性の分類"
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr "作業オーダーリストの表示の際には並びの順序を与えて下さい。"
+msgstr "作業オーダーリストの表示の際には並びの順序を与えます。"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1835,7 +1835,7 @@ msgid ""
 "being produced."
 msgstr ""
 "サブ製品が複数の製品の中で使われている場合、それ自身の部品表を作成すると便利です。このサブ製品のために分離された製造オーダーを望まない場合、部品表タイプに"
-"設定 / 模型を選択して下さい。模型部品表が根幹の製品に使われる場合、製造される代わりに構成部品のセットとして販売され、出荷されます。"
+"設定 / 模型を選択します。模型部品表が根幹の製品に使われる場合、製造される代わりに構成部品のセットとして販売され、出荷されます。"
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -1909,7 +1909,7 @@ msgstr "丸めは製品数量に適用されます。"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
 msgid "Assignment from Production or Purchase Order."
-msgstr "製造または発注オーダーから割り当てて下さい。"
+msgstr "製造または発注オーダーから割り当てます。"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -1942,7 +1942,7 @@ msgstr "在庫価値変動"
 #: model:process.node,note:mrp.process_node_mts0
 #: model:process.node,note:mrp.process_node_servicemts0
 msgid "Assignment from stock."
-msgstr "在庫から割り当てて下さい。"
+msgstr "在庫から割当"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -2015,8 +2015,7 @@ msgid ""
 "master bills of materials. Use this menu to search in which BoM a specific "
 "component is used."
 msgstr ""
-"構成部品の部品表はマスター部品表を作成するために使われる構成部品とサブ製品です。特定の構成部品が使われている部品表を検索するにはこのメニューを使って下さい"
-"。"
+"構成部品の部品表はマスター部品表を作成するために使われる構成部品とサブ製品です。特定の構成部品が使われている部品表を検索するにはこのメニューを使います。"
 
 #. module: mrp
 #: model:product.uom,name:mrp.product_uom_litre
@@ -2036,7 +2035,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
 msgid "Product type is Stockable or Consumable."
-msgstr "製品タイプは在庫可能または消費可能です。"
+msgstr "製品タイプは在庫可能または売り切り品です。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:603
@@ -2105,7 +2104,7 @@ msgstr "予定日"
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "この製品に製造ロットを割り当てて下さい。"
+msgstr "この製品に製造ロットを割り当てる必要があります。"
 
 #. module: mrp
 #: field:stock.move,production_id:0
@@ -2240,7 +2239,7 @@ msgstr ""
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr "生産あるいは購入する製品の数量を指定して下さい。コスト構造のレポートはこの数量を元にして表示されます。"
+msgstr "製造あるいは購入する製品の数量を指定します。コスト構造のレポートはこの数量を元にして表示されます。"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2263,7 +2262,7 @@ msgstr "リソースの休暇"
 #. module: mrp
 #: help:mrp.bom,sequence:0
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr "部品表のリストを表示する際には並び順を与えて下さい。"
+msgstr "部品表のリストを表示する際には並び順を与えます。"
 
 #. module: mrp
 #: view:mrp.production:0
