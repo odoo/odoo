@@ -728,7 +728,6 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
             }
-            //instance.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
@@ -914,6 +913,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     set_fields_view: function(fvg) {
         this.fvg = fvg;
+        this.version = parseFloat(this.fvg.arch.attrs.version);
+        if (isNaN(this.version)) {
+            this.version = 6.1;
+        }
     },
     set_tags_registry: function(tags_registry) {
         this.tags_registry = tags_registry;
@@ -923,8 +926,15 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     // Backward compatibility tools, current default version: v6.1
     process_version: function() {
+        if (this.version < 7.0) {
+            this.$form.find('form:first').wrapInner('<group col="4"/>');
+            this.$form.find('page').each(function() {
+                if (!$(this).parents('field').length) {
+                    $(this).wrapInner('<group col="4"/>');
+                }
+            });
+        }
         selector = 'form[version!="7.0"] page,form[version!="7.0"]';
-        this.$form.find(selector).add(this.$form.filter(selector)).wrapInner('<group col="4"/>');
     },
     render_to: function($target) {
         var self = this;
@@ -935,7 +945,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
 
-        this.process_version()
+        this.process_version();
 
         this.fields_to_init = [];
         this.tags_to_init = [];
@@ -2731,6 +2741,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.$element.addClass('oe_form_field_one2many');
 
         var self = this;
 
@@ -2738,7 +2749,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
-        //this.dataset.child_name = 
         this.dataset.on_change.add_last(function() {
             self.trigger_on_change();
         });
@@ -2770,6 +2780,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
         _.each(modes, function(mode) {
+            if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
+                instance.webclient.notification.warn(
+                    _.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                return;
+            }
             var view = {
                 view_id: false,
                 view_type: mode == "tree" ? "list" : mode,
@@ -2791,6 +2806,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 view.options.not_interactible_on_create = true;
             } else if (view.view_type === "kanban") {
                 view.options.confirm_on_delete = false;
+                view.options.sortable = false;
                 if (self.get("effective_readonly")) {
                     view.options.action_buttons = false;
                     view.options.quick_creatable = false;
@@ -3310,6 +3326,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
+                    'sortable': false,
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
@@ -4080,14 +4097,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
-    initialize_content: function() {
-        this._super();
-        if (!this.get("effective_readonly")) {
-            this.$element.find('.oe_form_field_image_controls').show();
-        } else {
-            this.$element.find('.oe_form_field_image_controls').hide();
-        }
-    },
     set_value: function(value_) {
         this._super.apply(this, arguments);
         this.render_value();
