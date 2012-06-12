@@ -136,7 +136,7 @@
 </t>
 <t t-name="BackupDB">
     <form name="backup_db_form" class="oe_forms" method="POST" target="backup-target"
-          action="/web/database/backup">
+          t-att-action='_s + "/web/database/backup"'>
         <input type="hidden" name="token"/>
         <table width="100%">
             <tr>
@@ -712,7 +712,7 @@
         <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
     <th t-if="options.isClarkGable" class="oe-record-edit-link" width="1">
-        <img src="/web/static/src/img/pencil.gif" width="12" height="12" class="oe-record-edit-link-img"/>
+        <img t-att-src='_s + "/web/static/src/img/pencil.gif"' width="12" height="12" class="oe-record-edit-link-img"/>
     </th>
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
@@ -762,7 +762,7 @@
     <div class="oe-sidebar-attachments-toolbar">
         <div class="oe-binary-file-set" style="float: right">
             <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
-                method="post" enctype="multipart/form-data" action="/web/binary/upload_attachment">
+                method="post" enctype="multipart/form-data" t-att-action='_s + "/web/binary/upload_attachment"'>
                 <input type="hidden" name="session_id" t-att-value="session.session_id"/>
                 <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
                 <input type="hidden" name="model" t-att-value="view.dataset.model"/>
@@ -1154,7 +1154,7 @@
                     <td>
                         <div class="oe-binary-file-set" style="width: 40px; height:22px;">
                             <form class="oe-binary-form" t-att-target="widget.iframe"
-                                method="post" enctype="multipart/form-data" action="/web/binary/upload">
+                                method="post" enctype="multipart/form-data" t-att-action='_s + "/web/binary/upload"'>
                                 <input type="hidden" name="session_id" value=""/>
                                 <input type="hidden" name="callback" t-att-value="widget.iframe"/>
                                 <button class="oe_button" type="button" title="Set Image">
@@ -1197,7 +1197,7 @@
                 <td>
                     <div class="oe-binary-file-set" style="width: 80px; height:22px;">
                         <form class="oe-binary-form" t-att-target="widget.iframe"
-                            method="post" enctype="multipart/form-data" action="/web/binary/upload">
+                            method="post" enctype="multipart/form-data" t-att-action='_s + "/web/binary/upload"'>
                             <input type="hidden" name="session_id" value=""/>
                             <input type="hidden" name="callback" t-att-value="widget.iframe"/>
                             <button class="oe_button oe_field_button" type="button" title="Set Image">
@@ -1556,7 +1556,7 @@
                 <tr>
                     <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                         <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                            src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                            t-att-src='_s + "/web/static/src/img/collapse.gif"' width="16" height="16" border="0"/>
                     </td>
                     <td style="cursor: pointer;">
                         <a style="text-decoration:none" href="javascript:void(0);">
@@ -1568,22 +1568,22 @@
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
-            <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+            <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
         </td>
         <t t-if="rec.child_id.length">
             <t t-set="data" t-value="rec.child_id"/>
