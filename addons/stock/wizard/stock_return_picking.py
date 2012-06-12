@@ -123,7 +123,13 @@ class stock_return_picking(osv.osv_memory):
             if m.state == 'done':
                 return_history[m.id] = 0
                 for rec in m.move_history_ids2:
-                    return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
+                    # only take into account 'product return' moves, ignoring any other
+                    # kind of upstream moves, such as internal procurements, etc.
+                    # a valid return move will be the exact opposite of ours:
+                    #     (src location, dest location) <=> (dest location, src location))
+                    if rec.location_dest_id.id == m.location_id.id \
+                        and rec.location_id.id == m.location_dest_id.id:
+                        return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
         return return_history
 
     def create_returns(self, cr, uid, ids, context=None):
@@ -158,7 +164,9 @@ class stock_return_picking(osv.osv_memory):
             new_type = 'out'
         else:
             new_type = 'internal'
-        new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s-return' % pick.name,
+        seq_obj_name = 'stock.picking.' + new_type
+        new_pick_name = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
+        new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s-%s-return' % (new_pick_name, pick.name),
                 'move_lines':[], 'state':'draft', 'type':new_type,
                 'date':date_cur, 'invoice_state':data['invoice_state'],})
         
