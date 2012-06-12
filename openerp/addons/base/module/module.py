@@ -161,7 +161,7 @@ class module(osv.osv):
                 res[key][k] = "\n".join(sorted(v))
         return res
 
-    def _get_image(self, cr, uid, ids, field_name=None, arg=None, context=None):
+    def _get_icon_image(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
             path = addons.get_module_resource(module.name, 'static', 'src', 'img', 'icon.png')
@@ -224,7 +224,7 @@ class module(osv.osv):
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'application': fields.boolean('Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
-        'image': fields.function(_get_image, string='Icon', type="binary"),
+        'icon_image': fields.function(_get_icon_image, string='Icon', type="binary"),
     }
 
     _defaults = {
