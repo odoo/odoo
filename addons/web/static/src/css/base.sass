@@ -89,9 +89,23 @@ $colour4: #8a89ba
 
 // }}}
 
+
 .openerp.openerp-web-client-container
     height: 100%
     position: relative
+
+// Jquery ui Overrides {{{
+.ui-widget
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    font-size: 13px
+.ui-menu
+    .ui-menu-item
+        margin: 0 8px 0 0
+        padding: 0 0 0 12px
+        width: auto
+        a.ui-state-active
+            background: #f0f0fa
+// }}}
 
 .openerp
     // Global style {{{
@@ -139,6 +153,14 @@ $colour4: #8a89ba
         padding: 0
     li
         list-style-type: none
+    input, textarea
+        border: 1px solid #ccc
+        @include radius(3px)
+    img
+        vertical-align: middle
+    h4
+        margin: 4px 0
+
     // }}}
     // Generic classes {{{
     .oe_i
@@ -173,7 +195,7 @@ $colour4: #8a89ba
         border: 1px solid #ababab
         color: #404040
         margin: 0
-        padding: 4px 12px
+        padding: 3px 12px
         font-size: 13px
         text-align: center
         @include vertical-gradient(#efefef, #d8d8d8)
@@ -411,7 +433,7 @@ $colour4: #8a89ba
             width: 24px
             height: 24px
             margin: -2px 2px 0 0
-            @include radius(4px)
+            @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
         .oe_dropdown_toggle:after
@@ -680,71 +702,6 @@ $colour4: #8a89ba
             &:hover
                 text-decoration: underline
     // }}}
-    // Content Header MIT {{{
-    .oe-view-manager-header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        h2
-            float: left
-            font-size: 18px
-            margin: 1px 0
-            a
-                color: $colour4
-        .buttons
-            padding-right: 8px
-            li
-                float: left
-                margin-right: 12px
-        .filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .header-row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_vm_switch
-            li
-                padding-left: 1px
-                text-align: center
-                width: 24px
-                height: 24px
-                line-height: 24px
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .button-group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                width: 100%
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                color: #fff
-                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-    // }}}
     // ViewManager.header {{{
     .oe_view_manager_header
         width: 100%
@@ -891,7 +848,7 @@ $colour4: #8a89ba
         left: 0px
         padding: 8px
         border: 1px solid #afafb6
-        width: 120px
+        min-width: 120px
         overflow-x: hidden
         z-index: 900
         text-align: left
@@ -919,67 +876,85 @@ $colour4: #8a89ba
     .oe_sidebar
         white-space: nowrap
     // }}}
-    // SearchView xmo {{{
+    // SearchView {{{
     .oe_searchview
         cursor: text
         position: relative
         float: right
-        padding-right: 20px
-        width: 410px
+        padding: 1px 0
+        line-height: 18px
+        width: 480px
         border: 1px solid #ababab
         background: white
-        @include radius(1em)
+        @include radius(13px)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-
+        input, textarea
+            padding: 3px
+            height: 14px
+            font-size: 11px
+            line-height: 18px
+            border: 1px solid #ccc
+            @include radius(3px)
         &.oe_focused
             border-color: $facets-border-selected
             @include box-shadow(0 1px 2px $facets-border-selected inset)
-
         .oe_searchview_clear
             cursor: pointer
             position: absolute
             top: 0
-            right: 22px
+            right: 18px
             width: 15px
             height: 100%
-            background: url(../img/attachments-close.png) center center no-repeat
-
+            background: url(../img/search_reset.gif) center center no-repeat
         .oe_searchview_unfold_drawer
             position: absolute
             top: 0
             right: 0
             height: 100%
-            line-height: 2.5em
             padding: 0 7px 0 4px
             color: #ccc
             cursor: pointer
             &:hover
                 color: #999
             &:before
-                content: "◀"
+                position: absolute
+                top: 10px
+                right: 7px
+                width: 0
+                height: 0
+                display: inline-block
+                content: ""
+                vertical-align: top
+                border-top: 5px solid #4C4C4C
+                border-left: 5px solid transparent
+                border-right: 5px solid transparent
+                @include opacity()
 
         .oe_searchview_facets
+            min-height: 22px
             &:before
                 color: #ccc
                 font-family: "mnmliconsRegular"
                 content: "r"
-                font-size: 150%
-                padding: 0 1px 0 3px
+                font-size: 130%
                 display: inline
-
+                position: relative
+                left: 6px
+                top: 2px
+                color: #a3a3a3
+                padding-right: 4px
             *
                 vertical-align: top
                 display: inline-block
-                line-height: 26px
-
+                line-height: 17px
             .oe_searchview_input, .oe_searchview_facet
-                height: 26px
+                height: 18px
+                margin: 1px 0
+                font-size: 11px
                 &:focus
                     outline: none
-
             .oe_searchview_input
                 padding: 0 3px
-
             .oe_searchview_facet
                 position: relative
                 cursor: pointer
@@ -987,162 +962,204 @@ $colour4: #8a89ba
                 @include radius(3px)
                 background: #8786b7
                 -webkit-font-smoothing: auto
-                padding-left: 1.1em
                 // spacing for opera, FF
-                margin: 1px 0
-
                 &:focus
                     border-color: $facets-border-selected
                     @include box-shadow(0 0 3px 1px $facets-border-selected)
-
                 .oe_facet_values
                     background: #f0f0fa
                     @include radius(0 3px 3px 0)
-
                 .oe_facet_category, .oe_facet_value
-                    height: 24px
-                    padding: 1px 0.1em
-
+                    height: 18px
+                    padding: 0 4px
                 .oe_facet_category
                     color: white
                     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-
+                .oe_facet_category.oe_i
+                    font-size: 16px
                 .oe_facet_value
                     border-left: 1px solid $facets-border
-
+                    text-shadow: 0 1px 1px white
+                    &:last-child
+                        padding-right: 16px
                 .oe_facet_remove
                     position: absolute
-                    top: 0
-                    left: 2px
-                    color: white
-
+                    top: 3px
+                    right: 3px
+                    color: #8786b7
+                    line-height: 8px
+                    width: 12px
+                    height: 12px
+                    text-align: center
+                    font-weight: bold
+                    cursor: pointer
+                    text-shadow: 0 1px 1px white
                     &:hover
-                        color: #ccc
-
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        @include radius(2px)
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
                 display: block
-            .oe_searchview_unfold_drawer:before
-                content: "▼"
 
         .oe_searchview_drawer
             position: absolute
             z-index: 1
             // detach drawer from field slightly
-            margin-top: 3px
+            margin-top: 4px
             top: 100%
-            right: 0
+            right: -1px
             background-color: white
             min-width: 100%
             display: none
-            border: 1px solid #ccc
+            border: 1px solid #afafb6
             text-align: left
-            padding-bottom: 0.5em
-            @include radius(1em)
-
+            @include radius(4px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
             > div
                 border-top: 1px solid #ccc
-                margin: 3px 0
+                margin: 0
+                padding: 8px
             > div:first-child
                 border-top: none
                 margin: 0
-
+            h3
+                margin: 8px 4px 4px 12px
+                color: $section-title-color
+                font-size: 13px
             h4, h4 *
                 margin: 0
                 cursor: pointer
-
+                font-weight: normal
+                display: inline-block
+                &:hover
+                    background-color: $hover-background
             h4:before
                 content: "▸ "
-
-            button, .button
+                color: #a3a3a3
+            button
+                margin: 4px 0
+            .button
                 border: none
                 background: transparent
                 padding: 0 2px
                 @include box-shadow(none)
                 @include radius(0)
-
-            .oe_searchview_filters
+            .oe_searchview_section
                 display: table
                 width: 100%
-
                 > div
                     @include unscrew-box
                     display: table-cell
                     width: 50%
-
-                h3
-                    margin: 2px 4px 2px 8px
-                    color: $section-title-color
-
                 ul
-                    margin: 0 12px 3px
+                    margin: 0 8px 8px
                     padding: 0
                     list-style: none
-
                 li
                     list-style: none
-                    padding: 3px 6px 3px 18px
+                    padding: 2px 4px 2px 20px
                     line-height: 14px
                     color: inherit
                     cursor: pointer
-
-                    &.oe_selected
-                        background: url(/web/static/src/img/icons/gtk-apply.png) left 2px no-repeat
+                    position: relative
+                    &.oe_selected:before
+                        content: "W"
+                        font-family: "entypoRegular" !important
+                        font-size: 24px
+                        font-weight: 300 !important
+                        color: #a3a3a3
+                        position: absolute
+                        left: 4px
+                        top: -2px
                     // after oe_selected so background color is not overridden
                     &:hover
                         background-color: $hover-background
-
-
+                form
+                    margin-left: 12px
+                    p
+                        margin: 4px 0
+                        line-height: 18px
+                    button
+                        margin: 0 0 8px 0
             .oe_searchview_custom
+                padding: 0 8px 8px 8px
                 form
                     display: none
-
-                    button
-                        @include text-to-icon("S")
                 li
                     cursor: pointer
                     position: relative
-                    line-height: 1.2em
-                    padding: 2px 20px 2px 25px
-
-                    &.oe_searchview_custom_private
-                        background: url(/web/static/src/img/icons/terp-locked.png) 5px center no-repeat
-
+                    line-height: 14px
+                    padding: 2px 4px 2px 20px
                     &:hover
                         background-color: $hover-background
-
                     button
                         position: absolute
                         top: 0
                         right: 5px
-
-
             .oe_searchview_advanced
                 form
                     display: none
-
+                    margin-top: 8px
                 button.oe_add_condition:before
-                    content: "⊞ "
-                button.oe_apply:before
-                    content: "⚡ "
-
+                    content: "Z"
+                    font-family: "entypoRegular" !important
+                    font-size: 24px
+                    font-weight: 300 !important
+                    margin-right: 4px
                 ul
                     list-style: none
                     padding: 0
                 li
+                    position: relative
                     list-style: none
                     margin: 0
                     white-space: nowrap
-
             .oe_opened
                 h4:before
                     content: "▾ "
+                    position: relative
+                    top: -1px
                 form
                     display: block
 
             // delete buttons
             .oe_searchview_custom_delete, .searchview_extended_delete_prop
-                @include text-to-icon("d")
+                display: inline-block
+                width: 12px
+                height: 12px
+                line-height: 12px
+                padding: 1px
+                color: #8786b7
+                line-height: 8px
+                text-align: center
+                font-weight: bold
+                text-shadow: 0 1px 1px white
+                &:hover
+                    text-decoration: none
+                    color: white
+                    background: #8786b7
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                    @include radius(2px)
+            .oe_searchview_custom_delete
+                display: none
+                position: absolute
+                bottom: 1px
+                right: 4px
+            .oe_searchview_custom_private, .oe_searchview_custom_public
+                &:hover
+                    .oe_searchview_custom_delete
+                        display: inline-block
+            .oe_searchview_custom_public:after
+                content: ","
+                font-family: "entypoRegular" !important
+                font-size: 22px
+                font-weight: 300 !important
+                margin: 0 0 0 4px
+                padding: 0
+
+                    
     // }}}
     // Views Common {{{
     .oe_view_nocontent
@@ -1184,13 +1201,15 @@ $colour4: #8a89ba
             background: #ED6F6A
     // }}}
     // FormView.customdivs {{{
-    .oe_form_topbar
+    .oe_form header
+        position: relative
         border-bottom: 1px solid #cacaca
         @include vertical-gradient(#fcfcfc, #dedede)
         padding: 0 8px
         line-height: 30px 
         button
             font-size: 12px 
+            float: left
             height: 24px !important
             line-height: 24px 
             vertical-align: top
@@ -1221,10 +1240,12 @@ $colour4: #8a89ba
                     &:hover
                         color: black
         .oe_form_steps
-            img  
+            display: inline-block
+            float: right
+            img
                 margin: 0 8px
                 vertical-align: top
-            li   
+            li
                 border-right: none 
                 padding: 0
                 &:first-child
@@ -1235,60 +1256,76 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold 
             color: #b33630
-    .oe_form_topbar.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
-        color: white
-        background: #DC5F59
-        background: -moz-linear-gradient(#DC5F59, #B33630)
-        background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
-        background: -webkit-linear-gradient(#DC5F59, #B33630)
-        -moz-box-shadow: none
-        -webkit-box-shadow: none
-        -box-shadow: none
-    .oe_form_topbar.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
-        background: #DF6B66
-        background: -moz-linear-gradient( #DF6B66, #BF3A33)
-        background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
-        background: -webkit-linear-gradient( #DF6B66, #BF3A33)
-        -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-        -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-        -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+    .oe_form_readonly
+        button.oe_form_button_hi
+            color: white
+            background: #DC5F59
+            background: -moz-linear-gradient(#DC5F59, #B33630)
+            background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
+            background: -webkit-linear-gradient(#DC5F59, #B33630)
+            -moz-box-shadow: none
+            -webkit-box-shadow: none
+            -box-shadow: none
+        button.oe_form_button_hi:hover
+            background: #DF6B66
+            background: -moz-linear-gradient( #DF6B66, #BF3A33)
+            background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
+            background: -webkit-linear-gradient( #DF6B66, #BF3A33)
+            -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+            -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+            -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
             padding: 8px 0
             border-bottom: 1px solid #ddd 
-        .oe_form_sheet_width, .oe_form_bottom
+        .oe_form_sheet_width, footer
             min-width: 650px
-            max-width: 980px
+            max-width: 960px
             margin: 0 auto
         .oe_form_sheet
-            padding: 8px 8px 8px 8px
+            padding: 18px
             background: white
-            min-height: 420px
+            min-height: 330px
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     // }}}
     // FormView.layout {{{
+    .oe_form_invisible
+        display: none !important
+    .oe_form_editable .oe_form_editable_hidden
+        display: none !important
+    .oe_form_readonly
+        .oe_form_readonly_hidden, .oe_form_field:empty
+            display: none !important
     .oe_form
-        .oe_form_group_cell
-            line-height: 18px
-            padding: 2px
-            height: 20px
-        .oe_form_group_cell > .oe_form_field_many2one,
-        .oe_form_group_cell > .oe_form_field_many2one input,
-        .oe_form_group_cell > .oe_form_field_char input,
-        .oe_form_group_cell > .oe_form_field_text textarea,
-        .oe_form_group_cell > .oe_form_field_email,
-        .oe_form_group_cell > .oe_form_field_email input,
-        .oe_form_group_cell > .oe_form_field_url,
-        .oe_form_group_cell > .oe_form_field_url input,
-        .oe_form_group_cell > .oe_form_field_float input,
-        .oe_form_group_cell > .oe_form_field_selection select,
-        .oe_form_group_cell > div > .oe_datepicker_root,
-        .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master
+        .oe_form_field_text
             width: 100%
-        .oe_form_group_cell.oe_form_group_nested
-            padding: 0
+
+        .oe_form_field_char input,
+        .oe_form_field_text textarea,
+        .oe_form_field_url input,
+        .oe_form_field_selection select
+            width: inherit
+
+        .oe_form_field_float input
+            width: 100px
+
+        h1 .oe_form_field_float input
+            width: 140px
+
+        h2 .oe_form_field_float input
+            width: 120px
+
+        h1, h2, h3, h4, h5, h6
+            margin: 0 0 4px 0
+            input
+                height: inherit !important
+                font-size: inherit
+    .oe_form_nosheet > *:not(.oe_form_topbar)
+        margin-left: 10px !important
+        margin-right: 10px !important
+
     // }}}
     // FormView.label {{{
     .oe_form
@@ -1306,8 +1343,27 @@ $colour4: #8a89ba
     // }}}
     // FormView.fields {{{
     .oe_form
-        textarea
+        .oe_form_field_text textarea
             resize: vertical
+        .oe_form_field
+            width: 100%
+            display: inline-block
+            padding: 2px 2px 2px 0px
+            line-height: 18px
+            input
+                margin: 0px
+
+        .oe_form_field_integer
+            width: 180px
+        .oe_form_field_float
+            width: 180px
+        .oe_form_field_date
+            width: 7em
+        .oe_form_field_datetime
+            width: 11em
+        .oe_form_inline
+            width: auto
+
         input[type="text"],
         input[type="password"],
         input[type="file"],
@@ -1324,7 +1380,6 @@ $colour4: #8a89ba
             -ms-box-sizing: border-box
             box-sizing: border-box
             padding: 0 2px
-            margin: 0 2px
             border: 1px solid #999
             -moz-border-radius: 3px
             -webkit-border-radius: 3px
@@ -1365,8 +1420,6 @@ $colour4: #8a89ba
             white-space: nowrap
         .oe_form_field_boolean
             padding-top: 4px
-        .oe_form_field_datetime input
-            min-width: 11em
         .oe_form_field_many2manytags
             .text-wrap
                 width: 100% !important
@@ -1382,7 +1435,6 @@ $colour4: #8a89ba
                 color: black
                 padding: 0px 3px 0px 3px
                 margin: 0 2px 2px 0
-                cursor: pointer
                 height: 16px
                 font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
             .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
@@ -1399,16 +1451,6 @@ $colour4: #8a89ba
             input, select, textarea
                 background-color: #F66 !important
                 border: 1px solid #D00 !important
-        .oe_button.oe_field_button
-            display: block
-            -webkit-border-top-left-radius: 0px
-            -webkit-border-bottom-left-radius: 0px
-            -moz-border-radius-topleft: 0px
-            -moz-border-radius-bottomleft: 0px
-            border-top-left-radius: 0px
-            border-bottom-left-radius: 0px
-            margin-right: -1px
-            height: 22px
         .oe_input_icon
             cursor: pointer
             margin: 3px 0 0 -21px
@@ -1423,23 +1465,59 @@ $colour4: #8a89ba
         .oe_form_group_cell .oe_kanban_view
             // Hack due to absolute positioning of kanban view messing with o2m
             position: static
+        .oe_form_field_with_button
+            input
+                width: 100%
+            > .oe_button
+                float: right
+                -webkit-border-top-left-radius: 0px
+                -webkit-border-bottom-left-radius: 0px
+                -moz-border-radius-topleft: 0px
+                -moz-border-radius-bottomleft: 0px
+                border-top-left-radius: 0px
+                border-bottom-left-radius: 0px
+                height: 22px
+            > div
+                position: relative
+                overflow: hidden
+
+        .oe_form_title
+            width: 55%
+        .oe_form_title:after
+            content: "."
+            display: block
+            height: 0
+            clear: both
+            visibility: hidden
+        .oe_form_button_box
+            width: 200px
+            text-align: center
+
+        .oe_form_group
+            margin: 5px 0px 5px 0px
+
+        .oe_form_group_cell .oe_kanban_view
+            // Hack due to absolute positioning of kanban view messing with o2m
+            position: static
+
     // }}}
     // FormView.buttons {{{
     .oe_form
         .oe_form_button.oe_button
             height: 22px
-            color: #4c4c4c
+            white-space: nowrap
             span
                 position: relative
                 vertical-align: top
         .oe_form_button > img
             vertical-align: -3px
             padding: 0 2px
-        .oe_form_group_cell > .oe_form_button.oe_button
-            display: block
-            white-space: nowrap
-            min-width: 100%
-            width: 100%
+    // From FP:    .oe_form_group_cell > .oe_form_button.oe_button
+    // From FP:        display: block
+    // From FP:        white-space: nowrap
+    // From FP:        min-width: 100%
+    // From FP:        width: 100%
+
     // }}}
     // FormView.binaryfile {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1449,6 +1527,7 @@ $colour4: #8a89ba
         .oe-binary-file-set
             overflow: hidden
             position: relative
+            display: inline-block
             width: 45px
             height: 30px
         input.oe-binary-file
@@ -1464,6 +1543,30 @@ $colour4: #8a89ba
             -ms-filter: "alpha(opacity=0)"
             margin: 0
             padding: 0
+        .oe_form_field_image
+            > img
+                min-width: 100px
+            padding: 0
+            position: relative
+            display: inline-block
+            width: auto
+            vertical-align: top
+            .oe_form_field_image_controls
+                position: absolute
+                top: 1px
+                padding: 3px 0 0 0
+                margin: 0 1px
+                display: none
+                width: 99%
+                text-align: center
+                background: url(/web/static/src/img/form_sheetbg.png)
+                border-bottom: 1px dotted black
+                -moz-box-sizing: border-box
+                -webkit-box-sizing: border-box
+                -ms-box-sizing: border-box
+                box-sizing: border-box
+            &:hover .oe_form_field_image_controls
+                display: block
     // }}}
     // FormView.separator {{{
     .oe_horizontal_border
@@ -1520,12 +1623,17 @@ $colour4: #8a89ba
         cursor: default
     .oe_form_notebook_page
         padding: 0
+    div.ui-tabs
+        padding: 3px 0px 3px 0px
     .ui-tabs-hide
         display: none
 
     // }}}
     // FormView.progressbar {{{
     .oe_form
+        .oe_form_field_progressbar
+            display: inline-block
+            min-width: 70px
         .oe_form_field_progressbar.ui-progressbar
             height: 22px
             font-size: 10px
@@ -1568,66 +1676,69 @@ $colour4: #8a89ba
     // }}}
     // FormView.classes for openerp views {{{
     .oe_form
-        .oe_form_title, .oe_form_title input
-            font-size: 20px
-            font-weight: bold
-            height: 30px
-        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
-        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
+        td.oe_form_group_cell_label
             border-right: 1px solid #ddd
+            padding: 2px 0px 2px 0px
             label
+                line-height: 18px
                 display: block
                 min-width: 120px
-        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
-        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
+        td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 8px
         .oe_form_subtotal_footer
+            width: auto
             float: right
-            > div
+            td.oe_form_group_cell
                 text-align: right
-                padding: 3px
-            label
-                font-weight: normal !important
-            span
-                display: inline-block
-                min-width: 80px
-                text-align: right
+                padding: 0
+            td.oe_form_group_cell_label
+                border: none
+            .oe_form_field
+                width: auto !important
             .oe_form_subtotal_footer_separator
                 border-top: 1px solid #cacaca
                 font-size: 120%
                 font-weight: bold
-                label
-                    font-weight: bold !important
+            label.oe_form_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 8px 2px 0px !important
     // }}}
     // ListView {{{
     .oe-listview-content
         width: 100%
+        td:first-child, th:first-child
+            width: 17px
+            &:after
+                border-width: 0
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
-            td, th
-                padding: 3px 6px
-                line-height: 18px
-            th:after
-                content: ""
-                float: right
-                margin-top: 7px
-                border-width: 0 4px 4px
-                border-style: solid
-                border-color: #000 transparent
-                visibility: hidden
-            th.sortup:after
-                visibility: visible
-                @include opacity(0.6)
-            th.sortdown:after
-                border-bottom: none
-                border-left: 4px solid transparent
-                border-right: 4px solid transparent
-                border-top: 4px solid #000
-                visibility: visible
-                @include box-shadow(none)
-                @include opacity(0.6)
+            th
+                position: relative
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        th:after
+            position: absolute
+            right: 6px
+            content: ""
+            margin-top: 7px
+            border-width: 0 4px 4px
+            border-style: solid
+            border-color: #000 transparent
+            visibility: hidden
+        th.sortup:after
+            visibility: visible
+            @include opacity(0.6)
+        th.sortdown:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
             // TODO mit
             //th:hover:after
             //    border-bottom: none
@@ -1655,7 +1766,7 @@ $colour4: #8a89ba
                     width: 17px
                     &:after
                         border-width: 0
-                > td.oe-number
+                > td.oe_number
                     text-align: right !important
             > tr:nth-child(odd)
                 background-color: #f0f0fa
@@ -1696,6 +1807,25 @@ $colour4: #8a89ba
         .oe_tooltip_technical_title
             font-weight: bold
     // }}}
+    // View Editor {{{
+    .oe_view_editor
+        width: 100%
+        border-collapse: collapse
+        margin-left: -12px
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        td
+            text-align: center
+            white-space: nowrap
+            border: 1px solid #D8D8D8
+            cursor: pointer
+            font-size: 90%
+    .oe_view_editor_field td
+        border: 0px !important
+    .oe_view_editor tr:hover
+        background-color: #ecebf2
+    // }}}
     // Debugging stuff {{{
     .oe_layout_debugging
         .oe_form_group
@@ -1732,12 +1862,14 @@ $colour4: #8a89ba
         color: #333
     // }}}
 
+// Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
     background-size: cover
     background-attachment: fixed
     >*
         opacity: 0.70
+// }}}
 
 // Transitional overrides for old styles {{{
 .openerp

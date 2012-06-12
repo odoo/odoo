@@ -424,7 +424,7 @@
                 <td>
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
                         <t t-if="widget.views_src.length > 2" t-foreach="widget.views_src" t-as="view">
-                          <li t-if="view.view_type != 'form'" class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
+                          <li t-if="view.view_type != 'form'" class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="_t('Switch to ') + (view.label || view.view_type)">
                             </a></li>
                         </t>
                     </ul>
@@ -591,7 +591,7 @@
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
         t-att-style="color_for(record) + style "
-        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') ? 'oe-number' : ''}">
+        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') ? 'oe_number' : ''}">
 
         <span t-if="!field.attrs.modifiers.invisible" >
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
@@ -634,7 +634,7 @@
     <tfoot>
         <tr>
             <td t-if="options.selectable"/>
-            <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
+            <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe_number"
                 t-att-data-field="column.id" t-att-title="column.label">
             </td>
             <td t-if="options.deletable"/>
@@ -679,7 +679,7 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')
+            t-att-class="'oe-field-cell' + (align ? ' oe_number' : '')
                          + (column.tag === 'button' ? ' oe-button' : '')"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
@@ -689,6 +689,12 @@
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
+
+<t t-name="ListView.row.save">
+    <td>
+        <button class='oe_i oe-edit-row-save' type='button' name='save'>S</button>
+    </td>
+</t>
 
 <t t-name="FormView">
     <div class="oe_formview">
@@ -773,31 +779,19 @@
     </table>
 </form>
 
-<t t-name="FormRenderingForm.manual">
-    <div class="oe_form_manual_layout"/>
-</t>
 <t t-name="FormRenderingForm">
+    <div t-attf-class="#{classnames}">
+    </div>
+</t>
+<t t-name="FormRenderingSheet">
     <div class="oe_form_sheetbg">
         <div t-attf-class="oe_form_sheet oe_form_sheet_width #{classnames}">
-            <group t-if="layout === 'auto'" col="4"/>
         </div>
     </div>
 </t>
-<t t-name="FormRenderingSheet" t-extend="FormRenderingForm">
-</t>
 <t t-name="FormRenderingGroup">
-    <t t-set="table">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" t-att-class="classnames"/>
-    </t>
-    <t t-if="string">
-        <fieldset class="oe_group_box">
-            <legend><t t-esc="string"/></legend>
-            <t t-raw="table"/>
-        </fieldset>
-    </t>
-    <t t-if="!string">
-        <t t-raw="table"/>
-    </t>
+    <t t-if="string" t-call="FormRenderingSeparator"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" t-attf-class="oe_form_group #{classnames}"/>
 </t>
 <t t-name="FormRenderingNotebook">
     <div>
@@ -812,7 +806,6 @@
 </t>
 <t t-name="FormRenderingNotebookPage">
     <div t-attf-class="oe_form_notebook_page #{classnames}" t-att-id="id">
-        <group t-if="layout === 'auto'" col="4"/>
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
@@ -895,75 +888,47 @@
     </ul>
 </t>
 <t t-name="FieldChar">
-    <t t-if="!widget.get('effective_readonly')">
-        <div class="oe_form_field_char">
+    <span t-att-class="'oe_form_field '+widget.widget_class">
+        <t  t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
-                t-attf-class="field_char #{widget.is_field_number ? 'oe-number' : ''}"
                 t-att-placeholder="widget.node.attrs.placeholder"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
-        </div>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <span t-attf-class="oe_form_field_char #{widget.is_field_number ? 'oe-number' : ''}"/>
-    </t>
+        </t>
+    </span>
 </t>
 <t t-name="FieldEmail">
-    <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field_email" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-            <td>
+    <span class="oe_form_field oe_form_field_email oe_form_field_with_button">
+        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
+        <t t-if="!widget.get('effective_readonly')">
+            <button class="oe_button" tabindex="-1" type="button" title="Send an e-mail with your default e-mail client">
+                <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
+            </button>
+            <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
                     t-att-placeholder="widget.node.attrs.placeholder"
                 />
-            </td>
-            <td width="16">
-                <button class="oe_button oe_field_button" tabindex="-1" type="button" title="Send an e-mail with your default e-mail client">
-                    <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
-                </button>
-            </td>
-        </tr>
-        </table>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <span>
-            <a href="#" class="oe_form_uri"/>
-        </span>
-    </t>
+            </div>
+        </t>
+    </span>
 </t>
-<t t-name="FieldUrl">
-    <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field_url" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-            <td>
-                <input type="text"
-                    t-att-id="widget.id_for_label"
-                    t-att-tabindex="widget.node.attrs.tabindex"
-                    t-att-autofocus="widget.node.attrs.autofocus"
-                    t-att-placeholder="widget.node.attrs.placeholder"
-                />
-            </td>
-            <td width="16">
-                <button class="oe_button oe_field_button" tabindex="-1" type="button" title="Open this resource">
-                    <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
-                </button>
-            </td>
-        </tr>
-        </table>
+<t t-name="FieldUrl" t-extend="FieldEmail">
+    <t t-jquery="span:first">
+        this.removeClass('oe_form_field_email').addClass('oe_form_field_url');
     </t>
-    <t t-if="widget.get('effective_readonly')">
-        <span>
-            <a href="#" class="oe_form_uri"/>
-        </span>
+    <t t-jquery="button.oe_button" t-operation="replace">
+        <button class="oe_button" tabindex="-1" type="button" title="Open this resource">
+            <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
+        </button>
     </t>
 </t>
 <t t-name="FieldText">
-    <div class="oe_form_field_text">
+    <div class="oe_form_field oe_form_field_text">
         <textarea rows="6"
             t-att-name="widget.name"
             class="field_text"
@@ -975,41 +940,45 @@
             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
     </div>
 </t>
-<t t-name="web.datetimepicker">
-    <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-    <div class="oe_datepicker_root oe_form_field_datetime">
+<t t-name="web.datepicker">
+    <span>
+        <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
             t-att-placeholder="placeholder"
-            t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
+            class="oe_datepicker_master"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
-    </div>
+    </span>
+</t>
+<t t-name="FieldDate">
+    <span class="oe_form_field oe_datepicker_root oe_form_field_date"/>
+</t>
+<t t-name="FieldDatetime">
+    <span class="oe_form_field oe_datepicker_root oe_form_field_datetime"/>
 </t>
 <t t-name="FieldSelection">
-    <t t-if="!widget.get('effective_readonly')">
-        <div class="oe_form_field_selection">
-            <select
-                t-att-name="widget.name"
-                t-att-tabindex="widget.node.attrs.tabindex"
-                t-att-autofocus="widget.node.attrs.autofocus"
-                t-att-id="widget.id_for_label">
-                    <t t-foreach="widget.values" t-as="option">
-                        <option><t t-esc="option[1]"/></option>
-                    </t>
-            </select>
-        </div>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <span class="field_selection"/>
-    </t>
+    <span class="oe_form_field oe_form_field_selection">
+        <select t-if="!widget.get('effective_readonly')"
+            t-att-name="widget.name"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
+            t-att-id="widget.id_for_label">
+                <t t-foreach="widget.values" t-as="option">
+                    <option><t t-esc="option[1]"/></option>
+                </t>
+        </select>
+    </span>
 </t>
 <t t-name="FieldMany2One">
-    <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field_many2one" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-            <td valign="top">
+    <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button">
+        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
+        <t t-if="!widget.get('effective_readonly')">
+            <button class="oe_button oe-m2o-cm-button" title="Open Resource">
+                <img t-att-src='_s + "/web/static/src/img/icons/terp-folder-yellow.png"'/>
+            </button>
+            <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
@@ -1017,24 +986,14 @@
                     t-att-placeholder="widget.node.attrs.placeholder"
                 />
                 <span class="oe-m2o-drop-down-button">
-                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
-            </td>
-            <td width="16">
-                <button class="oe_button oe_field_button oe-m2o-cm-button" title="Open Resource">
-                    <img t-att-src='_s + "/web/static/src/img/icons/terp-folder-yellow.png"'/>
-                </button>
-            </td>
-        </tr>
-        </table>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <span>
-            <a href="#" class="oe_form_uri"/>
-        </span>
-    </t>
+                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"'/>
+                </span>
+            </div>
+        </t>
+    </span>
 </t>
 <t t-name="FieldMany2ManyTags">
-    <div class="oe_form_field_many2manytags">
+    <div class="oe_form_field oe_form_field_many2manytags">
         <t t-if="! widget.get('effective_readonly')">
             <textarea rows="1" style="width: 100%"></textarea>
         </t>
@@ -1050,17 +1009,19 @@
     </t>
 </t>
 <t t-name="FieldReference">
-    <table class="oe_form_field_reference oe_form" border="0" cellpadding="0" cellspacing="0">
+    <table class="oe_form_field oe_form_field_reference oe_form" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
+        <td t-attf-class="oe_form_frame_cell oe_form_selection">
+            <span t-attf-class="oe_form_view_reference_selection"/>
         </td>
-        <td t-attf-class="oe_form_frame_cell oe_form_many2one oe_form_view_reference_m2o" nowrap="true" style="display: none">
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one" nowrap="true">
+            <span t-attf-class="oe_form_view_reference_m2o"/>
         </td>
     </tr>
     </table>
 </t>
 <t t-name="FieldBoolean">
-    <span class="oe_form_field_boolean">
+    <span class="oe_form_field oe_form_field_boolean">
         <input type="checkbox"
             t-att-id="widget.id_for_label"
             t-att-name="widget.name"
@@ -1070,88 +1031,61 @@
     </span>
 </t>
 <t t-name="FieldProgressBar">
-    <div class="oe_form_field_progressbar" t-opentag="true">
+    <span class="oe_form_field oe_form_field_progressbar" t-opentag="true">
         <span></span>
-    </div>
-</t>
-<t t-name="FieldStatus.content">
-    <ul class="oe-arrow-list">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
-                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
-            </li>
-        </t>
-    </ul>
+    </span>
 </t>
 <t t-name="FieldStatus.content">
     <ul class="oe_form_steps">
         <t t-set="size" t-value="widget.to_show.length"/>
         <t t-foreach="_.range(size)" t-as="i">
             <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-                <t t-esc="widget.to_show[i][1]"/>
+                <span><t t-esc="widget.to_show[i][1]"/></span>
                 <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
             </li>
         </t>
     </ul>
+    <div class="oe_clear"/>
 </t>
 <t t-name="FieldBinaryImage">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tr>
-        <td class="oe_form_field-binary-image-placeholder" align="center">
-
-        </td>
-    </tr>
-    <tr>
-        <td align="center" valign="bottom" height="25">
-            <div class="oe-binary">
-                <table cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                    <td>
-                        <div class="oe-binary-file-set">
-                            <form class="oe-binary-form" t-att-target="widget.iframe"
-                                method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                                <input type="hidden" name="session_id" value=""/>
-                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                                <button class="oe_button" type="button" title="Set Image">
-                                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                                </button>
-                                <input type="file" class="oe-binary-file" name="ufile"
-                                    t-att-tabindex="widget.node.attrs.tabindex"
-                                    t-att-autofocus="widget.node.attrs.autofocus"
-                                />
-                            </form>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
-                            <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
-                        </button>
-                    </td>
-                </tr>
-                </table>
+    <span class="oe_form_field oe_form_field_image">
+        <div class="oe_form_field_image_controls oe_form_readonly_hidden">
+            <div class="oe-binary-file-set">
+                <form class="oe-binary-form" t-att-target="widget.iframe"
+                    method="post" enctype="multipart/form-data" action="/web/binary/upload">
+                    <input type="hidden" name="session_id" value=""/>
+                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                    <button class="oe_button" type="button" title="Set Image">
+                        <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                    </button>
+                    <input type="file" class="oe-binary-file" name="ufile"
+                        t-att-tabindex="widget.node.attrs.tabindex"
+                        t-att-autofocus="widget.node.attrs.autofocus"
+                    />
+                </form>
             </div>
+            <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
+                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
+            </button>
             <div class="oe-binary-progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
-        </td>
-    </tr>
-    </table>
+        </div>
+    </span>
 </t>
 <t t-name="FieldBinaryImage-img">
-    <img t-att-src='url' class="oe-binary-image field_image"
+    <img t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
         t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
-        t-att-style="'max-width: ' + (widget.$element.width() > 60 ? widget.$element.width() : 60) + 'px'"
     />
 </t>
 <t t-name="FieldBinaryFile">
     <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field_binary" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td>
                 <input type="text" size="1" readonly="readonly"
@@ -1310,7 +1244,7 @@
 <div t-name="SearchView.FacetView"
      class="oe_searchview_facet"
      tabindex="0"
-    ><span class="oe_facet_remove">✖</span
+    ><span class="oe_facet_remove">x</span
     ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
         <t t-esc="widget.model.get('icon')"/>
     </span
@@ -1475,19 +1409,25 @@
         </t>
     </t>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_filters">
+<div t-name="SearchView.Filters" class="oe_searchview_section">
 
 </div>
-<div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
-    <ul class="oe_searchview_custom_list"/>
-    <h4 class="oe_searchview_custom_title">
-        <label for="oe_searchview_custom_input">Save search</label></h4>
-    <form>
-        <input id="oe_searchview_custom_input"/>
-        <button>Save</button><br/>
-        <label for="oe_searchview_custom_public">Share with all users:</label>
-        <input id="oe_searchview_custom_public" type="checkbox"/>
-    </form>
+<div t-name="SearchView.CustomFilters" class="oe_searchview_section">
+    <div>
+        <h3><span class="oe_i">M</span> Custom Filters</h3>
+        <ul class="oe_searchview_custom_list"/>
+        <div class="oe_searchview_custom">
+          <h4>Save current filter</h4>
+          <form>
+            <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+            <p><input id="oe_searchview_custom_public" type="checkbox"/>
+              <label for="oe_searchview_custom_public">Share with all users</label></p>
+            <button>Save</button>
+          </form>
+        </div>
+    </div>
+    <div>
+    </div>
 </div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
@@ -1495,7 +1435,7 @@
         <ul>
 
         </ul>
-        <button class="oe_add_condition" type="button">Add a condition</button>
+        <button class="oe_add_condition button" type="button">Add a condition</button><br/>
         <button class="oe_apply" type="submit">Apply</button>
     </form>
 </div>
@@ -1512,7 +1452,7 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <button type="button" class="searchview_extended_delete_prop">Delete</button>
+        <a class="searchview_extended_delete_prop button">x</a>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
