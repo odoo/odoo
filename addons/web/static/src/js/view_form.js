@@ -3283,6 +3283,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.$element.addClass('oe_form_field_many2many');
 
         var self = this;
 
@@ -3291,7 +3292,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         this.dataset.on_unlink.add_last(function(ids) {
             self.dataset_changed();
         });
-        
+
         this.is_setted.then(function() {
             self.load_view();
         });
@@ -3304,7 +3305,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     });
                 });
             });
-        })
+        });
     },
     set_value: function(value_) {
         value_ = value_ || [];

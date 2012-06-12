@@ -404,7 +404,7 @@
             <col width="33%"/>
             <col width="33%"/>
             <col width="34%"/>
-            <tr class="oe_header_row">
+            <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
                             <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
@@ -642,8 +642,8 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_list_add oe_form_button_hi" t-if="widget.options.addable">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
+        <button type="button" class="oe_button oe_list_add oe_form_button_hi">
             <t t-esc="widget.options.addable"/>
         </button>
         <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
@@ -1204,7 +1204,7 @@
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+    <t t-jquery=".oe_header_row_top" t-operation="replace"/>
 
     <t t-jquery=".oe-view-manager-header">
         this.attr('t-if', 'views.length != 1');

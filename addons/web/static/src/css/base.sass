@@ -1674,6 +1674,16 @@ $colour4: #8a89ba
         display: none
 
     // }}}
+    // FormView.one2many {{{
+    .oe_form .oe_form_field_one2many > .oe_view_manager
+        .oe_list_pager_single_page
+            display: none
+    // }}}
+    // FormView.many2many {{{
+    .oe_form .oe_form_field_many2many > .oe-listview
+        .oe_list_pager_single_page
+            display: none
+    // }}}
     // FormView.classes for openerp views {{{
     .oe_form
         td.oe_form_group_cell_label
