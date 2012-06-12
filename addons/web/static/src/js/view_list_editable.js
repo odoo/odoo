@@ -194,7 +194,7 @@ openerp.web.list_editable = function (openerp) {
         },
         render_row_as_form: function (row) {
             var self = this;
-            this.cancel_pending_edition().then(function () {
+            this.ensure_saved().then(function () {
                 var record_id = $(row).data('id');
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
