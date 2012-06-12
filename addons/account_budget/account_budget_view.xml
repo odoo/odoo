@@ -288,15 +288,13 @@
                                     <field name="theoritical_amount" sum="Theoritical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines" version="7.0">
-                                    <group col="4">
-                                        <field name="crossovered_budget_id"/>
-                                        <field name="general_budget_id"/>
-                                        <field name="date_from"/>
-                                        <field name="date_to"/>
-                                        <field name="paid_date"/>
-                                        <field name="planned_amount"/>
-                                    </group>
+                                <form string="Budget Lines">
+                                    <field name="crossovered_budget_id"/>
+                                    <field name="general_budget_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
                                 </form>
                                 <graph type="bar" string="Lines">
                                     <field name="general_budget_id" />

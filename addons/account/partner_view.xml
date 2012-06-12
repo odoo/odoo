@@ -75,21 +75,21 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page string="History" position="before" version="7.0">
-                <page string="Accounting">
-                    <group>
-                        <group string="Customer Accounting Properties">
+                <page string="Accounting" col="4">
+                    <group col="4">
+                        <group string="Customer Accounting Properties" col="4">
                             <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_account_position" widget="selection"/>
                             <field name="property_payment_term" widget="selection"/>
                         </group>
-                        <group string="Supplier Accounting Properties">
+                        <group string="Supplier Accounting Properties" col="4">
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
                         </group>
-                        <group string="Customer Credit">
+                        <group string="Customer Credit" col="4">
                             <field name="credit"/>
                             <field name="credit_limit"/>
                         </group>
-                        <group string="Supplier Debit">
+                        <group string="Supplier Debit" col="4">
                             <field name="debit"/>
                         </group>
                         <field name="bank_ids">
