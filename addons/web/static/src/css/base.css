@@ -1616,10 +1616,10 @@
   display: none !important;
 }
 .openerp .oe_form_editable .oe_form_editable_hidden {
-  display: none;
+  display: none !important;
 }
 .openerp .oe_form_readonly .oe_form_readonly_hidden, .openerp .oe_form_readonly .oe_form_field:empty {
-  display: none;
+  display: none !important;
 }
 .openerp .oe_form .oe_form_field_text {
   width: 100%;
@@ -1894,8 +1894,7 @@
   top: 1px;
   padding: 3px 0 0 0;
   margin: 0 1px;
-  filter: alpha(opacity=70);
-  opacity: 0.7;
+  display: none;
   width: 99%;
   text-align: center;
   background: url(/web/static/src/img/form_sheetbg.png);
@@ -1906,8 +1905,7 @@
   box-sizing: border-box;
 }
 .openerp .oe_form .oe_form_field_image:hover .oe_form_field_image_controls {
-  filter: alpha(opacity=100);
-  opacity: 1;
+  display: block;
 }
 .openerp .oe_horizontal_border {
   border-bottom: 1px solid black;

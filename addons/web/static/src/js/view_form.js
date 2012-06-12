@@ -4096,14 +4096,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
-    initialize_content: function() {
-        this._super();
-        if (!this.get("effective_readonly")) {
-            this.$element.find('.oe_form_field_image_controls').show();
-        } else {
-            this.$element.find('.oe_form_field_image_controls').hide();
-        }
-    },
     set_value: function(value_) {
         this._super.apply(this, arguments);
         this.render_value();
