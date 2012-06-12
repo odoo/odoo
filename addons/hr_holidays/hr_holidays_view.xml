@@ -505,16 +505,19 @@
             <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
             <field name="arch" type="xml">
                 <xpath expr="//templates" position="before">
+                    <field name="current_leave_id"/>
                     <field name="current_leave_state"/>
                     <field name="leave_date_from"/>
                     <field name="leave_date_to"/>
                 </xpath>
-                <xpath expr="//div[@class='oe_employee_details']/ul/li/span" position="before">
-                    <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
-                        <span class="oe_kanban_button" style="font-size: 100%%" t-att-title="record.leave_date_from.raw_value.toString('ddd dS MMM') + ' - ' + record.leave_date_to.raw_value.toString('ddd dS MMM')" >
+                <xpath expr="//div[@class='oe_employee_details']/ul/li" position="before">
+                    <li t-if="record.current_leave_id.raw_value">
+                        <span style="font-size: 100%%"
+                                t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_button oe_kanban_color_3':'oe_kanban_button oe_kanban_color_2'"
+                                t-att-title="record.leave_date_from.raw_value.toString('ddd dS MMM') + ' - ' + record.leave_date_to.raw_value.toString('ddd dS MMM')">
                             <field name="current_leave_id"/>
                         </span>
-                    </span>
+                    </li>
                 </xpath>
             </field>
         </record>
