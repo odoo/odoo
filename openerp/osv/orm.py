@@ -1762,6 +1762,10 @@ class BaseModel(object):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
                 if trans:
                     node.set('help', trans)
+            if node.get('placeholder'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('placeholder'))
+                if trans:
+                    node.set('placeholder', trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
