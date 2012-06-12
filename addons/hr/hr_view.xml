@@ -144,8 +144,8 @@
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
-                                    <li t-if="record.last_login.raw_value">
-                                        <span t-if="record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                    <li id="last_login">
+                                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
                                               <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
                                         </span>
                                     </li>
