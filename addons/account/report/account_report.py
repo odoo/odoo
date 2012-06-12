@@ -91,6 +91,7 @@ class report_aged_receivable(osv.osv):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
+        if context is None:context = {}
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
