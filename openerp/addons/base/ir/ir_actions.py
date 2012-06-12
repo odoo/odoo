@@ -203,53 +203,11 @@ class act_window(osv.osv):
 
     def _search_view(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
         for act in self.browse(cr, uid, ids, context=context):
-            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid, context=context)
-            search_view_id = False
-            if act.search_view_id:
-                search_view_id = act.search_view_id.id
-            else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid,
-                        [('model','=',act.res_model),('type','=','search'),
-                        ('inherit_id','=',False)], context=context)
-                if res_view:
-                    search_view_id = res_view[0]
-            if search_view_id:
-                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid, search_view_id,
-                            'search', context)
-                fields_from_fields_get.update(field_get['fields'])
-                field_get['fields'] = fields_from_fields_get
-                res[act.id] = str(field_get)
-            else:
-                def process_child(node, new_node, doc):
-                    for child in node.childNodes:
-                        if child.localName=='field' and child.hasAttribute('select') \
-                                and child.getAttribute('select')=='1':
-                            if child.childNodes:
-                                fld = doc.createElement('field')
-                                for attr in child.attributes.keys():
-                                    fld.setAttribute(attr, child.getAttribute(attr))
-                                new_node.appendChild(fld)
-                            else:
-                                new_node.appendChild(child)
-                        elif child.localName in ('page','group','notebook'):
-                            process_child(child, new_node, doc)
-
-                form_arch = self.pool.get(act.res_model).fields_view_get(cr, uid, False, 'form', context)
-                dom_arc = dom.minidom.parseString(encode(form_arch['arch']))
-                new_node = copy.deepcopy(dom_arc)
-                for child_node in new_node.childNodes[0].childNodes:
-                    if child_node.nodeType == child_node.ELEMENT_NODE:
-                        new_node.childNodes[0].removeChild(child_node)
-                process_child(dom_arc.childNodes[0],new_node.childNodes[0],dom_arc)
-
-                form_arch['arch'] = new_node.toxml()
-                form_arch['fields'].update(fields_from_fields_get)
-                res[act.id] = str(form_arch)
+            field_get = self.pool.get(act.res_model).fields_view_get(cr, uid,
+                act.search_view_id and act.search_view_id.id or False,
+                'search', context=context)
+            res[act.id] = str(field_get)
         return res
 
     def _get_help_status(self, cr, uid, ids, name, arg, context=None):
