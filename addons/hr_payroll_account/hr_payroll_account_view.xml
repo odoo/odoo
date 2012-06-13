@@ -44,7 +44,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
+                <xpath expr="//field[@name='advantages']" position="after">
                    <separator colspan="4" string="Accounting"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="journal_id"/>
