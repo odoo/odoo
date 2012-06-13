@@ -332,7 +332,13 @@ openerp.web.list_editable = function (openerp) {
          */
         ensure_saved: function () {
             if (this.edition) {
-                return this.save_row();
+                // kinda-hack-ish: if the user has entered data in a field,
+                // oe_form_dirty will be set on the form so save, otherwise
+                // discard the current (entirely empty) line
+                if (this.edition_form.$element.is('.oe_form_dirty')) {
+                    return this.save_row();
+                }
+                return this.cancel_pending_edition();
             }
             //noinspection JSPotentiallyInvalidConstructorUsage
             return $.when();
