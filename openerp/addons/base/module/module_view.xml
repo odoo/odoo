@@ -122,9 +122,8 @@
                 <header>
                     <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_form_button_hi"/>
                     <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_form_button_hi"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)"
-                                        icon="terp-dialog-close" type="object"
-                                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
+                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"
+                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
                     <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
                     <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
                     <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
@@ -132,7 +131,7 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_form_button_box">
-                        <field name="icon" widget='image'/>
+                        <field name="icon_image" widget="image"/>
                     </div>
                     <div class="oe_form_title">
                         <label for="shortdesc" class="oe_form_readonly_hidden"/>
@@ -157,7 +156,6 @@
                         </page>
                         <page string="Technical Data">
                             <group col="4">
-                                <field name="name"/>
                                 <field name="demo"/>
                                 <field name="application"/>
                             </group>
@@ -169,11 +167,11 @@
                             </field>
                         </page>
                         <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <separator string="Created Menus"/>
+                            <label for="menus_by_module" string="Created Menus"/>
                             <field name="menus_by_module"/>
-                            <separator string="Created Views"/>
+                            <label for="views_by_module" string="Created Views"/>
                             <field name="views_by_module"/>
-                            <separator string="Defined Reports"/>
+                            <label for="reports_by_module" string="Defined Reports"/>
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>
