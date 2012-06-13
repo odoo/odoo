@@ -64,9 +64,9 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="case_open" string="Confirm" type="object"
+                <button name="case_open" string="Confirm" type="object" class="oe_form_button_active_flow"
                         states="draft,pending" icon="gtk-go-forward"/>
-                <button name="case_close" string="Held" type="object"
+                <button name="case_close" string="Held" type="object" class="oe_form_button_active_flow"
                         states="open,pending" icon="gtk-jump-to"/>
                 <button name="case_reset" string="Reset to Todo" type="object"
                         states="cancel" icon="gtk-convert"/>
