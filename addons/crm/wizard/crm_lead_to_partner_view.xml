@@ -8,16 +8,15 @@
           <field name="model">crm.lead2partner</field>
           <field name="type">form</field>
           <field name="arch" type="xml">
-              <form string="Create a Partner">
-                  <separator string="Create a Partner" colspan="4" />
-                  <field name="action"/>
-                  <group attrs="{'invisible':[('action','!=','exist')]}">
-                    <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
-                </group>
-                <separator string="" colspan="4" />
-                  <group col="4" colspan="4">
+              <form string="Create a Partner" version="7.0">
+                  <header>
                       <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                       <button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
+                  </header>
+                  <separator string="Create a Partner"/>
+                  <group col="4">
+                      <field name="action"/>
+                      <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                   </group>
               </form>
           </field>
