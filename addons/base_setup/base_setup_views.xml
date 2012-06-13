@@ -47,7 +47,7 @@
                         <group name="config_sale" colspan="4"/>
                         <!-- this part is necessary to allow the plugins to extend the view -->
                         <field name="module_crm" invisible="1"/>
-                        <group name="config_fetchmail" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
+                        <group name="config_fetchmail" colspan="4" attrs="{'invisible': [('module_crm','=',False)]}">
                             <separator string="Emails"/>
                         </group>
                             <newline/>
