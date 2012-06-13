@@ -335,6 +335,12 @@ class account_voucher(osv.osv):
         'payment_rate_currency_id': _get_payment_rate_currency,
     }
 
+    def create(self, cr, uid, vals, context=None):
+        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
+        if voucher:
+            self.create_send_note(cr, uid, [voucher], context=context)
+        return voucher
+
     def compute_tax(self, cr, uid, ids, context=None):
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
@@ -1264,12 +1270,6 @@ class account_voucher(osv.osv):
                 self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
-    def create(self, cr, uid, vals, context=None):
-        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
-        if voucher:
-            self.create_send_note(cr, uid, [voucher], context=context)
-        return voucher
-    
     def copy(self, cr, uid, id, default={}, context=None):
         default.update({
             'state': 'draft',
@@ -1284,7 +1284,7 @@ class account_voucher(osv.osv):
         return super(account_voucher, self).copy(cr, uid, id, default, context)
 
     # --------------------------------------
-    # OpenChatter methods and notifications
+    # OpenChatter notifications and need_action
     # --------------------------------------
     
     def _get_document_type(self, type):
@@ -1294,7 +1294,7 @@ class account_voucher(osv.osv):
                 'sale': 'Sales Receipt',
                 'receipt': 'Customer Payment',
         }
-        return type_dict.get(type, 'payment')
+        return type_dict.get(type, 'Payment')
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
