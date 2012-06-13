@@ -53,7 +53,7 @@
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <field name="module_plugin_outlook" position="after">
-                    <group colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
+                    <group colspan="2" attrs="{'invisible': ['|',('module_crm','=',False),('module_plugin_outlook','=',False)]}">
                         <button name="%(action_outlook_installer)d" type="action"
                             string="Configure Outlook Plugin" icon="gtk-execute"/>
                     </group>
