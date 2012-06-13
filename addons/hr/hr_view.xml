@@ -347,13 +347,13 @@
             <field name="model">hr.job</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Job" version="7.0">                
+                <form string="Job" version="7.0">
                     <header>
                         <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
                         <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
-                    <sheet string="Job">
+                    <sheet>
                         <group>
                             <group>
                                 <field name="name" />
