@@ -8,13 +8,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Parameters">
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Name"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-project"
                         string="Generic"
                         help="Parameters that are used by all resources."
                         domain="[('res_id','=',False)]"/>
                     <separator orientation="vertical"/>
-                    <field name="fields_id" />
-                    <field name="name"/>
+                    <field name="fields_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
