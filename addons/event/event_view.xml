@@ -54,9 +54,9 @@
             <field name="arch" type="xml">
             <form string="Events" version="7.0">
                 <header>
-                    <button string="Confirm Event" name="button_confirm" states="draft" type="object"/>
-                    <button string="Event Ended" name="button_done" states="confirm" type="object"/>
-                    <button string="Set To Draft" name="button_draft" states="cancel,done" type="object"/>
+                    <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_form_button_active_flow"/>
+                    <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_form_button_active_flow"/>
+                    <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" class="oe_form_button_return_flow"/>
                     <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
@@ -355,9 +355,9 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="registration_open" string="Confirm" states="draft" type="object"/>
-                    <button name="button_reg_close" string="Attended" states="open" type="object"/>
-                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object"/>
+                    <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_form_button_active_flow"/>
+                    <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_form_button_active_flow"/>
+                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" class="oe_form_button_return_flow"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
                     <field name="state" select="1" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
