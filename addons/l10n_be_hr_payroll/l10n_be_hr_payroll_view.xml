@@ -50,9 +50,6 @@
             <field name="priority">30</field>
             <field name="arch" type="xml">
             <data>
-                <!-- <xpath expr="/form/notebook/page/group/field[@name='birthday']" position="after">
-                    <field name="marital" required="True"/>
-                </xpath> -->
                 <xpath expr="//field[@name='gender']" position="before">
                     <field name="resident_bool" eval="False"/> 
                 </xpath>

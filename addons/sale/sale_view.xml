@@ -132,7 +132,6 @@
                         <label string="Sale Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                         <field name="name" class="oe_form_inline" readonly="1"/>
                     </h1>
-
                     <group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" />
