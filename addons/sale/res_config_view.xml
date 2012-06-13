@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <group name="config_sale" position="after">
-                   <group>
+                   <group >
 	             	<separator string="Sale Order" colspan="4"/>
 	         		<field name="group_uom"/>
 	         		<field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
