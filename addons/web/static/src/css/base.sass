@@ -858,6 +858,10 @@ $colour4: #8a89ba
         @include radius(3px)
         @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
         li
+            &:hover
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+                @include box-shadow(none)
+            position: relative
             list-style-type: none
             float: none
             display: block
@@ -873,10 +877,33 @@ $colour4: #8a89ba
                 cursor: pointer
                 &:hover
                     text-decoration: none
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-                    @include box-shadow(none)
+            .oe_sidebar_delete_item
+                position: absolute
+                bottom: 1px
+                right: 4px
+                display: none
+                width: 12px
+                height: 12px
+                line-height: 12px
+                padding: 1px
+                color: #8786b7
+                line-height: 8px
+                text-align: center
+                font-weight: bold
+                text-shadow: 0 1px 1px white
+                &:hover
+                    text-decoration: none
+                    color: white
+                    background: #8786b7
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                    @include radius(2px)
+            &:hover
+                .oe_sidebar_delete_item
+                    display: inline-block
     .oe_sidebar
         white-space: nowrap
+        .oe_dropdown_menu li
+            padding-right: 16px
         .oe_sidebar_add_attachment
             cursor: pointer
             padding-left: 6px

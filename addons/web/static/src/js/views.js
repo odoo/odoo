@@ -857,7 +857,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.items['files'] = attachments;
         self.redraw();
         this.$('.oe_sidebar_add_attachment .oe-binary-file').change(this.on_attachment_changed);
-        //this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
+        this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
@@ -870,16 +870,14 @@ instance.web.Sidebar = instance.web.Widget.extend({
         }
     },
     on_attachment_delete: function(e) {
-        return;
-        var self = this, $e = $(e.currentTarget);
-        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm(_.str.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
-            this.rpc('/web/dataset/unlink', {
-                model: 'ir.attachment',
-                ids: [parseInt($e.attr('data-id'))]
-            }, function(r) {
-                $e.parent().remove();
-                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+        var self = this;
+        e.preventDefault();
+        e.stopPropagation();
+        var self = this;
+        var $e = $(e.currentTarget);
+        if (confirm(_t("Do you really want to delete this attachment ?"))) {
+            (new instance.web.DataSet(this, 'ir.attachment')).unlink([parseInt($e.attr('data-id'), 10)]).then(function() {
+                self.do_attachement_update(self.dataset, self.model_id);
             });
         }
     }

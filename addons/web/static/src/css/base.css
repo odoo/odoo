@@ -1066,10 +1066,23 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 .openerp .oe_dropdown_menu li {
+  position: relative;
   list-style-type: none;
   float: none;
   display: block;
   background-color: none;
+}
+.openerp .oe_dropdown_menu li:hover {
+  background-color: #f0f0fa;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+  background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -moz-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -ms-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .openerp .oe_dropdown_menu li a {
   display: block;
@@ -1083,19 +1096,39 @@
 }
 .openerp .oe_dropdown_menu li a:hover {
   text-decoration: none;
-  background-color: #f0f0fa;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
-  background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: -moz-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: -ms-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+}
+.openerp .oe_dropdown_menu li .oe_sidebar_delete_item {
+  position: absolute;
+  bottom: 1px;
+  right: 4px;
+  display: none;
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
+  padding: 1px;
+  color: #8786b7;
+  line-height: 8px;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 0 1px 1px white;
+}
+.openerp .oe_dropdown_menu li .oe_sidebar_delete_item:hover {
+  text-decoration: none;
+  color: white;
+  background: #8786b7;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.openerp .oe_dropdown_menu li:hover .oe_sidebar_delete_item {
+  display: inline-block;
 }
 .openerp .oe_sidebar {
   white-space: nowrap;
+}
+.openerp .oe_sidebar .oe_dropdown_menu li {
+  padding-right: 16px;
 }
 .openerp .oe_sidebar .oe_sidebar_add_attachment {
   cursor: pointer;
