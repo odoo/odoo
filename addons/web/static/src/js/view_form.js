@@ -2561,6 +2561,12 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         if (!(form = this.first_edition_form())) {
             return true;
         }
+        // If the form has not been modified, the view can only be valid
+        // NB: is_dirty will also be set on defaults/onchanges/whatever?
+        // oe_form_dirty seems to only be set on actual user actions
+        if (!form.$element.is('.oe_form_dirty')) {
+            return true;
+        }
 
         // Otherwise validate internal form
         return _(form.fields).chain()
