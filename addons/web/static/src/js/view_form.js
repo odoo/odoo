@@ -2508,23 +2508,20 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 	    }, this));
     },
     is_valid: function() {
-        this.validate();
-        return this._super();
-    },
-    validate: function() {
-        this.invalid = false;
         if (!this.viewmanager.views[this.viewmanager.active_view])
-            return;
+            return true;
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-        if (this.viewmanager.active_view === "form") {
-            for (var f in view.fields) {
-                f = view.fields[f];
-                if (!f.is_valid()) {
-                    this.invalid = true;
-                    return;
-                }
-            }
+        switch (this.viewmanager.active_view) {
+        case 'form':
+            return _(view.fields).chain()
+                .invoke('is_valid')
+                .all(_.identity)
+                .value();
+            break;
+        case 'list':
+            return view.is_valid();
         }
+        return true;
     },
     is_dirty: function() {
         this.save_any_view();
@@ -2556,6 +2553,36 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     _template: 'One2Many.listview',
+    is_valid: function () {
+        var form;
+        // A list not being edited is always valid
+        if (!(form = this.first_edition_form())) {
+            return true;
+        }
+
+        // Otherwise validate internal form
+        return _(form.fields).chain()
+            .invoke(function () {
+                this.validate();
+                this.update_dom(true);
+                return this.is_valid();
+            })
+            .all(_.identity)
+            .value();
+    },
+    first_edition_form: function () {
+        var get_form = function (group_or_list) {
+            if (group_or_list.edition) {
+                return group_or_list.edition_form;
+            }
+            return _(group_or_list.children).chain()
+                .map(get_form)
+                .compact()
+                .first()
+                .value();
+        };
+        return get_form(this.groups);
+    },
     do_add_record: function () {
         if (this.options.editable) {
             this._super.apply(this, arguments);
@@ -2609,7 +2636,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             var button_result = self.o2m.dataset.call_button.apply(self.o2m.dataset, arguments);
             self.o2m.reload_current_view();
             return button_result;
-        }
+        };
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
                 self.o2m.reload_current_view();
