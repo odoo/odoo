@@ -25,9 +25,21 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings">
+            <form string="Meetings" version="7.0">
+                <header>
+                    <button name="case_open" string="Confirm" type="object"
+                            states="draft"/>
+                    <button name="case_close" string="Done" type="object"
+                            states="open"/>
+                    <button name="case_reset" string="Reset to Unconfirmed" type="object"
+                            states="cancel,done"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
+                </header>
+                <sheet>
                 <group col="6" colspan="4">
-                    <field name="name" select="1" string="Title"
+                    <field name="name" string="Title"
                            required="1" />
                     <field name="categ_id" widget="selection"
                         string="Meeting Type"
@@ -47,7 +59,7 @@
                            <field name="recurrency" string="Recurrence"/>
                     </group>
                 </group>
-                <notebook colspan="4">
+                <notebook>
                 <page string="Meeting">
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
@@ -71,19 +83,6 @@
                     </group>
                     <separator string="Description" colspan="4" />
                     <field name="description" nolabel="1" colspan="4" />
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4" groups="base.group_no_one">
-                        <field name="state" />
-                        <button name="case_close" string="Done"
-                            states="open" type="object"
-                            icon="gtk-jump-to" />
-                        <button name="case_reset" string="Reset to Unconfirmed"
-                            states="open,done" type="object"
-                            icon="gtk-convert" />
-                        <button name="case_open" string="Confirm"
-                            states="draft" type="object"
-                            icon="gtk-go-forward" />
-                    </group>
                     </page>
                     <page string="Invitation Detail">
                         <button string="Invite People"
@@ -97,7 +96,7 @@
                                 <field name="sent_by_uid" string="From"/>
                                 <field name="user_id" string="To"/>
                                 <field name="email" string="Mail To"/>
-                                <field name="role" select="1" />
+                                <field name="role" />
                                 <field name="state" />
                                 <button name="do_tentative"
                                     states="needs-action,declined,accepted"
@@ -116,13 +115,13 @@
                                     states="needs-action,tentative,declined,accepted"
                                     context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
-                            <form string="Invitation details">
+                            <form string="Invitation details" version="7.0">
                                 <notebook colspan="4">
                                     <page string="Details">
                                         <field name="email" />
-                                        <field name="rsvp" select="1" />
-                                        <field name="cutype" select="1" />
-                                        <field name="role" select="1" />
+                                        <field name="rsvp" />
+                                        <field name="cutype" />
+                                        <field name="role" />
                                         <separator colspan="4" string="" />
                                         <group col="6" colspan="4">
                                             <field name="state" />
@@ -209,7 +208,10 @@
 
                     </page>
                 </notebook>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_form_bottom">
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </form>
         </field>
     </record>
