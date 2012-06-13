@@ -159,7 +159,11 @@ class payroll_advice(osv.osv):
         self.write(cr, uid, ids, {'number':number}, context=context)
 
     def confirm_sheet(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+        for advice in self.browse(cr, uid, ids, context=context):
+            if not advice.line_ids:
+                raise osv.except_osv(_('No Payment Advice Lines !'), _('Please create some advice lines.'))
+            else:
+                return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
