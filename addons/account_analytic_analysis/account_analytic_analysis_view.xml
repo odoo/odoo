@@ -59,7 +59,7 @@
 			    <td><field name="invoice_on_timesheets" nolabel="1"/></td>
 			    <td><field class="oe_th_110px" name="hours_qtt_est" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td class="oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-			    <td class="oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+			    <td class="oe_th_110px oe_border_right"><field name="remaining_hours_to_invoice" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td class="oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td width="10px"></td>
 			    <td><button icon="terp-go-week" class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
