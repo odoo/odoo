@@ -135,6 +135,10 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <group>
+                      <field name="name" string="Expenses" filter_domain="[('name','ilike',self)]"/>
+                      <separator orientation="vertical"/>
+                      <field name="date"/>
+                      <separator orientation="vertical"/>
                       <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
                       <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
                         help="Confirmed Expense"/>
@@ -142,12 +146,8 @@
                         help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
                       <field name="employee_id"/>
-                      <field name="date"/>
-                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                      </field>
-                      <field name="name"/>
-                      <field name="user_id"  string="User">
-                      </field>
+                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}"/>
+                      <field name="user_id"  string="User"/>
                 </group>
                 <newline />
                 <group expand="0" string="Group By...">

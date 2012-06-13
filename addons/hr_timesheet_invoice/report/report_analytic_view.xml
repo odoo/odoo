@@ -114,10 +114,11 @@
             <field name="arch" type="xml">
                 <search string="Analytic Lines to Invoice">
                    <group>
-                        <field name="name"/>
-                        <field name="month"/>
+                        <field name="name" string="Analytic Lines" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="product_id"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="month"/>
                    </group>
                </search>
             </field>

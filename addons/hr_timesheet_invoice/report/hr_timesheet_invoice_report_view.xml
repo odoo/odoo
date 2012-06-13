@@ -47,12 +47,12 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group>
-                      <field name="user_id" widget="selection">
-                          <filter icon="terp-personal"
+                      <filter icon="terp-personal"
                               string="Non Assigned timesheets to users"
                               help="Non Assigned timesheets to users"
                               domain="[('user_id','=',False)]"/>
-                      </field>
+                      <separator orientation="vertical"/>
+                      <field name="user_id" widget="selection"/>
                       <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="product_id"/>
                     </group>
@@ -150,9 +150,10 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group>
-                        <field name="name"/>
-                        <field name="month"/>
+                        <field name="name" string="Timesheet by users" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="user_id"/>
+                        <field name="month"/>
                     </group>
                 </search>
             </field>
@@ -282,10 +283,11 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                     <group>
-                        <field name="name"/>
-                        <field name="month"/>
+                        <field name="name" string="Timesheet by account" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id"/>
+                        <field name="month"/>
                     </group>
                 </search>
             </field>
@@ -350,10 +352,11 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by account">
                     <group>
-                        <field name="name"/>
-                        <field name="month"/>
+                        <field name="name" string="Timesheet by account" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id"/>
+                        <field name="month"/>
                     </group>
                 </search>
             </field>
