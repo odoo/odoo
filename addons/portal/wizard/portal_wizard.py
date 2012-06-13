@@ -116,8 +116,8 @@ class wizard(osv.osv_memory):
                 # add one user per contact, or one user if no contact
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
-#                else:
-#                    user_ids.append({'lang': p.lang or 'en_US', 'name': p.name,'user_email':p.user_email, 'parent_id': p.id})
+                if not p.is_company: 
+                    user_ids.append({'lang': p.lang or 'en_US', 'name': p.name,'user_email':p.email, 'partner_id': p.id})
         
         return user_ids
 
@@ -175,6 +175,9 @@ class wizard(osv.osv_memory):
 
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
+            if not wiz.user_ids:
+                raise osv.except_osv(_('User required'),
+                _('Create atleast one user for portal.'))
             # determine existing users
             portal_users=[portal_user.id for portal_user in wiz.portal_id.group_id.users]
             add_users=[]
@@ -290,7 +293,8 @@ class wizard_user(osv.osv_memory):
     ]
 
     _defaults = {  
-        'lang': lambda self,cr,uid,c: self.browse(cr, uid, uid, c).partner_id.lang or 'en_US',
+        'lang': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).partner_id.lang or 'en_US',
+        'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         }
     
 wizard_user()
