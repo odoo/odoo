@@ -55,7 +55,7 @@ class account_period_close(osv.osv_memory):
 
                     # Log message for Period
                     for period_id, name in period_pool.name_get(cr, uid, [id]):
-                        period_pool.log(cr, uid, period_id, "Period '%s' is closed, no more modification allowed for this period." % (name))
+                        period_pool.message_append_note(cr, uid, [period_id], body=_("Period '%s' is closed, no more modification allowed for this period.") % (name))
         return {'type': 'ir.actions.act_window_close'}
 
 account_period_close()
