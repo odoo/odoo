@@ -1248,19 +1248,26 @@ class account_analytic_account(osv.osv):
         'use_tasks': fields.boolean('Tasks Management'),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
-#    _defaults = {
-#        'use_tasks': True,
-#    }
-    
-    def project_create(self,cr,uid,analytic_account_id,vals,context=None):
-        res = {}
+
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        '''
+        This function is used to decide if a project needs to be automatically created or not when an analytic account is created. It returns True if it needs to be so, False otherwise.
+        '''
+        return vals.get('use_tasks')
+
+    def project_create(self, cr, uid, analytic_account_id, vals, context=None):
+        '''
+        This function is called at the time of analytic account creation and is used to create a project automatically linked to it if the conditions are meet.
+        '''
         project_pool = self.pool.get('project.project')
         project_id = project_pool.search(cr, uid, [('name','=',vals.get('name'))])
-        if not project_id:
-            res['name'] = vals.get('name')
-            res['analytic_account_id'] = analytic_account_id
-            project_pool.create(cr, uid, res, context=context)
-        return True
+        if not project_id and self._trigger_project_creation(vals):
+            project_values = {
+                'name': vals.get('name'),
+                'analytic_account_id': analytic_account_id,
+            }
+            return project_pool.create(cr, uid, project_values, context=context)
+        return False
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -1268,8 +1275,7 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
-        if vals.get('use_tasks', False):
-            self.project_create(cr, uid, analytic_account_id, vals, context)
+        self.project_create(cr, uid, analytic_account_id, vals, context=context)
         return analytic_account_id
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
