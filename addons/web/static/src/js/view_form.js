@@ -549,7 +549,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return $.Deferred().reject();
         } else {
             return $.when(this.reload()).pipe(function () {
-                return $.when(r).then(success); }, null);
+                return r; })
+                    .then(success);
         }
     },
     /**
@@ -583,8 +584,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 this.sidebar.attachments.do_update();
             }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
-            this.reload();
-            return $.when(_.extend(r, {created: true})).then(success);
+            return $.when(this.reload()).pipe(function () {
+                return _.extend(r, {created: true}); })
+                    .then(success);
         }
     },
     on_action: function (action) {
