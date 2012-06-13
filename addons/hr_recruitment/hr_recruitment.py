@@ -311,7 +311,7 @@ class hr_applicant(base_stage, osv.Model):
             # Get meeting views
             search_view = data_obj.get_object(cr, uid, 'crm', 'view_crm_case_meetings_filter', context)
             calendar_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_calendar_view_meet', context)
-            form_view = data_obj.get_object(cr, uid, 'hr_recruitment', 'crm_case_form_view_meet1', context)
+            form_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_form_view_meet', context)
             tree_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_tree_view_meet', context)
             category = data_obj.get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
             context.update({
@@ -575,7 +575,7 @@ hr_job()
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
     _columns = {
-        'applicant_id': fields.many2one('hr.applicant','Applicant Meeting'),
+        'applicant_id': fields.many2one('hr.applicant','Applicant'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
