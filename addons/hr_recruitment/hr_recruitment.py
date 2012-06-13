@@ -187,7 +187,7 @@ class hr_applicant(base_stage, osv.Model):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'probability': fields.float('Probability'),
-        'partner_id': fields.many2one('res.partner', 'Contact Name'),
+        'partner_id': fields.many2one('res.partner', 'Contact'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
@@ -309,26 +309,18 @@ class hr_applicant(base_stage, osv.Model):
         value = {}
         for opp in self.browse(cr, uid, ids, context=context):
             # Get meeting views
-            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'], context=context)
-            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            id2 = data_obj._get_id(cr, uid, 'hr_recruitment', 'crm_case_form_view_meet1')
-            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            if id1:
-                id1 = data_obj.browse(cr, uid, id1, context=context).res_id
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            if id3:
-                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-            cate_id = self.pool.get('crm.case.categ').search(cr,uid,[('name','=','Interview')])
-
+            search_view = data_obj.get_object(cr, uid, 'crm', 'view_crm_case_meetings_filter', context)
+            calendar_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_calendar_view_meet', context)
+            form_view = data_obj.get_object(cr, uid, 'hr_recruitment', 'crm_case_form_view_meet1', context)
+            tree_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_tree_view_meet', context)
+            category = data_obj.get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
             context.update({
                 'default_applicant_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
-                'default_categ_id':cate_id and cate_id[0],
-                'default_name': opp.name
+                'default_categ_id': category.id,
+                'default_name': opp.name,
             })
             value = {
                 'name': ('Meetings'),
@@ -338,10 +330,10 @@ class hr_applicant(base_stage, osv.Model):
                 'view_mode': 'calendar,form,tree',
                 'res_model': 'crm.meeting',
                 'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
+                'views': [(calendar_view.id, 'calendar'), (form_view.id, 'form'), (tree_view.id, 'tree')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
-                'nodestroy': True
+                'search_view_id': search_view.id,
+                'nodestroy': True,
             }
         return value
 
