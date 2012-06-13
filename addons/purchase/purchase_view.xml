@@ -134,7 +134,7 @@
                     <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
-                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
+                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" class="oe_form_button_active_flow"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_form_button_active_flow"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_form_button_active_flow"/>
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_form_button_active_flow"/>
