@@ -93,13 +93,15 @@ class hr_job(osv.osv):
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Total Employees', help='Expected number of employees in total for this job position after new recruitment.',
+        'expected_employees': fields.function(_no_of_employee, string='Total Employees',
+            help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees", help='Number of employees currently having this job position.',
+        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees",
+            help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
@@ -110,7 +112,8 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'),('recruit', 'In Recruitement')], 'Status', readonly=True, required=True, help='By default all job are \'In position\', set it \'In Recruitment\' if recruitment process is going on for this job position.'),
+        'state': fields.selection([('open', 'In Position'), ('recruit', 'In Recruitement')], 'Status', readonly=True, required=True,
+            help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
         'expected_employees': 1,

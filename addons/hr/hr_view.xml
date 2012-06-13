@@ -8,8 +8,7 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25" groups="base.group_hr_manager"/>
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
 
         <!--
         ==========
@@ -349,34 +348,36 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">                
-                <header>
-                    <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
-                    <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
-                </header>
-                <sheet string="Job" layout="auto">
-                    <group col="6" colspan="4">
-                    <field name="name" />
-                    <field name="department_id" />
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                    <field name="no_of_employee"/>
-                    <field name="expected_employees"/>
-                    </group>
-                    <newline/>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <separator colspan="4" string="Job Description"/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                            <separator colspan="4" string="Requirements"/>
-                            <field name="requirements" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Employees">
-                            <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree,form"/>
-                        </page>
-                    </notebook>
-                </sheet>
+                    <header>
+                        <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
+                        <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
+                    </header>
+                    <sheet string="Job">
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="department_id" />
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                                <field name="no_of_employee"/>
+                                <field name="expected_employees"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <label for="description"/>
+                                <field name="description"/>
+                                <label for="requirements"/>
+                                <field name="requirements"/>
+                            </page>
+                            <page string="Employees">
+                                <field name="employee_ids" widget="many2many" mode="tree,form"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -435,7 +436,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_hr_configuration" id="base.menu_hr_job" action="action_hr_job" sequence="6"/>
+        <menuitem parent="hr.menu_hr_configuration" id="menu_hr_job" action="action_hr_job" sequence="6"/>
 
     </data>
 </openerp>
