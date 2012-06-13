@@ -460,7 +460,6 @@ $colour4: #8a89ba
         border-right: 1px solid #afafb6
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
-        line-height: 18px
     a.oe_logo
         width: 220px
         display: block
@@ -652,9 +651,9 @@ $colour4: #8a89ba
             float: right
             background: #8a89ba
             color: #eee
-            font-size: 12px
+            font-size: 10px
             border: 1px solid lightgray
-            padding: 0px 4px 0px 4px
+            padding: 2px 4px
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
             margin: 0px
             @include radius(4px)
@@ -1274,11 +1273,14 @@ $colour4: #8a89ba
             max-width: 960px
             margin: 0 auto
         .oe_form_sheet
-            padding: 18px
             background: white
             min-height: 330px
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            > .oe_form_group
+                margin: 8px 16px
+                width: 97%
+
     // }}}
     // FormView.layout {{{
     .oe_form_invisible
@@ -1467,7 +1469,13 @@ $colour4: #8a89ba
                 overflow: hidden
 
         .oe_form_title
-            width: 55%
+            margin: 16px
+            float: left
+            h1
+                font-size: 22px
+            h2
+                font-size: 14px
+                font-weight: normal
         .oe_form_title:after
             content: "."
             display: block
@@ -1475,11 +1483,11 @@ $colour4: #8a89ba
             clear: both
             visibility: hidden
         .oe_form_button_box
-            width: 200px
-            text-align: center
-
-        .oe_form_group
-            margin: 5px 0px 5px 0px
+            width: 400px
+            margin: 16px
+            button
+                margin-left: 4px
+                float: right
 
         .oe_form_group_cell .oe_kanban_view
             // Hack due to absolute positioning of kanban view messing with o2m
@@ -1529,8 +1537,6 @@ $colour4: #8a89ba
             margin: 0
             padding: 0
         .oe_form_field_image
-            > img
-                min-width: 100px
             padding: 0
             position: relative
             display: inline-block
@@ -1647,6 +1653,14 @@ $colour4: #8a89ba
                     li
                         height: auto
                         line-height: 16px
+        .oe_form_avatar
+            float: left
+            margin: 16px 0 16px 16px
+            img
+                height: 50px
+                @include radius(3px)
+                @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.2))
+                border: none
     .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager
         display: none !important
 
