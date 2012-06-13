@@ -31,39 +31,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wiki Groups" version="7.0">
-                    <sheet layout="auto">
-                        <group col="4" colspan="3" >
-                            ield name="name" select="1"/>
-                            <field name="create_date" readonly="2"/>
-                        </group>
-                        <group col="2" colspan="1">
-                            <field name="method" select="1"/>
-                            <field name="home" select="1" domain="[('group_id','=',active_id)]"
-                                attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
-                        </group>
-                        <notebook colspan="4">
-                            <page string="Notes">
-                                <separator string="Group Description" colspan="4"/>
-                                <field name="notes" colspan="4" nolabel="1"/>
-                            </page>
-                            <page string="Configuration">
-                                <separator string="Page Template" colspan="4"/>
-                                <field name="template" colspan="4" nolabel="1" widget="text_wiki"/>
-                            </page>
-                        </notebook>
-                         <field name="menu_id"/>
-                         <button
-                            name="%(wiki.action_wiki_create_menu)d"
-                             string="Create Menu"
-                              type="action"
-                              icon="gtk-justify-fill"
-                              attrs="{'invisible':[('menu_id','!=',False)]}"/>
-                         <button
-                             name="open_wiki_page"
-                             string="Open Wiki Page"
-                              type="object"
-                              icon="gtk-ok" />
-                    </sheet>      
+                    <group col="4" colspan="3" >
+                        ield name="name" select="1"/>
+                        <field name="create_date" readonly="2"/>
+                    </group>
+                    <group col="2" colspan="1">
+                        <field name="method" select="1"/>
+                        <field name="home" select="1" domain="[('group_id','=',active_id)]"
+                            attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Notes">
+                            <separator string="Group Description" colspan="4"/>
+                            <field name="notes" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Configuration">
+                            <separator string="Page Template" colspan="4"/>
+                            <field name="template" colspan="4" nolabel="1" widget="text_wiki"/>
+                        </page>
+                    </notebook>
+                     <field name="menu_id"/>
+                     <button
+                        name="%(wiki.action_wiki_create_menu)d"
+                         string="Create Menu"
+                          type="action"
+                          icon="gtk-justify-fill"
+                          attrs="{'invisible':[('menu_id','!=',False)]}"/>
+                     <button
+                         name="open_wiki_page"
+                         string="Open Wiki Page"
+                          type="object"
+                          icon="gtk-ok" />
                 </form>
             </field>
         </record>
