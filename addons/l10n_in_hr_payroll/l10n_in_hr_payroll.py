@@ -104,14 +104,14 @@ class payroll_advice(osv.osv):
     _columns = {
         'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
-        'date': fields.date('Date', states={'draft': [('readonly', False)]},),
+        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Date is used to search Payslips."),
         'state':fields.selection([
             ('draft','Draft'),
             ('confirm','Confirm'),
             ('cancel','Cancelled'),
         ],'State', select=True, readonly=True),
         'number':fields.char('Number', size=16, readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}),
+        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Chaque Nos', size=256),
         'company_id':fields.many2one('res.company', 'Company',required=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank Address from whcih the salary is going to be paid"),
@@ -123,6 +123,8 @@ class payroll_advice(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'note': "Bank Payment advice contain the payment amount, payment date, company name, bank and other information of the payment."
+
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
