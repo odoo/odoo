@@ -151,7 +151,7 @@
         <spacer length="1.0cm" />
         <para style="title" t="1">Leaves Summary <xsl:value-of select="report/name" /></para>
         <spacer length="0.5cm" />
-        <para style="normal-title" t="1">Analyze from <u><xsl:value-of select="report/from" /></u> to <u> <xsl:value-of select="report/to" /> </u> of the <u><xsl:value-of select="report/type" /></u> Leaves. </para>
+        <para style="normal-title" t="1">Analyze from <u><xsl:value-of select="report/from" /></u> to <u> <xsl:value-of select="report/to" /> </u> of the <u><xsl:value-of select="report/type" /></u> leaves. </para>
         <spacer length="1.0cm" />
         <xsl:variable name="cols_legend">
             <xsl:text>0.7cm,5.0cm</xsl:text>
@@ -236,7 +236,7 @@
             <xsl:attribute name="colWidths"><xsl:value-of select="$cols_legend"/></xsl:attribute>
             <tr>
                     <td>Color</td>
-                    <td>Leaves Type</td>
+                    <td>Leave Type</td>
 
             </tr>
             <xsl:for-each select="report/legend">

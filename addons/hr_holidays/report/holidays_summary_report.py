@@ -107,9 +107,9 @@ class report_custom(report_rml):
         day_diff=eom-som
 
         name = ''
-        if data['form'].has_key('emp') and len(data['form']['emp']) == 1:
-            name = 'of'+' '+obj_emp.read(cr, uid, data['form']['emp'][0], ['name'])['name']
-            
+        if len(data['form'].get('emp', ())) == 1:
+            name = obj_emp.read(cr, uid, data['form']['emp'][0], ['name'])['name']
+
         if data['form']['holiday_type']!='both':
             type=data['form']['holiday_type']
             if data['form']['holiday_type']=='Confirmed':
