@@ -6,11 +6,11 @@
             <field name="model">knowledge.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Knowledge" layout="manual">
-                    <div class="oe_form_topbar">
+                <form string="Configure Knowledge" version="7.0">
+                    <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
-                    </div>
+                    </header>
                     <sheet layout="auto">
                         <separator string="Wiki" colspan="4"/>
                         <field name="module_wiki_faq"/>

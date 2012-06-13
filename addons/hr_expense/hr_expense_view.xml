@@ -35,8 +35,6 @@
                     <field name="currency_id"/>
                     <field name="amount"/>
                     <field name="state"/>
-                    <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
-                    <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -65,20 +63,17 @@
             <field name="type">form</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
+                <form string="Expenses Sheet" version="7.0">
+                <header>
                     <button name="confirm" states="draft" string="Submit to Manager" type="workflow"/>
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user"/>
                     <button name="invoice" states="accepted" string="Invoice" type="object" groups="base.group_hr_user"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Expenses Sheet" layout="auto">
-                    <group colspan="4" col="6">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                </header>
+                <sheet>
+                    <group col="4">
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="name"/>
                         <field name="ref"/>
@@ -87,11 +82,10 @@
                         <field name="department_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Description">
-                            <newline/>
-                            <field colspan="4" name="line_ids" nolabel="1" context="{'currency_id': currency_id}">
-                                <form string="Expense Lines">
+                            <field name="line_ids" context="{'currency_id': currency_id}">
+                                <form string="Expense Lines" version="7.0">
                                     <group col="6" colspan="4">
                                         <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
                                         <field name="name" colspan="4"/>
@@ -113,19 +107,19 @@
                             </field>
                         </page>
                         <page string="Other Info">
-                            <group col="2" colspan="2">
-                            <separator colspan="2" string="Accounting Data"/>
-                            <field name="journal_id"/>
-                            <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
+                            <group>
+                                <group string="Accounting Data">
+                                    <field name="journal_id"/>
+                                    <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
+                                </group>
+                                <group groups="base.group_no_one" string="Validation">
+                                    <field name="date_confirm" readonly="1"/>
+                                    <field name="date_valid" readonly="1"/>
+                                    <field name="user_valid"/>
+                                </group>
                             </group>
-                            <group col="2" colspan="2" groups="base.group_no_one">
-                                <separator colspan="2" string="Validation"/>
-                                <field name="date_confirm" readonly = "1"/>
-                                <field name="date_valid" readonly = "1"/>
-                                <field name="user_valid"/>
-                            </group>
-                            <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <separator string="Notes"/>
+                            <field name="note"/>
                         </page>
                     </notebook>
                 </sheet>

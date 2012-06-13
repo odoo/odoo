@@ -12,12 +12,12 @@
             <field name="model">hr.department</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="department">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
+                <form string="department" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
                         <field name="parent_id"/>
-                        <field name="manager_id" select="1"/>
-                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
+                        <field name="manager_id"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                 </form>
             </field>

@@ -476,10 +476,12 @@ openerp.mail = function(session) {
         // QWeb template to use when rendering the object
         template: 'RecordThread',
 
-        init: function() {
+       init: function() {
             this._super.apply(this, arguments);
             this.see_subscribers = true;
             this.thread = null;
+            this.params = this.get_definition_options();
+            this.params.thread_level = this.params.thread_level || 0;
             // datasets
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -520,12 +522,8 @@ openerp.mail = function(session) {
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.destroy();
-            // hack: for groups and users
-            if (this.view.model == 'mail.group') thread_level = 1;
-            if (this.view.model == 'res.users') thread_level = 1;
-            else thread_level = 0;
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
-                                                    'thread_level': thread_level, 'show_post_comment': true, 'limit': 15});
+                                                    'thread_level': this.params.thread_level, 'show_post_comment': true, 'limit': 15});
             var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
             return fetch_sub_done && thread_done;
         },
@@ -537,13 +535,13 @@ openerp.mail = function(session) {
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
-            var sub_node = this.$element.find('div.oe_mail_recthread_followers')
-            sub_node.empty();
-            $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
+            var user_list = this.$element.find('ul.oe_mail_followers_display').empty();
+            this.$element.find('div.oe_mail_recthread_followers h4').html('Followers (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
                 var mini_url = self.thread_get_avatar('res.users', 'avatar', record.id);
-                $('<img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
+                $('<li><img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '"/>' +
+                  '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-id="' + record.id + '">' + record.name + '</a></li>').appendTo(user_list);
             });
             if (self.is_subscriber) {
                 self.$element.find('button.oe_mail_button_follow').hide();
