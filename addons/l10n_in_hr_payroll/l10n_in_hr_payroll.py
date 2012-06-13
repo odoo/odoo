@@ -129,6 +129,7 @@ class payroll_advice(osv.osv):
         payslip_pool = self.pool.get('hr.payslip')
         advice_line_pool = self.pool.get('hr.payroll.advice.line')
         payslip_line_pool = self.pool.get('hr.payslip.line')
+        sequence_pool = self.pool.get('ir.sequence')
 
         for advice in self.browse(cr, uid, ids, context=context):
             old_line_ids = advice_line_pool.search(cr, uid, [('advice_id','=',advice.id)], context=context)
@@ -152,7 +153,8 @@ class payroll_advice(osv.osv):
                             'bysal': line.total
                             }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
-        return True
+        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
+        self.write(cr, uid, ids, {'number':number}, context=context)
 
     def confirm_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
