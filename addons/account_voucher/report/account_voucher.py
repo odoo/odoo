@@ -36,6 +36,8 @@ class report_voucher(report_sxw.rml_parse):
         })
 
     def convert(self, amount, cur):
+        if cur is None:
+            cur='euro'
         amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur)
         return amt_en
 

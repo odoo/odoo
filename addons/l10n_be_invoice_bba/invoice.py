@@ -24,7 +24,6 @@ import re, time, random
 from osv import fields, osv
 from tools.translate import _
 import logging
-logger=logging.getLogger(__name__)
 
 """
 account.invoice object:
@@ -41,7 +40,7 @@ class account_invoice(osv.osv):
                 context=context)
         res[[i for i,x in enumerate(res) if x[0] == 'none'][0]] = ('none', 'Free Communication')
         res.append(('bba', 'BBA Structured Communication'))
-        #logger.warning('addons.'+self._name, logging.LOG_WARNING, 'reference_type =  %s' %res ) 
+        #logging('l1on.be.invoice.bba').warning('reference_type =  %s' %res ) 
         return res
 
     def check_bbacomm(self, val):
@@ -68,7 +67,7 @@ class account_invoice(osv.osv):
         result = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
             date_invoice, payment_term, partner_bank_id, company_id)
 #        reference_type = self.default_get(cr, uid, ['reference_type'])['reference_type']
-#        logger.warning('addons.'+self._name, logging.LOG_WARNING, 'partner_id %s' % partner_id)
+#        logging('l1on.be.invoice.bba').warning('partner_id %s' % partner_id)
         reference = False
         reference_type = 'none'
         if partner_id:        

@@ -28,7 +28,6 @@ import logging
 import re
 from traceback import format_exception
 from sys import exc_info
-logger=logging.getLogger(__name__)
 
 class account_coda_import(osv.osv_memory):
     _name = 'account.coda.import'
@@ -816,7 +815,7 @@ class account_coda_import(osv.osv_memory):
                                         ttype = line['type'] == 'supplier' and 'payment' or 'receipt',
                                         date = line['val_date'],
                                         context = context)
-                                    #logger.warning('addons.'+self._name, logging.LOG_WARNING, 'voucher_dict = %s' % voucher_dict) 
+                                    #logging('account.coda').warning('voucher_dict = %s' % voucher_dict) 
                                     voucher_line_vals = False
                                     if voucher_dict['value']['line_ids']:
                                         for line_dict in voucher_dict['value']['line_ids']:
@@ -889,22 +888,19 @@ class account_coda_import(osv.osv_memory):
                 nb_err += 1
                 err_string += _('\nError ! ') + str(e)
                 tb = ''.join(format_exception(*exc_info()))
-                logger.warning('addons.'+self._name, logging.LOG_ERROR,
-                    'Application Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
+                logging('account.coda').error('Application Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
             except Exception, e:
                 cr.rollback()
                 nb_err += 1
                 err_string += _('\nSystem Error : ') + str(e)
                 tb = ''.join(format_exception(*exc_info()))
-                logger.warning('addons.'+self._name, logging.LOG_ERROR,
-                    'System Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
+                logging('account.coda').error('System Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
             except :
                 cr.rollback()
                 nb_err += 1
                 err_string = _('\nUnknown Error : ') + str(e)
                 tb = ''.join(format_exception(*exc_info()))
-                logger.warning('addons.'+self._name, logging.LOG_ERROR,
-                    'Unknown Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
+                logging('account.coda').error('Unknown Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
 
         # end 'for statement in coda_statements'
                           

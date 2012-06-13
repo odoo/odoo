@@ -35,6 +35,7 @@ class report_voucher_print(report_sxw.rml_parse):
         })
 
     def convert(self, amount, cur):
+        print "\n\n\n =-=-=-convert -=->", cur
         amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur)
         return amt_en
 

@@ -276,7 +276,6 @@ class mail_thread(osv.osv):
 
         ir_attachment = self.pool.get('ir.attachment')
         mail_message = self.pool.get('mail.message')
-
         new_msg_ids = []
         for thread in threads:
             to_attach = []

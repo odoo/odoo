@@ -212,7 +212,6 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
-    logger = logging.getLogger(__name__)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -295,8 +294,7 @@ class account_account(osv.osv):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            self.logger.warning('addons.'+self._name, logging.LOG_DEBUG,
-                                      'Filters: %s'%filters)
+            logging.getLogger('account').debug('Filters: %s'%filters)
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -312,8 +310,7 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            self.logger.warning('addons.'+self._name, logging.LOG_DEBUG,
-                                      'Status: %s'%cr.statusmessage)
+            logging.getLogger('account').debug('Status: %s'%cr.statusmessage)
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
@@ -886,6 +883,7 @@ account_journal()
 class account_fiscalyear(osv.osv):
     _name = "account.fiscalyear"
     _description = "Fiscal Year"
+    _inherit = 'mail.thread'
     _columns = {
         'name': fields.char('Fiscal Year', size=64, required=True),
         'code': fields.char('Code', size=6, required=True),
@@ -982,6 +980,7 @@ account_fiscalyear()
 class account_period(osv.osv):
     _name = "account.period"
     _description = "Account period"
+    _inherit = 'mail.thread'
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
         'code': fields.char('Code', size=12),
@@ -2095,8 +2094,7 @@ class account_tax(osv.osv):
         }
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
-        logger.warning("warning", logging.LOG_WARNING,
-            "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
+        logging.getLogger('account').debug("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
     def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):

@@ -22,9 +22,7 @@
 
 from osv import osv, fields
 import decimal_precision as dp
-import logging
 from tools.translate import _
-logger=logging.getLogger(__name__)
 
 class coda_bank_account(osv.osv):
     _name= 'coda.bank.account'
