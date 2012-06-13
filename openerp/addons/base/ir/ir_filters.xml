@@ -51,16 +51,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Filter Name"/>
+                    <separator orientation="vertical"/>
                     <filter string="Personal" domain="[('user_id','!=',False)]" help="Filters visible only for one user"/>
                     <filter string="Shared" domain="[('user_id','=',False)]" help="Filters shared with all users"/>
+                    <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]"
+                        name="my_filters"
+                        string="My Filters"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="model_id"/>
-                    <field name="user_id">
-                        <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]"
-                            name="my_filters"
-                            string="My Filters" />
-                    </field>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>
