@@ -321,61 +321,63 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
-                    <label for="product_id" class="oe_form_readonly_hidden"/>
-                    <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_form_inline"/>: 
-                        <field name="product_qty" class="oe_form_inline"/>
-                        <field name="product_uom" class="oe_form_inline"/>
-                    </h1>
-                    <label for="routing_id" class="oe_form_readonly_hidden"/>
-                    <h2>
-                        <field name="routing_id"  groups="mrp.group_mrp_routings"/>
-                    </h2>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="code" string="Reference"/>
-                        </group>
-                        <group>
-                            <field name="type"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="product_uos_qty" groups="product.group_uos" />
-                            <field name="product_uos"  groups="product.group_uos"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Components">
-                            <field name="bom_lines" widget="one2many_list">
-                                <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom"/>
-                                    <field name="name" invisible="1"/>
-                                    <field name="date_start"/>
-                                    <field name="date_stop"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
-                            <field name="revision_ids"/>
-                        </page>
-                        <page string="Properties" groups="product.group_mrp_properties">
-                            <group col="4">
-                                <field name="position"/>
-                                <field name="active"/>
-                                <field name="sequence"/>
-                                <field name="bom_id"/>
-
-                                <field name="date_start"/>
-                                <field name="date_stop"/>
-                                <field name="product_rounding"/>
-                                <field name="product_efficiency"/>
-                            </group>
-                            <separator string="Properties"/>
-                            <field name="property_ids"/>
-                        </page>
-                    </notebook>
-                    <newline/>
+                	<sheet>
+	                    <label for="product_id" class="oe_form_readonly_hidden"/>
+	                    <h1>
+	                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_form_inline"/>: 
+	                        <field name="product_qty" class="oe_form_inline"/>
+	                        <field name="product_uom" class="oe_form_inline"/>
+	                    </h1>
+	                    <label for="routing_id" class="oe_form_readonly_hidden"/>
+	                    <h2>
+	                        <field name="routing_id"  groups="mrp.group_mrp_routings"/>
+	                    </h2>
+	                    <group>
+	                        <group>
+	                            <field name="name"/>
+	                            <field name="code" string="Reference"/>
+	                        </group>
+	                        <group>
+	                            <field name="type"/>
+	                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+	                            <field name="product_uos_qty" groups="product.group_uos" />
+	                            <field name="product_uos"  groups="product.group_uos"/>
+	                        </group>
+	                    </group>
+	                    <notebook>
+	                        <page string="Components">
+	                            <field name="bom_lines" widget="one2many_list">
+	                                <tree string="Components" editable="bottom">
+	                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+	                                    <field name="product_qty"/>
+	                                    <field name="product_uom"/>
+	                                    <field name="name" invisible="1"/>
+	                                    <field name="date_start"/>
+	                                    <field name="date_stop"/>
+	                                </tree>
+	                            </field>
+	                        </page>
+	                        <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
+	                            <field name="revision_ids"/>
+	                        </page>
+	                        <page string="Properties" groups="product.group_mrp_properties">
+	                            <group col="4">
+	                                <field name="position"/>
+	                                <field name="active"/>
+	                                <field name="sequence"/>
+	                                <field name="bom_id"/>
+	
+	                                <field name="date_start"/>
+	                                <field name="date_stop"/>
+	                                <field name="product_rounding"/>
+	                                <field name="product_efficiency"/>
+	                            </group>
+	                            <separator string="Properties"/>
+	                            <field name="property_ids"/>
+	                        </page>
+	                    </notebook>
+	                    <newline/>
+                    </sheet>
                 </form>
             </field>
         </record>
