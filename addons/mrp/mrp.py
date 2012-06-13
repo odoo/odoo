@@ -1112,7 +1112,7 @@ class mrp_production_product_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
