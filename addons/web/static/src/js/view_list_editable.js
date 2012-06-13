@@ -402,12 +402,12 @@ openerp.web.list_editable = function (openerp) {
                 if (this.modifiers.tree_invisible) {
                     var old_invisible = this.invisible;
                     this.invisible = true;
-                    this._super();
+                    this._super.apply(this, arguments);
                     this.invisible = old_invisible;
                 } else if (this.invisible) {
                     this.$element.children().css('visibility', 'hidden');
                 } else {
-                    this._super();
+                    this._super.apply(this, arguments);
                 }
             }
         });
