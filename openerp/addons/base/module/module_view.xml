@@ -42,18 +42,17 @@
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <group col='10' colspan='4'>
-                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
-
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
-                        <separator orientation="vertical"/>
                         <field name="name"
                             filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]"
                             string="Name"/>
-                        <field name="description" string="Keywords"/>
+                        <separator orientation="vertical"/>
+                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                        <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                        <separator orientation="vertical"/>
                         <field name="category_id"/>
+                        <field name="description" string="Keywords"/>
                         <newline/>
                         <group expand="0" string="Group By...">
                             <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
