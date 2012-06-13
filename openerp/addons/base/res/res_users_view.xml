@@ -148,8 +148,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Users">
-                    <field name="name"/>
-                    <field name="login"/>
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('login','ilike',self)]"
+                    string="User"/>
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                 </search>
             </field>
