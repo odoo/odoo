@@ -1420,16 +1420,8 @@ class Binary(openerpweb.Controller):
         # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window,
-                            callback = win[%s];
-                        if (typeof(callback) === 'function') {
-                            callback.apply(this, %s);
-                        } else {
-                            win.jQuery('#oe_notification', win.document).notify('create', {
-                                title: "Ajax File Upload",
-                                text: "Could not find callback"
-                            });
-                        }
+                        var win = window.top.window;
+                        win.jQuery(win).trigger(%s, %s);
                     </script>"""
             data = ufile.read()
             args = [len(data), ufile.filename,
@@ -1444,11 +1436,8 @@ class Binary(openerpweb.Controller):
         Model = req.session.model('ir.attachment')
         try:
             out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window,
-                            callback = win[%s];
-                        if (typeof(callback) === 'function') {
-                            callback.call(this, %s);
-                        }
+                        var win = window.top.window;
+                        win.jQuery(win).trigger(%s, %s);
                     </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,

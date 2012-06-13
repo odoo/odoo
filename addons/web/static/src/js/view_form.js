@@ -3973,9 +3973,18 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
 
 instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     init: function(field_manager, node) {
+        var self = this;
         this._super(field_manager, node);
-        this.iframe = this.element_id + '_iframe';
         this.binary_value = false;
+        this.fileupload_id = _.uniqueId('oe_fileupload');
+        $(window).on(this.fileupload_id, function() {
+            var args = [].slice.call(arguments).slice(1);
+            self.on_file_uploaded.apply(self, args);
+        });
+    },
+    stop: function() {
+        $(window).off(this.fileupload_id);
+        this._super.apply(this, arguments);
     },
     initialize_content: function() {
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
@@ -3995,8 +4004,8 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend(
         // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
         // http://www.html5rocks.com/tutorials/file/dndfiles/
         // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
-        window[this.iframe] = this.on_file_uploaded;
-        if ($(e.target).val() != '') {
+
+        if ($(e.target).val() !== '') {
             this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
             this.$element.find('form.oe-binary-form').submit();
             this.$element.find('.oe-binary-progress').show();
@@ -4004,7 +4013,6 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend(
         }
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
-        delete(window[this.iframe]);
         if (size === false) {
             this.do_warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web crashmanager

@@ -1508,13 +1508,12 @@ $colour4: #8a89ba
     /* http://www.quirksmode.org/dom/inputfile.html
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
-    .oe_form
-        .oe-binary-file-set
-            overflow: hidden
-            position: relative
-            display: inline-block
-            width: 45px
-            height: 30px
+    .oe_hidden_input_file
+        overflow: hidden
+        position: relative
+        display: inline-block
+        width: 45px
+        height: 30px
         input.oe-binary-file
             z-index: 0
             line-height: 0
@@ -1528,6 +1527,7 @@ $colour4: #8a89ba
             -ms-filter: "alpha(opacity=0)"
             margin: 0
             padding: 0
+    .oe_form
         .oe_form_field_image
             > img
                 min-width: 100px

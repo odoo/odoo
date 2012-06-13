@@ -528,7 +528,7 @@
 </t>
 <t t-name="Sidebar.attachments">
     <div class="oe-sidebar-attachments-toolbar">
-        <div class="oe-binary-file-set" style="float: right">
+        <div class="oe_hidden_input_file" style="float: right">
             <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
                 method="post" enctype="multipart/form-data" action="/web/binary/upload_attachment">
                 <input type="hidden" name="session_id" t-att-value="session.session_id"/>
@@ -1050,20 +1050,12 @@
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image">
         <div class="oe_form_field_image_controls oe_form_readonly_hidden">
-            <div class="oe-binary-file-set">
-                <form class="oe-binary-form" t-att-target="widget.iframe"
-                    method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                    <input type="hidden" name="session_id" value=""/>
-                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                    <button class="oe_button" type="button" title="Set Image">
-                        <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                    </button>
-                    <input type="file" class="oe-binary-file" name="ufile"
-                        t-att-tabindex="widget.node.attrs.tabindex"
-                        t-att-autofocus="widget.node.attrs.autofocus"
-                    />
-                </form>
-            </div>
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <button class="oe_button" type="button" title="Set Image">
+                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                </button>
+            </t>
             <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
             </button>
@@ -1071,7 +1063,6 @@
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </div>
     </span>
 </t>
@@ -1099,18 +1090,14 @@
                 <table cellspacing="0" cellpadding="0" border="0">
                 <tr>
                     <td>
-                        <div class="oe-binary-file-set" style="width: 80px; height:22px;">
-                            <form class="oe-binary-form" t-att-target="widget.iframe"
-                                method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                                <input type="hidden" name="session_id" value=""/>
-                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                                <button class="oe_button oe_field_button" type="button" title="Set Image">
-                                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                                    <span>Select</span>
-                                </button>
-                                <input type="file" class="oe-binary-file" name="ufile"/>
-                            </form>
-                        </div>
+                        <t t-call="HiddenInputFile">
+                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                            <t t-set="fileupload_style">width: 83px;</t>
+                            <button class="oe_button oe_field_button" type="button" title="Set Image">
+                                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                                <span>Select</span>
+                            </button>
+                        </t>
                     </td>
                     <td>
                         <button class="oe_button oe-binary-file-save" type="button" title="Save As">
@@ -1130,7 +1117,6 @@
             <td class="oe-binary-progress" style="display: none" nowrap="true">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
-                <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
             </td>
         </tr>
         </table>
@@ -1140,6 +1126,18 @@
             <a href="javascript:void(0)" class="oe_form_uri"/>
         </span>
     </t>
+</t>
+<t t-name="HiddenInputFile">
+    <div class="oe_hidden_input_file" t-att-style="fileupload_style">
+        <form class="oe-binary-form" t-att-target="fileupload_id"
+            method="post" enctype="multipart/form-data" action="/web/binary/upload">
+            <input type="hidden" name="session_id" value=""/>
+            <input type="hidden" name="callback" t-att-value="fileupload_id"/>
+            <t t-raw="__content__"/>
+            <input type="file" class="oe-binary-file" name="ufile"/>
+        </form>
+        <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+    </div>
 </t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button oe_form_button"
