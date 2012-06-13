@@ -123,7 +123,7 @@ class payroll_advice(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-        'note': "Bank Payment advice contain the payment amount, payment date, company name, bank and other information of the payment."
+        'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
 
     }
 
@@ -161,9 +161,8 @@ class payroll_advice(osv.osv):
     def confirm_sheet(self, cr, uid, ids, context=None):
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
-                raise osv.except_osv(_('No Payment Advice Lines !'), _('Please create some advice lines.'))
-            else:
-                return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+                raise osv.except_osv(_('No Payment Advice Lines !'), _('You can not confirm Payment advice without advice lines.'))
+        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
