@@ -139,6 +139,7 @@ openerp.web.list_editable = function (openerp) {
                 self.edition_form.stop();
                 self.edition_form.$element.remove();
                 delete self.edition_form;
+                self.dataset.index = null;
                 delete self.edition_id;
                 delete self.edition;
             });
@@ -232,6 +233,10 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
+                self.dataset.index = _(self.dataset.ids).indexOf(record_id) || null;
+                if (self.dataset.index === -1) {
+                    self.dataset.index = null;
+                }
                 self.edition_form = _.extend(new openerp.web.ListEditableFormView(self.view, self.dataset, false), {
                     form_template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets,
@@ -360,7 +365,6 @@ openerp.web.list_editable = function (openerp) {
                 [record_id, this.dataset]);
         },
         new_record: function () {
-            this.dataset.index = null;
             this.render_row_as_form();
         },
         render_record: function (record) {
