@@ -106,8 +106,8 @@ class payroll_advice(osv.osv):
         'note': fields.text('Description'),
         'date': fields.date('Date', states={'draft': [('readonly', False)]},),
         'state':fields.selection([
-            ('draft','Draft Sheet'),
-            ('confirm','Confirm Sheet'),
+            ('draft','Draft'),
+            ('confirm','Confirm'),
             ('cancel','Cancelled'),
         ],'State', select=True, readonly=True),
         'number':fields.char('Number', size=16, readonly=True),
