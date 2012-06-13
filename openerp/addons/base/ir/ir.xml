@@ -71,9 +71,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Client Actions">
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="key2"/>
+                    <field name="name"
+                    filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
+                    string="Client Action"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
@@ -202,7 +202,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Sequence"/>
                     <field name="code"/>
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -255,8 +257,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences Type">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                    string="Sequence Type"/>
                 </search>
             </field>
         </record>
@@ -306,8 +309,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Action">
-                    <field name="name"/>
-                    <field name="type"/>
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]"
+                    string="Action"/>
                 </search>
             </field>
         </record>
@@ -390,13 +394,11 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Report xml">
+                <search string="Report Xml">
                     <group col="10" colspan="4">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="type"/>
-                        <field name="report_name"/>
-                        <field name="report_type"/>
+                        <field name="name"
+                        filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
+                        string="Report"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By" colspan="4">
@@ -497,8 +499,9 @@
             <field name="arch" type="xml">
                 <search string="Open a Window">
                     <group col="10" colspan="4">
-                        <field name="name"/>
-                        <field name="res_model"/>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]"
+                        string="Action"/>
                         <field name="view_type"/>
                     </group>
                     <newline/>
@@ -567,9 +570,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wizards">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="wiz_name"/>
+                    <field name="name"
+                    filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]"
+                    string="Wizard"/>
                 </search>
             </field>
         </record>
@@ -656,6 +659,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Views">
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]"
+                    string="View"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_zoom"
                         string="Search"
                         domain="[('type', '=', 'search')]"/>
@@ -666,10 +673,8 @@
                         string="Form"
                         domain="[('type', '=','form')]"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="model"/>
                     <field name="inherit_id"/>
+                    <field name="type"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
@@ -795,28 +800,29 @@
             <field name="arch" type="xml">
                 <search string="Attachments">
                     <group colspan="4" col="10">
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]"
+                        string="Attachment"/>
+                        <field name="create_date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-stage"
                             string="URL"
                             domain="[('type','=','url')]"/>
                         <filter icon="terp-stock_align_left_24"
                             string="Binary"
                             domain="[('type','=','binary')]"/>
+                        <filter string="My Document(s)"
+                            icon="terp-personal"
+                            domain="[('create_uid','=',uid)]"
+                            help="Filter on my documents"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
+                        <field name="create_uid"/>
                         <field name="type"/>
-                        <field name="datas_fname"/>
-                        <field name="create_date"/>
-                        <field name="create_uid">
-                            <filter string="My Document(s)"
-                                icon="terp-personal"
-                                domain="[('create_uid','=',uid)]"
-                                help="Filter on my documents" />
-                        </field>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_no_one"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
@@ -940,26 +946,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Model Description">
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]"
+                    string="Model"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
                         string="In Memory"
                         domain="[('osv_memory', '=', True)]"/>
-                    <separator orientation="vertical"/>
-
                     <filter icon="terp-stock_align_left_24"
                         string="Custom"
                         domain="[('state', '=', 'manual')]"/>
-                    <separator orientation="vertical"/>
-
                     <filter icon="terp-translate"
                         string="Base"
                         domain="[('state', '=', 'base')]"/>
-
-                    <separator orientation="vertical"/>
-
-                    <field name="name"/>
-                    <field name="model"/>
-
-                    <newline/>
                 </search>
             </field>
         </record>
@@ -1028,20 +1027,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fields">
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('field_description','ilike',self)]"
+                    string="Field"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+"
                         string="Required"
                         domain="[('required', '=', True)]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-dialog-close"
                         string="Readonly"
                         domain="[('readonly', '=', True)]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-translate"
                         string="Translate"
                         domain="[('translate', '=', True)]"/>
                     <newline/>
-                    <field name="name"/>
-                    <field name="field_description"/>
                     <field name="model_id"/>
                     <field name="ttype"/>
                     <field name="required"/>
@@ -1050,7 +1049,6 @@
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
-
                 </search>
             </field>
         </record>
@@ -1095,13 +1093,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="External Identifiers">
+                    <field name="name"
+                    filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('module','ilike',self)]"
+                    string="External Identifier"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
                         string="Updatable"
                         domain="[('noupdate', '=', False)]"/>
                     <separator orientation="vertical"/>
-                    <field name="module"/>
-                    <field name="name"/>
-                    <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
                     <newline/>
@@ -1297,7 +1296,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Menu">
-                    <field name="name" string="Menu" />
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Menu"/>
                     <field name="parent_id"/>
                 </search>
             </field>
@@ -1375,7 +1376,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scheduled Actions">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Scheduled Action"/>
                     <field name="user_id" widget="selection"/>
                     <field name="nextcall"/>
                     <field name="active"/>
@@ -1458,22 +1461,24 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Access Controls">
-                <group>
-                        <filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
+                    <group>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Access Control"/>
                         <separator orientation="vertical"/>
+                        <filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
                         <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                         <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
                         <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="model_id"/>
                         <field name="group_id"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
-                     <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
-                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
-                   </group>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
+                        <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1552,16 +1557,18 @@
             <field name="model">ir.rule</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Record rules">
+                <search string="Record Rules">
                     <group>
-                        <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Record Rule"/>
                         <separator orientation="vertical"/>
+                        <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
                         <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                         <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
                         <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                         <separator orientation="vertical"/>
                         <field name="model_id"/>
-                        <field name="name"/>
                         <field name="groups"/>
                     </group>
                 </search>
@@ -1606,7 +1613,7 @@
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <group string="Trigger Configuration" col="4">
                                 <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                                <field name="trigger_obj_id" context="{'key':''}" 
+                                <field name="trigger_obj_id" context="{'key':''}"
                                        domain="[('model_id','=',model_id),('ttype','in',['many2one','int'])]"
                                        attrs="{'required':[('state','=','trigger')]}"/>
                                 <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
@@ -1693,13 +1700,15 @@
             <field name="arch" type="xml">
                 <search string="Server Actions">
                     <group col="10" colspan="4">
-                        <field name="name"/>
-                        <field name="state"/>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Server Action"/>
                         <field name="model_id"/>
+                        <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By" colspan="4" col="4">
-                       <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -1795,7 +1804,7 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/> 
+        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/>
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="menu_ir_actions_todo"/>
 
         <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
@@ -1901,9 +1910,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Outgoing Mail Servers">
-                    <field name="name"/>
-                    <field name="smtp_host"/>
-                    <field name="smtp_user"/>
+                    <field name="name"
+                    filter_domain="['|', '|', ('name','ilike',self), ('smtp_host','ilike',self), ('smtp_user','ilike',self)]"
+                    string="Outgoing Mail Server"/>
                     <field name="smtp_encryption"/>
                 </search>
             </field>
