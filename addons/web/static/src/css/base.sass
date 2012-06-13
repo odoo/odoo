@@ -877,6 +877,17 @@ $colour4: #8a89ba
                     @include box-shadow(none)
     .oe_sidebar
         white-space: nowrap
+        .oe_sidebar_add_attachment
+            cursor: pointer
+            padding-left: 6px
+            margin-top: 6px
+            span
+                font-weight: bold
+            .oe_hidden_input_file
+                width: 200px
+            &:hover
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+                @include box-shadow(none)
     // }}}
     // SearchView {{{
     .oe_searchview

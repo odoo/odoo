@@ -1097,6 +1097,29 @@
 .openerp .oe_sidebar {
   white-space: nowrap;
 }
+.openerp .oe_sidebar .oe_sidebar_add_attachment {
+  cursor: pointer;
+  padding-left: 6px;
+  margin-top: 6px;
+}
+.openerp .oe_sidebar .oe_sidebar_add_attachment span {
+  font-weight: bold;
+}
+.openerp .oe_sidebar .oe_sidebar_add_attachment .oe_hidden_input_file {
+  width: 200px;
+}
+.openerp .oe_sidebar .oe_sidebar_add_attachment:hover {
+  background-color: #f0f0fa;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+  background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -moz-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -ms-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 .openerp .oe_searchview {
   cursor: text;
   position: relative;
