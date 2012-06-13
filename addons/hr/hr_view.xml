@@ -31,23 +31,22 @@
                     <div class="oe_form_title">
                         <label for="name" class="oe_form_readonly_hidden"/>
                         <h1><field name="name"/></h1>
+
+                        <label for="company_id" class="oe_form_readonly_hidden" groups="base.group_multi_company"/>
+                        <h2><field name="company_id" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h2>
+
                         <label for="department_id" class="oe_form_readonly_hidden"/>
-                        <h2>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>,
-                            <field name="department_id" on_change="onchange_department_id(department_id)" />
-                        </h2>
+                        <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                     </div>
                     <notebook>
                         <page string="Personal Information">
                             <group>
-                                <group>
+                                <group string="General">
                                     <field name="user_id" on_change="onchange_user(user_id)"/>
                                     <field name="active"/>
                                     <field name="parent_id" />
                                 </group>
                                 <group groups="base.group_hr_user" string="Social IDs">
-                                    <field name="ssnid"/>
-                                    <field name="sinid"/>
                                     <field name="identification_id"/>
                                     <field name="passport_id"/>
                                     <field name="otherid"/>
@@ -67,13 +66,13 @@
                                     <field name="work_location"/>
                                 </group>
                                 <group string="Job Information">
-                                    <field name="job_id" domain="[('state','!=','old')]"/>
+                                    <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                     <field name="coach_id" />
                                 </group>
                             </group>
                         </page>
                         <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids"/>
+                            <field name="category_ids" widget="many2many_tags"/>
                         </page>
                         <page string="Notes" groups="base.group_hr_user">
                             <field name="notes"/>
@@ -134,6 +133,7 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
+                <field name="last_login"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -143,6 +143,11 @@
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
+                                    <li id="last_login">
+                                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                              <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                        </span>
+                                    </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
@@ -421,9 +426,26 @@
                     <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                     </group>
                 </search>
-             </field>
-         </record>
-
+            </field>
+        </record>
+        
+        <record id="view_hr_job_employee_form" model="ir.ui.view">
+            <field name="name">hr.job.employee.form</field>
+            <field name="model">hr.job</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Job" version="7.0">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="department_id" />
+                    </group>
+                    <label for="description"/>
+                    <field name="description"/>
+                </form>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
