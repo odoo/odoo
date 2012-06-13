@@ -17,9 +17,10 @@
             <field name="arch" type="xml">
                 <form string="Configure Accounting" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_form_button_active_flow"/>
+                        <button string="Apply" type="object" name="execute" class="oe_form_button_hi"/>
                         <button string="Cancel" special="cancel"/>
                     </header>
+                    <sheet>
                     <group string="Accounting Details of Company" col="4">
                         <field name="has_default_company" invisible="1" />
                         <field name="has_chart_of_accounts" invisible="1"/>
@@ -109,6 +110,7 @@
                         </group>
                         <group name="analytic_accounting" invisible="1" string="Analytic Accounting"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
