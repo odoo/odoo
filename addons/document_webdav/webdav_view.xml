@@ -7,14 +7,14 @@
         <field name="model">document.webdav.dir.property</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Properties">
-		<field name="namespace"/>
-		<field name="name"/>
-		<newline />
-		<field name="dir_id" />
-		<field name="do_subst" />
-		<newline />
-		<field name="value" colspan="4" />
+            <form string="Properties" version="7.0">
+                <group col="4">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                    <field name="dir_id" />
+                    <field name="do_subst" />
+                </group>
+                <field name="value" colspan="4" />
             </form>
         </field>
     </record>
@@ -25,9 +25,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Properties" toolbar="1">
-		<field name="dir_id" />
-		<field name="namespace"/>
-		<field name="name"/>
+                <field name="dir_id" />
+                <field name="namespace"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -77,27 +77,28 @@
         <field name="inherit_id" ref="document.view_document_directory_form" />
         <field name="type">form</field>
         <field name="arch" type="xml">
-	    <page string="Dynamic context" position="after">
-		<page string="WebDAV properties">
-		    <label string="These properties will be added to WebDAV requests" colspan="4" />
+        <page string="Dynamic context" position="after" version="7.0">
+        <page string="WebDAV properties">
+            <label string="These properties will be added to WebDAV requests" colspan="4" />
 
-		    <field name="dav_prop_ids" nolabel="1" colspan="4">
-			<tree string="Properties">
-			    <field name="namespace"/>
-			    <field name="name"/>
-			</tree>
-			<form string="Properties">
-			    <field name="namespace"/>
-			    <field name="name"/>
-			    <newline />
-			    <field name="do_subst" />
-			    <newline />
-			    <field name="value" colspan="4" />
-			</form>
-		    </field>
-		</page>
-	    </page>
-	</field>
+            <field name="dav_prop_ids" nolabel="1" colspan="4">
+                <tree string="Properties">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                </tree>
+                <form string="Properties" version="7.0">
+                    <group col="4">
+                        <field name="namespace"/>
+                        <field name="name"/>
+                        <newline />
+                        <field name="do_subst" />
+                    </group>
+                    <field name="value"/>
+                </form>
+            </field>
+        </page>
+        </page>
+    </field>
     </record>
 
     <!-- File properties -->
@@ -106,14 +107,15 @@
         <field name="model">document.webdav.file.property</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Properties">
-		<field name="namespace"/>
-		<field name="name"/>
-		<newline />
-		<field name="file_id" />
-		<field name="do_subst" />
-		<newline />
-		<field name="value" colspan="4" />
+            <form string="Properties" version="7.0">
+                <group col="4">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                    <newline />
+                    <field name="file_id" />
+                    <field name="do_subst" />
+                </group>
+                <field name="value"/>
             </form>
         </field>
     </record>
@@ -124,9 +126,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Properties" toolbar="1">
-		<field name="file_id" />
-		<field name="namespace"/>
-		<field name="name"/>
+        <field name="file_id" />
+        <field name="namespace"/>
+        <field name="name"/>
             </tree>
         </field>
     </record>
