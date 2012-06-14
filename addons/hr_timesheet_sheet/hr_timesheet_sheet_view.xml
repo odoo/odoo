@@ -64,10 +64,10 @@
             <field name="arch" type="xml">
                 <form string="Timesheet" version="7.0">
                 <header>
-                    <button name="button_confirm" states="draft" string="Submited to Manager" type="object"/>
-                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
-                    <button name="action_set_to_draft" states="done" string="Set to Draft" type="object"/>
-                    <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user"/>
+                    <button name="button_confirm" states="draft" string="Submited to Manager" type="object" class="oe_form_button_active_flow"/>
+                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" class="oe_form_button_return_flow"/>
+                    <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
                 </header>
                 <sheet>

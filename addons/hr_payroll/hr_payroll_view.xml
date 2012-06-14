@@ -258,10 +258,10 @@
             <field name="arch" type="xml">
                 <form string="Payslip" version="7.0">
                 <header>
-                    <button string="Confirm" name="hr_verify_sheet" states="draft"/>
-                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object'/>
+                    <button string="Confirm" name="hr_verify_sheet" states="draft" class="oe_form_button_active_flow"/>
+                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object' class="oe_form_button_return_flow"/>
                     <button string="Set to Draft" name="draft" states="cancel"/>
-                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft"/>
+                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_form_button_active_flow"/>
                     <button string="Cancel" name="cancel_sheet" states="draft,hr_check,confirm,verify"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
@@ -721,9 +721,9 @@
             <field name="arch" type="xml">
                 <form string="Payslips Batches" version="7.0">
                 <header>
-                    <button name="close_payslip_run" type="object" string="Close" states="draft"/>
-                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" />
-                    <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
+                    <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_form_button_active_flow"/>
+                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_form_button_active_flow"/>
+                    <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
