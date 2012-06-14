@@ -3,7 +3,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -40,10 +40,16 @@ class payroll_advice_report(report_sxw.rml_parse):
         })
     def get_month(self,input_date):
         res = {
-               'mname': ''
+               'from_name': '','to_name': ''
                }
-        date = datetime.strptime(input_date, '%Y-%m-%d')
-        res['mname']= date.strftime('%B')+'-'+date.strftime('%Y')
+        payslip_pool = self.pool.get('hr.payslip')
+        for advice in self.pool.get('hr.payroll.advice').browse(self.cr, self.uid, self.ids):
+            slip_ids = payslip_pool.search(self.cr, self.uid, [('date_from','<=',advice.date), ('date_to','>=',advice.date)])
+            for slip in payslip_pool.browse(self.cr, self.uid, slip_ids):
+                from_date = datetime.strptime(slip.date_from, '%Y-%m-%d')
+                to_date =  datetime.strptime(slip.date_to, '%Y-%m-%d')
+                res['from_name']= from_date.strftime('%d')+'-'+from_date.strftime('%B')+'-'+from_date.strftime('%Y')
+                res['to_name']= to_date.strftime('%d')+'-'+to_date.strftime('%B')+'-'+to_date.strftime('%Y')
         return res
 
     def convert(self,amount, cur):
