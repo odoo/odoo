@@ -77,15 +77,15 @@ openerp.web_linkedin = function(instance) {
                 }
                 if (this.view.datarecord['linkedin_id']) {
                     if (this.view.datarecord['profile_id'] && !this.view.datarecord['twitter_id']) {
-	                    if (this.$element.find('#twitterid')) {
-	                        this.$element.find('#twitterid').remove();
-	                    }
-	                }
-	                else if (!this.view.datarecord['profile_id'] && this.view.datarecord['twitter_id']) {
-	                    if (this.$element.find('#profileid')) {
-	                        this.$element.find('#profileid').remove();
-	                    }
-	                }
+                        if (this.$element.find('#twitterid')) {
+                            this.$element.find('#twitterid').remove();
+                        }
+                    }
+                    else if (!this.view.datarecord['profile_id'] && this.view.datarecord['twitter_id']) {
+                        if (this.$element.find('#profileid')) {
+                            this.$element.find('#profileid').remove();
+                        }
+                    }
                 }else{
                     this.removeTemplate();
                 }
@@ -111,12 +111,17 @@ openerp.web_linkedin = function(instance) {
             instance.web.dialog($(QWeb.render("Register.Linkedin", _t(e))), {
                 title: _t("Configure your Linkedin Key API"),
                 modal: true,                
-                width : 825,        
-                buttons:[{
+                width : 800, 
+                height:500,       
+                buttons:[
+                {
                     text: _t("Close"),
-                    click: function() { $(this).dialog("close"); }
+                    click: function()
+                    {
+                      $(this).dialog("close"); 
+                    }
                 }
-                    ]
+                ]
             });
         },
         setTemplate: function( URL, AccountName ) {
