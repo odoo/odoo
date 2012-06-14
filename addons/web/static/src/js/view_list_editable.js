@@ -233,7 +233,7 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                self.dataset.index = _(self.dataset.ids).indexOf(record_id) || null;
+                self.dataset.index = _(self.dataset.ids).indexOf(record_id);
                 if (self.dataset.index === -1) {
                     self.dataset.index = null;
                 }
