@@ -576,11 +576,14 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Bank Statement"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="date"/>
                         <field name="period_id"/>
                         <field name="journal_id" widget="selection" domain="[('type', '=', 'bank')]" />
                     </group>
