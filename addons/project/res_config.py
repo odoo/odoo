@@ -58,7 +58,7 @@ class project_configuration(osv.osv_memory):
         'group_time_work_estimation_tasks': fields.boolean("Time Estimation on Tasks",
             implied_group='project.group_time_work_estimation_tasks',
             help="Allows you to compute Time Estimation on tasks."),
-        'group_manage_delegation_task': fields.boolean("Manage Taks Delegation",
+        'group_manage_delegation_task': fields.boolean("Manage Task Delegation",
             implied_group='project.group_delegate_task',
             help="Allows you to delegate tasks to other users."),                                
     }
