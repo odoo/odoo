@@ -1821,12 +1821,15 @@
             <field name="arch" type="xml">
                 <search string="Entry Subscription">
                     <group>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Account Subscription"/>
+                        <field name="date_start"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Subscription"/>
                         <filter icon="terp-camera_test" string="Running" domain="[('state','=','running')]" help="Running Subscription"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="model_id"/>
-                        <field name="date_start"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
