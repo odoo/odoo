@@ -2474,7 +2474,9 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fiscal Position">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Fiscal Position Template"/>
                 </search>
             </field>
         </record>
