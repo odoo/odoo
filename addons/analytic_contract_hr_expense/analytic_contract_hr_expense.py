@@ -48,7 +48,7 @@ class account_analytic_account(osv.osv):
             total_remaining += account.remaining_expense
         return total_remaining
 
-    def _get_total_remaining(self, account):
+    def _get_total_toinvoice(self, account):
         total_toinvoice = super(account_analytic_account, self)._get_total_toinvoice(account)
         if account.charge_expenses:
             total_toinvoice += account.expense_to_invoice
@@ -58,11 +58,9 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.est_expenses != 0:
-                res[account.id] = account.est_expenses - account.expense_invoiced
+                res[account.id] = max(account.est_expenses - account.expense_invoiced, account.expense_to_invoice)
             else:
                 res[account.id]=0.0
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
         return res
 
     def _expense_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):

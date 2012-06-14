@@ -260,12 +260,7 @@ class account_analytic_account(osv.osv):
     def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
-            if account.quantity_max != 0:
-                res[account.id] = account.quantity_max - account.hours_qtt_invoiced
-            else:
-                res[account.id] = 0.0
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[account.id] = max(account.hours_qtt_est - account.hours_qtt_invoiced, account.hours_qtt_non_invoiced)
         return res
 
     def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
@@ -306,11 +301,9 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.amount_max != 0:
-                res[account.id] = account.amount_max - account.ca_invoiced
+                res[account.id] = max(account.amount_max - account.ca_invoiced, account.ca_to_invoice)
             else:
                 res[account.id]=0.0
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
         return res
 
     def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):
@@ -365,7 +358,7 @@ class account_analytic_account(osv.osv):
         if account.fix_price_invoices:
             total_remaining += account.remaining_ca
         if account.invoice_on_timesheets:
-            total_remaining += account.remaining_hours
+            total_remaining += account.remaining_hours_to_invoice
         return total_remaining
 
     def _get_total_toinvoice(self, account):
