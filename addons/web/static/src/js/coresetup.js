@@ -412,12 +412,12 @@ instance.web.bus = new (instance.web.Class.extend(instance.web.EventDispatcherMi
         // http://unixpapa.com/js/key.html
         _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
             $('html').on(evtype, self, function(ev) {
-                self.trigger(evtype, ev, evtype);
+                self.trigger(evtype, ev);
             });
         });
         _.each('resize,scroll'.split(','), function(evtype) {
             $(window).on(evtype, self, function(ev) {
-                self.trigger(evtype, ev, evtype);
+                self.trigger(evtype, ev);
             });
         });
     }

@@ -729,8 +729,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this._super(this);
         this.redraw();
         this.$element.on('click','.oe_dropdown_toggle',function(event) {
+            self.$('ul').hide();
             $(this).parent().find('ul').toggle();
             return false;
+        });
+        instance.web.bus.on('click', self, function(ev) {
+            self.$('ul').hide();
         });
         this.$element.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
