@@ -220,11 +220,13 @@
             <field name="arch" type="xml">
                 <search string="Accounts">
                     <group>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                        string="Account"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                         <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                         <separator orientation="vertical"/>
-                        <field name="code"/>
-                        <field name="name"/>
                         <field name="user_type"/>
                     </group>
                     <newline/>
