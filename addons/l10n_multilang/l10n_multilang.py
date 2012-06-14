@@ -22,8 +22,7 @@
 from osv import fields, osv
 import os
 from tools.translate import _
-import netsvc
-logger=netsvc.Logger()
+import logging
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
@@ -80,8 +79,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         if context.get('lang') == lang:
                             self.pool.get(out_obj._name).write(cr, uid, out_ids[j], {in_field: value[in_id]})
                 else:
-                    logger.notifyChannel('addons.'+self._name, netsvc.LOG_WARNING,
-                             'Language: %s. Translation from template: there is no translation available for %s!' %(lang,  src[in_id]))#out_obj._name))
+                    logging.getLogger('l10n.multilang').info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  src[in_id]))#out_obj._name))
         return True
 
     def execute(self, cr, uid, ids, context=None):
