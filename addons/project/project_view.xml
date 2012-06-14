@@ -336,7 +336,7 @@
                         <button name="do_draft" string="Draft" type="object"
                                 states="cancel,done"/>
                         <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
-                                states="pending,open,draft"/>
+                                states="pending,open,draft" groups="project.group_delegate_task"/>
                         <button name="do_cancel" string="Cancel" type="object"
                                 states="draft,open,pending" />
                         <button name="stage_previous" string="Previous Stage" type="object"
@@ -391,7 +391,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Delegations History">
+                        <page string="Delegations History" groups="project.group_delegate_task">
                             <separator string="Parent Tasks"/>
                             <field name="parent_ids"/>
                             <separator string="Delegated tasks"/>
