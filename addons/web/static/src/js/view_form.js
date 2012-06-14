@@ -2555,6 +2555,11 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     _template: 'One2Many.listview',
+    init: function (parent, dataset, view_id, options) {
+        this._super(parent, dataset, view_id, _.extend(options || {}, {
+            ListType: openerp.web.form.One2ManyList
+        }));
+    },
     is_valid: function () {
         var form;
         // A list not being edited is always valid
@@ -2655,6 +2660,39 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         var self = this;
         var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
         return this._super(name, id, _.bind(def.resolve, def));
+    }
+});
+openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
+    render_row_as_form: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.setup_save_on_row_blur();
+        });
+    },
+    bind_blur_focus: function (new_row, onblur, onfocus) {
+        if (new_row.addEventListener) {
+            new_row.addEventListener('blur', onblur, true);
+            new_row.addEventListener('focus', onfocus, true);
+        } else {
+            new_row.onfocusout = onblur;
+            new_row.onfocusin = onfocus;
+        }
+    },
+    setup_save_on_row_blur: function () {
+        var self = this;
+        var form = this.edition_form;
+        this.bind_blur_focus(this.edition_form.$element[0], function () {
+            self._save_row_timeout = setTimeout(function () {
+                if (form.widget_is_stopped) {
+                    // Saved or cancelled already, maybe?
+                    return;
+                }
+                self.view.ensure_saved();
+            }, 0);
+        }, function () {
+            clearTimeout(self._save_row_timeout);
+            delete self._save_row_timeout;
+        });
     }
 });
 
