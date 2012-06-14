@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-07 10:54+0000\n"
+"PO-Revision-Date: 2012-06-12 21:00+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-08 05:15+0000\n"
-"X-Generator: Launchpad (build 15376)\n"
+"X-Launchpad-Export-Date: 2012-06-13 05:32+0000\n"
+"X-Generator: Launchpad (build 15389)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -305,17 +305,17 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross value "
-msgstr ""
+msgstr "Brutto värde "
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You can not create recursive assets."
-msgstr ""
+msgstr "Fel! Du kan inte skapa tillgångar rekursivt."
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
-msgstr ""
+msgstr "Tid i månader mellan två avskrivningar"
 
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,name:0
@@ -337,7 +337,7 @@ msgstr "Annan information"
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr ""
+msgstr "Restvärde"
 
 #. module: account_asset
 #: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
@@ -347,7 +347,7 @@ msgstr "Tillgångskategori"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Close"
-msgstr ""
+msgstr "Avsluta"
 
 #. module: account_asset
 #: model:ir.actions.wizard,name:account_asset.wizard_asset_compute
@@ -408,17 +408,17 @@ msgstr "Månad"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
-msgstr ""
+msgstr "Avskrivningsinfopanel"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Transaktioner"
 
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Icke bokfört belopp"
 
 #. module: account_asset
 #: field:account.asset.asset,method_time:0
@@ -430,7 +430,7 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic information"
-msgstr ""
+msgstr "Objektinformation"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -443,12 +443,14 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Verifikationsdatumet är inte inom den definierade perioden! Du bör ändra "
+"datum eller ta bort denna begränsning från journalen."
 
 #. module: account_asset
 #: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
-msgstr ""
+msgstr "Anteckning"
 
 #. module: account_asset
 #: help:account.asset.asset,method:0 help:account.asset.category,method:0
@@ -478,13 +480,13 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Closed"
-msgstr ""
+msgstr "Stängd"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
 #: field:asset.asset.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Företag"
 
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
@@ -494,52 +496,52 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Bokförda avskrivningsrader"
 
 #. module: account_asset
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Bolaget måste överenstämma för alla konton och perioder."
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
-msgstr ""
+msgstr "Undertillgångar"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Date of depreciation"
-msgstr ""
+msgstr "Avskrivningsdatum"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Användare"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in current month"
-msgstr ""
+msgstr "Tillgångar som anskaffats innevarande månad"
 
 #. module: account_asset
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Du kan inte skapa transaktioner på rubrikkonton."
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Utökade filter..."
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
-msgstr ""
+msgstr "Beräkna"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -549,17 +551,17 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
+msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
 #: field:account.asset.asset,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: account_asset
 #: model:ir.actions.wizard,name:account_asset.wizard_asset_close
 msgid "Close asset"
-msgstr ""
+msgstr "Avslutad tillgång"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
@@ -574,27 +576,27 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
 msgid "History"
-msgstr ""
+msgstr "Historik"
 
 #. module: account_asset
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Fakturanummer måste vara unikt per bolag!"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Period"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "General"
-msgstr ""
+msgstr "Allmän"
 
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "Prorata Temporis"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -604,7 +606,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form_normal
@@ -614,23 +616,23 @@ msgstr ""
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:account.asset.category:0
 msgid "Depreciation Method"
-msgstr ""
+msgstr "Avskrivningsmetod"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
-msgstr ""
+msgstr "Inköpsdatum"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -648,12 +650,12 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Current"
-msgstr ""
+msgstr "Aktuellt"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Amount to Depreciate"
-msgstr ""
+msgstr "Avskrivet belopp"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -664,17 +666,17 @@ msgstr ""
 #: view:account.asset.asset:0 view:account.asset.category:0
 #: view:account.asset.history:0
 msgid "Depreciation Dates"
-msgstr ""
+msgstr "Avskrivningsdatum"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
@@ -751,7 +753,7 @@ msgstr "Skapade tillgångsändringar"
 #. module: account_asset
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Du kan inte skapa transaktioner på ett stängt konto."
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report

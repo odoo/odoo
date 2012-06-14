@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-12 05:38+0000\n"
+"X-Launchpad-Export-Date: 2012-06-13 05:32+0000\n"
 "X-Generator: Launchpad (build 15389)\n"
 
 #. module: purchase
@@ -22,46 +22,46 @@ msgstr ""
 msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
-msgstr ""
+msgstr "買い手は仕入先に送られる前に見積（RFQ）を承認しなければなりません。見積（RFQ）は確認された発注オーダーになります。"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "制御のために入ってくる製品"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr ""
+msgstr "請求済＆支払済"
 
 #. module: purchase
 #: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr ""
+msgstr "宛先"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "In order to delete a purchase order, it must be cancelled first!"
-msgstr ""
+msgstr "発注オーダーを削除するためには、最初にそれをキャンセルする必要があります。"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "このドキュメントが作成された日付"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 #: view:stock.picking:0
 msgid "Group By..."
-msgstr ""
+msgstr "グループ化…"
 
 #. module: purchase
 #: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "担当"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -75,29 +75,32 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"仕入先に対して製品を購入したいが、しかし、まだ発注を確認していない場合に見積要求を作成できます。このメニューは物流ルール（最小在庫、MTOなど）を基本とし"
+"て自動的に作成された見積要求をレビューするためにも使用されます。オーダーが確認されると、見積要求から発注オーダーに変換することができます。拡張インタフェー"
+"ス（ユーザ設定から）を使用すると、仕入先請求書を制御する方法を選択できます：オーダー基準、受領基準、または手動エンコード。"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase order"
-msgstr ""
+msgstr "承認済発注オーダー"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,partner_id:0
 #: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
-msgstr ""
+msgstr "仕入先"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "価格リスト"
 
 #. module: purchase
 #: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "請求対象"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
@@ -111,29 +114,31 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"このメニューは、発注オーダーを参照、仕入先、製品などによる検索のために使用します。各発注オーダーのために、受け取った製品の追跡、そして仕入先請求書の制御が"
+"できます。"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "仕入先請求書"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "発注オーダー統計値"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "集荷リストから"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "価格リストがありません。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_wizard
@@ -143,44 +148,44 @@ msgstr ""
 #. module: purchase
 #: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "見積要求"
 
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Receptions"
-msgstr ""
+msgstr "受領基準"
 
 #. module: purchase
 #: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
 #: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
+msgstr "これは各発注オーダーのためのリード / 保証時間です。"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "分類別月次発注"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "ドラフトに設定"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "請求書の例外"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr ""
+msgstr "ドラフト発注価格リスト"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
