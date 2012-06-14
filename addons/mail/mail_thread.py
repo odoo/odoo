@@ -651,9 +651,9 @@ class mail_thread(osv.Model):
         return self.message_append_dict(cr, uid, ids, msg_dict, context=context)
 
     def message_thread_followers(self, cr, uid, ids, context=None):
-        """Returns a list of email addresses of the people following
-           this thread, including the sender of each mail, and the
-           people who were in CC of the messages, if any.
+        """ Returns a list of email addresses of the people following
+            this thread, including the sender of each mail, and the
+            people who were in CC of the messages, if any.
         """
         res = {}
         if isinstance(ids, (str, int, long)):
@@ -807,9 +807,9 @@ class mail_thread(osv.Model):
         """ Returns the current document followers. Basically this method
             checks in mail.subscription for entries with matching res_model,
             res_id.
-        
-            :param get_ids: if set to True, return the ids of users; if set
-                            to False, returns the result of a read in res.users
+            This method can be overriden to add implicit subscribers, such
+            as project managers, by adding their user_id to the list of
+            ids returned by this method.
         """
         subscr_obj = self.pool.get('mail.subscription')
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)

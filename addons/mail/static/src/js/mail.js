@@ -20,6 +20,55 @@ openerp.mail = function(session) {
      */
     var mail_msg_struct = mail.chatter_message_structure = {}; // TODO: USE IT OR NOT :)
 
+
+
+
+    /**
+     * ------------------------------------------------------------
+     * ComposeMessage widget
+     * ------------------------------------------------------------
+     * 
+     * This widget handles the display of a form to compose a new message.
+     */
+    
+    /* Add ComposeMessage widget to registry */
+    session.web.form.widgets.add('compose_message', 'openerp.mail.ComposeMessage');
+    
+    /* ComposeMessage is an extension of a Widget */
+    mail.compose_message = session.web.Widget.extend({
+        template: 'mail.compose_message',
+        
+        init: function(parent, params) {
+            this._super(parent);
+            console.log(params);
+            this.ds_compose = new session.web.DataSet(this, 'mail.compose.message');
+            this.form_view = new session.web.FormView(this, this.ds_compose, false, {
+                action_buttons: false,
+                pager: false,
+                initial_mode: 'edit',
+                }
+            );
+        },
+        
+        start: function(parent, params) {
+            this._super.apply(this, arguments);
+            console.log('start');
+            console.log(this);
+            var node = this.$element.find('div.caca');
+            var node = this.$element.find('p');
+            console.log(node);
+            var done = this.form_view.appendTo(node);
+            return done;
+        },
+        
+        destroy: function(parent, params) {
+            this._super.apply(this, arguments);
+        },
+    }),
+
+
+
+
     /** 
      * Thread widget: this widget handles the display of a thread of
      * messages. The [thread_level] parameter sets the thread level number:
@@ -92,6 +141,11 @@ openerp.mail = function(session) {
             else var display_done = this.init_comments();
             // customize display
             $.when(display_done).then(this.proxy('do_customize_display'));
+            
+            // add form view
+            this.caca = new mail.compose_message();
+            this.caca.appendTo(this.$element.find('div.oe_mail_thread_act'));
+            
             return display_done
         },
         
