@@ -34,26 +34,15 @@
 <t t-name="Register.Linkedin" style="height:300px;overflow:auto;">
     <div>
     <table>
-    
     <tr>
         <td>
-            <b>1)Go to...<a href="https://www.linkedin.com/secure/developer" style="color:blue;">https://www.linkedin.com/secure/developer</a></b>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>2) Log you in Linkedin if you did not yet</b>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>3)  Add a new Application</b>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>4)  Fill in the form</b>
-        </td>
+           <ol>
+                <li>Go to...<a href="https://www.linkedin.com/secure/developer" class="oe_secondary_menu_section" target="#">https://www.linkedin.com/secure/developer</a></li>
+                <li>Log you in Linkedin if you did not yet</li>      
+                <li>Add a new Application</li>   
+                <li>Fill in the form</li>       
+           </ol>
+         </td>
     </tr>
     <tr>
         <td>      
@@ -62,7 +51,7 @@
     </tr>
     <tr>
         <td >
-            <b>5) Copy the API Key <input type="text"/><button style="background-color:red;">Apply</button></b>
+            <li> Copy the API Key <input type="text" id="apikey" /><button id="register" class="oe_form_button_save_dirty">Apply</button></li>
         </td>
     </tr>
     <tr>
@@ -70,6 +59,7 @@
             <img src='/web_linkedin/static/src/img/apikey.png' height="300" width="500" border="2"/>
         </td>
     </tr>
+    
     </table>
     </div>
 </t>

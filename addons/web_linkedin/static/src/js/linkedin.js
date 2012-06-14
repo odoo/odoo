@@ -122,7 +122,15 @@ openerp.web_linkedin = function(instance) {
                     }
                 }
                 ]
+                
             });
+            $("#register").click(function()
+            {
+                var linkkey = $("#apikey").val();
+                console.log("the key is ",linkkey);
+            });
+            
+            
         },
         setTemplate: function( URL, AccountName ) {
             if(AccountName){
