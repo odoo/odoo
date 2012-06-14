@@ -151,7 +151,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sales by Account">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Year"/>
                     <field name="month"/>
                </search>
             </field>
@@ -214,7 +216,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sales by Account">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Year"/>
                     <field name="month"/>
                </search>
             </field>
