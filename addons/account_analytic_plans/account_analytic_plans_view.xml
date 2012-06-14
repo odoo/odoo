@@ -196,7 +196,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Plans">
-                <field name="name"/>
+                <field name="name"
+                filter_domain="[('name','ilike',self)]"
+                string="Analytic Plan"/>
             </search>
         </field>
     </record>
