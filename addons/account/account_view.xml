@@ -1408,18 +1408,17 @@
             <field name="arch" type="xml">
                 <search string="Search Move">
                     <group>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]"
+                        string="Move"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('to_check','=',True)]" help="Journal Entries to Review"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="ref"/>
                         <field name="partner_id"/>
-                        <field name="date"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection"/>
                         <field name="period_id"/>
                     </group>
