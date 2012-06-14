@@ -30,13 +30,15 @@
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <group>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                        string="Analytic Account"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                         <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Overdue Account" domain="[('date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Analytic Accounts with a past deadline."/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="code"/>
                         <field name="partner_id"/>
                         <field name="user_id" widget="selection"/>
                     </group>
