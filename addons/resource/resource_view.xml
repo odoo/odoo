@@ -220,6 +220,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leave Detail" version="7.0">
+                	<sheet>
                     <group>
                        <group>
                            <field name="resource_id" on_change="onchange_resource(resource_id)"/>
@@ -234,6 +235,7 @@
                            <field name="date_to"/>
                        </group>
                    </group>
+                   </sheet>
                 </form>
             </field>
         </record>
