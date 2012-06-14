@@ -810,8 +810,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Account Tax Code">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                    string="Tax Code"/>
                     <field name="parent_id"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </search>
