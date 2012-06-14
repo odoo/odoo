@@ -60,7 +60,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="standard_price" position="replace">
+                <field name="standard_price" position="replace" version="7.0">
                     <label string="Cost Price" for="standard_price" align="1.0"/>
                     <div>
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
@@ -102,7 +102,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="status" position="before">
+                <group name="status" position="before" version="7.0">
                     <group string="Stock and Expected Variations">
                         <field name="qty_available"/>
                         <field name="incoming_qty"/>
