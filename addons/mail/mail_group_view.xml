@@ -50,7 +50,8 @@
             <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Group">
+                <form string="Group" version="7.0">
+                <sheet>
                     <group colspan="4" col="8">
                         <group colspan="6" col="4">
                             <separator string="General Information" colspan="4"/>
@@ -71,6 +72,7 @@
                     </group>
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
                             options='{"thread_level": 1}'/>
+                  </sheet>
                 </form>
             </field>
         </record>
