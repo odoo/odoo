@@ -271,7 +271,59 @@
             <field name="city">Grand-Rosière</field>
             <field eval="1367" name="zip"/>
             <field name="country_id" ref="base.be"/>
+            <field name="color">8</field>
         </record>
+        <!-- Some messages linked to the previous opportunity -->
+        <record id="message_note0" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Hello <b>world</b> (note on opportunity) !]]></field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_note0_comment0" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Hello <b>world</b> (first comment on note) !]]></field>
+            <field name="parent_id" ref="message_note0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_note0_comment1" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Hello <b>world</b> (second comment on note) !]]></field>
+            <field name="parent_id" ref="message_note0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_email0" model="mail.message">
+            <field name="subject">Mail reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Hello <b>world</b> (email reply on opportunity) !]]></field>
+            <field name="type">email</field>
+            <field name="state">sent</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_email1" model="mail.message">
+            <field name="subject">Mail received</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Hello <b>world</b> (email received on opportunity) !]]></field>
+            <field name="type">email</field>
+            <field name="state">received</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        
         <record id="crm_case_unifliege" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
