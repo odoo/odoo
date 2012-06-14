@@ -184,8 +184,11 @@ class account_analytic_account(osv.osv):
     def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
         res={}
         if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
-            if part.user_id:res['manager_id'] = part.user_id.id
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            if partner.user_id:
+                res['manager_id'] = partner.user_id.id
+            if not name:
+                res['name'] = _('Contract: ') + partner.name
         return {'value': res}
 
     def _default_company(self, cr, uid, context=None):
