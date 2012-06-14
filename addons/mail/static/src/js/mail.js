@@ -41,24 +41,29 @@ openerp.mail = function(session) {
         init: function(parent, params) {
             this._super(parent);
             console.log(params);
-            this.ds_compose = new session.web.DataSet(this, 'mail.compose.message');
+            this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message');
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
-                action_buttons: false,
-                pager: false,
+                /*action_buttons: false,
+                pager: false,*/
                 initial_mode: 'edit',
                 }
             );
+            this.form_view.on_button_cancel = function() {
+                console.log('cacaprout');
+            }
         },
         
         start: function(parent, params) {
+            var self = this;
             this._super.apply(this, arguments);
             console.log('start');
             console.log(this);
             var node = this.$element.find('div.caca');
             var node = this.$element.find('p');
             console.log(node);
-            var done = this.form_view.appendTo(node);
-            return done;
+            return $.when(this.form_view.appendTo(node)).pipe(function() {
+                self.form_view.do_show();
+            });
         },
         
         destroy: function(parent, params) {
