@@ -143,9 +143,9 @@
             <field name="arch" type="xml">
                 <form string="Project Phase" version="7.0">
                 <header>
-                    <button string="Start Phase" name="set_open" states="pending,draft"/>
-                    <button string="Done" name="set_done" states="pending,open"/>
-                    <button string="Pending" name="set_pending" states="open"/>
+                    <button string="Start Phase" name="set_open" states="pending,draft" class="oe_form_button_active_flow"/>
+                    <button string="Done" name="set_done" states="pending,open" class="oe_form_button_active_flow"/>
+                    <button string="Pending" name="set_pending" states="open" class="oe_form_button_active_flow"/>
                     <button string="Draft" name="set_draft" states="open"/>
                     <button string="Cancel" name="set_cancel" states="draft,open,pending"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
