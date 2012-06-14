@@ -119,15 +119,20 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
+                    <div class="oe_form_title">
+                        <div class="oe_form_readonly_hidden">
+                            <label for="name"  /> 
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="Annual inventory"/>
+                        </h1>
+                    </div>
                 <group>
-                    <label for="name" clas="oe_form_readonly_hidden"/>
-                    <h1>
-                        <field name="name" placeholder="Annual invetory 2013"/>
-                    </h1>
-                    <group col="4">
+                    <group>
                         <field name="date"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
+                </group>
                     <notebook>
                     <page string="General Informations">
                         <field name="inventory_line_id">
@@ -182,7 +187,6 @@
                          </field>
                     </page>
                     </notebook>
-                    </group>
                     </sheet>
                 </form>
             </field>
