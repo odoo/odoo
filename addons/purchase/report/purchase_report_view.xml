@@ -53,18 +53,18 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
-            <group>
-                <filter icon="terp-document-new"
-                        string="Quotations"
-                        name="quotes"
-                        domain="[('state','=','draft')]"/>
-                <filter icon="terp-gtk-jump-to-rtl"
-                        string="Orders"
-                        name="orders"
-                        domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
-                <separator orientation="vertical"/>
-                <field name="partner_id"/>
-                <field name="product_id"/>
+                <group>
+                    <filter icon="terp-document-new"
+                            string="Quotations"
+                            name="quotes"
+                            domain="[('state','=','draft')]"/>
+                    <filter icon="terp-gtk-jump-to-rtl"
+                            string="Orders"
+                            name="orders"
+                            domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters...">

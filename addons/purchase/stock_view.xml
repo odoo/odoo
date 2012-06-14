@@ -65,19 +65,17 @@
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">
                     <group col="8" colspan="4">
+                        <field name="name" string="Picking to Invoice" filter_domain="['|'('name','ilike',self),('origin','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" name="available" string="Available"
                             domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
                         <filter icon="terp-dialog-close" name="done" string="Received"
                             domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders"
                             domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                        <separator orientation="vertical"/>
                         <filter string="To Invoice" name="to_invoice" icon="terp-dolar"
                             domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="origin"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>                    
