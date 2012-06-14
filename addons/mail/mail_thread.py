@@ -72,6 +72,7 @@ class mail_thread(osv.osv):
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     #------------------------------------------------------
@@ -445,6 +446,13 @@ class mail_thread(osv.osv):
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
+
+    def message_catchall(self, cr, uid, message, context=None):
+        """TODO proper docstring, inspired by messsage_process()"""
+        # TODO
+        pass
+
+
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------
@@ -452,7 +460,7 @@ class mail_thread(osv.osv):
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
-                        context=None):
+                        thread_id=None, context=None):
         """Process an incoming RFC2822 email message related to the
            given thread model, relying on ``mail.message.parse()``
            for the parsing operation, and then calling ``message_new``
@@ -472,6 +480,10 @@ class mail_thread(osv.osv):
                email source attached to the message after it is imported.
            :param bool strip_attachments: whether to strip all attachments
                before processing the message, in order to save some space.
+           :param int thread_id: optional ID of the record/thread from ``model``
+               to which this mail should be attached. When provided, this
+               overrides the automatic detection based on the message
+               headers.
         """
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -479,13 +491,12 @@ class mail_thread(osv.osv):
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
 
-        model_pool = self.pool.get(model)
-        if self._name != model:
-            if context is None: context = {}
-            context.update({'thread_model': model})
+        if context is None: context = {}
 
         mail_message = self.pool.get('mail.message')
-        res_id = False
+        model_pool = self.pool.get(model)
+        if self._name != model:
+            context.update({'thread_model': model})
 
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
@@ -504,8 +515,7 @@ class mail_thread(osv.osv):
                 return model_pool.message_new(cr, uid, msg,
                                               custom_values,
                                               context=context)
-        res_id = False
-        if msg.get('references') or msg.get('in-reply-to'):
+        if not thread_id and (msg.get('references') or msg.get('in-reply-to')):
             references = msg.get('references') or msg.get('in-reply-to')
             if '\r\n' in references:
                 references = references.split('\r\n')
@@ -513,26 +523,23 @@ class mail_thread(osv.osv):
                 references = references.split(' ')
             for ref in references:
                 ref = ref.strip()
-                res_id = tools.reference_re.search(ref)
-                if res_id:
-                    res_id = res_id.group(1)
-                else:
-                    res_id = tools.res_re.search(msg['subject'])
-                    if res_id:
-                        res_id = res_id.group(1)
-                if res_id:
-                    res_id = int(res_id)
-                    if model_pool.exists(cr, uid, res_id):
-                        if hasattr(model_pool, 'message_update'):
-                            model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
-                    else:
-                        # referenced thread was not found, we'll have to create a new one
-                        res_id = False
-        if not res_id:
-            res_id = create_record(msg)
+                thread_id = tools.reference_re.search(ref)
+                if not thread_id:
+                    thread_id = tools.res_re.search(msg['subject'])
+                if thread_id:
+                    thread_id = int(thread_id.group(1))
+                    if not model_pool.exists(cr, uid, thread_id) or \
+                        not hasattr(model_pool, 'message_update'):
+                            # referenced thread not found or not updatable,
+                            # -> create a new one
+                            thread_id = False
+        if not thread_id:
+            thread_id = create_record(msg)
+        else:
+            model_pool.message_update(cr, uid, [thread_id], msg, {}, context=context)
         #To forward the email to other followers
-        self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
-        return res_id
+        self.message_forward(cr, uid, model, [thread_id], msg_txt, context=context)
+        return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Called by ``message_process`` when a new message is received
