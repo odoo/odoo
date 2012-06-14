@@ -35,12 +35,16 @@
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
               <group>
+                    <field name="day"
+                    filter_domain="[('day','ilike',self)]"
+                    string="Day"/>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
+                    <separator orientation="vertical"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id" />
                     <field name="user_id"/>
-                    <field name="date"/>
-                    <field name="day"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">
