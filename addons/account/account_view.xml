@@ -2094,14 +2094,16 @@
             <field name="arch" type="xml">
                 <search string="Search Account Templates">
                     <group>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                        string="Account Template"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-sale" string="Receivale Accounts" domain="[('type','=','receivable')]"/>
-                         <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
-                         <separator orientation="vertical"/>
-                        <field name="code"/>
-                        <field name="name"/>
+                        <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
+                        <separator orientation="vertical"/>
                         <field name="parent_id"/>
-                        <field name="type"/>
                         <field name="user_type"/>
+                        <field name="type"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
