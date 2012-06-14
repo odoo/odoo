@@ -2164,13 +2164,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Chart of Account Templates">
-                      <group>
-                        <field name="name"/>
+                    <group>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Account Template"/>
+                        <separator orientation="vertical"/>
                         <field name="account_root_id"/>
                         <field name="bank_account_view_id"/>
-                      </group>
-                      <newline/>
-                      <group expand="0" string="Group By...">
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
                         <filter string="Root Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'account_root_id'}"/>
                         <filter string="Bank Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'bank_account_view_id'}"/>
                         <separator orientation="vertical"/>
@@ -2179,7 +2182,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Income Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_income_categ'}"/>
                         <filter string="Expense Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_expense_categ'}"/>
-                      </group>
+                    </group>
                 </search>
             </field>
         </record>
