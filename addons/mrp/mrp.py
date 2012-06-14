@@ -466,13 +466,13 @@ class mrp_production(osv.osv):
 
         'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date'),
-        'date_planned': fields.datetime('Scheduled date', required=True, select=1),
+        'date_planned': fields.datetime('Scheduled Date', required=True, select=1),
         'date_start': fields.datetime('Start Date', select=True),
         'date_finished': fields.datetime('End Date', select=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-        'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
+        'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
             help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
@@ -1094,8 +1094,8 @@ class mrp_production_workcenter_line(osv.osv):
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
-        'cycle': fields.float('Nbr of cycles', digits=(16,2)),
-        'hour': fields.float('Nbr of hours', digits=(16,2)),
+        'cycle': fields.float('Nbr of Cycles', digits=(16,2)),
+        'hour': fields.float('Nbr of Hours', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade', required=True),
     }
