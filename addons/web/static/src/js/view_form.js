@@ -4108,7 +4108,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         var show_value = name + " (" + this.human_filesize(size) + ")";
         this.$element.find('input').eq(0).val(show_value);
         this.set_filename(name);
-        this.trigger('changed_value');
     },
     set_filename: function(value_) {
         var filename = this.node.attrs.filename;
@@ -4151,7 +4150,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this.set({'value': file_base64});
         this.binary_value = true;
         this.render_value();
-        this.trigger('changed_value');
     },
     on_clear: function() {
         this._super.apply(this, arguments);
