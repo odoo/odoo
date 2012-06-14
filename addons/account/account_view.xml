@@ -2766,9 +2766,11 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="arch" type="xml">
                 <search string="Account Report">
                     <group>
-                        <field name="name"/>
-                        <field name="type"/>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Account Report"/>
                         <field name="account_report_id"/>
+                        <field name="type"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
