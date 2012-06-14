@@ -48,9 +48,9 @@
             <field name="arch" type="xml">
                 <form string="Procurement" version="7.0">
                     <header>
-                        <button name="button_confirm" states="draft" string="Confirm"/>
-                        <button name="button_check" states="confirmed" string="Run Procurement"/>
-                        <button name="button_restart" states="exception" string="Retry"/>
+                        <button name="button_confirm" states="draft" string="Confirm" class="oe_form_button_active_flow"/>
+                        <button name="button_check" states="confirmed" string="Run Procurement" class="oe_form_button_active_flow"/>
+                        <button name="button_restart" states="exception" string="Retry" class="oe_form_button_active_flow"/>
                         <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
