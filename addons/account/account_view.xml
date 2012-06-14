@@ -1165,6 +1165,8 @@
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
                     <group>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
@@ -1179,12 +1181,8 @@
                         <filter string="Next Partner to Reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         <separator orientation="vertical"/>
                         <field name="move_id" string="Number (Move)"/>
-                        <field name="date"/>
                         <field name="account_id"/>
                         <field name="partner_id"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id':self}"/>
                         <field name="period_id" context="{'period_id':self}"/>
                     </group>
