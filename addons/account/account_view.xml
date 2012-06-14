@@ -1637,17 +1637,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Journal Entry Model">
-                  <group>
-                    <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
-                    <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
-                    <separator orientation="vertical"/>
-                      <field name="name"/>
-                      <field name="journal_id" widget="selection"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <group>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Journal Entry Model"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
+                        <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
+                        <separator orientation="vertical"/>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                      <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                     </group>
                 </search>
             </field>
