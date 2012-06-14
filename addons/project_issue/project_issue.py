@@ -607,24 +607,16 @@ class project(osv.osv):
 project()
 
 class account_analytic_account(osv.osv):
-
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     
     _columns = {
         'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
     }
-#    _defaults = {
-#        'use_issues': True,
-#    }
     
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        obj_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
-        if vals.get('use_issues', False):
-            self.project_create(cr, uid, obj_id, vals, context)
-        return obj_id
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
+        return res or vals.get('use_issues')
 
 account_analytic_account()
 

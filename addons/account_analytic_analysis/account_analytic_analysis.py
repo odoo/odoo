@@ -250,6 +250,17 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.quantity_max != 0:
+                res[account.id] = account.quantity_max - account.hours_quantity
+            else:
+                res[account.id] = 0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
+
+    def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.quantity_max != 0:
                 res[account.id] = account.quantity_max - account.hours_qtt_invoiced
             else:
                 res[account.id] = 0.0
@@ -391,7 +402,7 @@ class account_analytic_account(osv.osv):
         'ca_theorical': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Theoretical Revenue',
             help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
             digits_compute=dp.get_precision('Account')),
-        'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Total Time',
+        'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Total Worked Time',
             help="Number of time you spent on the analytic account (from timesheet). It computes quantities on all journal of type 'general'."),
         'last_invoice_date': fields.function(_analysis_all, multi='analytic_analysis', type='date', string='Last Invoice Date',
             help="If invoice from the costs, this is the date of the latest invoiced."),
@@ -404,7 +415,9 @@ class account_analytic_account(osv.osv):
         'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, type='float', string='Invoiced Time',
             help="Number of time (hours/days) that can be invoiced plus those that already have been invoiced."),
         'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
-            help="Computed using the formula: Maximum Time - Total Time"),
+            help="Computed using the formula: Maximum Time - Total Worked Time"),
+        'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
+            help="Computed using the formula: Maximum Time - Total Invoiced Time"),
         'remaining_ca': fields.function(_remaining_ca_calc, type='float', string='Remaining Revenue',
             help="Computed using the formula: Max Invoice Price - Invoiced Amount.",
             digits_compute=dp.get_precision('Account')),
@@ -444,7 +457,6 @@ class account_analytic_account(osv.osv):
         res['value']['fix_price_invoices'] = template.fix_price_invoices
         res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
         res['value']['quantity_max'] = template.quantity_max
-        res['value']['remaining_hours'] = template.remaining_hours
         res['value']['amount_max'] = template.amount_max
         res['value']['to_invoice'] = template.to_invoice.id
         res['value']['pricelist_id'] = template.pricelist_id.id

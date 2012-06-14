@@ -10,7 +10,7 @@
             web_icon_hover="images/project-hover.png"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
         
         <act_window
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
@@ -47,9 +47,6 @@
                             <field name="analytic_account_id" invisible="1" required="0"/>
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <field name="privacy_visibility"/>
-                            <!--<field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
-                            <!--<field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
-                            <!--<field name="progress_rate" widget="progressbar"/>-->
                         </group>
                         <group col="2" colspan="2" class="oe_form_group_label_border">
                             <table border="0">
@@ -67,7 +64,7 @@
                         </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="Members">
+                        <page string="Team" attrs="{'invisible':[('use_tasks','=', 0)]}" name="team">
                             <field colspan="4" name="members" nolabel="1" widget="many2many_kanban">
                                 <kanban quick_create="true" create="false">
                                     <field name="name"/>
@@ -102,16 +99,7 @@
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                         </page>
-                        <page name="team" string="Team" attrs="{'invisible':[('use_tasks','=', 0)]}">
-                            <field colspan="4" name="members" nolabel="1" help="Project's members are users who can have an access to the tasks related to this project.">
-                                <tree string="Members">
-                                    <field name="name"/>
-                                    <field name="user_email"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Billing" groups="account.group_account_invoice">
-                            <!--<field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>-->
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
@@ -355,7 +343,7 @@
                         <button name="do_draft" string="Draft" type="object"
                                 states="cancel,done"/>
                         <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
-                                states="pending,open,draft"/>
+                                states="pending,open,draft" groups="project.group_delegate_task"/>
                         <button name="do_cancel" string="Cancel" type="object"
                                 states="draft,open,pending" />
                         <button name="stage_previous" string="Previous Stage" type="object"
@@ -410,7 +398,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Delegations History">
+                        <page string="Delegations History" groups="project.group_delegate_task">
                             <separator string="Parent Tasks"/>
                             <field name="parent_ids"/>
                             <separator string="Delegated tasks"/>
@@ -768,11 +756,11 @@
             <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem id="menu_project_config_project" name="Stages" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="menu_project_config_project" sequence="2"/>
+        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
         <act_window context="{'search_default_user_id': active_id, 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
