@@ -104,8 +104,8 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="open" states="draft" string="Confirm Payments" />
-                    <button name="set_done" states="open" string="Make Payments" type="object"/>
+                    <button name="open" states="draft" string="Confirm Payments" class="oe_form_button_active_flow"/>
+                    <button name="set_done" states="open" string="Make Payments" type="object" class="oe_form_button_active_flow"/>
                     <button name="set_to_draft" states="cancel" string="Set to draft" type="object"/>
                     <button name="cancel" states="draft,open" string="Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
@@ -232,7 +232,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_order_search"/>
-            <field name="help">A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for.</field>
+            <field name="help">A payment order is a payment request from your company to pay a supplier invoice or a customer `credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for.</field>
         </record>
 
         <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
