@@ -77,7 +77,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         } else if (state.client_action) {
             this.null_action();
-            this.ir_actions_client(state.client_action);
+            var action = state.client_action;
+            if(_.isString(action)) {
+                action = {
+                    tag: action,
+                    params: $.deparam($.param.querystring()),
+                };
+            }
+            this.ir_actions_client(action);
         }
 
         $.when(action_loaded || null).then(function() {
