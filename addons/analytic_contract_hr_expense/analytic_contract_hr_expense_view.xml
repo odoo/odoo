@@ -8,18 +8,16 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="end_of_tabl_hook"]' position='before'>
-                        <tr>
-                            <th class="oe_border_right">Charge Expenses</th>
-                            <td><field name="charge_expenses" nolabel="1"/></td>
-                            <td><field class="oe_th_110px" name="est_expenses" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td class="oe_th_110px"><field name="expense_invoiced" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td class="oe_th_110px oe_border_right"><field name="remaining_expense" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td class="oe_th_110px"><field name="expense_to_invoice" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td width="10px"></td>
-                            <td><button icon="gtk-select-all" class= "oe_btn_width" name="open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                            <td><button icon="terp-dolar" class= "oe_btn_width" name="hr_to_invoiced_expense" string="Invoice Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                        </tr>
+                <xpath expr='//div[@name="total"]' position='before'>
+                        <field class="oe_field_label" name="charge_expenses"/>
+                         <group colspan="4" col="6" attrs="{'invisible': [('charge_expenses','=',False)]}">
+                            <field class="oe_float_field" name="est_expenses" nolabel="1" />
+                            <field class="oe_float_field" name="expense_invoiced" nolabel="1"/>
+                            <field class="oe_float_field" name="remaining_expense" nolabel="1" />
+                            <field class="oe_float_field" name="expense_to_invoice" nolabel="1" />
+                            <div><button class="oe_btn_width_small" icon="gtk-select-all" name="open_hr_expense" string="Expenses" type="object" /></div>
+                            <div><button class="oe_btn_width" icon="terp-dolar" name="hr_to_invoiced_expense" string="Invoice Expenses" type="object"/></div>
+                        </group>
                 </xpath>
             </field>
         </record>
