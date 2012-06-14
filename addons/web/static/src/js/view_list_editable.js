@@ -195,7 +195,7 @@ openerp.web.list_editable = function (openerp) {
         },
         render_row_as_form: function (row) {
             var self = this;
-            this.ensure_saved().then(function () {
+            return this.ensure_saved().pipe(function () {
                 var record_id = $(row).data('id');
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
@@ -212,6 +212,7 @@ openerp.web.list_editable = function (openerp) {
                     .keyup(function () {
                         return self.on_row_keyup.apply(self, arguments); })
                     .keydown(function (e) { e.stopPropagation(); });
+
                 if (row) {
                     $new_row.replaceAll(row);
                 } else if (self.options.editable) {
@@ -245,7 +246,7 @@ openerp.web.list_editable = function (openerp) {
                 // HA HA
                 self.edition_form.appendTo();
                 // put in $.when just in case  FormView.on_loaded becomes asynchronous
-                $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
+                return $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     $new_row.find('> td')
                           .addClass('oe-field-cell')
                           .removeAttr('width')
