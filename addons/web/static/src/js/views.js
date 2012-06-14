@@ -81,7 +81,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             if(_.isString(action)) {
                 action = {
                     tag: action,
-                    params: $.deparam($.param.querystring()),
+                    params: state,
                 };
             }
             this.ir_actions_client(action);
