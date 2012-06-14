@@ -70,23 +70,6 @@ class project(osv.osv):
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        for project_id in self.browse(cr, uid, ids, context):
-           if vals.get('members'):
-               members = self.pool.get('res.users').browse(cr, uid, vals.get('members')[0][-1], context)
-           else:
-               members = project_id.members or False
-           select = vals.get('privacy_visibility') or project_id.privacy_visibility or False
-           if select=='follower' and members:
-               member_list = [member.id for member in members]
-               followers = self.message_get_subscribers_ids(cr, uid, ids, context=context)
-               for member_id in member_list:
-                   if not member_id in followers:
-                      self.message_subscribe(cr, uid, ids, [member_id], context=context)
-        return super(project, self).write(cr, uid, ids, vals, context=context)
-
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
@@ -182,6 +165,23 @@ class project(osv.osv):
             res[task.project_id.id] += 1
         return res
 
+    def _get_followers(self, cr, uid, ids, name, arg, context=None):
+        '''
+        Functional field that computes the users that are 'following' a thread.
+        '''
+        res = {}
+        for project in self.browse(cr, uid, ids, context=context):
+            l = set()
+            for message in project.message_ids:
+                l.add(message.user_id and message.user_id.id or False)
+            res[project.id] = list(filter(None, l))
+        return res
+
+    def _search_followers(self, cr, uid, obj, name, args, context=None):
+        project_obj = self.pool.get('project.project')
+        project_ids = project_obj.search(cr, uid, [('message_ids.user_id.id', 'in', args[0][2])], context=context)
+        return [('id', 'in', project_ids)]
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -220,20 +220,14 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'privacy_visibility': fields.selection([('public','Public'), ('follower','Followers Only')], 'Privacy / Visibility', select=True),
+        'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility'),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
+                        type='many2many', relation='res.users', string='Followers'),
      }
     
     def dummy(self, cr, uid, ids, context):
         return True
-
-    def message_thread_followers(self, cr, uid, ids, context=None):
-        followers = super(project,self).message_thread_followers(cr, uid, ids, context=context)
-        for project in self.browse(cr, uid, followers.keys(), context=context):
-            project_followers = set(followers[project.id])
-            project_followers.add(project.user_id.user_email)
-            followers[project.id] = filter(None, project_followers)
-        return followers
 
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
@@ -1261,7 +1255,7 @@ class account_analytic_account(osv.osv):
         '''
         project_pool = self.pool.get('project.project')
         project_id = project_pool.search(cr, uid, [('name','=',vals.get('name'))])
-        if not project_id and self._trigger_project_creation(vals):
+        if not project_id and self._trigger_project_creation(cr, uid, vals, context=context):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,

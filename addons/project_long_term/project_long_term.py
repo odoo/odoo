@@ -276,8 +276,8 @@ class account_analytic_account(osv.osv):
         'use_phases': fields.boolean('Phases Planing', help="Check this field if project manages phases"),
     }
 
-    def _trigger_project_creation(vals):
-        res= super(account_analytic_account, self)._trigger_project_creation(vals)
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        res= super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or vals.get('use_phases')
 
 account_analytic_account()
