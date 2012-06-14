@@ -99,19 +99,20 @@
             </header>
             <sheet>
                 <div class="oe_right oe_form_button_box">
-					<button name="action_makeMeeting" type="object" string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
-					<button name="%(survey.action_view_survey_question_message)d" string="Start Interview" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
-					<button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/>
+                    <button name="action_makeMeeting" type="object" string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Start Interview" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
+                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/>
                 </div>
                 <div class="oe_form_title">
                     <label for="name" class="oe_form_readonly_hidden"/>
                     <h1><field name="name"/></h1>
+                    <label for="partner_name" class="oe_form_readonly_hidden"/>
+                    <h2><field name="partner_name"/></h2>
                     <field name="type_id" placeholder="Degree"/>
                 </div>
 
-				<group>
+                <group>
                     <group>
-                        <field name="partner_name"/>
                         <field name="user_id"/>
                         <field name="title_action"/>
                         <field name="date_action"/>
@@ -273,13 +274,13 @@
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                                 <div class="oe_kanban_content" >
-                                	<h3 class="oe_kanban_ellipsis"><field name="name"/>
+                                    <h3 class="oe_kanban_ellipsis"><field name="name"/>
                                     </h3> 
                                     <div style="margin-bottom:2;padding-top:5px;white-space: nowrap;" >                               
-                                	    <field name="partner_name"/>
+                                        <field name="partner_name"/>
                                         <div class="oe_kanban_right">
-                                    	  <span class="oe_kanban_highlight">
-                                        	<t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                          <span class="oe_kanban_highlight">
+                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
                                             <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
                                                <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
                                             </a>
@@ -296,15 +297,15 @@
                                      </div>
                                   </div>
                                   <div style="white-space: nowrap;" >
-                                  		<div t-if="record.type_id.raw_value">
-                                    	  (<field name="type_id"/>)
+                                        <div t-if="record.type_id.raw_value">
+                                          (<field name="type_id"/>)
                                         </div>
                                   </div>
                                    <div style="padding-top:5px;white-space: nowrap;" >
-                                   	  <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
+                                      <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
                                    </div>
                                    <div style="padding-top:5px;white-space: nowrap;" >
-                                   	  <t t-if="record.title_action.raw_value">
+                                      <t t-if="record.title_action.raw_value">
                                           <field name="title_action" /> on 
                                            <field name="date_action" />
                                        </t>
@@ -332,8 +333,7 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="expected_employees" position="after">
-                <!--
+            <field name="expected_employees" version="7.0" position="after">
                 <label for="survey_id" />
                 <div>
                     <field name="survey_id" class="oe_form_inline"/>
@@ -342,11 +342,6 @@
                         name="action_print_survey" type="object"
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
-                -->
-                <field name="survey_id"/>
-                <button string="Interview" icon="gtk-print"
-                    name="action_print_survey" type="object"
-                    attrs="{'invisible':[('survey_id','=',False)]}"/>
             </field>
         </field>
     </record>
@@ -490,8 +485,8 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>
         <field name="arch" type="xml">
-            <field name="email_from" position="after">
-                <field name="applicant_id"/>
+            <field name="partner_id" position="before">
+                <field name="applicant_id" attrs="{'invisible': [('categ_id','!=',%(hr_recruitment.categ_meet_interview)d)]}"/>
             </field>
         </field>
     </record>
