@@ -1733,7 +1733,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payment Term">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Payment Term"/>
                     <field name="active"/>
                 </search>
             </field>
