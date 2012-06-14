@@ -1829,27 +1829,28 @@
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                     </header>
-
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="model_id"/>
-                            <field name="ref"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="model_id"/>
+                                <field name="ref"/>
+                            </group>
+                            <newline/>
+    
+                            <group string="Starts on">
+                                <field name="date_start"/>
+                                <field name="period_total"/>
+                            </group>
+    
+                            <group string="Valid Up to">
+                                <field name="period_nbr"/>
+                                <field name="period_type"/>
+                            </group>
                         </group>
-                        <newline/>
-
-                        <group string="Starts on">
-                            <field name="date_start"/>
-                            <field name="period_total"/>
-                        </group>
-
-                        <group string="Valid Up to">
-                            <field name="period_nbr"/>
-                            <field name="period_type"/>
-                        </group>
-                    </group>
-                    <separator string="Subscription Lines"/>
-                    <field name="lines_id" widget="one2many_list"/>
+                        <separator string="Subscription Lines"/>
+                        <field name="lines_id" widget="one2many_list"/>
+                    </sheet>
                 </form>
             </field>
         </record>
