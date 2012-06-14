@@ -61,7 +61,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.records = new Collection();
 
-        this.set_groups(new openerp.web.ListView.Groups(this));
+        this.set_groups(new (this.options.GroupsType)(this));
 
         if (this.dataset instanceof openerp.web.DataSetStatic) {
             this.groups.datagroup = new openerp.web.StaticDataGroup(this.dataset);
@@ -85,6 +85,14 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.no_leaf = false;
     },
+    set_default_options: function (options) {
+        this._super(options);
+        _.defaults(this.options, {
+            GroupsType: openerp.web.ListView.Groups,
+            ListType: openerp.web.ListView.List
+        });
+    },
+
     /**
      * Retrieves the view's number of records per page (|| section)
      *
@@ -1191,7 +1199,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
-            var child = self.children[group.value] = new openerp.web.ListView.Groups(self.view, {
+            var child = self.children[group.value] = new (this.view.options.GroupsType)(self.view, {
                 records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
@@ -1297,7 +1305,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     render_dataset: function (dataset) {
         var self = this,
-            list = new openerp.web.ListView.List(this, {
+            list = new (this.view.options.ListType)(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
