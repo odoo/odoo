@@ -569,8 +569,7 @@ class hr_job(osv.osv):
                 'context' : context,
                 'nodestroy':True,
             }
-   
-hr_job()
+
 
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
