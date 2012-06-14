@@ -400,8 +400,8 @@
                 <form string="Sales Order Lines" version="7.0">
                     <header>
                         <button name="button_cancel" string="Cancel" type="object" icon="gtk-cancel" states="confirmed,exception"/>
-                        <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}"/>
-                        <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward"/>
+                        <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}" class="oe_form_button_active_flow"/>
+                        <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward" class="oe_form_button_active_flow"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
                     <label for="order_id" class="oe_form_readonly_hidden"/>
