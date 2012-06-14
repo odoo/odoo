@@ -708,8 +708,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Account Type">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                    string="Account Type"/>
                 </search>
             </field>
         </record>
