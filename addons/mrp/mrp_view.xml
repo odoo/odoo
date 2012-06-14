@@ -536,7 +536,7 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
+                <tree fonts="bold:needaction_pending==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state not in ('done','cancel');gray:state in ('done','cancel')" string="Manufacturing Orders">
                     <field name="needaction_pending" invisible="1"/>
                     <field name="name"/>
                     <field name="date_planned"/>
@@ -644,6 +644,9 @@
                                 <group>
                                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                                 </group>
+                             </group>
+                             <newline/>
+                             <group>
                                 <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
                                     <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                         <field name="product_id"/>
@@ -681,7 +684,7 @@
                                            states="done,cancel"/>
                                    </tree>
                                 </field>
-                            </group>
+                               </group>
                         </page>
                         <page string="Finished Products">
                             <group>
