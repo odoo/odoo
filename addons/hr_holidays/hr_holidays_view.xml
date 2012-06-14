@@ -65,11 +65,11 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user"/>
+                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" class="oe_form_button_active_flow"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager" class="oe_form_button_active_flow"/>
+                    <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet string="Leave Request" layout="auto">
@@ -114,11 +114,11 @@
             <field name="arch" type="xml">
                 <form string="Allocation Request" version="7.0">
                 <header>
-                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user"/>
+                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" class="oe_form_button_active_flow"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
