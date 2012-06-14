@@ -29,52 +29,52 @@
 							</group>
 						</group>
 						<separator colspan="4" string="Invoicing"/>
-						<group col="1" colspan="4">
-							<table border="0">
-								<tr>
-									<th class="oe_th_160px" height="20px"></th>
-									<th width="10px"></th>
-									<th class="oe_th_110px">Est.Tot</th>
-									<th class="oe_th_110px">Invoiced</th>
-									<th class="oe_th_110px">Remaining</th>
-									<th class="oe_th_110px">Ready To Invoice</th>
-									<th width="10px"></th>
-									<th></th>
-									<th></th>
-								</tr>
-								<tr>
-								<th class="oe_border_right">Fix Price Invoices</th>
-									<td><field name="fix_price_invoices" nolabel="1"/></td>
-									<td><field class="oe_th_110px" name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-									<td class="oe_th_110px"><field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-									<td class="oe_th_110px oe_border_right"><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-									<td class="oe_th_110px"><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-									<td width="10px"></td>
-									<td><button icon="terp-check" class= "oe_btn_width" name="%(account_analytic_analysis.action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-									<td><button icon="terp-dolar_ok!" class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-								</tr>
-								<tr>
-									<th class="oe_border_right">Invoice On Timesheets</th>
-									<td><field name="invoice_on_timesheets" nolabel="1"/></td>
-									<td><field class="oe_th_110px" name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-									<td class="oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-									<td class="oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-									<td class="oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-									<td width="10px"></td>
-									<td><button icon="terp-go-week" class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-									<td><button icon="terp-dolar" class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-								</tr>
-								<div name="end_of_tabl_hook"/>
-								<tr>
-									<th class="oe_border_right">Total</th>
-									<td width="10px"></td>
-									<td class="oe_th_110px oe_border_top"><field name="est_total" nolabel="1"/></td>
-									<td class="oe_th_110px oe_border_top"><field name="invoiced_total" nolabel="1"/></td>
-									<td class="oe_th_110px oe_border_right oe_border_top"><field name="remaining_total" nolabel="1"/></td>
-									<td class="oe_th_110px oe_border_top"><field name="toinvoice_total" nolabel="1"/></td>
-								</tr>
-							</table>
-						</group>
+						<group colspan="4" col="6">
+                        <!-- header -->
+                        <div class="oe_field_label" colspan="2"/>
+                        <group colspan="4" col="6">
+                            <div class="oe_field_label_bold">Est.Tot</div>
+                            <div class="oe_field_label_bold">Invoiced</div>
+                            <div class="oe_field_label_bold">Remaining</div>
+                            <div class="oe_field_label_bold">To Invoice</div>
+                            <div class="oe_btn_width_small"/>
+                            <div class="oe_btn_width"/>
+                        </group>
+                        
+                        <!-- center -->
+                        
+                        <field class="oe_field_label" name="fix_price_invoices" />
+                        <group colspan="4" col="6" attrs="{'invisible': [('fix_price_invoices','=',False)]}">
+                            <field class="oe_float_field" name="amount_max" nolabel="1"   />
+                            <field class="oe_float_field" name="ca_invoiced" nolabel="1"   />
+                            <field class="oe_float_field" name="remaining_ca" nolabel="1"   />
+                            <field class="oe_float_field" name="ca_to_invoice" nolabel="1"   />
+                            <div><button class="oe_btn_width_small" icon="terp-check" name="%(account_analytic_analysis.action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></div>
+                            <div><button class="oe_btn_width" icon="terp-dolar_ok!" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></div>
+                        </group>
+                        
+                        <field class="oe_field_label" name="invoice_on_timesheets"/>
+                         <group colspan="4" col="6" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                            <field class="oe_float_field" name="hours_qtt_est" nolabel="1" />
+                            <field class="oe_float_field" name="hours_qtt_invoiced" nolabel="1"/>
+                            <field class="oe_float_field" name="remaining_hours" nolabel="1" />
+                            <field class="oe_float_field" name="hours_qtt_non_invoiced" nolabel="1" />
+                            <div><button class="oe_btn_width_small" icon="terp-go-week" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" /></div>
+                            <div><button class="oe_btn_width" icon="terp-dolar" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/></div>
+                        </group>
+                        
+                        <!-- footer -->
+                        
+                        <div class="oe_field_label oe_border_right" style="max-width:200px;" colspan="2">Total  </div>
+                        <group colspan="4" col="6" >
+                            <field name="est_total" nolabel="1" class="oe_float_field oe_border_top"/>
+                            <field name="invoiced_total" nolabel="1" class="oe_float_field oe_border_top"/>
+                            <field name="remaining_total" nolabel="1" class="oe_float_field oe_border_top"/>
+                            <field name="toinvoice_total" nolabel="1" class="oe_float_field oe_border_top"/>
+                            <div class="oe_btn_width_small"/>
+                            <div class="oe_btn_width"/>
+                        </group>
+                      </group>
 						<separator string="Terms and Conditions" colspan="4" name="description"/>
 						<field colspan="4" name="description" nolabel="1"/>
 					</page>
