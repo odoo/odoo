@@ -898,8 +898,9 @@
             <field name="arch" type="xml">
                 <search string="Search Taxes">
                     <group>
-                        <field name="name"/>
-                        <field name="description"/>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]"
+                        string="Tax"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                 </search>
