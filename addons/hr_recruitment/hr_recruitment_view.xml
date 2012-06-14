@@ -495,6 +495,12 @@
             <field name="partner_id" position="before">
                 <field name="applicant_id" attrs="{'invisible': [('categ_id','!=',%(hr_recruitment.categ_meet_interview)d)]}"/>
             </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('categ_id','=',%(hr_recruitment.categ_meet_interview)d)]}</attribute>
+            </field>
+            <field name="section_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('categ_id','=',%(hr_recruitment.categ_meet_interview)d)]}</attribute>
+            </field>
         </field>
     </record>
 
