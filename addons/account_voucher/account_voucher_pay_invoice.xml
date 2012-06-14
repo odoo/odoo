@@ -8,7 +8,7 @@
            <field name="inherit_id" ref="account.invoice_form"/>
            <field name="arch" type="xml">
            <button name="invoice_open" position="after">
-               <button name="invoice_pay_customer" type="object" string="Register Payment" states="open" icon="gtk-go-forward" class="oe_form_button_active_flow"/>
+               <button name="invoice_pay_customer" type="object" class="oe_form_button_active_flow" string="Register Payment" states="open" icon="gtk-go-forward"/>
            </button>
            </field>
         </record>
