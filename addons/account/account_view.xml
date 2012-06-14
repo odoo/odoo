@@ -2334,8 +2334,9 @@
             <field name="arch" type="xml">
                 <search string="Search tax template">
                     <group>
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                        string="Tax Template"/>
                         <field name="parent_id"/>
                     </group>
                     <newline/>
