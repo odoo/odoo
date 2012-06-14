@@ -49,6 +49,9 @@
         <field name="arch" type="xml">
             <search string="Sales Receipt Analysis">
               <group>
+                    <field name="date"/>
+                    <field name="date_due"/>
+                    <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
@@ -68,11 +71,8 @@
                 <newline/>
                 <group expand="0" string="Extended Filters...">
                     <field name="journal_id" widget="selection"/>
-                    <field name="pay_now"/>
                     <field name="account_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_due"/>
-                    <field name="date"/>
+                    <field name="pay_now"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
