@@ -2289,11 +2289,13 @@
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
                     <group>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]"
+                        string="Tax Template"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
                         <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="description"/>
                         <field name="chart_template_id"/>
                     </group>
                 </search>
