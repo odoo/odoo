@@ -7,16 +7,14 @@
         <field name="model">document.webdav.dir.property</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Properties" version="7.0">
-                <sheet layout="auto">
-                    <group col="4">
-                        <field name="namespace"/>
-                        <field name="name"/>
-                        <field name="dir_id" />
-                        <field name="do_subst" />
-                    </group>
-                    <field name="value" colspan="4" />
-                </sheet>
+            <form string="Properties">
+                <group col="4">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                    <field name="dir_id" />
+                    <field name="do_subst" />
+                </group>
+                <field name="value" colspan="4" />
             </form>
         </field>
     </record>
@@ -109,17 +107,15 @@
         <field name="model">document.webdav.file.property</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Properties" version="7.0">
-                <sheet layout="auto">
-                    <group col="4">
-                        <field name="namespace"/>
-                        <field name="name"/>
-                        <newline />
-                        <field name="file_id" />
-                        <field name="do_subst" />
-                    </group>
-                    <field name="value"/>
-                </sheet>
+            <form string="Properties">
+                <group col="4">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                    <newline />
+                    <field name="file_id" />
+                    <field name="do_subst" />
+                </group>
+                <field name="value"/>
             </form>
         </field>
     </record>

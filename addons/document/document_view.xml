@@ -7,19 +7,17 @@
         <field name="model">document.storage</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Storage Media" version="7.0">
-                <sheet layout="auto">
-                    <group col="4">
-                        <field name="name" colspan="4"/>
-                        <field name="type"/>
-                        <field name="user_id"/>
-                        <field name="online"/>
-                        <field name="readonly"/>
-                    </group>
-                    <group attrs="{'invisible':[('type','in',['db', 'db64'])]}">
-                        <field name="path"/>
-                    </group>
-                </sheet>
+            <form string="Storage Media">
+                <group col="4">
+                    <field name="name" colspan="4"/>
+                    <field name="type"/>
+                    <field name="user_id"/>
+                    <field name="online"/>
+                    <field name="readonly"/>
+                </group>
+                <group attrs="{'invisible':[('type','in',['db', 'db64'])]}">
+                    <field name="path"/>
+                </group>
             </form>
         </field>
     </record>
