@@ -20,7 +20,6 @@ class TestO2MSerialization(common.TransactionCase):
     def setUp(self):
         super(TestO2MSerialization, self).setUp()
         self.partner = self.registry('res.partner')
-#        self.address = self.registry('res.partner.address')
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
