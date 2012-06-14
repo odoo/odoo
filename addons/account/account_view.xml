@@ -2531,8 +2531,8 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object"/>
-                    <button name="button_open" states="draft" string="Open CashBox" type="object"/>
+                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_form_button_active_flow"/>
+                    <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_form_button_active_flow"/>
                     <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
