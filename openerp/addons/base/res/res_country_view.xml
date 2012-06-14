@@ -3,8 +3,8 @@
     <data>
 
         <!--
-		Country
-		-->
+        Country
+        -->
 
         <record id="view_country_tree" model="ir.ui.view">
             <field name="name">res.country.tree</field>
@@ -23,10 +23,12 @@
             <field name="model">res.country</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Country">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="address_format" colspan="4" groups="base.group_no_one"/>
+                <form string="Country" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="address_format" colspan="4" groups="base.group_no_one"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -65,10 +67,12 @@
             <field name="model">res.country.state</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="State">
-                    <field name="country_id" select="1"/>
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                <form string="State" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id"/>
+                    </group>
                 </form>
             </field>
         </record>

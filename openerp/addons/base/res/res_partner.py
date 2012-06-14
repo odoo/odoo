@@ -143,7 +143,6 @@ class res_partner(osv.osv):
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
         'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Tags'),
-        'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
@@ -205,7 +204,7 @@ class res_partner(osv.osv):
         if default is None:
             default = {}
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
-        default.update({'name': _('%s (copy)')%(name), 'events':[]})
+        default.update({'name': _('%s (copy)')%(name)})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):

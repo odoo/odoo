@@ -8,13 +8,14 @@
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
             <field name="type">form</field>
-            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <form string="Module Category">
-                    <field name="name"/>
-                    <field name="parent_id"/>
-                    <field name="sequence"/>
-                    <field name="description" colspan="4"/>
+                <form string="Module Category" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <field name="description"/>
                 </form>
             </field>
         </record>
@@ -118,40 +119,48 @@
             <field name="model">ir.module.module</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
+                <form string="Module" version="7.0">
+                <header>
                     <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_form_button_hi"/>
                     <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_form_button_hi"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)"
-                                        icon="terp-dialog-close" type="object"
-                                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
+                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"
+                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
                     <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
                     <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
                     <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="uninstalled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="uninstalled"/>
+                </header>
+                <sheet>
+                    <div class="oe_right oe_form_button_box">
+                        <field name="icon_image" widget="image"/>
                     </div>
-                </div>
-                <sheet string="Module" layout="auto">
-                    <field name="icon" widget='image' nolabel="1" rowspan="6" colspan="1"/>
-                    <group colspan="2" col="2" class="oe_form_group_label_border">
-                        <field name="shortdesc" string="Application Name"/>
-                        <field name="category_id"/>
-                        <field name="author" select="2"/>
-                        <field name="license"/>
-                        <field name="website" select="2" widget="url" string="Author Website"/>
-                        <field name="installed_version"/>
+                    <div class="oe_form_title">
+                        <label for="shortdesc" class="oe_form_readonly_hidden"/>
+                        <h1><field name="shortdesc"/></h1>
+                        <label for="category_id" class="oe_form_readonly_hidden"/>
+                        <h2><field name="category_id" class="oe_form_inline"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="license"/>
+                            <field name="installed_version"/>
+                        </group>
+                        <group>
+                            <field name="author"/>
+                            <field name="website" widget="url"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Description">
-                            <field colspan="4" name="description" select="2" nolabel="1" rowspan="6"/>
+                            <field name="description"/>
                         </page>
                         <page string="Technical Data">
-                            <field name="name"/>
-                            <field name="certificate" />
-                            <field name="demo"/>
-                            <field name="application"/>
-                            <field colspan="4" name="dependencies_id" nolabel="1">
+                            <group col="4">
+                                <field name="demo"/>
+                                <field name="application"/>
+                            </group>
+                            <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
                                     <field name="state"/>
@@ -159,12 +168,12 @@
                             </field>
                         </page>
                         <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <separator string="Created Menus" colspan="4"/>
-                            <field colspan="4" name="menus_by_module" nolabel="1"/>
-                            <separator string="Created Views" colspan="2"/>
-                            <separator string="Defined Reports" colspan="2"/>
-                            <field colspan="2" name="views_by_module" nolabel="1"/>
-                            <field colspan="2" name="reports_by_module" nolabel="1"/>
+                            <label for="menus_by_module" string="Created Menus"/>
+                            <field name="menus_by_module"/>
+                            <label for="views_by_module" string="Created Views"/>
+                            <field name="views_by_module"/>
+                            <label for="reports_by_module" string="Defined Reports"/>
+                            <field name="reports_by_module"/>
                         </page>
                     </notebook>
                     </sheet>
