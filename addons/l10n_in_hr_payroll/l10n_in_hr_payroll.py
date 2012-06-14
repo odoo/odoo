@@ -113,7 +113,7 @@ class payroll_advice(osv.osv):
         'number':fields.char('Number', size=16, readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Chaque Nos', size=256),
-        'company_id':fields.many2one('res.company', 'Company',required=True, states={'draft': [('readonly', False)]}),
+        'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank Address from whcih the salary is going to be paid"),
     }
     
@@ -131,7 +131,6 @@ class payroll_advice(osv.osv):
         payslip_pool = self.pool.get('hr.payslip')
         advice_line_pool = self.pool.get('hr.payroll.advice.line')
         payslip_line_pool = self.pool.get('hr.payslip.line')
-        sequence_pool = self.pool.get('ir.sequence')
 
         for advice in self.browse(cr, uid, ids, context=context):
             old_line_ids = advice_line_pool.search(cr, uid, [('advice_id','=',advice.id)], context=context)
@@ -155,14 +154,16 @@ class payroll_advice(osv.osv):
                             'bysal': line.total
                             }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
-        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
-        self.write(cr, uid, ids, {'number':number}, context=context)
+        return True
 
     def confirm_sheet(self, cr, uid, ids, context=None):
+        sequence_pool = self.pool.get('ir.sequence')
+
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
                 raise osv.except_osv(_('No Payment Advice Lines !'), _('You can not confirm Payment advice without advice lines.'))
-        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
+        return self.write(cr, uid, ids, {'number':number,'state':'confirm'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
