@@ -56,6 +56,8 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
               <group>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
@@ -90,7 +92,6 @@
                    <field name="partner_id"/>
                    <field name="user_id" />
                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
-                   <field name="date"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
