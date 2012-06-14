@@ -20,12 +20,13 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
-                    <button name="set_done" string="Done" type="object" states="open,pending"/>
-                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close"/>
-                    <button name="set_pending" string="Pending" type="object" states="open"/>
+                    <button name="set_done" string="Done" type="object" states="open,pending" class="oe_form_button_active_flow"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_form_button_active_flow"/>
+                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close" class="oe_form_button_return_flow"/>
+                    <button name="set_pending" string="Pending" type="object" states="open" class="oe_form_button_active_flow"/>
                     <button name="set_template" string="Set as Template" type="object" states="open"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_form_button_active_flow"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_form_button_active_flow"/>
                     <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
                 </header>
@@ -326,15 +327,15 @@
                 <form string="Project" version="7.0">
                     <header>
                         <button name="do_open" string="Start Task" type="object"
-                                states="draft,pending"/>
+                                states="draft,pending" class="oe_form_button_active_flow"/>
                         <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                states="done,cancelled" context="{'button_reactivate':True}"/>
+                                states="done,cancelled" context="{'button_reactivate':True}" class="oe_form_button_active_flow"/>
                         <button name="do_pending" string="Pending" type="object"
-                                states="open"/>
+                                states="open" class="oe_form_button_active_flow"/>
                         <button name="action_close" string="Done" type="object"
-                                states="draft,open,pending"/>
+                                states="draft,open,pending" class="oe_form_button_active_flow"/>
                         <button name="do_draft" string="Draft" type="object"
-                                states="cancel,done"/>
+                                states="cancel,done" class="oe_form_button_return_flow"/>
                         <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
                                 states="pending,open,draft" groups="project.group_delegate_task"/>
                         <button name="do_cancel" string="Cancel" type="object"
