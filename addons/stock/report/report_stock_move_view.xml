@@ -67,22 +67,21 @@
         <field name="arch" type="xml">
             <search string="Moves Analysis">
                 <group>
-                <filter string="Done"
-                    name="done"
-                    icon="terp-dialog-close"
-                    domain="[('state','=','done')]"
-                    help = "Completed Stock-Moves"/>
-                <filter string="Todo"
-                    icon="terp-gtk-go-back-rtl"
-                    domain="[('state','in',('assigned','waiting','confirmed'))]"
-                    help = "Future Stock-Moves"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
-                <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
-                <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
-                <separator orientation="vertical"/>
-                <field name="product_id" default_focus="1"/>
-                <field name="partner_id" context="{'contact_display':'partner'}"/>
+                    <filter string="Done"
+                        name="done"
+                        icon="terp-dialog-close"
+                        domain="[('state','=','done')]"
+                        help = "Completed Stock-Moves"/>
+                    <filter string="Todo"
+                        icon="terp-gtk-go-back-rtl"
+                        domain="[('state','in',('assigned','waiting','confirmed'))]"
+                        help = "Future Stock-Moves"/>
+                    <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
+                    <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
+                    <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="product_id" default_focus="1"/>
+                    <field name="partner_id" context="{'contact_display':'partner'}"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters...">
@@ -180,13 +179,10 @@
                         icon="terp-check"
                         domain="[('state','=','done')]"
                         help="Analysis of current inventory (only moves that have already been processed)"/>
-
                     <filter string="Future"
                         icon="terp-stock"
                         domain="[('state','in',('assigned','done','waiting','confirmed'))]"
                         help = "Analysis including future moves (similar to virtual stock)"/>
-
-                    <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
                     <separator orientation="vertical"/>
                     <field name="product_id" default_focus="1"/>
