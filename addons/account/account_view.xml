@@ -384,7 +384,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Journal View">
-                    <field name="name"/>
+                    <field name="name"
+                    filter_domain="[('name','ilike',self)]"
+                    string="Journal View"/>
                 </search>
             </field>
         </record>
