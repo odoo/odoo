@@ -222,16 +222,18 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group>
+                        <field name="name"
+                        filter_domain="[('name','ilike',self)]"
+                        string="Analytic Line"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
                         <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
                         <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
+                        <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="name"/>
                         <field name="account_id"/>
-                        <field name="user_id">
-                            <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
-                        </field>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group string="Group By..." expand="0">
