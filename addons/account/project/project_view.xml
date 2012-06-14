@@ -329,12 +329,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Journals">
-                  <group>
-                      <field name="code"/>
-                      <field name="name"/>
-                      <field name="type"/>
-                  </group>
-                  <newline/>
+                    <group>
+                        <field name="name"
+                        filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
+                        string="Analytic Journal"/>
+                        <field name="type"/>
+                    </group>
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
