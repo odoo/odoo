@@ -2543,6 +2543,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         var tip_delay = 200;
         var tip_duration = 3000;
         var anyoneLoosesFocus = function() {
+            var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
                     if (self.last_search[0][0] != self.get("value")) {
@@ -2550,13 +2551,17 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.set({value: self.last_search[0][0]});
                     } else {
+                        used = true;
                         self.render_value();
                     }
                 } else {
+                    used = true;
                     self.set({value: false});
+                    self.render_value();
                 }
+                self.floating = false;
             }
-            if (! self.get("value")) {
+            if (used) {
                 tip_def.reject();
                 untip_def.reject();
                 tip_def = $.Deferred();
@@ -2603,7 +2608,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
                 e.preventDefault();
             },
             html: true,
-            close: anyoneLoosesFocus,
+            // disabled to solve a bug, but may cause others
+            //close: anyoneLoosesFocus,
             minLength: 0,
             delay: 0
         });
