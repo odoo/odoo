@@ -1139,12 +1139,12 @@ class account_analytic_account(osv.osv):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
         project_obj = self.pool.get('project.project')
-        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)], context=context)
         if analytic_ids:
             raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
-        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 account_analytic_account()
 
