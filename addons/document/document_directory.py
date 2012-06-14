@@ -78,9 +78,8 @@ class document_directory(osv.osv):
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
             return root_id
         except Exception, e:
-            import netsvc
-            logger = netsvc.Logger()
-            logger.notifyChannel("document", netsvc.LOG_WARNING, 'Cannot set directory root:'+ str(e))
+            import logging
+            logging.getLogger('document').warning('Cannot set directory root:'+ str(e))
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
 
