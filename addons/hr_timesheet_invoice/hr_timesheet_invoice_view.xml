@@ -8,12 +8,14 @@
             <field name="priority">30</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="toinvoice"]' position='inside'>
-                    <field name="pricelist_id" />
-                    <field name="to_invoice" widget="selection"/>
+                <xpath expr='//separator[@name="description"]' position='before'>
+                    <group col="4">
+                        <field name="pricelist_id" />
+                        <field name="to_invoice" widget="selection"/>
+                    </group>
                  </xpath>
                 <xpath expr="//field[@name='use_timesheets']" position="replace">
-                    <field name="use_timesheets" on_change="on_change_use_timesheets(use_timesheets, context)" string="USE TIMESHEETS blablabla"/>
+                    <field name="use_timesheets" on_change="on_change_use_timesheets(use_timesheets, context)"/>
                 </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
