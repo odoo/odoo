@@ -1633,7 +1633,6 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         this.$element
         .on('click', 'h4', this.proxy('show_option'))
         .on('submit', 'form', function (e) {e.preventDefault(); self.add_dashboard();});
-        this.$element.find('.searchview_extended_delete_prop').click(function () {self.$element.toggleClass('oe_opened');});
         return this.rpc('/web/searchview/get_all_dashboard', {}, function(r) {self.menu_data = r;}).pipe(this.proxy("render_data"))
     },
     render_data: function(){
