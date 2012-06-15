@@ -22,7 +22,7 @@
                             <group>
                                 <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','!=','template')]}"/>
                                 <field name="manager_id"/>
-                                <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
+                                <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                             </group>
                         </group>
                         <notebook>
@@ -33,7 +33,7 @@
                                         <field name="date"/>
                                     </group>
                                     <group name="project">
-                                        <separator colspan="2" string="Project Management" name="project_sep" invisible="1"/>
+                                        <separator string="Project Management" name="project_sep" invisible="1"/>
                                     </group>
                                 </group>
                                 <separator string="Terms and Conditions" name="description"/>
