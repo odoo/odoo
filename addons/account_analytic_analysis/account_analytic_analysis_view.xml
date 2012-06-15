@@ -32,7 +32,7 @@
                 </xpath>
                 <xpath expr='//group[@name="master"]' position='after'>
                     <separator name="toinvoice" string="Invoicing"/>
-                    <table>
+                    <table width="100%%">
                         <tr>
                             <th></th>
                             <th></th>
@@ -45,47 +45,47 @@
                             <td>
                                 <label for="fix_price_invoices"/>
                             </td><td>
-                                <field name="fix_price_invoices"/>
+                                <field name="fix_price_invoices" class="oe_form_inline"/>
                             </td><td>
-                                <field class="oe_float_field" name="amount_max"   />
+                                <field class="oe_form_inline" name="amount_max"   />
                             </td><td>
-                                <field class="oe_float_field" name="ca_invoiced"   />
+                                <field class="oe_form_inline" name="ca_invoiced"   />
                             </td><td>
-                                <field class="oe_float_field" name="remaining_ca"   />
+                                <field class="oe_form_inline" name="remaining_ca"   />
                             </td><td>
-                                <field class="oe_float_field" name="ca_to_invoice"   />
+                                <field class="oe_form_inline" name="ca_to_invoice"   />
                             </td><td>
-                                <button class="oe_btn_width_small" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
-                                <button class="oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></td>
+                                <button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
+                                <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></td>
                         </tr><tr>
                             <td>
                                 <label for="invoice_on_timesheets"/>
                             </td><td>
                                 <field name="invoice_on_timesheets"/>
                             </td><td>
-                                <field class="oe_float_field" name="hours_qtt_est"  attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_form_inline" name="hours_qtt_est"  attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_float_field" name="hours_qtt_invoiced"/>
+                                <field class="oe_form_inline" name="hours_qtt_invoiced"/>
                             </td><td>
-                                <field class="oe_float_field" name="remaining_hours_to_invoice" />
+                                <field class="oe_form_inline" name="remaining_hours_to_invoice" />
                             </td><td>
-                                <field class="oe_float_field" name="hours_qtt_non_invoiced" />
+                                <field class="oe_form_inline" name="hours_qtt_non_invoiced" />
                             </td><td>
-                                <button class="oe_btn_width_small" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" />
-                                <button class="oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/>
+                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" />
+                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/>
                             </td>
                         </tr><tr>
-                            <td>
+                            <th>
                                 <label string="Total"/>
+                            </th><td>
                             </td><td>
+                                <field name="est_total" class="oe_form_inline" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field name="est_total" class="oe_field_label_bold oe_border_top" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field name="invoiced_total" class="oe_form_inline"/>
                             </td><td>
-                                <field name="invoiced_total" class="oe_field_label_bold oe_border_top"/>
+                                <field name="remaining_total" class="oe_form_inline"/>
                             </td><td>
-                                <field name="remaining_total" class="oe_field_label_bold oe_border_top"/>
-                            </td><td>
-                                <field name="toinvoice_total" class="oe_field_label_bold oe_border_top"/>
+                                <field name="toinvoice_total" class="oe_form_inline"/>
                             </td><td>
                             </td>
                         </tr>
