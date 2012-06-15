@@ -117,7 +117,7 @@ class mail_message_common(osv.TransientModel):
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-        'destination_partners': fields.many2many('res.partner',
+        'destination_partner_ids': fields.many2many('res.partner',
             'mail_message_common_partners_destination_rel',
             'common_id', 'partner_id', 'Destination partners'),
         'headers': fields.text('Message Headers', readonly=1,
