@@ -2673,6 +2673,9 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
+                if line.product_id.track_incoming and not line.prod_lot_id:
+                    raise osv.except_osv(_('Warning'),
+                    _('Please provide "Production Lot" as incoming tracking lot is required for "%s".') %line.product_id.name)
                 product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
 
