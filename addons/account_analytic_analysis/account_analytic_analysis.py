@@ -437,6 +437,26 @@ class account_analytic_account(osv.osv):
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
     }
+    
+    def open_sale_order_lines(self,cr,uid,ids,context=None):
+        if context is None:
+            context = {}
+        account = self.browse(cr,uid,ids[0],context)
+        sale_pool = self.pool.get('sale.order')
+        sale_ids = sale_pool.search(cr,uid,[('project_id','in',ids),('partner_id','=',account.partner_id.id)])
+        sale_context = {}
+        domain = [('order_id','in',sale_ids)]
+        sale_context = {'search_default_invoiced':False,'default_invoiced':False}
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sale Order Lines'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context':sale_context,
+            'domain' : domain,
+            'res_model': 'sale.order.line',
+            'nodestroy': True,
+        }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         if not template_id:
