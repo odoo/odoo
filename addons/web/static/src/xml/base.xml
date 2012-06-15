@@ -404,7 +404,7 @@
             <col width="33%"/>
             <col width="33%"/>
             <col width="34%"/>
-            <tr class="oe_header_row">
+            <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
                             <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
@@ -517,48 +517,22 @@
                         <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
                             <t t-raw="item.label"/>
                         </a>
+                        <a class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
                     </li>
-                    <li t-if="section.name == 'files'" class="oe_sidebar_add" style="display:none;">
-                        Input type file stuff
+                    <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
+                        <t t-call="HiddenInputFile">
+                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                            <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                            <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
+                            <input type="hidden" name="id" t-att-value="widget.model_id"/>
+                            <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                            <span>Add...</span>
+                        </t>
                     </li>
                 </ul>
             </div>
         </t>
     </div>
-</t>
-<t t-name="Sidebar.attachments">
-    <div class="oe-sidebar-attachments-toolbar">
-        <div class="oe-binary-file-set" style="float: right">
-            <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
-                method="post" enctype="multipart/form-data" action="/web/binary/upload_attachment">
-                <input type="hidden" name="session_id" t-att-value="session.session_id"/>
-                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
-                <input type="hidden" name="model" t-att-value="view.dataset.model"/>
-                <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
-                <button class="oe_button" type="button">
-                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
-                    <span>Add</span>
-                </button>
-                <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
-                    t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
-            </form>
-            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"/>
-        </div>
-    </div>
-    <br style="clear: both"/>
-    <ul class="oe-sidebar-attachments-items">
-        <li t-foreach="attachments" t-as="attachment">
-            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
-                + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
-            <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
-                <t t-esc="attachment.name"/>
-            </a>
-            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
-                <img t-att-src='_s + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
-            </a>
-        </li>
-    </ul>
 </t>
 
 <t t-name="TreeView">
@@ -642,8 +616,8 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_list_add oe_form_button_hi" t-if="widget.options.addable">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
+        <button type="button" class="oe_button oe_list_add oe_form_button_hi">
             <t t-esc="widget.options.addable"/>
         </button>
         <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
@@ -1049,21 +1023,13 @@
 </t>
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image">
-        <div class="oe_form_field_image_controls">
-            <div class="oe-binary-file-set">
-                <form class="oe-binary-form" t-att-target="widget.iframe"
-                    method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                    <input type="hidden" name="session_id" value=""/>
-                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                    <button class="oe_button" type="button" title="Set Image">
-                        <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                    </button>
-                    <input type="file" class="oe-binary-file" name="ufile"
-                        t-att-tabindex="widget.node.attrs.tabindex"
-                        t-att-autofocus="widget.node.attrs.autofocus"
-                    />
-                </form>
-            </div>
+        <div class="oe_form_field_image_controls oe_form_readonly_hidden">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <button class="oe_button" type="button" title="Set Image">
+                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                </button>
+            </t>
             <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
             </button>
@@ -1071,7 +1037,6 @@
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </div>
     </span>
 </t>
@@ -1099,24 +1064,22 @@
                 <table cellspacing="0" cellpadding="0" border="0">
                 <tr>
                     <td>
-                        <div class="oe-binary-file-set" style="width: 80px; height:22px;">
-                            <form class="oe-binary-form" t-att-target="widget.iframe"
-                                method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                                <input type="hidden" name="session_id" value=""/>
-                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                                <button class="oe_button oe_field_button" type="button" title="Set Image">
-                                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                                    <span>Select</span>
-                                </button>
-                                <input type="file" class="oe-binary-file" name="ufile"/>
-                            </form>
-                        </div>
+                        <t t-call="HiddenInputFile">
+                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                            <t t-set="fileupload_style">width: 83px;</t>
+                            <button class="oe_button oe_field_button" type="button" title="Set Image">
+                                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                                <span>Select</span>
+                            </button>
+                        </t>
                     </td>
                     <td>
-                        <button class="oe_button oe-binary-file-save" type="button" title="Save As">
-                            <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
-                            <span>Save As</span>
-                        </button>
+                        <a class="oe_binary_file_save_data">
+                            <button class="oe_button oe_binary_file_save" type="button" title="Save As">
+                                <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
+                                <span>Save As</span>
+                            </button>
+                        </a>
                     </td>
                     <td>
                         <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
@@ -1130,7 +1093,6 @@
             <td class="oe-binary-progress" style="display: none" nowrap="true">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
-                <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
             </td>
         </tr>
         </table>
@@ -1140,6 +1102,18 @@
             <a href="javascript:void(0)" class="oe_form_uri"/>
         </span>
     </t>
+</t>
+<t t-name="HiddenInputFile">
+    <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
+        <form class="oe-binary-form" t-att-target="fileupload_id"
+            method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+            <input type="hidden" name="session_id" value=""/>
+            <input type="hidden" name="callback" t-att-value="fileupload_id"/>
+            <t t-raw="__content__"/>
+            <input type="file" class="oe-binary-file" name="ufile"/>
+        </form>
+        <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+    </div>
 </t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button oe_form_button"
@@ -1204,7 +1178,7 @@
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+    <t t-jquery=".oe_header_row_top" t-operation="replace"/>
 
     <t t-jquery=".oe-view-manager-header">
         this.attr('t-if', 'views.length != 1');
@@ -1409,10 +1383,10 @@
         </t>
     </t>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_section">
+<div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
 
 </div>
-<div t-name="SearchView.CustomFilters" class="oe_searchview_section">
+<div t-name="SearchView.CustomFilters" class="oe_searchview_custom oe_searchview_section">
     <div>
         <h3><span class="oe_i">M</span> Custom Filters</h3>
         <ul class="oe_searchview_custom_list"/>

@@ -400,6 +400,29 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     }
 });
 
+/**
+ * Event Bus used to bind events scoped in the current instance
+ */
+instance.web.bus = new (instance.web.Class.extend(instance.web.EventDispatcherMixin, {
+    init: function() {
+        instance.web.EventDispatcherMixin.init.call(this, parent);
+        var self = this;
+        // TODO fme: allow user to bind keys for some global actions.
+        //           check gtk bindings
+        // http://unixpapa.com/js/key.html
+        _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
+            $('html').on(evtype, self, function(ev) {
+                self.trigger(evtype, ev);
+            });
+        });
+        _.each('resize,scroll'.split(','), function(evtype) {
+            $(window).on(evtype, self, function(ev) {
+                self.trigger(evtype, ev);
+            });
+        });
+    }
+}))();
+
 /** OpenERP Translations */
 instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
     /**
