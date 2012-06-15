@@ -1391,7 +1391,7 @@
         <div class="oe_searchview_custom">
           <h4>Save current filter</h4>
           <form>
-            <p><input id="oe_searchview_custom_input" t-att-placeholder="_t('Filter name')"/></p>
+            <p><input id="oe_searchview_custom_input" t-att-placeholder="Filter name"/></p>
             <p><input id="oe_searchview_custom_public" type="checkbox"/>
               <label for="oe_searchview_custom_public">Share with all users</label></p>
             <button>Save</button>
@@ -1711,7 +1711,7 @@
         </tr>
         <tr>
             <td t-foreach="records[0]" t-as="column">
-                <input class="sel_fields" t-att-placeholder="_t('--- Don't Import ---')"/><span class="oe-m2o-drop-down-button">
+                <input class="sel_fields" t-att-placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
                         <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
         </tr>
