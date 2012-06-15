@@ -616,6 +616,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Views" version="7.0">
+                   <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -630,6 +631,7 @@
                         </group>
                     </group>
                     <field name="arch"/>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -742,6 +744,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments" version="7.0">
+                   <sheet>
                     <group col="4">
                         <field name="name" />
                         <field name="type"/>
@@ -770,6 +773,7 @@
                         <field name="description"/>
                     </page>
                     </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -843,6 +847,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Model Description" version="7.0">
+                  <sheet>
                     <group col="6">
                         <field name="name"/>
                         <field name="model"/>
@@ -916,6 +921,7 @@
                             <field name="view_ids"/>
                         </page>
                     </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -972,6 +978,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fields" version="7.0">
+                  <sheet>
                     <group colspan="4" col="6">
                         <field name="name" />
                         <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
@@ -1004,6 +1011,7 @@
                             <field name="groups"/>
                         </page>
                     </notebook>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -1168,6 +1176,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Translations" version="7.0">
+                   <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -1184,6 +1193,7 @@
                            <field name="value" nolabel="1" height="400"/>
                         </group>
                     </group>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -1260,6 +1270,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Menu" version="7.0">
+                  <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -1288,6 +1299,7 @@
                             </field>
                         </page>
                     </notebook>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1340,6 +1352,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Actions" version="7.0">
+                   <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -1366,6 +1379,7 @@
                         <field name="args"/>
                     </page>
                     </notebook>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1439,6 +1453,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access Controls" version="7.0">
+                   <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -1450,6 +1465,7 @@
                         <field name="perm_create"/>
                         <field name="perm_unlink"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1496,6 +1512,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules" version="7.0">
+                  <sheet>
                     <group>
                         <group string="General">
                             <field colspan="4" name="name"/>
@@ -1528,6 +1545,7 @@
                         <label colspan="2"
                             string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1593,6 +1611,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action" version="7.0">
+                  <sheet> 
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -1669,6 +1688,7 @@
                         </page>
                     </notebook>
                     <field name="type" readonly="1"/>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -1862,6 +1882,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Outgoing Mail Servers" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>
@@ -1877,6 +1898,7 @@
                         <field name="smtp_pass" password="True"/>
                         <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
                     </group>
+                  </sheet>  
                 </form>
             </field>
         </record>
