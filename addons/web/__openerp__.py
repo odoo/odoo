@@ -10,7 +10,6 @@
     'auto_install': True,
     'post_load' : 'wsgi_postload',
     'js' : [
-        "static/lib/cleditor/jquery.cleditor.min.js",
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
         "static/lib/datejs/parser.js",
@@ -36,6 +35,7 @@
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
+        "static/lib/cleditor/jquery.cleditor.min.js",
 
         "static/lib/labjs/LAB.src.js",
         "static/lib/py.js/lib/py.js",
@@ -57,7 +57,6 @@
         "static/src/js/view_editor.js"
     ],
     'css' : [
-        "static/lib/cleditor/jquery.cleditor.css",
         "static/lib/jquery.superfish/css/superfish.css",
         "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
@@ -67,6 +66,7 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
+        "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [
         "static/src/xml/*.xml",
