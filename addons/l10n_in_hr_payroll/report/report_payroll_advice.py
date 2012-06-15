@@ -23,8 +23,8 @@
 
 import time
 from datetime import datetime
-from report import report_sxw
 
+from report import report_sxw
 from tools import amount_to_text_en
 
 class payroll_advice_report(report_sxw.rml_parse):
