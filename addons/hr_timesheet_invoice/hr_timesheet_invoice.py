@@ -82,8 +82,9 @@ class account_analytic_account(osv.osv):
         res = {'value': {}}
         if use_timesheets:
             ir_model_obj = self.pool.get('ir.model.data')
-            res['value']['to_invoice'] = ir_model_obj.get_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
+            res['value']['to_invoice'] = ir_model_obj.get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
         return res
+
     def on_change_partner_id(self, cr, uid, ids,partner_id, name, context=None):
         res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, name, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
