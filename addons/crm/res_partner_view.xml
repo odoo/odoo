@@ -85,6 +85,27 @@
             </field>
         </record>
 
+
+        <record model="ir.ui.view" id="res_partner_view_buttons">
+            <field name="name">res.partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action"
+                        string="Schedule a Meeting"
+                        name="%(crm.crm_case_categ_meet_create_partner)d"
+                        context="{'search_default_partner_id': [active_id], 'default_duration': 4.0}"/>
+                    <button type="action" string="Schedule a Call" 
+                        name="%(crm.crm_case_categ_phone_create_partner)d" 
+                        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}" />
+                    <button type="action" string="Create an Opportunity"
+                        name="%(crm.action_view_crm_partner2opportunity)d" />
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
 

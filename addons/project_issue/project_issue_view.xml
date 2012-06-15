@@ -84,13 +84,8 @@
                             <field name="user_id"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
-                            <label for="task_id"/>
-                            <div>
-                                <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_form_inline"/>
-                                <button string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"
-                                    attrs="{'invisible':[('task_id','!=',False)]}" />
-                            </div>
                         </group><group>
+                            <field name="task_id" on_change="onchange_task_id(task_id)" />
                             <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                             <field name="version_id" widget="selection"/>
                             <field name="priority"/>
@@ -98,7 +93,7 @@
                             <field name="state" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <field name="description"/>
+                    <field name="description" placeholder="Add a description..." />
 
                     <notebook groups="base.group_no_one">
                         <page string="Extra Info">
@@ -258,7 +253,6 @@
                                         <a string="Edit" icon="gtk-edit" type="edit"/>
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
                                         <a string="Escalate" name="case_escalate"  icon="gtk-go-up" type="object"/>
                                         <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
                                     </div>
