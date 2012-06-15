@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- TODO get own css -->
+        <record id="reset_password_wizard_form_view" model="ir.ui.view">
+            <field name="name">reset_password.wizard.form</field>
+            <field name="model">reset_password.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Reset Password" version="7.0">
+                    <field name="state" invisible="1"/> 
+                    <field name="token" on_change="onchange_token(token)" invisible="1"/>
+               		<group colspan="4" states="draft,missmatch">
+		                <field name="pw" required='1' on_change="onchange_pw(pw,cpw)"/>
+		                <field name="cpw" required='1' on_change="onchange_pw(pw,cpw)"/>
+                        <group colspan="4" states="missmatch">
+                            <div>Passwords missmatch</div>
+                        </group>
+                        <group colspan="2" col="1">
+                            <button string="Change Password" name="change" icon="gtk-dialog-authentication" attrs="{'readonly': [('state', '=', 'missmatch')]}"/>
+                        </group>
+		            </group>
+                    <group colspan="4" states="error" col="1">
+                        <div>Invalid or expired token</div>
+                        <button special="cancel" string="Close"/>
+                    </group>
+                    <group colspan="4" states="done" col="1">
+                        <div>Password changed. We sent you an email confirming the password change.</div>
+                        <button special="cancel" string="Close"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_reset" model="ir.actions.act_window">
+            <field name="name">Reset Password</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reset_password.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
