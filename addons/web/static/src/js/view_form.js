@@ -2209,6 +2209,36 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
     },
 }));
 
+/**
+ * FieldTextHtml Widget
+ * Intended for FieldText widgets meant to display HTML content. This
+ * widget will instantiate the CLEditor (see cleditor in static/src/lib)
+ * To find more information about CLEditor configutation: go to
+ * http://premiumsoftware.net/cleditor/docs/GettingStarted.html
+ */
+instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
+
+    set_value: function(value_) {
+        this._super.apply(this, arguments);
+        console.log(this.$element);
+        var textarea_node = this.$element.find('textarea.field_text');
+        textarea_node.cleditor({
+          //width:        500, // width not including margins, borders or padding
+          //height:       250, // height not including margins, borders or padding
+          controls:     // controls to add to the toolbar
+                        "bold italic underline strikethrough | size " +
+                        "| removeformat | bullets numbering | outdent " +
+                        "indent | " +
+                        "link unlink | source",  
+          sizes:        // sizes in the font size popup
+                        "1,2,3,4,5,6,7",
+          useCSS:       false, // use CSS to style HTML when possible (not supported in ie)
+          bodyStyle:    // style to assign to document body contained within the editor
+                        "margin:4px; font:13px monospace; cursor:text"
+        });
+    },
+});
+
 instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
@@ -4287,6 +4317,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'email' : 'instance.web.form.FieldEmail',
     'url' : 'instance.web.form.FieldUrl',
     'text' : 'instance.web.form.FieldText',
+    'text_html' : 'instance.web.form.FieldTextHtml',
     'date' : 'instance.web.form.FieldDate',
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
