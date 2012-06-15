@@ -24,53 +24,75 @@
                     <field name="template_id" on_change="on_change_template(template_id,context)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                 </xpath>
                 <xpath expr='//field[@name="date"]' position="after" version="7.0">
-                    <field name="quantity_max" class="oe_form_inline"/> / Remaining
-                    <field name="remaining_hours" class="oe_form_inline"/>
+                    <label for="quantity_max"/>
+                    <div>
+                        <field name="quantity_max" class="oe_form_inline"/> / Remaining:
+                        <field name="remaining_hours" class="oe_form_inline"/>
+                    </div>
                 </xpath>
-                <xpath expr='//group[@name="toinvoice"]' position='replace'>
-                    <group name="toinvoice" string="Invoicing" colspan="4">
-                        <div class="oe_field_label" />
-                    <group colspan="4" col="6">
-                            <div class="oe_field_label_bold">Est.Tot</div>
-                            <div class="oe_field_label_bold">Invoiced</div>
-                            <div class="oe_field_label_bold">Remaining</div>
-                            <div class="oe_field_label_bold">To Invoice</div>
-                            <div class="oe_btn_width_small"/>
-                            <div class="oe_btn_width"/>
-                        </group>
-                        
-                -        <field class="oe_field_label" name="fix_price_invoices" />
-                        <group colspan="4" col="6" attrs="{'invisible': [('fix_price_invoices','=',False)]}">
-                            <field class="oe_float_field" name="amount_max" nolabel="1"   />
-                            <field class="oe_float_field" name="ca_invoiced" nolabel="1"   />
-                            <field class="oe_float_field" name="remaining_ca" nolabel="1"   />
-                            <field class="oe_float_field" name="ca_to_invoice" nolabel="1"   />
-                            <div><button class="oe_btn_width_small" icon="terp-check" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></div>
-                            <div><button class="oe_btn_width" icon="terp-dolar_ok!" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></div>
-                        </group>
-                        
-                        <field class="oe_field_label" name="invoice_on_timesheets"/>
-                         <group colspan="4" col="6" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-                            <field class="oe_float_field" name="hours_qtt_est" nolabel="1" />
-                            <field class="oe_float_field" name="hours_qtt_invoiced" nolabel="1"/>
-                            <field class="oe_float_field" name="remaining_hours_to_invoice" nolabel="1" />
-                            <field class="oe_float_field" name="hours_qtt_non_invoiced" nolabel="1" />
-                            <div><button class="oe_btn_width_small" icon="terp-go-week" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" /></div>
-                            <div><button class="oe_btn_width" icon="terp-dolar" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/></div>
-                        </group>
-                        
-                        
-                        <div name="total" class="oe_field_label" colspan="2">Total  </div>
-                        <group colspan="4" col="6" >
-                            <field name="est_total" nolabel="1" class="oe_field_label_bold oe_border_top"/>
-                            <field name="invoiced_total" nolabel="1" class="oe_field_label_bold oe_border_top"/>
-                            <field name="remaining_total" nolabel="1" class="oe_field_label_bold oe_border_top"/>
-                            <field name="toinvoice_total" nolabel="1" class="oe_field_label_bold oe_border_top"/>
-                            <div class="oe_btn_width_small"/>
-                            <div class="oe_btn_width"/>
-                        </group>
-                        <field name="pricelist_id" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                        <field name="to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                <xpath expr='//group[@name="master"]' position='after'>
+                    <separator name="toinvoice" string="Invoicing">
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th><label string="Est.Tot"/></th>
+                            <th><label string="Invoiced"/></th>
+                            <th><label string="Remaining"/></th>
+                            <th><label string="To Invoice"/></th>
+                            <th></th>
+                        </tr><tr>
+                            <td>
+                                <label for="fix_price_invoices"/>
+                            </td><td>
+                                <field for="fix_price_invoices"/>
+                            </td><td>
+                                <field class="oe_float_field" name="amount_max"   />
+                            </td><td>
+                                <field class="oe_float_field" name="ca_invoiced"   />
+                            </td><td>
+                                <field class="oe_float_field" name="remaining_ca"   />
+                            </td><td>
+                                <field class="oe_float_field" name="ca_to_invoice"   />
+                            </td><td>
+                                <button class="oe_btn_width_small" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
+                                <button class="oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
+                        </tr><tr>
+                            <td>
+                                <label for="invoice_on_timesheets"/>
+                            </td><td>
+                                <field for="invoice_on_timesheets"/>
+                            </td><td>
+                                <field class="oe_float_field" name="hours_qtt_est"  attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                            </td><td>
+                                <field class="oe_float_field" name="hours_qtt_invoiced"/>
+                            </td><td>
+                                <field class="oe_float_field" name="remaining_hours_to_invoice" />
+                            </td><td>
+                                <field class="oe_float_field" name="hours_qtt_non_invoiced" />
+                            </td><td>
+                                <button class="oe_btn_width_small" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" />
+                                <button class="oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/>
+                            </td>
+                        </tr><tr>
+                            <td>
+                                <label string="Total"/>
+                            </td><td>
+                            </td><td>
+                                <field name="est_total" class="oe_field_label_bold oe_border_top" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                            </td><td>
+                                <field name="invoiced_total" class="oe_field_label_bold oe_border_top"/>
+                            </td><td>
+                                <field name="remaining_total" class="oe_field_label_bold oe_border_top"/>
+                            </td><td>
+                                <field name="toinvoice_total" class="oe_field_label_bold oe_border_top"/>
+                            </td><td>
+                            </td>
+                        </tr>
+                    </table>
+                      <group col="4" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                        <field name="pricelist_id"/>
+                        <field name="to_invoice"/>
                       </group>
                  </xpath>
             </field>
