@@ -1,9 +1,6 @@
+@charset "utf-8";
 .openerp .oe_kanban_view {
-  position: absolute;
-  top: 118px;
-  bottom: 0;
-  left: 221px;
-  right: 0;
+  height: inherit;
 }
 .openerp .oe_kanban_view .ui-sortable-placeholder {
   border: 1px dotted black;
@@ -20,7 +17,7 @@
   clear: both;
 }
 .openerp .oe_kanban_view .oe_kanban_groups {
-  height: 100%;
+  height: inherit;
   width: 100%;
 }
 .openerp .oe_kanban_view .oe_kanban_group_title {
@@ -106,8 +103,8 @@
   box-sizing: border-box;
   width: 100%;
 }
-.openerp .oe_kanban_view .oe_kanban_quick_create .oe_kanban_quick_create_buttons {
-    margin-bottom: 10px;
+.openerp .oe_kanban_view .oe_kanban_quick_create button {
+  float: right;
 }
 .openerp .oe_kanban_view .oe_kanban_vignette {
   padding: 8px;

@@ -48,7 +48,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp a {
   text-decoration: none;
@@ -866,6 +866,15 @@
 .openerp .oe_application a:hover {
   text-decoration: underline;
 }
+.openerp .oe_application > div {
+  height: 100%;
+}
+.openerp .oe_view_manager .oe_view_manager_body {
+  height: inherit;
+}
+.openerp .oe_view_manager .oe_view_manager_view_kanban {
+  height: inherit;
+}
 .openerp .oe_view_manager .oe_view_manager_header {
   width: 100%;
 }
@@ -1007,6 +1016,9 @@
 }
 .openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_diagram:after {
   content: "f";
+}
+.openerp .oe_view_manager_global {
+  height: 100%;
 }
 .openerp .oe_view_manager_global > .oe_view_manager_header {
   border-top: 1px solid #cacaca;
@@ -1884,9 +1896,6 @@
   right: 5px;
   top: 3px;
 }
-.openerp .oe_form .oe_form_field_one2many .oe_kanban_view {
-  position: static;
-}
 .openerp .oe_form .oe_form_field_with_button input {
   width: 100%;
 }
@@ -1920,9 +1929,6 @@
 }
 .openerp .oe_form .oe_form_group {
   margin: 5px 0px 5px 0px;
-}
-.openerp .oe_form .oe_form_group_cell .oe_kanban_view {
-  position: static;
 }
 .openerp .oe_form .oe_form_button.oe_button {
   height: 22px;
