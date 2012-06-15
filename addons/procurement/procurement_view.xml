@@ -282,7 +282,7 @@
                     <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
                         <separator string="Minimum Stock Rules" colspan="4"/>
                         <field colspan="4" name="orderpoint_ids" nolabel="1" context="{'default_product_id': active_id}" widget="one2many_list"
-                                mode="tree,form">
+                                mode="tree">
                                 <tree string="Reordering Rules">
                                     <field name="name"/>
                                     <field name="warehouse_id"/>
