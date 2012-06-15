@@ -1977,6 +1977,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
+            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -2005,16 +2006,18 @@ class BaseModel(object):
                     if node.get('name') == spec.get('name'):
                         return node
                 return None
-            else:
-                for node in source.getiterator(spec.tag):
-                    good = True
-                    for attr in spec.attrib:
-                        if attr != 'position' and (not node.get(attr) or node.get(attr) != spec.get(attr)):
-                            good = False
-                            break
-                    if good:
-                        return node
-                return None
+
+            for node in source.getiterator(spec.tag):
+                if isinstance(node, SKIPPED_ELEMENT_TYPES):
+                    continue
+                if all(node.get(attr) == spec.get(attr) \
+                        for attr in spec.attrib
+                            if attr not in ('position','version')):
+                    # Version spec should match parent's root element's version 
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        return None
+                    return node
+            return None
 
         def apply_inheritance_specs(source, specs_arch, inherit_id=None):
             """ Apply an inheriting view.
@@ -2080,7 +2083,11 @@ class BaseModel(object):
                         if attr != 'position'
                     ])
                     tag = "<%s%s>" % (spec.tag, attrs)
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
+                                            (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
+                    
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):

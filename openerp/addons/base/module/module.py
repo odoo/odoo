@@ -23,8 +23,9 @@ import logging
 import re
 import urllib
 import zipimport
+import base64
 
-from openerp import modules, pooler, release, tools
+from openerp import modules, pooler, release, tools, addons
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import fields, osv, orm
@@ -160,6 +161,18 @@ class module(osv.osv):
                 res[key][k] = "\n".join(sorted(v))
         return res
 
+    def _get_icon_image(self, cr, uid, ids, field_name=None, arg=None, context=None):
+        res = dict.fromkeys(ids, '')
+        for module in self.browse(cr, uid, ids, context=context):
+            path = addons.get_module_resource(module.name, 'static', 'src', 'img', 'icon.png')
+            if path:
+                image_file = tools.file_open(path, 'rb')
+                try:
+                    res[module.id] = image_file.read().encode('base64')
+                finally:
+                    image_file.close()
+        return res
+
     _columns = {
         'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
@@ -211,6 +224,7 @@ class module(osv.osv):
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'application': fields.boolean('Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
+        'icon_image': fields.function(_get_icon_image, string='Icon', type="binary"),
     }
 
     _defaults = {
