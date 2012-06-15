@@ -84,7 +84,7 @@
                                 </kanban>
                             </field>
                         </page>
-                        <page string="Administration">
+                        <page string="Other Info">
                             <group string="Administration">
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time" />
@@ -94,8 +94,6 @@
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="priority"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                            </group>
-                            <group string="Billing" groups="account.group_account_invoice">
                                 <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             </group>
                         </page>
