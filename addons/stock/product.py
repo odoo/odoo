@@ -262,7 +262,8 @@ class product_product(osv.osv):
                 'where location_id NOT IN %s '\
                 'and location_dest_id IN %s '\
                 'and product_id IN %s '\
-                '' + (prodlot_id and ('and prodlot_id = ' + str(prodlot_id)) or '') + ' '\
+                '' + (('prodlot_id' in context and not prodlot_id and 'and prodlot_id is null') or
+                (prodlot_id and ('and prodlot_id = ' + str(prodlot_id)) or '')) + ' '\
                 'and state IN %s ' + (date_str and 'and '+date_str+' ' or '') +' '\
                 'group by product_id,product_uom',tuple(where))
             results = cr.fetchall()
@@ -274,7 +275,8 @@ class product_product(osv.osv):
                 'where location_id IN %s '\
                 'and location_dest_id NOT IN %s '\
                 'and product_id  IN %s '\
-                '' + (prodlot_id and ('and prodlot_id = ' + str(prodlot_id)) or '') + ' '\
+                '' + (('prodlot_id' in context and not prodlot_id and 'and prodlot_id is null') or
+                (prodlot_id and ('and prodlot_id = ' + str(prodlot_id)) or '')) + ' '\
                 'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
                 'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()
