@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="message_blogpost0" model="mail.message">
+            <field name="subject">A cool blogpost about something clean</field>
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_company"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Lorem ipsum dolor <b>sit amet</b>, consectetur <i>adipiscing elit</i>. Pellentesque et quam sapien, in sagittis tellus. 
+            Praesent vel massa sed massa consequat egestas in tristique orci. Praesent iaculis libero et neque vehicula iaculis. Vivamus placerat tincidunt orci ac ornare. Proin ut dolor fringilla velit ultricies consequat. Maecenas sit amet ipsum non leo interdum imperdiet. Donec sapien mi, varius a consequat id, consectetur sit amet nulla. 
+
+Fusce tempus elit volutpat mi auctor adipiscing. Nam congue luctus suscipit. Duis vestibulum dapibus enim vitae dignissim. Sed tellus libero, venenatis ut mollis ut, luctus quis dui. Sed rhoncus pulvinar orci in consectetur. 
+
+Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in dolor in sapien tempus vehicula.]]></field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+
+        <record id="message_blogpost0_comment0" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_company"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[That was such a <b>tremendous</b> blogpost (first comment) !]]></field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+
+        <record id="message_blogpost0_comment1" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_company"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Agreed !  
+            Is it possible to learn more about the author (second comment) ?]]></field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+
+        <record id="message_blogpost0_comment2" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_company"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Sure: (second comment) ?]]></field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+
+    </data>
+</openerp>
