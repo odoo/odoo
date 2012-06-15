@@ -56,6 +56,7 @@
 }
 
 .openerp div.oe_mail_msg_content {
+    position: relative;
     width: 486px;
 }
 
@@ -284,20 +285,98 @@
     -box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
 }
 
-.openerp p.oe_mail_msg {
+.openerp div.oe_mail_msg {
     padding: 0;
     margin: 0 0 4px 0;
-}
-
-.openerp a.oe_mail_oe_intlink {
-    color: #8786b7;
 }
 
 .openerp .oe_mail_oe_bold {
     font-weight: bold;
 }
 
-/*.openerp .oe_mail_oe_space:after {*/
-    /*content: " · ";*/
-    /*margin-right: 2px;*/
-/*}*/
+/* ------------------------------ */
+/* New layouts' style             */
+/* ------------------------------ */
+
+.openerp .oe_mail_msg .oe_mail_msg_title {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+.openerp .oe_mail_msg .oe_mail_msg_title a:link,
+.openerp .oe_mail_msg .oe_mail_msg_title a:visited {
+    color: #4C4C4C;
+    text-decoration: none;
+}
+
+.openerp .oe_mail_msg_intlinks,
+.openerp .oe_mail_msg_subtitle {
+    color: #888;
+}
+.openerp .oe_mail_msg_intlinks a:link {
+    color: #8786b7;
+}
+
+/* Gear menu */
+.openerp .oe_mail_msg_comment a.oe_gear_menuaction {
+  position: absolute;
+  top: 0px;
+  right: 3px;
+  display: none;
+  color: #4c4c4c;
+  cursor: pointer;
+}
+.openerp .oe_mail_msg_comment:hover .oe_gear_menuaction {
+  display: block;
+}
+.openerp .oe_mail_msg_comment a.oe_gear_menuaction:hover {
+  text-decoration: none;
+}
+.openerp .oe_mail_msg_comment a.oe_gear_menuaction:hover {
+  text-decoration: none;
+}
+.openerp .oe_mail_msg_comment ul.oe_gear_menu {
+  list-style-type: none;
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: -140px;
+  padding: 4px;
+  border: 1px solid #afafb6;
+  min-width: 160px;
+  overflow-x: hidden;
+  z-index: 900;
+  background: white;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.openerp .oe_mail_msg_comment a.oe_gear_menuaction:hover ~ .oe_gear_menu {
+    display: block;
+}
+.openerp .oe_mail_msg_comment ul.oe_gear_menu > li {
+    float: none;
+}
+.openerp .oe_mail_msg_comment .oe_gear_menu > li > a {
+  display: block;
+  padding: 3px 6px;
+  line-height: 14px;
+  color: #4c4c4c;
+  text-decoration: none;
+}
+.openerp .oe_mail_msg_comment .oe_gear_menu > li > a:hover {
+  background: #f0f0fa;
+  background: -moz-linear-gradient(#f0f0fa, #eeeef6);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+  background: -webkit-linear-gradient(#f0f0fa, #eeeef6);
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -box-shadow: none;
+}
+.openerp .oe_mail_msg_comment .oe_gear_menu p {
+  margin-left: 12px;
+}
+
+
