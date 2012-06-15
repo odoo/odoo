@@ -157,6 +157,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.inner_viewmanager.$element.addClass("oe_view_manager_global");
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
