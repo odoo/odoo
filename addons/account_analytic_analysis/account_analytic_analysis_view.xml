@@ -31,7 +31,7 @@
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="master"]' position='after'>
-                    <separator name="toinvoice" string="Invoicing">
+                    <separator name="toinvoice" string="Invoicing"/>
                     <table>
                         <tr>
                             <th></th>
@@ -45,7 +45,7 @@
                             <td>
                                 <label for="fix_price_invoices"/>
                             </td><td>
-                                <field for="fix_price_invoices"/>
+                                <field name="fix_price_invoices"/>
                             </td><td>
                                 <field class="oe_float_field" name="amount_max"   />
                             </td><td>
@@ -56,12 +56,12 @@
                                 <field class="oe_float_field" name="ca_to_invoice"   />
                             </td><td>
                                 <button class="oe_btn_width_small" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
-                                <button class="oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
+                                <button class="oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></td>
                         </tr><tr>
                             <td>
                                 <label for="invoice_on_timesheets"/>
                             </td><td>
-                                <field for="invoice_on_timesheets"/>
+                                <field name="invoice_on_timesheets"/>
                             </td><td>
                                 <field class="oe_float_field" name="hours_qtt_est"  attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
