@@ -338,27 +338,16 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-            	<xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr name="use_issues_row">
-                        <th style="border-right:1px solid #DDD;" width="140px">Issues Tracking</th>
-                        <td><field name="use_issues" nolabel="1"/></td>
-                        <td style="text-align:right;" width="110px"><button icon="terp-stock_symbol-selection" class="oe_btn_width" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr>
+                        <td><group><field name="use_issues"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
                     </tr>
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>
-                <xpath expr='//page[@name="team"]' position='replace'>
-                    <page name="team" string="Team" attrs="{'invisible':[('use_tasks','=', 0),('use_issues','=', 0)]}">
-                        <field colspan="4" name="members" nolabel="1" help="Project's members are users who can have an access to the tasks related to this project.">
-                            <tree string="Members">
-                                <field name="name"/>
-                                <field name="user_email"/>
-                            </tree>
-                        </field>
-                    </page>
-                </xpath>
             </field>
        </record>
         

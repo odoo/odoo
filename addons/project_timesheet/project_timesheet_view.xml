@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="project_invoice_form" model="ir.ui.view">
-            <field name="name">Inherit project form : Invoicing Data</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr name="use_timesheets_row">
-                        <th style="border-right:1px solid #DDD;" width="140px">Timesheets</th>
-                        <td><field name="use_timesheets" nolabel="1"/></td>
-                        <td style="text-align:right;"><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
-                    </tr>
-                </xpath>
-            </field>
-        </record>
 
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>

@@ -50,13 +50,9 @@ class project_project(osv.osv):
         return res
 
     _columns = {
-        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
         'amount_to_invoice': fields.function(_to_invoice, string="Amount to Invoice", multi="sums"),
         'time_to_invoice': fields.function(_to_invoice, string="Time to Invoice", multi="sums"),
         'timesheet_count': fields.function(_timesheet_count, type='integer', string="Issue"),
-    }
-    _defaults = {
-        'use_timesheets': True,
     }
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):

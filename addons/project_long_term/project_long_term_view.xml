@@ -104,7 +104,7 @@
             view_type="form"
             view_mode="tree,form"
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
-        
+
         <record id="project_phase_form" model="ir.ui.view">
             <field name="name">Inherit project form : Phase</field>
             <field name="model">project.project</field>
@@ -112,10 +112,9 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr name="use_phases_row">
-                        <th style="border-right:1px solid #DDD;" width="140px">Phases Planing</th>
-                        <td><field name="use_phases" nolabel="1"/></td>
-                        <td style="text-align:right;"><button icon=" terp-emblem-important" class="oe_btn_width" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
+                    <tr>
+                        <td><group><field name="use_phases"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
                     </tr>
                 </xpath>
             </field>
