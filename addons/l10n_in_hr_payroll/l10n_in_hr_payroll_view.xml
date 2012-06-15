@@ -61,10 +61,6 @@
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="bank_id" select="1"/>
                     <field name="state"/>
-                    <button name="compute_advice" string="Compute Advice" icon="terp-document-new" states="draft" type="object"/>
-                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" icon="gtk-cancel"  type="object"/>
-                        <button name="confirm_sheet"  icon="gtk-apply" string="Confirm Sheet" states="draft" type="object"/>
-                        <button name="set_to_draft" string="Set to Draft"  icon="gtk-convert"  states="cancel,confirm" type="object"/>
                 </tree>
             </field>
         </record>
@@ -105,7 +101,7 @@
                               <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
                               <field name="chaque_nos"/>
                             </group>
-                            <separator colspan="4" string="Information"/>
+                            <separator colspan="4" string="Letter Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
