@@ -708,8 +708,26 @@ class account_move_line(osv.osv):
             if not partner:
                 return []
             args.append(('partner_id', '=', partner[0]))
-        return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+        ids = super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+        if context.get('extended_from'):
+            return self.get_move_by_unique_partner(cr, uid, offset, context)
+        return ids
 
+    def get_move_by_unique_partner(self, cr, uid, offset=0, context=None):
+        cr.execute(
+             """
+             SELECT l.id ,l.partner_id AS partner_id  
+                FROM account_move_line l
+                LEFT JOIN account_account a ON (a.id = l.account_id)
+                    
+                    WHERE a.reconcile IS TRUE
+                    AND l.reconcile_id IS NULL
+
+                    AND l.state <> 'draft'
+                    GROUP BY l.id, l.partner_id OFFSET %s""", (offset, )
+            )
+        return  dict(cr.fetchall()).keys()
+        
     def get_next_partner_only(self, cr, uid, offset=0, context=None):
         cr.execute(
              """
