@@ -2565,12 +2565,16 @@ class BaseModel(object):
         order = orderby or groupby
         data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
         
-        # the IDS of records that have groupby field value = False or '' should be sorted too
-        data_ids += set(alldata.keys()).difference(data_ids)    
-        data = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
-        # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
-        data_dict = dict((d['id'], d[groupby]) for d in data) 
-        result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
+        # the IDs of records that have groupby field value = False or '' should be included too
+        data_ids += set(alldata.keys()).difference(data_ids)
+        
+        if groupby:   
+            data = self.read(cr, uid, data_ids, [groupby], context=context)
+            # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
+            data_dict = dict((d['id'], d[groupby] ) for d in data)
+            result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
+        else:
+            result = [{'id': i} for i in data_ids] 
 
         for d in result:
             if groupby:
