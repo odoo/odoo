@@ -24,6 +24,7 @@
 import time
 from datetime import datetime
 from report import report_sxw
+
 from tools import amount_to_text_en
 
 class payroll_advice_report(report_sxw.rml_parse):
@@ -38,7 +39,7 @@ class payroll_advice_report(report_sxw.rml_parse):
             'get_detail': self.get_detail,
             'get_bysal_total': self.get_bysal_total,
         })
-    def get_month(self,input_date):
+    def get_month(self, input_date):
         res = {
                'from_name': '','to_name': ''
                }
@@ -52,23 +53,23 @@ class payroll_advice_report(report_sxw.rml_parse):
                 res['to_name']= to_date.strftime('%d')+'-'+to_date.strftime('%B')+'-'+to_date.strftime('%Y')
         return res
 
-    def convert(self,amount, cur):
-        amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
-        return amt_en
+    def convert(self, amount, cur):
+        return amount_to_text_en.amount_to_text(amount,'en',cur);
 
     def get_bysal_total(self):
         return self.total_bysal
 
-    def get_detail(self,line_ids):
+    def get_detail(self, line_ids):
         result =[]
-        if line_ids:
-            for l in line_ids:
-                res = {}
-                res['name'] = l.employee_id.name
-                res['acc_no'] = l.name
-                res['bysal'] = l.bysal
-                self.total_bysal += l.bysal
-                result.append(res)
+        res = {}
+        for l in line_ids:
+            res.update({
+                    'name': l.employee_id.name,
+                    'acc_no': l.name,
+                    'bysal': l.bysal,
+                    })
+            self.total_bysal += l.bysal
+            result.append(res)
         return result
 
 report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'l10n_in_hr_payroll/report/payment_advice.rml', parser=payroll_advice_report)
