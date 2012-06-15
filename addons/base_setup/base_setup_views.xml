@@ -42,22 +42,20 @@
                     <button string="Apply" type="object" name="execute"/>
                     <button string="Cancel" special="cancel"/>
                 </header>
-                <sheet>
-                    <group>
-                        <group name="config_sale" colspan="4"/>
+                <group>
+                    <group name="config_sale" colspan="4"/>
 
-                        <!-- this part is necessary to allow the plugins to extend the view -->
-                        <field name="module_crm" invisible="1"/>
-                        <group name="config_fetchmail" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
-                            <separator string="Emails"/>
-                        </group>
-                        <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                        <newline/>
-                        <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
-
-                        <group name="config_crm" colspan="2"/>
+                    <!-- this part is necessary to allow the plugins to extend the view -->
+                    <field name="module_crm" invisible="1"/>
+                    <group name="config_fetchmail" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
+                        <separator string="Emails"/>
                     </group>
-                </sheet>
+                    <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                    <newline/>
+                    <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
+
+                    <group name="config_crm" colspan="2"/>
+                </group>
             </form>
         </field>
     </record>
