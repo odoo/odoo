@@ -62,21 +62,31 @@ openerp.mail = function(session) {
             var main_node = this.$element;
             
             return $.when(this.form_view.appendTo(main_node)).pipe(function() {
+                self.bind_events();
                 self.form_view.do_show();
-                //self.form_view.on_button_cancel = function() {
-                    //console.log('cacaprout');
-                //};
+            });
+        },
+        
+        /**
+         * Bind events in the widget. Each event is slighty described
+         * in the function. */
+        bind_events: function() {
+            var self = this;
+            // event: click on 'Send a Message' link that toggles the
+            // advanced options for writing a message
+            this.$element.find('a.mail_compose_message_toggle').click(function (event) {
+                event.preventDefault();
+                self.$element.find('span.mail_compose_message_subject').toggle();
+                self.$element.find('div.mail_compose_message_body_html').toggle();
+                self.$element.find('div.mail_compose_message_partner_ids').toggle();
             });
         },
         
         destroy: function(parent, params) {
             this._super.apply(this, arguments);
         },
-        
-        //on_button_cancel: function() {
-            //console.log('boudin noir');
-        //},
     }),
+
 
     /** 
      * ------------------------------------------------------------
