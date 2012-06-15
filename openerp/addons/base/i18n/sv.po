@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-06-07 18:05+0000\n"
+"PO-Revision-Date: 2012-06-11 11:00+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-08 05:15+0000\n"
-"X-Generator: Launchpad (build 15376)\n"
+"X-Launchpad-Export-Date: 2012-06-12 05:37+0000\n"
+"X-Generator: Launchpad (build 15389)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -2987,7 +2987,7 @@ msgstr ""
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
 msgid "Application"
-msgstr "Tillämpning"
+msgstr "Applikation"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
@@ -4105,7 +4105,7 @@ msgstr ""
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
-msgstr "Kommer att uppgraderas"
+msgstr "Att uppgradera"
 
 #. module: base
 #: model:res.country,name:base.ly
@@ -7806,6 +7806,29 @@ msgid ""
 "task is completed.\n"
 "\n"
 msgstr ""
+"\n"
+"Skapar automatiskt projektuppgifter från anskaffningsrader\n"
+"===============================================\n"
+"Denna modul skapar automatiskt en ny uppgift för varje anskaffnings-\n"
+"orderrad (t.ex. för kundorderrader), under förutsättning att produkten\n"
+"uppfyller följande egenskaper:\n"
+"\n"
+"   * Typ = service\n"
+"   * Anskaffingsmetod (Orderuppfyllandet) = MTO (göra i ordning)\n"
+"   * Inköp / anskaffning = Producera\n"
+"\n"
+"Om dessutom projektet är angivet i formuläret (anskaffningsfliken), \n"
+"skapas sedan aktiviteten i det specifika projektet.\n"
+"Annars kommer kan icke knutna aktiviter, knytas till ett projekt i "
+"efterhand.\n"
+"\n"
+"När projektaktiviteten är slutförd eller återkallad, uppdateras arbetsflödet "
+"\n"
+"för motsvarande anskaffningsrad. Till exempel om denna anskaffning "
+"motsvarar\n"
+"en kundorderrad kommer orderraden anses levererad när\n"
+"uppgiften är avslutad.\n"
+"\n"
 
 #. module: base
 #: code:addons/base/res/res_config.py:348
@@ -9979,7 +10002,7 @@ msgstr "Expert"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Leaves Management"
-msgstr "Närvarohantering"
+msgstr "Semesterplanering"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -15135,6 +15158,37 @@ msgid ""
 "    * Opportunities by Stage (graph)\n"
 "    * Planned Revenue by Stage and User (graph)\n"
 msgstr ""
+"\n"
+"Den generiska OpenERP säljstödmodulen (Customer Relationship Management, "
+"CRM)\n"
+"===================================================================\n"
+"\n"
+"Detta system hjälper en grupp personer att på ett intelligent och effektivt "
+"hantera\n"
+"kundämnen, affärsmöjligheter, möten, telefonsamtal etc.\n"
+"Modulen hanterar viktiga uppgifter som kommunikation, identifiering, "
+"prioritering,\n"
+"ärendehantering, lösning och loggning.\n"
+"\n"
+"OpenERP garanterar att alla ärenden framgångsrikt följsupp per användare, "
+"kund och\n"
+"leverantör. Automastiskt skickade påminnelser, eskalera ärenden, automatiska "
+"aktiviteter\n"
+"baserat på affärsregler.\n"
+"\n"
+"Det bästa med detta system är att användarna inte behöver göra något\n"
+"speciell. Det räcker att e-post meddelanden till systemet och  OpenERP tar\n"
+"hand om att tacka avsändarenm, startar säljprocessen och involverar lämpliga "
+"personer\n"
+"och säkerställer att framtida kommunikation hamnar rätt och loggas.\n"
+"\n"
+"CRM modulen har en e-postbrygga för synkroniseringen mellan e-post och "
+"OpenERP.\n"
+"\n"
+"Modulen skapar en infopanel för CRM som innehåller:\n"
+"     * Affärsmöjligheter med kategorier (graf)\n"
+"     * Affärsmöjligheter per steg (graf)\n"
+"     * Planerad Intäkt per steg och användare (graf)\n"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
