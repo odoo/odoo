@@ -268,6 +268,7 @@ openerp.mail = function(session) {
          * Display a record
          */
         display_comment: function (record) {
+            record.body = this.do_text_nl2br(record.body, true);
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
             else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
@@ -428,9 +429,16 @@ openerp.mail = function(session) {
             else return string.slice(0, max_length);
         },
         
+        /** Removes html tags, except b, em, br */
         do_clean_text: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em)\\s*&gt;', 'gi'), '<$1$2>');
+            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /)\\s*&gt;', 'gi'), '<$1$2>');
             return html;
+        },
+        
+        /** Replaces line bracks by html line breaks (br) */
+        do_text_nl2br: function (str, is_xhtml) {   
+            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
+            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
         },
         
         /**
