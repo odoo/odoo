@@ -358,7 +358,7 @@ class survey_question_wiz(osv.osv_memory):
                     fields['progress_bar_' + tools.ustr(page_number)] = {'type':'float', 'string':"Progress", 'views':{}}
                     etree.SubElement(xml_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages)})
                     etree.SubElement(xml_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel"})
-
+                    
                     if pre_button:
                         etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object"})
                     but_string = "Next"
@@ -450,6 +450,7 @@ class survey_question_wiz(osv.osv_memory):
             
             # hr.applicant: if survey answered directly in system: attach report to applicant
             if context.get('active_model') == 'hr.applicant':
+                self.pool.get('hr.applicant').write(cr,uid,[context.get('active_ids')[0]],{'response':context.get('response_id')})
                 result = base64.b64encode(result)
                 file_name = file_name + '.pdf'
                 ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
