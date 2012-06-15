@@ -69,7 +69,7 @@
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" class="oe_form_button_return_flow"/>
                     <button name="invoice" states="accepted" string="Invoice" type="object" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
-                    <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
+                    <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
