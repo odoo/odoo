@@ -10,6 +10,7 @@
     'auto_install': True,
     'post_load' : 'wsgi_postload',
     'js' : [
+        "static/lib/cleditor/jquery.cleditor.min.js",
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
         "static/lib/datejs/parser.js",
@@ -56,6 +57,7 @@
         "static/src/js/view_editor.js"
     ],
     'css' : [
+        "static/lib/cleditor/jquery.cleditor.css",
         "static/lib/jquery.superfish/css/superfish.css",
         "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
