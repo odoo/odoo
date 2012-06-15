@@ -57,7 +57,10 @@ class project_configuration(osv.osv_memory):
             help="Allows you to compute work on tasks."),
         'group_time_work_estimation_tasks': fields.boolean("Time Estimation on Tasks",
             implied_group='project.group_time_work_estimation_tasks',
-            help="Allows you to compute Time Estimation on tasks."),                                
+            help="Allows you to compute Time Estimation on tasks."),
+        'group_manage_delegation_task': fields.boolean("Manage Taks Delegation",
+            implied_group='project.group_delegate_task',
+            help="Allows you to delegate tasks to other users."),                                
     }
     
     def default_get(self, cr, uid, fields, context=None):
