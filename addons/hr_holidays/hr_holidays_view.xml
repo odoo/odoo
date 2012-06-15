@@ -8,14 +8,14 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
-                        <field name="employee_id">
-                            <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
-                        </field>
-                        <field name="department_id" widget="selection">
-                            <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
-                        </field>
-                        <field name="holiday_status_id" widget="selection"/>
                         <field name="date_from"/>
+                        <separator orientation="vertical"/>
+                        <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                        <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="employee_id"/>
+                        <field name="department_id" widget="selection"/>
+                        <field name="holiday_status_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -349,7 +349,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave Type">
-                    <field name="name"/>
+                    <field name="name" string="Leave Types" filter_domain="[('name','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
             </field>
@@ -415,7 +416,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leave Type">
-                    <field name="name"/>
+                    <field name="name" string="Leave Types" filter_domain="[('name','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
             </field>

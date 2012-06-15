@@ -93,8 +93,7 @@
             <field name="arch" type="xml">
                 <search string="Payroll Structures">
                     <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     </group>
                     <newline/>
                 </search>
@@ -212,8 +211,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
                     <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="slip_id"/>
                         <field name="amount_select"/>
                     </group>
@@ -383,13 +382,14 @@
             <field name="arch" type="xml">
                 <search string="Search Payslips">
                     <group>
+                        <field name="name" string="Payslips" filter_domain="['|'('name','ilike',self),('number','ilike',self)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_from"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
                         <separator orientation="vertical"/>
-                        <field name="number"/>
                         <field name="employee_id"/>
-                        <field name="name"/>
-                        <field name="date_from"/>
                         <field name="payslip_run_id"/>
                     </group>
                     <newline/>
@@ -464,8 +464,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Rule Categories">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" string="Salary Rule Categories" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
                </search>
             </field>
         </record>
@@ -518,7 +517,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Contribution Registers">
-                    <field name="name"/>
+                    <field name="name" string="Contribution Registers" filter_domain="[('name','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </search>
             </field>
@@ -648,8 +648,8 @@
             <field name="arch" type="xml">
                 <search string="Search Salary Rule">
                     <group col="8">
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name" string="Salary Rules" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="category_id"/>
                         <field name="condition_range_min"/>
                     </group>
@@ -689,12 +689,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslip Batches">
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
+                    <field name="name" string="Payslip Batches" filter_domain="[('name','ilike',self)]"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
+                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
                 </search>
             </field>
         </record>

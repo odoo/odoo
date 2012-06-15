@@ -54,10 +54,9 @@
             <search string="Expenses Analysis">
               <group>
                     <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
-                    help = "Confirm Expenses"/>
+                      help = "Confirm Expenses"/>
                     <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
                       help = "Approved Expenses"/>
-                    <separator orientation="vertical"/>
                     <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]"
                       help = "Invoiced Expenses"/>
                     <separator orientation="vertical"/>

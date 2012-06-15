@@ -52,12 +52,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Hr Attendance Search">
-                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <field name="name" filter_domain="[('name','ilike',self)]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
-                    <field name="name"/>
                     <field name="action"/>
                     <newline/>
                     <group expand="0" string="Group By...">

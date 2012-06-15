@@ -57,23 +57,22 @@
                         icon="terp-camera_test"
                         domain="[('state', '=' ,'open')]"
                         help = "In progress recruitment"/>
-                       <filter string="Pending"
-                           icon="terp-gtk-media-pause"
-                           domain="[('state','=','pending')]"
-                           help = "Pending recruitment"/>
+                    <filter string="Pending"
+                        icon="terp-gtk-media-pause"
+                        domain="[('state','=','pending')]"
+                        help = "Pending recruitment"/>
                     <filter string="Hired"
-                           icon="terp-camera_test"
-                           domain="[('state','=','done')]"
-                           help = "Hired employees"/>
-                      <separator orientation="vertical"/>
-                      <field name="job_id"/>
+                        icon="terp-camera_test"
+                        domain="[('state','=','done')]"
+                        help = "Hired employees"/>
+                    <filter icon="terp-personal"
+                        string="My Recruitment"
+                        help="My Recruitment"
+                        domain="[('user_id','=',uid)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
-                    <field name="user_id" string="Responsible">
-                        <filter icon="terp-personal"
-                            string="My Recruitment"
-                            help="My Recruitment"
-                            domain="[('user_id','=',uid)]"/>
-                    </field>
+                    <field name="user_id" string="Responsible"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters...">
@@ -102,9 +101,7 @@
                    <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
                    <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" help="Creation Date"/>
                 </group>
-
-
-                </search>
+            </search>
         </field>
     </record>
 

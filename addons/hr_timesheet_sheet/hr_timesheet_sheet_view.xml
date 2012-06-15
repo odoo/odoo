@@ -167,11 +167,12 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group>
+                        <field name="date_from"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id"/>
-                        <field name="date_from"/>
                         <field name="department_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -238,7 +239,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
-                <field name="date" position="after">
+                <field name="user_id" position="before">
                     <field name="sheet_id"/>
                 </field>
             </field>
@@ -254,7 +255,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
             <field name="arch" type="xml">
-                <field name="action" position="after">
+                <field name="employee_id" position="after">
                     <field name="sheet_id"/>
                 </field>
             </field>
