@@ -44,12 +44,24 @@
         font-weight: bold
         color: #333333
         text-shadow: 0 1px 0 white
+
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
         padding: 6px 7px 6px 6px
         background: #f0eeee
+
+    .oe_kanban_group_header.oe_kanban_no_group
+        display: none
+
+    .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
+
+    .oe_form
+        .oe_kanban_column
+            padding: 0px
+            background: #ffffff
+
     .oe_kanban_column
         height: 100%
     .oe_kanban_aggregates
