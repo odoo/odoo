@@ -102,8 +102,7 @@
             <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
-                <field name="account_id" position="replace">
-                    <field name="account_id" context="{'search_default_use_timesheets': 1, 'default_use_timesheets': 1}"/>
+                <field name="account_id" position="after">
                     <field name="to_invoice"/>
                 </field>
             </field>

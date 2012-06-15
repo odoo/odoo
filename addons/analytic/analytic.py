@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-from lxml import etree
 
 from osv import fields, osv
 from tools.translate import _
@@ -226,29 +225,6 @@ class account_analytic_account(osv.osv):
         default['code'] = False
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
-
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
-        
-        res = super(account_analytic_account, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        
-        doc = etree.XML(res['arch'])
-        node = []
-        if view_type == 'form':node = doc.xpath("//field[@name='name']")
-        if view_type == 'tree':node = doc.xpath("//field[@name='complete_name']")
-        if node:
-            curr_node = node[0]
-            if context.get('default_type') == 'contract':
-                curr_node.set('string', 'Contract/Project Name')
-                curr_node.set('placeholder', 'Contract or Project Name')
-            elif context.get('default_type') == 'template':
-                curr_node.set('string', 'Template Name')
-                curr_node.set('placeholder', 'Template Name')
-            else:
-                curr_node.set('string', 'Account Name')
-                curr_node.set('placeholder', 'Account Name')
-        res['arch'] = etree.tostring(doc)
-        return res
 
     def on_change_company(self, cr, uid, id, company_id):
         if not company_id:

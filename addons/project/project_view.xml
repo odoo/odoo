@@ -38,34 +38,33 @@
                     <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
                 </header>
-                <sheet string="Project" layout="auto">
-                    <group col="4" colspan="4">
-                        <group col="2" colspan="2" class="oe_form_group_label_border">
-                            <field name="name" string="Project Name" select="1"/>
+                <sheet string="Project">
+                    <group>
+                        <label for="name" class="oe_form_readonly_hidden"/>
+                        <h1>
+                            <field name="name" string="Project Name"/>
+                        </h1>
+                        <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
-                            <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                            <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <field name="privacy_visibility"/>
                         </group>
-                        <group col="2" colspan="2" class="oe_form_group_label_border">
-                            <table border="0">
-                                <tr name="use_tasks_row">
-                                    <th style="border-right:1px solid #DDD;" width="140px">Tasks Management</th>
-                                    <td><field name="use_tasks" nolabel="1"/></td>
-                                    <td style="text-align:right;" width="110px"><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
-                                </tr>
-                                <tr name="use_attachment_row">
-                                    <th/>
-                                    <td/>
-                                    <td style="text-align:right;" width="110px"><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
-                                </tr>
-                            </table>
+                        <group col="4">
+                            <group>
+                                <label string=""/>
+                                <field name="use_tasks"/>
+                            </group>
+                            <group>
+                                <button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action"/>
+                                <button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                            </group>
                         </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Team" attrs="{'invisible':[('use_tasks','=', 0)]}" name="team">
-                            <field colspan="4" name="members" nolabel="1" widget="many2many_kanban">
+                            <field colspan="4" name="members" widget="many2many_kanban">
                                 <kanban quick_create="true" create="false">
                                     <field name="name"/>
                                     <templates>
@@ -94,19 +93,8 @@
                                 <field name="priority"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
-                        </page>
-                        <page string="Billing" groups="account.group_account_invoice">
-                            <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
-                            <group col="3">
-                                <b>
-                                    <label string="Variables you can use for headers and footer." colspan="3"/>
-                                </b>
-                                <label string="Task: %%(name)s"/>
-                                <label string="User: %%(user_id)s"/>
-                                <label string="ID: %%(task_id)s"/>
-                                <label string="Status: %%(state)s"/>
-                                <label string="Date Start: %%(date_start)s"/>
-                                <label string="Date Stop: %%(date)s"/>
+                            <group string="Billing" groups="account.group_account_invoice">
+                                <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             </group>
                         </page>
                         <page string="Tasks Stages">

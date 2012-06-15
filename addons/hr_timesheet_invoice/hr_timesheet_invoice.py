@@ -87,9 +87,10 @@ class account_analytic_account(osv.osv):
 
     def on_change_partner_id(self, cr, uid, ids,partner_id, name, context=None):
         res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, name, context=context)
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
-        if pricelist:res['value']['pricelist_id'] = pricelist
+        if pricelist:
+            res['value']['pricelist_id'] = pricelist
         return res
 
     def set_close(self, cr, uid, ids, context=None):
