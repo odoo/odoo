@@ -77,7 +77,7 @@
                             </td><td>
                                 <field class="oe_form_inline" name="hours_qtt_non_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
                                 <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Timesheets to Invoice" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td>
                         </tr><tr>
