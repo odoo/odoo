@@ -84,31 +84,19 @@
                             </field>
                         </page>
                         <page string="Administration">
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Performance"/>
+                            <group string="Administration">
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time" />
                                 <field name="resource_calendar_id"/>
                             </group>
-                            <newline/>
-                            <group col="2" colspan="2" name="misc">
-                                <separator colspan="4" string="Miscellaneous"/>
+                            <group string="Miscellaneous" name="misc">
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
-                                <field name="warn_manager"/>
                                 <field name="priority"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
-                            <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
-                            <newline/>
-                            <group colspan="4" col="4">
-                                <separator colspan="2" string="Mail Header"/>
-                                <separator colspan="2" string="Mail Footer"/>
-                                <field name="warn_header" nolabel="1" colspan="2"/>
-                                <field name="warn_footer" nolabel="1" colspan="2"/>
-                            </group>
                             <group col="3">
                                 <b>
                                     <label string="Variables you can use for headers and footer." colspan="3"/>

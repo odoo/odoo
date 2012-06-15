@@ -188,8 +188,6 @@ class project(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
-        'warn_manager': fields.boolean('Notify Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -214,9 +212,6 @@ class project(osv.osv):
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'state'], 20),
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
-        'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
@@ -914,28 +909,12 @@ class task(base_stage, osv.osv):
         return True
 
     def action_close(self, cr, uid, ids, context=None):
-        """ This action closes the task, then opens the wizard to send an 
-            email to the partner or the project manager.
+        """ This action closes the task 
         """
         task_id = len(ids) and ids[0] or False
         self._check_child_task(cr, uid, ids, context=context)
         if not task_id: return False
-        task = self.browse(cr, uid, task_id, context=context)
-        project = task.project_id
-        res = self.do_close(cr, uid, [task_id], context=context)
-        if project.warn_manager or project.warn_customer:
-            return {
-                'name': _('Send Email after close task'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'mail.compose.message',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True,
-                'context': {'active_id': task.id,
-                            'active_model': 'project.task'}
-           }
-        return res
+        return self.do_close(cr, uid, [task_id], context=context)
 
     def do_close(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_close. """
