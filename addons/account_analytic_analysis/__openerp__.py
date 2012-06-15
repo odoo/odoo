@@ -45,9 +45,6 @@ user-wise as well as month wise.
                     "account_analytic_analysis_report.xml"
                     ],
     'demo_xml': [],
-#    "css" : [
-#             "static/src/css/account_analytic.css",
-#             ],
     'installable': True,
     'auto_install': False,
     'certificate': '0042927202589',
