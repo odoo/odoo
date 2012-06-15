@@ -7,9 +7,9 @@
         -->
 
         <act_window
-            id="action_sales_order_line"
+            id="action_sales_order"
             name="Sales Order Lines"
-            res_model="sale.order.line"
+            res_model="sale.order"
             src_model="account.analytic.account"
             />
 
@@ -61,7 +61,7 @@
                             </td><td>
                                 <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <button name="%(action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                                 <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
                         </tr><tr attrs="{'invisible':[('use_timesheets','=',False)]}">
                             <td>
@@ -77,8 +77,8 @@
                             </td><td>
                                 <field class="oe_form_inline" name="hours_qtt_non_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Timesheets to Invoice" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td>
                         </tr><tr>
                             <th>
