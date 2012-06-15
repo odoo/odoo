@@ -28,37 +28,40 @@
                             statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
                     </header>
                     <sheet>
-                        <group col="4">
-                            <field name="email" string="Invitation To"/>
-                            <field name="cutype" string="Invitation Type" />
-                            <field name="rsvp" />
-                            <field name="role" string="Role" />
-                            <field name="sent_by_uid" string="Invitation From" />
+
+                        <div class="oe_form_title">
+                            <label for="email" string="Invitation To" class="oe_form_readonly_hidden" /> 
+                            <h1>
+                                <field name="email" class="oe_form_inline" />
+                                (<field name="language" class="oe_form_inline" />)
+                            </h1>
+                            
+                            <h2>
+                                From <field name="event_date" class="oe_form_inline" />
+                                to <field name="event_end_date" class="oe_form_inline"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="sent_by_uid" string="Invitation From" />
+                                <field name="user_id" string="Invited User"/>
+                                <field name="partner_id" string="Contact" />
+                            </group>
+                            <group>
+                                <field name="cutype" string="Invitation Type" />
+                                <field name="role" string="Role" />
+                                <field name="rsvp" />
+                                <field name="ref" readonly="1"/>
+                            </group>
                         </group>
-                        <notebook>
-                            <page string="Invitation">
-                                <group>
-                                    <group string="Invitation Detail">
-                                        <field name="user_id" string="Invited User"/>
-                                        <field name="partner_id" string="Contact" />
-                                    </group>
-                                    <group string="Event Detail">
-                                        <field name="event_date" />
-                                        <field name="event_end_date" />
-                                        <field name="language"/>
-                                        <field name="ref" readonly="1"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Delegation Info">
-                                <separator string="Delegated From" colspan="4" />
-                                <field name="parent_ids"
-                                    readonly="1" />
-                                <separator string="Delegated To" colspan="4" />
-                                <field name="child_ids"
-                                    readonly="1" />
-                            </page>
-                        </notebook>
+                        <group>
+                            <group string="Delegrated From">
+                                <field name="parent_ids" readonly="1" nolabel="1" />
+                            </group>
+                            <group string="Delegrated To" >
+                                <field name="child_ids" readonly="1" nolabel="1" />
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
