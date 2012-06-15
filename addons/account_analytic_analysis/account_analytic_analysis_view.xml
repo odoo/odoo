@@ -8,10 +8,10 @@
 
         <act_window
             id="action_sales_order"
-            name="Sales Order Lines"
+            name="Sales Orders"
             res_model="sale.order"
             src_model="account.analytic.account"
-            />
+        />
 
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
@@ -61,8 +61,8 @@
                             </td><td>
                                 <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <button name="%(action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                                <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
+                                <button name="%(action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <button name="open_sale_order_lines" string="Lines To Invoice" type="object" context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
                         </tr><tr attrs="{'invisible':[('use_timesheets','=',False)]}">
                             <td>
                                 <label for="invoice_on_timesheets"/>
