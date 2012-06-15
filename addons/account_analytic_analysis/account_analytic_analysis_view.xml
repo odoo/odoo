@@ -12,7 +12,7 @@
             res_model="sale.order.line"
             src_model="account.analytic.account"
             />
-            
+
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -47,32 +47,32 @@
                             </td><td>
                                 <field name="fix_price_invoices" class="oe_form_inline"/>
                             </td><td>
-                                <field class="oe_form_inline" name="amount_max"   />
+                                <field class="oe_form_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="ca_invoiced"   />
+                                <field class="oe_form_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="remaining_ca"   />
+                                <field class="oe_form_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="ca_to_invoice"   />
+                                <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/>
-                                <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}"/></td>
-                        </tr><tr>
+                                <button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
+                        </tr><tr attrs="{'invisible':[('use_timesheets','=',False)]}">
                             <td>
                                 <label for="invoice_on_timesheets"/>
                             </td><td>
                                 <field name="invoice_on_timesheets"/>
                             </td><td>
-                                <field class="oe_form_inline" name="hours_qtt_est"  attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_form_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="hours_qtt_invoiced"/>
+                                <field class="oe_form_inline" name="hours_qtt_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="remaining_hours_to_invoice" />
+                                <field class="oe_form_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="hours_qtt_non_invoiced" />
+                                <field class="oe_form_inline" name="hours_qtt_non_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" />
-                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/>
+                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td>
                         </tr><tr>
                             <th>
