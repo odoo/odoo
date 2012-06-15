@@ -191,13 +191,13 @@
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
                   <group>
+                       <field name="name" string="Reair Orders" filter_domain="[('name','ilike',self)]"/>
+                       <separator orientation="vertical"/>
                        <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
                        <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
                        <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
-                       <separator orientation="vertical"/>
                        <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]"/>
                        <separator orientation="vertical"/>
-                       <field name="name"/>
                        <field name="product_id"/>
                        <field name="partner_id"/>
                        <field name="state" />

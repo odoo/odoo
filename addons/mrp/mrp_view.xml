@@ -82,9 +82,10 @@
             <field name="arch" type="xml">
                 <search string="Search">
                    <group>
-                       <field name="name"/>
-                       <field name="composition"/>
+                       <field name="name" string="Name" filter_domain="[('name','ilike',self)]"/>
+                       <separator orientation="vertical"/>
                        <field name="group_id"  widget="selection" />
+                       <field name="composition"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By...">
@@ -188,10 +189,10 @@
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
                    <group>
+                        <field name="name" string="mrp workcenter" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                         <separator orientation="vertical"/>
-                        <field name="code"/>
-                        <field name="name"/>
                         <field name="resource_type"/>
                    </group>
                    <newline/>
@@ -287,10 +288,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Routing">
+                    <field name="name" string="Routing" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                     <separator orientation="vertical"/>
-                    <field name="code"/>
-                    <field name="name"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
@@ -387,8 +388,8 @@
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
                     <group>
-                         <field name="name"/>
-                         <field name="code" string="Reference"/>
+                         <field name="name" string="Bill Of Material" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
+                         <separator orientation="vertical"/>
                          <field name="product_id"/>
                          <field name="company_id" groups="base.group_multi_company"/>
                     </group>
@@ -774,6 +775,8 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group>
+                       <field name="name" string="Production" filter_domain="['|'('name','ilike',self),('origin','ilike',self)]"/>
+                       <separator orientation="vertical"/>
                        <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
                            domain="[('state','=','confirmed')]"
                            help="Manufacturing Orders which are waiting for raw materials."/>
@@ -783,15 +786,12 @@
                        <filter icon="terp-check" string="In Production" name="inprogress"
                            domain="[('state','=','in_production')]"
                            help="Manufacturing Orders which are currently in production."/>
-                       <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                            help="Production started late" />
                        <separator orientation="vertical"/>
-                       <field name="name"/>
                        <field name="product_id"/>
                        <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                       <field name="origin"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
