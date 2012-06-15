@@ -155,7 +155,8 @@ $colour4: #8a89ba
         padding: 0
     li
         list-style-type: none
-    input, textarea
+    input, textarea, select
+        padding: 4px
         border: 1px solid #ccc
         @include radius(3px)
     img
@@ -894,8 +895,6 @@ $colour4: #8a89ba
             height: 14px
             font-size: 11px
             line-height: 18px
-            border: 1px solid #ccc
-            @include radius(3px)
         &.oe_focused
             border-color: $facets-border-selected
             @include box-shadow(0 1px 2px $facets-border-selected inset)
@@ -1275,11 +1274,12 @@ $colour4: #8a89ba
         .oe_form_sheet
             background: white
             min-height: 330px
+            padding: 16px
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
-            > .oe_form_group
-                margin: 8px 16px
-                width: 97%
+            .oe_form_group
+                width: 100%
+                margin: 8px 0
 
     // }}}
     // FormView.layout {{{
@@ -1295,11 +1295,12 @@ $colour4: #8a89ba
             width: 100%
 
         .oe_form_field_char input,
-        .oe_form_field_text textarea,
         .oe_form_field_url input,
+        .oe_form_field_text textarea,
         .oe_form_field_selection select
             width: inherit
-
+        .oe_form_sheet textarea
+            width: 49%
         .oe_form_field_float input
             width: 100px
 
@@ -1336,7 +1337,7 @@ $colour4: #8a89ba
     // FormView.fields {{{
     .oe_form
         .oe_form_field_text textarea
-            resize: vertical
+            resize: none
         .oe_form_field
             width: 100%
             display: inline-block
@@ -1344,7 +1345,6 @@ $colour4: #8a89ba
             line-height: 18px
             input
                 margin: 0px
-
         .oe_form_field_integer
             width: 180px
         .oe_form_field_float
@@ -1355,6 +1355,8 @@ $colour4: #8a89ba
             width: 11em
         .oe_form_inline
             width: auto
+        .ui-tabs
+            margin: 0 -16px
 
         input[type="text"],
         input[type="password"],
@@ -1368,9 +1370,6 @@ $colour4: #8a89ba
         select,
         textarea
             @include box-sizing(border)
-            padding: 0 2px
-            border: 1px solid #999
-            @include radius(3px)
             background: white
             min-width: 70px
             color: #1f1f1f
@@ -1455,11 +1454,7 @@ $colour4: #8a89ba
                 width: 100%
             > .oe_button
                 float: right
-                -webkit-border-top-left-radius: 0px
-                -webkit-border-bottom-left-radius: 0px
-                -moz-border-radius-topleft: 0px
-                -moz-border-radius-bottomleft: 0px
-                border-top-left-radius: 0px
+                @include radius(0)
                 border-bottom-left-radius: 0px
                 height: 22px
             > div
@@ -1467,19 +1462,15 @@ $colour4: #8a89ba
                 overflow: hidden
 
         .oe_form_title
-            margin: 16px
             float: left
+            width: 460px
             h1
                 font-size: 22px
+                input
+                    width: 100%
             h2
                 font-size: 14px
                 font-weight: normal
-        .oe_form_title:after
-            content: "."
-            display: block
-            height: 0
-            clear: both
-            visibility: hidden
         .oe_form_button_box
             width: 400px
             margin: 16px
@@ -1487,7 +1478,7 @@ $colour4: #8a89ba
                 margin-left: 4px
                 float: right
 
-        .oe_form_group_cell .oe_kanban_view
+        .e_form_group_cell .oe_kanban_view
             // Hack due to absolute positioning of kanban view messing with o2m
             position: static
 
@@ -1570,10 +1561,15 @@ $colour4: #8a89ba
     // }}}
     // FormView.notebook {{{
     .oe_form_notebook
-        margin: 8px 0
-        padding: 0 8px
+        margin-top: 8px
+        padding: 0 16px
         list-style: none
+        border-color: #ddd
+        border-style: solid
+        border-width: 0 0 1px
         zoom: 1
+    .oe_form_notebook.ui-corner-all
+        @include radius(0)
     .oe_form_notebook:before, .oe_form_notebook:after
         display: table
         content: ""
@@ -1585,13 +1581,8 @@ $colour4: #8a89ba
     .oe_form_notebook > li > a
         display: block
         color: #4c4c4c
-    .oe_form_notebook
-        border-color: #ddd
-        border-style: solid
-        border-width: 0 0 1px
     .oe_form_notebook > li
         position: relative
-        margin-bottom: -1px
     .oe_form_notebook > li > a
         padding: 0 12px
         margin-right: 2px
@@ -1608,7 +1599,7 @@ $colour4: #8a89ba
         border-bottom-color: transparent
         cursor: default
     .oe_form_notebook_page
-        padding: 0
+        padding: 16px 16px
     div.ui-tabs
         padding: 3px 0px 3px 0px
     .ui-tabs-hide
@@ -1653,11 +1644,11 @@ $colour4: #8a89ba
                         line-height: 16px
         .oe_form_avatar
             float: left
-            margin: 16px 0 16px 16px
+            margin: 0 16px 0 0
             img
                 height: 50px
                 @include radius(3px)
-                @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.2))
+                @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
                 border: none
     .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager
         display: none !important
