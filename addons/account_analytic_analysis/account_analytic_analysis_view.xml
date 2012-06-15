@@ -18,7 +18,7 @@
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
-            <field eval="18" name="priority"/>
+            <field eval="40" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//field[@name="type"]' position='after'>
                     <field name="template_id" on_change="on_change_template(template_id,context)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
@@ -30,6 +30,12 @@
                         <field name="remaining_hours" class="oe_form_inline"/>
                     </div>
                 </xpath>
+                <xpath expr='//field[@name="pricelist_id"]' position='replace'>
+                    <field name="pricelist_id" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                 </xpath>
+                <xpath expr='//field[@name="to_invoice"]' position='replace'>
+                    <field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                 </xpath>
                 <xpath expr='//group[@name="master"]' position='after'>
                     <separator name="toinvoice" string="Invoicing"/>
                     <table width="100%%">
