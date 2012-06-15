@@ -376,7 +376,7 @@
         src_model="project.phase"
         view_mode="tree,form"
         />
-     
+
     <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
             <field name="name">account.analytic.account.phase.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -385,11 +385,11 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="2" string="Project" name="project_sep"/>
+                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
                 </xpath>
-            	<group name="project" position="inside">
-            	    <field name="use_phases"/>
-            	</group>
+                <xpath expr="//separator[@name='project_sep']" position="after">
+                    <field name="use_phases"/>
+                </group>
             </field>
         </record>
 
