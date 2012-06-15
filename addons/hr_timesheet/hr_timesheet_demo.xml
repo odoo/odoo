@@ -13,18 +13,15 @@
             <field name="journal_id" ref="analytic_journal"/>
         </record>
         <record id="account.analytic_administratif" model="account.analytic.account">
-             <field name="use_timesheets">True</field>
+            <field name="use_timesheets">True</field>
         </record>
          <record id="account.analytic_partners" model="account.analytic.account">
-             <field name="type">contract</field>
             <field name="use_timesheets">True</field>
         </record>
-        <record id="account.analytic_customers" model="account.analytic.account">
-            <field name="type">contract</field>
+        <record id="account.analytic_consultancy" model="account.analytic.account">
             <field name="use_timesheets">True</field>
         </record>
-        <record id="account.analytic_support_internal" model="account.analytic.account">
-            <field name="type">contract</field>
+        <record id="account.analytic_super_product_trainings" model="account.analytic.account">
             <field name="use_timesheets">True</field>
         </record>
 
