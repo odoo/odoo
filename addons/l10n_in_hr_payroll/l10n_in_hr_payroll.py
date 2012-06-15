@@ -160,6 +160,7 @@ class payroll_advice(osv.osv):
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
                 raise osv.except_osv(_('Error !'), _('You can not confirm Payment advice without advice lines.'))
+            advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
             date = advice_date.strftime('%Y')+'/'+advice_date.strftime('%m')
             number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
             sequence_num = 'PAY' + '/' + date + '/' + number
