@@ -5,7 +5,10 @@ openerp.mail = function(session) {
     var mail = session.mail = {};
 
     /**
+     * ------------------------------------------------------------
      * Global variables for the Chatter
+     * ------------------------------------------------------------
+     * 
      */
 
     /**
@@ -21,72 +24,78 @@ openerp.mail = function(session) {
     var mail_msg_struct = mail.chatter_message_structure = {}; // TODO: USE IT OR NOT :)
 
 
-
-
     /**
      * ------------------------------------------------------------
      * ComposeMessage widget
      * ------------------------------------------------------------
      * 
      * This widget handles the display of a form to compose a new message.
+     * This form is an OpenERP form_view, build on a mail.compose.message
+     * wizard.
      */
     
     /* Add ComposeMessage widget to registry */
-    session.web.form.widgets.add('compose_message', 'openerp.mail.ComposeMessage');
+    session.web.form.widgets.add('mail.compose_message', 'openerp.mail.ComposeMessage');
     
     /* ComposeMessage is an extension of a Widget */
-    mail.compose_message = session.web.Widget.extend({
+    mail.ComposeMessage = session.web.Widget.extend({
         template: 'mail.compose_message',
         
         init: function(parent, params) {
             this._super(parent);
-            console.log(params);
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message');
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
-                /*action_buttons: false,
-                pager: false,*/
+                action_buttons: false,
+                pager: false,
                 initial_mode: 'edit',
                 }
             );
-            this.form_view.on_button_cancel = function() {
-                console.log('cacaprout');
-            }
         },
         
+        /**
+         * widget start function
+         * - builds and initializes the form view
+         */
         start: function(parent, params) {
             var self = this;
             this._super.apply(this, arguments);
-            console.log('start');
-            console.log(this);
-            var node = this.$element.find('div.caca');
-            var node = this.$element.find('p');
-            console.log(node);
-            return $.when(this.form_view.appendTo(node)).pipe(function() {
+            var main_node = this.$element;
+            
+            return $.when(this.form_view.appendTo(main_node)).pipe(function() {
                 self.form_view.do_show();
+                //self.form_view.on_button_cancel = function() {
+                    //console.log('cacaprout');
+                //};
             });
         },
         
         destroy: function(parent, params) {
             this._super.apply(this, arguments);
         },
+        
+        //on_button_cancel: function() {
+            //console.log('boudin noir');
+        //},
     }),
 
-
-
-
     /** 
-     * Thread widget: this widget handles the display of a thread of
-     * messages. The [thread_level] parameter sets the thread level number:
+     * ------------------------------------------------------------
+     * Thread Widget
+     * ------------------------------------------------------------
+     *
+     * This widget handles the display of a thread of messages. The
+     * [thread_level] parameter sets the thread level number:
      * - root message
      * - - sub message (parent_id = root message)
      * - - - sub sub message (parent id = sub message)
      * - - sub message (parent_id = root message)
-     * This widget has 2 ways of initialization, either you give records to be rendered,
-     * either it will fetch [limit] messages related to [res_model]:[res_id].
+     * This widget has 2 ways of initialization, either you give records
+     * to be rendered, either it will fetch [limit] messages related to
+     * [res_model]:[res_id].
      */
 
     /* Add ThreadDisplay widget to registry */
-    session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
+    session.web.form.widgets.add('Thread', 'openerp.mail.Thread');
 
     /* Thread is an extension of a Widget */
     mail.Thread = session.web.Widget.extend({
@@ -147,11 +156,11 @@ openerp.mail = function(session) {
             // customize display
             $.when(display_done).then(this.proxy('do_customize_display'));
             
-            // add form view
-            this.caca = new mail.compose_message();
-            this.caca.appendTo(this.$element.find('div.oe_mail_thread_act'));
+            // add message composition form view
+            this.compose_message = new mail.ComposeMessage();
+            var compose_done = this.compose_message.appendTo(this.$element.find('div.oe_mail_thread_act'));
             
-            return display_done
+            return display_done && compose_done;
         },
         
         do_customize_display: function() {
@@ -503,14 +512,29 @@ openerp.mail = function(session) {
     });
 
 
+    /** 
+     * ------------------------------------------------------------
+     * mail_thread Widget
+     * ------------------------------------------------------------
+     *
+     * This widget handles the display of a thread of messages. The
+     * [thread_level] parameter sets the thread level number:
+     * - root message
+     * - - sub message (parent_id = root message)
+     * - - - sub sub message (parent id = sub message)
+     * - - sub message (parent_id = root message)
+     * This widget has 2 ways of initialization, either you give records
+     * to be rendered, either it will fetch [limit] messages related to
+     * [res_model]:[res_id].
+     */
+
     /* Add ThreadView widget to registry */
-    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
-//    session.web.page.readonly.add( 'ThreadView', 'openerp.mail.RecordThread');
+    session.web.form.widgets.add('ThreadView', 'openerp.mail.RecordThread');
 
     /* ThreadView widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         // QWeb template to use when rendering the object
-        template: 'RecordThread',
+        template: 'mail.record_thread',
 
        init: function() {
             this._super.apply(this, arguments);
@@ -556,11 +580,11 @@ openerp.mail = function(session) {
             // fetch followers
             var fetch_sub_done = this.fetch_subscribers();
             // create and render Thread widget
-            this.$element.find('div.oe_mail_recthread_left').empty();
+            this.$element.find('div.oe_mail_recthread_main').empty();
             if (this.thread) this.thread.destroy();
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
                                                     'thread_level': this.params.thread_level, 'show_post_comment': true, 'limit': 15});
-            var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
+            var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_main'));
             return fetch_sub_done && thread_done;
         },
         

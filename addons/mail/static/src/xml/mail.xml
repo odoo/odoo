@@ -1,37 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <div t-name="Wall" class="oe_mail_wall">
+    <!-- 
+        wall main template
+        Template used to display the communication history in the
+        wall.
+        -->
+    <div t-name="mail.wall" class="oe_mail_wall">
         <table class="oe_view_manager_header">
             <tr class="oe_header_row">
                 <td><h2 class="oe_view_title">All Feeds</h2></td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
         </table>
-        <div class="oe_mail_wall_left">
+        <div class="oe_mail_wall_main">
             <div class="oe_mail_wall_act">
                 <img class="oe_mail_msg_image oe_left" alt="User img"/>
                 <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="What are you working on?"/>
                 <button class="oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
             </div>
-            <div class="oe_clear"></div>
+            <div class="oe_clear"/>
             <div class="oe_mail_wall_threads">
+                <!-- contains threads -->
             </div>
             <div class="oe_mail_wall_more">
                 <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
             </div>
         </div>
-        <div class="oe_mail_wall_right"></div>
+        <div class="oe_mail_wall_aside">
+                <!-- contains currently nothing -->
+        </div>
     </div>
 
-    <t t-name="WallThreadContainer">
+    <!--
+        thread_container template for the wall
+        Each discussion thread is be contained inside this template
+        -->
+    <t t-name="mail.wall.thread_container">
     </t>
 
-    <div t-name="RecordThread" class="oe_mail_recthread">
+    <!--
+        record_thread main template
+        Template used to display the communciation history in documents
+        form view.
+        -->
+    <div t-name="mail.record_thread" class="oe_mail_recthread">
         <h4>History and Comments</h4>
-        <div class="oe_mail_recthread_left">
+        <div class="oe_mail_recthread_main">
+            <!-- contains the document thread -->
         </div>
-        <div class="oe_mail_recthread_right">
+        <div class="oe_mail_recthread_aside">
             <div class="oe_mail_recthread_actions">
                 <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
                 <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
@@ -44,9 +62,16 @@
         </div>
     </div>
 
+    <!--
+        compose_message template
+        This template holds the composition form to write a note or send
+        an e-mail.
+        -->
     <t t-name="mail.compose_message">
-        <div class="caca"><p>cacaproutboudin</p>
+        <div class="oe_mail_compose_message">
+            <!-- contains the composition form -->
         </div>
+        <div class="oe_clear"/>
     </t>
 
     <ul t-name="Thread" class="oe_mail oe_mail_thread">
