@@ -433,7 +433,6 @@
             </tr>
         </table>
 
-
         <div class="oe_view_manager_body">
             <t t-foreach="widget.views_src" t-as="view">
                 <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
@@ -1178,8 +1177,6 @@
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery=".oe_header_row_top" t-operation="replace"/>
-
     <t t-jquery=".oe-view-manager-header">
         this.attr('t-if', 'views.length != 1');
     </t>

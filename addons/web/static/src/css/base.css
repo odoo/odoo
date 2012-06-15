@@ -48,7 +48,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp a {
   text-decoration: none;
@@ -866,8 +866,149 @@
 .openerp .oe_application a:hover {
   text-decoration: underline;
 }
-.openerp .oe_view_manager_header {
+.openerp .oe_view_manager .oe_view_manager_header {
   width: 100%;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_header_row {
+  clear: both;
+  text-shadow: 0 1px 1px white;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_header_row:last-child td {
+  padding-top: 0;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_view_manager_sidebar {
+  margin: 0px auto;
+  width: 400px;
+  text-align: center;
+}
+.openerp .oe_view_manager .oe_view_manager_header td {
+  line-height: 26px;
+}
+.openerp .oe_view_manager .oe_view_manager_header h2 {
+  font-size: 18px;
+  margin: 0;
+  float: left;
+}
+.openerp .oe_view_manager .oe_view_manager_header h2 a {
+  color: #8a89ba;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group {
+  display: inline-block;
+  border: 1px solid #ababab;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group li {
+  float: left;
+  border-right: 1px solid #ababab;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group li:last-child {
+  border: none;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group a {
+  color: #4c4c4c;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group a:hover {
+  text-decoration: none;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group .active {
+  background: #999999;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_button_group .active a {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.openerp .oe_view_manager .oe_view_manager_header .oe_view_manager_buttons {
+  white-space: nowrap;
+}
+.openerp .oe_view_manager .oe_view_manager_pager {
+  line-height: 26px;
+}
+.openerp .oe_view_manager .oe_pager_value {
+  float: left;
+  margin-right: 8px;
+}
+.openerp .oe_view_manager .oe_pager_group {
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  display: inline-block;
+  border: 1px solid #ababab;
+  cursor: pointer;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.openerp .oe_view_manager .oe_pager_group li {
+  height: 24px;
+  line-height: 24px;
+  padding: 0;
+  float: left;
+  border-right: 1px solid #ababab;
+}
+.openerp .oe_view_manager .oe_pager_group li:last-child {
+  border: none;
+}
+.openerp .oe_view_manager .oe_pager_group a {
+  color: #4c4c4c;
+  padding: 0 8px;
+}
+.openerp .oe_view_manager .oe_pager_group a:hover {
+  text-decoration: none;
+}
+.openerp .oe_view_manager .oe_pager_group .active {
+  background: #999999;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+}
+.openerp .oe_view_manager .oe_pager_group .active a {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.openerp .oe_view_manager .oe_view_manager_switch li {
+  text-align: center;
+  width: 24px;
+  height: 24px;
+  line-height: 16px;
+}
+.openerp .oe_view_manager .oe_view_manager_switch li a {
+  position: relative;
+}
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_list:after, .openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_tree:after {
+  padding: 2px;
+  content: "i";
+}
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_graph:after {
+  font-family: "mnmliconsRegular" !important;
+  font-size: 21px;
+  font-weight: 300 !important;
+  content: "}";
+  top: -2px;
+  position: relative;
+}
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_gantt:after {
+  font-family: "mnmliconsRegular" !important;
+  font-size: 21px;
+  font-weight: 300 !important;
+  content: "y";
+  top: -2px;
+  position: relative;
+}
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_calendar:after {
+  content: "P";
+}
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_kanban:after {
+  content: "k";
+}
+.openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_diagram:after {
+  content: "f";
+}
+.openerp .oe_view_manager_global > .oe_view_manager_header {
   border-top: 1px solid #cacaca;
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
@@ -881,150 +1022,14 @@
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
 }
-.openerp .oe_view_manager_header .oe_header_row {
-  clear: both;
-  text-shadow: 0 1px 1px white;
-}
-.openerp .oe_view_manager_header .oe_header_row td {
+.openerp .oe_view_manager_global > .oe_view_manager_header .oe_header_row td {
   padding: 8px;
 }
-.openerp .oe_view_manager_header .oe_header_row:last-child td {
-  padding-top: 0;
-}
-.openerp .oe_view_manager_header .oe_header_row:first-child td {
+.openerp .oe_view_manager_global > .oe_view_manager_header .oe_header_row:first-child td {
   padding-top: 8px;
 }
-.openerp .oe_view_manager_header .oe_view_manager_sidebar {
-  margin: 0px auto;
-  width: 400px;
-  text-align: center;
-}
-.openerp .oe_view_manager_header td {
-  line-height: 26px;
-}
-.openerp .oe_view_manager_header h2 {
-  font-size: 18px;
-  margin: 0;
-  float: left;
-}
-.openerp .oe_view_manager_header h2 a {
-  color: #8a89ba;
-}
-.openerp .oe_view_manager_header .oe_button_group {
-  display: inline-block;
-  border: 1px solid #ababab;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-.openerp .oe_view_manager_header .oe_button_group li {
-  float: left;
-  border-right: 1px solid #ababab;
-}
-.openerp .oe_view_manager_header .oe_button_group li:last-child {
-  border: none;
-}
-.openerp .oe_view_manager_header .oe_button_group a {
-  color: #4c4c4c;
-}
-.openerp .oe_view_manager_header .oe_button_group a:hover {
-  text-decoration: none;
-}
-.openerp .oe_view_manager_header .oe_button_group .active {
-  background: #999999;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-}
-.openerp .oe_view_manager_header .oe_button_group .active a {
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-.openerp .oe_view_manager_header .oe_view_manager_buttons {
-  white-space: nowrap;
-}
-.openerp .oe_view_manager_pager {
-  line-height: 26px;
-}
-.openerp .oe_pager_value {
-  float: left;
-  margin-right: 8px;
-}
-.openerp .oe_pager_group {
-  float: left;
-  height: 24px;
-  line-height: 24px;
-  display: inline-block;
-  border: 1px solid #ababab;
-  cursor: pointer;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-.openerp .oe_pager_group li {
-  height: 24px;
-  line-height: 24px;
-  padding: 0;
-  float: left;
-  border-right: 1px solid #ababab;
-}
-.openerp .oe_pager_group li:last-child {
-  border: none;
-}
-.openerp .oe_pager_group a {
-  color: #4c4c4c;
-  padding: 0 8px;
-}
-.openerp .oe_pager_group a:hover {
-  text-decoration: none;
-}
-.openerp .oe_pager_group .active {
-  background: #999999;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-}
-.openerp .oe_pager_group .active a {
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-.openerp .oe_view_manager_switch li {
-  text-align: center;
-  width: 24px;
-  height: 24px;
-  line-height: 16px;
-}
-.openerp .oe_view_manager_switch li a {
-  position: relative;
-}
-.openerp .oe_view_manager_switch .oe_vm_switch_list:after, .openerp .oe_view_manager_switch .oe_vm_switch_tree:after {
-  padding: 2px;
-  content: "i";
-}
-.openerp .oe_view_manager_switch .oe_vm_switch_graph:after {
-  font-family: "mnmliconsRegular" !important;
-  font-size: 21px;
-  font-weight: 300 !important;
-  content: "}";
-  top: -2px;
-  position: relative;
-}
-.openerp .oe_view_manager_switch .oe_vm_switch_gantt:after {
-  font-family: "mnmliconsRegular" !important;
-  font-size: 21px;
-  font-weight: 300 !important;
-  content: "y";
-  top: -2px;
-  position: relative;
-}
-.openerp .oe_view_manager_switch .oe_vm_switch_calendar:after {
-  content: "P";
-}
-.openerp .oe_view_manager_switch .oe_vm_switch_kanban:after {
-  content: "k";
-}
-.openerp .oe_view_manager_switch .oe_vm_switch_diagram:after {
-  content: "f";
+.openerp .oe_form_field_one2many > .oe_view_manager .oe_header_row_top {
+  display: none;
 }
 .openerp .oe_form_dropdown_section {
   position: relative;
