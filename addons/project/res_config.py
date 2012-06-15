@@ -63,11 +63,6 @@ class project_configuration(osv.osv_memory):
             help="Allows you to delegate tasks to other users."),                                
     }
     
-    def default_get(self, cr, uid, fields, context=None):
-        res = {}
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        res['time_unit'] = user.company_id.project_time_mode_id.id
-        return res
     
     def _get_default_time_unit(self, cr, uid, context=None):
         product_uom_obj = self.pool.get('product.uom')
