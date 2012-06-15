@@ -164,7 +164,8 @@ class payroll_advice(osv.osv):
             date = advice_date.strftime('%Y')+'/'+advice_date.strftime('%m')
             number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
             sequence_num = 'PAY' + '/' + date + '/' + number
-            return self.write(cr, uid, ids, {'number':sequence_num,'state':'confirm'}, context=context)
+            self.write(cr, uid, advice.id, {'number':sequence_num,'state':'confirm'}, context=context)
+        return True
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
