@@ -168,24 +168,29 @@ openerp.web.list_editable = function (openerp) {
             var self = this;
             switch (e.which) {
             case KEY_RETURN:
-                this.save_row().then(function (result) {
-                    if (result.created) {
-                        self.new_record();
-                        return;
-                    }
+                $(e.target).blur();
+                e.preventDefault();
+                //e.stopImmediatePropagation();
+                setTimeout(function () {
+                    self.save_row().then(function (result) {
+                        if (result.created) {
+                            self.new_record();
+                            return;
+                        }
 
-                    var next_record_id,
-                        next_record = self.records.at(
-                                self.records.indexOf(result.edited_record) + 1);
-                    if (next_record) {
-                        next_record_id = next_record.get('id');
-                        self.dataset.index = _(self.dataset.ids)
-                                .indexOf(next_record_id);
-                    } else {
-                        self.dataset.index = 0;
-                        next_record_id = self.records.at(0).get('id');
-                    }
-                    self.edit_record(next_record_id);
+                        var next_record_id,
+                            next_record = self.records.at(
+                                    self.records.indexOf(result.edited_record) + 1);
+                        if (next_record) {
+                            next_record_id = next_record.get('id');
+                            self.dataset.index = _(self.dataset.ids)
+                                    .indexOf(next_record_id);
+                        } else {
+                            self.dataset.index = 0;
+                            next_record_id = self.records.at(0).get('id');
+                        }
+                        self.edit_record(next_record_id);
+                    }, 0);
                 });
                 break;
             case KEY_ESCAPE:
@@ -211,7 +216,12 @@ openerp.web.list_editable = function (openerp) {
                     })
                     .keyup(function () {
                         return self.on_row_keyup.apply(self, arguments); })
-                    .keydown(function (e) { e.stopPropagation(); });
+                    .keydown(function (e) { e.stopPropagation(); })
+                    .keypress(function (e) {
+                        if (e.which === KEY_RETURN) {
+                            return false;
+                        }
+                    });
 
                 if (row) {
                     $new_row.replaceAll(row);
