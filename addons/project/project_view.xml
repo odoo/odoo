@@ -363,18 +363,18 @@
                     </h2>
                     <group>
                         <group>
+                            <field name="effective_hours"
+                                widget="float_time" invisible="1" groups="project.group_tasks_work_on_tasks"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="partner_id" />
-                            <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
+                            <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"
                                 groups="project.group_time_work_estimation_tasks"
                                 on_change="onchange_planned(planned_hours, effective_hours)"/>
 
-                            <field name="effective_hours"
-                                widget="float_time" invisible="1" groups="project.group_tasks_work_on_tasks"/>
                             <label for="remaining_hours" string="+ Remaining"/>
                             <div>
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" groups="project.group_time_work_estimation_tasks"/>
@@ -387,8 +387,9 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Information">
-                            <field name="description" attrs="{'readonly':[('state','=','done')]}"/>
+                        <page string="Description">
+                            <field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Add a Description..." />
+                            <separator string="Task Works" />
                             <field name="work_ids" attrs="{'readonly':[('state','in',['done','draft'])]}" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
@@ -421,8 +422,6 @@
                                 <field name="sequence"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
-                            <separator string="Notes"/>
-                            <field name="notes"/>
                         </page>
                     </notebook>
                     </sheet>
@@ -721,16 +720,15 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="state"/>
+                            <field name="case_default"/>
                         </group>
                         <group>
-                            <field name="case_default"/>
+                            <field name="state" string="Related State"/>
                             <field name="sequence"/>
                             <field name="fold"/>
                         </group>
                     </group>
-                    <separator string="Description"/>
-                    <field name="description"/>
+                    <field name="description" placeholder="Add a description..."/>
                 </form>
             </field>
         </record>
