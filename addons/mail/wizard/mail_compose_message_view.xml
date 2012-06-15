@@ -57,14 +57,18 @@
             <field name="priority">1</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Compose Email">
+                <form string="Compose Email" version="7.0">
                     <group col="4">
-                        <field name="subject" colspan="4" widget="char" size="512"/>
-                        <field name="body_text" colspan="4" nolabel="1" height="300" width="300"/>
+                        <field name="subject" colspan="4" nolabel="1" placeholder="Subject..."/>
+                        <field name="body_text" colspan="4" nolabel="1" placeholder="What are you working on ?"/>
+                        <field name="destination_partners" colspan="4" nolabel="1" widget="many2many_tags"/>
                         <newline/>
-                        <label string="" name="placeholder" colspan="1"/>
-                        <button icon="gtk-close" special="cancel" string="Cancel"/>
-                        <button icon="gtk-ok" name="send_mail" string="Send" type="object"/>
+                        <button icon="gtk-ok" name="send_mail" string="Post" type="object"/>
+                        <p> or <a href="#">Send a Message</a></p>
+                        <button icon="gtk-close" string="Cancel" special="cancel" />
+                        <p>
+                            Checklist . Attach
+                        </p>
                     </group>
                 </form>
             </field>

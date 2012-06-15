@@ -85,6 +85,7 @@ The main features are:
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
+        'static/src/css/mail_compose_message.css',
     ],
     'js': [
         'static/src/js/jquery.expander.min.js',
