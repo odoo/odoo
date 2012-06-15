@@ -1020,7 +1020,7 @@ class account_move_line(osv.osv):
         }
 
         document = etree.Element('tree', string=title, editable="top",
-                                 refresh="5", on_write="on_create_write",
+                                 on_write="on_create_write",
                                  colors="red:state=='draft';black:state=='valid'")
         fields_get = self.fields_get(cr, uid, flds, context)
         for field, _seq in fld:
