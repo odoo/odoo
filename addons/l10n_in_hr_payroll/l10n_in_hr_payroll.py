@@ -104,16 +104,16 @@ class payroll_advice(osv.osv):
     _columns = {
         'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
-        'date': fields.date('Date', states={'draft': [('readonly', False)]},),
+        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Date is used to search Payslips."),
         'state':fields.selection([
-            ('draft','Draft Sheet'),
-            ('confirm','Confirm Sheet'),
+            ('draft','Draft'),
+            ('confirm','Confirm'),
             ('cancel','Cancelled'),
         ],'State', select=True, readonly=True),
         'number':fields.char('Number', size=16, readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}),
+        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Chaque Nos', size=256),
-        'company_id':fields.many2one('res.company', 'Company',required=True, states={'draft': [('readonly', False)]}),
+        'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank Address from whcih the salary is going to be paid"),
     }
     
@@ -123,6 +123,8 @@ class payroll_advice(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
+
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
@@ -135,10 +137,10 @@ class payroll_advice(osv.osv):
             if old_line_ids:
                 advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
             slip_ids = payslip_pool.search(cr, uid, [('date_from','<=',advice.date), ('date_to','>=',advice.date)], context=context)
-            if not slip_ids:
-                advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
-                a_date = advice_date.strftime('%B')+'-'+advice_date.strftime('%Y')
-                raise osv.except_osv(_('Error !'), _('No Payslips for found for %s Month') % (a_date))
+#            if not slip_ids:
+#                advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
+#                a_date = advice_date.strftime('%B')+'-'+advice_date.strftime('%Y')
+#                raise osv.except_osv(_('Error !'), _('No Payslips for found for %s Month') % (a_date))
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
@@ -155,7 +157,11 @@ class payroll_advice(osv.osv):
         return True
 
     def confirm_sheet(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+        for advice in self.browse(cr, uid, ids, context=context):
+            if not advice.line_ids:
+                raise osv.except_osv(_('Error !'), _('You can not confirm Payment advice without advice lines.'))
+        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
+        return self.write(cr, uid, ids, {'number':number, 'state':'confirm'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
@@ -186,7 +192,7 @@ class payroll_advice_line(osv.osv):
         'name':fields.char('Bank Account No.', size=32, required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
-        'company_id': fields.related('advice_id','company_id', type='many2one', required=True,relation='res.company', string='Company'),
+        'company_id': fields.related('advice_id', 'company_id', type='many2one', required=True, relation='res.company', string='Company'),
     }
 
 payroll_advice_line()

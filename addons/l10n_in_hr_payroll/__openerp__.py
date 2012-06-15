@@ -49,6 +49,7 @@ Indian Payroll Rules.
          'l10n_in_hr_payroll_data.xml',
          'data/hr.salary.rule.csv',
          'l10n_in_hr_payroll_report.xml',
+         'l10n_in_hr_payroll_sequence.xml'
      ],
     'demo_xml': ['l10n_in_hr_payroll_demo.xml'],
     'installable': True
