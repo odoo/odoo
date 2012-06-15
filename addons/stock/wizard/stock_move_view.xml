@@ -10,8 +10,7 @@
             <field name="arch" type="xml">
                 <form string="Consume Move" version="7.0">
                     <header>
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                        <button name="do_move_consume" string="Ok" type="object" icon="gtk-ok" />
+                        <button name="do_move_consume" string="Ok" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
                     <separator string="Consume Products"/>
                     <div>
@@ -43,8 +42,7 @@
             <field name="arch" type="xml">
                 <form string="Scrap Move" version="7.0">
                     <header>
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                        <button name="move_scrap" string="Ok" type="object" icon="gtk-ok" />
+                        <button name="move_scrap" string="Ok" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
                     <separator string="Scrap Products"/>
                     <group>
@@ -76,8 +74,7 @@
                 <field name="arch" type="xml">
                 <form string="Split in Lots" version="7.0">
                     <header>
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                        <button name="split_lot" string="Ok" type="object" icon="gtk-ok" />
+                        <button name="split_lot" string="Ok" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
                     <group>
                         <field name="product_id" readonly="1"/>

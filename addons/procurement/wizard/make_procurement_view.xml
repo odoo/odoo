@@ -11,8 +11,7 @@
             <field name="arch" type="xml">
                 <form string="Procurement Request" version="7.0">
                     <header>
-                        <button name="make_procurement" string="Ask New Products" type="object" icon="gtk-ok" />
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
+                        <button name="make_procurement" string="Ask New Products" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
                     <group col="4" string="This wizard will plan the procurement for this product. This procurement may generate task, production orders or purchase orders.">
                         <field name="product_id" on_change="onchange_product_id(product_id)"/>
