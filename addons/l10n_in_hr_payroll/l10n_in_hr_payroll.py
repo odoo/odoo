@@ -160,8 +160,10 @@ class payroll_advice(osv.osv):
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
                 raise osv.except_osv(_('Error !'), _('You can not confirm Payment advice without advice lines.'))
-        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
-        return self.write(cr, uid, ids, {'number':number, 'state':'confirm'}, context=context)
+            date = advice_date.strftime('%Y')+'/'+advice_date.strftime('%m')
+            number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
+            sequence_num = 'PAY' + '/' + date + '/' + number
+            return self.write(cr, uid, ids, {'number':sequence_num,'state':'confirm'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
