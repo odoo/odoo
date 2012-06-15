@@ -30,7 +30,7 @@ import decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
 
-class hr_contract_in(osv.osv):
+class hr_contract(osv.osv):
     _inherit = 'hr.contract'
     _description = 'contract'
     
@@ -50,7 +50,7 @@ class hr_contract_in(osv.osv):
         'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'), help="Deduction for company provided transport."), 
     }
 
-hr_contract_in()
+hr_contract()
 
 
 class hr_employee(osv.osv):
@@ -96,11 +96,11 @@ hr_employee()
 
 class payroll_advice(osv.osv):
     '''
-    Bank Advice Note
+    Bank Advice
     '''
 
     _name = 'hr.payroll.advice'
-    _description = 'Bank Advice Note'
+    _description = 'Bank Advice'
     _columns = {
         'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
@@ -114,7 +114,7 @@ class payroll_advice(osv.osv):
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Chaque Nos', size=256),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank Address from whcih the salary is going to be paid"),
+        'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank Address from which the salary is going to be paid"),
     }
     
     _defaults = {
@@ -157,11 +157,16 @@ class payroll_advice(osv.osv):
         return True
 
     def confirm_sheet(self, cr, uid, ids, context=None):
+        seq_obj = self.pool.get('ir.sequence')
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
                 raise osv.except_osv(_('Error !'), _('You can not confirm Payment advice without advice lines.'))
-        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
-        return self.write(cr, uid, ids, {'number':number, 'state':'confirm'}, context=context)
+            advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
+            advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
+            number = seq_obj.get(cr, uid, 'payment.advice')
+            sequence_num = 'PAY' + '/' + advice_year + '/' + number
+            self.write(cr, uid, [advice.id], {'number': sequence_num, 'state': 'confirm'}, context=context)
+        return True
 
     def set_to_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
