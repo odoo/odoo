@@ -23,23 +23,14 @@
                 <xpath expr='//field[@name="type"]' position='after'>
                     <field name="template_id" on_change="on_change_template(template_id,context)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                 </xpath>
-                <xpath expr='//field[@name="date"]' position="after">
-                    <group col="6" colspan="2" class="oe_form_group_label_border">
-                        <field name="quantity_max"/><label string="/"/> <label string="Remaining"/> <field name="remaining_hours" nolabel="1"/>
-                    </group>
+                <xpath expr='//field[@name="date"]' position="after" version="7.0">
+                    <field name="quantity_max" class="oe_form_inline"/> / Remaining
+                    <field name="remaining_hours" class="oe_form_inline"/>
                 </xpath>
-				<xpath expr='//group[@name="toinvoice"]' position='replace'>
-					<group class="oe_form_group_label_border" name="toinvoice" col="4" colspan="4" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-						<field name="pricelist_id"/>
-						<field name="to_invoice"/>
-					</group>
-				</xpath>
-                <xpath expr='//group[@name="toinvoice"]' position='before'>
-                    <separator colspan="4" string="Invoicing" name="invoicing"/>
+                <xpath expr='//group[@name="toinvoice"]' position='replace'>
+                    <group name="toinvoice" string="Invoicing" colspan="4">
+                        <div class="oe_field_label" />
                     <group colspan="4" col="6">
-                        <!-- header -->
-                        <div class="oe_field_label" colspan="2"/>
-                        <group colspan="4" col="6">
                             <div class="oe_field_label_bold">Est.Tot</div>
                             <div class="oe_field_label_bold">Invoiced</div>
                             <div class="oe_field_label_bold">Remaining</div>
@@ -48,9 +39,7 @@
                             <div class="oe_btn_width"/>
                         </group>
                         
-                        <!-- center -->
-                        <!--<group class="oe_group">-->
-                        <field class="oe_field_label" name="fix_price_invoices" />
+                -        <field class="oe_field_label" name="fix_price_invoices" />
                         <group colspan="4" col="6" attrs="{'invisible': [('fix_price_invoices','=',False)]}">
                             <field class="oe_float_field" name="amount_max" nolabel="1"   />
                             <field class="oe_float_field" name="ca_invoiced" nolabel="1"   />
@@ -70,7 +59,6 @@
                             <div><button class="oe_btn_width" icon="terp-dolar" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action"/></div>
                         </group>
                         
-                        <!-- footer -->
                         
                         <div name="total" class="oe_field_label" colspan="2">Total  </div>
                         <group colspan="4" col="6" >
@@ -81,7 +69,8 @@
                             <div class="oe_btn_width_small"/>
                             <div class="oe_btn_width"/>
                         </group>
-						<!--</group>-->
+                        <field name="pricelist_id" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                        <field name="to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                       </group>
                  </xpath>
             </field>

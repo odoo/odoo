@@ -236,6 +236,7 @@ class project(osv.osv):
     _order = "sequence"
     _defaults = {
         'active': True,
+        'type': 'contract',
         'state': 'open',
         'priority': 1,
         'sequence': 10,

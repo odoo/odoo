@@ -5,12 +5,16 @@
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
+            <field name="priority">30</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//group[@name="toinvoice"]' position='inside'>
                     <field name="pricelist_id" />
-                    <field name="to_invoice" widget="selection" />
+                    <field name="to_invoice" widget="selection"/>
                  </xpath>
+                <xpath expr="//field[@name='use_timesheets']" position="replace">
+                    <field name="use_timesheets" on_change="on_change_use_timesheets(use_timesheets, context)" string="USE TIMESHEETS blablabla"/>
+                </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
                         <button name="set_pending" string="Pending" type="object" states="open"/>

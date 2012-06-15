@@ -19,17 +19,16 @@
                             <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract','template'])]}"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Contract Information" name="contract_page">
-                                <group col="4" colspan="4">
-                                    <group colspan="2" col= "2" name="contract" class="oe_form_group_label_border">
-                                        <separator colspan="2" string="Validity"/>
+                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','=','view')]}">
+                                <group>
+                                    <group string="Validity" name="contract">
                                         <field name="date_start"/>
                                         <field name="date"/>
                                     </group>
-                                    <group colspan="2" col="2" name="project" class="oe_form_group_label_border">
-                                        <separator colspan="2" string="Project" name="project_sep" invisible="1"/>
+                                    <group name="project">
+                                        <separator colspan="2" string="Project Management" name="project_sep" invisible="1"/>
                                     </group>
-                                     <group class="oe_form_group_label_border" name="toinvoice" colspan="4" col="4"></group>
+                                     <group name="toinvoice"></group>
                                 </group>
                                 <separator string="Terms and Conditions" colspan="4" name="description"/>
                                 <field colspan="4" name="description" nolabel="1"/>

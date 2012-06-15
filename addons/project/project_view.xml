@@ -53,12 +53,12 @@
                                 <tr name="use_tasks_row">
                                     <th style="border-right:1px solid #DDD;" width="140px">Tasks Management</th>
                                     <td><field name="use_tasks" nolabel="1"/></td>
-                                    <td style="text-align:right;" width="110px"><button icon="terp-stock_align_left_24" class="oe_btn_width" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
+                                    <td style="text-align:right;" width="110px"><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
                                 </tr>
                                 <tr name="use_attachment_row">
                                     <th/>
                                     <td/>
-                                    <td style="text-align:right;" width="110px"><button icon="gtk-dnd-multiple" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
+                                    <td style="text-align:right;" width="110px"><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
                                 </tr>
                             </table>
                         </group>
@@ -636,9 +636,9 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="2" string="Project" name="project_sep"/>
+                    <separator colspan="2" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
                 </xpath>
-            	<xpath expr='//group[@name="project"]' position='inside'>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
                     <field name="use_tasks" />
                 </xpath>
             </field>

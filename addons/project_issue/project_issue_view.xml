@@ -387,11 +387,11 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="2" string="Project" name="project_sep"/>
+                    <separator colspan="2" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
                 </xpath>
-            	<group name="project" position="inside">
-            	    <field name="use_issues"/>
-            	</group>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_issuess" />
+                </xpath>
             </field>
         </record>
     </data>
