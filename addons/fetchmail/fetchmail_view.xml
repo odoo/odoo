@@ -77,9 +77,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Incoming Mail Server"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Incoming Mail Server"/>
                     <separator orientation="vertical"/>
                     <filter string="IMAP" icon="terp-folder-green" domain="[('type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" icon="terp-folder-orange" domain="[('type','=','pop')]" help="Server type POP."/>
