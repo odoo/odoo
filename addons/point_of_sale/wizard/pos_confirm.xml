@@ -9,8 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Post All Orders" version="7.0">
                     <header>
-                        <button name="action_confirm" string="Generate Entries" type="object" icon="gtk-ok"/>
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
+                        <button name="action_confirm" string="Generate Entries" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
                     <separator string="Generate Journal Entries"/>
                     <label string="Generate all sale journal entries for non invoiced orders linked to a closed cash register or statement."/>
