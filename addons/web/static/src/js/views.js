@@ -328,7 +328,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
 
         this.$element
-            .find('.oe_view_manager_switch a').parent().removeClass('active')
+            .find('.oe_view_manager_switch a').parent().removeClass('active');
         this.$element
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
@@ -337,9 +337,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
+                    var container = self.$element.find(".oe_view_manager_view_" + view_name + ":first");
                     if (view_name === view_type) {
+                        container.show();
                         controller.do_show(view_options || {});
                     } else {
+                        container.hide();
                         controller.do_hide();
                     }
                 }
