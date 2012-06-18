@@ -107,16 +107,17 @@ openerp.web_linkedin = function(instance) {
             }
         },
         APIKeyWarning: function(e) {
-            e.message="";            
-            instance.web.dialog($(QWeb.render("Register.Linkedin", _t(e))), {
-                title: _t("Configure your Linkedin Key API"),
-                modal: true,                
-                width : 825,        
-                buttons:[{
-                    text: _t("Close"),
+            e.message= "Linkedin API Key is not registerd/correct.\n  Go to Settings,  'General Settings'  menu and follow steps to register the LinkedIn API Key.";
+            instance.web.dialog($(QWeb.render("CrashManager.warning", _t(e))), {
+                title: _t("Linkedin API Key Warning"),
+                modal: true,
+                height: 200,
+                width: 500,
+                buttons: [
+                {
+                    text: _t("Ok"),
                     click: function() { $(this).dialog("close"); }
-                }
-                    ]
+                }]
             });
         },
         setTemplate: function( URL, AccountName ) {
