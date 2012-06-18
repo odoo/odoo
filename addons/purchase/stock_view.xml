@@ -65,7 +65,7 @@
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">
                     <group col="8" colspan="4">
-                        <field name="name" string="Picking to Invoice" filter_domain="['|'('name','ilike',self),('origin','ilike',self)]"/>
+                        <field name="name" string="Picking to Invoice" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" name="available" string="Available"
                             domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
