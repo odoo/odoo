@@ -22,7 +22,8 @@
             <field name="model">publisher_warranty.contract</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Publisher Warranty Contract">
+                <form string="Publisher Warranty Contract" version="7.0">
+                  <sheet>
                     <group col="3" colspan="4">
                         <group col="2">
                             <field name="name"/>
@@ -45,6 +46,7 @@
                             attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
                         </group>
                     </group>
+                  </sheet>  
                 </form>
             </field>
         </record>
