@@ -108,7 +108,8 @@
             <field name="arch" type="xml">
                 <search string="Search Process">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Process" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="model_id"/>
                     </group>
                     <newline/>
@@ -205,7 +206,8 @@
         <field name="arch" type="xml">
             <search string="Search ProcessNode">
                 <group>
-                    <field name="name"/>
+                    <field name="name" string="ProcessNode" filter_domain="[('name','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="model_id"/>
                     <field name="kind" />
                 </group>
@@ -295,7 +297,8 @@
         <field name="arch" type="xml">
             <search string="Search Process Transition">
                 <group>
-                    <field name="name"/>
+                    <field name="name" string="Process Transition" filter_domain="[('name','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="source_node_id"/>
                     <field name="target_node_id" />
                 </group>
