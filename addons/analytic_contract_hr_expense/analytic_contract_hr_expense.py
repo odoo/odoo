@@ -73,39 +73,42 @@ class account_analytic_account(osv.osv):
             return res
 
         if child_ids:
-            cr.execute("SELECT hel.analytic_account, SUM(hel.unit_amount*hel.unit_quantity) \
-                    FROM hr_expense_line AS hel\
-                    LEFT JOIN hr_expense_expense AS he \
-                        ON he.id = hel.expense_id\
-                    WHERE he.state = 'invoiced' \
-                        AND hel.analytic_account IN %s \
-                    GROUP BY hel.analytic_account",(child_ids,))
+            cr.execute("""SELECT account_analytic_account.id, \
+                                COALESCE(SUM (product_template.list_price * \
+                                    account_analytic_line.unit_amount * \
+                                    ((100-hr_timesheet_invoice_factor.factor)/100)), 0.0) \
+                                    AS ca_to_invoice \
+                            FROM product_template \
+                            JOIN product_product \
+                                ON product_template.id = product_product.product_tmpl_id \
+                            JOIN account_analytic_line \
+                                ON account_analytic_line.product_id = product_product.id \
+                            JOIN account_analytic_journal \
+                                ON account_analytic_line.journal_id = account_analytic_journal.id \
+                            JOIN account_analytic_account \
+                                ON account_analytic_account.id = account_analytic_line.account_id \
+                            JOIN hr_timesheet_invoice_factor \
+                                ON hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
+                            WHERE account_analytic_account.id IN %s \
+                                AND account_analytic_line.invoice_id IS NULL \
+                                AND account_analytic_line.to_invoice IS NOT NULL \
+                                AND account_analytic_journal.type = 'purchase' \
+                            GROUP BY account_analytic_account.id;""",(child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = sum
         res_final = res
         return res_final
 
     def _expense_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        lines_obj = self.pool.get('account.analytic.line')
         res = {}
-        res_final = {}
-        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
-        for i in child_ids:
-            res[i] =  0.0
-        if not child_ids:
-            return res
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = 0.0
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'purchase')], context=context)
+            for line in lines_obj.browse(cr, uid, line_ids, context=context):
+                res[account.id] += line.invoice_id.amount_untaxed
+        return res
 
-        if child_ids:
-            cr.execute("SELECT hel.analytic_account,SUM(hel.unit_amount*hel.unit_quantity)\
-                    FROM hr_expense_line AS hel\
-                    LEFT JOIN hr_expense_expense AS he \
-                        ON he.id = hel.expense_id\
-                    WHERE he.state = 'paid' \
-                         AND hel.analytic_account IN %s \
-                    GROUP BY hel.analytic_account",(child_ids,))
-            for account_id, sum in cr.fetchall():
-                res[account_id] = sum
-        res_final = res
-        return res_final
 
     _columns = {
         'charge_expenses' : fields.boolean('Charge Expenses'),

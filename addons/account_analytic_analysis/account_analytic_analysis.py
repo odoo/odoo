@@ -98,7 +98,7 @@ class account_analytic_account(osv.osv):
                             WHERE account_analytic_account.id IN %s \
                                 AND account_analytic_line.invoice_id IS NULL \
                                 AND account_analytic_line.to_invoice IS NOT NULL \
-                                AND account_analytic_journal.type IN ('purchase', 'general') \
+                                AND account_analytic_journal.type = 'general' \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
@@ -316,7 +316,7 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False)], context=context)
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general')], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
                 res[account.id] += line.invoice_id.amount_untaxed
         return res
@@ -324,10 +324,7 @@ class account_analytic_account(osv.osv):
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
-            if account.amount_max != 0:
-                res[account.id] = max(account.amount_max - account.ca_invoiced, account.fix_price_to_invoice)
-            else:
-                res[account.id]=0.0
+            res[account.id] = max(account.amount_max - account.ca_invoiced, account.fix_price_to_invoice)
         return res
 
     def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):

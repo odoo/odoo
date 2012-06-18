@@ -5,9 +5,7 @@
             <field name="name">account.analytic.account.form.expense.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form"/>
-            <field eval="20" name="priority"/>
-            <field name="arch" type="xml">
+            <field eval="60" name="priority"/>
                 <xpath expr='//tr[@name="total"]' position='before'>
                     <tr>
                         <td>
@@ -23,8 +21,8 @@
                         </td><td>
                             <field class="oe_form_inline" name="expense_to_invoice" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
-                            <button name="open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
-                            <button name="hr_to_invoiced_expense" string="Invoice Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
+                            <button name="open_hr_expense" string="All Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
+                            <button name="hr_to_invoiced_expense" string="Expenses to Invoice" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td>
                     </tr>
                 </xpath>
