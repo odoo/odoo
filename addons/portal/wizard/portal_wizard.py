@@ -98,12 +98,11 @@ class wizard(osv.osv_memory):
                 active_user = [u.login for u in portal_users]
                 if address.email in active_user:
                     has_portal = True
-
             return  {    # a user config based on a contact (address)
                 'name': address.name,
                 'user_email': extract_email(address.email),
                 'lang': address.parent_id and address.parent_id.lang or 'en_US',
-                'partner_id': address.parent_id and address.parent_id.id,
+                'partner_id': address.parent_id and address.parent_id.id or address.id,
                 'has_portal_user':has_portal,
             }
         
@@ -116,9 +115,8 @@ class wizard(osv.osv_memory):
                 # add one user per contact, or one user if no contact
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
-                if not p.is_company: 
-                    user_ids.extend(map(create_user_from_address, [p]))
-        
+                else : 
+                     user_ids.extend(map(create_user_from_address, [p]))
         return user_ids
 
     _defaults = {
