@@ -65,28 +65,6 @@ class project_project(osv.osv):
                 factor_id = data_obj.browse(cr, uid, data_id).res_id
                 res['value'].update({'to_invoice': factor_id})
         return res
-    
-    def open_timesheets(self, cr, uid, ids, context=None):
-        """ open Timesheets view """
-        project = self.browse(cr, uid, ids[0], context)
-        try:
-            journal_id = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_timesheet', 'analytic_journal').id
-        except ValueError:
-            journal_id = False
-        view_context = {
-            'search_default_account_id': [project.analytic_account_id.id],
-            'default_account_id': project.analytic_account_id.id,
-            'default_journal_id': journal_id,
-        }
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Bill Tasks Works'),
-            'res_model': 'account.analytic.line',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': view_context,
-            'nodestroy': True,
-        }
 
 project_project()
 
