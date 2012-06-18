@@ -3487,10 +3487,7 @@ class BaseModel(object):
             for sub_ids in cr.split_for_in_conditions(ids):
                 if rule_clause:
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
-                                         % (self._description,))
+                    self._check_record_rules_result_count(cr, user, sub_ids, 'read', context=context)
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
@@ -3669,6 +3666,26 @@ class BaseModel(object):
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
+    def _check_record_rules_result_count(self, cr, uid, ids, operation, context=None):
+        """Verify that number of returned rows after applying record rules matches
+           the length of `ids`, and raise an appropriate exception if it does not.
+        """
+        if cr.rowcount != len(ids):
+            # Attempt to distinguish record rule restriction vs deleted records, 
+            # to provide a more specific error message
+            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
+            if cr.rowcount != len(ids):
+                if operation == 'unlink':
+                    # no need to warn about deleting an already deleted record!
+                    return
+                _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
+                raise except_orm(_('Missing document(s)'),
+                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+            _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+            raise except_orm(_('Access Denied'),
+                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                (self._description, operation))
+
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to the access rights."""
@@ -3700,7 +3717,7 @@ class BaseModel(object):
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
-            # have log_access enabled and this the create_uid column is always there.
+            # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
             cr.execute("""SELECT distinct create_uid
@@ -3708,9 +3725,8 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for transient models '
-                    '(except for the super-user).' % operation.capitalize())
+                raise except_orm(_('Access Denied'),
+                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
         else:
             where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
             if where_clause:
@@ -3719,10 +3735,7 @@ class BaseModel(object):
                     cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
                                ' WHERE ' + self._table + '.id IN %s' + where_clause,
                                [sub_ids] + where_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                         % (operation, self._description))
+                    self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
         """Call given workflow trigger as a result of a CRUD operation""" 
