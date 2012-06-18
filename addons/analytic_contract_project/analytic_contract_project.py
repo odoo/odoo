@@ -20,13 +20,32 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
-    _columns = {
-    #    'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
-    }
+
     _defaults = {
         'use_timesheets': True,
     }
+
+    def open_sale_order_lines(self,cr,uid,ids,context=None):
+        account_ids = [x.analytic_account_id.id for x in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('account.analytic.account').open_sale_order_lines(cr, uid, account_ids, context=context)
+
+    def open_timesheets_to_invoice(self,cr,uid,ids,context=None):
+        if context is None:
+            context = {}
+        analytic_account_id = self.browse(cr, uid, ids[0], context=context).analytic_account_id.id
+        context.update({'search_default_account_id': analytic_account_id, 'default_account_id': analytic_account_id, 'search_default_to_invoice': 1})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Timesheet Lines to Invoice'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': context,
+            'domain' : [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general')],
+            'res_model': 'account.analytic.line',
+            'nodestroy': True,
+        }
 project_project()

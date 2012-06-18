@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record id="project_account_analytic_account_form" model="ir.ui.view">
             <field name="name">project.project.form.inherit</field>
             <field name="model">project.project</field>
@@ -52,8 +53,8 @@
                             </td><td>
                                 <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <button name="%(account_analytic_analysis.action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                                <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
+                                <button name="%(account_analytic_analysis.action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id], 'default_project_id': analytic_account_id, 'search_default_project_id': analytic_account_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <button name="open_sale_order_lines" string="Lines To Invoice" type="object" context="{'default_partner_id': [partner_id],'default_project_id': analytic_account_id,'search_default_uninvoiced': 1,'search_default_project_id': analytic_account_id,'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
                         </tr><tr nameattrs="{'invisible':[('use_timesheets','=',False)]}">
                             <td>
                                 <label for="invoice_on_timesheets"/>
@@ -68,10 +69,10 @@
                             </td><td>
                                 <field class="oe_form_inline" name="hours_qtt_non_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
-                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Timesheets to Invoice" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" context="{'default_account_id': analytic_account_id,'search_default_account_id': analytic_account_id}"/>
+                                <button name="open_timesheets_to_invoice" string="Timesheets to Invoice" type="object" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td>
-                        </tr><tr>
+                        </tr><tr name="total">
                             <th>
                                 <label string="Total"/>
                             </th><td>
