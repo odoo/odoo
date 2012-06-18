@@ -50,6 +50,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Sales Analysis">
+                <group>
                     <field name="date"/>
                     <field name="date_confirm"/>
                     <separator orientation="vertical"/>
@@ -70,15 +71,15 @@
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="user_id"/>
-                   <newline/>
-                   <group expand="0" string="Extended Filters...">
+                </group>
+                <newline/>
+                <group expand="0" string="Extended Filters...">
                        <field name="shop_id" widget="selection"/>
                        <field name="categ_id" widget="selection"/>
                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                   <newline/>
-                   </group>
-                   <newline/>
-                   <group expand="1" string="Group By...">
+                </group>
+                <newline/>
+                <group expand="1" string="Group By...">
                        <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                        <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
                        <separator orientation="vertical"/>
@@ -96,7 +97,7 @@
                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Ordered date of the sales order"/>
                        <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Ordered Year of the sales order"/>
-                    </group>
+                  </group>
             </search>
         </field>
     </record>
