@@ -31,6 +31,11 @@ import decimal_precision as dp
 DATETIME_FORMAT = "%Y-%m-%d"
 
 class hr_contract(osv.osv):
+    """
+    Employee contract allows to add different values in fields.
+    Fields are used in salary rule computation.
+    """
+
     _inherit = 'hr.contract'
     _description = 'contract'
     
@@ -54,7 +59,11 @@ hr_contract()
 
 
 class hr_employee(osv.osv):
-    
+    '''
+    Employee's Join date allows to compute total working 
+    experience of Employee and it is used to calculate Gratuity rule.
+    '''
+
     _inherit = 'hr.employee'
     _description = 'Employee'
 
@@ -128,6 +137,15 @@ class payroll_advice(osv.osv):
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
+        """
+        Advice - Create Advice lines in Payment Advice and 
+        compute Advice lines.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Advice’s IDs
+        @return: Advice lines
+        @param context: A standard dictionary for contextual values
+        """
         payslip_pool = self.pool.get('hr.payslip')
         advice_line_pool = self.pool.get('hr.payroll.advice.line')
         payslip_line_pool = self.pool.get('hr.payslip.line')
@@ -157,6 +175,14 @@ class payroll_advice(osv.osv):
         return True
 
     def confirm_sheet(self, cr, uid, ids, context=None):
+        """
+        confirm Advice - confirmed Advice after computing Advice Lines..
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of confirm Advice’s IDs
+        @return: confirmed Advice lines and set sequence of Advice.
+        @param context: A standard dictionary for contextual values
+        """
         seq_obj = self.pool.get('ir.sequence')
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
@@ -169,9 +195,13 @@ class payroll_advice(osv.osv):
         return True
 
     def set_to_draft(self, cr, uid, ids, context=None):
+        """Resets Advice as draft.
+        """
         return self.write(cr, uid, ids, {'state':'draft'}, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
+        """Marks Advice as cancelled.
+        """
         return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
 
     def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
