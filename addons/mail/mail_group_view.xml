@@ -96,8 +96,8 @@
             <field name="type">search</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <search string="Search groups">
-                    <field name="name"/>
+                <search string="Search Groups">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Group"/>
                     <field name="responsible_id"/>
                 </search>
             </field>
