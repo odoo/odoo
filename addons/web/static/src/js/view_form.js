@@ -1556,6 +1556,40 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
         this.$input = this.$element.find('input.oe_datepicker_master');
         this.$input_picker = this.$element.find('input.oe_datepicker_container');
         this.$input.change(this.on_change);
+        $.datepicker.regional = {
+            clearText: _t('Clear'), 
+            clearStatus: _t('Erase the current date'),
+            closeText: _t('Done'),
+            closeStatus: _t('Close without change'),
+            prevText: _t('<Prev'), prevStatus: _t('Show the previous month'),
+            nextText: _t('Next>'), nextStatus: _t('Show the next month'),
+            currentText: _t('Today'), currentStatus: _t('Show the current month'),
+            monthNames: [_t('January'),_t('February'),_t('March'),_t('April'),_t('May'),_t('June'),
+            _t('July'),_t('August'),_t('September'),_t('October'),_t('November'),_t('December')],
+            monthNamesShort: [_t('Jan'),_t('Feb'),_t('Mar'),_t('Apr'),_t('May'),_t('Jun'),
+            _t('Jul'),_t('Aug'),_t('Sep'),_t('Oct'),_t('Nov'),_t('Dec')],
+            monthStatus: _t('Show a different month'), yearStatus: _t('Show a different year'),
+            weekHeader: _t('Wk'), weekStatus: _t('Week of the year'),
+            dayNames: [_t('Sunday'),_t('Monday'),_t('Tuesday'),_t('Wednesday'),_t('Thursday'),_t('Friday'),_t('Saturday')],
+            dayNamesShort: [_t('Sun'),_t('Mon'),_t('Tue'),_t('Wed'),_t('Thu'),_t('Fri'),_t('Sat')],
+            dayNamesMin: [_t('Su'),_t('Mo'),_t('Tu'),_t('We'),_t('Th'),_t('Fr'),_t('Sa')],
+            dayStatus: _t('Set DD as first week day'), dateStatus: _t('Select D, M d'),
+            dateFormat: 'dd/mm/yy', firstDay: 0, 
+            initStatus: _t('Select a date'), isRTL: false
+        }
+        $.datepicker.setDefaults($.datepicker.regional)
+
+        $.timepicker.regional = {
+            timeOnlyTitle: _t('Choose Time'),
+            timeText: _t('Time'),
+            hourText: _t('Hour'),
+            minuteText: _t('Minute'),
+            secondText: _t('Second'),
+            currentText: _t('Now'),
+            closeText: _t('Done')
+        }
+        $.timepicker.setDefaults($.timepicker.regional)
+
         this.picker({
             onSelect: this.on_picker_select,
             changeMonth: true,
