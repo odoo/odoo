@@ -2669,29 +2669,23 @@ openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
             self.setup_save_on_row_blur();
         });
     },
-    bind_blur_focus: function (new_row, onblur, onfocus) {
-        if (new_row.addEventListener) {
-            new_row.addEventListener('blur', onblur, true);
-            new_row.addEventListener('focus', onfocus, true);
-        } else {
-            new_row.onfocusout = onblur;
-            new_row.onfocusin = onfocus;
-        }
-    },
     setup_save_on_row_blur: function () {
         var self = this;
         var form = this.edition_form;
-        this.bind_blur_focus(this.edition_form.$element[0], function () {
-            self._save_row_timeout = setTimeout(function () {
-                if (form.widget_is_stopped) {
-                    // Saved or cancelled already, maybe?
-                    return;
-                }
-                self.view.ensure_saved();
-            }, 0);
-        }, function () {
-            clearTimeout(self._save_row_timeout);
-            delete self._save_row_timeout;
+        this.edition_form.$element.bind({
+            focusout: function () {
+                self._save_row_timeout = setTimeout(function () {
+                    if (form.widget_is_stopped) {
+                        // Saved or cancelled already, maybe?
+                        return;
+                    }
+                    self.view.ensure_saved();
+                }, 0);
+            },
+            focusin: function () {
+                clearTimeout(self._save_row_timeout);
+                delete self._save_row_timeout;
+            }
         });
     }
 });
