@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="bic"/>
@@ -33,6 +34,7 @@
                             <field name="active"/>
                         </group>
                     </group>
+                  </sheet>
                 </form>
             </field>
         </record>
