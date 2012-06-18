@@ -472,7 +472,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
 
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
-                console.error(e);
+                instance.webclient.crashmanager.on_javascript_exception(e);
                 return $.Deferred().reject();
             }
         });
@@ -2787,7 +2787,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var views = [];
         _.each(modes, function(mode) {
             if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
-                throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                try {
+                    throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                } catch(e) {
+                    instance.webclient.crashmanager.on_javascript_exception(e)
+                }
             }
             var view = {
                 view_id: false,
