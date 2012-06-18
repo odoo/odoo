@@ -104,6 +104,10 @@
     <!-- After we have setup the root directory, migrate the attachments
         to point to that. -->
     <function model="ir.attachment" name="_attach_parent_id"/>
-
+    <function
+            eval="('default',False,'parent_id', [('document.directory', False)], ref('document.dir_root'), True, False, False, False, True)"
+            id="document_default_set"
+            model="ir.values"
+            name="set"/>
 </data>
 </openerp>
