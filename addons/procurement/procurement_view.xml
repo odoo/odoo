@@ -106,17 +106,18 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group>
+                       <field name="origin" string="Procurement" filter_domain="[('origin','ilike',self)]"/>
+                       <separator orientation="vertical"/>
+                       <field name="date_planned"/>
+                       <separator orientation="vertical"/>
                        <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
                        <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
                        <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
-                       <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
                            help="Procurement started late" />
                        <separator orientation="vertical"/>
-                       <field name="origin"/>
                        <field name="product_id" />
-                       <field name="date_planned"/>
                        <field name="state" />
                     </group>
                     <newline/>
@@ -186,7 +187,8 @@
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Reordering Rules" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="warehouse_id" widget="selection"/>
                         <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
