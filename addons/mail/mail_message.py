@@ -106,7 +106,7 @@ class mail_message_common(osv.TransientModel):
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
-        'subject': fields.char('Subject', size=512, required=True),
+        'subject': fields.char('Subject', size=512),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string', string='Message Record Name',
