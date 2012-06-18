@@ -62,9 +62,7 @@
             <field name="arch" type="xml">
                 <search string="Search Audittrail Rule">
                     <group>
-                        <field name="name"
-                        filter_domain="[('name','ilike',self)]"
-                        string="Audittrail Rule"/>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Audittrail Rule"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft  Rule"/>
                         <filter icon="terp-camera_test" string="Subscribed" domain="[('state','=','subscribed')]" help="Subscribed Rule"/>
@@ -170,9 +168,7 @@
             <field name="arch" type="xml">
                 <search string="Search Audittrail Log">
                     <group>
-                        <field name="name"
-                        filter_domain="[('name','ilike',self)]"
-                        string="Audittrail Log"/>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Audittrail Log"/>
                         <field name="object_id"/>
                         <field name="user_id"  widget="selection"/>
                     </group>
