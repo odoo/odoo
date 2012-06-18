@@ -32,9 +32,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Request Link">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('object','ilike',self)]"
-                    string="Subject"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('object','ilike',self)]" string="Subject"/>
                 </search>
             </field>
         </record>

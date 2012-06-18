@@ -51,9 +51,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Filter Name"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Filter Name"/>
                     <separator orientation="vertical"/>
                     <filter string="Personal" domain="[('user_id','!=',False)]" help="Filters visible only for one user"/>
                     <filter string="Shared" domain="[('user_id','=',False)]" help="Filters shared with all users"/>

@@ -8,9 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Parameters">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Name"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-project"
                         string="Generic"

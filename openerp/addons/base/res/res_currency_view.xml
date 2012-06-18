@@ -8,9 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Currency"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Currency"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -111,9 +109,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currency Rate Type">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Name"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
                 </search>
             </field>
         </record>

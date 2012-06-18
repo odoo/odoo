@@ -249,8 +249,8 @@
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
                         <field name="name" 
-                        filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"
-                        string="Partner"/>
+                            filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"
+                            string="Partner"/>
                         <separator orientation="vertical"/>
                         <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                         <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>

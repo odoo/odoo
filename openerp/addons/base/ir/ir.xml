@@ -72,8 +72,8 @@
             <field name="arch" type="xml">
                 <search string="Client Actions">
                     <field name="name"
-                    filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
-                    string="Client Action"/>
+                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
+                        string="Client Action"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
@@ -202,9 +202,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Sequence"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Sequence"/>
                     <field name="code"/>
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -257,9 +255,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences Type">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
-                    string="Sequence Type"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Sequence Type"/>
                 </search>
             </field>
         </record>
@@ -309,9 +305,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Action">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]"
-                    string="Action"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Action"/>
                 </search>
             </field>
         </record>
@@ -397,8 +391,8 @@
                 <search string="Report Xml">
                     <group col="10" colspan="4">
                         <field name="name"
-                        filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
-                        string="Report"/>
+                            filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
+                            string="Report"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By" colspan="4">
@@ -499,9 +493,7 @@
             <field name="arch" type="xml">
                 <search string="Open a Window">
                     <group col="10" colspan="4">
-                        <field name="name"
-                        filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]"
-                        string="Action"/>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
                         <field name="view_type"/>
                     </group>
                     <newline/>
@@ -571,8 +563,8 @@
             <field name="arch" type="xml">
                 <search string="Wizards">
                     <field name="name"
-                    filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]"
-                    string="Wizard"/>
+                        filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]"
+                        string="Wizard"/>
                 </search>
             </field>
         </record>
@@ -659,9 +651,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Views">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]"
-                    string="View"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="View"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-stock_zoom"
                         string="Search"
@@ -800,9 +790,7 @@
             <field name="arch" type="xml">
                 <search string="Attachments">
                     <group colspan="4" col="10">
-                        <field name="name"
-                        filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]"
-                        string="Attachment"/>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
                         <field name="create_date"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stage"
@@ -946,9 +934,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Model Description">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]"
-                    string="Model"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
                         string="In Memory"
@@ -1027,9 +1013,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fields">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('field_description','ilike',self)]"
-                    string="Field"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('field_description','ilike',self)]" string="Field"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+"
                         string="Required"
@@ -1094,8 +1078,8 @@
             <field name="arch" type="xml">
                 <search string="External Identifiers">
                     <field name="name"
-                    filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('module','ilike',self)]"
-                    string="External Identifier"/>
+                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('module','ilike',self)]"
+                        string="External Identifier"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
                         string="Updatable"
@@ -1296,9 +1280,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Menu">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Menu"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Menu"/>
                     <field name="parent_id"/>
                 </search>
             </field>
@@ -1376,9 +1358,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scheduled Actions">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Scheduled Action"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Scheduled Action"/>
                     <field name="user_id" widget="selection"/>
                     <field name="nextcall"/>
                     <field name="active"/>
@@ -1462,9 +1442,7 @@
             <field name="arch" type="xml">
                 <search string="Access Controls">
                     <group>
-                        <field name="name"
-                        filter_domain="[('name','ilike',self)]"
-                        string="Access Control"/>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Access Control"/>
                         <separator orientation="vertical"/>
                         <filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
                         <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
@@ -1559,9 +1537,7 @@
             <field name="arch" type="xml">
                 <search string="Record Rules">
                     <group>
-                        <field name="name"
-                        filter_domain="[('name','ilike',self)]"
-                        string="Record Rule"/>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Record Rule"/>
                         <separator orientation="vertical"/>
                         <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
                         <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
@@ -1700,9 +1676,7 @@
             <field name="arch" type="xml">
                 <search string="Server Actions">
                     <group col="10" colspan="4">
-                        <field name="name"
-                        filter_domain="[('name','ilike',self)]"
-                        string="Server Action"/>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Server Action"/>
                         <field name="model_id"/>
                         <field name="state"/>
                     </group>
@@ -1911,8 +1885,8 @@
             <field name="arch" type="xml">
                 <search string="Outgoing Mail Servers">
                     <field name="name"
-                    filter_domain="['|', '|', ('name','ilike',self), ('smtp_host','ilike',self), ('smtp_user','ilike',self)]"
-                    string="Outgoing Mail Server"/>
+                        filter_domain="['|', '|', ('name','ilike',self), ('smtp_host','ilike',self), ('smtp_user','ilike',self)]"
+                        string="Outgoing Mail Server"/>
                     <field name="smtp_encryption"/>
                 </search>
             </field>

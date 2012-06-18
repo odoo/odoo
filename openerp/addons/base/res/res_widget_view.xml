@@ -7,9 +7,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Widget">
-                    <field name="title"
-                    filter_domain="[('title','ilike',self)]"
-                    string="Widget"/>
+                    <field name="title" filter_domain="[('title','ilike',self)]" string="Widget"/>
                  </search>
             </field>
         </record>

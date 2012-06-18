@@ -31,9 +31,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow">
-                <field name="name"
-                filter_domain="['|', ('name','ilike',self), ('osv','ilike',self)]"
-                string="Workflow"/>
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('osv','ilike',self)]" string="Workflow"/>
             </search>
         </field>
     </record>
@@ -163,9 +161,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow Activity">
-                <field name="name"
-                filter_domain="[('name','ilike',self)]"
-                string="Workflow Activity"/>
+                <field name="name" filter_domain="[('name','ilike',self)]" string="Workflow Activity"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Flow Start"
                 domain="[('flow_start', '=',True)]" />
@@ -238,9 +234,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Transition">
-                <field name="signal"
-                filter_domain="['|', ('signal','ilike',self), ('condition','ilike',self)]"
-                string="Workflow Transition"/>
+                <field name="signal" filter_domain="['|', ('signal','ilike',self), ('condition','ilike',self)]" string="Workflow Transition"/>
                 <separator orientation="vertical"/>
                 <field name="act_from"/>
                 <field name="act_to"/>
@@ -297,9 +291,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow Instances">
-                <field name="res_type"
-                filter_domain="[('res_type','ilike',self)]"
-                string="Resource Object"/>
+                <field name="res_type" filter_domain="[('res_type','ilike',self)]" string="Resource Object"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
                 <separator orientation="vertical"/>
@@ -362,9 +354,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow Workitems">
-                <field name="state"
-                filter_domain="[('state','ilike',self)]"
-                string="State"/>
+                <field name="state" filter_domain="[('state','ilike',self)]" string="State"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
                 <separator orientation="vertical"/>

@@ -171,9 +171,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">
-                    <field name="name"
-                    filter_domain="[('name','ilike',self)]"
-                    string="Name"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
                     <field name="company_id" widget="selection"/>
                     <field name="company_dest_id" widget="selection"/>
                     <field name="object_id"/>
