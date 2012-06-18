@@ -117,7 +117,7 @@ class wizard(osv.osv_memory):
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
                 if not p.is_company: 
-                    user_ids.append({'lang': p.lang or 'en_US', 'name': p.name,'user_email':p.email, 'partner_id': p.id})
+                    user_ids.extend(map(create_user_from_address, [p]))
         
         return user_ids
 
@@ -212,9 +212,12 @@ class wizard(osv.osv_memory):
                 add_users.append(created_user[0])
                 
             #add the user relationship in portal.        
-            if add_users and add_users not in portal_users:
+            for add_user in add_users:
+                if add_user not in portal_users: 
+                    portal_users.append(add_user)   
+                # add the existing user and new created USER     
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(6, 0, add_users)]}, context0)
+                    {'users': [(6, 0,portal_users)]}, context0)
                 
             #delete the user relationship from portal.
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
