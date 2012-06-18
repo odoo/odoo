@@ -127,37 +127,33 @@ class account_analytic_account(osv.osv):
         return res
 
     def open_hr_expense(self, cr, uid, ids, context=None):
-        account = self.browse(cr, uid, ids[0], context)
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            journal_id = data_obj.get_object(cr, uid, 'hr_timesheet', 'analytic_journal').id
-        except ValueError:
-            journal_id = False
-        line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account','=',account.id)])
-        id2 = data_obj._get_id(cr, uid, 'hr_expense', 'view_expenses_form')
-        id3 = data_obj._get_id(cr, uid, 'hr_expense', 'view_expenses_tree')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        domain = [('line_ids','in',line_ids)]
+        line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account', 'in', ids)])
+        domain = [('line_ids', 'in', line_ids)]
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Expenses of %s') % ','.join(names)
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Expenses'),
+            'name': name,
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'views': [(id3,'tree'),(id2,'form')],
             'domain' : domain,
             'res_model': 'hr.expense.expense',
             'nodestroy': True,
         }
 
-    def hr_to_invoiced_expense(self, cr, uid, ids, context=None):
-         res = self.open_hr_expense(cr,uid,ids,context)
-         account = self.browse(cr, uid, ids[0], context)
-         line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account','=',account.id)])
-         res['domain'] = [('line_ids','in',line_ids),('state','=','invoiced')]
-         return res
+    def hr_to_invoice_expense(self, cr, uid, ids, context=None):
+        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'purchase'), ('account_id', 'in', ids)]
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Expenses to Invoice of %s') % ','.join(names)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain' : domain,
+            'res_model': 'account.analytic.line',
+            'nodestroy': True,
+        }
 
 account_analytic_account()
 
