@@ -1984,6 +1984,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 self.$input.focus();
             }
         });
+
+        // Autocomplete close on drag dialog
+        this.$input.closest(".ui-dialog").find(".ui-dialog-titlebar:first").mousedown(function(e){
+            self.$input.autocomplete("close");
+        });
+
         var anyoneLoosesFocus = function() {
             if (!self.$input.is(":focus") &&
                     !self.$input.autocomplete("widget").is(":visible") &&
