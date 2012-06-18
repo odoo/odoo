@@ -65,7 +65,7 @@ class stock_config_settings(osv.osv_memory):
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
         'group_stock_inventory_valuation': fields.boolean("Generate Accounting Entries per Stock Movement",
             implied_group='stock.group_inventory_valuation',
-            help="""This allows to configure Inventory valuation on product and product categories."""),
+            help="""Allows to configure inventory valuations on products and product categories."""),
         'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,

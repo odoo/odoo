@@ -65,14 +65,15 @@ class project_configuration(osv.osv_memory):
     
     
     def _get_default_time_unit(self, cr, uid, context=None):
+        res = {}
         product_uom_obj = self.pool.get('product.uom')
-        ids = product_uom_obj.search(cr, uid, [('name', '=', _('Hour'))], context=context)
-        return ids and ids[0] or False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        res['time_unit'] = user.company_id.project_time_mode_id.id
+        return res.get('time_unit', False)
 
     _defaults = {
         'time_unit': _get_default_time_unit,
     }
-    
     def set_project_defaults(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids)[0]
         if wizard.time_unit:
