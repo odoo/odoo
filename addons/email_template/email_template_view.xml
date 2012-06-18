@@ -126,9 +126,7 @@
            <field name="arch" type="xml">
                <search string="Templates">
                     <group>
-                        <field name="name"
-                        filter_domain="['|', '|', '|', '|' ('name','ilike',self), ('lang','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]"
-                        string="Templates"/>
+                        <field name="name" filter_domain="['|', '|', '|', '|' ('name','ilike',self), ('lang','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
                         <field name="model_id"/>
                     </group>
                     <newline/>
