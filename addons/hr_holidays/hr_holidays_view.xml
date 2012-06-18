@@ -13,6 +13,11 @@
                         <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
                         <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
+                        <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                        <separator orientation="vertical"/>
                         <field name="employee_id"/>
                         <field name="department_id" widget="selection"/>
                         <field name="holiday_status_id" widget="selection"/>
@@ -510,6 +515,15 @@
                 </xpath>
             </field>
         </record>
+
+        <act_window
+            id="act_hr_leave_request_to_meeting"
+            name="Leave Meetings"
+            src_model="hr.holidays"
+            res_model="crm.meeting"
+            domain="[('leave_id', '=', active_id)]"
+            view_mode="tree,form,calendar,gantt"
+            view_type="form"/>
 
     </data>
 </openerp>
