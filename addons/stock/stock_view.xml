@@ -281,7 +281,7 @@
             <field name="arch" type="xml">
                 <search string="Pack Search">
                     <group>
-                        <field name="name" string="Pack" filter_domain="['|'('name','ilike',self),('serial','ilike',self)]"/>
+                        <field name="name" string="Pack" filter_domain="['|',('name','ilike',self),('serial','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <field name="date" />
                         <field name="active"/>
@@ -388,7 +388,7 @@
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
                     <group>
-                        <field name="name" string="Product Lots" filter_domain="['|','|'('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
+                        <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <separator orientation="vertical"/>
@@ -871,7 +871,7 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <group>
-                        <field name="name" string="Internal Picking List" filter_domain="['|'('name','ilike', self),('origin','ilike',self)]"/>
+                        <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
@@ -936,6 +936,7 @@
                     <field name="partner_id"/>
                     <field name="origin"/>
                     <field name="min_date"/>
+                    <field name="date"/>
                     <field name="backorder_id"/>
                     <field name="stock_journal_id" groups="account.group_account_user"/>
                     <field name="invoice_state"/>
@@ -983,7 +984,7 @@
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <group>
-                        <field name="name" string="Picking List" filter_domain="['|'('name','ilike', self),('origin','ilike',self)]"/>
+                        <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
@@ -1095,7 +1096,7 @@
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
                     <group>
-                        <field name="name" string="Incoming Shipments" filter_domain="['|'('name','ilike',self),('origin','ilike',self)]"/>
+                        <field name="name" string="Incoming Shipments" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
                         <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
