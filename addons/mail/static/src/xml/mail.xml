@@ -68,14 +68,18 @@
         an e-mail.
         -->
     <t t-name="mail.compose_message">
-        <div class="oe_mail_compose_message">
-            <!-- contains the composition form -->
+        <div>
+            <img class="oe_mail_msg_image oe_left" alt="User img"/>
+            <div class="oe_mail_msg_content">
+                <!-- contains the composition form -->
+            </div>
+            <div class="oe_clear"/>
         </div>
-        <div class="oe_clear"/>
     </t>
 
     <ul t-name="Thread" class="oe_mail oe_mail_thread">
         <div class="oe_mail_thread_act">
+<!--
             <img class="oe_mail_msg_image oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
                 <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
@@ -83,6 +87,7 @@
             <a href="#" class="oe_mail_compose oe_right">Send an e-mail
                 <img src='/mail/static/src/img/email_icon.png' alt='Send an e-mail'/>
             </a>
+-->
         </div>
         <div class="oe_mail_thread_display"></div>
         <div class="oe_mail_thread_more">

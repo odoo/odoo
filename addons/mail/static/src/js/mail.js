@@ -43,6 +43,8 @@ openerp.mail = function(session) {
         
         init: function(parent, params) {
             this._super(parent);
+            this.params = params || {};
+            this.params.extended_mode = params.extended_mode || false;
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message');
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
                 action_buttons: false,
@@ -59,7 +61,9 @@ openerp.mail = function(session) {
         start: function(parent, params) {
             var self = this;
             this._super.apply(this, arguments);
-            var main_node = this.$element;
+            console.log(this.$element);
+            var main_node = this.$element.find('div.oe_mail_msg_content');
+            console.log(main_node);
             
             return $.when(this.form_view.appendTo(main_node)).pipe(function() {
                 self.bind_events();
@@ -76,9 +80,11 @@ openerp.mail = function(session) {
             // advanced options for writing a message
             this.$element.find('a.mail_compose_message_toggle').click(function (event) {
                 event.preventDefault();
-                self.$element.find('span.mail_compose_message_subject').toggle();
-                self.$element.find('div.mail_compose_message_body_html').toggle();
-                self.$element.find('div.mail_compose_message_partner_ids').toggle();
+                self.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
+                self.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
+                self.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
+                self.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
+                
             });
         },
         
@@ -167,7 +173,7 @@ openerp.mail = function(session) {
             $.when(display_done).then(this.proxy('do_customize_display'));
             
             // add message composition form view
-            this.compose_message = new mail.ComposeMessage();
+            this.compose_message = new mail.ComposeMessage(this, {'extended_mode': false});
             var compose_done = this.compose_message.appendTo(this.$element.find('div.oe_mail_thread_act'));
             
             return display_done && compose_done;

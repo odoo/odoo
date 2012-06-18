@@ -60,13 +60,13 @@
                 <form string="Compose Email" version="7.0" >
                     <group col="4">
                         <field name="subject" colspan="4" nolabel="1" placeholder="Subject..."
-                                class="mail_compose_message_subject"/>
+                                class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
                         <field name="body_text" colspan="4" nolabel="1" placeholder="What are you working on ?"
-                                class="mail_compose_message_body_text"/>
+                                class="oe_mail_compose_message_body_text"/>
                         <field name="body_html" colspan="4" nolabel="1" placeholder="What are you working on ?"
-                                class="mail_compose_message_body_html" widget="text_html"/>
+                                class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible" widget="text_html"/>
                         <field name="destination_partner_ids" colspan="4" nolabel="1" widget="many2many_tags"
-                                class="mail_compose_message_partner_ids"/>
+                                class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
                         <button icon="gtk-ok" name="send_mail" string="Post" type="object"/>
                         <p> or <a href="#" class="mail_compose_message_toggle">Send a Message</a></p>
                         <button icon="gtk-close" string="Cancel" special="cancel" />
