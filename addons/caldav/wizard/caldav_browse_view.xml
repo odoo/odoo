@@ -13,11 +13,6 @@
                         <field name="url" colspan="4" />
                         <separator string="Description" colspan="4"/>
                         <field name="description"  colspan="4"  nolabel="1"/>
-                        <separator colspan="4"/>
-                        <group col="4" colspan="4">
-                            <label string="" colspan="2"/>
-                            <button special="cancel" string="_Close" icon="gtk-close"/>
-                        </group>
                     </group>
                 </form>
             </field>
@@ -28,18 +23,16 @@
            <field name="model">user.preference</field>
            <field name="type">form</field>
             <field name="arch" type="xml">
-               <form string="Caldav's host name configuration">
+               <form string="Caldav's host name configuration" version="7.0">
+                    <header>
+                        <button name="next_window" string="Next" type="object" icon="gtk-go-forward" class="oe_form_button_active_flow"/>
+                    </header>
                 	<label string="Configure your openerp hostname. For example : " colspan="4"></label>
                     <newline/>
                     <label string="database.my.openerp.com  or companyserver.com" colspan="4"/>
                     <newline/>
                     <separator colspan="4"/>
                     <field name="host_name"  colspan="4" width="250" />
-                    <separator colspan="4"/>
-                    <group col="4" colspan="4">
-                       <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                       <button name="next_window" string="Next" type="object" icon="gtk-go-forward"/>
-                    </group>
                </form>
             </field>
         </record>
@@ -49,19 +42,15 @@
             <field name="model">user.preference</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="User Preference">
+                <form string="User Preference" version="7.0">
+                    <header>
+                        <button name="open_window" string="_Open" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
+                    </header>
                     <separator string="" colspan="4"/>
                     <field name="service"  colspan="4" width="250" readonly="1"/>
                     <field name="collection"  colspan="4" width="250" invisible="1" />
                     <field name="calendar"  colspan="4" width="250" domain="[('collection_id','=', collection)]" readonly="1"/>
                     <field name="device"  colspan="4" width="250" />
-                    <separator colspan="4"/>
-                    
-                    <group col="4" colspan="4">
-                        <label string="" colspan="2"/>
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                        <button name="open_window" string="_Open" type="object" icon="gtk-ok"/>
-                    </group>
                 </form>
             </field>
         </record>

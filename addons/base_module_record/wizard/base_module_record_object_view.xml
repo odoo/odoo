@@ -7,18 +7,16 @@
             <field name="model">base.module.record</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Objects Recording">
+                <form string="Objects Recording" version="7.0">
+                    <header>
+                        <button name="record_objects" icon="gtk-ok" string="Record" type="object" class="oe_form_button_active_flow"/>
+                    </header>
                     <field name="check_date"/>
                     <newline/>
                     <field name="filter_cond"/>
                     <separator string="Choose objects to record" colspan="4"/>
                     <field name="objects" colspan="4" nolabel="1"/>
                     <group><field name="info_yaml"/></group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
-                    </group>
                 </form>
             </field>
         </record>
@@ -66,11 +64,6 @@
                     <separator string="Information" colspan="4"/>
                     <label string="If you think your module could interest other people, we'd like you to publish it on http://www.openerp.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
                     <label string="Thanks in advance for your contribution." colspan="4" align="0.0"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-close" string="Close" special="cancel"/>
-                    </group>
                 </form>
             </field>
          </record>         
@@ -89,7 +82,10 @@
             <field name="model">base.module.record.objects</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Module Recording">
+                <form string="Module Recording" version="7.0">
+                    <header>
+                        <button string="Continue" name="inter_call" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
+                    </header>
                     <separator string="Module Information" colspan="4"/>
                     <field name="name"/>
                     <field name="directory_name"/>
@@ -100,11 +96,6 @@
                     <field name="data_kind"/>
                     <newline/>
                     <field name="description" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button string="Continue" name="inter_call" type="object" icon="gtk-ok"/>
-                    </group>
                 </form>
             </field>
          </record>
@@ -116,11 +107,6 @@
             <field name="arch" type="xml">
                 <form string="Module Recording">
                     <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-ok" string="OK" special="cancel"/>
-                    </group>
                 </form>
             </field>
         </record>         
@@ -134,11 +120,6 @@
                     <separator string="YAML file successfully created !" colspan="4"/>
                     <newline/>
                     <field name="yaml_file" filename="module_filename"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-close" string="Close" special="cancel"/>
-                    </group>				    
                 </form>  
             </field>
         </record>   

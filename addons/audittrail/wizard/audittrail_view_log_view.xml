@@ -11,8 +11,7 @@
             <field name="arch" type="xml">
                 <form string="Audit Logs" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="gtk-open" string="Open Logs" name="log_open_window" type="object" />
+                        <button icon="gtk-open" string="Open Logs" name="log_open_window" type="object" class="oe_form_button_active_flow" />
                     </header>
                     <group col="4">
                          <field name="from"/>

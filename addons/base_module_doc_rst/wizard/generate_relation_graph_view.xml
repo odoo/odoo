@@ -7,10 +7,11 @@
             <field name="model">create.relation.graph</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Generate Relationship Graph">
+                <form string="Generate Relationship Graph" version="7.0">
+                    <header>
+                        <button name="get_graph" string="Create Graphs" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
+                    </header>
                     <separator string="Relationship Graphs" colspan="6"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="get_graph" string="Create Graphs" type="object" icon="gtk-ok"/>
                 </form>
             </field>
         </record>
