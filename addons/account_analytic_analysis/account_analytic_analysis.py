@@ -260,7 +260,7 @@ class account_analytic_account(osv.osv):
     def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
-            res[account.id] = max(account.hours_qtt_est - account.hours_qtt_invoiced, account.hours_qtt_non_invoiced)
+            res[account.id] = max(account.hours_qtt_est - account.timesheet_ca_invoiced, account.ca_to_invoice)
         return res
 
     def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
@@ -297,11 +297,35 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
+    def _fix_price_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        sale_obj = self.pool.get('sale.order')
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = 0.0
+            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('partner_id', '=', account.partner_id.id)], context=context)
+            for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+                if not sale.invoiced:
+                    res[account.id] += sale.amount_untaxed
+                    for invoice in sale.invoice_ids:
+                        if invoice.state not in ('draft', 'cancel'):
+                            res[account.id] -= invoice.amount_untaxed
+        return res
+
+    def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        lines_obj = self.pool.get('account.analytic.line')
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = 0.0
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False)], context=context)
+            for line in lines_obj.browse(cr, uid, line_ids, context=context):
+                res[account.id] += line.invoice_id.amount_untaxed
+        return res
+
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.amount_max != 0:
-                res[account.id] = max(account.amount_max - account.ca_invoiced, account.ca_to_invoice)
+                res[account.id] = max(account.amount_max - account.ca_invoiced, account.fix_price_to_invoice)
             else:
                 res[account.id]=0.0
         return res
@@ -350,7 +374,7 @@ class account_analytic_account(osv.osv):
         if account.fix_price_invoices:
             total_invoiced += account.ca_invoiced
         if account.invoice_on_timesheets:
-            total_invoiced += account.hours_qtt_invoiced
+            total_invoiced += account.timesheet_ca_invoiced
         return total_invoiced
 
     def _get_total_remaining(self, account):
@@ -364,9 +388,9 @@ class account_analytic_account(osv.osv):
     def _get_total_toinvoice(self, account):
         total_toinvoice = 0.0
         if account.fix_price_invoices:
-            total_toinvoice += account.ca_to_invoice
+            total_toinvoice += account.fix_price_to_invoice
         if account.invoice_on_timesheets:
-            total_toinvoice += account.hours_qtt_non_invoiced
+            total_toinvoice += account.ca_to_invoice
         return total_toinvoice
 
     def _sum_of_fields(self, cr, uid, ids, name, arg, context=None):
@@ -411,6 +435,10 @@ class account_analytic_account(osv.osv):
             help="Computed using the formula: Maximum Time - Total Worked Time"),
         'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
             help="Computed using the formula: Maximum Time - Total Invoiced Time"),
+        'fix_price_to_invoice': fields.function(_fix_price_to_invoice_calc, type='float', string='Remaining Time',
+            help="Sum of quotations for this contract."),
+        'timesheet_ca_invoiced': fields.function(_timesheet_ca_invoiced_calc, type='float', string='Remaining Time',
+            help="Sum of timesheet lines invoiced for this contract."),
         'remaining_ca': fields.function(_remaining_ca_calc, type='float', string='Remaining Revenue',
             help="Computed using the formula: Max Invoice Price - Invoiced Amount.",
             digits_compute=dp.get_precision('Account')),
