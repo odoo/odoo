@@ -361,19 +361,22 @@
 	                            <field name="revision_ids"/>
 	                        </page>
 	                        <page string="Properties" groups="product.group_mrp_properties">
-	                            <group col="4">
-	                                <field name="position"/>
-	                                <field name="active"/>
-	                                <field name="sequence"/>
-	                                <field name="bom_id"/>
-	
-	                                <field name="date_start"/>
-	                                <field name="date_stop"/>
-	                                <field name="product_rounding"/>
-	                                <field name="product_efficiency"/>
+	                            <group>
+                                        <group>
+                                            <field name="position"/>
+                                            <field name="bom_id"/>
+                                            <field name="sequence"/>
+                                            <field name="active"/>
+                                        </group>
+                                        <group>
+                                            <field name="date_start"/>
+                                            <field name="date_stop"/>
+                                            <field name="product_rounding"/>
+                                            <field name="product_efficiency"/>
+                                        </group>
 	                            </group>
 	                            <separator string="Properties"/>
-	                            <field name="property_ids"/>
+	                            <field name="property_ids" widget="many2many_tags" />
 	                        </page>
 	                    </notebook>
 	                    <newline/>
