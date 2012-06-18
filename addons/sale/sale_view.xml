@@ -412,6 +412,7 @@
                         <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
+                    <sheet>
                     <label for="order_id" class="oe_form_readonly_hidden"/>
                     <h1><field name="order_id"/></h1>
                     <label for="order_partner_id" class="oe_form_readonly_hidden"/>
@@ -435,6 +436,7 @@
                     </group>
                     <separator string="Notes" groups="base.group_sale_notes_subtotal"/>
                     <field name="notes" groups="base.group_sale_notes_subtotal"/>
+                    </sheet>
                 </form>
             </field>
         </record>
