@@ -51,7 +51,7 @@
                             </td><td>
                                 <field class="oe_form_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_form_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
                                 <button name="%(account_analytic_analysis.action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id], 'default_project_id': analytic_account_id, 'search_default_project_id': analytic_account_id}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                                 <button name="open_sale_order_lines" string="Lines To Invoice" type="object" context="{'default_partner_id': [partner_id],'default_project_id': analytic_account_id,'search_default_uninvoiced': 1,'search_default_project_id': analytic_account_id,'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
@@ -63,11 +63,11 @@
                             </td><td>
                                 <field class="oe_form_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="hours_qtt_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_form_inline" name="timesheet_ca_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
                                 <field class="oe_form_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="hours_qtt_non_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
                                 <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" context="{'default_account_id': analytic_account_id,'search_default_account_id': analytic_account_id}"/>
                                 <button name="open_timesheets_to_invoice" string="Timesheets to Invoice" type="object" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
