@@ -11,8 +11,8 @@
             <field name="arch" type="xml">
             <form string="Create invoices" version="7.0">
                 <header>
-                    <button icon="gtk-stop" special="cancel" string="Cancel" />
-                    <button name="make_invoices" string="Create Invoice" type="object" icon="terp-gtk-go-back-rtl" />
+                    <button name="make_invoices" string="Create Invoice" type="object" icon="terp-gtk-go-back-rtl"  class=
+"oe_form_button_active_flow"/>
                 </header>
                 <group string="Do you really want to create the invoice(s)?">
                     <field name="group"/>
