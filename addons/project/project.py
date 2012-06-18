@@ -1234,7 +1234,7 @@ class account_analytic_account(osv.osv):
         This function is called at the time of analytic account creation and is used to create a project automatically linked to it if the conditions are meet.
         '''
         project_pool = self.pool.get('project.project')
-        project_id = project_pool.search(cr, uid, [('name','=',vals.get('name'))])
+        project_id = project_pool.search(cr, uid, [('analytic_account_id','=', analytic_account_id)])
         if not project_id and self._trigger_project_creation(cr, uid, vals, context=context):
             project_values = {
                 'name': vals.get('name'),
@@ -1251,6 +1251,14 @@ class account_analytic_account(osv.osv):
         analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
         self.project_create(cr, uid, analytic_account_id, vals, context=context)
         return analytic_account_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        name = vals.get('name')
+        for account in self.browse(cr, uid, ids, context=context):
+            if not name:
+                vals['name'] = account.name
+            self.project_create(cr, uid, account.id, vals, context=context)
+        return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')

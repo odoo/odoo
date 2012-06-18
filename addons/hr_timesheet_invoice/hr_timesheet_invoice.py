@@ -115,10 +115,6 @@ class account_analytic_line(osv.osv):
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
 
-    def unlink(self, cursor, user, ids, context=None):
-        return super(account_analytic_line,self).unlink(cursor, user, ids,
-                context=context)
-
     def write(self, cr, uid, ids, vals, context=None):
         self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
