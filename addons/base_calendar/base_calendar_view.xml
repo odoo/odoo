@@ -94,9 +94,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
-                   <field name="email"
-                   filter_domain="[('email','ilike',self)]"
-                   string="Email"/>
+                   <field name="email" filter_domain="[('email','ilike',self)]" string="Email"/>
                    <field name="event_date"/>
                    <separator orientation="vertical"/>
                    <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
@@ -438,9 +436,7 @@
             <field name="arch" type="xml">
                 <search string="Search Events">
                        <group>
-                           <field name="name"
-                           filter_domain="['|' ('name','ilike',self), ('location','ilike',self)]"
-                           string="Event"/>
+                           <field name="name" filter_domain="['|' ('name','ilike',self), ('location','ilike',self)]" string="Event"/>
                            <separator orientation="vertical"/>
                            <filter icon="terp-go-today" string="My Events"
                                domain="[('user_id','=',uid)]"
