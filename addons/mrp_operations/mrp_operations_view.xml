@@ -123,25 +123,26 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-            <search string="Search Work Orders">
-                        <group>
-                           <filter icon="terp-document-new" string="Draft"
-                               domain="[('state','=','draft')]"/>
-                           <filter icon="terp-check" string="In Progress" name="Current"
-                               domain="[('state','=','startworking')]"/>
-                           <filter icon="terp-gtk-media-pause" string="Pending"
-                               domain="[('state','=','pause')]"/>
-                           <separator orientation="vertical"/>
-                           <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                               domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                               help="Production started late" />
-                           <separator orientation="vertical"/>
-                            <field name="name"/>
-                            <field name="workcenter_id" widget="selection"/>
-                            <field name="production_id" />
-                            <field name="state" />
-                            <field name="date_planned"/>
-                        </group>
+                <search string="Search Work Orders">
+                    <group>
+                        <field name="name" string="Work Orders" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_planned"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-document-new" string="Draft"
+                            domain="[('state','=','draft')]"/>
+                        <filter icon="terp-check" string="In Progress" name="Current"
+                            domain="[('state','=','startworking')]"/>
+                        <filter icon="terp-gtk-media-pause" string="Pending"
+                            domain="[('state','=','pause')]"/>
+                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
+                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                            help="Production started late"/>
+                        <separator orientation="vertical"/>
+                        <field name="workcenter_id" widget="selection"/>
+                        <field name="production_id"/>
+                        <field name="state"/>
+                    </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
