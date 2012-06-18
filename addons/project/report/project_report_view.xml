@@ -62,6 +62,10 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                     <group>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="date_deadline"/>
+                        <separator orientation="vertical"/>
                         <filter string="New"
                                 icon="terp-document-new"
                                 domain="[('state','=','draft')]"
@@ -70,32 +74,29 @@
                                 icon="terp-check"
                                 domain="[('state', '=' ,'open')]"
                                 help = "In progress tasks"/>
-                           <filter string="Pending"
-                                   icon="terp-gtk-media-pause"
-                                   domain="[('state','=','pending')]"
-                                   help = "Pending tasks"/>
-                          <filter string="Done"
+                        <filter string="Pending"
+                                icon="terp-gtk-media-pause"
+                                domain="[('state','=','pending')]"
+                                help = "Pending tasks"/>
+                        <filter string="Done"
                                 icon="terp-dialog-close"
                                 name="done"
                                 domain="[('state','=','done')]"/>
-                       <separator orientation="vertical"/>
-                        <field name="project_id">
-                            <filter icon="terp-folder-violet"
-                                    string="My Projects"
-                                    help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
-                          </field>
-
-                          <field name="user_id" widget="selection">
-                            <filter icon="terp-personal"
-                                    string="My Task"
-                                    help = "My tasks"
-                                    domain="[('user_id','=',uid)]" />
-                            <filter icon="terp-personal-"
-                                    string="Non Assigned Tasks to users"
-                                    help="Non Assigned Tasks to users"
-                                    domain="[('user_id','=',False)]"/>
-                          </field>
-                      <field name="partner_id" />
+                        <filter icon="terp-folder-violet"
+                                string="My Projects"
+                                help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
+                        <filter icon="terp-personal"
+                                string="My Task"
+                                help = "My tasks"
+                                domain="[('user_id','=',uid)]" />
+                        <filter icon="terp-personal-"
+                                string="Non Assigned Tasks to users"
+                                help="Non Assigned Tasks to users"
+                                domain="[('user_id','=',False)]"/>
+                         <separator orientation="vertical"/>
+                         <field name="project_id"/>
+                         <field name="user_id" widget="selection"/>
+                         <field name="partner_id" />
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
@@ -103,12 +104,6 @@
                         <field name="type_id" widget="selection"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        <newline/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="date_deadline"/>
-                        <separator orientation="vertical"/>
-
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">

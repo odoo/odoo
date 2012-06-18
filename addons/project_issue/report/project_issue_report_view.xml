@@ -52,27 +52,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group>
+                   <group>
+                        <field name="creation_date"/>
+                        <separator orientation="vertical" />
                         <filter  icon="terp-camera_test"
                             string="New"
                             domain="[('state','=','draft')]"/>
                         <filter  icon="terp-check"
                             string="To Do"
-                            domain="[('state','=','open')]"/>                            
-                       <filter icon="terp-gtk-media-pause"
+                            domain="[('state','=','open')]"/>
+                        <filter icon="terp-gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"/>
-                       <filter icon="terp-dialog-close"
+                        <filter icon="terp-dialog-close"
                             string="Done"
                             domain="[('state','=','done')]"/>
-
-                           <separator orientation="vertical" />
-
+                          <separator orientation="vertical" />
                           <field name="project_id"/>
                           <field name="user_id" widget="selection" filter_domain="[('user_id','ilike',self)]"/>
                           <field name="partner_id"/>
                           <field name="version_id" widget="selection" />
-                          <field name="creation_date"/>
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By...">
@@ -108,8 +107,7 @@
 
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" help="Creation Date"/>
-
-                  </group>
+                   </group>
                </search>
             </field>
         </record>

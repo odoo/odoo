@@ -10,7 +10,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Version">
-                    <field name="name"/>
+                    <field name="name" string="Issue Version" filter_domain="[('name','ilike',self)]"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -152,15 +152,16 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
+                        <field name="name" string="Issue / Partner" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
+                        <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                         <separator orientation="vertical"/>
-                        <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
-                        <field name="user_id">
-                            <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
-                        </field>
+                        <field name="user_id"/>
                         <field name="project_id"/>
+                        <separator orientation="vertical"/>
                         <field name="id"/>
                     </group>
                     <newline/>
@@ -304,17 +305,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <filter icon="terp-go-today" string="Today"
-                        domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's features"/>
-                    <separator orientation="vertical"/>
                     <group>
-                        <field name="name" string="Feature description"/>
-                        <field name="user_id"/>
-                        <field name="state" groups="base.group_no_one">
+                        <field name="name" string="Feature description" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                         <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
-                        </field>
+                        <separator orientation="vertical"/>
+                        <field name="user_id"/>
                         <field name="project_id" string="Project"/>
+                        <field name="state" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
