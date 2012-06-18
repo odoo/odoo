@@ -6,6 +6,7 @@
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
             <field eval="60" name="priority"/>
+            <field name="arch" type="xml">
                 <xpath expr='//tr[@name="total"]' position='before'>
                     <tr>
                         <td>
