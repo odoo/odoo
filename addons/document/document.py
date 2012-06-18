@@ -140,8 +140,7 @@ class document_file(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx:uid,
-        'file_size': lambda self, cr, uid, ctx:0,
-        'parent_id': __get_def_directory
+        'file_size': lambda self, cr, uid, ctx:0    
     }
     _sql_constraints = [
         # filename_uniq is not possible in pure SQL
