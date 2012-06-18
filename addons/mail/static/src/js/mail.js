@@ -26,6 +26,29 @@ openerp.mail = function(session) {
 
     /**
      * ------------------------------------------------------------
+     * ChatterMixin class
+     * ------------------------------------------------------------
+     * 
+     * This mixin class holds a few tools method that will be used by
+     * the various Chatter widgets.
+     */
+
+    mail.ChatterMixin = {
+
+        init: function(parent, params) {
+            this._super(parent);
+            console.log('oinoin');
+        },
+        
+        /** get an image in /web/binary/image?... */
+        get_image: function(session_prefix, session_id, model, field, id) {
+            return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        },
+    };
+
+
+    /**
+     * ------------------------------------------------------------
      * ComposeMessage widget
      * ------------------------------------------------------------
      * 
@@ -38,7 +61,7 @@ openerp.mail = function(session) {
     session.web.form.widgets.add('mail.compose_message', 'openerp.mail.ComposeMessage');
     
     /* ComposeMessage is an extension of a Widget */
-    mail.ComposeMessage = session.web.Widget.extend({
+    mail.ComposeMessage = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
         template: 'mail.compose_message',
         
         init: function(parent, params) {
@@ -61,10 +84,11 @@ openerp.mail = function(session) {
         start: function(parent, params) {
             var self = this;
             this._super.apply(this, arguments);
-            console.log(this.$element);
+            // get user image
+            var user_avatar = this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.session.uid);
+            this.$element.find('img.oe_mail_msg_image').attr('src', user_avatar);
+            // bind events
             var main_node = this.$element.find('div.oe_mail_msg_content');
-            console.log(main_node);
-            
             return $.when(this.form_view.appendTo(main_node)).pipe(function() {
                 self.bind_events();
                 self.form_view.do_show();
@@ -91,7 +115,7 @@ openerp.mail = function(session) {
         destroy: function(parent, params) {
             this._super.apply(this, arguments);
         },
-    }),
+    })),
 
 
     /** 
@@ -114,7 +138,7 @@ openerp.mail = function(session) {
     session.web.form.widgets.add('Thread', 'openerp.mail.Thread');
 
     /* Thread is an extension of a Widget */
-    mail.Thread = session.web.Widget.extend({
+    mail.Thread = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
         template: 'Thread',
 
         /**
@@ -173,7 +197,7 @@ openerp.mail = function(session) {
             $.when(display_done).then(this.proxy('do_customize_display'));
             
             // add message composition form view
-            this.compose_message = new mail.ComposeMessage(this, {'extended_mode': false});
+            this.compose_message = new mail.ComposeMessage(this, {'extended_mode': false, 'uid': this.params.uid});
             var compose_done = this.compose_message.appendTo(this.$element.find('div.oe_mail_thread_act'));
             
             return display_done && compose_done;
@@ -525,7 +549,7 @@ openerp.mail = function(session) {
             return (this.session.uid == id);
         },
 
-    });
+    }));
 
 
     /** 
