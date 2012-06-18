@@ -20,6 +20,10 @@
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <group col="8" colspan="4">
+                        <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" name="open" string="Open" domain="[('state','in',('open','draft'))]" help="Contracts in progress"/>
                         <filter icon="terp-gtk-media-pause" name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending contracts to renew with your customer"/>
                         <separator orientation="vertical"/>
@@ -30,10 +34,8 @@
                         <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
                         <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
                         <separator orientation="vertical"/>
-                        <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
                         <field name="partner_id"/>
                         <field name="user_id"/>
-                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

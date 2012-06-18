@@ -406,23 +406,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                   <group>
+                    <group>
+                        <field name="number"
+                            string="Invoice"
+                            filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                         <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                         <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
-                        <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal" />
+                        <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
                         <separator orientation="vertical"/>
-                        <field name="number"
-                            string="Reference"
-                            filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
                         <field name="partner_id"/>
                         <field name="user_id" widget="selection" string="Salesperson"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection"/>
                         <field name="period_id" string="Period"/>
                     </group>

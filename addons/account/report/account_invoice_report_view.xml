@@ -55,7 +55,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
-              <group>
+                <group>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
@@ -71,26 +73,25 @@
                            help = "Open and Paid Invoices"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-personal" string="Customer"
-                            name="customer"
-                            domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
-                            help="Customer Invoices And Refunds"/>
+                           name="customer"
+                           domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
+                           help="Customer Invoices And Refunds"/>
                     <filter icon="terp-personal"
-                            string="Supplier"
-                            domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
-                            help="Supplier Invoices And Refunds"/>
-                   <separator orientation="vertical"/>
-                   <filter icon="terp-dolar" string="Invoice"
-                            domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
-                            help="Customer And Supplier Invoices"/>
-                   <filter icon="terp-dolar_ok!"
-                            string="Refund"
-                            domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
-                            help="Customer And Supplier Refunds"/>
-                   <separator orientation="vertical"/>
-                   <field name="partner_id"/>
-                   <field name="user_id" />
-                   <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
-                   <field name="date"/>
+                           string="Supplier"
+                           domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
+                           help="Supplier Invoices And Refunds"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-dolar" string="Invoice"
+                           domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
+                           help="Customer And Supplier Invoices"/>
+                    <filter icon="terp-dolar_ok!"
+                           string="Refund"
+                           domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
+                           help="Customer And Supplier Refunds"/>
+                    <separator orientation="vertical"/>
+                    <field name="partner_id"/>
+                    <field name="user_id" />
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
