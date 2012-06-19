@@ -47,11 +47,20 @@ view_custom()
 
 class view(osv.osv):
     _name = 'ir.ui.view'
+
+    def _type_field(self, cr, uid, ids, name, args, context=None):
+        records = self.browse(cr, uid, ids, context)
+        result = dict((r.id, etree.fromstring(r.arch.encode('utf8')).tag) for r in records)
+        return result
+
+    def _set_type_field(self, cr, uid, ids, name, value, args, context=None):
+        print "ignoring", value
+
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
-        'type': fields.selection((
+        'type': fields.function(_type_field, fnct_inv=_set_type_field, type='selection', selection=[
             ('tree','Tree'),
             ('form','Form'),
             ('mdx','mdx'),
@@ -60,7 +69,7 @@ class view(osv.osv):
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
-            ('search','Search')), 'View Type', required=True, select=True),
+            ('search','Search')], string='View Type', required=True, select=True, store=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
@@ -133,7 +142,7 @@ class view(osv.osv):
         super(view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
+            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
