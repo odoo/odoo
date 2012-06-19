@@ -117,7 +117,7 @@
 <t t-name="DatabaseManager">
     <div class="oe_database_manager">
         <div class="oe_database_manager_menu">
-            <ul class="oe_form_notebook">
+            <ul class="oe_notebook">
                 <li><a href="#db_create">Create</a></li>
                 <li><a href="#db_drop">Drop</a></li>
                 <li><a href="#db_backup">Backup</a></li>
@@ -616,7 +616,7 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
-        <button type="button" class="oe_button oe_list_add oe_form_button_hi">
+        <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
         <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
@@ -768,7 +768,7 @@
 </t>
 <t t-name="FormRenderingNotebook">
     <div>
-        <ul t-attf-class="oe_form_notebook #{classnames}">
+        <ul t-attf-class="oe_notebook #{classnames}">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
                 <a t-attf-href="##{page.id}">
                     <t t-esc="page.string"/>
@@ -778,7 +778,7 @@
     </div>
 </t>
 <t t-name="FormRenderingNotebookPage">
-    <div t-attf-class="oe_form_notebook_page #{classnames}" t-att-id="id">
+    <div t-attf-class="oe_notebook_page #{classnames}" t-att-id="id">
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
@@ -1022,7 +1022,7 @@
 </t>
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image">
-        <div class="oe_form_field_image_controls oe_form_readonly_hidden">
+        <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 <button class="oe_button" type="button" title="Set Image">
