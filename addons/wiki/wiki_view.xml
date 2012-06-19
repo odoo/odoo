@@ -164,14 +164,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('section','ilike',self), ('tags','ilike',self)]"
+                        string="Wiki"/>
+                    <field name="write_date" groups="base.group_no_one"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="group_id"/>
-                    <field name="tags"/>
-                    <field name="section"/>
                     <field name="write_uid"/>
-                    <field name="write_date" groups="base.group_no_one"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
