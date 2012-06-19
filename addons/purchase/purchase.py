@@ -1072,8 +1072,9 @@ class procurement_order(osv.osv):
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }
-            res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
-            self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
+            if not procurement.product_id.purchase_requisition:
+                res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
+                self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
             self.running_send_note(cr, uid, [procurement.id], context=context)
         return res
 

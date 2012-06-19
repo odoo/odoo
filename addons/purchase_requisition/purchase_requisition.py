@@ -280,11 +280,12 @@ class procurement_order(osv.osv):
     def make_po(self, cr, uid, ids, context=None):
         sequence_obj = self.pool.get('ir.sequence')
         res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
-        for proc_id, po_id in res.items():
-            procurement = self.browse(cr, uid, proc_id, context=context)
-            requisition_id=False
-            if procurement.product_id.purchase_requisition:
-                requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
+        sequence_obj = self.pool.get('ir.sequence')
+        requisition_obj = self.pool.get('purchase.requisition')
+        procurement = self.browse(cr, uid, ids, context=context)[0]
+        if procurement.product_id.purchase_requisition:
+            requisition_id = requisition_obj.create(cr, uid, 
+                {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.origin,
                     'date_end': procurement.date_planned,
@@ -296,9 +297,9 @@ class procurement_order(osv.osv):
                         'product_qty': procurement.product_qty
 
                     })],
-                    'purchase_ids': [(6,0,[po_id])]
                 })
-            self.write(cr,uid,[proc_id],{'requisition_id':requisition_id},context=context)
+            self.write(cr, uid, ids, {'requisition_id':requisition_id}, context=context)
+            return {}
         return res
 
 procurement_order()
