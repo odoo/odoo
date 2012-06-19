@@ -147,7 +147,7 @@ $colour4: #8a89ba
         display: inline-block
         border: 1px solid #ababab
         color: #404040
-        margin: 0
+        margin: 0 4px 0 0
         padding: 3px 12px
         font-size: 13px
         text-align: center
@@ -181,31 +181,6 @@ $colour4: #8a89ba
         color: #aaa !important
         cursor: default
         text-shadow: 0 1px 1px #fff !important
-
-    button.primary
-        color: white
-        @include vertical-gradient(#dc5f59, #b33630)
-        @include box-shadow(none)
-
-    button.primary:hover
-        @include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
-        @include box-shadow(0 0 1px rgba(0,0,0,0.2))
-
-    button.primary:active
-        @include vertical-gradient(#b33630, #dc5f59)
-        @include box-shadow(none)
-
-    button.following
-        color: white
-        width: 120px
-        @include vertical-gradient($colour4, darken($colour4, 3%))
-
-    button.unfollow
-        display: none
-        color: white
-        width: 120px
-        @include vertical-gradient(#dc5f59, #b33630)
-
     // }}}
     // Jquery ui Overrides {{{
     .ui-widget
@@ -252,9 +227,12 @@ $colour4: #8a89ba
     button.oe_highlight
         @include vertical-gradient(#dc5f59, #b33630)
         @include box-shadow(none)
+    button.oe_highlight:active
+        @include vertical-gradient(#b33630, #dc5f59)
+        @include box-shadow(none)
     button.oe_highlight:hover
-        background: #DF6B66
         @include vertical-gradient(#DF6B66, #BF3A33)
+        //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
     .oe_button_box
         width: 200px
@@ -1331,17 +1309,6 @@ $colour4: #8a89ba
             @include vertical-gradient(#fcfcfc, #dedede)
             padding: 0 8px
             line-height: 30px 
-            button
-                font-size: 12px
-                float: left
-                height: 24px !important
-                line-height: 24px
-                vertical-align: top
-                padding: 0 10px
-                margin: 3px 4px 3px 0
-                span.i
-                    line-height: 20px
-                    height: 24px
             ul
                 display: inline-block
                 float: right
@@ -1615,18 +1582,6 @@ $colour4: #8a89ba
         .oe_form_group
             margin: 5px 0px 5px 0px
 
-    // }}}
-    // FormView.buttons {{{
-    .oe_form
-        .oe_form_button.oe_button
-            height: 22px
-            white-space: nowrap
-            span
-                position: relative
-                vertical-align: top
-        .oe_form_button > img
-            vertical-align: -3px
-            padding: 0 2px
     // }}}
     // FormView.binaryfile {{{
     /* http://www.quirksmode.org/dom/inputfile.html

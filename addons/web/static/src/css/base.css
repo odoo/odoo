@@ -106,7 +106,7 @@
   display: inline-block;
   border: 1px solid #ababab;
   color: #404040;
-  margin: 0;
+  margin: 0 4px 0 0;
   padding: 3px 12px;
   font-size: 13px;
   text-align: center;
@@ -168,66 +168,6 @@
   color: #aaaaaa !important;
   cursor: default;
   text-shadow: 0 1px 1px white !important;
-}
-.openerp button.primary {
-  color: white;
-  background-color: #dc5f59;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
-  background-image: -webkit-linear-gradient(top, #dc5f59, #b33630);
-  background-image: -moz-linear-gradient(top, #dc5f59, #b33630);
-  background-image: -ms-linear-gradient(top, #dc5f59, #b33630);
-  background-image: -o-linear-gradient(top, #dc5f59, #b33630);
-  background-image: linear-gradient(to bottom, #dc5f59, #b33630);
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.openerp button.primary:hover {
-  background-color: #df6b66;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
-  background-image: -webkit-linear-gradient(top, #df6b66, #bf3a33);
-  background-image: -moz-linear-gradient(top, #df6b66, #bf3a33);
-  background-image: -ms-linear-gradient(top, #df6b66, #bf3a33);
-  background-image: -o-linear-gradient(top, #df6b66, #bf3a33);
-  background-image: linear-gradient(to bottom, #df6b66, #bf3a33);
-  -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-}
-.openerp button.primary:active {
-  background-color: #b33630;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#b33630), to(#dc5f59));
-  background-image: -webkit-linear-gradient(top, #b33630, #dc5f59);
-  background-image: -moz-linear-gradient(top, #b33630, #dc5f59);
-  background-image: -ms-linear-gradient(top, #b33630, #dc5f59);
-  background-image: -o-linear-gradient(top, #b33630, #dc5f59);
-  background-image: linear-gradient(to bottom, #b33630, #dc5f59);
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.openerp button.following {
-  color: white;
-  width: 120px;
-  background-color: #8a89ba;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8a89ba), to(#807fb4));
-  background-image: -webkit-linear-gradient(top, #8a89ba, #807fb4);
-  background-image: -moz-linear-gradient(top, #8a89ba, #807fb4);
-  background-image: -ms-linear-gradient(top, #8a89ba, #807fb4);
-  background-image: -o-linear-gradient(top, #8a89ba, #807fb4);
-  background-image: linear-gradient(to bottom, #8a89ba, #807fb4);
-}
-.openerp button.unfollow {
-  display: none;
-  color: white;
-  width: 120px;
-  background-color: #dc5f59;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
-  background-image: -webkit-linear-gradient(top, #dc5f59, #b33630);
-  background-image: -moz-linear-gradient(top, #dc5f59, #b33630);
-  background-image: -ms-linear-gradient(top, #dc5f59, #b33630);
-  background-image: -o-linear-gradient(top, #dc5f59, #b33630);
-  background-image: linear-gradient(to bottom, #dc5f59, #b33630);
 }
 .openerp .ui-widget {
   font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
@@ -293,8 +233,19 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.openerp button.oe_highlight:active {
+  background-color: #b33630;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#b33630), to(#dc5f59));
+  background-image: -webkit-linear-gradient(top, #b33630, #dc5f59);
+  background-image: -moz-linear-gradient(top, #b33630, #dc5f59);
+  background-image: -ms-linear-gradient(top, #b33630, #dc5f59);
+  background-image: -o-linear-gradient(top, #b33630, #dc5f59);
+  background-image: linear-gradient(to bottom, #b33630, #dc5f59);
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 .openerp button.oe_highlight:hover {
-  background: #df6b66;
   background-color: #df6b66;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
   background-image: -webkit-linear-gradient(top, #df6b66, #bf3a33);
@@ -1696,19 +1647,6 @@
   padding: 0 8px;
   line-height: 30px;
 }
-.openerp .oe_form header button {
-  font-size: 12px;
-  float: left;
-  height: 24px !important;
-  line-height: 24px;
-  vertical-align: top;
-  padding: 0 10px;
-  margin: 3px 4px 3px 0;
-}
-.openerp .oe_form header button span.i {
-  line-height: 20px;
-  height: 24px;
-}
 .openerp .oe_form header ul {
   display: inline-block;
   float: right;
@@ -2033,18 +1971,6 @@
 }
 .openerp .oe_form .oe_form_group {
   margin: 5px 0px 5px 0px;
-}
-.openerp .oe_form .oe_form_button.oe_button {
-  height: 22px;
-  white-space: nowrap;
-}
-.openerp .oe_form .oe_form_button.oe_button span {
-  position: relative;
-  vertical-align: top;
-}
-.openerp .oe_form .oe_form_button > img {
-  vertical-align: -3px;
-  padding: 0 2px;
 }
 .openerp .oe_hidden_input_file {
   overflow: hidden;
