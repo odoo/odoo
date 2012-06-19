@@ -90,7 +90,8 @@
 .openerp li {
   list-style-type: none;
 }
-.openerp input, .openerp textarea {
+.openerp input, .openerp textarea, .openerp select {
+  padding: 4px;
   border: 1px solid #cccccc;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -181,6 +182,9 @@
 .openerp .ui-menu .ui-menu-item a.ui-state-active {
   background: #f0f0fa;
 }
+.openerp .ui-tabs {
+  margin: 0 -16px;
+}
 .openerp .oe_i {
   font-family: "mnmliconsRegular" !important;
   font-size: 21px;
@@ -260,6 +264,20 @@
 .openerp .oe_button_box {
   width: 200px;
   text-align: center;
+}
+.openerp .oe_avatar {
+  float: left;
+  margin: 0 16px 0 0;
+}
+.openerp .oe_avatar img {
+  height: 50px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: none;
 }
 .openerp.oe_tooltip {
   font-size: 12px;
@@ -724,7 +742,6 @@
   border-right: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
   padding-bottom: 16px;
-  line-height: 18px;
 }
 .openerp a.oe_logo {
   width: 220px;
@@ -980,9 +997,9 @@
   float: right;
   background: #8a89ba;
   color: #eeeeee;
-  font-size: 12px;
+  font-size: 10px;
   border: 1px solid lightgray;
-  padding: 0px 4px 0px 4px;
+  padding: 2px 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   margin: 0px;
   -moz-border-radius: 4px;
@@ -1244,10 +1261,6 @@
   height: 14px;
   font-size: 11px;
   line-height: 18px;
-  border: 1px solid #cccccc;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
 }
 .openerp .oe_searchview.oe_focused {
   border-color: #a6a6fe;
@@ -1388,7 +1401,7 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer {
   position: absolute;
-  z-index: 1;
+  z-index: 100;
   margin-top: 4px;
   top: 100%;
   right: -1px;
@@ -1704,9 +1717,9 @@
   margin: 0 auto;
 }
 .openerp .oe_application .oe_form_sheet {
-  padding: 18px;
   background: white;
   min-height: 330px;
+  padding: 16px;
   border: 1px solid #afafb6;
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -1748,10 +1761,13 @@
   width: 100%;
 }
 .openerp .oe_form .oe_form_field_char input,
-.openerp .oe_form .oe_form_field_text textarea,
 .openerp .oe_form .oe_form_field_url input,
+.openerp .oe_form .oe_form_field_text textarea,
 .openerp .oe_form .oe_form_field_selection select {
   width: inherit;
+}
+.openerp .oe_form .oe_form_sheet textarea {
+  width: 500px;
 }
 .openerp .oe_form .oe_form_field_float input {
   width: 100px;
@@ -1799,7 +1815,7 @@
   padding: 0 2px;
 }
 .openerp .oe_form .oe_form_field_text textarea {
-  resize: vertical;
+  resize: none;
 }
 .openerp .oe_form .oe_form_field {
   width: 100%;
@@ -1838,11 +1854,6 @@
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 0 2px;
-  border: 1px solid #999999;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
   background: white;
   min-width: 70px;
   color: #1f1f1f;
@@ -1869,7 +1880,6 @@
 .openerp .oe_form .oe_form_field_many2one input,
 .openerp .oe_form .oe_form_field_binary input,
 .openerp .oe_form .oe_form_field_binary input,
-.openerp .oe_form .oe_form_field_email input,
 .openerp .oe_form .oe_form_field_url input {
   border-right: none;
   -webkit-border-top-right-radius: 0px;
@@ -1879,7 +1889,6 @@
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
-.openerp .oe_form .oe_form_field_email button img,
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
 }
@@ -1947,11 +1956,9 @@
 }
 .openerp .oe_form .oe_form_field_with_button > .oe_button {
   float: right;
-  -webkit-border-top-left-radius: 0px;
-  -webkit-border-bottom-left-radius: 0px;
-  -moz-border-radius-topleft: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  border-top-left-radius: 0px;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
   border-bottom-left-radius: 0px;
   height: 22px;
 }
@@ -1998,9 +2005,6 @@
   display: inline-block;
   width: auto;
   vertical-align: top;
-}
-.openerp .oe_form .oe_form_field_image > img {
-  min-width: 100px;
 }
 .openerp .oe_form .oe_form_field_image .oe_form_field_image_controls {
   position: absolute;

@@ -764,7 +764,7 @@
 </t>
 <t t-name="FormRenderingGroup">
     <t t-if="string" t-call="FormRenderingSeparator"/>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" t-attf-class="oe_form_group #{classnames}"/>
+    <table border="0" cellpadding="0" cellspacing="0" t-attf-class="oe_form_group #{classnames}"/>
 </t>
 <t t-name="FormRenderingNotebook">
     <div>
@@ -876,9 +876,6 @@
     <span class="oe_form_field oe_form_field_email oe_form_field_with_button">
         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
         <t t-if="!widget.get('effective_readonly')">
-            <button class="oe_button" tabindex="-1" type="button" title="Send an e-mail with your default e-mail client">
-                <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
-            </button>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
