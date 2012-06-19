@@ -37,9 +37,9 @@ openerp.mail = function(session) {
 
         init: function(parent, params) {
             this._super(parent);
-            console.log('oinoin');
+            this.test = 'prout'
         },
-        
+
         /** get an image in /web/binary/image?... */
         get_image: function(session_prefix, session_id, model, field, id) {
             return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
@@ -66,8 +66,11 @@ openerp.mail = function(session) {
         
         init: function(parent, params) {
             this._super(parent);
+            session.mail.ChatterMixin.init.call(this, {});
+            // options
             this.params = params || {};
             this.params.extended_mode = params.extended_mode || false;
+            // create a form_view on the mail.compose.message wizard
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message');
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
                 action_buttons: false,
@@ -81,15 +84,15 @@ openerp.mail = function(session) {
          * widget start function
          * - builds and initializes the form view
          */
-        start: function(parent, params) {
+        start: function() {
             var self = this;
             this._super.apply(this, arguments);
             // get user image
             var user_avatar = this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.session.uid);
             this.$element.find('img.oe_mail_msg_image').attr('src', user_avatar);
             // bind events
-            var main_node = this.$element.find('div.oe_mail_msg_content');
-            return $.when(this.form_view.appendTo(main_node)).pipe(function() {
+            var msg_node = this.$element.find('div.oe_mail_msg_content');
+            return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
                 self.bind_events();
                 self.form_view.do_show();
             });
@@ -104,6 +107,8 @@ openerp.mail = function(session) {
             // advanced options for writing a message
             this.$element.find('a.mail_compose_message_toggle').click(function (event) {
                 event.preventDefault();
+                self.params.extended_mode = ! self.params.extended_mode;
+                // toggle display
                 self.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
                 self.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
                 self.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
@@ -112,7 +117,7 @@ openerp.mail = function(session) {
             });
         },
         
-        destroy: function(parent, params) {
+        destroy: function() {
             this._super.apply(this, arguments);
         },
     })),
