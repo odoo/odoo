@@ -122,7 +122,7 @@ class mrp_repair(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
-            ('cancel','Cancel'),
+            ('cancel','Cancelled'),
             ('confirmed','Confirmed'),
             ('under_repair','Under Repair'),
             ('ready','Ready to Repair'),
