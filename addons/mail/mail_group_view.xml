@@ -50,27 +50,29 @@
             <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Group">
-                    <group colspan="4" col="8">
-                        <group colspan="6" col="4">
-                            <separator string="General Information" colspan="4"/>
-                            <field name="name" colspan="2"/>
-                            <field name="responsible_id" colspan="2"/>
-                            <newline/>
-                            <field name="description" colspan="4"/>
+                <form string="Group" version="7.0">
+                    <sheet>
+                        <group colspan="4" col="8">
+                            <group colspan="6" col="4">
+                                <separator string="General Information" colspan="4"/>
+                                <field name="name" colspan="2"/>
+                                <field name="responsible_id" colspan="2"/>
+                                <newline/>
+                                <field name="description" colspan="4"/>
+                            </group>
+                            <group colspan="1" col="2">
+                                <separator string="Group Image" colspan="2"/>
+                                <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
+                            </group>
+                            <group colspan="1" col="2">
+                                <separator string="Privacy Settings" colspan="2"/>
+                                <field name="public" nolabel="1"/>
+                                <label string="This group is visible by non members" colspan="2"/>
+                            </group>
                         </group>
-                        <group colspan="1" col="2">
-                            <separator string="Group Image" colspan="2"/>
-                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
-                        </group>
-                        <group colspan="1" col="2">
-                            <separator string="Privacy Settings" colspan="2"/>
-                            <field name="public" nolabel="1"/>
-                            <label string="This group is visible by non members" colspan="2"/>
-                        </group>
-                    </group>
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
-                            options='{"thread_level": 1}'/>
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
+                                options='{"thread_level": 1}'/>
+                    </sheet>
                 </form>
             </field>
         </record>

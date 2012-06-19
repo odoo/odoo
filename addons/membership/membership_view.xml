@@ -94,10 +94,15 @@
             <field name="arch" type="xml">
                 <page string="Information" position="after">
                     <page string="Membership">
-                        <field name="membership" readonly="0"/>
-                        <newline/>
-                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                        <group>
+                            <group>
+                                <field name="membership" readonly="0"/>
+                            </group>
+                            <group>
+                                <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                                <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                            </group>
+                        </group>
                     </page>
                 </page>
             </field>
@@ -235,23 +240,23 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Membership">
-                        <group colspan="2" col="2">
-                            <group colspan="4" col="3">
-                            <field name="free_member"/>
-                            <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
-                            <field colspan="4" name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
-                            <field colspan="4" name="membership_state"/>
+                        <group>
+                            <group>
+                                <field name="free_member"/>
+                                <field colspan="4" name="membership_state"/>
+                                <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
                             </group>
-                        </group>
-                        <group colspan="2" col="2">
-                            <field name="membership_start"/>
-                            <field name="membership_stop"/>
-                            <field name="membership_cancel"/>
+                            <group>
+                                <field name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
+                                <field name="membership_start"/>
+                                <field name="membership_stop"/>
+                                <field name="membership_cancel"/>
+                            </group>
                         </group>
                         <field name="member_lines" nolabel="1" colspan="4" readonly="1">
                             <tree string="Memberships">
                                 <field name="date"/>
-                                <field name="membership_id"/>
+                                <field name="membership_id" string="Membership"/>
                                 <field name="member_price"/>
                                 <field name="account_invoice_id"/>
                                 <field name="state"/>
