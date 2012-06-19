@@ -49,9 +49,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page//field[@name='users']" position="attributes">
+                <field name="users" position="attributes">
                     <attribute name="context">{'search_default_no_share':1}</attribute>
-                </xpath>
+                </field>
+                <field name="name" position="after">
+                    <field name="share"/>
+                </field>
             </field>
         </record>
     </data>
