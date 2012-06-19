@@ -53,7 +53,7 @@
             <div class="oe_mail_recthread_actions">
                 <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
                 <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
-                <button type="button" class="oe_mail_button_followers">Display followers</button>
+                <button type="button" class="oe_mail_button_followers">Show followers</button>
             </div>
             <div class="oe_mail_recthread_followers">
                 <h4>Followers</h4>
@@ -61,6 +61,15 @@
             </div>
         </div>
     </div>
+
+    <!--
+        record_thread.record_thread template
+        Template used to display subscibers
+        -->
+    <li t-name="mail.record_thread.subscriber">
+        <img class="oe_mail_oe_left oe_mail_msg_image" t-attf-src="{record.avatar_url}"/>
+        <a href="#" class="oe_mail_oe_intlink" data-res-model="res.users" t-attf-data-res-id="{record.id}"><t t-raw="record.name"/></a>
+    </li>
 
     <!--
         compose_message template
@@ -78,17 +87,7 @@
     </t>
 
     <ul t-name="Thread" class="oe_mail oe_mail_thread">
-        <div class="oe_mail_thread_act">
-<!--
-            <img class="oe_mail_msg_image oe_left" alt="User img"/>
-            <div class="oe_mail_msg_content">
-                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
-            </div>
-            <a href="#" class="oe_mail_compose oe_right">Send an e-mail
-                <img src='/mail/static/src/img/email_icon.png' alt='Send an e-mail'/>
-            </a>
--->
-        </div>
+        <div class="oe_mail_thread_act"></div>
         <div class="oe_mail_thread_display"></div>
         <div class="oe_mail_thread_more">
             <button class="oe_mail_button_more" type="button">Load more messages</button>
@@ -100,11 +99,11 @@
             <img class="oe_mail_msg_menu_icon" src="/mail/static/src/img/wheel_menu.png" alt="menu"/>
             <ul class="oe_mail_msg_menu">
                 <t t-if="display['show_delete']"><t t-if="thread._is_author(record.user_id[0])">
-                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+                    <li><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                 </t></t>
                 <t t-if="display['show_hide']">
-                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
-                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
+                    <li><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
+                    <li><a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
                 </t>
             </ul>
             <img t-if="record.type == 'email'" class="oe_email_icon oe_left" src="/mail/static/src/img/email_icon.png"/>
@@ -120,7 +119,7 @@
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
             <t t-if="params.thread_level > 0">
-                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+                <a href="#" class="oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             </t>
             <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
             <t t-call="MessageDisplayManageLinks"/>
@@ -130,7 +129,7 @@
     <t t-name="EmailDisplay">
         <p class="oe_mail_msg oe_mail_msg_p_email_header">
             <t t-if="params.thread_level > 0">
-                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+                <a href="#" class="oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             </t>
         </p>
         <p><span class="oe_mail_oe_bold">From:</span> <t t-esc="record.email_from"/></p>
@@ -145,32 +144,32 @@
         <ul>
             <t t-if="display['show_reply']">
                 <li>
-                    <a href="#" class="oe_mail_oe_intlink oe_mail_msg_reply">Reply</a>
+                    <a href="#" class="oe_mail_msg_reply">Reply</a>
                     <span class="oe_mail_oe_space oe_fade"> · </span>
                 </li>
             </t>
             <t t-if="display['show_delete']"><t t-if="thread._is_author(record.user_id[0])">
                 <li>
-                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_oe_intlink oe_mail_msg_delete">Delete</a>
+                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a>
                     <span class="oe_mail_oe_space oe_fade"> · </span>
                 </li>
             </t></t>
             <t t-if="display['show_hide']">
                 <li>
-                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_oe_intlink oe_mail_msg_hide">Remove from Wall</a>
+                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Remove from Wall</a>
                     <span class="oe_mail_oe_space oe_fade"> · </span>
                 </li>
             </t>
             <t t-if="display['show_reply_by_email']"><t t-if="record.type == 'email'">
                 <li>
-                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_oe_intlink oe_mail_msg_reply_by_email">Reply by e-mail</a>
+                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_reply_by_email">Reply by e-mail</a>
                     <span class="oe_mail_oe_space oe_fade"> · </span>
                 </li>
             </t></t>
             <li>
                 <span class="oe_fade"><t t-raw="record.date"/>
                 <t t-if="record.type != 'email'">
-                    by <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                    by <a href="#" class="oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 </t>
                 </span>
             </li>
