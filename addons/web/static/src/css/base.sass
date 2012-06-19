@@ -556,20 +556,17 @@ $colour4: #8a89ba
         border-top: solid 1px #d3d3d3
         @include vertical-gradient(#646060, #262626)
         .oe_topbar_item
-            li
-                float: left
-                a
-                    display: block
-                    padding: 5px 10px 7px
-                    line-height: 20px
-                    height: 20px
-                    color: #eee
-                    vertical-align: top
-                    text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-                    &:hover
-                        background: #303030
-                        color: white
-                        @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+            display: block
+            padding: 5px 10px 7px
+            line-height: 20px
+            height: 20px
+            color: #eee
+            vertical-align: top
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            &:hover
+                background: #303030
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
             .oe_active
                 background: #303030
                 font-weight: bold
