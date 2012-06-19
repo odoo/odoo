@@ -70,7 +70,7 @@
           parent="base.menu_purchase_root" sequence="6"/>
 
     <record id="action_invoice_pending" model="ir.actions.act_window">
-        <field name="name">Based on draft invoices</field>
+        <field name="name">Based on Draft Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
@@ -81,7 +81,7 @@
             <field name="help">Use this menu to control the invoices to be received from your supplier. OpenERP pregenerates draft invoices from your purchase orders or receptions, according to your settings. Once you receive a supplier invoice, you can match it with the draft invoice and validate it.</field>
     </record>
 
-     <menuitem name="Based on draft invoices"
+     <menuitem name="Based on Draft Invoices"
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
           parent="menu_procurement_management_invoice"
