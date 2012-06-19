@@ -276,7 +276,7 @@
                 <search string="Search Meetings">
                        <group>
                            <field name="name" string="Meeting / Partner"
-                               filter_domain="['|', ('name','ilike',self)]"/>
+                               filter_domain="['|',('name','ilike',self),('partner_id','ilike', self)]"/>
                            <separator orientation="vertical"/>                   
                            <filter string="My Meetings"
                                    icon="terp-personal"
