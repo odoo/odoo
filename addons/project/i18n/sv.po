@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-05-24 11:32+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"PO-Revision-Date: 2012-06-18 22:21+0000\n"
+"Last-Translator: Anders Eriksson, Aspirix AB <ae@mobilasystem.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
-"X-Generator: Launchpad (build 15288)\n"
+"X-Launchpad-Export-Date: 2012-06-19 05:12+0000\n"
+"X-Generator: Launchpad (build 15435)\n"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -131,7 +131,7 @@ msgstr "Ger ordningsföljden vid listning av projekt"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr "Fel! projektetx startdatum måste föregå projekets slutdatum"
+msgstr "Fel! projektets startdatum måste föregå projekets slutdatum."
 
 #. module: project
 #: view:project.task.reevaluate:0
@@ -231,7 +231,7 @@ msgstr "Nytt projekt baserat på en mall"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Fel! Du kan inte eskalera till samma projekt"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -242,7 +242,7 @@ msgstr "Mycket bråttom"
 #: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "En användare vill delegera detta ärende till"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -304,7 +304,7 @@ msgstr "För att avbryta uppgiften"
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "Projektaktivitetsarbete"
 
 #. module: project
 #: view:project.project:0 view:project.task:0 field:project.task,notes:0
@@ -478,7 +478,7 @@ msgstr "Klara"
 #. module: project
 #: view:project.task:0
 msgid "Change Color"
-msgstr ""
+msgstr "Byt färg"
 
 #. module: project
 #: constraint:account.analytic.account:0
@@ -489,27 +489,27 @@ msgstr "Fel! Du kan inte skapa rekursiva objekt."
 #: code:addons/project/project.py:264 code:addons/project/project.py:303
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (kopia)"
 
 #. module: project
 #: view:project.task:0
 msgid "New Tasks"
-msgstr ""
+msgstr "Ny aktivitet"
 
 #. module: project
 #: view:report.project.task.user:0 field:report.project.task.user,nbr:0
 msgid "# of tasks"
-msgstr ""
+msgstr "# aktiviteter"
 
 #. module: project
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Bakåt"
 
 #. module: project
 #: field:project.vs.hours,user_id:0 field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr ""
+msgstr "Tilldelad"
 
 #. module: project
 #: view:project.project:0
@@ -519,7 +519,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Du kan inte ha två användare med samma användarid !"
 
 #. module: project
 #: view:project.project:0
@@ -539,12 +539,12 @@ msgstr "Mina projekt"
 #. module: project
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fel! Du kan inte skapa rekursiva bolagsstrukturer."
 
 #. module: project
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Nästa"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -554,12 +554,12 @@ msgstr "Från status preliminär, det kommer att få status öppen"
 #. module: project
 #: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
 msgid "# of Days"
-msgstr ""
+msgstr "# dagar"
 
 #. module: project
 #: view:project.project:0
 msgid "Open Projects"
-msgstr ""
+msgstr "Öppna projekt"
 
 #. module: project
 #: code:addons/project/project.py:358
@@ -594,7 +594,7 @@ msgstr "Projektaktivitet"
 #: selection:project.task.history.cumulative,state:0
 #: view:report.project.task.user:0
 msgid "New"
-msgstr ""
+msgstr "Ny"
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -611,7 +611,7 @@ msgstr "Kummulativt flöde"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,hours_effective:0
 msgid "Effective Hours"
-msgstr ""
+msgstr "Faktisk tid"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -627,7 +627,7 @@ msgstr ""
 #: code:addons/project/project.py:597
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopia)"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -656,18 +656,18 @@ msgstr "Återstående timmar"
 #. module: project
 #: model:ir.model,name:project.model_mail_compose_message
 msgid "E-mail composition wizard"
-msgstr ""
+msgstr "E-post editor"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Registeringsdatum"
 
 #. module: project
 #: view:project.task:0 field:project.task.history,remaining_hours:0
 #: field:project.task.history.cumulative,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "Återstående tid"
 
 #. module: project
 #: field:project.project,planned_hours:0
@@ -728,7 +728,7 @@ msgstr "Tilläggsinformation"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "juli"
 
 #. module: project
 #: view:project.task.history.burndown:0
@@ -747,7 +747,7 @@ msgstr "Startdatum"
 #: view:project.project:0 field:project.task.type,project_ids:0
 #, python-format
 msgid "Projects"
-msgstr "Projects"
+msgstr "Projekt"
 
 #. module: project
 #: view:project.task:0 field:project.task,type_id:0
@@ -806,7 +806,7 @@ msgstr "Utkast öppna ärenden"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "januari"
 
 #. module: project
 #: field:project.task,delay_hours:0
@@ -816,7 +816,7 @@ msgstr "Fördröjda timmar"
 #. module: project
 #: selection:project.task,priority:0
 msgid "Very important"
-msgstr ""
+msgstr "Mycket viktigt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -886,7 +886,7 @@ msgstr "Projektets tidsenhet"
 #. module: project
 #: view:report.project.task.user:0
 msgid "In progress"
-msgstr ""
+msgstr "Pågående"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -908,7 +908,7 @@ msgstr "Uppgifter"
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr ""
+msgstr "Överliggande"
 
 #. module: project
 #: view:project.task:0
@@ -939,12 +939,12 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "september"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "december"
 
 #. module: project
 #: field:project.task,progress:0
@@ -964,13 +964,13 @@ msgstr ""
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "Omvärdera aktivitet"
 
 #. module: project
 #: view:project.task.history.cumulative:0 view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Månad"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -1009,12 +1009,12 @@ msgstr "Status: %(state)s"
 #. module: project
 #: help:project.task,sequence:0
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
+msgstr "Ger sorteringsordning vid listning av aktiviteter."
 
 #. module: project
 #: view:project.project:0 view:project.task:0
 msgid "Start Date"
-msgstr ""
+msgstr "Startdatum"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1034,7 +1034,7 @@ msgstr "Föräldrauppgifter"
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Spärrad"
 
 #. module: project
 #: help:project.task,progress:0
@@ -1046,7 +1046,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Contact Address"
-msgstr ""
+msgstr "Kontaktadress"
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -1070,7 +1070,7 @@ msgstr "Användare: %(user_id)s"
 #. module: project
 #: view:project.project:0
 msgid "Billing"
-msgstr ""
+msgstr "Fakturering"
 
 #. module: project
 #: view:project.task:0
@@ -1080,13 +1080,13 @@ msgstr ""
 #. module: project
 #: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
 #: view:project.project:0
 msgid "Templates of Projects"
-msgstr ""
+msgstr "Mallprojekt"
 
 #. module: project
 #: view:project.project:0
@@ -1096,7 +1096,7 @@ msgstr "Administration"
 #. module: project
 #: model:ir.model,name:project.model_project_task_reevaluate
 msgid "project.task.reevaluate"
-msgstr ""
+msgstr "project.task.reevaluate"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:81
@@ -1107,7 +1107,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Member"
-msgstr ""
+msgstr "Medlem"
 
 #. module: project
 #: view:project.task:0 view:project.task.history.cumulative:0
@@ -1118,6 +1118,7 @@ msgstr "Projektuppgifter"
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
 msgstr ""
+"Uppskatta tid som krävs för att stänga ärendet av den delegerade användaren"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1158,7 +1159,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Change Type"
-msgstr ""
+msgstr "Byt typ"
 
 #. module: project
 #: help:project.project,members:0
@@ -1175,24 +1176,24 @@ msgstr "Projektledare"
 #. module: project
 #: view:project.task:0 view:res.partner:0
 msgid "For changing to done state"
-msgstr ""
+msgstr "För att ändra till klarstatus"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Aktiviteter per användare och projekt"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "augusti"
 
 #. module: project
 #: view:project.task:0 selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: project
 #: view:project.project:0 field:project.project,complete_name:0
@@ -1221,7 +1222,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "juni"
 
 #. module: project
 #: field:project.project,total_hours:0
@@ -1232,7 +1233,7 @@ msgstr "Total tid"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Dagar i behandling"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
@@ -1248,7 +1249,7 @@ msgstr "Återaktivera"
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr ""
+msgstr "Användare"
 
 #. module: project
 #: field:project.project,active:0
@@ -1259,12 +1260,12 @@ msgstr "Active"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Dagar för att öppna"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "november"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_create_initial_projects_installer
@@ -1290,7 +1291,7 @@ msgstr "Aktivitetsutgåva"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "oktober"
 
 #. module: project
 #: view:project.task:0
@@ -1312,7 +1313,7 @@ msgstr "Delegeringshistorik"
 #. module: project
 #: model:ir.model,name:project.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: project
 #: help:project.project,active:0
@@ -1324,22 +1325,22 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Users"
-msgstr ""
+msgstr "Användare"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bolag"
 
 #. module: project
 #: view:project.project:0
 msgid "Projects in which I am a member."
-msgstr ""
+msgstr "Projekt där jag medverkar"
 
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr ""
+msgstr "Sök projekt"
 
 #. module: project
 #: code:addons/project/project.py:251
@@ -1356,7 +1357,7 @@ msgstr "Datum"
 #. module: project
 #: model:ir.ui.menu,name:project.next_id_86
 msgid "Dashboard"
-msgstr ""
+msgstr "Infopanel"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -1423,7 +1424,7 @@ msgstr ""
 #. module: project
 #: view:report.project.task.user:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Utökade filter..."
 
 #. module: project
 #: code:addons/project/project.py:1148
@@ -1488,7 +1489,7 @@ msgstr "Klar"
 #. module: project
 #: view:report.project.task.user:0 field:report.project.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "År"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
@@ -1500,7 +1501,7 @@ msgstr "Avbryt"
 #. module: project
 #: selection:project.vs.hours,state:0
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -1554,7 +1555,7 @@ msgstr ""
 #: field:project.task.history,user_id:0
 #: field:project.task.history.cumulative,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Ansvarig"
 
 #. module: project
 #: field:project.project,resource_calendar_id:0
@@ -1564,7 +1565,7 @@ msgstr "Arbetstid"
 #. module: project
 #: view:project.project:0
 msgid "Projects in which I am a manager"
-msgstr ""
+msgstr "Projekt där jag är ansvarig"
 
 #. module: project
 #: code:addons/project/project.py:959
@@ -1608,7 +1609,7 @@ msgstr "Varna projektledaren"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "Passerad tidsfrist"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
@@ -1644,7 +1645,7 @@ msgstr "Viktigt"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "maj"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1734,19 +1735,19 @@ msgstr "När aktiviteten är avslutad sätts status till klar."
 #. module: project
 #: view:project.project:0
 msgid "Customer"
-msgstr ""
+msgstr "Kund"
 
 #. module: project
 #: view:project.project:0 view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
-msgstr ""
+msgstr "Slutdatum"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "februari"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_task_by_days_graph
@@ -1762,7 +1763,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Edit"
-msgstr ""
+msgstr "Ändra"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -1787,12 +1788,12 @@ msgstr ""
 #. module: project
 #: view:project.task.history.cumulative:0 view:report.project.task.user:0
 msgid "Month-1"
-msgstr ""
+msgstr "Månad-1"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "april"
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -1812,12 +1813,12 @@ msgstr "Öppna avslutade uppgifter"
 #. module: project
 #: view:project.task.type:0
 msgid "Common"
-msgstr ""
+msgstr "Vanlig"
 
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "Förbrukade timmar"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_review_task_stage
@@ -1842,7 +1843,7 @@ msgstr ""
 #. module: project
 #: field:project.task,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_history_burndown
@@ -1863,12 +1864,12 @@ msgstr ""
 #. module: project
 #: view:report.project.task.user:0
 msgid "Current Year"
-msgstr ""
+msgstr "Innevarande år"
 
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
 
 #. module: project
 #: field:project.project,priority:0 field:project.project,sequence:0
@@ -1938,12 +1939,12 @@ msgstr ""
 #. module: project
 #: view:project.project:0 model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr ""
+msgstr "Chef"
 
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Registreringsdatum"
 
 #. module: project
 #: code:addons/project/project.py:890
