@@ -46,7 +46,7 @@
                             attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
                         </group>
                     </group>
-                  </sheet>  
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -92,7 +92,10 @@
             <field name="model">publisher_warranty.contract.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Register a Contract">
+                <form string="Register a Contract" version="7.0">
+                    <header>
+                        <button name="action_validate" string="Register" type="object" icon="gtk-apply" states="draft" class="oe_form_button_active_flow"/>
+                    </header>
                     <group colspan="4" col="8">
                         <group colspan="1">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
@@ -114,17 +117,6 @@
                             </group>
                         </group>
                     </group>
-                        <group colspan="8" col="8" states="draft">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Cancel" icon="gtk-cancel" colspan="1"/>
-                            <button name="action_validate" string="Register" type="object" icon="gtk-apply" colspan="1"/>
-                        </group>
-                        <group colspan="8" col="8" states="finished">
-                            <separator string="" colspan="8"/>
-                            <label colspan="7" width="220"/>
-                            <button special="cancel" string="Close" icon="gtk-ok"/>
-                        </group>
                 </form>
             </field>
         </record>
