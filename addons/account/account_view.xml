@@ -1829,27 +1829,28 @@
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                     </header>
-
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="model_id"/>
-                            <field name="ref"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="model_id"/>
+                                <field name="ref"/>
+                            </group>
+                            <newline/>
+    
+                            <group string="Starts on">
+                                <field name="date_start"/>
+                                <field name="period_total"/>
+                            </group>
+    
+                            <group string="Valid Up to">
+                                <field name="period_nbr"/>
+                                <field name="period_type"/>
+                            </group>
                         </group>
-                        <newline/>
-
-                        <group string="Starts on">
-                            <field name="date_start"/>
-                            <field name="period_total"/>
-                        </group>
-
-                        <group string="Valid Up to">
-                            <field name="period_nbr"/>
-                            <field name="period_type"/>
-                        </group>
-                    </group>
-                    <separator string="Subscription Lines"/>
-                    <field name="lines_id" widget="one2many_list"/>
+                        <separator string="Subscription Lines"/>
+                        <field name="lines_id" widget="one2many_list"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -2357,8 +2358,8 @@
                   <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <group string="res_config_contents" position="replace">
-                	<label string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" width="150"/>
-                	<separator string="Generate Your Chart of Accounts from a Chart Template"/>
+                	<label string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" width="150" />
+                	<separator string="Generate Your Chart of Accounts from a Chart Template" />
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     <field name="code_digits" groups="account.group_account_user"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>

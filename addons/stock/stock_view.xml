@@ -848,16 +848,20 @@
                             </field>
                         </page>
                         <page string="Additional info">
-                            <group col="4">
-                                <field name="auto_picking"/>
-                                <field name="date_done"/>
-                                <field name="move_type"/>
-                                <field name="type"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <group>
+                                <group>
+                                    <field name="move_type"/>
+                                    <field name="type"/>
+                                    <field name="auto_picking"/>
+                                </group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="date_done"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Notes">
-                            <field name="note" placeholder="Quality test ok..."/>
+                            <field name="note" placeholder="Add an internal note..."/>
                         </page>
                     </notebook>
                 </sheet>
