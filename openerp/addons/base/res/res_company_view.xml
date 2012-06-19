@@ -91,7 +91,6 @@
                             <field name="bank_ids"/>
                         </page>
                     </notebook>
-
                     </sheet>
                 </form>
             </field>
@@ -149,6 +148,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Multi Company" version="7.0">
+                  <sheet>
                     <group col="6" colspan="4">
                         <field name="name" colspan="6"/>
                         <separator string="Matching" colspan="6"/>
@@ -161,6 +161,7 @@
                         <separator string="Returning" colspan="6"/>
                         <field name="company_dest_id"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>

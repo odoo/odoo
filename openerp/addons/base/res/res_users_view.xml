@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Groups" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="category_id"/>
                         <field name="name"/>
@@ -57,6 +58,7 @@
                             <field name="comment"/>
                         </page>
                     </notebook>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -193,6 +195,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
+                   <sheet>
                     <div class="oe_right oe_form_avatar">
                         <field name="avatar" widget='image' on_change="onchange_avatar(avatar)"/>
                     </div>
@@ -215,6 +218,7 @@
                         <field name="user_email" widget="email" readonly="0"/>
                         <field name="signature" readonly="0"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
