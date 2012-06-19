@@ -9,9 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Subscription Compute" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="gtk-execute" string="Generate Entries"
-                            name="action_generate" type="object" />
+                        <button icon="gtk-execute" string="Generate Entries" name="action_generate" type="object" class="oe_form_button_active_flow"/>
                     </header>
                     <separator string="Generate Entries before:"/>
                     <label string ="Automatically generate entries based on what has been entered in the  system before a specific date."/>

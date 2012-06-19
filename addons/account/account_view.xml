@@ -1983,8 +1983,7 @@
             <field name="arch" type="xml">
                 <form string="Create Account" version="7.0">
                     <header>
-                        <button icon="gtk-ok" name="action_create" string="Add" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_form_button_active_flow"/>
                     </header>
                     <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
                     <field name="cparent_id"/>

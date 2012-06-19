@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Generate Fiscal Year Opening Entries" version="7.0">
                     <header>
-                        <button icon="gtk-execute" string="Create" name="data_save" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-execute" string="Create" name="data_save" type="object" class="oe_form_button_active_flow"/>
                     </header>
                     <separator string="Generate Fiscal Year Opening Entries"/>
                     <label string="This wizard will generate the end of year journal entries of selected fiscal year. Note that you can run this wizard many times for the same fiscal year: it will simply replace the old opening entries with the new ones."/>

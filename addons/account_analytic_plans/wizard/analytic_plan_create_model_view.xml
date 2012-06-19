@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
             <form string="Distribution Model Saved" version="7.0">
                 <header>
-                    <button string="Ok" icon='gtk-execute' type="object" name="activate" default_focus="1"/>
-                    <button special="cancel" string="Cancel" icon='gtk-ok' />
+                    <button string="Ok" icon='gtk-execute' type="object" name="activate" default_focus="1" class="oe_form_button_active_flow"/>
                 </header>
                 <label string="Save This Distribution as a Model"/>
             </form>
@@ -22,9 +21,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Distribution Model Saved" version="7.0">
-                <header>
-                    <button special="cancel" string="Ok" icon='gtk-ok'/>
-                </header>
                 <label string="This distribution model has been saved.You will be able to reuse it later."/>
             </form>
             </field>
