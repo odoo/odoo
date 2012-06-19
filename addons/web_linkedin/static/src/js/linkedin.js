@@ -107,11 +107,12 @@ openerp.web_linkedin = function(instance) {
             }
         },
         APIKeyWarning: function(e) {
+            var self = this;
             e.message="";            
             instance.web.dialog($(QWeb.render("Register.Linkedin", _t(e))), {
                 title: _t("Configure your Linkedin Key API"),
                 modal: true,                
-                width : 800, 
+                width : 840, 
                 height:500,       
                 buttons:[
                 {
@@ -124,10 +125,18 @@ openerp.web_linkedin = function(instance) {
                 ]
                 
             });
-            $("#register").click(function()
-            {
+            $("#register").click(function() {
+            
                 var linkkey = $("#apikey").val();
-                console.log("the key is ",linkkey);
+                                                              
+                var key = JSON.stringify(linkkey);                                
+                
+                     
+                self.rpc('/web_linkedin/database/api_key',{'key': key},function(data){
+               
+                });     
+                
+                       
             });
             
             
