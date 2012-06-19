@@ -1964,6 +1964,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 };
                 bindings[self.cm_id + "_open"] = function() {
                     if (!self.value) {
+                        self.focus();
                         return;
                     }
                     var pop = new openerp.web.form.FormOpenPopup(self.view);
@@ -1977,6 +1978,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                     );
                     pop.on_write_completed.add_last(function() {
                         self.set_value(self.value[0]);
+                        self.focus();
                     });
                 };
                 _.each(_.range(self.related_entries.length), function(i) {
@@ -2074,8 +2076,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             isSelecting = false;
         });
 
+        // avoid triggering blur on the widget when it comes from clicking on
+        // a completion of the list, on the dropdown or on the m2o menu thing
         var picking_completion = false;
-        this.$input.autocomplete('widget').add(this.$drop_down)
+        this.$input.autocomplete('widget')
+                .add(this.$drop_down)
+                .add(this.$menu_btn)
             .mousedown(function () {
                 picking_completion = true;
             });
@@ -2191,6 +2197,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             var dataset = new openerp.web.DataSetStatic(self, self.field.relation, self.build_context());
             dataset.name_get([element_ids[0]], function(data) {
                 self._change_int_ext_value(data[0]);
+                self.focus();
             });
         });
     },
