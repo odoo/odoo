@@ -11,7 +11,7 @@
                       <header>
                           <button icon="gtk-ok" name="check_selection" string="C_ompute" type="object" class="oe_form_button_active_flow"/>
                       </header>
-                      <group string="Schedule Phases">
+                      <group>
                           <field name="target_project"/>
                           <field name="project_id" attrs="{'invisible':[('target_project','=','all')], 'required':[('target_project','!=','all')]}"/>
                       </group>
