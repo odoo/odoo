@@ -374,6 +374,11 @@ class YamlInterpreter(object):
                     val = []
                 if len(val) and type(val[0]) == dict:
                     val = map(lambda x: (0,0,x), val)
+            elif (fg[key]['type']=='many2many'):
+                if val is False:
+                    val = []
+                if len(val):
+                    val = map (lambda x: [6,0,[x]], val)
             return val
 
         # Process all on_change calls
