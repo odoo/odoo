@@ -763,17 +763,14 @@ class sale_order(osv.osv):
         '''
         This function opens a window to compose an email, with the edi sale template message loaded by default
         '''
-        print "\n  =--===== context -==>", context
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         mod_obj = self.pool.get('ir.model.data')
         template = mod_obj.get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')
-        print "\n\ntemplate.......", template, "\n"
         template_id = template and template[1] or False
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False
         ctx = dict(context, active_model='sale.order', active_id=ids[0])
         ctx.update({'mail.compose.template_id': template_id})
-        print "\n  =--===== cont -==>", ctx
         return {
             'view_type': 'form',
             'view_mode': 'form',
