@@ -836,7 +836,7 @@ class ir_model_data(osv.osv):
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
         return True
 
-    def _module_data_uninstall(self, cr, uid, ids, context=None):
+    def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):
         """Deletes all the records referenced by the ir.model.data entries
         ``ids`` along with their corresponding database backed (including
         dropping tables, columns, FKs, etc, as long as there is no other
@@ -846,6 +846,8 @@ class ir_model_data(osv.osv):
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
         """ 
+
+        ids = self.search(cr, uid, [('module', 'in', modules_to_remove)])
 
         if uid != 1 and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
@@ -888,7 +890,7 @@ class ir_model_data(osv.osv):
                 external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
                 if (set(external_ids)-ids_set):
                     # if other modules have defined this record, we must not delete it
-                    return
+                    continue
                 _logger.info('Deleting %s@%s', res_id, model)
                 try:
                     self.pool.get(model).unlink(cr, uid, [res_id], context=context)
@@ -900,10 +902,17 @@ class ir_model_data(osv.osv):
                                 if model not in ('ir.model','ir.model.fields'))
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model.fields')
+
+        ir_model_relation = self.pool.get('ir.model.relation')
+        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
+        ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
+
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model')
 
         cr.commit()
+
+        self.unlink(cr, uid, ids, context)
 
     def _process_end(self, cr, uid, modules):
         """ Clear records removed from updated module data.

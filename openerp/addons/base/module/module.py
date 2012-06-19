@@ -379,15 +379,10 @@ class module(osv.osv):
         tables, columns, constraints, etc."""
         ir_model_data = self.pool.get('ir.model.data')
         ir_model_constraint = self.pool.get('ir.model.constraint')
-        ir_model_relation = self.pool.get('ir.model.relation')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
         constraint_ids = ir_model_constraint.search(cr, uid, [('module', 'in', modules_to_remove)])
         ir_model_constraint._module_data_uninstall(cr, uid, constraint_ids, context)
-        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
-        ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
-        data_ids = ir_model_data.search(cr, uid, [('module', 'in', modules_to_remove)])
-        ir_model_data._module_data_uninstall(cr, uid, data_ids, context)
-        ir_model_data.unlink(cr, uid, data_ids, context)
+        ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
         return True
 

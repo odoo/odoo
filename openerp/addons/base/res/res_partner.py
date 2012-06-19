@@ -87,7 +87,7 @@ class res_partner_category(osv.osv):
         'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
         'parent_left' : fields.integer('Left parent', select=True),
         'parent_right' : fields.integer('Right parent', select=True),
-        'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
+        'partner_ids': fields.many2many('res.partner', id1='category_id', id2='partner_id', string='Partners'),
     }
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
@@ -142,7 +142,7 @@ class res_partner(osv.osv):
         'website': fields.char('Website',size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
-        'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Tags'),
+        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
