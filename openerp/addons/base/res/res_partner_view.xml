@@ -101,33 +101,33 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="photo" widget='image' class="oe_form_avatar oe_right" height="70"/>
-                    <div class="oe_right oe_form_button_box" name="buttons">
+                    <field name="photo" widget='image' class="oe_avatar oe_right" height="70"/>
+                    <div class="oe_right oe_button_box" name="buttons">
 
                     </div>
-                    <div class="oe_form_title">
-                        <div class="oe_form_readonly_hidden">
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
                             <label for="name" string="Customer Name"/> 
-                            (<field name="is_company" on_change="onchange_type(is_company)" class="oe_form_inline"/> <label for="is_company" string="Is a Company?"/>)
+                            (<field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
                         </div>
                         <h1>
                             <field name="name"/>
                         </h1>
                         <div attrs="{'invisible': [('is_company','=', True)]}">
-                            <label for="parent_id" class="oe_form_readonly_hidden"/>
+                            <label for="parent_id" class="oe_edit_only"/>
                         </div>
                         <h2 attrs="{'invisible': [('is_company','=', True)]}">
                             <field name="parent_id"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                class="oe_form_inline"
+                                class="oe_inline"
                                 on_change="onchange_address(use_parent_address, parent_id)"/>, 
                             
                         </h2>
                         <div attrs="{'invisible' : [('is_company', '=', True)]}">
-                            <label for="function" class="oe_form_readonly_hidden" />
+                            <label for="function" class="oe_edit_only" />
                         </div>
                         <h2 attrs="{'invisible' : [('is_company', '=', True)]}">
-                            <field name="function" class="oe_form_inline" placeholder="Job Position"/>
+                            <field name="function" class="oe_inline" placeholder="Job Position"/>
                         </h2>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                     </div>
@@ -136,11 +136,11 @@
                         <group>
                             <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
                             <div attrs="{'invisible': [('parent_id','=', False)]}">
-                                <field class="oe_form_inline"
+                                <field class="oe_inline"
                                     name="type"/>
                                 <label for="use_parent_address"/>
                                 <field name="use_parent_address"
-                                    class="oe_form_inline"
+                                    class="oe_inline"
                                     on_change="onchange_address(use_parent_address, parent_id)"/>
                             </div>
 
@@ -149,8 +149,8 @@
                                 <field name="street" placeholder="Street..."/>
                                 <field name="street2"/>
                                 <div>
-                                    <field name="zip" class="oe_form_inline" placeholder="ZIP"/>
-                                    <field name="city" class="oe_form_inline" placeholder="City"/>
+                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
+                                    <field name="city" class="oe_inline" placeholder="City"/>
                                 </div>
                                 <field name="state_id" placeholder="State"/>
                                 <field name="country_id" placeholder="Country"/>
@@ -193,7 +193,7 @@
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_module_vignette">
                                                 <a type="edit">
-                                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_form_avatar oe_kanban_avatar_toto"/>
+                                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/>
                                                 </a>
                                                     <div class="oe_module_desc">
                                                         <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
