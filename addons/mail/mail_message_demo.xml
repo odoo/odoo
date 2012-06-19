@@ -2,6 +2,28 @@
 <openerp>
     <data>
 
+        <record id="message_blogpost0_attachment0" model="ir.attachment">
+            <field name="name">A cool attachment</field>
+            <field name="datas">PT1Tb21lIGNvb2wgYXR0YWNobWVudD09ClByYWVzZW50IHZlbCBtYXNzYSBzZWQgbWFzc2EgY29uc2VxdWF0IGVnZXN0YXMgaW4gdHJpc3RpcXVlIG9yY2ku</field>
+            <field name="datas_fname">a_cool_attachment</field>
+            <field name="description"></field>
+            <field name="res_name">Mail group</field>
+            <field name="res_model">mail.group</field>
+            <field name="res_id" ref="group_all_company"/>
+            <field name="type">binary</field>
+        </record>
+
+        <record id="message_blogpost0_attachment1" model="ir.attachment">
+            <field name="name">Another clean attachment</field>
+            <field name="datas">PT1Tb21lIGNsZWFuIGF0dGFjaG1lbnQ9PQpOdWxsYSB0dXJwaXMgbGVvLCByaG9uY3VzIHV0IGVnZXN0YXMgc2l0IGFtZXQsIGNvbnNlY3RldHVyIHZpdGFlIHVybmEu</field>
+            <field name="datas_fname">a_clean_attachment</field>
+            <field name="description"></field>
+            <field name="res_name">Mail group</field>
+            <field name="res_model">mail.group</field>
+            <field name="res_id" ref="group_all_company"/>
+            <field name="type">binary</field>
+        </record>
+
         <record id="message_blogpost0" model="mail.message">
             <field name="subject">A cool blogpost about something clean</field>
             <field name="model">mail.group</field>
@@ -15,6 +37,7 @@ Fusce tempus elit volutpat mi auctor adipiscing. Nam congue luctus suscipit. Dui
 Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in dolor in sapien tempus vehicula.]]></field>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"/>
+            <field name="attachment_ids" eval="[(6,0,[ref('message_blogpost0_attachment0'),ref('message_blogpost0_attachment1')])]"/>
         </record>
 
         <record id="message_blogpost0_comment0" model="mail.message">
@@ -22,7 +45,7 @@ Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_company"/>
             <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[That was such a <b>tremendous</b> blogpost (first comment) !]]></field>
+            <field name="body_html"><![CDATA[That was such a <b>tremendous</b> blogpost !  (first comment)]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"/>
@@ -34,10 +57,21 @@ Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in
             <field name="res_id" ref="group_all_company"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[Agreed !  
-Would it be possible to learn more about the author (second comment) ?]]></field>
+Would it be possible to learn more about the author ?  (second comment)]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="message_blogpost0_comment2_attachment0" model="ir.attachment">
+            <field name="name">Author's full biography</field>
+            <field name="datas">PT1BYm91dCB0aGUgYXV0aG9yPT0KSW50ZWdlciBzb2RhbGVzIGRvbG9yIGV1IGVsaXQgZnJpbmdpbGxhIGJsYW5kaXQu</field>
+            <field name="datas_fname">blogpost_author_biography</field>
+            <field name="description"></field>
+            <field name="res_name">Mail group</field>
+            <field name="res_model">mail.group</field>
+            <field name="res_id" ref="group_all_company"/>
+            <field name="type">binary</field>
         </record>
 
         <record id="message_blogpost0_comment2" model="mail.message">
@@ -46,12 +80,15 @@ Would it be possible to learn more about the author (second comment) ?]]></field
             <field name="res_id" ref="group_all_company"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[Sure: Curabitur tempor bibendum diam, et euismod ante rutrum vel. 
-            
-            In quis purus neque. Integer sodales dolor eu elit fringilla blandit. Maecenas lacus nisi, facilisis sit amet viverra eu, tristique vel augue. 
-            Donec viverra congue dui eu blandit. In lacinia molestie nulla, ut sagittis risus feugiat eu. (third comment)]]></field>
+
+In quis purus neque. Integer sodales dolor eu elit fringilla blandit. Maecenas lacus nisi, facilisis sit amet viverra eu, tristique vel augue. 
+Donec viverra congue dui eu blandit. In lacinia molestie nulla, ut sagittis risus feugiat eu. 
+
+Check the file in attachment for more information !  (third comment)]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"/>
+            <field name="attachment_ids" eval="[(4,ref('message_blogpost0_comment2_attachment0'))]"/>
         </record>
 
     </data>
