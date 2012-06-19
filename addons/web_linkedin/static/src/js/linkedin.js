@@ -77,15 +77,15 @@ openerp.web_linkedin = function(instance) {
                 }
                 if (this.view.datarecord['linkedin_id']) {
                     if (this.view.datarecord['profile_id'] && !this.view.datarecord['twitter_id']) {
-	                    if (this.$element.find('#twitterid')) {
-	                        this.$element.find('#twitterid').remove();
-	                    }
-	                }
-	                else if (!this.view.datarecord['profile_id'] && this.view.datarecord['twitter_id']) {
-	                    if (this.$element.find('#profileid')) {
-	                        this.$element.find('#profileid').remove();
-	                    }
-	                }
+                        if (this.$element.find('#twitterid')) {
+                            this.$element.find('#twitterid').remove();
+                        }
+                    }
+                    else if (!this.view.datarecord['profile_id'] && this.view.datarecord['twitter_id']) {
+                        if (this.$element.find('#profileid')) {
+                            this.$element.find('#profileid').remove();
+                        }
+                    }
                 }else{
                     this.removeTemplate();
                 }
@@ -107,17 +107,31 @@ openerp.web_linkedin = function(instance) {
             }
         },
         APIKeyWarning: function(e) {
-            e.message= "Linkedin API Key is not registerd/correct.\n  Go to Settings,  'General Settings'  menu and follow steps to register the LinkedIn API Key.";
-            instance.web.dialog($(QWeb.render("CrashManager.warning", _t(e))), {
-                title: _t("Linkedin API Key Warning"),
+//            e.message= "Linkedin API Key is not registerd/correct.\n  Go to Settings,  'General Settings'  menu and follow steps to register the LinkedIn API Key.";
+//            instance.web.dialog($(QWeb.render("CrashManager.warning", _t(e))), {
+//                title: _t("Linkedin API Key Warning"),
+//                modal: true,
+//                height: 200,
+//                width: 500,
+//                buttons: [
+            var self = this;
+            e.message="";
+            instance.web.dialog($(QWeb.render("Register.Linkedin", _t(e))), {
+                title: _t("Configure your Linkedin Key API"),
                 modal: true,
-                height: 200,
-                width: 500,
-                buttons: [
+                width : 840, 
+                height:500,
+                buttons:[
                 {
                     text: _t("Ok"),
                     click: function() { $(this).dialog("close"); }
                 }]
+            });
+            $("#register").click(function() {
+                var linkkey = $("#apikey").val();
+                var key = JSON.stringify(linkkey);
+                self.rpc('/web_linkedin/database/api_key',{'key': key},function(data){
+                });
             });
         },
         setTemplate: function( URL, AccountName ) {

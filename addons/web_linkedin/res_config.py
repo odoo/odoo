@@ -48,5 +48,10 @@ class base_config_settings(osv.osv_memory):
         company_id = company_obj._company_default_get(cr, uid, 'res.users', context=context)
         company_obj.write(cr, uid, [company_id], {'default_linkedin_api_key': data.default_linkedin_api_key}, context=context)
 
+        
+	  
+        
 base_config_settings()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
