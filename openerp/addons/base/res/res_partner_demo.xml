@@ -9,119 +9,171 @@
             <field name="name">Customer</field>
         </record>
         <record id="res_partner_category_1" model="res.partner.category">
-            <field name="name">Prospect</field>
-        </record>
-        <record id="res_partner_category_2" model="res.partner.category">
-            <field name="name">OpenERP Partners</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_3" model="res.partner.category">
-            <field name="name">Starter Partner</field>
-            <field name="parent_id" ref="res_partner_category_2"/>
-        </record>
-        <record id="res_partner_category_4" model="res.partner.category">
-            <field name="name">Basic Partner</field>
-            <field name="parent_id" ref="res_partner_category_2"/>
-        </record>
-        <record id="res_partner_category_5" model="res.partner.category">
-            <field name="name">Gold Partner</field>
-            <field name="parent_id" ref="res_partner_category_2"/>
-        </record>
-        <record id="res_partner_category_7" model="res.partner.category">
-            <field name="name">Openstuff.net</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_12" model="res.partner.category">
-            <field name="name">Segmentation</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_13" model="res.partner.category">
-            <field name="name">Important customers</field>
-            <field name="parent_id" ref="res_partner_category_12"/>
-        </record>
-        <record id="res_partner_category_14" model="res.partner.category">
-            <field name="name">Bad customers</field>
-            <field name="parent_id" ref="res_partner_category_12"/>
-        </record>
-
-        <record id="res_partner_category_8" model="res.partner.category">
             <field name="name">Supplier</field>
         </record>
+        <record id="res_partner_category_2" model="res.partner.category">
+            <field name="name">Prospect</field>
+        </record>
+        <record id="res_partner_category_3" model="res.partner.category">
+            <field name="name">Employee</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_4" model="res.partner.category">
+            <field name="name">Partners</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_5" model="res.partner.category">
+            <field name="name">Gold Partners</field>
+            <field name="parent_id" ref="res_partner_category_4"/>
+        </record>
+        <record id="res_partner_category_6" model="res.partner.category">
+            <field name="name">Silver Partners</field>
+            <field name="parent_id" ref="res_partner_category_4"/>
+        </record>
+        <record id="res_partner_category_7" model="res.partner.category">
+            <field name="name">Ready Partners</field>
+            <field name="parent_id" ref="res_partner_category_4"/>
+        </record>
+        <record id="res_partner_category_8" model="res.partner.category">
+            <field name="name">Services</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
         <record id="res_partner_category_9" model="res.partner.category">
-            <field name="name">Components Supplier</field>
+            <field name="name">IT Services</field>
             <field name="parent_id" ref="res_partner_category_8"/>
         </record>
         <record id="res_partner_category_10" model="res.partner.category">
-            <field name="name">Open Source Service Company</field>
+            <field name="name">Consultancy Services</field>
             <field name="parent_id" ref="res_partner_category_8"/>
         </record>
         <record id="res_partner_category_11" model="res.partner.category">
-            <field name="name">Textile Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
-        </record>
-
-
-        <!--
-        Resource: res.partner.category for training
-        -->
-        <record id="res_partner_category_consumers0" model="res.partner.category">
-            <field name="name">Consumers</field>
+            <field name="name">Components Buyer</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
-        <record id="res_partner_category_retailers0" model="res.partner.category">
+        <record id="res_partner_category_12" model="res.partner.category">
+            <field name="name">Important Customer</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_13" model="res.partner.category">
+            <field name="name">Components Distributors</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
+        </record>
+        <record id="res_partner_category_14" model="res.partner.category">
+            <field name="name">Manufacturers</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
+        </record>
+        <record id="res_partner_category_15" model="res.partner.category">
+            <field name="name">Wholesalers</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
+        </record>
+        <record id="res_partner_category_16" model="res.partner.category">
             <field name="name">Retailers</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
+            <field name="parent_id" ref="res_partner_category_1"/>
         </record>
-        <record id="res_partner_category_miscellaneoussuppliers0" model="res.partner.category">
-            <field name="name">Miscellaneous Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+        <record id="res_partner_category_17" model="res.partner.category">
+            <field name="name">Services</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
         </record>
-        <record id="res_partner_category_woodsuppliers0" model="res.partner.category">
-            <field name="name">Wood Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+        <record id="res_partner_category_18" model="res.partner.category">
+            <field name="name">Office Supplies</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
         </record>
+
 
        <!--
         Resource: res.partner
         -->
 
-        <record id="res_partner_asus" model="res.partner">
-            <field name="name">ASUStek</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+        <record id="res_partner_1" model="res.partner">
+            <field name="name">ASUSTeK</field>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_18')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
-            <field name="city">Taiwan</field>
-            <field name="zip">23410</field>
+            <field name="city">Taipei</field>
+            <field name="zip">106</field>
             <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
             <field name="street">31 Hong Kong street</field>
             <field name="email">info@asustek.com</field>
-            <field name="phone">+ 1 64 61 04 01</field>
+            <field name="phone">(+886) (02) 4162 2023</field>
             <field name="website">www.asustek.com</field>
         </record>
-        <record id="res_partner_agrolait" model="res.partner">
+        <record id="res_partner_2" model="res.partner">
             <field name="name">Agrolait</field>
             <field eval="[(6, 0, [ref('base.res_partner_category_0')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Wavre</field>
-            <field name="zip">5478</field>
+            <field name="zip">1300</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
 	        <field name="email">s.l@agrolait.be</field>
-	        <field name="phone">003281588558</field>
+	        <field name="phone">+32 10 588 558</field>
             <field name="website">www.agrolait.com</field>
         </record>
-        <record id="res_partner_c2c" model="res.partner">
+        <record id="res_partner_3" model="res.partner">
+            <field name="name">China Export</field>
+            <field name="supplier">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_15')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="city">Shanghai</field>
+            <field name="zip">200000</field>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
+            <field name="street">52 Chop Suey street</field>
+            <field name="email">info@chinaexport.com</field>
+            <field name="phone">+86-21-64845671</field>
+            <field name="website">www.chinaexport.com/</field>
+        </record>
+        <record id="res_partner_4" model="res.partner">
+            <field name="name">Distrib PC</field>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="is_company">1</field>
+            <field name="city">Namur</field>
+            <field name="zip">2541</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">42 rue de la Lesse</field>
+            <field name="email">info@distribpc.com</field>
+            <field name="phone">+ 32 081256987</field>
+            <field name="website">www.distribpc.com/</field>
+        </record>
+        <record id="res_partner_5" model="res.partner">
+            <field name="name">Ecole de Commerce de Liege</field>
+            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="city">Liege</field>
+            <field name="zip">6985</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">2 Impasse de la Soif</field>
+            <field name="email">k.lesbrouffe@eci-liege.info</field>
+            <field name="phone">+32 421 52571</field>
+            <field name="website">www.eci-liege.info//</field>
+        </record>
+        <record id="res_partner_6" model="res.partner">
+            <field name="name">Elec Import</field>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="is_company">1</field>
+            <field name="city">Brussels</field>
+            <field name="zip">2365</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">23 rue du Vieux Bruges</field>
+            <field name="email">info@elecimport.com</field>
+            <field name="phone">+ 32 025 897 456</field>
+        </record>
+        <record id="res_partner_12" model="res.partner">
             <field name="name">Camptocamp</field>
             <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="customer">1</field>
             <field name="is_company">1</field>
             <field name="city">Le Bourget du Lac</field>
             <field name="zip">73377</field>
-            <field name="phone">+41 21 619 10 04 </field>
+            <field name="phone">+33 4 49 23 44 54</field>
             <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="street">Savoie Technolac, BP 352</field>
-            <field name="email">openerp@camptocamp.com</field>
+            <field name="street">93, Press Avenue</field>
+            <field name="email">info@c2c.com</field>
             <field name="website">www.camptocamp.com</field>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
@@ -137,7 +189,7 @@
             <field name="is_company">1</field>
         </record>
         <record id="res_partner_thymbra" model="res.partner">
-            <field name="name">SmartBusiness</field>
+            <field name="name">Smart Business</field>
             <field name="is_company">1</field>
             <field name="city">Buenos Aires</field>
             <field name="zip">1659</field>
@@ -183,57 +235,6 @@
             <field name="email">a.g@wealthyandsons.com</field>
             <field name="phone">003368978776</field>
             <field name="website">www.wealthyandsons.com/</field>
-        </record>
-        <record id="res_partner_3" model="res.partner">
-            <field name="name">China Export</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Shanghai</field>
-            <field name="zip">478552</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">52 Chop Suey street</field>
-            <field name="email">zen@chinaexport.com</field>
-            <field name="phone">+86-751-64845671</field>
-            <field name="website">www.chinaexport.com/</field>
-        </record>
-        <record id="res_partner_4" model="res.partner">
-            <field name="name">Distrib PC</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="city">Namur</field>
-            <field name="zip">2541</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">42 rue de la Lesse</field>
-            <field name="email">info@distribpc.com</field>
-            <field name="phone">+ 32 081256987</field>
-            <field name="website">www.distribpc.com/</field>
-        </record>
-        <record id="res_partner_5" model="res.partner">
-            <field name="name">Ecole de Commerce de Liege</field>
-            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Liege</field>
-            <field name="zip">6985</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">2 Impasse de la Soif</field>
-            <field name="email">k.lesbrouffe@eci-liege.info</field>
-            <field name="phone">+32 421 52571</field>
-            <field name="website">www.eci-liege.info//</field>
-        </record>
-        <record id="res_partner_6" model="res.partner">
-            <field name="name">Elec Import</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="city">Brussels</field>
-            <field name="zip">2365</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">23 rue du Vieux Bruges</field>
-            <field name="email">info@elecimport.com</field>
-            <field name="phone">+ 32 025 897 456</field>
         </record>
         <record id="res_partner_maxtor" model="res.partner">
             <field name="name">Maxtor</field>
@@ -450,6 +451,12 @@
         -->
 
         <record id="res_partner_address_1" model="res.partner">
+            <field name="name">Tang Tsui</field>
+            <field name="use_parent_address" eval="1"/>
+            <field name="parent_id" ref="res_partner_1"/>
+        </record>
+
+        <record id="res_partner_address_1_x" model="res.partner">
             <field name="name">Michel Schumacher</field>
             <field name="website">www.balmerinc.com</field>
             <field name="ref">or</field>
@@ -496,18 +503,7 @@
             <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_8"/>
         </record>
-        <record id="res_partner_address_tang" model="res.partner">
-            <field name="name">Tang</field>
-            <field name="city">Taiwan</field>
-            <field name="zip">23410</field>
-            <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
-            <field name="street">31 Hong Kong street</field>
-            <field name="email">info@asustek.com</field>
-            <field name="phone">+ 1 64 61 04 01</field>
-            <field name="website">www.asustek.com</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_asus"/>
-        </record>
+
         <record id="res_partner_address_wong" model="res.partner">
             <field name="name">Wong</field>
             <field name="city">Hong Kong</field>
@@ -544,7 +540,7 @@
         </record>
         <record id="res_partner_address_8" model="res.partner">
             <field name="name">Sylvie Lelitre</field>
-            <field name="parent_id" ref="res_partner_agrolait"/>
+            <field name="parent_id" ref="res_partner_2"/>
             <field name="city">Wavre</field>
             <field name="zip">5478</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
@@ -565,7 +561,7 @@
             <field name="email">p.l@agrolait.be</field>
             <field name="phone">003281588557</field>
             <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_agrolait"/>
+            <field name="parent_id" ref="res_partner_2"/>
             <field name="title" ref="base.res_partner_title_sir"/>
         </record>
         <record id="res_partner_address_8invoice" model="res.partner">
@@ -578,7 +574,7 @@
             <field name="email">serge.l@agrolait.be</field>
             <field name="phone">003281588556</field>
             <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_agrolait"/>
+            <field name="parent_id" ref="res_partner_2"/>
             <field name="title" ref="base.res_partner_title_sir"/>
         </record>
         <record id="res_partner_address_9" model="res.partner">
@@ -618,18 +614,13 @@
             <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_5"/>
         </record>
+
         <record id="res_partner_address_zen" model="res.partner">
-            <field name="name">Zen</field>
-            <field name="city">Shanghai</field>
-            <field name="zip">478552</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">52 Chop Suey street</field>
-	        <field name="email">zen@chinaexport.com</field>
-	        <field name="phone">+86-751-64845671</field>
-            <field name="website">www.chinaexport.com/</field>
+            <field name="name">Chao Wang</field>
             <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_3"/>
         </record>
+
         <record id="res_partner_address_12" model="res.partner">
             <field name="type">default</field>
             <field name="city">Grenoble</field>
@@ -707,7 +698,7 @@
             <field name="street">PSE-A, EPFL </field>
             <field name="type">default</field>
             <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_c2c"/>
+            <field name="parent_id" ref="res_partner_12"/>
         </record>
         <record id="res_partner_address_seagate" model="res.partner">
             <field name="name">Seagate Technology</field>
@@ -900,7 +891,7 @@
         <record id="res_partner_asustek_request" model="res.request">
             <field name="name">ASUSTEK-Subject</field>
             <field name="act_to" ref="user_demo"/>
-            <field name="ref_doc1" ref="res_partner_asus"/>
+            <field name="ref_doc1" ref="res_partner_1"/>
         </record>
     </data>
 </openerp>
