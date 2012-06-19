@@ -333,9 +333,13 @@
                                 states="cancel,done" class="oe_form_button_return_flow"/>
                         -->
                         <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                states="done,cancelled" context="{'button_reactivate':True}" class="oe_form_button_active_flow"/>
+                                states="done" context="{'button_reactivate':True}" class="oe_form_button_active_flow"/>
+                         <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
+                                states="cancelled" context="{'button_reactivate':True}"/>
                         <button name="action_close" string="Done" type="object"
-                                states="draft,open,pending" class="oe_form_button_active_flow"/>
+                                states="open" class="oe_form_button_active_flow"/>
+                        <button name="action_close" string="Done" type="object"
+                                states="draft,pending" />        
                         <button name="do_pending" string="Pending" type="object"
                                 states="open" class="oe_form_button_return_flow"/>
                         <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
