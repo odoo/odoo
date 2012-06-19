@@ -400,7 +400,7 @@ openerp.mail = function(session) {
         display_comment: function (record) {
             record.body = this.do_text_nl2br(record.body, true);
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
-            else { record.mini_url = tools_get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]); }    
+            else { record.mini_url = this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
             record.body = this.do_text_remove_html_tags(record.body);
             record.body = this.do_replace_internal_links(record.body);
@@ -414,7 +414,7 @@ openerp.mail = function(session) {
         },
         
         display_current_user: function () {
-            return this.$element.find('img.oe_mail_msg_image').attr('src', tools_get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid));
+            return this.$element.find('img.oe_mail_msg_image').attr('src', this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid));
         },
         
         do_comment: function () {
@@ -539,7 +539,7 @@ openerp.mail = function(session) {
 
     /** 
      * ------------------------------------------------------------
-     * mail_thread Widget
+     * ThreadView Widget
      * ------------------------------------------------------------
      *
      * This widget handles the display of the Chatter on documents.
@@ -648,13 +648,21 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
     }));
-    
-    
+
+
+    /** 
+     * ------------------------------------------------------------
+     * WallView Widget
+     * ------------------------------------------------------------
+     *
+     * This widget handles the display of the Chatter on the Wall.
+     */
+
     /* Add WallView widget to registry */
     session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
     
     /* WallView widget: a wall of messages */
-    mail.WallView = session.web.Widget.extend({
+    mail.WallView = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
         template: 'mail.wall',
 
         /**
@@ -847,7 +855,7 @@ openerp.mail = function(session) {
             comment_node.val('');
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html', 'tweet']).then(this.proxy('init_and_fetch_comments'));
         },
-    });
+    }));
     
 
     /**
@@ -905,11 +913,6 @@ openerp.mail = function(session) {
             });
         }
         return cs;
-    }
-
-    /** get an image in /web/binary/image?... */
-    function tools_get_image(session_prefix, session_id, model, field, id) {
-        return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
     }
         
 };
