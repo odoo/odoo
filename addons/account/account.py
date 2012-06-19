@@ -2969,6 +2969,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=True),
+        'only_one_chart_template': fields.boolean('Only One Chart Template Available'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
@@ -3015,7 +3016,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
             if 'chart_template_id' in fields:
-                res.update({'chart_template_id': ids[0]})
+                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': ids[0]})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
