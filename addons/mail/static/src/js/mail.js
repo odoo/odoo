@@ -117,15 +117,43 @@ openerp.mail = function(session) {
         },
         
         start: function() {
+            var self = this;
+            
             this._super.apply(this, arguments);
             // customize display
-            if (! this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
+            if (! this.display.show_post_comment) {
+                this.$element.find('div.oe_mail_thread_act').hide();
+            }
             // add events
             this.add_events();
-            /* display user, fetch comments */
+            
+            // display user, fetch comments
             this.display_current_user();
-            if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
-            else var display_done = this.init_comments();
+            
+            if (this.params.records) {
+                var display_done = this.display_comments_from_parameters(this.params.records);
+            } else {
+                var display_done = this.init_comments();
+            }
+            
+            // handle the dropdown menu
+            var dropdown_menu_trigger   = '.oe_gear_menuaction';    // css class name
+            var dropdown_menu_elts      = '.oe_gear_menu';          // css class name
+            
+            this.$element.on('click', dropdown_menu_trigger, function (ev) {
+                $gear_menu = $(this).siblings(dropdown_menu_elts);
+                
+                if ($gear_menu.is(':visible')) {
+                    $gear_menu.hide();
+                } else {
+                    $gear_menu.show();
+                }
+                
+                // hide others menus if opened
+                $(dropdown_menu_trigger).not(this).siblings(dropdown_menu_elts).hide();
+                return false;
+            });
+            
             return display_done
         },
         
@@ -175,7 +203,7 @@ openerp.mail = function(session) {
                 return false;
             });
             // event: click on an internal link
-            this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_internal_link', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
                 if (! event.srcElement.dataset.resModel) return false;
                 else var res_model = event.srcElement.dataset.resModel;
@@ -192,6 +220,12 @@ openerp.mail = function(session) {
                     });
                 }
                 else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
+            });
+            // event: click on 'attachment(s)' in msg
+            this.$element.delegate('a.oe_mail_msg_view_attachments', 'click', function (event) {
+                var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
+                act_dom.toggle();
+                return false;
             });
         },
         
@@ -270,7 +304,7 @@ openerp.mail = function(session) {
         display_comment: function (record) {
             record.body = this.do_text_nl2br(record.body, true);
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
-            else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }    
+            else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }
             // body text manipulation
             record.body = this.do_clean_text(record.body);
             record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
@@ -284,8 +318,8 @@ openerp.mail = function(session) {
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
             if (record.tr_body) {
-                var node_body = this.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
-                var node_body_short = this.$element.find('span.oe_mail_msg_body_short:last').append(' <a href="#" class="expand">[ ... Show more]</a>');
+                var node_body = this.$element.find('.oe_mail_msg_body:last').append('<br/><br/><a href="#" class="reduce">See less</a>');
+                var node_body_short = this.$element.find('.oe_mail_msg_body_short:last').append('... <a href="#" class="expand">See more</a>');
                 node_body.hide();
                 node_body.find('a:last').click(function() { node_body.hide(); node_body_short.show(); return false; });
                 node_body_short.find('a:last').click(function() { node_body_short.hide(); node_body.show(); return false; });
@@ -405,7 +439,7 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
-                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
+                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="oe_mail_internal_link" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
                 regex_res = regex_login.exec(string);
             }
             /* special shortcut: :name, try to find an icon if in list */
@@ -424,9 +458,18 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
         
+        /**
+         * @param {String} string to truncate
+         * @param {Number} max number of chars to display 
+         * @returns {String} truncated string
+         */
         do_truncate_string: function(string, max_length) {
-            if (string.length <= (max_length * 1.2)) return false;
-            else return string.slice(0, max_length);
+            // multiply by 1.2: prevent truncating an just too little long string
+            if (string.length <= (max_length * 1.2)) {
+                return false;
+            } else {
+                return string.slice(0, max_length);
+            }
         },
         
         /** Removes html tags, except b, em, br */
@@ -550,7 +593,7 @@ openerp.mail = function(session) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
                 var mini_url = self.thread_get_avatar('res.users', 'avatar', record.id);
                 $('<li><img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '"/>' +
-                  '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-id="' + record.id + '">' + record.name + '</a></li>').appendTo(user_list);
+                  '<a href="#" class="oe_mail_internal_link" data-res-model="res.users" data-res-id="' + record.id + '">' + record.name + '</a></li>').appendTo(user_list);
             });
             if (self.is_subscriber) {
                 self.$element.find('button.oe_mail_button_follow').hide();
