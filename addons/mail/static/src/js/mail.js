@@ -555,31 +555,29 @@ openerp.mail = function(session) {
 
        init: function() {
             this._super.apply(this, arguments);
-            this.see_subscribers = true;
-            this.thread = null;
             this.params = this.get_definition_options();
             this.params.thread_level = this.params.thread_level || 0;
-            // datasets
+            this.params.see_subscribers = true;
+            this.params.see_subscribers_options = this.params.see_subscribers_options || false;
+            this.thread = null;
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
         start: function() {
-            this._super.apply(this, arguments);
-            this.bind_events();
-            this.reinit();
-        },
-        
-        bind_events: function() {
             var self = this;
+            this._super.apply(this, arguments);
             this.do_bind_chatter_events();
-            this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); }).hide();
+            this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
+            if (! this.params.see_subscribers_options) {
+                this.$element.find('button.oe_mail_button_followers').hide(); }
             this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
+            this.reinit();
         },
 
         destroy: function () {
@@ -587,7 +585,8 @@ openerp.mail = function(session) {
         },
         
         reinit: function() {
-            this.see_subscribers = true;
+            this.params.see_subscribers = true;
+            this.params.see_subscribers_options = this.params.see_subscribers_options || false;
             this.$element.find('button.oe_mail_button_followers').html('Hide followers')
             this.$element.find('button.oe_mail_button_follow').hide();
             this.$element.find('button.oe_mail_button_unfollow').hide();
@@ -604,7 +603,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_main').empty();
             if (this.thread) this.thread.destroy();
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
-                                                    'thread_level': this.params.thread_level, 'show_post_comment': true, 'limit': 15});
+                                                'thread_level': this.params.thread_level, 'show_post_comment': true, 'limit': 15});
             var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_main'));
             return fetch_sub_done && thread_done;
         },
@@ -620,9 +619,8 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_followers h4').html('Followers (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
-				var mini_url = tools_get_image(self.session.prefix, self.session.session_id, 'res.users', 'avatar', record.id);
-                $('<li><img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '"/>' +
-                  '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-id="' + record.id + '">' + record.name + '</a></li>').appendTo(user_list);
+                record.avatar_url = self.get_image(self.session.prefix, self.session.session_id, 'res.users', 'avatar', record.id);
+                $(session.web.qweb.render('mail.record_thread.subscriber', {'record': record})).appendTo(user_list);
             });
             if (self.is_subscriber) {
                 self.$element.find('button.oe_mail_button_follow').hide();
@@ -644,9 +642,9 @@ openerp.mail = function(session) {
         },
         
         do_toggle_followers: function () {
-            this.see_subscribers = ! this.see_subscribers;
-            if (this.see_subscribers) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
-            else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
+            this.params.see_subscribers = ! this.params.see_subscribers;
+            if (this.params.see_subscribers) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
+            else { this.$element.find('button.oe_mail_button_followers').html('Show followers'); }
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
     }));
