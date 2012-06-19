@@ -74,14 +74,16 @@
             <field name="arch" type="xml">
                 <search string="Search Subscription">
                     <group>
+                        <field name="name" string="Subscription" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_init"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check"
                         string="Running"
                         domain="[('state','=','running')]"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="user_id"/>
                         <field name="partner_id"/>
-                        <field name="date_init"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -166,7 +168,8 @@
             <field name="arch" type="xml">
                 <search string="Subscription Document">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Subscription Document" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="model"/>
                     </group>
                 </search>
