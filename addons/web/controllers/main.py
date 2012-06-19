@@ -1358,6 +1358,11 @@ class Binary(openerpweb.Controller):
             image_data = self.placeholder(req)
         headers.append(('ETag', retag))
         headers.append(('Content-Length', len(image_data)))
+        try:
+            ncache = int(kw.get('cache'))
+            headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
+        except:
+            pass
         return req.make_response(image_data, headers)
     def placeholder(self, req):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
