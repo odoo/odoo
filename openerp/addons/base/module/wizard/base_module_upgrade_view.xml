@@ -9,13 +9,14 @@
             <field name="arch" type="xml">
                 <form string="System Update" version="7.0">
                     <header>
-                        <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward" class="oe_form_button_active_flow"/>
                     </header>
-                    <label string="Your system will be updated."/>
-                    <label string="Note that this operation might take a few minutes."/>
-                    <separator string="Modules to Update"/>
-                    <field name="module_info"/>
+                    <group>
+	                    <label string="Your system will be updated."/>
+	                    <label string="Note that this operation might take a few minutes."/>
+	                    <separator string="Modules to Update"/>
+	                    <field name="module_info"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -45,11 +46,12 @@
             <field name="arch" type="xml">
                 <form string="Apply Scheduled Upgrades" version="7.0">
                     <header>
-                        <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="config" string="Start configuration" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
-                    <label string="The selected modules have been updated / installed !"/>
-                    <label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/>
+                    <group>
+	                    <label string="The selected modules have been updated / installed !"/>
+	                    <label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/>
+                    </group>
                 </form>
             </field>
         </record>

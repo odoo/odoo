@@ -7,7 +7,10 @@
             <field name="model">base.language.export</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Export Translations">
+                <form string="Export Translations" version="7.0">
+                    <header>
+                        <button icon="gtk-ok" name="act_getfile" string="_Export" type="object" states="choose" class="oe_form_button_active_flow"/>
+                    </header>
                     <group col="8">
                         <group colspan="3">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
@@ -34,17 +37,6 @@
                                 <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
                                 <field height="80" name="advice" nolabel="1" colspan="4"/>
                             </group>
-                        </group>
-                        <group colspan="8" col="8" states="choose">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button icon="gtk-cancel" name="act_cancel" special="cancel" string="_Close" type="object"/>
-                            <button icon="gtk-ok" name="act_getfile" string="_Export" type="object"/>
-                        </group>
-                        <group colspan="8" col="8" states="get">
-                            <separator string="" colspan="8"/>
-                            <label colspan="7" width="220"/>
-                            <button icon="gtk-close" name="act_destroy" special="cancel" string="_Close" type="object"/>
                         </group>
                     </group>
                 </form>
