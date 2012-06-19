@@ -128,9 +128,9 @@ openerp.web_linkedin = function(instance) {
                 }]
             });
             $("#register").click(function() {
-                var key = JSON.stringify($("#apikey").val());
-                self.rpc('/web_linkedin/webclient/api_key',{'key': key},function(data){
-                });
+                var key = $("#apikey").val();
+                var user = new instance.web.DataSet(self, "res.users");
+                user.call("set_linkedin_api_key", [key]);
             });
         },
         setTemplate: function( URL, AccountName ) {

@@ -37,6 +37,19 @@ class company(osv.osv):
 
 company()
 
+class users(osv.osv):
+    _inherit = 'res.users'
+    
+    def set_linkedin_api_key(self, cr, uid, key, context=None):
+        company_obj = self.pool.get('res.company')
+        company_id = company_obj._company_default_get(cr, uid, 'res.users', context=context)
+        company_obj.write(cr, uid, [company_id], {'default_linkedin_api_key': key })
+        ir_values = self.pool.get('ir.values')
+        ir_values.set_default(cr, uid, 'res.company', 'linkedin_api_key', key)
+        
+        return True
+users()
+
 class res_partner(osv.osv):
      _inherit = 'res.partner'
 
@@ -70,11 +83,4 @@ class Binary(openerpweb.Controller):
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
 
-class WebClient(openerpweb.Controller):
-    _cp_path = "/web_linkedin/webclient"
-    
-    @openerpweb.jsonrequest
-    def api_key(self, req, key):
-        
-        return False
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
