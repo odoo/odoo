@@ -400,6 +400,29 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     }
 });
 
+/**
+ * Event Bus used to bind events scoped in the current instance
+ */
+instance.web.bus = new (instance.web.Class.extend(instance.web.EventDispatcherMixin, {
+    init: function() {
+        instance.web.EventDispatcherMixin.init.call(this, parent);
+        var self = this;
+        // TODO fme: allow user to bind keys for some global actions.
+        //           check gtk bindings
+        // http://unixpapa.com/js/key.html
+        _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
+            $('html').on(evtype, self, function(ev) {
+                self.trigger(evtype, ev);
+            });
+        });
+        _.each('resize,scroll'.split(','), function(evtype) {
+            $(window).on(evtype, self, function(ev) {
+                self.trigger(evtype, ev);
+            });
+        });
+    }
+}))();
+
 /** OpenERP Translations */
 instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
     /**
@@ -597,13 +620,18 @@ instance.web.Reload = instance.web.Widget.extend({
         this.menu_id = (params && params.menu_id) || false;
     },
     start: function() {
+        var l = window.location;
+        var timestamp = new Date().getTime();
+        var search = "?ts=" + timestamp;
+        if (l.search) {
+            search = l.search + "&ts=" + timestamp;
+        } 
+        var hash = l.hash;
         if (this.menu_id) {
-            // open the given menu id
-            var url_without_fragment = window.location.toString().split("#", 1)[0];
-            window.location = url_without_fragment + "#menu_id=" + this.menu_id;
-        } else {
-            window.location.reload();
+            hash = "#menu_id=" + this.menu_id;
         }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
     }
 });
 

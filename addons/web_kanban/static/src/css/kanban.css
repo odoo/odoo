@@ -1,9 +1,6 @@
+@charset "utf-8";
 .openerp .oe_kanban_view {
-  position: absolute;
-  top: 118px;
-  bottom: 0;
-  left: 221px;
-  right: 0;
+  height: inherit;
 }
 .openerp .oe_kanban_view .ui-sortable-placeholder {
   border: 1px dotted black;
@@ -20,7 +17,7 @@
   clear: both;
 }
 .openerp .oe_kanban_view .oe_kanban_groups {
-  height: 100%;
+  height: inherit;
   width: 100%;
 }
 .openerp .oe_kanban_view .oe_kanban_group_title {
@@ -34,9 +31,20 @@
 .openerp .oe_kanban_view .oe_kanban_column, .openerp .oe_kanban_view .oe_kanban_group_header {
   vertical-align: top;
   padding: 6px 7px 6px 6px;
+}
+.openerp .oe_kanban_view .oe_kanban_column.oe_kanban_grouped, .openerp .oe_kanban_view .oe_kanban_group_header {
   background: #f0eeee;
+}
+.openerp .oe_kanban_view .oe_kanban_group_header.oe_kanban_no_group {
+  display: none;
+}
+.openerp .oe_kanban_view .oe_kanban_column.oe_kanban_grouped, .openerp .oe_kanban_view .oe_kanban_group_header {
   border-left: 1px solid #f0f8f8;
   border-right: 1px solid #b9b9b9;
+}
+.openerp .oe_kanban_view .oe_form .oe_kanban_column {
+  padding: 0px;
+  background: white;
 }
 .openerp .oe_kanban_view .oe_kanban_column {
   height: 100%;
@@ -106,8 +114,8 @@
   box-sizing: border-box;
   width: 100%;
 }
-.openerp .oe_kanban_view .oe_kanban_quick_create .oe_kanban_quick_create_buttons {
-    margin-bottom: 10px;
+.openerp .oe_kanban_view .oe_kanban_quick_create button {
+  float: right;
 }
 .openerp .oe_kanban_view .oe_kanban_vignette {
   padding: 8px;
@@ -476,4 +484,9 @@
 }
 .openerp .oe_kanban_view .oe_kanban_color_9 {
   background-color: #ffc7f1;
+}
+
+.openerp .oe_form .oe_kanban_view .oe_kanban_column, .openerp .oe_form .oe_kanban_view .oe_kanban_group_header {
+  padding: 0px;
+  background: white;
 }

@@ -1331,19 +1331,39 @@ class Binary(openerpweb.Controller):
 
     @openerpweb.httprequest
     def image(self, req, model, id, field, **kw):
+        last_update = '__last_update'
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
+        headers = [('Content-Type', 'image/png')]
+        etag = req.httprequest.headers.get('If-None-Match')
+        hashed_session = hashlib.md5(req.session_id).hexdigest()
+        if etag:
+            if not id and hashed_session == etag:
+                return werkzeug.wrappers.Response(status=304)
+            else:
+                date = Model.read([int(id)], [last_update], context)[0].get(last_update)
+                if hashlib.md5(date).hexdigest() == etag:
+                    return werkzeug.wrappers.Response(status=304)
 
+        retag = hashed_session
         try:
             if not id:
                 res = Model.default_get([field], context).get(field)
+                image_data = base64.b64decode(res)
             else:
-                res = Model.read([int(id)], [field], context)[0].get(field)
-            image_data = base64.b64decode(res)
+                res = Model.read([int(id)], [last_update, field], context)[0]
+                retag = hashlib.md5(res.get(last_update)).hexdigest()
+                image_data = base64.b64decode(res.get(field))
         except (TypeError, xmlrpclib.Fault):
             image_data = self.placeholder(req)
-        return req.make_response(image_data, [
-            ('Content-Type', 'image/png'), ('Content-Length', len(image_data))])
+        headers.append(('ETag', retag))
+        headers.append(('Content-Length', len(image_data)))
+        try:
+            ncache = int(kw.get('cache'))
+            headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
+        except:
+            pass
+        return req.make_response(image_data, headers)
     def placeholder(self, req):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
@@ -1420,16 +1440,8 @@ class Binary(openerpweb.Controller):
         # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window,
-                            callback = win[%s];
-                        if (typeof(callback) === 'function') {
-                            callback.apply(this, %s);
-                        } else {
-                            win.jQuery('#oe_notification', win.document).notify('create', {
-                                title: "Ajax File Upload",
-                                text: "Could not find callback"
-                            });
-                        }
+                        var win = window.top.window;
+                        win.jQuery(win).trigger(%s, %s);
                     </script>"""
             data = ufile.read()
             args = [len(data), ufile.filename,
@@ -1444,11 +1456,8 @@ class Binary(openerpweb.Controller):
         Model = req.session.model('ir.attachment')
         try:
             out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window,
-                            callback = win[%s];
-                        if (typeof(callback) === 'function') {
-                            callback.call(this, %s);
-                        }
+                        var win = window.top.window;
+                        win.jQuery(win).trigger(%s, %s);
                     </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,
