@@ -6,13 +6,12 @@
             <field name="model">hr.attendance.week</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Print Attendance Report Weekly">
+            <form string="Print Attendance Report Weekly" version="7.0">
+                <header>
+                    <button name="print_report" string="Print" type="object"  icon="gtk-print" class="oe_form_button_active_flow"/>
+                </header>
                 <field name="init_date"/>
                 <field name="end_date"/>
-                <newline/>
-                <separator colspan="4"/>
-                <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                <button name="print_report" string="Print" type="object"  icon="gtk-print"/>
             </form>
             </field>
         </record>

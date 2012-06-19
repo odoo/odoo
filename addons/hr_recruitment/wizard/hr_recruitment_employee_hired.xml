@@ -7,13 +7,12 @@
             <field name="model">hired.employee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Create New Employee">
-                    <label string="Would you like to create an employee ?" colspan="4" />
-                    <separator string="" colspan="4"/>
-                    <newline />
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="case_close" string="No" icon='gtk-no' type="object"/>
-                    <button name="case_close_with_emp" string="Yes" colspan="1" type="object" icon="terp-camera_test"/>
+            <form string="Create New Employee" version="7.0">
+                <header>
+                    <button name="case_close" string="No" icon='gtk-no' type="object" class="oe_form_button_active_flow"/>
+                    <button name="case_close_with_emp" string="Yes" colspan="1" type="object" icon="terp-camera_test" class="oe_form_button_active_flow"/>
+                </header>
+                <label string="Would you like to create an employee ?" colspan="4" />
             </form>
             </field>
         </record>
