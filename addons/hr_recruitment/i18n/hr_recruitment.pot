@@ -55,13 +55,8 @@ msgid "Sources of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,delay_open:0
-msgid "Avg. Delay to Open"
-msgstr ""
-
-#. module: hr_recruitment
 #: field:hr.recruitment.report,nbr:0
-msgid "# of Cases"
+msgid "# of Applications"
 msgstr ""
 
 #. module: hr_recruitment
@@ -150,7 +145,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0 view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
-msgid "Create Partner"
+msgid "Create Contact"
 msgstr ""
 
 #. module: hr_recruitment
@@ -160,7 +155,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,reference:0
-msgid "Refered By"
+msgid "Referred By"
 msgstr ""
 
 #. module: hr_recruitment
@@ -237,6 +232,11 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.job,survey_id:0
 msgid "Interview Form"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Interview"
 msgstr ""
 
 #. module: hr_recruitment
@@ -349,7 +349,7 @@ msgstr ""
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
 #, python-format
-msgid "A partner is already defined on this job request."
+msgid "A contact is already defined on this job request."
 msgstr ""
 
 #. module: hr_recruitment
@@ -516,6 +516,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
 msgid "Contact"
 msgstr ""
 
@@ -530,7 +531,6 @@ msgid "Qualification"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr ""
@@ -828,7 +828,12 @@ msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
-msgid "Avg Salary Proposed"
+msgid "Avg. Proposed Salary"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_exp_avg:0
+msgid "Avg. Expected Salary"
 msgstr ""
 
 #. module: hr_recruitment
@@ -871,7 +876,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
-msgid "Are you sure you want to create a partner based on this job request ?"
+msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
 
 #. module: hr_recruitment
@@ -959,7 +964,7 @@ msgstr ""
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
 #, python-format
-msgid "A partner is already existing with the same name."
+msgid "A contact is already existing with the same name."
 msgstr ""
 
 #. module: hr_recruitment

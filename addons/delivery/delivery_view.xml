@@ -192,7 +192,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
+                <field name="company_id" position="before">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </field>
@@ -230,12 +230,10 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <group name="picking" position="after">
-                    <group string="Weights">
-                        <field name="weight"/>
-                        <field name="weight_net"/>
-                    </group>
-                </group>
+                <field name="picking_id" position="after">
+                    <field name="weight"/>
+                    <field name="weight_net"/>
+                </field>
             </field>
         </record>
 
@@ -245,12 +243,10 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
             <field name="arch" type="xml">
-                <group name="picking" position="after">
-                    <group string="Weights">
-                        <field name="weight"/>
-                        <field name="weight_net"/>
-                    </group>
-                </group>
+                <field name="picking_id">
+                    <field name="weight"/>
+                    <field name="weight_net"/>
+                </field>
             </field>
         </record>
 
