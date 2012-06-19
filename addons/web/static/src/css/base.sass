@@ -256,8 +256,10 @@ $colour4: #8a89ba
         background: #DF6B66
         @include vertical-gradient(#DF6B66, #BF3A33)
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    .oe_button_box
+        width: 200px
+        text-align: center
     //.oe_avatar 
-    //.oe_button_box 
     //.oe_edit_only 
     // }}}
     // Tooltips {{{
@@ -1322,71 +1324,76 @@ $colour4: #8a89ba
             background: #ED6F6A
     // }}}
     // FormView.custom tags and classes {{{
-    .oe_form header
-        position: relative
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        padding: 0 8px
-        line-height: 30px 
-        button
-            font-size: 12px 
-            float: left
-            height: 24px !important
-            line-height: 24px 
+    .oe_form 
+        header
+            position: relative
+            border-bottom: 1px solid #cacaca
+            @include vertical-gradient(#fcfcfc, #dedede)
+            padding: 0 8px
+            line-height: 30px 
+            button
+                font-size: 12px
+                float: left
+                height: 24px !important
+                line-height: 24px
+                vertical-align: top
+                padding: 0 10px
+                margin: 3px 4px 3px 0
+                span.i
+                    line-height: 20px
+                    height: 24px
+            ul
+                display: inline-block
+                float: right
+        footer
+            min-width: 650px
+            max-width: 960px
+            margin: 0 auto
+    ul.oe_form_steps
+        height: 30px
+        padding: 0
+        margin: 0
+        text-shadow: 0 1px 1px white
+        img
             vertical-align: top
-            padding: 0 10px 
-            margin: 3px 4px 3px 0
-            span.i
-                line-height: 20px 
-                height: 24px 
-        ul
-            height: 30px
+            margin-left: 8px
+        li
+            border-right: none 
             padding: 0
             margin: 0
-            text-shadow: 0 1px 1px white
-            border-left: 1px solid #cacaca
-            border-right: 1px solid #cacaca
-            li   
-                padding: 0
-                margin: 0
-                float: left 
-                vertical-align: top
+            float: left 
+            vertical-align: top
+            height: 30px 
+            padding: 0 0 0 12px
+            &:first-child
+                border-left: 1px solid #cacaca
+            &:last-child
+                margin-right: 12px
+                padding-right: 12px
                 border-right: 1px solid #cacaca
-                height: 30px 
-                padding: 0 12px 
-                &:first-child
-                    border-left: 1px solid #cacaca
-                a    
-                    color: #4c4c4c
-                    &:hover
-                        color: black
-        .oe_form_steps
-            display: inline-block
-            float: right
-            img
-                margin: 0 8px
-                vertical-align: top
-            li
-                border-right: none 
-                padding: 0
-                &:first-child
-                    margin-left: 12px 
-                    border-left: none 
-                &:last-child
-                    margin-right: 12px 
+            a
+                color: #4c4c4c
+                &:hover
+                    color: black
         .oe_form_steps_active
-            font-weight: bold 
+            font-weight: bold
             color: #b33630
+    .oe_application
+        .oe_form_sheetbg
+            background: url(/web/static/src/img/form_sheetbg.png)
+            padding: 8px 0
+            border-bottom: 1px solid #ddd 
+        .oe_form_sheet_width
+            min-width: 650px
+            max-width: 960px
+            margin: 0 auto
+        .oe_form_sheet
+            padding: 18px
+            background: white
+            min-height: 330px
+            border: 1px solid #afafb6
+            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     .oe_form
-        td.oe_form_group_cell_label
-            border-right: 1px solid #ddd
-            padding: 2px 0px 2px 0px
-            label
-                line-height: 18px
-                display: block
-                min-width: 120px
-        td.oe_form_group_cell + .oe_form_group_cell
-            padding-left: 8px
         .oe_form_subtotal_footer
             width: auto
             float: right
@@ -1404,21 +1411,6 @@ $colour4: #8a89ba
             label.oe_form_subtotal_footer_separator
                 font-weight: bold !important
                 padding: 2px 8px 2px 0px !important
-    .oe_application
-        .oe_form_sheetbg
-            background: url(/web/static/src/img/form_sheetbg.png)
-            padding: 8px 0
-            border-bottom: 1px solid #ddd 
-        .oe_form_sheet_width, footer
-            min-width: 650px
-            max-width: 960px
-            margin: 0 auto
-        .oe_form_sheet
-            padding: 18px
-            background: white
-            min-height: 330px
-            border: 1px solid #afafb6
-            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     // }}}
     // FormView.layout {{{
     .oe_form_invisible
@@ -1455,6 +1447,17 @@ $colour4: #8a89ba
     .oe_form_nosheet > *:not(.oe_form_topbar)
         margin-left: 10px !important
         margin-right: 10px !important
+
+    .oe_form
+        td.oe_form_group_cell_label
+            border-right: 1px solid #ddd
+            padding: 2px 0px 2px 0px
+            label
+                line-height: 18px
+                display: block
+                min-width: 120px
+        td.oe_form_group_cell + .oe_form_group_cell
+            padding-left: 8px
 
     // }}}
     // FormView.label {{{
@@ -1609,10 +1612,6 @@ $colour4: #8a89ba
             height: 0
             clear: both
             visibility: hidden
-        .oe_form_button_box
-            width: 200px
-            text-align: center
-
         .oe_form_group
             margin: 5px 0px 5px 0px
 

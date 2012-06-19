@@ -306,6 +306,10 @@
   -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
+.openerp .oe_button_box {
+  width: 200px;
+  text-align: center;
+}
 .openerp.oe_tooltip {
   font-size: 12px;
 }
@@ -1706,65 +1710,69 @@
   height: 24px;
 }
 .openerp .oe_form header ul {
+  display: inline-block;
+  float: right;
+}
+.openerp .oe_form footer {
+  min-width: 650px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.openerp ul.oe_form_steps {
   height: 30px;
   padding: 0;
   margin: 0;
   text-shadow: 0 1px 1px white;
-  border-left: 1px solid #cacaca;
-  border-right: 1px solid #cacaca;
 }
-.openerp .oe_form header ul li {
+.openerp ul.oe_form_steps img {
+  vertical-align: top;
+  margin-left: 8px;
+}
+.openerp ul.oe_form_steps li {
+  border-right: none;
   padding: 0;
   margin: 0;
   float: left;
   vertical-align: top;
-  border-right: 1px solid #cacaca;
   height: 30px;
-  padding: 0 12px;
+  padding: 0 0 0 12px;
 }
-.openerp .oe_form header ul li:first-child {
+.openerp ul.oe_form_steps li:first-child {
   border-left: 1px solid #cacaca;
 }
-.openerp .oe_form header ul li a {
+.openerp ul.oe_form_steps li:last-child {
+  margin-right: 12px;
+  padding-right: 12px;
+  border-right: 1px solid #cacaca;
+}
+.openerp ul.oe_form_steps li a {
   color: #4c4c4c;
 }
-.openerp .oe_form header ul li a:hover {
+.openerp ul.oe_form_steps li a:hover {
   color: black;
 }
-.openerp .oe_form header .oe_form_steps {
-  display: inline-block;
-  float: right;
-}
-.openerp .oe_form header .oe_form_steps img {
-  margin: 0 8px;
-  vertical-align: top;
-}
-.openerp .oe_form header .oe_form_steps li {
-  border-right: none;
-  padding: 0;
-}
-.openerp .oe_form header .oe_form_steps li:first-child {
-  margin-left: 12px;
-  border-left: none;
-}
-.openerp .oe_form header .oe_form_steps li:last-child {
-  margin-right: 12px;
-}
-.openerp .oe_form header .oe_form_steps_active {
+.openerp ul.oe_form_steps .oe_form_steps_active {
   font-weight: bold;
   color: #b33630;
 }
-.openerp .oe_form td.oe_form_group_cell_label {
-  border-right: 1px solid #dddddd;
-  padding: 2px 0px 2px 0px;
+.openerp .oe_application .oe_form_sheetbg {
+  background: url(/web/static/src/img/form_sheetbg.png);
+  padding: 8px 0;
+  border-bottom: 1px solid #dddddd;
 }
-.openerp .oe_form td.oe_form_group_cell_label label {
-  line-height: 18px;
-  display: block;
-  min-width: 120px;
+.openerp .oe_application .oe_form_sheet_width {
+  min-width: 650px;
+  max-width: 960px;
+  margin: 0 auto;
 }
-.openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
-  padding-left: 8px;
+.openerp .oe_application .oe_form_sheet {
+  padding: 18px;
+  background: white;
+  min-height: 330px;
+  border: 1px solid #afafb6;
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 .openerp .oe_form .oe_form_subtotal_footer {
   width: auto;
@@ -1788,25 +1796,6 @@
 .openerp .oe_form .oe_form_subtotal_footer label.oe_form_subtotal_footer_separator {
   font-weight: bold !important;
   padding: 2px 8px 2px 0px !important;
-}
-.openerp .oe_application .oe_form_sheetbg {
-  background: url(/web/static/src/img/form_sheetbg.png);
-  padding: 8px 0;
-  border-bottom: 1px solid #dddddd;
-}
-.openerp .oe_application .oe_form_sheet_width, .openerp .oe_application footer {
-  min-width: 650px;
-  max-width: 960px;
-  margin: 0 auto;
-}
-.openerp .oe_application .oe_form_sheet {
-  padding: 18px;
-  background: white;
-  min-height: 330px;
-  border: 1px solid #afafb6;
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 .openerp .oe_form_invisible {
   display: none !important;
@@ -1845,6 +1834,18 @@
 .openerp .oe_form_nosheet > *:not(.oe_form_topbar) {
   margin-left: 10px !important;
   margin-right: 10px !important;
+}
+.openerp .oe_form td.oe_form_group_cell_label {
+  border-right: 1px solid #dddddd;
+  padding: 2px 0px 2px 0px;
+}
+.openerp .oe_form td.oe_form_group_cell_label label {
+  line-height: 18px;
+  display: block;
+  min-width: 120px;
+}
+.openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
+  padding-left: 8px;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   font-weight: bold;
@@ -2029,10 +2030,6 @@
   height: 0;
   clear: both;
   visibility: hidden;
-}
-.openerp .oe_form .oe_form_button_box {
-  width: 200px;
-  text-align: center;
 }
 .openerp .oe_form .oe_form_group {
   margin: 5px 0px 5px 0px;
