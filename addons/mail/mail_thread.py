@@ -413,7 +413,31 @@ class mail_thread(osv.osv):
         """ OpenChatter feature: return thread messages
         """
         msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
-        msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
+        msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, [], context=context)
+        
+        """ Retrieve all attachments names """
+        map_id_to_name = {}
+        
+        for msg in msgs:
+            for attach_id in msg["attachment_ids"]:
+                map_id_to_name[attach_id] = '' # use empty string as a placeholder
+        
+        ids = map_id_to_name.keys()
+        names = self.pool.get('ir.attachment').name_get(cr, uid, ids)
+        
+        # convert the list of tuples into a dictionnary
+        for name in names: 
+            map_id_to_name[name[0]] = name[1]
+        
+        # give corresponding ids and names to each message
+        for msg in msgs:
+            msg["attachments"] = []
+            
+            for attach_id in msg["attachment_ids"]:
+                msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
+        
+        
+        """ Sort and return messages """
         msgs = sorted(msgs, key=lambda d: (-d['id']))
         return msgs
 
