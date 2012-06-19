@@ -11,8 +11,7 @@
               <field name="arch" type="xml">
                 <form string="Price List" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Close"/>
-                        <button name="print_report" string="Print"  type="object"  icon="gtk-print"/>
+                        <button name="print_report" string="Print"  type="object"  icon="gtk-print" class="oe_form_button_active_flow"/>
                     </header>
                     <group string="Calculate Product Price per Unit Based on Pricelist Version.">
                         <field name="price_list" widget="selection"/>
