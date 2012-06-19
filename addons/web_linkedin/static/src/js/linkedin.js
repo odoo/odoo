@@ -128,9 +128,8 @@ openerp.web_linkedin = function(instance) {
                 }]
             });
             $("#register").click(function() {
-                var linkkey = $("#apikey").val();
-                var key = JSON.stringify(linkkey);
-                self.rpc('/web_linkedin/database/api_key',{'key': key},function(data){
+                var key = JSON.stringify($("#apikey").val());
+                self.rpc('/web_linkedin/webclient/api_key',{'key': key},function(data){
                 });
             });
         },

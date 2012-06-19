@@ -70,11 +70,11 @@ class Binary(openerpweb.Controller):
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
 
-class Database(openerpweb.Controller):
-    _cp_path = "/web_linkedin/database"
+class WebClient(openerpweb.Controller):
+    _cp_path = "/web_linkedin/webclient"
     
     @openerpweb.jsonrequest
-    def api_key(self, req, key):  
-                             
-        return True
+    def api_key(self, req, key):
+        
+        return False
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
