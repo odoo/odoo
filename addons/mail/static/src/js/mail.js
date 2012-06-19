@@ -6,26 +6,6 @@ openerp.mail = function(session) {
 
     /**
      * ------------------------------------------------------------
-     * Global variables for the Chatter
-     * ------------------------------------------------------------
-     * 
-     */
-
-    /**
-     * mail_int_mapping: structure to keep a trace of internal links mapping
-     *      mail_int_mapping['model'] = {
-     *          'name_get': [[id,label], [id,label], ...]
-     *          'fetch_ids': [id, id, ...] } */
-    var mail_int_mapping = mail.chatter_internal_mapping = {};
-    
-    /**
-     * mail_msg_struct: structure to orrganize chatter messages
-     */
-    var mail_msg_struct = mail.chatter_message_structure = {}; // TODO: USE IT OR NOT :)
-
-
-    /**
-     * ------------------------------------------------------------
      * ChatterMixin class
      * ------------------------------------------------------------
      * 
@@ -35,14 +15,67 @@ openerp.mail = function(session) {
 
     mail.ChatterMixin = {
 
+        /**
+        * mail_int_mapping: structure to keep a trace of internal links mapping
+        *      mail_int_mapping['model'] = {
+        *          'name_get': [[id,label], [id,label], ...]
+        *          'fetch_ids': [id, id, ...] } */
+        //var mail_int_mapping = {};
+        
+        /**
+        * mail_msg_struct: structure to orrganize chatter messages
+        */
+        //var mail_msg_struct = {}; // TODO: USE IT OR NOT :)
+
         init: function(parent, params) {
             this._super(parent);
             this.test = 'prout'
         },
 
+        do_bind_chatter_events: function() {
+            var self = this;
+            // event: click on an internal link
+            this.$element.delegate('a.intlink', 'click', function (event) {
+                event.preventDefault();
+                // lazy implementation: fetch data and try to redirect
+                if (! event.srcElement.dataset.resModel) return false;
+                else var res_model = event.srcElement.dataset.resModel;
+                var res_login = event.srcElement.dataset.resLogin;
+                var res_id = event.srcElement.dataset.resId;
+                if ((! res_login) && (! res_id)) return false;
+                if (! res_id) {
+                    var ds = new session.web.DataSet(self, res_model);
+                    var defer = ds.call('search', [[['login', '=', res_login]]]).then(function (records) {
+                        if (records[0]) {
+                            self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
+                        }
+                        else return false;
+                    });
+                }
+                else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
+            });
+        },
+
         /** get an image in /web/binary/image?... */
         get_image: function(session_prefix, session_id, model, field, id) {
             return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        },
+
+        /** Removes html tags, except b, em, br, ul, li */
+        do_text_remove_html_tags: function (string) {
+            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li)\\s*&gt;', 'gi'), '<$1$2>');
+            return html;
+        },
+        
+        /** Replaces line bracks by html line breaks (br) */
+        do_text_nl2br: function (str, is_xhtml) {   
+            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
+            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
+        },
+
+        /** checks if tue current user is the message author */
+        _is_author: function (message_user_id) {
+            return (this.session.uid == message_user_id);
         },
     };
 
@@ -194,6 +227,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             // add events
             this.add_events();
+            
             // display user, fetch comments
             this.display_current_user();
             if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
@@ -216,6 +250,8 @@ openerp.mail = function(session) {
         
         add_events: function() {
             var self = this;
+            // generic events from Chatter Mixin
+            this.do_bind_chatter_events();
             // event: click on 'more' at bottom of thread
             this.$element.find('button.oe_mail_button_more').click(function () {
                 self.do_more();
@@ -283,39 +319,6 @@ openerp.mail = function(session) {
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
                 }
-                return false;
-            });
-            // event: click on an internal link
-            this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
-                // lazy implementation: fetch data and try to redirect
-                if (! event.srcElement.dataset.resModel) return false;
-                else var res_model = event.srcElement.dataset.resModel;
-                var res_login = event.srcElement.dataset.resLogin;
-                var res_id = event.srcElement.dataset.resId;
-                if ((! res_login) && (! res_id)) return false;
-                if (! res_id) {
-                    var ds = new session.web.DataSet(self, res_model);
-                    var defer = ds.call('search', [[['login', '=', res_login]]]).then(function (records) {
-                        if (records[0]) {
-                            self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
-                        }
-                        else return false;
-                    });
-                }
-                else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
-            });
-            // event: click on "send an email"
-            this.$element.find('div.oe_mail_thread_act').delegate('a.oe_mail_compose', 'click', function (event) {
-                self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: 'mail.compose.message',
-                        views: [[false, 'form']],
-                        view_type: 'form',
-                        view_mode: 'form',
-                        target: 'new',
-                        context: {'active_model': self.params.res_model, 'active_id': self.params.res_id, 'mail.compose.message.mode': 'document'},
-                        key2: 'client_action_multi',
-                });
                 return false;
             });
         },
@@ -399,7 +402,7 @@ openerp.mail = function(session) {
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
             else { record.mini_url = tools_get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
-            record.body = this.do_clean_text(record.body);
+            record.body = this.do_text_remove_html_tags(record.body);
             record.body = this.do_replace_internal_links(record.body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
@@ -531,29 +534,6 @@ openerp.mail = function(session) {
                 regex_res = regex_intlink.exec(string);
             }
         },
-        
-        /** Removes html tags, except b, em, br */
-        do_clean_text: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /)\\s*&gt;', 'gi'), '<$1$2>');
-            return html;
-        },
-        
-        /** Replaces line bracks by html line breaks (br) */
-        do_text_nl2br: function (str, is_xhtml) {   
-            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
-            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
-        },
-
-
-        /**
-         *    MISC TOOLS METHODS
-         */
-        
-        /** checks if tue current user is the message author */
-        _is_author: function (id) {
-            return (this.session.uid == id);
-        },
-
     }));
 
 
@@ -562,22 +542,14 @@ openerp.mail = function(session) {
      * mail_thread Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display of a thread of messages. The
-     * [thread_level] parameter sets the thread level number:
-     * - root message
-     * - - sub message (parent_id = root message)
-     * - - - sub sub message (parent id = sub message)
-     * - - sub message (parent_id = root message)
-     * This widget has 2 ways of initialization, either you give records
-     * to be rendered, either it will fetch [limit] messages related to
-     * [res_model]:[res_id].
+     * This widget handles the display of the Chatter on documents.
      */
 
     /* Add ThreadView widget to registry */
     session.web.form.widgets.add('ThreadView', 'openerp.mail.RecordThread');
 
     /* ThreadView widget: thread of comments */
-    mail.RecordThread = session.web.form.AbstractField.extend({
+    mail.RecordThread = session.web.form.AbstractField.extend(_.extend({}, session.mail.ChatterMixin, {
         // QWeb template to use when rendering the object
         template: 'mail.record_thread',
 
@@ -594,8 +566,13 @@ openerp.mail = function(session) {
 
         start: function() {
             this._super.apply(this, arguments);
+            this.bind_events();
+            this.reinit();
+        },
+        
+        bind_events: function() {
             var self = this;
-            // bind buttons
+            this.do_bind_chatter_events();
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); }).hide();
             this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
@@ -603,7 +580,6 @@ openerp.mail = function(session) {
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
-            this.reinit();
         },
 
         destroy: function () {
@@ -673,7 +649,7 @@ openerp.mail = function(session) {
             else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
-    });
+    }));
     
     
     /* Add WallView widget to registry */
@@ -681,7 +657,7 @@ openerp.mail = function(session) {
     
     /* WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
-        template: 'Wall',
+        template: 'mail.wall',
 
         /**
          * @param {Object} parent parent
@@ -815,7 +791,7 @@ openerp.mail = function(session) {
                 var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
                 var model_name = self.comments_structure.msgs[root_id]['model'];
                 var res_id = self.comments_structure.msgs[root_id]['res_id'];
-                var render_res = session.web.qweb.render('WallThreadContainer', {});
+                var render_res = session.web.qweb.render('mail.wall.thread_container', {});
                 $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
                 var thread = new mail.Thread(self, {
                     'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
