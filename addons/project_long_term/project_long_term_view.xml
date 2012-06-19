@@ -135,7 +135,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
             <field name="model">project.phase</field>
@@ -145,8 +145,8 @@
                 <header>
                     <button string="Start Phase" name="set_open" states="pending,draft" class="oe_form_button_active_flow"/>
                     <button string="Done" name="set_done" states="pending,open" class="oe_form_button_active_flow"/>
-                    <button string="Pending" name="set_pending" states="open" class="oe_form_button_active_flow"/>
-                    <button string="Draft" name="set_draft" states="open"/>
+                    <button string="Pending" name="set_pending" states="open" class="oe_form_button_return_flow"/>
+                    <button string="Draft" name="set_draft" states="open" class="oe_form_button_return_flow"/>
                     <button string="Cancel" name="set_cancel" states="draft,open,pending"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
