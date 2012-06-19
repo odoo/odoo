@@ -18,9 +18,8 @@
             <field name="arch" type="xml">
                 <form string="Add Portal Access" version="7.0">
                     <header>
-                        <button string="Cancel" special="cancel" icon="gtk-cancel"/>
                         <button string="Send Invitations"
-                            name="action_create" type="object" icon="gtk-ok"/>
+                            name="action_create" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
                     <group col="4">
                         <field name="portal_id" widget="selection"/>
