@@ -258,14 +258,14 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
+                        <field name="title" string="Survey" filter_domain="[('title','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
+                        <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         <separator orientation="vertical"/>
-                        <field name="title"/>
                         <field name="type" widget="selection"/>
-                        <field name="responsible_id">
-                            <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
-                        </field>
+                        <field name="responsible_id"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By...">
@@ -473,7 +473,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey Page">
-                    <field name="title"/>
+                    <field name="title" string="Page" filter_domain="[('title','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="survey_id"/>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -678,7 +679,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Question">
-                    <field name="question"/>
+                    <field name="question" string="Question" filter_domain="[('question','ilike',self)]"/>
+                    <separator orientation="vertical"/>
                     <field name="page_id"/>
                     <field name="survey" widget="selection"/>
                     <field name="type"/>
@@ -1100,14 +1102,14 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
+                        <field name="email" string="Survey" filter_domain="[('email','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
                         <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
+                        <filter string="My Survey(s)" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         <separator orientation="vertical"/>
                         <field name="survey_id" widget="selection"/>
-                        <field name="email"/>
-                        <field name="user_id">
-                        <filter string="My Survey(s)" icon="terp-personal" domain="[('user_id','=',uid)]"/>
-                        </field>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
