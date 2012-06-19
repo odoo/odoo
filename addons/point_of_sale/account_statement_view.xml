@@ -27,10 +27,11 @@
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
                     <group>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Cash Statement"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="name"/>
                         <field name="journal_id"/>
                     </group>
                     <newline/>
@@ -52,11 +53,12 @@
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
                     <group>
+                        <field name="name" filter_domain="[('name','ilike',self)]" string="Cash Statement"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="name"/>
                         <field name="journal_id"/>
                     </group>
                     <newline/>
