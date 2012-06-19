@@ -12,8 +12,7 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-forward" name="action_next" string="Start" type="object"/>
+                        <button icon="gtk-go-forward" name="action_next" string="Start" type="object" class="oe_form_button_active_flow"/>
                     </header>
                     <group string="Select Survey">
                         <field name="survey_id" on_change="on_change_survey(survey_id)"/>
