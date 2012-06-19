@@ -2730,16 +2730,30 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     }
 });
 openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
+    KEY_RETURN: 13,
+    // blurring caused by hitting the [Return] key, should skip the
+    // autosave-on-blur and let the handler for [Return] do its thing
+    __return_blur: false,
     render_row_as_form: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             $(self.edition_form).bind('form-blur', function () {
+                if (self.__return_blur) {
+                    delete self.__return_blur;
+                    return;
+                }
                 if (!self.edition_form.widget_is_stopped) {
                     self.view.ensure_saved();
                 }
             });
         });
     },
+    on_row_keyup: function (e) {
+        if (e.which === this.KEY_RETURN) {
+            this.__return_blur = true;
+        }
+        this._super(e);
+    }
 });
 
 openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
