@@ -87,27 +87,24 @@
                         <filter icon="terp-gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"/>
-                        <separator orientation="vertical" />
-                        <field name="section_id" string="Sales Team"
-                            context="{'invisible_section': False}">
                             <filter string="My Sales Team(s)"
                                 icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My Sales Team(s)" />
-                        </field>
-                        <field name="company_id" groups="base.group_multi_company">
                             <filter string="My Company"
                                 icon="terp-go-home"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id.company_id','=',uid)]"
                                 help="My company"/>
-                        </field>
-                        <field name="user_id" string="Salesperson">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
+                        <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                        <separator orientation="vertical"/>
+                        <field name="section_id" string="Sales Team"
+                            context="{'invisible_section': False}"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="user_id" string="Salesperson"/>
                     </group>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <group  expand="0" string="Extended Filters...">
                         <filter icon="terp-dialog-close"
                             string="Done"
@@ -119,7 +116,7 @@
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
                         <field name="create_date"/>
                     </group>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <group  expand="1" string="Group By...">
                         <filter string="Salesperson" name="Salesperson" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />

@@ -64,7 +64,6 @@
                             string="Not Held"
                             domain="[('state','=','pending')]"
                             help="Phone calls which are in pending state"/>
-                        <separator orientation="vertical" />
                         <filter string="My Sales Team(s)"
                                 icon="terp-personal+"
                                 context="{'invisible_section': False}"
@@ -76,7 +75,7 @@
                             context="{'invisible_section': False}"/>
                         <field name="user_id" string="Salesperson"/>
                     </group>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
@@ -86,7 +85,7 @@
                         <field name="opening_date"/>
                         <field name="date_closed"/>
                     </group>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <group expand="1" string="Group By...">
                         <filter string="Salesperson" name="Salesperson" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
