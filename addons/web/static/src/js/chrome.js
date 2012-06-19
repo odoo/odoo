@@ -723,20 +723,12 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        $('html').bind('click', function() {
-            self.$element.find('.oe_dropdown_options').hide();
-        });
-        this.$element.find('.oe_dropdown_toggle').click(function() {
-            self.$element.find('.oe_dropdown_options').toggle();
-            return false;
-        });
-        this.$element.on('click', '.oe_dropdown_options li a[data-menu]', function() {
+        this.$element.on('click', '.oe_cropdown_menu li a[data-menu]', function(ev) {
+            ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
             if (f) {
                 f($(this));
             }
-            self.$element.find('.oe_dropdown_options').hide();
-            return false;
         });
     },
     change_password :function() {
@@ -879,6 +871,17 @@ instance.web.WebClient = instance.web.Widget.extend({
         });
         this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
+        });
+        this.$element.on('click', '.oe_cropdown_toggle', function(ev) {
+            var $menu = $(this).find('.oe_cropdown_menu');
+            var state = $menu.is('.oe_opened');
+            setTimeout(function() {
+                // Do not alter propagation
+                $menu.toggleClass('oe_opened', !state);
+            }, 0);
+        });
+        instance.web.bus.on('click', this, function() {
+            self.$element.find('.oe_cropdown_menu.oe_opened').removeClass('oe_opened');
         });
     },
     show_common: function() {
