@@ -53,7 +53,7 @@
                     </h2>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}" groups="sale.group_delivery_invoice_address"/>
                             <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)"/>
                             <field name="move_id" on_change="onchange_move_id(product_id, move_id)" context="{'default_product_id':product_id}"/>
@@ -67,6 +67,11 @@
                     </group>
                 <notebook>
                     <page string="Operations">
+                        <group col="4">
+                            <field
+                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
+                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                        </group>
                         <field name="operations">
                             <form string="Operations" version="7.0">
                                 <notebook>
@@ -123,10 +128,7 @@
                     <page string="Invoicing">
                         <group col="4">
                             <field name="invoice_method"/>
-                            <field
-                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
-                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}" groups="sale.group_delivery_invoice_address"/>
+                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                         </group>
                         <!-- <field name="invoice_id"/> -->
                         <field name="fees_lines">
