@@ -27,6 +27,8 @@
           <field name="arch" type="xml">
               <search string="Point of Sale Cash Register Analysis">
                 <group>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new"
                         string="Draft"
                         domain="[('state','=',('draft'))]"/>
@@ -34,13 +36,11 @@
                           string="Confirm"
                           domain="[('state','=',('confirm'))]"/>
                         <separator orientation="vertical"/>
-                        <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
-                        </field>
-                        <field name="date"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                   <group expand="1" string="Group By...">

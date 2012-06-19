@@ -35,21 +35,21 @@
             <field name="arch" type="xml">
                 <search string="Point of Sale Analysis">
                     <group>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-dolar"
                             string="Invoiced"
                             domain="[('state','=',('invoiced'))]"/>
                         <filter icon="terp-dolar"
                             string="Not Invoiced"
                             domain="[('state','=',('paid'))]"/>
-                    <separator orientation="vertical"/>
-                    <field name="partner_id"/>
-                    <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
-                    </field>
-                    <field name="date"/>
+                        <separator orientation="vertical"/>
+                        <field name="partner_id"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
