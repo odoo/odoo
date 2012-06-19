@@ -1620,10 +1620,13 @@ class orm_template(object):
             elif view_type == 'tree':
                 _rec_name = self._rec_name
                 if _rec_name not in self._columns:
-                    _rec_name = self._columns.keys()[0]
+                    if len(self._columns.keys()):
+                        _rec_name = self._columns.keys()[0]
+                    else:
+                        _rec_name = 'id'
                 xml = '<?xml version="1.0" encoding="utf-8"?>' \
                        '<tree string="%s"><field name="%s"/></tree>' \
-                       % (self._description, self._rec_name)
+                       % (self._description, _rec_name)
 
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
