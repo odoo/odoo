@@ -191,7 +191,7 @@
     self.product_amt_change(cr, uid, forecast_ids, 5.0, ref('product.product_uom_unit'), ref('product.product_product_20'))
     self.product_amt_change(cr, uid, forecast_ids, 5.0, ref('product.product_uom_unit'), ref('product.product_product_20'))
     self._to_default_uom_factor(cr, uid, ref('product.product_product_20'), ref('product.product_uom_unit'), {})
-    self.onchange_company(cr, uid, forecast_ids, ref('stock.res_company_tinyshop0'))
+    self.onchange_company(cr, uid, forecast_ids, ref('stock.res_partner_2'))
 
 -
   I create Master procurement schedule for the third week of July.
@@ -216,7 +216,7 @@
   Performing an osv_memory action create_planning on module stock.planning.createlines
 -
   !python {model: stock.planning.createlines}: |
-    self.onchange_company(cr, uid, ref("stock_planning_createlines_0"), ref('stock.res_company_tinyshop0'))
+    self.onchange_company(cr, uid, ref("stock_planning_createlines_0"), ref('stock.res_partner_2'))
     self.create_planning(cr, uid, [ref("stock_planning_createlines_0")], {"lang":
       "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning_createlines")],
       "active_id": ref("stock_planning.menu_stock_planning_createlines"), "department_id":
@@ -227,7 +227,7 @@
   !python {model: stock.planning}: |
     planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1')),('period_id','=',ref('stock_period_03'))])
     self.write(cr, uid, planning_ids, {'to_procure': 30.0,'planned_outgoing': 40.0,'supply_warehouse_id': ref("stock_warehouse_0")})
-    self.onchange_company(cr, uid, planning_ids, ref('stock.res_company_tinyshop0'))
+    self.onchange_company(cr, uid, planning_ids, ref('stock.res_partner_2'))
     self.onchange_uom(cr, uid, planning_ids, ref('product.product_uom_unit'), ref('product.product_product_pc1'),ref('product.product_uom_unit'), False, False)
     self.product_id_change(cr, uid, planning_ids, ref('product.product_product_20'))
     context = {"lang": "en_US", "tz": False, "active_model": "ir.ui.menu", 

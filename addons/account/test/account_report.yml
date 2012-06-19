@@ -4,7 +4,7 @@
   !record {model: account.invoice, id: test_invoice_1}:
     currency_id: base.EUR
     company_id: base.main_company
-    partner_id: base.res_partner_asus
+    partner_id: base.res_partner_1
     state: draft
     type: out_invoice
     account_id: account.a_recv
@@ -23,7 +23,7 @@
 -
   !python {model: res.partner}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -

@@ -126,7 +126,7 @@
             <field eval="str(time.localtime()[0] - 1) + '-08-07'" name="date_start"/>
             <field eval="time.strftime('%Y-12-31')" name="date"/>
             <field name="parent_id" ref="analytic_integration"/>
-            <field name="partner_id" ref="base.res_partner_c2c"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_agrolait" model="account.analytic.account">
@@ -134,14 +134,14 @@
             <field name="code">3</field>
             <field name="parent_id" ref="analytic_customers"/>
             <field name="type">normal</field>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
         </record>
         <record id="analytic_asustek" model="account.analytic.account">
             <field name="name">Asustek</field>
             <field name="code">4</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_customers"/>
-            <field name="partner_id" ref="base.res_partner_asus"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
         </record>
         <record id="analytic_distripc" model="account.analytic.account">
             <field name="name">DistriPC</field>
@@ -150,7 +150,8 @@
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_4"/>
         </record>
-        <record id="analytic_sednacom" model="account.analytic.account">
+        <!--To remove or change ID-->
+        <!--record id="analytic_sednacom" model="account.analytic.account">
             <field name="name">Sednacom</field>
             <field name="code">2</field>
             <field eval="str(time.localtime()[0] - 1) + '-05-09'" name="date_start"/>
@@ -159,7 +160,7 @@
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_sednacom"/>
             <field name="state">open</field>
-        </record>
+        </record-->
         <record id="analytic_thymbra" model="account.analytic.account">
             <field name="name">Thymbra</field>
             <field name="code">3</field>
@@ -202,7 +203,7 @@
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
-            <field name="partner_id" ref="base.res_partner_c2c"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_project_2_support" model="account.analytic.account">

@@ -22,14 +22,14 @@
   I convert lead into opportunity for exiting customer.
 -
   !python {model: crm.lead}: |
-    self.convert_opportunity(cr, uid ,[ref("crm_case_qrecorp0")], ref("base.res_partner_agrolait"))
+    self.convert_opportunity(cr, uid ,[ref("crm_case_qrecorp0")], ref("base.res_partner_2"))
 -
   I check details of converted opportunity. 
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
     assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
-    assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
+    assert lead.partner_id.id == ref("base.res_partner_2"), 'Partner missmatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
   Now I begin communication and schedule a phone call with the customer.

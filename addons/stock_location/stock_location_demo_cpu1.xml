@@ -46,7 +46,7 @@
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="partner_address_id" ref="base.main_partner"/>
             <field name="invoice_state">none</field>
-            <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="type_proc">move</field>
             <field eval="0" name="cancel_cascade"/>
             <field name="procure_method">make_to_order</field>
@@ -70,7 +70,7 @@
             <field name="product_max_qty">20.0</field>
             <field name="product_min_qty">10.0</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field model="product.product" name="product_id" ref="product.product_product_cpu1"/>
@@ -79,13 +79,13 @@
         <record id="sale_shop1" model="sale.shop">
             <field name="name">Shop 1</field>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
-            <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_id" ref="stock.res_company_1"/>
             <field model="account.payment.term" name="payment_default_id" search="[]"/>
         </record>
         <record id="sale_shop2" model="sale.shop">
             <field name="name">Shop 2</field>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop1"/>
-            <field name="company_id" ref="stock.res_company_tinyshop0"/>
+            <field name="company_id" ref="stock.res_company_2"/>
             <field model="account.payment.term" name="payment_default_id" search="[]"/>
         </record>
     </data>

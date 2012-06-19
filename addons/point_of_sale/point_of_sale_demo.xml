@@ -46,7 +46,7 @@
             <field eval="450.0" name="amount_untaxed"/>
             <field model="account.move" name="move_id" search="[('name', '=', u'SAJ/2010/010')]"/>
             <field eval="450.0" name="amount_total"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="name">Invoice from POS: POS/019</field>
         </record>
         <record id="account_invoice_line_pcbasicpc0" model="account.invoice.line">
@@ -59,7 +59,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field eval="[(6,0,[])]" name="invoice_line_tax_id"/>
             <field eval="1.0" name="quantity"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="product_id" ref="product.product_product_pc1"/>
         </record>
         <record id="stock_picking_out0" model="stock.picking">
@@ -80,7 +80,7 @@
             <field name="sale_journal" ref="account.sales_journal"/>
             <field name="shop_id" ref="sale.shop"/>
             <field name="date_order" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field eval="1" name="nb_print"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="base.main_company"/>
@@ -100,7 +100,7 @@
             <field name="date" eval="time.strftime('%Y-%m-%d')"/>
         </record>
         <record id="account_bank_statement_line_paymentpos0" model="account.bank.statement.line">
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field model="account.bank.statement" name="statement_id" search="[('name', '=', u'10')]"/>
             <field name="type">general</field>
             <field model="pos.order" name="pos_statement_id" search="[('name', '=', u'POS/019')]"/>

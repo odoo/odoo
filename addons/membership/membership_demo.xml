@@ -32,7 +32,7 @@
     </record>
 
 <!-- Join Memberships  -->
-    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_agrolait'), ref('membership_0'), {'amount':180})"/>
+    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_2'), ref('membership_0'), {'amount':180})"/>
 
 <!-- Demo data for free member -->
     <record id="base.res_partner_desertic_hispafuentes" model="res.partner">
@@ -41,10 +41,10 @@
 
 <!-- Demo data for associate member -->
     <record id="base.res_partner_9" model="res.partner">
-        <field name="associate_member" ref="base.res_partner_agrolait"/>
+        <field name="associate_member" ref="base.res_partner_2"/>
     </record>
     <record id="base.res_partner_8" model="res.partner">
-        <field name="associate_member" ref="base.res_partner_agrolait"/>
+        <field name="associate_member" ref="base.res_partner_2"/>
     </record>
 
     </data>
