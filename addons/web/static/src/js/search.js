@@ -1322,7 +1322,8 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
         {value: "<=", text: _lt("less or equal than")}
     ],
     get_value: function() {
-        return this.$element.val();
+        if(!this.$element.val()) return false;
+        else return this.$element.val();
     }
 });
 openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.ExtendedSearchProposition.Field.extend({
