@@ -148,7 +148,7 @@ $colour4: #8a89ba
         display: inline-block
         border: 1px solid #ababab
         color: #404040
-        margin: 0 4px 0 0
+        margin: 0
         padding: 3px 12px
         font-size: 13px
         text-align: center
@@ -1281,11 +1281,6 @@ $colour4: #8a89ba
             padding: 35px 0px 0px 0px
             max-width: 700px
             font-size: 125%
-    .oe_view_topbar
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        padding: 0 8px
-        line-height: 30px
     // }}}
     // FormView.body {{{
     .oe_form_dropdown_section
@@ -1293,8 +1288,6 @@ $colour4: #8a89ba
         display: inline-block
     .oe_formview
         background: white
-    .oe_form_header
-        padding: 8px
     .oe_form_invalid
         input, select, textarea
             background-color: #F66 !important
@@ -1352,6 +1345,24 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold
             color: #b33630
+    .oe_form_subtotal_footer
+        width: auto
+        float: right
+        td.oe_form_group_cell
+            text-align: right
+            padding: 0
+        td.oe_form_group_cell_label
+            border: none
+        .oe_form_field
+            width: auto !important
+        .oe_form_subtotal_footer_separator
+            border-top: 1px solid #cacaca
+            font-size: 120%
+            font-weight: bold
+        label.oe_form_subtotal_footer_separator
+            font-weight: bold !important
+            padding: 2px 8px 2px 0px !important
+    // no sheet in popups
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
@@ -1367,24 +1378,6 @@ $colour4: #8a89ba
             padding: 16px
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
-    .oe_form
-        .oe_form_subtotal_footer
-            width: auto
-            float: right
-            td.oe_form_group_cell
-                text-align: right
-                padding: 0
-            td.oe_form_group_cell_label
-                border: none
-            .oe_form_field
-                width: auto !important
-            .oe_form_subtotal_footer_separator
-                border-top: 1px solid #cacaca
-                font-size: 120%
-                font-weight: bold
-            label.oe_form_subtotal_footer_separator
-                font-weight: bold !important
-                padding: 2px 8px 2px 0px !important
     // }}}
     // FormView.layout {{{
     .oe_form_invisible
@@ -1577,7 +1570,7 @@ $colour4: #8a89ba
         .oe_form_group
             margin: 5px 0px 5px 0px
     // }}}
-    // FormView.binaryfile {{{
+    // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
@@ -1636,26 +1629,23 @@ $colour4: #8a89ba
         padding: 0 4px 0 4px
     // }}}
     // FormView.progressbar {{{
-    .oe_form
-        .oe_form_field_progressbar
-            display: inline-block
-            min-width: 70px
-        .oe_form_field_progressbar.ui-progressbar
-            height: 22px
-            font-size: 10px
-            @include box-sizing(border)
-            border: 1px solid #999
-            @include radius(3px)
-            background: white
-            min-width: 50px
-
-            span
-                position: absolute
-                margin-left: 10px
-                font-weight: bold
-
-            .ui-widget-header
-                background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+    .oe_form_field_progressbar
+        display: inline-block
+        min-width: 70px
+    .oe_form_field_progressbar.ui-progressbar
+        height: 22px
+        font-size: 10px
+        @include box-sizing(border)
+        border: 1px solid #999
+        @include radius(3px)
+        background: white
+        min-width: 50px
+        span
+            position: absolute
+            margin-left: 10px
+            font-weight: bold
+        .ui-widget-header
+            background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
