@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Change Product Quantity" version="7.0">
                     <header>
-                        <button name="change_product_qty" string="_Apply" type="object" icon="gtk-apply"/>
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="change_product_qty" string="_Apply" type="object" icon="gtk-apply" class="oe_form_button_active_flow"/>
                     </header>
                     <group string="Select Quantity">
                         <field name="new_quantity" />

@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
               <form string="Create invoice" version="7.0">
                   <header>
-                      <button special="cancel" string="_Cancel" icon='gtk-cancel'/>
-                      <button name="open_invoice" string="Create" type="object" icon="terp-gtk-go-back-rtl"/>
+                      <button name="open_invoice" string="Create" type="object" icon="terp-gtk-go-back-rtl" class="oe_form_button_active_flow"/>
                   </header>
                   <group string="Create Invoice">
                       <field name="journal_id"/>
