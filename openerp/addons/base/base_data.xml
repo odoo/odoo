@@ -1063,7 +1063,9 @@
             <field name="is_company" eval="True"/>
             <field model="res.country" name="country_id" search="[('code','=','us')]"/>
             <field name="street">81 Academy Avenue</field>
-            <field name="street">Chicago</field>
+            <field model="res.country.state" name="state_id" search="[('code','=','il')]"/>
+            <field name="zip">60610</field>
+            <field name="city">Chicago</field>
             <field name="email">info@unisol.com</field>
             <field name="phone">+1 312 349 2324</field>
             <field name="website">www.universalsolutions.com</field>
