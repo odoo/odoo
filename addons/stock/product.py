@@ -248,6 +248,8 @@ class product_product(osv.osv):
         elif to_date:
             date_str = "date<=%s"
             date_values = [to_date]
+        if date_values:
+            where.append(tuple(date_values))
 
         prodlot_id = context.get('prodlot_id', False)
         prodlot_clause = ''
@@ -255,9 +257,7 @@ class product_product(osv.osv):
             prodlot_clause = ' and prodlot_id = %s '
             where += [prodlot_id]
 
-    # TODO: perhaps merge in one query.
-        if date_values:
-            where.append(tuple(date_values))
+        # TODO: perhaps merge in one query.
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
             cr.execute(
