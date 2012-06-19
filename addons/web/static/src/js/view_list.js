@@ -1199,7 +1199,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
-            var child = self.children[group.value] = new (this.view.options.GroupsType)(self.view, {
+            var child = self.children[group.value] = new (self.view.options.GroupsType)(self.view, {
                 records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
