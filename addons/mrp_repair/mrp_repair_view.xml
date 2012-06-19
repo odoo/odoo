@@ -67,6 +67,11 @@
                     </group>
                 <notebook>
                     <page string="Operations">
+                        <group col="4">
+                            <field
+                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
+                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                        </group>
                         <field name="operations">
                             <form string="Operations" version="7.0">
                                 <notebook>
@@ -123,9 +128,6 @@
                     <page string="Invoicing">
                         <group col="4">
                             <field name="invoice_method"/>
-                            <field
-                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
-                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                             <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         </group>
                         <!-- <field name="invoice_id"/> -->
