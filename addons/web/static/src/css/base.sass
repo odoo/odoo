@@ -148,7 +148,7 @@ $colour4: #8a89ba
         display: inline-block
         border: 1px solid #ababab
         color: #404040
-        margin: 0 4px 0 0
+        margin: 0
         padding: 3px 12px
         font-size: 13px
         text-align: center
@@ -401,7 +401,6 @@ $colour4: #8a89ba
                 @include vertical-gradient(#f0f0fa, #eeeef6)
                 @include box-shadow(none)
     // }}}
-
     // Loading {{{
     .oe_loading
         display: none
@@ -1281,20 +1280,13 @@ $colour4: #8a89ba
             padding: 35px 0px 0px 0px
             max-width: 700px
             font-size: 125%
-    .oe_view_topbar
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        padding: 0 8px
-        line-height: 30px
     // }}}
-    // FormView.body {{{
+    // FormView.base and dynamic tags {{{
+    .oe_formview
+        background: white
     .oe_form_dropdown_section
         position: relative
         display: inline-block
-    .oe_formview
-        background: white
-    .oe_form_header
-        padding: 8px
     .oe_form_invalid
         input, select, textarea
             background-color: #F66 !important
@@ -1307,6 +1299,16 @@ $colour4: #8a89ba
         font-weight: bold
         &:hover
             background: #ED6F6A
+    .oe_form_invisible
+        display: none !important
+    .oe_form_editable .oe_edit_only
+        display: none !important
+    .oe_form_readonly
+        .oe_edit_only, .oe_form_field:empty
+            display: none !important
+    .oe_form_nosheet > *:not(.oe_form_topbar)
+        margin-left: 10px !important
+        margin-right: 10px !important
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form 
@@ -1352,6 +1354,24 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold
             color: #b33630
+    .oe_form_subtotal_footer
+        width: auto
+        float: right
+        td.oe_form_group_cell
+            text-align: right
+            padding: 0
+        td.oe_form_group_cell_label
+            border: none
+        .oe_form_field
+            width: auto !important
+        .oe_form_subtotal_footer_separator
+            border-top: 1px solid #cacaca
+            font-size: 120%
+            font-weight: bold
+        label.oe_form_subtotal_footer_separator
+            font-weight: bold !important
+            padding: 2px 8px 2px 0px !important
+    // no sheet in popups
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
@@ -1367,62 +1387,8 @@ $colour4: #8a89ba
             padding: 16px
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
-    .oe_form
-        .oe_form_subtotal_footer
-            width: auto
-            float: right
-            td.oe_form_group_cell
-                text-align: right
-                padding: 0
-            td.oe_form_group_cell_label
-                border: none
-            .oe_form_field
-                width: auto !important
-            .oe_form_subtotal_footer_separator
-                border-top: 1px solid #cacaca
-                font-size: 120%
-                font-weight: bold
-            label.oe_form_subtotal_footer_separator
-                font-weight: bold !important
-                padding: 2px 8px 2px 0px !important
     // }}}
-    // FormView.layout {{{
-    .oe_form_invisible
-        display: none !important
-    .oe_form_editable .oe_edit_only
-        display: none !important
-    .oe_form_readonly
-        .oe_edit_only, .oe_form_field:empty
-            display: none !important
-    .oe_form
-        .oe_form_field_text
-            width: 100%
-
-        .oe_form_field_char input,
-        .oe_form_field_url input,
-        .oe_form_field_text textarea,
-        .oe_form_field_selection select
-            width: inherit
-        .oe_form_sheet textarea
-            width: 500px
-        .oe_form_field_float input
-            width: 100px
-
-        h1 .oe_form_field_float input
-            width: 140px
-
-        h2 .oe_form_field_float input
-            width: 120px
-
-        h1, h2, h3, h4, h5, h6
-            margin: 0 0 4px 0
-            input
-                height: inherit !important
-                font-size: inherit
-    .oe_form_nosheet > *:not(.oe_form_topbar)
-        margin-left: 10px !important
-        margin-right: 10px !important
-
+    // FormView.group {{{
     .oe_form
         td.oe_form_group_cell_label
             border-right: 1px solid #ddd
@@ -1449,8 +1415,61 @@ $colour4: #8a89ba
                 top: -4px
                 padding: 0 2px
     // }}}
+    // FormView.separator {{{
+    .oe_horizontal_border
+        border-bottom: 1px solid black
+    .oe_horizontal_separator
+        font-weight: bold
+        font-size: 20px
+        margin: 20px 0px 10px 0px
+        color: #aab
+    .oe_horizontal_separator:empty
+        height: 5px
+    .oe_vertical_separator
+        border-left: 1px solid #666
+        padding: 0 4px 0 4px
+    // }}}
+    // FormView.progressbar {{{
+    .oe_form_field_progressbar
+        display: inline-block
+        min-width: 70px
+    .oe_form_field_progressbar.ui-progressbar
+        height: 22px
+        font-size: 10px
+        @include box-sizing(border)
+        border: 1px solid #999
+        @include radius(3px)
+        background: white
+        min-width: 50px
+        span
+            position: absolute
+            margin-left: 10px
+            font-weight: bold
+        .ui-widget-header
+            background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+    // }}}
     // FormView.fields {{{
     .oe_form
+        .oe_form_field_text
+            width: 100%
+        .oe_form_field_char input,
+        .oe_form_field_url input,
+        .oe_form_field_text textarea,
+        .oe_form_field_selection select
+            width: inherit
+        .oe_form_sheet textarea
+            width: 500px
+        .oe_form_field_float input
+            width: 100px
+        h1 .oe_form_field_float input
+            width: 140px
+        h2 .oe_form_field_float input
+            width: 120px
+        h1, h2, h3, h4, h5, h6
+            margin: 0 0 4px 0
+            input
+                height: inherit !important
+                font-size: inherit
         .oe_form_field
             width: 100%
             display: inline-block
@@ -1466,26 +1485,15 @@ $colour4: #8a89ba
             width: 7em
         .oe_form_field_datetime
             width: 11em
-        input[type="text"],
-        input[type="password"],
-        input[type="file"],
-        select
+        input[type="text"], input[type="password"], input[type="file"], select
             height: 22px
             padding-top: 2px
-        input[type="text"],
-        input[type="password"],
-        input[type="file"],
-        select,
-        textarea
+        input[type="text"], input[type="password"], input[type="file"], select, textarea
             @include box-sizing(border)
             background: white
             min-width: 70px
             color: #1f1f1f
-        input[readonly],
-        select[readonly],
-        textarea[readonly],
-        input[disabled],
-        select[disabled]
+        input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
         textarea[disabled]
@@ -1494,10 +1502,7 @@ $colour4: #8a89ba
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-        .oe_form_field_many2one input,
-        .oe_form_field_binary input,
-        .oe_form_field_binary input,
-        .oe_form_field_url input
+        .oe_form_field_many2one input, .oe_form_field_binary input, .oe_form_field_binary input, .oe_form_field_url input
             border-right: none
             -webkit-border-top-right-radius: 0px
             -webkit-border-bottom-right-radius: 0px
@@ -1565,7 +1570,6 @@ $colour4: #8a89ba
             > div
                 position: relative
                 overflow: hidden
-
         .oe_form_title
             width: 55%
         .oe_form_title:after
@@ -1577,7 +1581,7 @@ $colour4: #8a89ba
         .oe_form_group
             margin: 5px 0px 5px 0px
     // }}}
-    // FormView.binaryfile {{{
+    // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
@@ -1621,41 +1625,14 @@ $colour4: #8a89ba
             &:hover .oe_form_field_image_controls
                 display: block
     // }}}
-    // FormView.separator {{{
-    .oe_horizontal_border
-        border-bottom: 1px solid black
-    .oe_horizontal_separator
-        font-weight: bold
-        font-size: 20px
-        margin: 20px 0px 10px 0px
-        color: #aab
-    .oe_horizontal_separator:empty
-        height: 5px
-    .oe_vertical_separator
-        border-left: 1px solid #666
-        padding: 0 4px 0 4px
-    // }}}
-    // FormView.progressbar {{{
-    .oe_form
-        .oe_form_field_progressbar
-            display: inline-block
-            min-width: 70px
-        .oe_form_field_progressbar.ui-progressbar
-            height: 22px
-            font-size: 10px
-            @include box-sizing(border)
-            border: 1px solid #999
-            @include radius(3px)
-            background: white
-            min-width: 50px
-
-            span
-                position: absolute
-                margin-left: 10px
-                font-weight: bold
-
-            .ui-widget-header
-                background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+    // FormView.many2one {{{
+    .oe_form_field_many2one
+        td:first-child
+            position: relative
+        span.oe-m2o-drop-down-button
+            position: absolute
+            top: 3px
+            right: 2px
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
@@ -1779,7 +1756,6 @@ $colour4: #8a89ba
     .oe_view_editor tr:hover
         background-color: #ecebf2
     // }}}
-
     // Debugging stuff {{{
     .oe_layout_debugging
         .oe_form_group
@@ -1821,16 +1797,6 @@ $colour4: #8a89ba
     background-attachment: fixed
     >*
         opacity: 0.70
-// }}}
-// Transitional overrides for old styles {{{
-.openerp
-    .oe_form_field_many2one
-        td:first-child
-            position: relative
-        span.oe-m2o-drop-down-button
-            position: absolute
-            top: 3px
-            right: 2px
 // }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
