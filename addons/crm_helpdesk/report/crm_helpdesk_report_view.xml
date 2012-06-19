@@ -77,7 +77,7 @@
                             context="{'invisible_section': False}"/>   
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
-                    <separator orientation="vertical"/>
+                    <newline/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_no_one">
                         <field name="priority" string="Priority"/>
                         <field name="categ_id"/>
@@ -85,7 +85,7 @@
                         <field name="create_date"/>
                         <field name="date_closed" string="Close Date"/>
                     </group>
-                    <separator orientation="vertical"/>
+                    <newline/>
                     <group expand="1" string="Group By...">
                         <filter string="Salesperson" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}"/>

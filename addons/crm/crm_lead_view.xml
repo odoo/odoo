@@ -314,6 +314,7 @@
                     context="{'invisible_section': False}"/>
                 <field name="country_id" context="{'invisible_country': False}"/>
                 <separator orientation="vertical"/>
+                <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
@@ -561,7 +562,7 @@
                 <field name="partner_id"/>
                 <field name="section_id"
                     context="{'invisible_section': False, 'default_section_id': self}"/>
-                <separator orientation="vertical"/>
+                <newline/>
                 <group expand="0" string="Group By..." colspan="16">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                     <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
