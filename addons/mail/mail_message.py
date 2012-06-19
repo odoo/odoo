@@ -93,6 +93,19 @@ class mail_message_common(osv.TransientModel):
         #   - args: [('body', 'ilike', 'blah')]
         return ['|', '&', ('content_subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
     
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for message in self.browse(cr, uid, ids, context=context):
+            name = ''
+            if message.subject:
+                name = '%s: ' % (message.subject)
+            if message.body_text:
+                name = '%s%s ' % (name, message.body_text[0:20])
+            if message.date:
+                name = '%s(%s)' % (name, message.date)
+            res.append((message.id, name))
+        return res
+
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
