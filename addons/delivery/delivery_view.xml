@@ -192,7 +192,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
+                <field name="company_id" position="before">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </field>
