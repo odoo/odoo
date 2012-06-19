@@ -15,18 +15,18 @@
                         </h1>
                         <group>
                             <group>
-                                <field name="code"/>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','=','contract')]}"/>
                                 <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract','template'])]}"/>
                                 <field name="type"/>
                             </group>
                             <group>
-                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','!=','template')]}"/>
+                                <field name="code"/>
                                 <field name="manager_id"/>
                                 <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','=','view')]}">
+                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','not in',['contract', 'template'])]}">
                                 <group name="master">
                                     <group string="Validity" name="contract">
                                         <field name="date_start"/>

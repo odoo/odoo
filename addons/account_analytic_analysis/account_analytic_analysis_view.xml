@@ -30,12 +30,12 @@
                         <field name="remaining_hours" class="oe_form_inline"/>
                     </div>
                 </xpath>
-                <xpath expr='//field[@name="pricelist_id"]' position='replace'>
-                    <field name="pricelist_id" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                 </xpath>
-                <xpath expr='//field[@name="to_invoice"]' position='replace'>
-                    <field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                 </xpath>
+                <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
+                    <group name='invoice_on_timesheets' string="Invoice on Timesheets Options" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" col="4">
+                        <field name="pricelist_id" attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                        <field name="to_invoice" widget="selection" attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                    </group>
+                </xpath>
                 <xpath expr='//group[@name="master"]' position='after'>
                     <separator name="toinvoice" string="Invoicing"/>
                     <table width="100%%">
@@ -100,22 +100,6 @@
             </field>
         </record>
 
-        <!-- Add information on Account analytic list for the project management -->
-        <record id="view_account_analytic_account_tree_c2c_2" model="ir.ui.view">
-            <field name="name">account.analytic.account.tree</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="quantity" position="replace">
-                    <field name="hours_quantity"/>
-                    <field name="hours_qtt_non_invoiced"/>
-                    <field name="remaining_hours"/>
-                    <field name="quantity_max"/>
-                </field>
-            </field>
-        </record>
-
         <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
@@ -124,11 +108,11 @@
             <field name="arch" type="xml">
                 <field name="date" position="before">
                     <field name="last_invoice_date"/>
-                    <field name="ca_to_invoice"/>
+                    <field name="toinvoice_total"/>
                 </field>
             </field>
         </record>
-        
+
         <record id="template_of_contract_action" model="ir.actions.act_window">
             <field name="name">Template of Contract</field>
             <field name="type">ir.actions.act_window</field>

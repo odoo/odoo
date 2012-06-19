@@ -455,14 +455,14 @@ class account_analytic_account(osv.osv):
         'invoice_on_timesheets' : fields.boolean("Invoice On Timesheets"),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
-        'template_id':fields.many2one('account.analytic.account', 'Template of Contract'),
+        'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
         'hours_qtt_est': fields.float('Estimation of Hours to Invoice'),
-        'est_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
-        'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
-        'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
-        'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
+        'est_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Estimation"),
+        'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
+        'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
+        'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
     }
-    
+
     def open_sale_order_lines(self,cr,uid,ids,context=None):
         if context is None:
             context = {}

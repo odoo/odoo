@@ -156,7 +156,7 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
         'code': fields.char('Code/Reference', size=24, select=True),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
