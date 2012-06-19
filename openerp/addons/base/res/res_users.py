@@ -112,6 +112,7 @@ class users(osv.osv):
     __admin_ids = {}
     _uid_cache = {}
     _name = "res.users"
+    _description = 'Users'
     _order = 'name'
 
     WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"

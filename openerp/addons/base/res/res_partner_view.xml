@@ -117,10 +117,16 @@
                             <label for="parent_id" class="oe_form_readonly_hidden"/>
                         </div>
                         <h2 attrs="{'invisible': [('is_company','=', True)]}">
-                            <field name="parent_id" string="Company"
+                            <field name="parent_id"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                 class="oe_form_inline"
                                 on_change="onchange_address(use_parent_address, parent_id)"/>, 
+                            
+                        </h2>
+                        <div attrs="{'invisible' : [('is_company', '=', True)]}">
+                            <label for="function" class="oe_form_readonly_hidden" />
+                        </div>
+                        <h2 attrs="{'invisible' : [('is_company', '=', True)]}">
                             <field name="function" class="oe_form_inline" placeholder="Job Position"/>
                         </h2>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
@@ -218,16 +224,16 @@
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
                             <group>
                                 <group>
-                                    <field name="lang"/>
-                                    <field name="user_id"/>
-                                    <field name="date"/>
+                                    <field name="user_id" />
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="ref"/>
+                                    <field name="lang"/>
+                                    <field name="date"/>
                                 </group>
                                 <group>
                                     <field name="customer"/>
                                     <field name="supplier"/>
                                     <field name="active"/>
-                                    <field name="ref"/>
                                 </group>
                             </group>
                         </page>
