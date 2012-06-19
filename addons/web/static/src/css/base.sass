@@ -1394,6 +1394,8 @@ $colour4: #8a89ba
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
             .ui-tabs
                 margin: 0 -16px
+            .oe_notebook_page
+                padding: 0 16px
     // }}}
     // FormView.group {{{
     .oe_form
@@ -1407,7 +1409,8 @@ $colour4: #8a89ba
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 8px
         .oe_form_group
-            margin: 5px 0px 5px 0px
+            width: 100%
+            margin: 4px 0 4px 0
     // }}}
     // FormView.label {{{
     .oe_form
@@ -1429,7 +1432,7 @@ $colour4: #8a89ba
     .oe_horizontal_separator
         font-weight: bold
         font-size: 20px
-        margin: 20px 0px 10px 0px
+        margin: 8px 0px 8px 0px
         color: #aab
     .oe_horizontal_separator:empty
         height: 5px
