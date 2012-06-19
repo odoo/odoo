@@ -1,4 +1,3 @@
-@charset "utf-8";
 .openerp .oe_kanban_view {
   height: inherit;
 }
@@ -15,6 +14,9 @@
 }
 .openerp .oe_kanban_view .oe_kanban_clear {
   clear: both;
+}
+.openerp .oe_kanban_view .oe_kanban_content div:first-child {
+  margin-right: 12px;
 }
 .openerp .oe_kanban_view .oe_kanban_groups {
   height: inherit;
@@ -385,8 +387,8 @@
 }
 .openerp .oe_kanban_view a.oe_kanban_menuaction {
   position: absolute;
-  top: 0px;
-  right: 3px;
+  top: 3px;
+  right: 6px;
   display: none;
   color: #4c4c4c;
   cursor: pointer;
@@ -399,7 +401,7 @@
   position: absolute;
   top: 30px;
   right: -140px;
-  padding: 8px;
+  padding: 4px;
   border: 1px solid #afafb6;
   min-width: 160px;
   overflow-x: hidden;
