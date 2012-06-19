@@ -194,8 +194,6 @@ $colour4: #8a89ba
             width: auto
             a.ui-state-active
                 background: #f0f0fa
-    .ui-tabs
-        margin: 0 -16px
     // }}}
     // Generic classes {{{
     .oe_i
@@ -1325,6 +1323,14 @@ $colour4: #8a89ba
             min-width: 650px
             max-width: 960px
             margin: 0 auto
+    .oe_form_title
+        width: 55%
+    .oe_form_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden
     ul.oe_form_steps
         height: 30px
         padding: 0
@@ -1387,6 +1393,8 @@ $colour4: #8a89ba
             padding: 16px
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            .ui-tabs
+                margin: 0 -16px
     // }}}
     // FormView.group {{{
     .oe_form
@@ -1399,7 +1407,8 @@ $colour4: #8a89ba
                 min-width: 120px
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 8px
-
+        .oe_form_group
+            margin: 5px 0px 5px 0px
     // }}}
     // FormView.label {{{
     .oe_form
@@ -1570,16 +1579,6 @@ $colour4: #8a89ba
             > div
                 position: relative
                 overflow: hidden
-        .oe_form_title
-            width: 55%
-        .oe_form_title:after
-            content: "."
-            display: block
-            height: 0
-            clear: both
-            visibility: hidden
-        .oe_form_group
-            margin: 5px 0px 5px 0px
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
