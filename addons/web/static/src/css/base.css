@@ -743,6 +743,9 @@
 .openerp .oe_topbar .oe_topbar_avatar {
   vertical-align: top;
 }
+.openerp .oe_topbar .oe_cropdown_toggle:after {
+  border-top: 4px solid white;
+}
 .openerp .oe_topbar .oe_cropdown_menu {
   background: #333333;
   background: rgba(37, 37, 37, 0.9);
@@ -830,9 +833,6 @@
   list-style-type: none;
   float: left;
 }
-.openerp .oe_user_menu.oe_cropdown_toggle:after, .openerp .oe_user_menu .oe_cropdown_toggle:after {
-  border-top: 4px solid white;
-}
 .openerp .oe_user_menu .oe_cropdown_menu {
   right: -1px;
 }
@@ -874,24 +874,6 @@
   -moz-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
-}
-.openerp .oe_menu_more_container {
-  position: relative;
-}
-.openerp .oe_menu_more_container .oe_menu_more {
-  position: absolute;
-  padding: 0;
-  background-color: #646060;
-  z-index: 1;
-  border: 1px solid black;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-.openerp .oe_menu_more_container .oe_menu_more li {
-  float: none;
-}
-.openerp .oe_menu_more_container .oe_menu_more li a {
-  white-space: nowrap;
 }
 .openerp .oe_secondary_menu_section {
   font-weight: bold;

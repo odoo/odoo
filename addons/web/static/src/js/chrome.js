@@ -582,10 +582,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.renderElement();
         this.limit_entries();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$element.on('click', 'a.oe_menu_more_link', function() {
-            self.$element.find('.oe_menu_more').toggle();
-            return false;
-        });
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
@@ -606,15 +602,11 @@ instance.web.Menu =  instance.web.Widget.extend({
             $index.after($more);
             $more.find('.oe_menu_more').append($index.next().nextAll());
         }
-        this.do_hide_more();
     },
     auto_limit_entries: function() {
         // TODO: auto detect overflow and bind window on resize
         var width = $(window).width();
         return Math.floor(width / 125);
-    },
-    do_hide_more: function() {
-        this.$element.find('.oe_menu_more').hide();
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -676,7 +668,6 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     menu_click: function(id) {
         if (id) {
-            this.do_hide_more();
             // find back the menuitem in dom to get the action
             var $item = this.$element.find('a[data-menu=' + id + ']');
             if (!$item.length) {
@@ -708,9 +699,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Event} ev the jquery event
      */
     on_menu_click: function(ev) {
+        ev.preventDefault();
         this.menu_click($(ev.currentTarget).data('menu'));
-        ev.stopPropagation();
-        return false;
     },
 });
 

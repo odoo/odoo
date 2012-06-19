@@ -603,6 +603,8 @@ $colour4: #8a89ba
             @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
+        .oe_cropdown_toggle:after
+            border-top: 4px solid white
         .oe_cropdown_menu
             background: #333
             background: rgba(37,37,37,0.9)
@@ -668,8 +670,6 @@ $colour4: #8a89ba
         li
             list-style-type: none
             float: left
-        &.oe_cropdown_toggle:after, .oe_cropdown_toggle:after
-            border-top: 4px solid white
         .oe_cropdown_menu
             right: -1px
     // }}}
@@ -705,20 +705,6 @@ $colour4: #8a89ba
             font-weight: bold
             color: white
             @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-    .oe_menu_more_container
-        position: relative
-        .oe_menu_more
-            position: absolute
-            padding: 0
-            background-color: #646060
-            z-index: 1
-            border: 1px solid black
-            border-bottom-left-radius: 5px
-            border-bottom-right-radius: 5px
-            li
-                float: none
-                a
-                    white-space: nowrap
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
