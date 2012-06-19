@@ -997,6 +997,11 @@ class account_move_line(osv.osv):
         for journal in journals:
             all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
+                # sometimes, it's possible that a defined column is not loaded (the module containing 
+                # this field is not loaded) when we make an update.
+                if field.name not in self._columns:
+                    continue
+
                 if not field.field in fields:
                     fields[field.field] = [journal.id]
                     fld.append((field.field, field.sequence))

@@ -31,12 +31,13 @@
                         <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
                         <field name="state" widget="statusbar"/>
                     </header>
-                    <group col="4">
+                    <sheet>
+                     <group col="4">
                         <field name="name"/>
                         <field name="type" on_change="onchange_server_type(type, is_ssl, object_id)"/>
                         <field name="date"/>
-                    </group>
-                    <notebook>
+                     </group>
+                     <notebook>
                         <page string="Server &amp; Login">
                             <group>
                                 <group attrs="{'invisible' : [('type', '=', 'local')]}" string="Server Information">
@@ -67,6 +68,7 @@
                             </group>
                         </page>
                     </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>

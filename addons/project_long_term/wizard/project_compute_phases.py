@@ -28,7 +28,7 @@ class project_compute_phases(osv.osv_memory):
         'target_project': fields.selection([
             ('all', 'Compute All My Projects'),
             ('one', 'Compute a Single Project'),
-            ], 'Schedule', required=True),
+            ], 'Action', required=True),
         'project_id': fields.many2one('project.project', 'Project')
     }
     _defaults = {
