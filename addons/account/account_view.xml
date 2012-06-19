@@ -2376,7 +2376,6 @@
                         <newline/>
                         <group groups="account.group_account_user">
                             <field name="code_digits"/>
-                            <field name="seq_journal"/>
                         </group>
                         <group>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
