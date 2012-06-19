@@ -88,17 +88,6 @@ class res_company(osv.osv):
         return result
 
 
-    def _get_bank_data(self, cr, uid, ids, field_names, arg, context=None):
-        """ Read the 'address' functional fields. """
-        result = {}
-        for company in self.browse(cr, uid, ids, context=context):
-            r = []
-            for bank in company.bank_ids:
-                if bank.footer:
-                    r.append(bank.name_get(context=context)[0][1])
-            result[company.id] = ' | '.join(r)
-        return result
-
     def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
         """ Write the 'address' functional fields. """
         company = self.browse(cr, uid, company_id, context=context)
@@ -120,7 +109,7 @@ class res_company(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'rml_header1': fields.char('Report Header / Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents."),
         'rml_footer1': fields.char('General Information Footer', size=200),
-        'rml_footer2': fields.function(_get_bank_data, type="char", string='Bank Accounts Footer', size=250, help="This field is computed automatically based on bank accounts defined, having the display on footer checkbox set."),
+        'rml_footer2': fields.char('Bank Accounts Footer', size=250, help="Write here your bank accounts for customer payments."),
         'rml_header': fields.text('RML Header', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header', required=True),

@@ -517,15 +517,16 @@ class ir_model_access(osv.osv):
         """
         assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
         cr.execute('''SELECT
-                        g.name
+                        c.name, g.name
                       FROM
                         ir_model_access a
                         JOIN ir_model m ON (a.model_id=m.id)
                         JOIN res_groups g ON (a.group_id=g.id)
+                        LEFT JOIN ir_module_category c ON (c.id=g.category_id)
                       WHERE
                         m.model=%s AND
                         a.perm_''' + access_mode, (model_name,))
-        return [x[0] for x in cr.fetchall()]
+        return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
     @tools.ormcache()
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
@@ -569,15 +570,23 @@ class ir_model_access(osv.osv):
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
-            groups = ', '.join(self.group_names_with_access(cr, model_name, mode)) or '/'
-            msgs = {
-                'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
-                'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
-                'create': _("You can not create this document (%s) ! Be sure your user belongs to one of these groups: %s."),
-                'unlink': _("You can not delete this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+            groups = '\n\t'.join('- %s' % g for g in self.group_names_with_access(cr, model_name, mode))
+            msg_heads = {
+                # Messages are declared in extenso so they are properly exported in translation terms
+                'read': _("Sorry, you are not allowed to access this document."),
+                'write':  _("Sorry, you are not allowed to modify this document."),
+                'create': _("Sorry, you are not allowed to create this kind of document."),
+                'unlink': _("Sorry, you are not allowed to delete this document."),
             }
-
-            raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
+            if groups:
+                msg_tail = _("Only users with the following access level are currently allowed to do that") + ":\n%s\n\n(" + _("Document model") + ": %s)"
+                msg_params = (groups, model_name)
+            else:
+                msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
+                msg_params = (model_name,)
+            _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
+            msg = '%s %s' % (msg_heads[mode], msg_tail)
+            raise except_orm(_('Access Denied'), msg % msg_params)
         return r or False
 
     __cache_clearing_methods = []

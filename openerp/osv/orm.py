@@ -1854,6 +1854,24 @@ class BaseModel(object):
                 etree.SubElement(view, 'newline')
         return view
 
+    def _get_default_search_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, using _rec_name if
+        it's one of the columns or the first column it finds otherwise
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
+        _rec_name = self._rec_name
+        if _rec_name not in self._columns:
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+
+        view = etree.Element('search', string=self._description)
+        etree.SubElement(view, 'field', name=_rec_name)
+        return view
+
     def _get_default_tree_view(self, cr, user, context=None):
         """ Generates a single-field tree view, using _rec_name if
         it's one of the columns or the first column it finds otherwise
@@ -1923,38 +1941,6 @@ class BaseModel(object):
 
         return view
 
-    def _get_default_search_view(self, cr, uid, context=None):
-        """
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
-        :returns: an lxml document of the view
-        :rtype: etree._Element
-        """
-        form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
-        tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
-
-        # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
-        fields = self.fields_get(cr, uid, context=context)
-        fields_to_search = set(
-            field for field, descriptor in fields.iteritems()
-            if descriptor.get('select'))
-
-        for view in (form_view, tree_view):
-            view_root = etree.fromstring(view['arch'])
-            # Only care about select=1 in xpath below, because select=2 is covered
-            # by the custom advanced search in clients
-            fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
-
-        tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
-
-        field_group = etree.SubElement(search_view, "group")
-        for field_name in fields_to_search:
-            etree.SubElement(field_group, "field", name=field_name)
-
-        return search_view
-
     #
     # if view_id, view_type is not required
     #
@@ -1986,6 +1972,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
+            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -2014,16 +2001,18 @@ class BaseModel(object):
                     if node.get('name') == spec.get('name'):
                         return node
                 return None
-            else:
-                for node in source.getiterator(spec.tag):
-                    good = True
-                    for attr in spec.attrib:
-                        if attr != 'position' and (not node.get(attr) or node.get(attr) != spec.get(attr)):
-                            good = False
-                            break
-                    if good:
-                        return node
-                return None
+
+            for node in source.getiterator(spec.tag):
+                if isinstance(node, SKIPPED_ELEMENT_TYPES):
+                    continue
+                if all(node.get(attr) == spec.get(attr) \
+                        for attr in spec.attrib
+                            if attr not in ('position','version')):
+                    # Version spec should match parent's root element's version 
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        return None
+                    return node
+            return None
 
         def apply_inheritance_specs(source, specs_arch, inherit_id=None):
             """ Apply an inheriting view.
@@ -2089,7 +2078,11 @@ class BaseModel(object):
                         if attr != 'position'
                     ])
                     tag = "<%s%s>" % (spec.tag, attrs)
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
+                                            (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
+                    
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):
@@ -3103,7 +3096,7 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr, context["module"])
+        self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
@@ -3230,7 +3223,7 @@ class BaseModel(object):
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
-    def _add_sql_constraints(self, cr, module):
+    def _add_sql_constraints(self, cr):
         """
 
         Modify this model's database table constraints so they match the one in
@@ -3521,10 +3514,7 @@ class BaseModel(object):
             for sub_ids in cr.split_for_in_conditions(ids):
                 if rule_clause:
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
-                                         % (self._description,))
+                    self._check_record_rules_result_count(cr, user, sub_ids, 'read', context=context)
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
@@ -3703,6 +3693,26 @@ class BaseModel(object):
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
+    def _check_record_rules_result_count(self, cr, uid, ids, operation, context=None):
+        """Verify that number of returned rows after applying record rules matches
+           the length of `ids`, and raise an appropriate exception if it does not.
+        """
+        if cr.rowcount != len(ids):
+            # Attempt to distinguish record rule restriction vs deleted records, 
+            # to provide a more specific error message
+            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
+            if cr.rowcount != len(ids):
+                if operation == 'unlink':
+                    # no need to warn about deleting an already deleted record!
+                    return
+                _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
+                raise except_orm(_('Missing document(s)'),
+                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+            _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+            raise except_orm(_('Access Denied'),
+                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                (self._description, operation))
+
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to the access rights."""
@@ -3734,7 +3744,7 @@ class BaseModel(object):
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
-            # have log_access enabled and this the create_uid column is always there.
+            # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
             cr.execute("""SELECT distinct create_uid
@@ -3742,9 +3752,8 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for transient models '
-                    '(except for the super-user).' % operation.capitalize())
+                raise except_orm(_('Access Denied'),
+                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
         else:
             where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
             if where_clause:
@@ -3753,10 +3762,7 @@ class BaseModel(object):
                     cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
                                ' WHERE ' + self._table + '.id IN %s' + where_clause,
                                [sub_ids] + where_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                         % (operation, self._description))
+                    self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
         """Call given workflow trigger as a result of a CRUD operation""" 

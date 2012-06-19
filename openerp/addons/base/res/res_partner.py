@@ -132,18 +132,17 @@ class res_partner(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Title'),
-        'parent_id': fields.many2one('res.partner','Parent Partner'),
+        'parent_id': fields.many2one('res.partner','Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
-        'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
+        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
-        'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
-        'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
+        'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
@@ -205,7 +204,7 @@ class res_partner(osv.osv):
         if default is None:
             default = {}
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
-        default.update({'name': _('%s (copy)')%(name), 'events':[]})
+        default.update({'name': _('%s (copy)')%(name)})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
