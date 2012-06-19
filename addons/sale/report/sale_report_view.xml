@@ -51,6 +51,9 @@
         <field name="arch" type="xml">
             <search string="Sales Analysis">
                 <group>
+                    <field name="date"/>
+                    <field name="date_confirm"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new"
                         string="Quotations"
                         domain="[('state','=','draft')]"/>
@@ -61,24 +64,20 @@
                     <filter icon="terp-accessories-archiver"
                         string="Picked"
                         domain="[('shipped','=',True)]"/>
+                    <filter icon="terp-personal"
+                        string="My Sales"
+                        help="My Sales"
+                        domain="[('user_id','=',uid)]"/>
                     <separator orientation="vertical"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
-                    <field name="user_id">
-                        <filter icon="terp-personal"
-                            string="My Sales"
-                            help="My Sales"
-                            domain="[('user_id','=',uid)]"/>
-                    </field>
+                    <field name="user_id"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters...">
                     <field name="shop_id" widget="selection"/>
                     <field name="categ_id" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="date"/>
-                    <field name="date_confirm"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
