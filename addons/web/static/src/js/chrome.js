@@ -713,7 +713,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$element.on('click', '.oe_cropdown_menu li a[data-menu]', function(ev) {
+        this.$element.on('click', '.oe_dropdown_menu li a[data-menu]', function(ev) {
             ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
             if (f) {
@@ -862,8 +862,8 @@ instance.web.WebClient = instance.web.Widget.extend({
         this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
         });
-        this.$element.on('click', '.oe_cropdown_toggle', function(ev) {
-            var $menu = $(this).find('.oe_cropdown_menu');
+        this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
+            var $menu = $(this).find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
                 // Do not alter propagation
@@ -881,7 +881,7 @@ instance.web.WebClient = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function() {
-            self.$element.find('.oe_cropdown_menu.oe_opened').removeClass('oe_opened');
+            self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
         });
     },
     show_common: function() {

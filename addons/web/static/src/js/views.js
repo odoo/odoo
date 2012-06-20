@@ -739,7 +739,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         this._super(this);
         this.redraw();
-        this.$element.on('click','.oe_cropdown_menu li a', function(event) {
+        this.$element.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
             var index = $(this).data('index');
             var item = self.items[section][index];

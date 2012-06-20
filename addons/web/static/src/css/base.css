@@ -355,14 +355,14 @@
 .openerp .ui-tabs-hide {
   display: none;
 }
-.openerp .oe_cropdown, .openerp .oe_cropdown_hover, .openerp .oe_cropdown_toggle {
+.openerp .oe_dropdown, .openerp .oe_dropdown_hover, .openerp .oe_dropdown_toggle {
   position: relative;
   cursor: pointer;
 }
-.openerp .oe_cropdown_hover:hover .oe_cropdown_menu, .openerp .oe_cropdown_menu.oe_opened {
+.openerp .oe_dropdown_hover:hover .oe_dropdown_menu, .openerp .oe_dropdown_menu.oe_opened {
   display: block;
 }
-.openerp .oe_cropdown_menu {
+.openerp .oe_dropdown_menu {
   display: none;
   position: absolute;
   top: 28px;
@@ -379,13 +379,13 @@
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
-.openerp .oe_cropdown_menu > li {
+.openerp .oe_dropdown_menu > li {
   list-style-type: none;
   float: none;
   display: block;
   position: relative;
 }
-.openerp .oe_cropdown_menu > li:hover {
+.openerp .oe_dropdown_menu > li:hover {
   background-color: #f0f0fa;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
   background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
@@ -397,17 +397,17 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.openerp .oe_cropdown_menu > li > a {
+.openerp .oe_dropdown_menu > li > a {
   white-space: nowrap;
   display: block;
   padding: 3px 6px;
   color: #4c4c4c;
   text-decoration: none;
 }
-.openerp .oe_cropdown_menu > li > a:hover {
+.openerp .oe_dropdown_menu > li > a:hover {
   text-decoration: none;
 }
-.openerp .oe_cropdown_arrow:after {
+.openerp .oe_dropdown_arrow:after {
   width: 0;
   height: 0;
   display: inline-block;
@@ -425,19 +425,19 @@
 .openerp .oe_sidebar {
   white-space: nowrap;
 }
-.openerp .oe_sidebar .oe_cropdown_menu .oe_sidebar_add_attachment {
+.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment {
   height: 20px;
   cursor: pointer;
   padding-left: 6px;
   margin-top: 6px;
 }
-.openerp .oe_sidebar .oe_cropdown_menu .oe_sidebar_add_attachment span {
+.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment span {
   font-weight: bold;
 }
-.openerp .oe_sidebar .oe_cropdown_menu .oe_sidebar_add_attachment .oe_hidden_input_file {
+.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment .oe_hidden_input_file {
   width: 200px;
 }
-.openerp .oe_sidebar .oe_cropdown_menu .oe_sidebar_add_attachment:hover {
+.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment:hover {
   background-color: #f0f0fa;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
   background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
@@ -449,7 +449,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.openerp .oe_sidebar .oe_cropdown_menu li .oe_sidebar_delete_item {
+.openerp .oe_sidebar .oe_dropdown_menu li .oe_sidebar_delete_item {
   position: absolute;
   top: 4px;
   right: 4px;
@@ -463,7 +463,7 @@
   font-weight: bold;
   text-shadow: 0 1px 1px white;
 }
-.openerp .oe_sidebar .oe_cropdown_menu li .oe_sidebar_delete_item:hover {
+.openerp .oe_sidebar .oe_dropdown_menu li .oe_sidebar_delete_item:hover {
   text-decoration: none;
   color: white;
   background: #8786b7;
@@ -472,7 +472,7 @@
   -webkit-border-radius: 2px;
   border-radius: 2px;
 }
-.openerp .oe_sidebar .oe_cropdown_menu li:hover .oe_sidebar_delete_item {
+.openerp .oe_sidebar .oe_dropdown_menu li:hover .oe_sidebar_delete_item {
   display: inline-block;
 }
 .openerp .oe_loading {
@@ -710,10 +710,10 @@
 .openerp .oe_topbar .oe_topbar_avatar {
   vertical-align: top;
 }
-.openerp .oe_topbar .oe_cropdown_arrow:after {
+.openerp .oe_topbar .oe_dropdown_arrow:after {
   border-top: 4px solid white;
 }
-.openerp .oe_topbar .oe_cropdown_menu {
+.openerp .oe_topbar .oe_dropdown_menu {
   background: #333333;
   background: rgba(37, 37, 37, 0.9);
   border-color: #999999;
@@ -727,13 +727,13 @@
   -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
-.openerp .oe_topbar .oe_cropdown_menu li {
+.openerp .oe_topbar .oe_dropdown_menu li {
   float: none;
 }
-.openerp .oe_topbar .oe_cropdown_menu li a {
+.openerp .oe_topbar .oe_dropdown_menu li a {
   color: #eeeeee;
 }
-.openerp .oe_topbar .oe_cropdown_menu li a:hover {
+.openerp .oe_topbar .oe_dropdown_menu li a:hover {
   background-color: #292929;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#292929), to(#191919));
   background-image: -webkit-linear-gradient(top, #292929, #191919);
@@ -792,7 +792,7 @@
   list-style-type: none;
   float: left;
 }
-.openerp .oe_user_menu .oe_cropdown_menu {
+.openerp .oe_user_menu .oe_dropdown_menu {
   right: -1px;
 }
 .openerp .oe_systray > div {
@@ -1740,38 +1740,6 @@
   height: inherit !important;
   font-size: inherit;
 }
-<<<<<<< TREE
-.openerp .oe_form_nosheet > *:not(.oe_form_topbar) {
-  margin-left: 10px !important;
-  margin-right: 10px !important;
-}
-.openerp .oe_form td.oe_form_group_cell_label {
-  border-right: 1px solid #dddddd;
-  padding: 2px 0px 2px 0px;
-}
-.openerp .oe_form td.oe_form_group_cell_label label {
-  line-height: 18px;
-  display: block;
-  min-width: 120px;
-}
-.openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
-  padding-left: 8px;
-}
-.openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
-  font-weight: bold;
-  white-space: nowrap;
-  padding-right: 8px;
-}
-.openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
-  font-size: 80%;
-  color: darkGreen;
-  vertical-align: top;
-  position: relative;
-  top: -4px;
-  padding: 0 2px;
-}
-=======
->>>>>>> MERGE-SOURCE
 .openerp .oe_form .oe_form_field {
   width: 100%;
   display: inline-block;
@@ -1986,9 +1954,6 @@
 }
 .openerp .oe-listview-content {
   width: 100%;
-}
-.openerp .oe-listview-content td:first-child, .openerp .oe-listview-content th:first-child {
-  width: 17px;
 }
 .openerp .oe-listview-content td:first-child:after, .openerp .oe-listview-content th:first-child:after {
   border-width: 0;

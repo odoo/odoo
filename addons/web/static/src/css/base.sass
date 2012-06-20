@@ -311,12 +311,12 @@ $colour4: #8a89ba
         display: none
     // }}}
     // Dropdown {{{
-    .oe_cropdown, .oe_cropdown_hover, .oe_cropdown_toggle
+    .oe_dropdown, .oe_dropdown_hover, .oe_dropdown_toggle
         position: relative
         cursor: pointer
-    .oe_cropdown_hover:hover .oe_cropdown_menu, .oe_cropdown_menu.oe_opened
+    .oe_dropdown_hover:hover .oe_dropdown_menu, .oe_dropdown_menu.oe_opened
         display: block
-    .oe_cropdown_menu
+    .oe_dropdown_menu
         display: none
         position: absolute
         top: 28px
@@ -344,7 +344,7 @@ $colour4: #8a89ba
                 text-decoration: none
                 &:hover
                     text-decoration: none
-    .oe_cropdown_arrow:after
+    .oe_dropdown_arrow:after
         width: 0
         height: 0
         display: inline-block
@@ -360,7 +360,7 @@ $colour4: #8a89ba
 
     .oe_sidebar
         white-space: nowrap
-        .oe_cropdown_menu
+        .oe_dropdown_menu
             .oe_sidebar_add_attachment
                 height: 20px
                 cursor: pointer
@@ -575,9 +575,9 @@ $colour4: #8a89ba
             @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
-        .oe_cropdown_arrow:after
+        .oe_dropdown_arrow:after
             border-top: 4px solid white
-        .oe_cropdown_menu
+        .oe_dropdown_menu
             background: #333
             background: rgba(37,37,37,0.9)
             border-color: #999
@@ -636,7 +636,7 @@ $colour4: #8a89ba
         li
             list-style-type: none
             float: left
-        .oe_cropdown_menu
+        .oe_dropdown_menu
             right: -1px
     // }}}
     // Systray {{{
