@@ -1621,12 +1621,14 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
             showButtonPanel: true
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
-            if (!self.readonly && !self.picker('widget').is(':visible')) {
-                self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
-                self.$input_picker.show();
-                self.picker('show');
-                self.$input_picker.hide();
+            if (self.readonly || self.picker('widget').is(':visible')) {
+                self.$input.focus();
+                return;
             }
+            self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
+            self.$input_picker.show();
+            self.picker('show');
+            self.$input_picker.hide();
         });
         this.set_readonly(false);
         this.value = false;
@@ -1636,7 +1638,10 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     },
     on_picker_select: function(text, instance) {
         var date = this.picker('getDate');
-        this.$input.val(date ? this.format_client(date) : '').change();
+        this.$input
+            .val(date ? this.format_client(date) : '')
+            .change()
+            .focus();
     },
     set_value: function(value) {
         this.value = value;
