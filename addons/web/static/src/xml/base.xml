@@ -979,7 +979,7 @@
     </t>
 </t>
 <t t-name="FieldReference">
-    <table class="oe_form_field oe_form_field_reference oe_form" border="0" cellpadding="0" cellspacing="0">
+    <table class="oe_form_field oe_form_field_reference" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td t-attf-class="oe_form_frame_cell oe_form_selection">
             <span t-attf-class="oe_form_view_reference_selection"/>
@@ -1250,7 +1250,7 @@
     </div>
 </t>
 <t t-name="SearchView.add_to_dashboard">
-    <div class="oe_form">
+    <div>
         <p><b>Select Dashboard to add this filter to:</b></p>
         <select style="width: 100%; margin-right: 1em;">
             <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
