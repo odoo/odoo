@@ -382,7 +382,7 @@
             <field name="arch" type="xml">
                 <search string="Search Payslips">
                     <group>
-                        <field name="name" string="Payslips" filter_domain="['|'('name','ilike',self),('number','ilike',self)]"/>
+                        <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <field name="date_from"/>
                         <separator orientation="vertical"/>
@@ -464,7 +464,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Rule Categories">
-                    <field name="name" string="Salary Rule Categories" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="name" string="Salary Rule Categories" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                </search>
             </field>
         </record>
@@ -650,7 +650,7 @@
             <field name="arch" type="xml">
                 <search string="Search Salary Rule">
                     <group col="8">
-                        <field name="name" string="Salary Rules" filter_domain="['|'('name','ilike',self),('code','ilike',self)]"/>
+                        <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <field name="category_id"/>
                         <field name="condition_range_min"/>
