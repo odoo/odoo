@@ -331,7 +331,7 @@ $colour4: #8a89ba
         text-align: left
         @include radius(3px)
         @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        li
+        > li
             &:hover
                 @include vertical-gradient(#f0f0fa, #eeeef6)
                 @include box-shadow(none)
@@ -339,7 +339,7 @@ $colour4: #8a89ba
             float: none
             display: block
             position: relative
-            a
+            > a
                 white-space: nowrap
                 display: block
                 padding: 3px 6px
@@ -649,7 +649,6 @@ $colour4: #8a89ba
         padding: 0 4px 0 4px
     .oe_systray
         float: right
-
     // }}}
     // Menu {{{
     .oe_menu

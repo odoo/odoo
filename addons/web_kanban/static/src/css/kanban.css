@@ -322,7 +322,7 @@
   -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
   -box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
 }
-.openerp .oe_kanban_view .oe_kanban_card:hover .oe_kanban_menuaction {
+.openerp .oe_kanban_view .oe_kanban_card:hover .oe_cropdown_kanban {
   display: block;
 }
 .openerp .oe_kanban_view .oe_kanban_card h3 {
@@ -383,56 +383,24 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.openerp .oe_kanban_view a.oe_kanban_menuaction {
+.openerp .oe_kanban_view .oe_cropdown_kanban {
   position: absolute;
-  top: 0px;
+  top: -8px;
   right: 3px;
   display: none;
   color: #4c4c4c;
   cursor: pointer;
 }
-.openerp .oe_kanban_view a.oe_kanban_menuaction:hover {
+.openerp .oe_kanban_view .oe_cropdown_kanban:hover {
   text-decoration: none;
 }
-.openerp .oe_kanban_view .oe_kanban_menu {
-  display: none;
-  position: absolute;
-  top: 30px;
+.openerp .oe_kanban_view .oe_cropdown_kanban .oe_cropdown_menu {
   right: -140px;
-  padding: 8px;
-  border: 1px solid #afafb6;
   min-width: 160px;
-  overflow-x: hidden;
-  z-index: 900;
-  background: white;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-.openerp .oe_kanban_view .oe_kanban_menu p {
-  margin-left: 12px;
-}
-.openerp .oe_kanban_view .oe_kanban_menu > li > a {
-  display: block;
-  padding: 3px 6px;
-  line-height: 14px;
-  color: #4c4c4c;
-  text-decoration: none;
-}
-.openerp .oe_kanban_view .oe_kanban_menu > li > a:hover {
-  background: #f0f0fa;
-  background: -moz-linear-gradient(#f0f0fa, #eeeef6);
-  background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
-  background: -webkit-linear-gradient(#f0f0fa, #eeeef6);
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  -box-shadow: none;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker {
   padding: 3px 6px;
+  white-space: nowrap;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker li {
   float: left;
