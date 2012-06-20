@@ -121,8 +121,8 @@
             <field name="arch" type="xml">
                 <form string="Module" version="7.0">
                 <header>
-                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_form_button_hi"/>
-                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_form_button_hi"/>
+                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_highlight"/>
+                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_highlight"/>
                     <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"
                         confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
                     <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
@@ -131,14 +131,14 @@
                     <field name="state" widget="statusbar" statusbar_visible="uninstalled"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_form_button_box">
+                    <div class="oe_right oe_button_box">
                         <field name="icon_image" widget="image"/>
                     </div>
-                    <div class="oe_form_title">
-                        <label for="shortdesc" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="shortdesc" class="oe_edit_only"/>
                         <h1><field name="shortdesc"/></h1>
-                        <label for="category_id" class="oe_form_readonly_hidden"/>
-                        <h2><field name="category_id" class="oe_form_inline"/></h2>
+                        <label for="category_id" class="oe_edit_only"/>
+                        <h2><field name="category_id" class="oe_inline"/></h2>
                     </div>
                     <group>
                         <group>
