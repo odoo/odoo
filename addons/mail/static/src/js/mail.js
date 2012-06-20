@@ -841,10 +841,13 @@ openerp.mail = function(session) {
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(this.proxy('init_and_fetch_comments'));
         },
     });
-
+    
+    
+    
     /**
      * Compute relative time from a date (ISO format)
      * Code from http://timeago.yarp.com/
+     * Please note that the library has been slightly refactored for i18n's sake.
      * 
      * 
      * 
@@ -910,33 +913,41 @@ openerp.mail = function(session) {
               suffix = $l.suffixFromNow;
             }
           }
-    
+          
           var seconds = Math.abs(distanceMillis) / 1000;
           var minutes = seconds / 60;
           var hours = minutes / 60;
           var days = hours / 24;
           var years = days / 365;
-    
-          function substitute(stringOrFunction, number) {
+          
+          function convert(stringOrFunction, number) {
             var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, distanceMillis) : stringOrFunction;
-            var value = ($l.numbers && $l.numbers[number]) || number;
-            return string.replace(/%d/i, value);
+            
+            // return the proper string and the numeric value that goes in it
+            return stringAndNumber = {'string': string, 'value': ($l.numbers && $l.numbers[number]) || number};
           }
-    
-          var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
-            seconds < 90 && substitute($l.minute, 1) ||
-            minutes < 45 && substitute($l.minutes, Math.round(minutes)) ||
-            minutes < 90 && substitute($l.hour, 1) ||
-            hours < 24 && substitute($l.hours, Math.round(hours)) ||
-            hours < 42 && substitute($l.day, 1) ||
-            days < 30 && substitute($l.days, Math.round(days)) ||
-            days < 45 && substitute($l.month, 1) ||
-            days < 365 && substitute($l.months, Math.round(days / 30)) ||
-            years < 1.5 && substitute($l.year, 1) ||
-            substitute($l.years, Math.round(years));
-    
+          
+          var stringAndNumber = seconds < 45 && convert($l.seconds, Math.round(seconds)) ||
+            seconds < 90 && convert($l.minute, 1) ||
+            minutes < 45 && convert($l.minutes, Math.round(minutes)) ||
+            minutes < 90 && convert($l.hour, 1) ||
+            hours < 24 && convert($l.hours, Math.round(hours)) ||
+            hours < 42 && convert($l.day, 1) ||
+            days < 30 && convert($l.days, Math.round(days)) ||
+            days < 45 && convert($l.month, 1) ||
+            days < 365 && convert($l.months, Math.round(days / 30)) ||
+            years < 1.5 && convert($l.year, 1) ||
+            convert($l.years, Math.round(years));
+          
+          var string = stringAndNumber.string;
+          var value = stringAndNumber.value;
           var separator = $l.wordSeparator === undefined ?  " " : $l.wordSeparator;
-          return $.trim([prefix, words, suffix].join(separator));
+          
+          // compose and translate the final string
+          var finalString = $.trim([prefix, string, suffix].join(separator));
+          var translatedFinalString = _.str.sprintf(_t(finalString), value);
+          
+          return translatedFinalString;
         },
         parse: function(iso8601) {
           var s = $.trim(iso8601);
