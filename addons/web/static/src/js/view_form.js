@@ -1556,6 +1556,45 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
         this.$input = this.$element.find('input.oe_datepicker_master');
         this.$input_picker = this.$element.find('input.oe_datepicker_container');
         this.$input.change(this.on_change);
+        $.datepicker.regional = {
+            clearText: _t('Clear'), 
+            clearStatus: _t('Erase the current date'),
+            closeText: _t('Done'),
+            closeStatus: _t('Close without change'),
+            prevText: _t('<Prev'),
+            prevStatus: _t('Show the previous month'),
+            nextText: _t('Next>'),
+            nextStatus: _t('Show the next month'),
+            currentText: _t('Today'),
+            currentStatus: _t('Show the current month'),
+            monthNames: Date.CultureInfo.monthNames,
+            monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
+            monthStatus: _t('Show a different month'),
+            yearStatus: _t('Show a different year'),
+            weekHeader: _t('Wk'),
+            weekStatus: _t('Week of the year'),
+            dayNames: Date.CultureInfo.dayNames,
+            dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
+            dayNamesMin: Date.CultureInfo.shortestDayNames,
+            dayStatus: _t('Set DD as first week day'),
+            dateStatus: _t('Select D, M d'),
+            firstDay: Date.CultureInfo.firstDayOfWeek,
+            initStatus: _t('Select a date'),
+            isRTL: false
+        }
+        $.datepicker.setDefaults($.datepicker.regional)
+
+        $.timepicker.regional = {
+            timeOnlyTitle: _t('Choose Time'),
+            timeText: _t('Time'),
+            hourText: _t('Hour'),
+            minuteText: _t('Minute'),
+            secondText: _t('Second'),
+            currentText: _t('Now'),
+            closeText: _t('Done')
+        }
+        $.timepicker.setDefaults($.timepicker.regional)
+
         this.picker({
             onSelect: this.on_picker_select,
             changeMonth: true,
