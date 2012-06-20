@@ -49,8 +49,10 @@
 	                <header>
 	                    <button icon="terp-camera_test" string="Approve" name="validate_move_lines" type="object" default_focus="1" class="oe_form_button_active_flow"/>
 	                </header>
-	                <separator string="Post Journal Entries"/>
-	                <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accounting fields anymore." colspan="2"/>
+	                <group>
+	                    <separator string="Post Journal Entries"/>
+	                    <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accounting fields anymore." colspan="2"/>
+	                </group>    
 	            </form>
             </field>
         </record>

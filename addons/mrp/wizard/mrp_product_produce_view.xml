@@ -15,9 +15,11 @@
                         <button name="do_produce" string="Confirm"
                             colspan="1" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
                     </header>
-                    <separator string="Produce" colspan="4"/>
-                    <field name="mode" colspan="4"/>
-                    <field name="product_qty" colspan="2"/>
+                    <group>
+                        <separator string="Produce" colspan="4"/>
+                        <field name="mode"/>
+                        <field name="product_qty" colspan="2"/>
+                    </group>    
                 </form>
             </field>
         </record>

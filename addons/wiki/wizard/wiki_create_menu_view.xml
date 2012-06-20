@@ -13,9 +13,11 @@
                     <header>
                         <button name="wiki_menu_create" string="Create Menu" type="object" class="oe_form_button_active_flow"/>
                     </header>
-                    <separator string="Menu Information" colspan="4" />
-                    <field name="menu_name" />
-                    <field name="menu_parent_id" />
+                    <group>
+                        <separator string="Menu Information" colspan="4" />
+                        <field name="menu_name" />
+                        <field name="menu_parent_id" />
+                    </group>
                 </form>
             </field>
         </record>
