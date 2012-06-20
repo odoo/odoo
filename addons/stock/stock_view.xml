@@ -1444,7 +1444,7 @@
                     </group>
 
                     <group>
-                        <label name="tracking_id"/>
+                        <label for="tracking_id"/>
                         <div>
                             <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
                             <button name="%(split_into)d" string="New Pack" type="action"
@@ -1452,7 +1452,7 @@
                               icon="terp-stock_effects-object-colorize"
                               states="draft,assigned,confirmed,done" colspan="1"/>
                         </div>
-                        <label name="prodlot_id"/>
+                        <label for="prodlot_id"/>
                         <div>
                             <field name="prodlot_id" groups="stock.group_production_lot"
                                 context="{'location_id':location_id, 'product_id':product_id}"
