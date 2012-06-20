@@ -64,8 +64,8 @@
             <field name="arch" type="xml">
                 <form string="Timesheet" version="7.0">
                 <header>
-                    <button name="button_confirm" states="draft" string="Submited to Manager" type="object" class="oe_form_button_active_flow"/>
-                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_form_button_active_flow"/>
+                    <button name="button_confirm" states="draft" string="Submited to Manager" type="object" class="oe_highlight"/>
+                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" class="oe_form_button_return_flow"/>
                     <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>

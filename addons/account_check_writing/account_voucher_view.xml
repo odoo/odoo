@@ -20,7 +20,7 @@
                     <field name="number" attrs="{'readonly':[('allow_check','!=',1)]}" />
                 </field>
                 <button name="proforma_voucher" position="after">
-                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}" class="oe_form_button_active_flow"/>
+                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}" class="oe_highlight"/>
                 </button>
             </field>
         </record>
