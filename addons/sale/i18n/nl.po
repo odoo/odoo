@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-13 15:00+0000\n"
+"PO-Revision-Date: 2012-06-19 17:53+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-14 04:57+0000\n"
-"X-Generator: Launchpad (build 15405)\n"
+"X-Launchpad-Export-Date: 2012-06-20 05:11+0000\n"
+"X-Generator: Launchpad (build 15435)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -80,7 +80,7 @@ msgstr "De offerte '%s' is omgezet in een verkooporder."
 #. module: sale
 #: view:sale.order:0
 msgid "Print Quotation"
-msgstr "Print offerte"
+msgstr "Offerte afdrukken"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
@@ -124,8 +124,8 @@ msgid ""
 "orders."
 msgstr ""
 "Om een ​​bevestigde verkooporder te verwijderen, moet u deze eerst "
-"annuleren! Om een verkooporder te annuleren, moet u eerst gereleateerde "
-"pickopdrachten of leveringsopdrachten annuleren."
+"annuleren! Om een verkooporder te annuleren, moet u eerst de gereleateerde "
+"leveringsopdrachten annuleren."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -140,7 +140,7 @@ msgstr "Relatie"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "Facturatie gebaseerd op leveringen"
+msgstr "Factuur van leveringsopdracht"
 
 #. module: sale
 #: view:sale.order:0
@@ -332,14 +332,14 @@ msgstr ""
 "Het factureerbeleid wordt gebruikt om facturatie en leveringsopdrachten te "
 "synchroniseren.\n"
 "  - De 'Vooruitbetaling' keuze genereert eerst de factuur en genereert de "
-"pakbon na betaling van de factuur.\n"
-"  - De 'Leveren & Handmatig factureren' keuze maakt de pakbon direct en "
-"wacht met het genereren van een concept factuur totdat de gebruiker de "
-"'Factureren' knop drukt.\n"
-"  - De 'Factuur op order na levering' keuze genereert de concept factuur "
-"gebaseerd op de verkooporder nadat alle pakbonnen gereed zijn. \n"
-"  - De 'Factuur van pakbon' keuze wordt gebruikt om een factuur te maken "
-"gedurende het verzamel proces."
+"leveringsopdracht na betaling van de factuur.\n"
+"  - De 'Leveren & Handmatig factureren' keuze maakt de leveringsopdracht "
+"direct en wacht met het genereren van een concept factuur totdat de "
+"gebruiker de 'Factureren' knop drukt.\n"
+"  - De 'Factuur van order na levering' keuze genereert de concept factuur "
+"gebaseerd op de verkooporder nadat alle verzamelijsten zijn verwerkt. \n"
+"  - De 'Factuur van leveringsopdracht' keuze wordt gebruikt om een factuur "
+"te maken gedurende het verzamel proces."
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -701,7 +701,7 @@ msgstr "Bedrag voor belastingen"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
-msgstr "Te factureren regels"
+msgstr "Te factureren orderregels"
 
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
@@ -920,7 +920,7 @@ msgstr "Historie"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on order after delivery"
-msgstr "Factureer op basis van order, na aflevering"
+msgstr "Factuur van order na levering"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1052,7 +1052,7 @@ msgstr "Gebaseerd op de geleverde of bestelde hoeveelheden."
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Lever alle producten in 1 keer"
+msgstr "Lever alle producten tegelijk"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -1143,7 +1143,7 @@ msgstr "Maak factuur opnieuw"
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "Te factureren leveringen"
+msgstr "Te factureren leveringsopdrachten"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -1163,7 +1163,7 @@ msgstr "Verzamellijst"
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
-msgstr "Naar Concept"
+msgstr "Terug naar offerte-aanvraag"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1437,7 +1437,7 @@ msgstr "Kan verkooporder niet annuleren !"
 #. module: sale
 #: view:sale.order:0
 msgid "Qty(UoM)"
-msgstr "Hvh(UoM)"
+msgstr "Hoeveelheid"
 
 #. module: sale
 #: view:sale.report:0
@@ -1633,7 +1633,7 @@ msgstr "Te doen"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr "Pickingbeleid"
+msgstr "Verzamelbeleid"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -1649,7 +1649,8 @@ msgstr "Het bedrag zonder BTW."
 #: code:addons/sale/sale.py:604
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
-msgstr "U moet eerst alle picking bij deze verkooporder annuleren."
+msgstr ""
+"U moet eerst alle leveringsopdrachten bij deze verkooporder annuleren."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1798,7 +1799,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Pay before delivery"
-msgstr "Betalen voor afleveren"
+msgstr "Vooruitbetaling"
 
 #. module: sale
 #: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
@@ -2201,7 +2202,7 @@ msgstr "Toezegging vertraging"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Deliver & invoice on demand"
-msgstr "Lever & factureer op oproep"
+msgstr "Leveren & Handmatig factureren"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -2373,4 +2374,4 @@ msgstr "Jaar"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr "Facturatie gebaseer op leveringen"
+msgstr "Factuur gebaseerd op leveringen"
