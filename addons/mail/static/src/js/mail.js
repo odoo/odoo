@@ -592,16 +592,16 @@ openerp.mail = function(session) {
 
     /** 
      * ------------------------------------------------------------
-     * ThreadView Widget
+     * mail_thread Widget
      * ------------------------------------------------------------
      *
      * This widget handles the display of the Chatter on documents.
      */
 
-    /* Add ThreadView widget to registry */
-    session.web.form.widgets.add('ThreadView', 'openerp.mail.RecordThread');
+    /* Add mail_thread widget to registry */
+    session.web.form.widgets.add('mail_thread', 'openerp.mail.RecordThread');
 
-    /* ThreadView widget: thread of comments */
+    /* mail_thread widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend(_.extend({}, session.mail.ChatterMixin, {
         // QWeb template to use when rendering the object
         template: 'mail.record_thread',
@@ -712,10 +712,10 @@ openerp.mail = function(session) {
      */
 
     /* Add WallView widget to registry */
-    session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
+    session.web.client_actions.add('mail.wall', 'session.mail.Wall');
     
     /* WallView widget: a wall of messages */
-    mail.WallView = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
+    mail.Wall = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
         template: 'mail.wall',
 
         /**
