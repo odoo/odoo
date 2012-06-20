@@ -114,7 +114,7 @@ class test_ir_sequence_change_implementation(unittest2.TestCase):
         d = dict(code='test_sequence_type_3', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
-        d = dict(code='test_sequence_type_3', name='Test sequence', 'implementation': 'standard')
+        d = dict(code='test_sequence_type_3', name='Test sequence')
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_4', name='Test sequence type')
