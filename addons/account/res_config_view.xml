@@ -75,14 +75,14 @@
                         <group string="Customer Invoices">
                             <label string="Invoice Sequence" for="sale_sequence_prefix"/>
                             <div>
-                                <field name="sale_sequence_prefix" class="oe_form_inline"/>
-                                <field name="sale_sequence_next" class="oe_form_inline" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
+                                <field name="sale_sequence_prefix" class="oe_inline"/>
+                                <field name="sale_sequence_next" class="oe_inline" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
                             </div>
 
                             <label string="Credit Note Sequence" for="sale_refund_sequence_prefix"/>
                             <div>
-                                <field name="sale_refund_sequence_prefix" class="oe_form_inline"/>
-                                <field name="sale_refund_sequence_next" class="oe_form_inline" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
+                                <field name="sale_refund_sequence_prefix" class="oe_inline"/>
+                                <field name="sale_refund_sequence_next" class="oe_inline" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
                             </div>
                             <field name="module_account_invoice_layout"/>
                             <field name="module_account_voucher"/>
@@ -92,13 +92,13 @@
                         <group string="Supplier Invoices">
                             <label string="Supplier Invoice Sequence" for="purchase_sequence_prefix"/>
                             <div>
-                                <field name="purchase_sequence_prefix" class="oe_form_inline"/>
-                                <field name="purchase_sequence_next" class="oe_form_inline" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
+                                <field name="purchase_sequence_prefix" class="oe_inline"/>
+                                <field name="purchase_sequence_next" class="oe_inline" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                             </div>
                             <label string="Supplier Credit Note Sequence" for="purchase_refund_sequence_prefix"/>
                             <div>
-                                <field name="purchase_refund_sequence_prefix" class="oe_form_inline"/>
-                                <field name="purchase_refund_sequence_next" class="oe_form_inline"
+                                <field name="purchase_refund_sequence_prefix" class="oe_inline"/>
+                                <field name="purchase_refund_sequence_next" class="oe_inline"
                                   attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
                             </div>
                             <field name="module_account_payment"/>
