@@ -262,6 +262,9 @@
                         <separator orientation="vertical"/>
                         <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>
                         <filter string="Companies" name="type_company" icon="terp-partner" domain="[('is_company','=',1)]"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                        <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                    </group>
                    <newline />
                    <group expand="0" string="Group By...">
