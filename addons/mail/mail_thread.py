@@ -423,7 +423,7 @@ class mail_thread(osv.osv):
                 map_id_to_name[attach_id] = '' # use empty string as a placeholder
         
         ids = map_id_to_name.keys()
-        names = self.pool.get('ir.attachment').name_get(cr, uid, ids)
+        names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
         
         # convert the list of tuples into a dictionnary
         for name in names: 
@@ -435,7 +435,6 @@ class mail_thread(osv.osv):
             
             for attach_id in msg["attachment_ids"]:
                 msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
-        
         
         """ Sort and return messages """
         msgs = sorted(msgs, key=lambda d: (-d['id']))

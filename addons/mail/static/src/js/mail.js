@@ -249,10 +249,21 @@ openerp.mail = function(session) {
             $.when(defer).then(function (records) {
                 if (records.length <= self.params.limit) self.display.show_more = false;
                 else { self.display.show_more = true; records.pop(); }
+                
+                //build attachments download urls
+                for (var k in records) {
+                    if (records[k].attachments) {
+                        for (var l in records[k].attachments) {
+                            records[k].attachments[l].url = self.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id='+records[k].attachments[l].id;
+                        }
+                    }
+                }
+                
                 self.display_comments(records);
                 if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
                 else  self.$element.find('div.oe_mail_thread_more:last').hide();
-                });
+            });
+            
             return defer;
         },
 

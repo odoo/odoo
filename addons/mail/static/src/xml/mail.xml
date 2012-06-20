@@ -202,7 +202,7 @@
                 <ul class="oe_mail_msg_attachments">
                     <t t-foreach="record.attachments" t-as="attachment">
                         <li>
-                            <a href="#" data-res-model='ir.attachment' t-attf-data-res-id='{attachment.id}' class="oe_mail_internal_link">
+                            <a t-att-href="attachment.url">
                                 <t t-raw="attachment.name"/>
                             </a>
                         </li>
