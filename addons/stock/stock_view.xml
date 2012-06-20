@@ -112,8 +112,8 @@
             <field name="arch" type="xml">
                 <form string="Physical Inventory" version="7.0">
                 <header>
-                    <button name="action_confirm" states="draft" string="Confirm Inventory" type="object" class="oe_form_button_active_flow"/>
-                    <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_form_button_active_flow"/>
+                    <button name="action_confirm" states="draft" string="Confirm Inventory" type="object" class="oe_highlight"/>
+                    <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" class="oe_form_button_return_flow"/>
                     <button name="action_cancel_inventory" states="draft,confirm,done" string="Cancel Inventory" type="object" class="oe_form_button_return_flow"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
@@ -716,12 +716,12 @@
             <field name="arch" type="xml">
                 <form string="Internal Picking List" version="7.0">
                 <header>
-                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_form_button_active_flow"/>
-                    <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_form_button_active_flow"/>
+                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight"/>
                     <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
-                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_form_button_active_flow"/>
-                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_form_button_active_flow"/>
-                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_form_button_active_flow"/>
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight"/>
+                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" class="oe_form_button_return_flow"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -956,15 +956,15 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form/header/button[@name='%(act_stock_return_picking)d']" position="replace">
-                        <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" states="done" class="oe_form_button_active_flow"/>
+                        <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" states="done" class="oe_highlight"/>
                         <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" class="oe_form_button_return_flow"/>
                     </xpath>
                     <xpath expr="/form/header/button[@name='draft_validate']" position="replace">
-                        <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_form_button_active_flow"/>
-                        <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_form_button_active_flow"/>
+                        <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
+                        <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="/form/header/button[@name='action_process']" position="replace">
-                        <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" class="oe_form_button_active_flow"/>
+                        <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="/form/header/field[@name='state']" position="replace">
                         <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
@@ -1079,10 +1079,10 @@
                         <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" class="oe_form_button_return_flow"/>
                     </xpath>
                     <xpath expr="//button[@name='draft_validate']" position="replace">
-                        <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_form_button_active_flow"/>
+                        <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="//button[@name='action_process']" position="replace">
-                        <button name="action_process" states="assigned" string="Receive" type="object" class="oe_form_button_active_flow"/>
+                        <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="//field[@name='partner_id']" position="replace">
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Supplier"/>
@@ -1215,9 +1215,9 @@
             <field name="arch" type="xml">
                 <form string="Stock Moves" version="7.0">
                 <header>
-                    <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_form_button_active_flow"/>
-                    <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" class="oe_form_button_active_flow"/>
-                    <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_form_button_active_flow"/>
+                    <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
+                    <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" class="oe_highlight"/>
+                    <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>
@@ -1405,9 +1405,9 @@
             <field name="arch" type="xml">
                 <form string="Receive Products" version="7.0">
                 <header>
-                    <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_form_button_active_flow"/>
-                    <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_form_button_active_flow"/>
-                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" class="oe_form_button_active_flow"/>
+                    <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
+                    <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
+                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" class="oe_highlight"/>
                     <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>

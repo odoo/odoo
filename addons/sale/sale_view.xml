@@ -107,14 +107,14 @@
                         <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                         <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                         <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                        <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent" class="oe_form_button_active_flow"/>
-                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_form_button_active_flow"/>
-                        <button name="print_quotation" string="Send by Post" type="object" states="draft,sent" class="oe_form_button_active_flow"/>
+                        <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent" class="oe_highlight"/>
+                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_highlight"/>
+                        <button name="print_quotation" string="Send by Post" type="object" states="draft,sent" class="oe_highlight"/>
                         <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
-                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_form_button_active_flow" type="object"/>
-                        <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_form_button_active_flow"
+                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
+                        <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
                           attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
-                        <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_form_button_active_flow"
+                        <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_highlight"
                           attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
                         <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="manual"/>
                         <button name="cancel" states="draft,sent" string="Cancel"/>
@@ -413,8 +413,8 @@
                 <form string="Sales Order Lines" version="7.0">
                     <header>
                         <button name="button_cancel" string="Cancel" type="object" icon="gtk-cancel" states="confirmed,exception"/>
-                        <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}" class="oe_form_button_active_flow"/>
-                        <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward" class="oe_form_button_active_flow"/>
+                        <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}" class="oe_highlight"/>
+                        <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
                     <sheet>

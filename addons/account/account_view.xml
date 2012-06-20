@@ -13,8 +13,8 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_form_button_active_flow"/>
-                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_form_button_active_flow"/>
+                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
+                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" nolabel="1" />
                 </header>
                 <sheet string="Fiscalyear" layout="auto">
@@ -589,8 +589,8 @@
             <field name="arch" type="xml">
                 <form string="Bank Statement" version="7.0">
                 <header>
-                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" class="oe_form_button_active_flow"/>
-                    <button name="button_dummy" states="draft" string="Compute" type="object" class="oe_form_button_active_flow"/>
+                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="button_dummy" states="draft" string="Compute" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
@@ -1270,7 +1270,7 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_form_button_active_flow"/>
+                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="posted" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -1825,8 +1825,8 @@
                 <form string="Recurring" version="7.0">
                     <header>
                         <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
-                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific" class="oe_form_button_active_flow"/>
-                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove" class="oe_form_button_active_flow"/>
+                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific" class="oe_highlight"/>
+                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                     </header>
                     <sheet>
@@ -2532,8 +2532,8 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_form_button_active_flow"/>
-                    <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_form_button_active_flow"/>
+                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
+                    <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>

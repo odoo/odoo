@@ -64,15 +64,15 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="case_open" string="Confirm" type="object" class="oe_form_button_active_flow"
+                <button name="case_open" string="Confirm" type="object" class="oe_highlight"
                         states="draft,pending"/>
-                <button name="case_close" string="Held" type="object" class="oe_form_button_active_flow"
+                <button name="case_close" string="Held" type="object" class="oe_highlight"
                         states="open,pending"/>
                 <button name="case_reset" string="Reset to Todo" type="object"
                         states="cancel"/>
                 <button name="case_cancel" string="Cancel" type="object"
                         states="draft,open,pending"/>
-                <button string="Convert to Opportunity"  class="oe_form_button_active_flow"
+                <button string="Convert to Opportunity"  class="oe_highlight"
                         name="%(phonecall2opportunity_act)d"
                         type="action"
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
