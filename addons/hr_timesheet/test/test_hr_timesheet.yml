@@ -32,7 +32,7 @@
     import time
     from datetime import datetime, date, timedelta
     uid = ref('base.user_demo')
-    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_thymbra'),'analytic_amount': 7.0,
+    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_nebula'),'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S') ,
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
     'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'action'})
@@ -44,7 +44,7 @@
     import time
     from datetime import datetime, date, timedelta
     uid = ref('base.user_demo')
-    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_sednacom'), 'analytic_amount': 7.0,
+    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_spark'), 'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(2)).strftime('%Y-%m-%d %H:%M:%S'),
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
     'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})

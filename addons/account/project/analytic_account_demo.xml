@@ -102,7 +102,7 @@
             <field name="parent_id" ref="analytic_integration"/>
             <field name="type">normal</field>
             <field name="state">open</field>
-            <field name="partner_id" ref="base.res_partner_seagate"/>
+            <field name="partner_id" ref="base.res_partner_19"/>
         </record>
         <record id="analytic_seagate_p2" model="account.analytic.account">
             <field name="name">Seagate P2</field>
@@ -110,7 +110,7 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_integration"/>
             <field name="state">open</field>
-            <field name="partner_id" ref="base.res_partner_seagate"/>
+            <field name="partner_id" ref="base.res_partner_19"/>
         </record>
         <record id="analytic_magasin_bml_1" model="account.analytic.account">
             <field name="name">Magasin BML 1</field>
@@ -150,25 +150,24 @@
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_4"/>
         </record>
-        <!--To remove or change ID-->
-        <!--record id="analytic_sednacom" model="account.analytic.account">
-            <field name="name">Sednacom</field>
+        <record id="analytic_spark" model="account.analytic.account">
+            <field name="name">Spark Systems</field>
             <field name="code">2</field>
             <field eval="str(time.localtime()[0] - 1) + '-05-09'" name="date_start"/>
             <field eval="time.strftime('%Y-05-08')" name="date"/>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="type">normal</field>
-            <field name="partner_id" ref="base.res_partner_sednacom"/>
+            <field name="partner_id" ref="base.res_partner_16"/>
             <field name="state">open</field>
-        </record-->
-        <record id="analytic_thymbra" model="account.analytic.account">
-            <field name="name">Thymbra</field>
+        </record>
+        <record id="analytic_nebula" model="account.analytic.account">
+            <field name="name">Nebula</field>
             <field name="code">3</field>
             <field eval="time.strftime('%Y-02-01')" name="date_start"/>
             <field eval="time.strftime('%Y-07-01')" name="date"/>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
-            <field name="partner_id" ref="base.res_partner_thymbra"/>
+            <field name="partner_id" ref="base.res_partner_17"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_leclerc" model="account.analytic.account">
@@ -187,14 +186,14 @@
             <field eval="str(time.localtime()[0] + 1) + '-02-01'" name="date"/>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
-            <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
         </record>
         <record id="analytic_tiny_at_work" model="account.analytic.account">
             <field name="name">OpenERP SA AT Work</field>
             <field name="code">15</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
-            <field name="partner_id" ref="base.res_partner_tinyatwork"/>
+            <field name="partner_id" ref="base.res_partner_18"/>
         </record>
         <record id="analytic_partners_camp_to_camp" model="account.analytic.account">
             <field name="name">Camp to Camp</field>

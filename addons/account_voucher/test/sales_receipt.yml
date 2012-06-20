@@ -10,7 +10,7 @@
       - account_id: account.a_sale
         amount: 30000.0
         type: cr
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_9
     type: sale
     
@@ -48,14 +48,14 @@
     import netsvc
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
-    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), journal_id, 0.0, 1, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_19"), journal_id, 0.0, 1, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 30000.0,
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.EUR'),
         'journal_id': ref('account.bank_journal'),
-        'partner_id': ref('base.res_partner_seagate'),
+        'partner_id': ref('base.res_partner_19'),
         'period_id': ref('account.period_8'),
         'type': 'receipt',
     }
