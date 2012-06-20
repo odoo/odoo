@@ -71,7 +71,7 @@ class repair_cancel(osv.osv_memory):
         if not repair_order.invoiced:
             res['arch'] = """ <form string="Cancel Repair" colspan="4">
                               <header>
-                                <button name="cancel_repair" string="_Yes" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
+                                <button name="cancel_repair" string="_Yes" type="object" icon="gtk-ok" class="oe_highlight"/>
                               </header>
                             <group col="2" colspan="2">
                                 <label string="Do you want to continue?" colspan="4"/>
