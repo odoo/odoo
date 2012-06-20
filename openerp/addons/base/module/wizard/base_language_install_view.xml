@@ -3,11 +3,11 @@
     <data>
 
         <record id="view_base_language_install" model="ir.ui.view">
-            <field name="name">Load Official Translation</field>
+            <field name="name">Load a Translation</field>
             <field name="model">base.language.install</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Load Official Translation">
+                <form string="Load a Translation">
                     <group colspan="4" col="8">
                         <group colspan="1">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
@@ -19,7 +19,7 @@
                         </group>
                         <separator orientation="vertical" colspan="1" rowspan="12"/>
                         <group colspan="6">
-                            <separator string="Load an Official Translation" colspan="4"/>
+                            <separator string="Load a Translation" colspan="4"/>
                             <group states="init" colspan="4">
                                 <field name="lang" colspan="4"/>
                                 <field name="overwrite" colspan="4" groups="base.group_no_one"/>
@@ -46,7 +46,7 @@ You must change the preferences of the user and open a new menu to view the chan
         </record>
 
         <record id="action_view_base_language_install" model="ir.actions.act_window">
-            <field name="name">Load Official Translation</field>
+            <field name="name">Load a Translation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.language.install</field>
             <field name="view_type">form</field>
@@ -55,7 +55,7 @@ You must change the preferences of the user and open a new menu to view the chan
         </record>
 
         <menuitem
-        name="Load an Official Translation"
+        name="Load a Translation"
         action="action_view_base_language_install"
         id="menu_view_base_language_install"
         parent="menu_translation" sequence="2"/>

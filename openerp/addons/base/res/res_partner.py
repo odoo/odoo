@@ -50,6 +50,8 @@ class res_partner_category(osv.osv):
             context = {}
         if context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -285,7 +287,9 @@ class res_partner(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        if not len(ids):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if not ids:
             return []
         if context.get('show_ref'):
             rec_name = 'ref'
