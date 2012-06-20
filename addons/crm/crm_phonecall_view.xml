@@ -177,8 +177,11 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
+               <field name="name" string="Phonecalls" filter_domain="[('name','ilike',self)]"/>
                <separator orientation="vertical"/>
+               <field name="date"/>
+               <separator orientation="vertical"/>
+               <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
               <filter string="Unassigned Phonecalls"
                        icon="terp-personal-"
                        domain="[('user_id','=',False)]"
@@ -188,12 +191,10 @@
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="Phone Calls that are assigned to me or to my team(s)" />
                <separator orientation="vertical"/>
-               <field name="name"/>
                <field name="partner_id"/>
                <field name="user_id"/>
                <field name="section_id"
                    widget="selection" string="Sales Team"/>
-               <field name="date"/>
                <newline/>
                <group expand="0" string="Group By...">
                    <filter string="Partner" icon="terp-partner" domain="[]"
