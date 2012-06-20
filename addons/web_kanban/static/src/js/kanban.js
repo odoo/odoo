@@ -109,11 +109,23 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
     },
     transform_qweb_template: function(node) {
-        var qweb_prefix = QWeb.prefix;
+        var qweb_add_if = function(node, condition) {
+            if (node.attrs[QWeb.prefix + '-if']) {
+                condition = _.str.sprintf("(%s) and (%s)", node.attrs[QWeb.prefix + '-if'], condition);
+            }
+            node.attrs[QWeb.prefix + '-if'] = condition;
+        };
+        // Process modifiers
+        if (node.tag && node.attrs.modifiers) {
+            var modifiers = JSON.parse(node.attrs.modifiers || '{}');
+            if (modifiers.invisible) {
+                qweb_add_if(node, _.str.sprintf("!kanban_compute_domain(%s)", JSON.stringify(modifiers.invisible)));
+            }
+        }
         switch (node.tag) {
             case 'field':
-                node.tag = qweb_prefix;
-                node.attrs[qweb_prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
+                node.tag = QWeb.prefix;
+                node.attrs[QWeb.prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
                 this.extract_aggregates(node);
                 break;
             case 'button':
@@ -126,18 +138,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                             delete(node.attrs[k]);
                         }
                     });
-                    if (node.attrs['data-states']) {
-                        var states = _.map(node.attrs['data-states'].split(','), function(state) {
-                            return "record.state.raw_value == '" + _.str.trim(state) + "'";
-                        });
-                        node.attrs[qweb_prefix + '-if'] = states.join(' or ');
-                    }
-                    if (node.attrs['data-kanban_states']) {
-                        var states = _.map(node.attrs['data-kanban_states'].split(','), function(state) {
-                            return "record.kanban_state.raw_value == '" + _.str.trim(state) + "'";
-                        });
-                        node.attrs[qweb_prefix + '-if'] = states.join(' or ');
-                    }
                     if (node.attrs['data-string']) {
                         node.attrs.title = node.attrs['data-string'];
                     }
@@ -325,7 +325,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     open_record: function(id) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form');
+            this.do_switch_view('form', null, { editable: true });
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }
@@ -530,7 +530,14 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         this.state = this.view.state.records[this.id];
     },
     set_record: function(record) {
+        var self = this;
         this.id = record.id;
+        this.values = {};
+        _.each(record, function(v, k) {
+            self.values[k] = {
+                value: v
+            };
+        });
         this.record = this.transform_record(record);
     },
     start: function() {
@@ -733,12 +740,12 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         var email_md5 = $.md5(email);
         return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
-    kanban_image: function(model, field, id) {
+    kanban_image: function(model, field, id, cache) {
         id = id || '';
         var url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-        if (this.record.__last_update && this.record.__last_update.raw_value) {
-            var time = instance.web.str_to_datetime(this.record.__last_update.raw_value).getTime();
-            url += '&t=' + time;
+        if (cache !== undefined) {
+            // Set the cache duration in seconds.
+            url += '&cache=' + parseInt(cache, 10);
         }
         return url;
     },
@@ -751,6 +758,9 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         } else {
             return s.substr(0, size) + '...';
         }
+    },
+    kanban_compute_domain: function(domain) {
+        return instance.web.form.compute_domain(domain, this.values);
     }
 });
 

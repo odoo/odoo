@@ -332,12 +332,9 @@ def httprequest(f):
 # OpenERP Web werkzeug Session Managment wraped using with
 #----------------------------------------------------------
 STORES = {}
-SESSION_TIMEOUT = 7 * 24 * 60 * 60      # FIXME make it configurable ?
-SESSION_COUNTER = 0
 
 @contextlib.contextmanager
 def session_context(request, storage_path, session_cookie='sessionid'):
-    global SESSION_COUNTER
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
         session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
@@ -347,22 +344,10 @@ def session_context(request, storage_path, session_cookie='sessionid'):
 
     sid = request.cookies.get(session_cookie)
     with session_lock:
-
-        SESSION_COUNTER += 1
-        if SESSION_COUNTER % 100 == 0:
-            SESSION_COUNTER = 0
-            for s in session_store.list():
-                ss = session_store.get(s)
-                t = ss.get('timestamp')
-                if not t or t + SESSION_TIMEOUT < time.time():
-                    _logger.debug('deleting http session %s', s)
-                    session_store.delete(ss)
-
         if sid:
             request.session = session_store.get(sid)
         else:
             request.session = session_store.new()
-        request.session['timestamp'] = time.time()
 
     try:
         yield request.session
@@ -379,7 +364,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                     and not value.jsonp_requests
                     # FIXME do not use a fixed value
                     and value._creation_time + (60*5) < time.time()):
-                _logger.debug('remove OpenERP session %s', key)
+                _logger.debug('remove session %s', key)
                 removed_sessions.add(key)
                 del request.session[key]
 

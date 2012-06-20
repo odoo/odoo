@@ -208,8 +208,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             }
         }
     },
-    do_show: function () {
+    do_show: function (options) {
         var self = this;
+        options = options || {};
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
@@ -233,6 +234,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
                 }).pipe(self.on_record_loaded);
             }
             result.pipe(function() {
+                if (options.editable) {
+                    self.set({mode: "edit"});
+                }
                 self.$element.css('visibility', 'visible');
             });
             return result;
@@ -468,7 +472,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
 
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
-                console.error(e);
+                instance.webclient.crashmanager.on_javascript_exception(e);
                 return $.Deferred().reject();
             }
         });
@@ -495,7 +499,8 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-        	instance.web.dialog($(QWeb.render("CrashManagerWarning", result.warning)), {
+        	instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+                title:result.warning.title,
                 modal: true,
                 buttons: [
                     {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -642,6 +647,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
+                for (var f in self.fields) {
+                    self.fields[f]._check_css_flags();
+                }
                 first_invalid_field.focus();
                 self.on_invalid();
                 return $.Deferred().reject();
@@ -720,7 +728,6 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
             }
-            //instance.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
@@ -906,12 +913,28 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     set_fields_view: function(fvg) {
         this.fvg = fvg;
+        this.version = parseFloat(this.fvg.arch.attrs.version);
+        if (isNaN(this.version)) {
+            this.version = 6.1;
+        }
     },
     set_tags_registry: function(tags_registry) {
         this.tags_registry = tags_registry;
     },
     set_fields_registry: function(fields_registry) {
         this.fields_registry = fields_registry;
+    },
+    // Backward compatibility tools, current default version: v6.1
+    process_version: function() {
+        if (this.version < 7.0) {
+            this.$form.find('form:first').wrapInner('<group col="4"/>');
+            this.$form.find('page').each(function() {
+                if (!$(this).parents('field').length) {
+                    $(this).wrapInner('<group col="4"/>');
+                }
+            });
+        }
+        selector = 'form[version!="7.0"] page,form[version!="7.0"]';
     },
     render_to: function($target) {
         var self = this;
@@ -921,6 +944,8 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         //       but one day, we will have to get rid of xml2json
         var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
+
+        this.process_version();
 
         this.fields_to_init = [];
         this.tags_to_init = [];
@@ -1409,11 +1434,7 @@ instance.web.form.InvisibilityChangerMixin = {
         this._check_visibility();
     },
     _check_visibility: function() {
-        if (this.get("effective_invisible")) {
-            this.$element.hide();
-        } else {
-            this.$element.show();
-        }
+        this.$element.toggleClass('oe_form_invisible', this.get("effective_invisible"));
     },
 };
 
@@ -1902,7 +1923,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function() {
         this.delay_focus(this.$element.find('input:first'));
@@ -2111,7 +2132,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function() {
         if (this.datewidget && this.datewidget.$input)
@@ -2161,7 +2182,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function($element) {
         this.delay_focus(this.$textarea);
@@ -2522,6 +2543,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         var tip_delay = 200;
         var tip_duration = 3000;
         var anyoneLoosesFocus = function() {
+            var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
                     if (self.last_search[0][0] != self.get("value")) {
@@ -2529,13 +2551,17 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.set({value: self.last_search[0][0]});
                     } else {
+                        used = true;
                         self.render_value();
                     }
                 } else {
+                    used = true;
                     self.set({value: false});
+                    self.render_value();
                 }
+                self.floating = false;
             }
-            if (! self.get("value")) {
+            if (used) {
                 tip_def.reject();
                 untip_def.reject();
                 tip_def = $.Deferred();
@@ -2582,7 +2608,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
                 e.preventDefault();
             },
             html: true,
-            close: anyoneLoosesFocus,
+            // disabled to solve a bug, but may cause others
+            //close: anyoneLoosesFocus,
             minLength: 0,
             delay: 0
         });
@@ -2720,6 +2747,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.$element.addClass('oe_form_field_one2many');
 
         var self = this;
 
@@ -2727,7 +2755,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
-        //this.dataset.child_name = 
         this.dataset.on_change.add_last(function() {
             self.trigger_on_change();
         });
@@ -2759,6 +2786,13 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
         _.each(modes, function(mode) {
+            if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
+                try {
+                    throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                } catch(e) {
+                    instance.webclient.crashmanager.on_javascript_exception(e)
+                }
+            }
             var view = {
                 view_id: false,
                 view_type: mode == "tree" ? "list" : mode,
@@ -2769,9 +2803,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
             if(view.view_type === "list") {
                 view.options.selectable = self.multi_selection;
+                view.options.sortable = false;
                 if (self.get("effective_readonly")) {
                     view.options.addable = null;
                     view.options.deletable = null;
+                    view.options.reorderable = false;
                 }
             } else if (view.view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -2792,6 +2828,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.views = views;
 
         this.viewmanager = new instance.web.form.One2ManyViewManager(this, this.dataset, views, {});
+        this.viewmanager.$element.addClass("oe_view_manager_one2many");
         this.viewmanager.o2m = self;
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -3256,6 +3293,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.$element.addClass('oe_form_field_many2many');
 
         var self = this;
 
@@ -3264,7 +3302,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         this.dataset.on_unlink.add_last(function(ids) {
             self.dataset_changed();
         });
-        
+
         this.is_setted.then(function() {
             self.load_view();
         });
@@ -3277,7 +3315,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     });
                 });
             });
-        })
+        });
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -3290,12 +3328,17 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         self.reload_content();
         this.is_setted.resolve();
     },
+    get_value: function() {
+        return [commands.replace_with(this.get('value'))];
+    },
     load_view: function() {
         var self = this;
         this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
+                    'sortable': false,
+                    'reorderable': false,
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
@@ -3319,7 +3362,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         });
     },
     dataset_changed: function() {
-        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+        this.set({'value': this.dataset.ids});
     },
 });
 
@@ -3774,7 +3817,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
-                        'selectable': !self.options.disable_multiple_selection
+                        'selectable': !self.options.disable_multiple_selection,
+                        'read_only': true,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($(".oe-select-create-popup-view-list", self.$element)).pipe(function() {
@@ -3940,13 +3984,22 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
 
 instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     init: function(field_manager, node) {
+        var self = this;
         this._super(field_manager, node);
-        this.iframe = this.element_id + '_iframe';
         this.binary_value = false;
+        this.fileupload_id = _.uniqueId('oe_fileupload');
+        $(window).on(this.fileupload_id, function() {
+            var args = [].slice.call(arguments).slice(1);
+            self.on_file_uploaded.apply(self, args);
+        });
+    },
+    stop: function() {
+        $(window).off(this.fileupload_id);
+        this._super.apply(this, arguments);
     },
     initialize_content: function() {
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
-        this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
+        this.$element.find('button.oe_binary_file_save').click(this.on_save_as);
         this.$element.find('.oe-binary-file-clear').click(this.on_clear);
     },
     human_filesize : function(size) {
@@ -3962,8 +4015,8 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend(
         // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
         // http://www.html5rocks.com/tutorials/file/dndfiles/
         // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
-        window[this.iframe] = this.on_file_uploaded;
-        if ($(e.target).val() != '') {
+
+        if ($(e.target).val() !== '') {
             this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
             this.$element.find('form.oe-binary-form').submit();
             this.$element.find('.oe-binary-progress').show();
@@ -3971,12 +4024,12 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend(
         }
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
-        delete(window[this.iframe]);
         if (size === false) {
             this.do_warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
+            this.filename = name;
             this.on_file_uploaded_and_valid.apply(this, arguments);
         }
         this.$element.find('.oe-binary-progress').hide();
@@ -3984,20 +4037,33 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend(
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
-    on_save_as: function() {
-        $.blockUI();
-        this.session.get_file({
-            url: '/web/binary/saveas_ajax',
-            data: {data: JSON.stringify({
-                model: this.view.dataset.model,
-                id: (this.view.datarecord.id || ''),
-                field: this.name,
-                filename_field: (this.node.attrs.filename || ''),
-                context: this.view.dataset.get_context()
-            })},
-            complete: $.unblockUI,
-            error: instance.webclient.crashmanager.on_rpc_error
-        });
+    on_save_as: function(ev) {
+        var value = this.get('value');
+        if (!value) {
+            this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
+            ev.stopPropagation();
+        } else if (this._dirty_flag) {
+            var link = this.$('.oe_binary_file_save_data')[0];
+            link.download = this.filename || "download.bin"; // Works on only on Google Chrome
+            //link.target = '_blank';
+            link.href = "data:application/octet-stream;base64," + value;
+        } else {
+            $.blockUI();
+            this.session.get_file({
+                url: '/web/binary/saveas_ajax',
+                data: {data: JSON.stringify({
+                    model: this.view.dataset.model,
+                    id: (this.view.datarecord.id || ''),
+                    field: this.name,
+                    filename_field: (this.node.attrs.filename || ''),
+                    context: this.view.dataset.get_context()
+                })},
+                complete: $.unblockUI,
+                error: instance.webclient.crashmanager.on_rpc_error
+            });
+            ev.stopPropagation();
+            return false;
+        }
     },
     on_clear: function() {
         if (this.get('value') !== false) {
@@ -4065,14 +4131,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
-    initialize_content: function() {
-        this._super();
-        if (!this.get("effective_readonly")) {
-            this.$element.find('.oe_form_field_image_controls').show();
-        } else {
-            this.$element.find('.oe_form_field_image_controls').hide();
-        }
-    },
     set_value: function(value_) {
         this._super.apply(this, arguments);
         this.render_value();

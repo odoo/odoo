@@ -9,8 +9,7 @@ instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
     init: function() {
         this._super.apply(this, arguments);
-        // move to instance.web.notification
-        instance.notification = this;
+        instance.web.notification = this;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -141,7 +140,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     on_resized: function() {
-        //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     destroy: function () {
         this.close();
@@ -208,7 +206,14 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             buttons: buttons
         }).open();
         dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
-    }
+    },
+    on_javascript_exception: function(exception) {
+	this.on_traceback({
+	    type: _t("Client Error"),
+	    message: exception,
+	    data: {debug: ""}
+	});
+    },
 });
 
 instance.web.Loading = instance.web.Widget.extend({
