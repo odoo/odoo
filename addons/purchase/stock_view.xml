@@ -25,7 +25,6 @@
         </record>
 
         <act_window
-            domain="[('purchase_id', '=', active_id)]"
             id="act_purchase_order_2_stock_picking"
             name="Incoming Shipments"
             res_model="stock.picking.in"
@@ -36,13 +35,11 @@
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="stock.view_picking_in_tree"/>
-            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
         </record>
         <record id="action_picking_in_form_view" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="stock.view_picking_in_form"/>
-            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
         </record>
         
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
@@ -57,6 +54,21 @@
             </field>
         </record>
         
+        <record id="purchase_order_2_stock_picking" model="ir.ui.view">
+            <field name="name">Purchase Picking Inherited</field>
+            <field name="model">purchase.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//div[contains(@class, 'oe_title')]" position="before">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button type="action"
+                            name="%(act_purchase_order_2_stock_picking)d"
+                            string="Incoming Shipments"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
         <!-- Picking to Invoice -->
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
