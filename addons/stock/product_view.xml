@@ -202,7 +202,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="store" position="after">
-                    <group col="2" colspan="2" name="store" groups="stock.group_locations">
+                    <group name="store" groups="stock.group_locations">
                         <separator string="Counter-Part Locations Properties" colspan="2"/>
                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
