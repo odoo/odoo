@@ -1642,10 +1642,10 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"],['view_id','!=',false]])
                                     .query(['name','id']),
         map_data =  function(){
-            var fetch_name = arguments[0],fetch_res_id = arguments[1];
-            _(fetch_res_id).each(function(res){
-                var ans = _.detect(fetch_name,function(name){ return name.id == parseInt((res.value).split(",")[1]);});
-                self.dashboard_data.push({"res_id":res.res_id,"name":ans.name})
+            var ir_actions_values = arguments[0],ir_values = arguments[1];
+            _(ir_values).each(function(res){
+                var get_name = _.detect(ir_actions_values,function(name){ return name.id == parseInt((res.value).split(",")[1]);});
+                self.dashboard_data.push({"res_id":res.res_id,"name":get_name.name})
             });
             self.data_loaded.resolve();
         },
