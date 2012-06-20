@@ -1050,6 +1050,9 @@ class account_period(osv.osv):
         ids = self.search(cr, uid, args, context=context)
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
+        for period in self.browse(cr, uid, ids, context=context):
+            if period.date_start == period.date_stop:
+                ids.remove(period.id)
         return ids
 
     def action_draft(self, cr, uid, ids, *args):
