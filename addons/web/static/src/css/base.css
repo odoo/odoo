@@ -258,12 +258,21 @@
   -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
+.openerp .oe_title {
+  width: 55%;
+}
+.openerp .oe_title:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
 .openerp .oe_button_box {
   width: 200px;
   text-align: center;
 }
 .openerp .oe_avatar {
-  float: left;
   margin: 0 16px 0 0;
 }
 .openerp .oe_avatar img {
@@ -1548,16 +1557,6 @@
   min-width: 650px;
   max-width: 960px;
   margin: 0 auto;
-}
-.openerp .oe_form_title {
-  width: 55%;
-}
-.openerp .oe_form_title:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
 }
 .openerp ul.oe_form_steps {
   height: 30px;

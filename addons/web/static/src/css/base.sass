@@ -235,11 +235,18 @@ $colour4: #8a89ba
         @include vertical-gradient(#DF6B66, #BF3A33)
         //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    .oe_title
+        width: 55%
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden
     .oe_button_box
         width: 200px
         text-align: center
     .oe_avatar
-        float: left
         margin: 0 16px 0 0
         img
             height: 50px
@@ -1235,14 +1242,6 @@ $colour4: #8a89ba
             min-width: 650px
             max-width: 960px
             margin: 0 auto
-    .oe_form_title
-        width: 55%
-    .oe_form_title:after
-        content: "."
-        display: block
-        height: 0
-        clear: both
-        visibility: hidden
     ul.oe_form_steps
         height: 30px
         padding: 0
