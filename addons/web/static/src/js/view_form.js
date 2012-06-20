@@ -52,6 +52,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
+
+        this.__clicked_inside = false;
+        this.__blur_timeout = null;
     },
     start: function() {
         this._super();
@@ -83,6 +86,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             $(w).unbind('.formBlur');
             w.stop();
         });
+        this.$element.unbind('.formBlur');
         this._super();
     },
     reposition: function ($e) {
@@ -99,6 +103,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.rendered = QWeb.render(this.form_template, { 'frame': frame, 'widget': this });
         }
         this.$element.html(this.rendered);
+        this.$element.bind('mousedown.formBlur', function () {
+            self.__clicked_inside = true;
+        });
         _.each(this.widgets, function(w) {
             w.start();
             $(w).bind('widget-focus.formBlur', self.proxy('widgetFocused'))
@@ -134,12 +141,20 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
 
     widgetFocused: function() {
+        // Clear click flag if used to focus a widget
+        this.__clicked_inside = false;
         if (this.__blur_timeout) {
             clearTimeout(this.__blur_timeout);
-            delete this.__blur_timeout;
+            this.__blur_timeout = null;
         }
     },
     widgetBlurred: function() {
+        if (this.__clicked_inside) {
+            // clicked in an other section of the form (than the currently
+            // focused widget) => just ignore the blurring entirely?
+            this.__clicked_inside = false;
+            return;
+        }
         var self = this;
         // clear timeout, if any
         this.widgetFocused();
@@ -944,6 +959,11 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
 
         this.width = this.node.attrs.width;
     },
+    /**
+     * Sets up blur/focus forwarding from DOM elements to a widget (`this`)
+     *
+     * @param {jQuery} $e jQuery object of elements to bind focus/blur on
+     */
     setupFocus: function ($e) {
         var self = this;
         $e.bind({
@@ -1676,7 +1696,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
         this.datewidget = this.build_widget();
         this.datewidget.on_change.add_last(this.on_ui_change);
         this.datewidget.appendTo(this.$element);
-        // FIXME: handle focus on datetime field
+        this.setupFocus(this.datewidget.$input);
     },
     set_value: function(value) {
         this._super(value);
@@ -2021,6 +2041,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 return;
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
+                self.$input.focus();
             } else {
                 if (self.value) {
                     self.$input.autocomplete("search", "");
@@ -2028,7 +2049,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                     self.$input.autocomplete("search");
                 }
             }
-            self.$input.focus();
         });
         var anyoneLoosesFocus = function() {
             if (!self.$input.is(":focus") &&
@@ -2076,26 +2096,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             isSelecting = false;
         });
 
-        // avoid triggering blur on the widget when it comes from clicking on
-        // a completion of the list, on the dropdown or on the m2o menu thing
-        var picking_completion = false;
-        this.$input.autocomplete('widget')
-                .add(this.$drop_down)
-                .add(this.$menu_btn)
-            .mousedown(function () {
-                picking_completion = true;
-            });
-        this.$input.add(this.$menu_btn).bind({
-            blur: function () {
-                if (!picking_completion) {
-                    $(self).trigger('widget-blur');
-                }
-                picking_completion = false;
-            },
-            focus: function () {
-                $(self).trigger('widget-focus');
-            }
-        })
+        this.setupFocus(this.$input.add(this.$menu_btn));
     },
     // autocomplete component content handling
     get_search_result: function(request, response) {
