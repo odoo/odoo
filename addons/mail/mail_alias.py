@@ -39,8 +39,8 @@ class mail_alias(osv.Model):
     _rec_name = 'alias_name'
 
     _columns = {
-        'alias_name': fields.char('Mailbox Alias', required=True,
-                            help="The name of the mailbox alias, e.g. `jobs' "
+        'alias_name': fields.char('Mailbox Alias', size=255, required=True,
+                            help="The name of the mailbox alias, e.g. 'jobs' "
                                  "if you want to catch emails for <jobs@example.my.openerp.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True,
                                           help="The model (OpenERP Document Kind) to which this alias "
