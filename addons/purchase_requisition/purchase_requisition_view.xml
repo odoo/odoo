@@ -75,7 +75,7 @@
                             </form>
                         </field>
                         <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
-                            attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}" color="blue"/>
+                            attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
                         <separator colspan="4" string="Quotations"/>
                            <field name="purchase_ids" readonly="1">
                              <tree string="Purchase Order">
