@@ -98,7 +98,7 @@
                 <field name="stage_id" widget="statusbar"/>
             </header>
             <sheet>
-                <div class="oe_right oe_form_button_box">
+                <div class="oe_right oe_button_box">
                     <button name="action_makeMeeting" type="object"
                         string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
                     <button name="%(survey.action_view_survey_question_message)d" type="action"
@@ -109,10 +109,10 @@
                         string="Print Interview" icon="gtk-print" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
                 </div>
-                <div class="oe_form_title">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="partner_name" class="oe_form_readonly_hidden"/>
+                    <label for="partner_name" class="oe_edit_only"/>
                     <h2><field name="partner_name"/></h2>
                     <field name="type_id" placeholder="Degree"/>
                 </div>
@@ -138,9 +138,9 @@
                             <group string="Contact">
                                 <label for="partner_id"/>
                                 <div>
-                                    <field name="partner_id" class="oe_form_inline"
+                                    <field name="partner_id" class="oe_inline"
                                         on_change="onchange_partner_id(partner_id, email_from)"/>
-                                    <button class="oe_form_inline"
+                                    <button class="oe_inline"
                                         string="Create" help="Create a new contact for this applicant" icon="gtk-index"
                                         name="%(action_hr_recruitment_partner_create)d" type="action"
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
@@ -343,8 +343,8 @@
             <field name="expected_employees" version="7.0" position="after">
                 <label for="survey_id" />
                 <div>
-                    <field name="survey_id" class="oe_form_inline"/>
-                    <button class="oe_form_inline"
+                    <field name="survey_id" class="oe_inline"/>
+                    <button class="oe_inline"
                         string="Interview" icon="gtk-print"
                         name="action_print_survey" type="object"
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
