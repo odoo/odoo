@@ -170,7 +170,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account" version="7.0">
-                    <label for="name" class="oe_form_readonly_hidden" string="Account Name and Code:"/>
+                    <label for="name" class="oe_edit_only" string="Account Name and Code:"/>
                     <h1>
                         <field name="name"/> - 
                         <field name="code"/>
@@ -465,10 +465,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Journal" version="7.0">
-                    <div class="oe_form_title">
-                        <label for="name" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
-                        <label for="type" class="oe_form_readonly_hidden"/>
+                        <label for="type" class="oe_edit_only"/>
                         <h2><field name="type" on_change="onchange_type(type, currency, context)"/></h2>
                     </div>
                     <notebook>
@@ -1851,27 +1851,28 @@
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                     </header>
-
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="model_id"/>
-                            <field name="ref"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="model_id"/>
+                                <field name="ref"/>
+                            </group>
+                            <newline/>
+    
+                            <group string="Starts on">
+                                <field name="date_start"/>
+                                <field name="period_total"/>
+                            </group>
+    
+                            <group string="Valid Up to">
+                                <field name="period_nbr"/>
+                                <field name="period_type"/>
+                            </group>
                         </group>
-                        <newline/>
-
-                        <group string="Starts on">
-                            <field name="date_start"/>
-                            <field name="period_total"/>
-                        </group>
-
-                        <group string="Valid Up to">
-                            <field name="period_nbr"/>
-                            <field name="period_type"/>
-                        </group>
-                    </group>
-                    <separator string="Subscription Lines"/>
-                    <field name="lines_id" widget="one2many_list"/>
+                        <separator string="Subscription Lines"/>
+                        <field name="lines_id" widget="one2many_list"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -2369,48 +2370,61 @@
         <!--  Wizard for Multi Charts of Accounts -->
 
         <record id="view_wizard_multi_chart" model="ir.ui.view">
-            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="name">Set Your Accounting Options</field>
             <field name="model">wizard.multi.charts.accounts</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
-              <data>
                 <form position="attributes" version="7.0">
-                  <attribute name="string">Accounting Application Configuration</attribute>
+                    <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
+                <button name="action_skip" position="replace"/>
                 <group string="res_config_contents" position="replace">
-                	<label string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" width="150"/>
-                	<separator string="Generate Your Chart of Accounts from a Chart Template"/>
-                    <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                    <field name="code_digits" groups="account.group_account_user"/>
-                    <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
-                    <field name="seq_journal"/>
-                    <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                    <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                    <newline/>
-                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
-                    <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
-                    <field name ="complete_tax_set" invisible="1"/>
-                    <newline/> <!-- extended view because the web UI is not good for one2many -->
-                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="account.group_account_user">
-                        <form string="Bank Information">
-                            <field name="acc_name"/>
-                            <field name="account_type"/>
-                            <field name="currency_id" widget="selection"/>
-                        </form>
-                        <tree editable="bottom" string="Bank Information">
-                            <field name="acc_name"/>
-                            <field name="account_type"/>
-                            <field name="currency_id" widget="selection"/>
-                        </tree>
-                    </field>
+                    <field name="only_one_chart_template" invisible="1"/>
+                    <field name="complete_tax_set" invisible="1"/>
+                    <p>This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template.</p>
+                    <div groups="base.group_multi_company">
+                        <label for="company_id"/>
+                        <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                    </div>
+                    <group string="Set Your Accounting Options">
+                        <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
+                            <label for="chart_template_id"/>
+                            <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
+                        </div>
+                        <newline/>
+                        <group groups="account.group_account_user">
+                            <field name="code_digits"/>
+                        </group>
+                        <group>
+                            <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                            <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                            <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
+                                <field name="sale_tax_rate" class="oe_inline" on_change="onchange_tax_rate(sale_tax_rate)"/> %%
+                            </div>
+                            <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                            <label for="purchase_tax_rate" string="Purchase Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                            <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
+                                <field name="purchase_tax_rate" class="oe_inline"/> %%
+                            </div>
+                        </group>
+                    </group>
+                    <div groups="account.group_account_user">
+                        <label for="bank_accounts_id" string="Bank Information"/>
+                        <field name="bank_accounts_id">
+                            <tree editable="bottom">
+                                <field name="acc_name"/>
+                                <field name="account_type"/>
+                                <field name="currency_id" widget="selection"/>
+                            </tree>
+                        </field>
+                    </div>
                 </group>
-              </data>
             </field>
         </record>
 
         <record id="action_wizard_multi_chart" model="ir.actions.act_window">
-            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="name">Set Your Accounting Options</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.multi.charts.accounts</field>
             <field name="view_id" ref="view_wizard_multi_chart"/>

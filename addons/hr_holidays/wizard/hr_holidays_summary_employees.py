@@ -24,16 +24,16 @@ from osv import osv, fields
 
 class hr_holidays_summary_employee(osv.osv_memory):
     _name = 'hr.holidays.summary.employee'
-    _description = 'HR Holidays Summary Report By Employee'
+    _description = 'HR Leaves Summary Report By Employee'
     _columns = {
         'date_from': fields.date('From', required=True),
         'emp': fields.many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', 'Employee(s)'),
-        'holiday_type': fields.selection([('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')], 'Select Holiday Type', required=True)
+        'holiday_type': fields.selection([('Approved','Approved'),('Confirmed','Confirmed'),('both','Both Approved and Confirmed')], 'Select Leave Type', required=True)
     }
 
     _defaults = {
          'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Validated',
+         'holiday_type': 'Approved',
     }
 
     def print_report(self, cr, uid, ids, context=None):
