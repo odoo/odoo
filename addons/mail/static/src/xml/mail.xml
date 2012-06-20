@@ -29,8 +29,7 @@
 
     <div t-name="RecordThread" class="oe_mail_recthread">
         <h4>History and Comments</h4>
-        <div class="oe_mail_recthread_left">
-        </div>
+        <div class="oe_mail_recthread_left"></div>
         <div class="oe_mail_recthread_right">
             <div class="oe_mail_recthread_actions">
                 <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
@@ -44,7 +43,7 @@
         </div>
     </div>
 
-    <ul t-name="Thread" class="oe_mail oe_mail_thread">
+    <div t-name="Thread" class="oe_mail oe_mail_thread">
         <div class="oe_mail_thread_act">
             <img class="oe_mail_msg_image oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
@@ -55,96 +54,21 @@
         <div class="oe_mail_thread_more">
             <button class="oe_mail_button_more" type="button">Load more messages</button>
         </div>
-    </ul>
+    </div>
 
     <!-- default layout -->
-
     <li t-name="mail.Thread.default" t-attf-class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
             <img t-if="record.type == 'email'" class="oe_email_icon oe_left" src="/mail/static/src/img/email_icon.png"/>
             <img t-if="record.type == 'notification' || record.type == 'comment'" class="oe_mail_msg_image oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
-                <t t-if="record.type == 'email'"><t t-call="mail.Thread.default.EmailDisplay"/></t>
-                <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="mail.Thread.default.NoteDisplay"/></t>
+                <t t-call="mail.Thread.default.NoteDisplay"/>
             </div>
-            <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay"/></t>
+            <t t-if="record.type == 'tmp'"><t t-call="mail.Thread.default.ThreadDisplay"/></t>
         </div>
     </li>
 
     <t t-name="mail.Thread.default.NoteDisplay">
-        <p class="oe_mail_msg">
-            <t t-if="params.thread_level > 0">
-                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
-            </t>
-            <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
-            <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t><br/>
-            <ul>
-              <t t-if="display['show_reply']">
-                <li><a href="#" class="oe_mail_msg_reply oe_mail_oe_intlink">Reply</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
-              </t>
-              <t t-if="display['show_delete']">
-                <t t-if="thread._is_author(record.user_id[0])">
-                  <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink">Delete</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
-                </t>
-              </t>
-              <t t-if="display['show_hide']">
-                <t t-if="!(thread._is_author(record.user_id[0]))">
-                  <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
-                </t>
-              </t>
-              <li>
-                <span class="oe_fade"><t t-raw="record.date"/>
-                  by <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
-                </span>
-              </li>
-            </ul>
-        </p>
-    </t>
-
-    <t t-name="mail.Thread.default.EmailDisplay">
-        <p class="oe_mail_msg oe_mail_msg_p_email_header">
-            <t t-if="params.thread_level > 0">
-                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
-            </t>
-        </p>
-        <p><span class="oe_mail_oe_bold">From:</span> <t t-esc="record.email_from"/></p>
-        <p><span class="oe_mail_oe_bold">Subject:</span> <t t-esc="record.subject"/></p>
-        <p class="oe_mail_msg">
-            <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
-            <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
-        </p>
-
-        <ul>
-          <t t-if="display['show_delete']">
-            <t t-if="thread._is_author(record.user_id[0])">
-              <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink">Delete</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
-            </t>
-          </t>
-          <t t-if="display['show_hide']">
-            <t t-if="!(thread._is_author(record.user_id[0]))">
-              <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a><span class="oe_mail_oe_space oe_fade"> · </span></li>
-            </t>
-          </t>
-          <li>
-            <span class="oe_fade"><t t-raw="record.date"/></span>
-          </li>
-        </ul>
-    </t>
-
-    <!-- new layout -->
-
-    <li t-name="mail.Thread.new" t-attf-class="oe_mail oe_mail_thread_msg">
-        <div t-attf-class="oe_mail_msg_#{record.type}">
-            <img t-if="record.type == 'email'" class="oe_email_icon oe_left" src="/mail/static/src/img/email_icon.png"/>
-            <img t-if="record.type == 'notification' || record.type == 'comment'" class="oe_mail_msg_image oe_left" t-att-src="record.mini_url"/>
-            <div class="oe_mail_msg_content">
-                <t t-call="mail.Thread.new.NoteDisplay"/>
-            </div>
-            <t t-if="record.type == 'tmp'"><t t-call="mail.Thread.new.ThreadDisplay"/></t>
-        </div>
-    </li>
-
-    <t t-name="mail.Thread.new.NoteDisplay">
         <a class="oe_gear_menuaction oe_i">B</a>
         <ul class="oe_gear_menu">
             <t t-if="display['show_delete']">

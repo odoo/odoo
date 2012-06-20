@@ -325,7 +325,7 @@ openerp.mail = function(session) {
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // render
             // OPTIONS
-            $(session.web.qweb.render('mail.Thread.new', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
+            $(session.web.qweb.render('mail.Thread.default', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
             if (record.tr_body) {
