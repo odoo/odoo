@@ -1287,18 +1287,6 @@ class SearchView(View):
                 del filter['domain']
         return filters
     
-    @openerpweb.jsonrequest
-    def get_all_dashboard(self, req):
-         all_dashboard = []
-         Model = req.session.model('ir.actions.act_window')
-         Dashboard_Menus = req.session.model('ir.values')
-         Dashboard_act_window = Model.search_read([('res_model','=',"board.board")],['name','id'])
-         for i in Dashboard_act_window:
-             tuple_of_dashboard = "ir.actions.act_window," + str(i["id"])
-             menu_id = Dashboard_Menus.search_read([('value','=',tuple_of_dashboard)],['res_id'])
-             if menu_id:
-                all_dashboard.append({"res_id":menu_id[0]["res_id"],"name":i["name"]})
-         return all_dashboard
      
     @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
