@@ -43,11 +43,11 @@
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ready" />
                </header>
                <sheet string="Repairs order">
-                    <label for="product_id" class="oe_form_readonly_hidden"/>
+                    <label for="product_id" class="oe_edit_only"/>
                     <h1>
                         <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
                     </h1>
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h2>
                         <field name="name"/>
                     </h2>
@@ -117,7 +117,7 @@
                                 <field name="price_subtotal"/>
                             </tree>
                         </field>
-                        <group class="oe_form_subtotal_footer">
+                        <group class="oe_subtotal_footer">
                             <field name="amount_untaxed" sum="Untaxed amount"/>
                             <field name="amount_tax"/>
                             <field name="amount_total" sum="Total amount"/>
