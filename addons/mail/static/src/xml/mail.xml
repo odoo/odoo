@@ -97,7 +97,7 @@
                 </t>
                 <span class="oe_mail_msg_author"><a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a></span>
                  · 
-                <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
+                <span class="oe_mail_msg_date" t-att-title="record.date"><t t-raw="record.timerelative"/></span>
             </p>
             
             <div class="oe_mail_msg_body"><t t-raw="record.body"/></div>
