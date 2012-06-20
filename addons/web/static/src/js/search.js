@@ -1631,7 +1631,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
     start: function () {
         var self = this;
         this.data_loaded = $.Deferred();
-        this.menu_data =[];
+        this.dashboard_data =[];
         this.$element
         .on('click', 'h4', this.proxy('show_option'))
         .on('submit', 'form', function (e) {e.preventDefault(); self.add_dashboard();});
@@ -1645,7 +1645,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
             var fetch_name = arguments[0],fetch_res_id = arguments[1];
             _(fetch_res_id).each(function(res){
                 var ans = _.detect(fetch_name,function(name){ return name.id == parseInt((res.value).split(",")[1]);});
-                self.menu_data.push({"res_id":res.res_id,"name":ans.name})
+                self.dashboard_data.push({"res_id":res.res_id,"name":ans.name})
             });
             self.data_loaded.resolve();
         },
@@ -1657,18 +1657,18 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
             })
             return domain;
         };
-        return ir_actions_act_window._execute().then(function(result){
-            if(!result.length) {self.data_loaded.resolve();return;}
-            var ir_value = new instance.web.Model('ir.values',{},make_domain(result)).query(['res_id','value']);
-            ir_value._execute().done(function(result1){
-                map_data(result,result1);
+        return ir_actions_act_window._execute().then(function(ir_actions_values){
+            if(!ir_actions_values.length) {self.data_loaded.resolve();return;}
+            var ir_value = new instance.web.Model('ir.values',{},make_domain(ir_actions_values)).query(['res_id','value']);
+            ir_value._execute().done(function(ir_values){
+                map_data(ir_actions_values,ir_values);
             })
         });
     },
     
     render_data: function(){
         var self = this;
-        var selection = instance.web.qweb.render("SearchView.addtodashboard.selection",{selections:this.menu_data});
+        var selection = instance.web.qweb.render("SearchView.addtodashboard.selection",{selections:this.dashboard_data});
         this.$element.find("input").before(selection)
     },
     add_dashboard:function(){
