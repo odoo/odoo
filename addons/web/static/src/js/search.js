@@ -1630,25 +1630,42 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
     _in_drawer: true,
     start: function () {
         var self = this;
+        this.data_loaded = $.Deferred();
+        this.menu_data =[];
         this.$element
         .on('click', 'h4', this.proxy('show_option'))
         .on('submit', 'form', function (e) {e.preventDefault(); self.add_dashboard();});
-        //return this.rpc('/web/searchview/get_all_dashboard', {}, function(r) {self.menu_data = r;}).pipe(this.proxy("render_data"))
+        return $.when(this.load_data(),this.data_loaded).pipe(self.proxy("render_data"));
     },
-    /*
-     *     @openerpweb.jsonrequest
-    def get_all_dashboard(self, req):
-         all_dashboard = []
-         Model = req.session.model('ir.actions.act_window')
-         Dashboard_Menus = req.session.model('ir.values')
-         Dashboard_act_window = Model.search_read([('res_model','=',"board.board")],['name','id'])
-         for i in Dashboard_act_window:
-             tuple_of_dashboard = "ir.actions.act_window," + str(i["id"])
-             menu_id = Dashboard_Menus.search_read([('value','=',tuple_of_dashboard)],['res_id'])
-             if menu_id:
-                all_dashboard.append({"res_id":menu_id[0]["res_id"],"name":i["name"]})
-         return all_dashboard
-     */
+    load_data:function(){
+        var self = this,
+        ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"],['view_id','!=',false]])
+                                    .query(['name','id']),
+        map_data =  function(){
+            var fetch_name = arguments[0],fetch_res_id = arguments[1];
+            _(fetch_res_id).each(function(res){
+                var ans = _.detect(fetch_name,function(name){ return name.id == parseInt((res.value).split(",")[1]);});
+                self.menu_data.push({"res_id":res.res_id,"name":ans.name})
+            });
+            self.data_loaded.resolve();
+        },
+        make_domain = function(result){
+            var domain = [];
+            _(result).map(function(value,key){
+                domain.push(["value","=","ir.actions.act_window,"+value.id]);
+                ((result.length)- 1 !== key)?domain.unshift("|"):false;
+            })
+            return domain;
+        };
+        return ir_actions_act_window._execute().then(function(result){
+            if(!result.length) {self.data_loaded.resolve();return;}
+            var ir_value = new instance.web.Model('ir.values',{},make_domain(result)).query(['res_id','value']);
+            ir_value._execute().done(function(result1){
+                map_data(result,result1);
+            })
+        });
+    },
+    
     render_data: function(){
         var self = this;
         var selection = instance.web.qweb.render("SearchView.addtodashboard.selection",{selections:this.menu_data});
@@ -1661,7 +1678,6 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         data = getParent.build_search_data(),
         context = new instance.web.CompoundContext(getParent.dataset.get_context() || []),
         domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
-        this.$element.toggleClass('oe_opened');
         _.each(data.contexts, function(x) {context.add(x);});
         _.each(data.domains, function(x) {domain.add(x);});
         this.rpc('/web/searchview/add_to_dashboard', {
@@ -1675,6 +1691,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
             if (r === false) {
                 self.do_warn("Could not add filter to dashboard");
             } else {
+                self.$element.toggleClass('oe_opened');
                 self.do_notify("Filter added to dashboard", '');
             }
         });
