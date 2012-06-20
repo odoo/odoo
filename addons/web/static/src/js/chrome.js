@@ -868,6 +868,16 @@ instance.web.WebClient = instance.web.Widget.extend({
             setTimeout(function() {
                 // Do not alter propagation
                 $menu.toggleClass('oe_opened', !state);
+                if (!state) {
+                    // Move $menu if outside window's edge
+                    var doc_width = $(document).width();
+                    var offset = $menu.offset();
+                    var menu_width = $menu.width();
+                    var x = doc_width - offset.left - menu_width - 15;
+                    if (x < 0) {
+                        $menu.offset({ left: offset.left + x }).width(menu_width);
+                    }
+                }
             }, 0);
         });
         instance.web.bus.on('click', this, function() {
