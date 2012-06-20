@@ -982,9 +982,13 @@
             <field name="arch" type="xml">
                 <form string="Journal Item">
                     <group col="6" colspan="4">
-                         <field name="partner_id"/><newline/>
-                         <button string="Reconcile"/>
-                         <button string="Nothing to Reconcile"/>
+                         <field name="partner_id" nolabel="1"/>
+                         <field name="lastest_entry" /> 
+                         <field name="lastest_entry2" /> <newline/>
+                         <button string="Reconcile" name="%(action_view_account_move_line_reconcile)d" type="action" />
+                         <button string="Nothing to Reconcile" name="%(action_account_unreconcile)d" type="action" />
+                       
+                         <field name="reconciliation_progress" widget="progressbar" nolabel="1"/> 
                     </group>
                 </form>
             </field>

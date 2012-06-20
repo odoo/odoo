@@ -470,6 +470,22 @@ class account_move_line(osv.osv):
             for line in move.line_id:
                 result.append(line.id)
         return result
+    
+    def _latest_entry_date(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = {}
+        # ToDo write query to fetch the same date
+        for accout_move_line in self.browse(cr, uid, ids, context=context):
+            ids = self.search(cr, uid, [('partner_id','=',accout_move_line.partner_id.id)], context=context, limit=1, order='date')
+            date = self.browse(cr, uid, ids, context=context)[0].date
+            res[accout_move_line.id] = date
+        return res
+    
+    def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
+        #ToDo
+        res = {}
+        for id in ids:
+            res[id] = 0.5
+        return res
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -517,7 +533,12 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
+        'last_reconciliation_date': fields.related('partner_id', 'last_reconciliation_date', type='datetime', relation='res.partner', string='Latest Reconciliation Date',readonly=True),
+        'lastest_entry': fields.function(_latest_entry_date, type='date', string="Latest Entry"),
+        'lastest_entry2': fields.function(_latest_entry_date, type='date', string="Latest Recnciliation"),
+        'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float')
+
     }
 
     def _get_date(self, cr, uid, context=None):
