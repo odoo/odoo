@@ -8,12 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee attendances" version="7.0">
+                	<sheet>
                     <group>
                         <field name="employee_id"/>
                         <field name="name"/>
                         <field name="action"/>
                         <field name="action_desc"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -123,7 +125,7 @@
         <menuitem
             sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendance"
             groups="base.group_no_one"/>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" />
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="base.group_no_one"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>
