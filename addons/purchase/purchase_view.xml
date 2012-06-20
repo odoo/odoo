@@ -394,38 +394,25 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order Line" version="7.0">
                 	<sheet>
-	                    <label for="order_id" class="oe_edit_only"/>
-	                    <h1>
-	                        <field name="order_id" class="oe_inline"/>, 
-	                        <field name="date_order" class="oe_inline"/>
-	                    </h1>
-	                    <label for="partner_id" class="oe_edit_only"/>
-	                    <h2><field name="partner_id"/></h2>
-	
-	                    <group>
+	                    <group col="4" colspan="4">
 	                        <group>
-	                            <field name="name"/>
-	                            <field name="product_id" readonly="1"/>
-	                            <label for="product_qty"/>
-	                            <div>
-	                                <field name="product_qty" readonly="1" class="oe_inline"/>
-	                                <field name="product_uom" readonly="1" groups="product.group_uom" class="oe_inline"/>
-	                            </div>
-	                            <field name="price_unit"/>
+	                           <field name="product_id"/>
+	                           <field name="product_qty" readonly="1" class="oe_inline"/>
+	                           <field name="price_unit"/>
+	                           <field name="taxes_id" widget="many2many_tags"
+	                                domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>                         
 	                        </group>
 	                        <group>
-	                            <field name="date_planned" widget="date"  readonly="1"/>
-	                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-	                            <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-	                            <field name="taxes_id" widget="many2many_tags"
-	                                domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
-	                            <field name="invoiced"/>
+	                            <field name="name"/>
+ 	                            <field name="date_planned" widget="date"  readonly="1"/>
+ 	                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+ 	                            <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
 	                        </group>
 	                    </group>
 	                    <separator string="Manual Invoices"/>
 	                    <field name="invoice_lines"/>
 	                    <separator string="Notes"/>
-	                    <field name="notes"/>
+	                    <field name="notes" placeholder="Add a note on the purchase line..."/>
 	                    <separator string="Stock Moves"/>
 	                    <field name="move_ids"/>
 	            	</sheet>
