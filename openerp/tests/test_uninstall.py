@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-# Run with one of these commands:
-#    > OPENERP_ADDONS_PATH='../../addons/trunk' OPENERP_PORT=8069 \
-#      OPENERP_DATABASE=yy PYTHONPATH=. python tests/test_ir_sequence.py
-#    > OPENERP_ADDONS_PATH='../../addons/trunk' OPENERP_PORT=8069 \
-#      OPENERP_DATABASE=yy nosetests tests/test_ir_sequence.py
-#    > OPENERP_ADDONS_PATH='../../../addons/trunk' OPENERP_PORT=8069 \
-#      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence
-# This assume an existing database.
+# This assumes an existing but uninitialized database.
 import psycopg2
 import unittest2
 
@@ -77,7 +70,7 @@ class test_uninstall(unittest2.TestCase):
         assert search_registry('ir.model.fields',
             [('model', '=', 'test_uninstall.model')])
 
-    def test_02_install(self):
+    def test_02_uninstall(self):
         """ Check a few things showing the module is uninstalled. """
         uninstall_module('test_uninstall')
         assert not get_module('test_uninstall.model')

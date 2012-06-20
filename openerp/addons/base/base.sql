@@ -348,9 +348,9 @@ CREATE TABLE ir_model_data (
 );
 
 -- Records foreign keys and constraints installed by a module (so they can be
--- removed them when the module is uninstalled):
---   - for a foreign key: type 'f',
---   - for a constraint: type 'u'.
+-- removed when the module is uninstalled):
+--   - for a foreign key: type is 'f',
+--   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
 CREATE TABLE ir_model_constraint (
     id serial NOT NULL,
     create_uid integer,
@@ -366,7 +366,7 @@ CREATE TABLE ir_model_constraint (
 );
 
 -- Records relation tables (i.e. implementing many2many) installed by a module
--- (so they can be removed them when the module is uninstalled).
+-- (so they can be removed when the module is uninstalled).
 CREATE TABLE ir_model_relation (
     id serial NOT NULL,
     create_uid integer,
