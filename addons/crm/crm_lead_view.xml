@@ -282,8 +282,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
-                <field name="name" string="Lead / Customer"
-                    filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self),('subjects','ilike',self)]"/>
+                <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                <!---TO FIX: when subjects put in domain it not works-->
+                <field name="subjects"/>     
                 <separator orientation="vertical"/>
                 <field name="create_date"/>
                 <separator orientation="vertical"/>

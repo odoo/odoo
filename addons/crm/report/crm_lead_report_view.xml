@@ -82,6 +82,7 @@
                             name="opportunity"
                             domain="[('type','=','opportunity')]"
                             help="Show only opportunity"/>
+                        <separator orientation="vertical" />
                         <filter icon="terp-check"
                             string="New"
                             domain="[('state','=','draft')]"
@@ -98,6 +99,7 @@
                             string="Closed"
                             domain="[('state','=','done')]"
                             help="Leads/Opportunities which are in done state"/>
+                        <separator orientation="vertical" />
                         <filter string="My Sales Team(s)" icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"

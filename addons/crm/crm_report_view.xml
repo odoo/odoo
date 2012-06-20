@@ -157,10 +157,9 @@
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
                    <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="section_id" widget="selection"/>
+                        <field name="name"/>
                         <field name="month"/>
+                        <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>
                    </group>
