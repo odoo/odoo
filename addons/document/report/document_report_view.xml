@@ -43,10 +43,10 @@
                 <search string="All users files">
                     <group>
                         <separator orientation="vertical"/>
-                            <field name="name"/>
-                            <field name="month"/>
-                            <field name="user"/>
-                            <field name="directory"/>
+                        <field name="name"
+                            filter_domain="['|', '|',('name','ilike',self), ('user','ilike',self), ('directory','ilike',self)]"
+                            string="Users File"/>
+                        <field name="month"/>
                     </group>
                </search>
             </field>
