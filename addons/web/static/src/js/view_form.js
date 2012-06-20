@@ -2220,7 +2220,6 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
 
     set_value: function(value_) {
         this._super.apply(this, arguments);
-        console.log(this.$element);
         var textarea_node = this.$element.find('textarea.field_text');
         textarea_node.cleditor({
           //width:        500, // width not including margins, borders or padding
