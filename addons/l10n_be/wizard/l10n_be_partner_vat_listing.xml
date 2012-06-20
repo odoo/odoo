@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <form string="Partner VAT Listing" version="7.0">
           <header>
-            <button name="get_partner" string="View Customers" type="object" icon="terp-partner" class="oe_form_button_active_flow"/>
+            <button name="get_partner" string="View Customers" type="object" icon="terp-partner" class="oe_highlight"/>
           </header>
           <group>
             <label string="This wizard will create an XML file for VAT details and total invoiced amounts per partner." colspan="4"/>
@@ -66,7 +66,7 @@
       <field name="arch" type="xml">
         <form string="XML File has been Created." version="7.0">
             <header>
-                <button name="print_vatlist" string="Print" type="object"  icon="gtk-print" class="oe_form_button_active_flow"/>
+                <button name="print_vatlist" string="Print" type="object"  icon="gtk-print" class="oe_highlight"/>
             </header>
             <separator string="XML File has been Created." colspan="4"/>
             <label string="Save the File with '.xml' extension." colspan="4" nolabel="1"/>

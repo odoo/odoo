@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
             <form string="Send followups" version="7.0">
                 <header>
-                    <button name="do_continue" string="Continue" colspan="1" type="object" icon="gtk-ok" class="oe_form_button_active_flow"/>
+                    <button name="do_continue" string="Continue" colspan="1" type="object" icon="gtk-ok" class="oe_highlight"/>
                 </header>
                 <separator string="Send Follow-Ups"/>
                 <label string ="This feature allows you to send reminders to partners with pending invoices. You can send them the default message for unpaid invoices or manually enter a message should you need to remind them of a specific information."/>
@@ -75,8 +75,8 @@
             <field name="arch" type="xml">
             <form string="Send followups" version="7.0">
                 <header>
-                    <button name="do_mail" string="Send Mails" colspan="1" type="object" icon="gtk-execute" class="oe_form_button_active_flow"/>
-                    <button name="do_print" string="Print Follow Ups" colspan="1" type="object" icon="gtk-print" class="oe_form_button_active_flow"/>
+                    <button name="do_mail" string="Send Mails" colspan="1" type="object" icon="gtk-execute" class="oe_highlight"/>
+                    <button name="do_print" string="Print Follow Ups" colspan="1" type="object" icon="gtk-print" class="oe_highlight"/>
                 </header>
                 <notebook>
                     <page string="Partner Selection">
