@@ -11,9 +11,11 @@
                         <button icon="terp-gtk-jump-to-ltr" string="Sign in" name="si_check" type="object" class="oe_form_button_active_flow"/>
                         <button icon="terp-gtk-jump-to-rtl" string="Sign out" name="so_check" type="object" class="oe_form_button_active_flow"/>
                     </header>
-                    <separator colspan="4" string="Sign in / Sign out"/>
-                    <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
-                    <newline/>
+                    <group>
+                        <separator colspan="4" string="Sign in / Sign out"/>
+                        <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
+                        <newline/>
+                    </group>
                     <group colspan="4" >
                     <field name="name" />
                     <field name="state" />
