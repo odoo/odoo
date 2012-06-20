@@ -740,12 +740,12 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         var email_md5 = $.md5(email);
         return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
-    kanban_image: function(model, field, id) {
+    kanban_image: function(model, field, id, cache) {
         id = id || '';
         var url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-        if (this.record.__last_update && this.record.__last_update.raw_value) {
-            var time = instance.web.str_to_datetime(this.record.__last_update.raw_value).getTime();
-            url += '&t=' + time;
+        if (cache !== undefined) {
+            // Set the cache duration in seconds.
+            url += '&cache=' + parseInt(cache, 10);
         }
         return url;
     },

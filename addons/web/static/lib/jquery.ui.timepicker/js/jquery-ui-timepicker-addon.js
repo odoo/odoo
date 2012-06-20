@@ -913,7 +913,7 @@ $.fn.extend({
 		tmp_args = arguments;
 
 		if (typeof(o) == 'string'){
-			if(o == 'getDate') 
+			if(o == 'getDate' || o == 'widget')
 				return $.fn.datepicker.apply($(this[0]), tmp_args);
 			else 
 				return this.each(function() {

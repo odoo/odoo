@@ -620,13 +620,18 @@ instance.web.Reload = instance.web.Widget.extend({
         this.menu_id = (params && params.menu_id) || false;
     },
     start: function() {
+        var l = window.location;
+        var timestamp = new Date().getTime();
+        var search = "?ts=" + timestamp;
+        if (l.search) {
+            search = l.search + "&ts=" + timestamp;
+        } 
+        var hash = l.hash;
         if (this.menu_id) {
-            // open the given menu id
-            var url_without_fragment = window.location.toString().split("#", 1)[0];
-            window.location = url_without_fragment + "#menu_id=" + this.menu_id;
-        } else {
-            window.location.reload();
+            hash = "#menu_id=" + this.menu_id;
         }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
     }
 });
 

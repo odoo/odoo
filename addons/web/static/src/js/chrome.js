@@ -206,7 +206,14 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             buttons: buttons
         }).open();
         dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
-    }
+    },
+    on_javascript_exception: function(exception) {
+	this.on_traceback({
+	    type: _t("Client Error"),
+	    message: exception,
+	    data: {debug: ""}
+	});
+    },
 });
 
 instance.web.Loading = instance.web.Widget.extend({

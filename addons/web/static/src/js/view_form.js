@@ -472,7 +472,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
 
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
-                console.error(e);
+                instance.webclient.crashmanager.on_javascript_exception(e);
                 return $.Deferred().reject();
             }
         });
@@ -2817,7 +2817,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var views = [];
         _.each(modes, function(mode) {
             if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
-                throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                try {
+                    throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                } catch(e) {
+                    instance.webclient.crashmanager.on_javascript_exception(e)
+                }
             }
             var view = {
                 view_id: false,
@@ -2829,9 +2833,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
             if(view.view_type === "list") {
                 view.options.selectable = self.multi_selection;
+                view.options.sortable = false;
                 if (self.get("effective_readonly")) {
                     view.options.addable = null;
                     view.options.deletable = null;
+                    view.options.reorderable = false;
                 }
             } else if (view.view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -2840,7 +2846,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 view.options.not_interactible_on_create = true;
             } else if (view.view_type === "kanban") {
                 view.options.confirm_on_delete = false;
-                view.options.sortable = false;
                 if (self.get("effective_readonly")) {
                     view.options.action_buttons = false;
                     view.options.quick_creatable = false;
@@ -2853,6 +2858,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.views = views;
 
         this.viewmanager = new instance.web.form.One2ManyViewManager(this, this.dataset, views, {});
+        this.viewmanager.$element.addClass("oe_view_manager_one2many");
         this.viewmanager.o2m = self;
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -3362,6 +3368,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
                     'sortable': false,
+                    'reorderable': false,
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
