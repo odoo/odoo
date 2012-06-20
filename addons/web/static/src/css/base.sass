@@ -322,7 +322,31 @@ $colour4: #8a89ba
     .oe_cropdown_menu
         display: none
         position: absolute
+        top: 28px
         z-index: 1
+        border: 1px solid #afafb6
+        background: white
+        padding: 8px
+        min-width: 120px
+        text-align: left
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        li
+            &:hover
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+                @include box-shadow(none)
+            list-style-type: none
+            float: none
+            display: block
+            position: relative
+            a
+                white-space: nowrap
+                display: block
+                padding: 3px 6px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
     .oe_cropdown_arrow:after
         width: 0
         height: 0
@@ -334,95 +358,47 @@ $colour4: #8a89ba
         margin-left: 4px
         border-left: 4px solid transparent
         border-right: 4px solid transparent
-        border-top-color: #404040
+        border-top: 4px solid#404040
         @include opacity(0.5)
 
-
-    .oe_dropdown_toggle:after
-        width: 0
-        height: 0
-        display: inline-block
-        content: "&darr"
-        text-indent: -99999px
-        vertical-align: top
-        border-left: 4px solid transparent
-        border-right: 4px solid transparent
-        border-top: 4px solid white
-        @include opacity(0.5)
-        margin-top: 7px
-        margin-left: 6px
-    .oe_dropdown_menu
-        display: none
-        position: absolute
-        top: 28px
-        left: 0px
-        padding: 8px
-        border: 1px solid #afafb6
-        min-width: 120px
-        overflow-x: hidden
-        z-index: 900
-        text-align: left
-        background: white
-        @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        li
-            &:hover
-                @include vertical-gradient(#f0f0fa, #eeeef6)
-                @include box-shadow(none)
-            position: relative
-            list-style-type: none
-            float: none
-            display: block
-            background-color: none
-            a
-                display: block
-                padding: 3px 6px
-                clear: both
-                font-weight: normal
-                line-height: 14px
-                color: #4c4c4c
-                text-decoration: none
-                cursor: pointer
-                &:hover
-                    text-decoration: none
-            .oe_sidebar_delete_item
-                position: absolute
-                bottom: 1px
-                right: 4px
-                display: none
-                width: 12px
-                height: 12px
-                line-height: 12px
-                padding: 1px
-                color: #8786b7
-                line-height: 8px
-                text-align: center
-                font-weight: bold
-                text-shadow: 0 1px 1px white
-                &:hover
-                    text-decoration: none
-                    color: white
-                    background: #8786b7
-                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                    @include radius(2px)
-            &:hover
-                .oe_sidebar_delete_item
-                    display: inline-block
     .oe_sidebar
         white-space: nowrap
-        .oe_dropdown_menu li
-            padding-right: 16px
-        .oe_sidebar_add_attachment
-            cursor: pointer
-            padding-left: 6px
-            margin-top: 6px
-            span
-                font-weight: bold
-            .oe_hidden_input_file
-                width: 200px
-            &:hover
-                @include vertical-gradient(#f0f0fa, #eeeef6)
-                @include box-shadow(none)
+        .oe_cropdown_menu
+            .oe_sidebar_add_attachment
+                height: 20px
+                cursor: pointer
+                padding-left: 6px
+                margin-top: 6px
+                span
+                    font-weight: bold
+                .oe_hidden_input_file
+                    width: 200px
+                &:hover
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+            li
+                .oe_sidebar_delete_item
+                    position: absolute
+                    top: 4px
+                    right: 4px
+                    display: none
+                    width: 12px
+                    height: 12px
+                    padding: 1px
+                    color: #8786b7
+                    line-height: 8px
+                    text-align: center
+                    font-weight: bold
+                    text-shadow: 0 1px 1px white
+                    &:hover
+                        text-decoration: none
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        @include radius(2px)
+                &:hover
+                    .oe_sidebar_delete_item
+                        display: inline-block
     // }}}
 
     // Loading {{{
@@ -603,26 +579,20 @@ $colour4: #8a89ba
             @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
-        .oe_cropdown_toggle:after
+        .oe_cropdown_arrow:after
             border-top: 4px solid white
         .oe_cropdown_menu
             background: #333
             background: rgba(37,37,37,0.9)
-            padding: 6px 0
             border-color: #999
             border-color: rgba(0, 0, 0, 0.2)
             border-style: solid
             border-width: 0 1px 1px
             @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
             @include background-clip()
             li
                 float: none
-                display: block
                 a
-                    white-space: nowrap
-                    display: block
-                    padding: 4px 15px
                     color: #eee
                     &:hover
                         @include vertical-gradient(#292929, #191919)
