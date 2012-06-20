@@ -245,15 +245,17 @@
                     </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
-                            <a class="oe_kanban_menuaction oe_i">B</a>
-                            <ul class="oe_kanban_menu">
-                                <li><a type="edit" >Edit...</a></li>
-                                <li><a type="delete">Delete</a></li>
-                                <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
-                                <li><a name="%(opportunity2phonecall_act)d" type="action">Log Call</a></li>
-                                <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
-                                <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                            </ul>
+                            <div class="oe_cropdown_toggle oe_cropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_cropdown_menu">
+                                    <li><a type="edit" >Edit...</a></li>
+                                    <li><a type="delete">Delete</a></li>
+                                    <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
+                                    <li><a name="%(opportunity2phonecall_act)d" type="action">Log Call</a></li>
+                                    <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>
                             <div class="oe_kanban_content">
                                 <div>
                                     <b><field name="name"/></b>
