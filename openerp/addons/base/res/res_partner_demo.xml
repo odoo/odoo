@@ -131,7 +131,7 @@
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
             <field name="city">Fremont</field>
-            <field name="zip">94538</field>
+            <field name="zip">CA 94538</field>
             <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
             <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
             <field name="street">3661 Station Street</field>
@@ -149,7 +149,7 @@
             <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
             <field name="street">99 Cheriton Rd</field>
             <field name="email">epic@tech.info</field>
-            <field name="phone">+32 421 52571</field>
+            <field name="phone">+44 121 690 4596</field>
             <field name="website">www.epic-tech.info//</field>
         </record>
 
@@ -160,8 +160,9 @@
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
             <field name="city">Chicago</field>
-            <field name="zip">60623</field>
+            <field name="zip">IL 60623</field>
             <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
             <field name="street">23 Rockwell Lane</field>
             <field name="email">info@elecimport.com</field>
             <field name="phone">+1 773 439 3000</field>
@@ -214,24 +215,26 @@
             <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_9')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Miami</field>
-            <field name="zip">33169</field>
+            <field name="zip">FL 33169</field>
             <field model="res.country" name="country_id" search="[('code','=','US')]"/>
             <field model="res.country.state" name="state_id" search="[('code','=','FL')]"/>
             <field name="email">contact@jackson.com</field>
             <field name="phone">+1 786 525 0724</field>
             <field name="street">3203 Lamberts Branch Road</field>
         </record>
-
+  
         <record id="res_partner_11" model="res.partner">
-            <field name="name">Leclerc</field>
-            <field eval="1200.00" name="credit_limit"/>
+            <field name="name">Luminous Technologies</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
             <field eval="[(6, 0, [ref('res_partner_category_0')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="street">rue Grande</field>
-	        <field name="city">Brest</field>
-            <field name="zip">29200</field>
-	        <field name="email">marine@leclerc.fr</field>
-	        <field name="phone">+33-298.334558</field>
+            <field name="street">Constitución, 80</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','es')]"/>
+	        <field name="city">Barcelona</field>
+            <field name="zip">08078</field>
+	        <field name="phone">+34 934 340 230</field>
+	        <field name="website">www.lumitech.com</field>
         </record>
 
         <record id="res_partner_12" model="res.partner">
@@ -249,32 +252,7 @@
             <field name="website">www.camptocamp.com</field>
         </record>
 
-        <record id="res_partner_sednacom" model="res.partner">
-            <field name="website">www.syleam.fr</field>
-            <field name="name">Syleam</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
-            <field name="city">Alencon</field>
-            <field name="zip">61000</field>
-            <field name="email">contact@syleam.fr</field>
-            <field name="street">1 place de l'Église</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="is_company">1</field>
-        </record>
-
-        <record id="res_partner_thymbra" model="res.partner">
-            <field name="name">Smart Business</field>
-            <field name="is_company">1</field>
-            <field name="city">Buenos Aires</field>
-            <field name="zip">1659</field>
-            <field name="email">contact@smartbusiness.ar</field>
-            <field name="street">Palermo, Capital Federal </field>
-            <field name="street2">C1414CMS Capital Federal </field>
-            <field name="phone">(5411) 4773-9666 </field>
-            <field model="res.country" name="country_id" search="[('name','=','Argentina')]"/>
-            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
-        </record>
-        <record id="res_partner_desertic_hispafuentes" model="res.partner">
+        <record id="res_partner_13" model="res.partner">
             <field name="name">Axelor</field>
             <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
             <field name="supplier">1</field>
@@ -287,129 +265,115 @@
             <field name="street">12 rue Albert Einstein</field>
             <field name="website">www.axelor.com/</field>
         </record>
-        <record id="res_partner_tinyatwork" model="res.partner">
-            <field name="name">Tiny AT Work</field>
-            <field name="is_company">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
-            <field name="city">Boston</field>
-            <field name="zip">5501</field>
-            <field name="email">info@tinyatwork.com</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">One Lincoln Street</field>
-            <field name="website">www.tinyatwork.com/</field>
-        </record>
-        <record id="res_partner_maxtor" model="res.partner">
-            <field name="name">Maxtor</field>
-            <field eval="32000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="city">Hong Kong</field>
-            <field name="zip">23540</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">56 Beijing street</field>
-            <field name="email">info@maxtor.com</field>
-            <field name="phone">+ 11 8528 456 789</field>
-        </record>
-        <record id="res_partner_seagate" model="res.partner">
-            <field name="name">Seagate</field>
-            <field eval="5000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field name="is_company">1</field>
-            <field name="city">Cupertino</field>
-            <field name="zip">95014</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">10200 S. De Anza Blvd</field>
-            <field name="email">info@seagate.com</field>
-            <field name="phone">+1 408 256987</field>
-        </record>
-        
+
         <record id="res_partner_14" model="res.partner">
-            <field name="name">Centrale d'achats BML</field>
-            <field name="ean13">3020178572427</field>
+            <field name="name">Chamber Works</field>
+            <!--      Contact: Angel Cook-->
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
             <field eval="15000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9'), ref('res_partner_category_11')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="name">Carl François</field>
-            <field name="city">Bruxelles</field>
-            <field name="zip">1000</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">89 Chaussée de Waterloo</field>
-            <field name="email">carl.françois@bml.be</field>
-            <field name="phone">+32-258-256545</field>
+            <field name="city">Detroit</field>
+            <field name="zip">MI 48212</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','mi')]"/>
+            <field name="street">60, Rosewood Court</field>
+            <field name="email">info@chamberworks.com</field>
+            <field name="phone">+1 313 222 3456</field>
         </record>
+
         <record id="res_partner_15" model="res.partner">
             <field name="name">Millennium Industries</field>
-            <field name="ean13">3020178570171</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
             <field eval="1500.00" name="credit_limit"/>
             <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="street">89 Chaussée de Liège</field>
-            <field name="city">Namur</field>
-            <field name="zip">5000</field>
-            <field name="email">lucien.ferguson@bml.be</field>
-	        <field name="phone">+32-621-568978</field>
+            <field name="street">89 Lingfield Tower</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
+            <field name="city">London</field>
+	        <field name="phone">+44 20 1294 2193</field>
         </record>
-        <record id="res_partner_accent" model="res.partner">
-            <field name="name">Université de Liège</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+
+        <record id="res_partner_16" model="res.partner">
+            <field name="name">Spark Systems</field>
+            <field eval="1" name="supplier"/>
+            <field eval="0" name="customer"/>
+            <field eval="[(6, 0, [ref('res_partner_category_16'), ref('res_partner_category_17')])]" name="category_id"/>
+            <field name="city">São Paulo</field>
+            <field name="zip">01060-324</field>
+            <field name="email"></field>
+            <field name="street">Rua Dom Carlos, 1073</field>
+            <field name="phone">+55 11 2402 2045</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','br')]"/>
+            <field name="is_company">1</field>
+        </record>
+
+       <record id="res_partner_17" model="res.partner">
+            <field name="name">Nebula Business</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field name="is_company">1</field>
+            <field name="city">Rosario</field>
+            <field name="email">contact@nebula.ar</field>
+            <field name="street">34 Westwood Avenue</field>
+            <field name="street2">Capital Federal</field>
+            <field name="phone">+54 341 324 9459 </field>
+            <field model="res.country" name="country_id" search="[('name','=','Argentina')]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
+        </record>
+
+        <record id="res_partner_18" model="res.partner">
+            <field name="name">Think Big Systems</field>
+            <field name="is_company">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
+            <field name="city">Boston</field>
+            <field name="zip">MA 02203</field>
+            <field name="email">info@thinkbig.com</field>
+            <field name="phone">+1 857 349 3049</field>
+            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
+            <field name="street">One Lincoln Street</field>
+            <field name="website">www.think-big.com</field>
+        </record>
+
+        <record id="res_partner_19" model="res.partner">
+            <field name="name">Seagate</field>
+            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_15')])]" name="category_id"/>
+            <field eval="0" name="customer"/>
+            <field eval="1" name="supplier"/>
+            <field name="is_company">1</field>
+            <field name="city">Cupertino</field>
+            <field name="zip">CA 95014</field>
+            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
+            <field name="street">10200 S. De Anza Blvd</field>
+            <field name="email">info@seagate.com</field>
+            <field name="phone">+1 800 732 4283</field>
+        </record>
+
+<!--        To be removed as its acquired by Seagate-->
+        <record id="res_partner_20" model="res.partner">
+            <field name="name">Maxtor</field>
+            <field eval="32000.00" name="credit_limit"/>
+            <field eval="0" name="customer"/>
+            <field eval="1" name="supplier"/>
+            <field eval="0" name="active"/>
+            <field name="parent_id" ref="res_partner_19"/>
+            <field name="is_company">1</field>
+        </record>
+
+        <record id="res_partner_21" model="res.partner">
+            <field name="name">Global Solutions</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field eval="[(6, 0, [ref('res_partner_category_6')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="type">default</field>
-            <field name="street">Place du 20Août</field>
-	        <field name="city">Liège</field>
-            <field name="zip">4000</field>
-	        <field name="email">martine.ohio@ulg.ac.be</field>
-	        <field name="phone">+32-45895245</field>
-            <field name="website">http://www.ulg.ac.be/</field>
-        </record>
-
-    <!--
-        Resource: res.partner for training
-        -->
-
-        <record id="res_partner_duboissprl0" model="res.partner">
-            <field eval="'Sprl Dubois would like to sell our bookshelves but they have no storage location, so it would be exclusively on order'" name="comment"/>
-            <field name="name">Dubois sprl</field>
-            <field name="is_company">1</field>
-            <field eval="'Brussels'" name="city"/>
-            <field eval="'1000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Avenue de la Liberté 56'" name="street"/>
-            <field eval="'m.dubois@dubois.be'" name="email"/>
-            <field name="website">http://www.dubois.be/</field>
-        </record>
-
-        <record id="res_partner_ericdubois0" model="res.partner">
-            <field name="name">Eric Dubois</field>
-            <field name="is_company">1</field>
-            <field name="address" eval="[]"/>
-            <field eval="'Mons'" name="city"/>
-            <field eval="'7000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Binche, 27'" name="street"/>
-            <field eval="'e.dubois@gmail.com'" name="email"/>
-            <field eval="'(+32).758 958 789'" name="phone"/>
-        </record>
-
-        <record id="res_partner_fabiendupont0" model="res.partner">
-            <field name="name">Fabien Dupont</field>
-            <field name="is_company">1</field>
-            <field name="address" eval="[]"/>
-            <field eval="'Namur'" name="city"/>
-            <field eval="'5000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Blvd Kennedy, 13'" name="street"/>
-        </record>
-
-        <record id="res_partner_lucievonck0" model="res.partner">
-            <field name="name">Lucie Vonck</field>
-            <field eval="'Grand-Rosière'" name="city"/>
-            <field eval="'1367'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Namur'" name="street"/>
+            <field name="street">Union Road</field>
+	        <field name="city">Liverpool</field>
+	        <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
+            <field name="zip">L25 4RL</field>
         </record>
 
         <!--record id="res_partner_notsotinysarl0" model="res.partner">
@@ -418,48 +382,19 @@
             <field name="website">notsotiny.be</field>
         </record-->
 
-        <record id="res_partner_theshelvehouse0" model="res.partner">
-            <field name="name">The Shelve House</field>
-            <field eval="[(6,0,[ref('res_partner_category_16')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field eval="'Paris'" name="city"/>
-            <field name="country_id" ref="base.fr"/>
-        </record>
-
-        <record id="res_partner_vickingdirect0" model="res.partner">
+        <record id="res_partner_22" model="res.partner">
             <field name="name">Vicking Direct</field>
-            <field eval="[(6,0,[ref('res_partner_category_17')])]" name="category_id"/>
+            <field eval="[(6,0,[ref('res_partner_category_18')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="customer">0</field>
             <field name="is_company">1</field>
-            <field eval="'Puurs'" name="city"/>
-            <field eval="'2870'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'(+32).70.12.85.00'" name="phone"/>
-            <field eval="'Schoonmansveld 28'" name="street"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">vicking-direct.be</field>
-        </record>
-
-        <record id="res_partner_woodywoodpecker0" model="res.partner">
-            <field name="name">Wood y Wood Pecker</field>
-            <field eval="[(6,0,[ref('res_partner_category_17')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field eval="'Kainuu'" name="city"/>
-            <field eval="'(+358).9.589 689'" name="phone"/>
-            <field name="country_id" ref="base.fi"/>
-            <field name="website">woodywoodpecker.com</field>
-        </record>
-
-        <record id="res_partner_zerooneinc0" model="res.partner">
-            <field name="name">ZeroOne Inc</field>
-            <field eval="[(6,0,[ref('res_partner_category_15')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field eval="'Brussels'" name="city"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">http://www.zerooneinc.com/</field>
+             <field name="type">default</field>
+            <field name="street">Margaret Alley</field>
+	        <field name="city">Leicester</field>
+	        <field name="zip">LE4 2BN</field>
+	        <field name="phone">+44 20 1294 2193</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
+            <field name="website">www.vicking-direct.com</field>
         </record>
 
         <!--
@@ -468,31 +403,27 @@
 
         <record id="res_partner_address_1" model="res.partner">
             <field name="name">Tang Tsui</field>
-            <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_1"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
 
         <record id="res_partner_address_1_x" model="res.partner">
             <field name="name">Michel Schumacher</field>
-            <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_9"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
+
         <record id="res_partner_address_2" model="res.partner">
             <field name="name">Laurent Jacot</field>
-            <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_10"/>
+            <field name="use_parent_address" eval="1"/>
+            
         </record>
+
         <record id="res_partner_address_3000" model="res.partner">
             <field name="name">Laith Jubair</field>
-            <field name="city">Champs sur Marne</field>
-            <field name="zip">77420</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="email">info@axelor.com</field>
-            <field name="phone">+33 1 64 61 04 01</field>
-            <field name="street">12 rue Albert Einstein</field>
-            <field name="website">www.axelor.com/</field>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_desertic_hispafuentes"/>
+            <field name="parent_id" ref="res_partner_13"/>
         </record>
         <record id="res_partner_address_3" model="res.partner">
             <field name="name">Thomas Passot</field>
@@ -500,17 +431,6 @@
             <field name="parent_id" ref="res_partner_8"/>
         </record>
 
-        <record id="res_partner_address_wong" model="res.partner">
-            <field name="name">Wong</field>
-            <field name="city">Hong Kong</field>
-            <field name="zip">23540</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">56 Beijing street</field>
-            <field name="email">info@maxtor.com</field>
-            <field name="phone">+ 11 8528 456 789</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_maxtor"/>
-        </record>
         <record id="res_partner_address_6" model="res.partner">
             <field name="name">Etienne Lacarte</field>
             <field name="use_parent_address" eval="1"/>
@@ -546,15 +466,8 @@
 
         <record id="res_partner_address_11" model="res.partner">
             <field name="name">Sebastien LANGE</field>
-            <field name="website">www.syleam.fr</field>
-            <field name="city">Alencon</field>
-            <field name="zip">61000</field>
-            <field name="email">contact@syleam.fr</field>
-            <field name="street">1 place de l'Église</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_sednacom"/>
+            <field name="parent_id" ref="res_partner_16"/>
         </record>
         <record id="res_partner_address_10" model="res.partner">
             <field name="name">David Simpson</field>
@@ -576,22 +489,11 @@
         </record>
         <record id="res_partner_address_13" model="res.partner">
             <field name="name">Carl</field>
-            <field name="city">Bruxelles</field>
-            <field name="zip">1000</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">89 Chaussée de Waterloo</field>
-	        <field name="email">carl.françois@bml.be</field>
-	        <field name="phone">+32-258-256545</field>
             <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_14"/>
         </record>
         <record id="res_partner_address_14" model="res.partner">
             <field name="name">Lucien Ferguson</field>
-            <field name="street">89 Chaussée de Liège</field>
-	        <field name="city">Namur</field>
-            <field name="zip">5000</field>
-	        <field name="email">lucien.ferguson@bml.be</field>
-	        <field name="phone">+32-621-568978</field>
             <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_15"/>
         </record>
@@ -619,94 +521,23 @@
         </record>
 
         <record id="res_partner_address_accent" model="res.partner">
-            <field name="name">Martine Ohio</field>
-            <field name="street">Place du 20Août</field>
-	        <field name="city">Liège</field>
-            <field name="zip">4000</field>
-	        <field name="email">martine.ohio@ulg.ac.be</field>
-	        <field name="phone">+32-45895245</field>
-            <field name="website">http://www.ulg.ac.be/</field>
+            <field name="name">William Thomas</field>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_accent"/>
+            <field name="parent_id" ref="res_partner_21"/>
         </record>
+
         <record id="res_partner_address_Camptocamp" model="res.partner">
             <field name="name">Luc Maurer</field>
             <field name="type">default</field>
-            <field name="use_parent_address" eval="0"/>
+            <field name="use_parent_address" eval="1"/>
             <field name="parent_id" ref="res_partner_12"/>
         </record>
-        <record id="res_partner_address_seagate" model="res.partner">
-            <field name="name">Seagate Technology</field>
-            <field name="city">Cupertino</field>
-            <field name="zip">95014</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">10200 S. De Anza Blvd</field>
-            <field name="email">info@seagate.com</field>
-            <field name="phone">+1 408 256987</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_seagate"/>
-        </record>
-        <record id="res_partner_address_thymbra" model="res.partner">
+
+        <record id="res_partner_address_nebula" model="res.partner">
             <field name="name">Jack Daniels</field>
-            <field name="city">Buenos Aires</field>
-            <field name="zip">1659</field>
-            <field name="email">contact@smartbusiness.ar</field>
-            <field name="street">Palermo, Capital Federal </field>
-            <field name="street2">C1414CMS Capital Federal </field>
-            <field name="phone">(5411) 4773-9666 </field>
-            <field model="res.country" name="country_id" search="[('name','=','Argentina')]"/>
+            <field name="parent_id" ref="res_partner_17"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_thymbra"/>
         </record>
-        <record id="res_partner_address_tinyatwork" model="res.partner">
-            <field name="name">Tiny Work</field>
-            <field name="city">Boston</field>
-            <field name="zip">5501</field>
-            <field name="email">info@tinyatwork.com</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">One Lincoln Street</field>
-            <field name="website">www.tinyatwork.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_tinyatwork"/>
-        </record>
-
-        <!--
-        Resource: res.partner.address for Training
-        -->
-
-        <record id="res_partner_address_notsotinysarl0" model="res.partner">
-            <field eval="'Namur'" name="city"/>
-            <field eval="'NotSoTiny SARL'" name="name"/>
-            <field eval="'5000'" name="zip"/>
-            <!--field name="parent_id" ref="res_partner_notsotinysarl0"/-->
-            <field name="country_id" ref="base.be"/>
-            <field name="is_company">1</field>
-            <field eval="'(+32).81.81.37.00'" name="phone"/>
-            <field eval="'Rue du Nid 1'" name="street"/>
-            <field eval="'default'" name="type"/>
-        </record>
-
-
-        <!--record id="res_partner_address_henrychard0" model="res.partner">
-            <field eval="'Paris'" name="city"/>
-            <field eval="'Henry Chard'" name="name"/>
-            <field name="country_id" ref="base.fr"/>
-        </record-->
-
-
-        <!--record id="res_partner_address_geoff0" model="res.partner">
-            <field eval="'Brussels'" name="city"/>
-            <field eval="'Geoff'" name="name"/>
-            <field name="country_id" ref="base.be"/>
-        </record-->
-
-
-        <!--record id="res_partner_address_rogerpecker0" model="res.partner">
-            <field eval="'Kainuu'" name="city"/>
-            <field eval="'Roger Pecker'" name="name"/>
-            <field name="country_id" ref="base.fi"/>
-        </record-->
 
 
         <record id="res_partner_address_0" model="res.partner">
@@ -715,109 +546,11 @@
             <field name="country_id" ref="base.be"/>
         </record>
 
-
-        <record id="res_partner_address_henrychard1" model="res.partner">
-            <field eval="'Henry Chard'" name="name"/>
-            <field eval="'Paris'" name="city"/>
-            <field name="country_id" ref="base.fr"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_theshelvehouse0"/>
-        </record>
-
-
         <record id="res_partner_address_brussels0" model="res.partner">
-            <field eval="'Leen Vandenloep'" name="name"/>
-            <field eval="'Puurs'" name="city"/>
-            <field eval="'2870'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'(+32).70.12.85.00'" name="phone"/>
-            <field eval="'Schoonmansveld 28'" name="street"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">vicking-direct.be</field>
+            <field name="name">Paul Brown</field>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_vickingdirect0"/>
+            <field name="parent_id" ref="res_partner_22"/>
         </record>
-
-
-        <record id="res_partner_address_rogerpecker1" model="res.partner">
-            <field eval="'Roger Pecker'" name="name"/>
-            <field eval="'Kainuu'" name="city"/>
-            <field eval="'(+358).9.589 689'" name="phone"/>
-            <field name="country_id" ref="base.fi"/>
-            <field name="website">woodywoodpecker.com</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_woodywoodpecker0"/>
-        </record>
-
-
-        <record id="res_partner_address_geoff1" model="res.partner">
-            <field eval="'Geoff'" name="name"/>
-            <field eval="'Brussels'" name="city"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">http://www.zerooneinc.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_zerooneinc0"/>
-        </record>
-
-
-        <record id="res_partner_address_marcdubois0" model="res.partner">
-            <field eval="'Marc Dubois'" name="name"/>
-            <field eval="'Brussels'" name="city"/>
-            <field eval="'1000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Avenue de la Liberté 56'" name="street"/>
-            <field eval="'m.dubois@dubois.be'" name="email"/>
-            <field name="website">http://www.dubois.be/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_duboissprl0"/>
-        </record>
-
-
-        <record id="res_partner_address_fabiendupont0" model="res.partner">
-            <field eval="'Frank'" name="name"/>
-            <field eval="'Namur'" name="city"/>
-            <field eval="'5000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Blvd Kennedy, 13'" name="street"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_fabiendupont0"/>
-        </record>
-
-
-        <record id="res_partner_address_ericdubois0" model="res.partner">
-            <field eval="'Joy'" name="name"/>
-            <field name="address" eval="[]"/>
-            <field eval="'Mons'" name="city"/>
-            <field eval="'7000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Binche, 27'" name="street"/>
-            <field eval="'e.dubois@gmail.com'" name="email"/>
-            <field eval="'(+32).758 958 789'" name="phone"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_ericdubois0"/>
-        </record>
-
-
-        <record id="res_partner_address_notsotinysarl1" model="res.partner">
-            <field eval="'Antwerpen'" name="city"/>
-            <field eval="'NotSoTiny'" name="name"/>
-            <field eval="'2000'" name="zip"/>
-            <field name="parent_id" ref="res_partner_address_notsotinysarl0"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="use_parent_address" eval="0"/>
-            <field eval="'Antwerpsesteenweg 254'" name="street"/>
-            <field eval="'invoice'" name="type"/>
-        </record>
-
-
-        <!--record id="res_partner_address_4" model="res.partner">
-            <field eval="'Grand-Rosière'" name="city"/>
-            <field eval="'1367'" name="zip"/>
-            <field name="parent_id" ref="res_partner_lucievonck0"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Namur'" name="street"/>
-        </record-->
-
 
         <!--
         Resource: res.request
