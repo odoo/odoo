@@ -164,23 +164,7 @@
                     <notebook>
                         <page string="Purchase Order">
                             <field name="order_line">
-                            	<form string="Purchase Order Lines" version="7.0">
-                            	<header>
-                                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
-                                </header>
-                                <group col="4" colspan="4">
-                                	<group>
-                                		<field name="name"/>
-                                		<field name="product_qty"/>
-                                    	<field name="price_unit"/>
-                                	</group>
-                                	<group>
-                                		<field name="product_uom" groups="product.group_uom"/>
-                                		<field name="date_planned"/>
-                                		<field name="price_subtotal"/>
-                                	</group>
-                                </group>
-                            	</form>
+                            	
                                 <tree string="Purchase Order Lines">
                                 	<field name="date_planned"/>
                                     <field name="name"/>
