@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Alias Form View !-->
+        <record  model="ir.ui.view" id="view_mail_alias_form">
+            <field name="name">mail.alias.form</field>
+            <field name="model">mail.alias</field>
+            <field name="type">form</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Alias" version="7.0">
+                    <sheet>
+		                <group colspan="2" col="4">
+			                <field name="alias_name"/>
+			                <field name="alias_model_id"/>
+			                <field name="alias_user_id"/>
+			                <field name="alias_force_thread_id"/>
+			                <field name="alias_defaults"/>
+		                </group>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Alias List View !-->
+        <record  model="ir.ui.view" id="view_mail_alias_tree">
+            <field name="name">mail.alias.tree</field>
+            <field name="model">mail.alias</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_model_id"/>
+                    <field name="alias_user_id"/>
+                    <field name="alias_defaults"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Alias Search View !-->
+        <record  model="ir.ui.view" id="view_mail_alias_search">
+            <field name="name">mail.alias.search</field>
+            <field name="model">mail.alias</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_model_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_alias" model="ir.actions.act_window">
+            <field name="name">Alias</field>
+            <field name="res_model">mail.alias</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_mail_alias_search"/>
+        </record>
+
+        <menuitem id="mail_alias_menu" name="Alias" parent="base.menu_email" action="action_view_mail_alias"/>
+
+    </data>
+</openerp>

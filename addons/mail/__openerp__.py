@@ -67,6 +67,7 @@ The main features are:
         'mail_data.xml',
         'mail_group_data.xml',
         'res_users_view.xml',
+        'mail_alias_view.xml',
     ],
     'installable': True,
     'auto_install': False,
