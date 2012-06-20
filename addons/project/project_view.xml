@@ -31,11 +31,11 @@
                 </header>
                 <sheet string="Project" layout="auto">
                     <field name="analytic_account_id" invisible="1" required="0"/>
-                    <label for="name" class="oe_form_readonly_hidden" string="Project Name"/>
+                    <label for="name" class="oe_edit_only" string="Project Name"/>
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <label for="parent_id" class="oe_form_readonly_hidden" string="Parent Project"/>
+                    <label for="parent_id" class="oe_edit_only" string="Parent Project"/>
                     <h2>
                         <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                     </h2>
@@ -348,10 +348,14 @@
                         <field name="stage_id" widget="statusbar"/>
                     </header>
                     <sheet string="Task">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name"/>
                     </h1>
+                    <label for="project_id" class="oe_edit_only"/>
+                    <h2>
+                        <field name="project_id"  on_change="onchange_project(project_id)"/>
+                    </h2>
                     <group>
                         <group>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
