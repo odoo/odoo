@@ -38,7 +38,7 @@
                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                    <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
                    <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" attrs="{'invisible':['|',('invoice_method','!=','none')]}"/>
-                   <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
+                   <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" attrs="{'invisible':['|',('invoice_method','!=','none')]}"/>
                    <button name="cancel" states="draft" string="Cancel Repair"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ready" />
                </header>
