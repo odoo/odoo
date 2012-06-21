@@ -106,14 +106,58 @@ openerp.web_linkedin = function(instance) {
                 }
             }
         },
+        /* Load Linkedin Data On search */
+        do_load_linkedin: function( e ) {
+            var self = this;
+            this.msg_Counter=0; /* used to display notification, when record not found on Linkedin search */
+            this.removeTemplate( 1 );
+            if(!this.apikey){
+                this.APIKeyWarning(this.APIWarning);
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }
+            if (IN.ENV.auth.oauth_token) {
+                if (self.$element.find("input").val()) {
+                    self.$element.find('#loader').show();
+                    $('.linkedin_icon').css('display', 'none');
+                    /* People Search */
+                    IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
+                    .params({
+                        "first-name": self.$element.find("input").val(),
+                        "count" : 4
+                    })
+                    .result( self.do_fetch_detail );
+                    /* Company Search */
+                    IN.API.Raw("/company-search:(companies:(id,name,description,industry,logo-url,website-url,locations,twitter-id))")
+                    .params({
+                        "keywords": self.$element.find("input").val(),
+                        "count" : 4
+                    })
+                    .result( self.do_fetch_detail );
+                }else{
+                    this.notification.warn(_t("Linkedin Search"), _t("Please Enter Required Field."));
+                }
+            }
+            else {
+                //self.do_authorize();
+                IN.User.authorize();
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        },
+        do_authorize: function(resultCallback){
+            this.check_authorized();
+            if (this.isAuthorized == false){
+                IN.User.authorize(resultCallback);
+            }
+        },
+        check_authorized: function(){
+            this.isAuthorized = IN.User.isAuthorized();
+        },
         APIKeyWarning: function(e) {
-//            e.message= "Linkedin API Key is not registerd/correct.\n  Go to Settings,  'General Settings'  menu and follow steps to register the LinkedIn API Key.";
-//            instance.web.dialog($(QWeb.render("CrashManager.warning", _t(e))), {
-//                title: _t("Linkedin API Key Warning"),
-//                modal: true,
-//                height: 200,
-//                width: 500,
-//                buttons: [
             var self = this;
             e.message="";
             instance.web.dialog($(QWeb.render("Register.Linkedin", _t(e))), {
@@ -154,56 +198,6 @@ openerp.web_linkedin = function(instance) {
                 }
             }
          },
-        /* Load Linkedin Data On search */
-        do_load_linkedin: function( e ) {
-            var self = this;
-            this.msg_Counter=0; /* used to display notification, when record not found on Linkedin search */
-            this.removeTemplate( 1 );
-            if(!this.apikey){
-                this.APIKeyWarning(this.APIWarning);
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                return false;
-            }
-            if (IN.ENV.auth.oauth_token) {
-                if (self.$element.find("input").val()) {
-                    self.$element.find('#loader').show();
-                    $('.linkedin_icon').css('display', 'none');
-                    /* People Search */
-                    IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
-                    .params({
-                        "first-name": self.$element.find("input").val(),
-                        "count" : 4
-                    })
-                    .result( self.do_fetch_detail );
-                    /* Company Search */
-                    IN.API.Raw("/company-search:(companies:(id,name,description,industry,logo-url,website-url,locations,twitter-id))")
-                    .params({
-                        "keywords": self.$element.find("input").val(),
-                        "count" : 4
-                    })
-                    .result( self.do_fetch_detail );
-                }else{
-                    this.notification.warn(_t("Linkedin Search"), _t("Please Enter Required Field."));
-                }
-            }
-            else {
-                self.do_authorize();
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-        },
-        do_authorize: function(resultCallback){
-            this.check_authorized();
-            if (this.isAuthorized == false){
-                IN.User.authorize(resultCallback);
-            }
-        },
-        check_authorized: function(){
-            this.isAuthorized = IN.User.isAuthorized();
-        },
         /* Fetch Result from Linkedin and set in searchbox */
         do_fetch_detail: function(result, metadata) {
             var self = this;
