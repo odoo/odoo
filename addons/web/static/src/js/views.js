@@ -739,18 +739,9 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         this._super(this);
         this.redraw();
-        this.$element.on('click','.oe_dropdown_toggle',function(event) {
-            self.$('ul').hide();
-            $(this).parent().find('ul').toggle();
-            return false;
-        });
-        instance.web.bus.on('click', self, function(ev) {
-            self.$('ul').hide();
-        });
         this.$element.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
             var index = $(this).data('index');
-            $(this).closest('ul').hide();
             var item = self.items[section][index];
             if (item.callback) {
                 item.callback.apply(self, [item]);
@@ -759,13 +750,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else if (item.url) {
                 return true;
             }
-            return false;
+            event.preventDefault();
         });
     },
     redraw: function() {
         var self = this;
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
-        this.$element.find('ul').hide();
 
         // Hides Sidebar sections when item list is empty
         this.$('.oe_form_dropdown_section').each(function() {
