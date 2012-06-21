@@ -457,7 +457,7 @@ class mail_thread(osv.osv):
         if alias.alias_user_id:
             user_id = alias_id.alias_user_id.id
         #if user_id not defined in the alias then search related user using name of Email sender
-        else if:
+        else:
             frm = msg.get('from')
             user_ids = user_obj.search(cr, uid, [('name','=',frm)], context)
             if user_ids:
