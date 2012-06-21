@@ -77,7 +77,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         } else if (state.client_action) {
             this.null_action();
-            this.ir_actions_client(state.client_action);
+            var action = state.client_action;
+            if(_.isString(action)) {
+                action = {
+                    tag: action,
+                    params: state,
+                };
+            }
+            this.ir_actions_client(action);
         }
 
         $.when(action_loaded || null).then(function() {
@@ -150,6 +157,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.inner_viewmanager.$element.addClass("oe_view_manager_global");
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -320,7 +328,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
 
         this.$element
-            .find('.oe_view_manager_switch a').parent().removeClass('active')
+            .find('.oe_view_manager_switch a').parent().removeClass('active');
         this.$element
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
@@ -329,9 +337,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
+                    var container = self.$element.find(".oe_view_manager_view_" + view_name + ":first");
                     if (view_name === view_type) {
+                        container.show();
                         controller.do_show(view_options || {});
                     } else {
+                        container.hide();
                         controller.do_hide();
                     }
                 }
@@ -696,6 +707,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
 instance.web.Sidebar = instance.web.Widget.extend({
     init: function(parent) {
+        var self = this;
         this._super(parent);
         var view = this.getParent();
         this.sections = [
@@ -712,19 +724,24 @@ instance.web.Sidebar = instance.web.Widget.extend({
             var item = { label: _t("Translate"), callback: view.on_sidebar_translate, title: _t("Technical translation") };
             this.items.other.push(item);
         }
+        this.fileupload_id = _.uniqueId('oe_fileupload');
+        $(window).on(this.fileupload_id, function() {
+            var args = [].slice.call(arguments).slice(1);
+            if (args[0] && args[0].error) {
+                alert(args[0].error);
+            } else {
+                self.do_attachement_update(self.dataset, self.model_id);
+            }
+            $.unblockUI();
+        });
     },
     start: function() {
         var self = this;
         this._super(this);
         this.redraw();
-        this.$element.on('click','.oe_dropdown_toggle',function(event) {
-            $(this).parent().find('ul').toggle();
-            return false;
-        });
         this.$element.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
             var index = $(this).data('index');
-            $(this).closest('ul').hide();
             var item = self.items[section][index];
             if (item.callback) {
                 item.callback.apply(self, [item]);
@@ -733,16 +750,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else if (item.url) {
                 return true;
             }
-            return false;
+            event.preventDefault();
         });
-        //this.$div.html(QWeb.render('FormView.sidebar.attachments', this));
-        //this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
-        //this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
     },
     redraw: function() {
         var self = this;
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
-        this.$element.find('ul').hide();
 
         // Hides Sidebar sections when item list is empty
         this.$('.oe_form_dropdown_section').each(function() {
@@ -826,6 +839,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
     },
     do_attachement_update: function(dataset, model_id) {
+        this.dataset = dataset;
+        this.model_id = model_id;
         if (!model_id) {
             this.on_attachments_loaded([]);
         } else {
@@ -837,42 +852,37 @@ instance.web.Sidebar = instance.web.Widget.extend({
     on_attachments_loaded: function(attachments) {
         var self = this;
         var items = [];
-        // TODO: preprend: _s +
-        var prefix = '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
+        var prefix = this.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
                 a.url = prefix  + a.id + '&t=' + (new Date().getTime());
             }
         });
-        attachments.push( { label: _t("Add..."), callback: self.on_attachment_add } );
         self.items['files'] = attachments;
         self.redraw();
-    },
-    on_attachment_add: function(e) {
-        this.$element.find('.oe_sidebar_add').show();
+        this.$('.oe_sidebar_add_attachment .oe-binary-file').change(this.on_attachment_changed);
+        this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
-        return;
-        window[this.element_id + '_iframe'] = this.do_update;
         var $e = $(e.target);
-        if ($e.val() != '') {
+        if ($e.val() !== '') {
             this.$element.find('form.oe-binary-form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
+            this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
+            $.blockUI();
         }
     },
     on_attachment_delete: function(e) {
-        return;
-        var self = this, $e = $(e.currentTarget);
-        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm(_.str.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
-            this.rpc('/web/dataset/unlink', {
-                model: 'ir.attachment',
-                ids: [parseInt($e.attr('data-id'))]
-            }, function(r) {
-                $e.parent().remove();
-                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+        var self = this;
+        e.preventDefault();
+        e.stopPropagation();
+        var self = this;
+        var $e = $(e.currentTarget);
+        if (confirm(_t("Do you really want to delete this attachment ?"))) {
+            (new instance.web.DataSet(this, 'ir.attachment')).unlink([parseInt($e.attr('data-id'), 10)]).then(function() {
+                self.do_attachement_update(self.dataset, self.model_id);
             });
         }
     }

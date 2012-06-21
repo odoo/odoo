@@ -4774,7 +4774,8 @@
 		return node;
 	};
 })(jQuery);
-;(function(a){var b=document,c="getElementsByTagName",d=b[c]("head")[0]||b[c]("body")[0],e=b.createElement("style");e.innerHTML=a,d.appendChild(e)})('\n.text-core {\
+;
+(function(a){var b=document,c="getElementsByTagName",d=b[c]("head")[0]||b[c]("body")[0],e=b.createElement("style");e.innerHTML=a,d.appendChild(e)})('\n.text-core {\
   position: relative;\
 }\
 .text-core .text-wrap {\
@@ -4785,10 +4786,9 @@
   -webkit-box-sizing: border-box;\
   -moz-box-sizing: border-box;\
   box-sizing: border-box;\
-  -webkit-border-radius: 0px;\
-  -moz-border-radius: 0px;\
-  border-radius: 0px;\
-  border: 1px solid #9daccc;\
+  -webkit-border-radius: 3px;\
+  -moz-border-radius: 3px;\
+  border-radius: 3px;\
   outline: none;\
   resize: none;\
   position: absolute;\
