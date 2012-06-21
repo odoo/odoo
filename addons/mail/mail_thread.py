@@ -71,7 +71,6 @@ class mail_thread(osv.Model):
                 'message_ids': message_ids,
                 'message_summary': "(%d,%d)" % (len(message_ids), len(subscriber_ids)),
             }
-        print res
         return res
     
     # OpenChatter: message_ids is a dummy field that should not be used
