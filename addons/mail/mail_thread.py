@@ -171,7 +171,7 @@ class mail_thread(osv.Model):
         msg_id = message_obj.create(cr, uid, vals, context=context)
         
         # Set as unread if writer is not the document responsible
-        model_pool.message_create_check_state(cr, uid, [res_id], context=context)
+        self.message_create_check_state(cr, uid, [thread_id], context=context)
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
@@ -843,7 +843,8 @@ class mail_thread(osv.Model):
     def message_create_check_state(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
-                self.mark_as_unread(cr, uid, [obj.id], context=context)
+                print 'poinpoinponi'
+                self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_mark_as_read(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_state': True}, context=context)
