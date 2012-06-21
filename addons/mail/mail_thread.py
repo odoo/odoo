@@ -62,19 +62,29 @@ class mail_thread(osv.Model):
     _name = 'mail.thread'
     _description = 'Email Thread'
 
-    def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
+    def _get_message_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
-            res[id] = self.message_load_ids(cr, uid, [id], context=context)
+            message_ids = self.message_load_ids(cr, uid, [id], context=context)
+            subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+            res[id] = {
+                'message_ids': message_ids,
+                'message_summary': "(%d,%d)" % (len(message_ids), len(subscriber_ids)),
+            }
+        print res
         return res
-
+    
     # OpenChatter: message_ids is a dummy field that should not be used
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
-                        type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id',
-                        help="Functional field holding messages related to the current document."),
+            type='one2many', obj='mail.message', _fields_id = 'res_id',
+            string='Temp messages', multi="_get_message_ids",
+            help="Functional field holding messages related to the current document."),
         'message_state': fields.boolean('Read',
-                        help="When checked, new messages require your attention."),
+            help="When checked, new messages require your attention."),
+        'message_summary': fields.function(_get_message_ids, method=True,
+            type='char', size=128, string='Summary', multi="_get_message_ids",
+            help="Holds the Chatter summary (number of messages, ...)."),
     }
     
     _defaults = {
