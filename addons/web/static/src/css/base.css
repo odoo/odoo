@@ -215,8 +215,8 @@
 .openerp .oe_bold {
   font-weight: bold;
 }
-.openerp .oe_inline  {
-  width: auto;
+.openerp .oe_inline {
+  width: auto !important;
 }
 .openerp .oe_highlight {
   color: white;
@@ -1526,9 +1526,6 @@
 .openerp .oe_form_invisible {
   display: none !important;
 }
-.openerp .oe_form_editable .oe_edit_only {
-  display: none !important;
-}
 .openerp .oe_form_readonly .oe_edit_only, .openerp .oe_form_readonly .oe_form_field:empty {
   display: none !important;
 }
@@ -1723,7 +1720,7 @@
 .openerp .oe_form .oe_form_field_selection select {
   width: inherit;
 }
-.openerp .oe_form .oe_form_sheet textarea {
+.openerp .oe_form .oe_form_field_text.oe_inline, .openerp .oe_form .oe_form_field_text.oe_inline > textarea {
   width: 500px;
 }
 .openerp .oe_form .oe_form_field_float input {
@@ -1809,6 +1806,7 @@
 }
 .openerp .oe_form .oe_form_field_boolean {
   padding-top: 4px;
+  width: auto;
 }
 .openerp .oe_form .oe_form_field_many2manytags .text-wrap {
   width: 100% !important;
