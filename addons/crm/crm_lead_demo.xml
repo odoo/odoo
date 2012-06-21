@@ -274,12 +274,22 @@
             <field name="color">8</field>
         </record>
         <!-- Some messages linked to the previous opportunity -->
+        <record id="message_email0" model="mail.message">
+            <field name="subject">Kitchen design</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Email0 inquiry]]></field>
+            <field name="type">email</field>
+            <field name="state">sent</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
         <record id="message_note0" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
             <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Hello <b>world</b> (note on opportunity) !]]></field>
+            <field name="body_html"><![CDATA[Internal note0]]></field>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"></field>
         </record>
@@ -288,7 +298,7 @@
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
             <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Hello <b>world</b> (first comment on note) !]]></field>
+            <field name="body_html"><![CDATA[comment on note0]]></field>
             <field name="parent_id" ref="message_note0"/>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"></field>
@@ -298,27 +308,17 @@
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
             <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Hello <b>world</b> (second comment on note) !]]></field>
+            <field name="body_html"><![CDATA[comment1 on note0]]></field>
             <field name="parent_id" ref="message_note0"/>
             <field name="type">comment</field>
             <field name="user_id" ref="base.user_root"></field>
         </record>
-        <record id="message_email0" model="mail.message">
-            <field name="subject">Mail reply</field>
-            <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
-            <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Hello <b>world</b> (email reply on opportunity) !]]></field>
-            <field name="type">email</field>
-            <field name="state">sent</field>
-            <field name="user_id" ref="base.user_root"></field>
-        </record>
         <record id="message_email1" model="mail.message">
-            <field name="subject">Mail received</field>
+            <field name="subject">Your inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
             <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Hello <b>world</b> (email received on opportunity) !]]></field>
+            <field name="body_html"><![CDATA[hello, outgoing email]]></field>
             <field name="type">email</field>
             <field name="state">received</field>
             <field name="user_id" ref="base.user_root"></field>

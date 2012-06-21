@@ -1,7 +1,7 @@
 openerp.mail = function(session) {
     var _t = session.web._t,
        _lt = session.web._lt;
-    
+
     var mail = session.mail = {};
 
     /**
@@ -59,8 +59,6 @@ openerp.mail = function(session) {
 
     /* Add ThreadDisplay widget to registry */
     session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
-//    session.web.page.readonly.add( 'Thread', 'openerp.mail.Thread');
-
     /** 
      * ThreadDisplay widget: this widget handles the display of a thread of
      * messages. The [thread_level] parameter sets the thread level number:
@@ -135,25 +133,6 @@ openerp.mail = function(session) {
             } else {
                 var display_done = this.init_comments();
             }
-            
-            // handle the dropdown menu
-            var dropdown_menu_trigger   = '.oe_gear_menuaction';    // css class name
-            var dropdown_menu_elts      = '.oe_gear_menu';          // css class name
-            
-            this.$element.on('click', dropdown_menu_trigger, function (ev) {
-                $gear_menu = $(this).siblings(dropdown_menu_elts);
-                
-                if ($gear_menu.is(':visible')) {
-                    $gear_menu.hide();
-                } else {
-                    $gear_menu.show();
-                }
-                
-                // hide others menus if opened
-                $(dropdown_menu_trigger).not(this).siblings(dropdown_menu_elts).hide();
-                return false;
-            });
-            
             return display_done
         },
         
@@ -252,7 +231,8 @@ openerp.mail = function(session) {
                 
                 //build attachments download urls and compute time-relative from dates
                 for (var k in records) {
-                    records[k].timerelative = $.timeago(records[k].date);
+                    // TODO use timeago records[k].timerelative = $.timeago(records[k].date);
+                    records[k].timerelative = records[k].date;
                     
                     if (records[k].attachments) {
                         for (var l in records[k].attachments) {
@@ -316,8 +296,11 @@ openerp.mail = function(session) {
          */
         display_comment: function (record) {
             record.body = this.do_text_nl2br(record.body, true);
-            if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
-            else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }
+            if (record.type == 'email') {
+                record.mini_url = ('/mail/static/src/img/email_icon.png');
+            } else { 
+                record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]);
+            }
             // body text manipulation
             record.body = this.do_clean_text(record.body);
             record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
@@ -327,14 +310,14 @@ openerp.mail = function(session) {
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // render
             // OPTIONS
-            $(session.web.qweb.render('mail.Thread.default', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
-                    ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+
+            var rendered = session.web.qweb.render('mail.Thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
+            $( rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
             if (record.tr_body) {
-                var node_body = this.$element.find('.oe_mail_msg_body:last').append('<br/><br/><a href="#" class="reduce">See less</a>');
+                var node_body = this.$element.find('.oe_mail_msg_body:last');
                 var node_body_short = this.$element.find('.oe_mail_msg_body_short:last').append('... <a href="#" class="expand">See more</a>');
                 node_body.hide();
-                node_body.find('a:last').click(function() { node_body.hide(); node_body_short.show(); return false; });
                 node_body_short.find('a:last').click(function() { node_body_short.hide(); node_body.show(); return false; });
             }
         },
@@ -531,14 +514,10 @@ openerp.mail = function(session) {
 
     });
 
-
     /* Add ThreadView widget to registry */
     session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
-//    session.web.page.readonly.add( 'ThreadView', 'openerp.mail.RecordThread');
-
     /* ThreadView widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
-        // QWeb template to use when rendering the object
         template: 'mail.RecordThread',
 
        init: function() {
@@ -638,11 +617,10 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
-    
-    
+
+
     /* Add WallView widget to registry */
     session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
-    
     /* WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
         template: 'mail.Wall',
@@ -841,175 +819,7 @@ openerp.mail = function(session) {
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(this.proxy('init_and_fetch_comments'));
         },
     });
-    
-    
-    
-    /**
-     * Compute relative time from a date (ISO format)
-     * Code from http://timeago.yarp.com/
-     * Please note that the library has been slightly refactored for i18n's sake.
-     * 
-     * 
-     * 
-     * Timeago is a jQuery plugin that makes it easy to support automatically
-     * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
-     *
-     * @name timeago
-     * @version 0.11.3
-     * @requires jQuery v1.2.3+
-     * @author Ryan McGeary
-     * @license MIT License - http://www.opensource.org/licenses/mit-license.php
-     *
-     * For usage and examples, visit:
-     * http://timeago.yarp.com/
-     *
-     * Copyright (c) 2008-2012, Ryan McGeary (ryan -[at]- mcgeary [*dot*] org)
-     */
-    (function($) {
-      $.timeago = function(timestamp) {
-        if (timestamp instanceof Date) {
-          return inWords(timestamp);
-        } else if (typeof timestamp === "string") {
-          return inWords($.timeago.parse(timestamp));
-        } else if (typeof timestamp === "number") {
-          return inWords(new Date(timestamp));
-        } else {
-          return inWords($.timeago.datetime(timestamp));
-        }
-      };
-      var $t = $.timeago;
-    
-      $.extend($.timeago, {
-        settings: {
-          refreshMillis: 60000,
-          allowFuture: false,
-          strings: {
-            prefixAgo: null,
-            prefixFromNow: null,
-            suffixAgo: "ago",
-            suffixFromNow: "from now",
-            seconds: "less than a minute",
-            minute: "about a minute",
-            minutes: "%d minutes",
-            hour: "about an hour",
-            hours: "about %d hours",
-            day: "a day",
-            days: "%d days",
-            month: "about a month",
-            months: "%d months",
-            year: "about a year",
-            years: "%d years",
-            wordSeparator: " ",
-            numbers: []
-          }
-        },
-        inWords: function(distanceMillis) {
-          var $l = this.settings.strings;
-          var prefix = $l.prefixAgo;
-          var suffix = $l.suffixAgo;
-          if (this.settings.allowFuture) {
-            if (distanceMillis < 0) {
-              prefix = $l.prefixFromNow;
-              suffix = $l.suffixFromNow;
-            }
-          }
-          
-          var seconds = Math.abs(distanceMillis) / 1000;
-          var minutes = seconds / 60;
-          var hours = minutes / 60;
-          var days = hours / 24;
-          var years = days / 365;
-          
-          function convert(stringOrFunction, number) {
-            var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, distanceMillis) : stringOrFunction;
-            
-            // return the proper string and the numeric value that goes in it
-            return stringAndNumber = {'string': string, 'value': ($l.numbers && $l.numbers[number]) || number};
-          }
-          
-          var stringAndNumber = seconds < 45 && convert($l.seconds, Math.round(seconds)) ||
-            seconds < 90 && convert($l.minute, 1) ||
-            minutes < 45 && convert($l.minutes, Math.round(minutes)) ||
-            minutes < 90 && convert($l.hour, 1) ||
-            hours < 24 && convert($l.hours, Math.round(hours)) ||
-            hours < 42 && convert($l.day, 1) ||
-            days < 30 && convert($l.days, Math.round(days)) ||
-            days < 45 && convert($l.month, 1) ||
-            days < 365 && convert($l.months, Math.round(days / 30)) ||
-            years < 1.5 && convert($l.year, 1) ||
-            convert($l.years, Math.round(years));
-          
-          var string = stringAndNumber.string;
-          var value = stringAndNumber.value;
-          var separator = $l.wordSeparator === undefined ?  " " : $l.wordSeparator;
-          
-          // compose and translate the final string
-          var finalString = $.trim([prefix, string, suffix].join(separator));
-          var translatedFinalString = _.str.sprintf(_t(finalString), value);
-          
-          return translatedFinalString;
-        },
-        parse: function(iso8601) {
-          var s = $.trim(iso8601);
-          s = s.replace(/\.\d\d\d+/,""); // remove milliseconds
-          s = s.replace(/-/,"/").replace(/-/,"/");
-          s = s.replace(/T/," ").replace(/Z/," UTC");
-          s = s.replace(/([\+\-]\d\d)\:?(\d\d)/," $1$2"); // -04:00 -> -0400
-          return new Date(s);
-        },
-        datetime: function(elem) {
-          var iso8601 = $t.isTime(elem) ? $(elem).attr("datetime") : $(elem).attr("title");
-          return $t.parse(iso8601);
-        },
-        isTime: function(elem) {
-          // jQuery's `is()` doesn't play well with HTML5 in IE
-          return $(elem).get(0).tagName.toLowerCase() === "time"; // $(elem).is("time");
-        }
-      });
-    
-      $.fn.timeago = function() {
-        var self = this;
-        self.each(refresh);
-    
-        var $s = $t.settings;
-        if ($s.refreshMillis > 0) {
-          setInterval(function() { self.each(refresh); }, $s.refreshMillis);
-        }
-        return self;
-      };
-    
-      function refresh() {
-        var data = prepareData(this);
-        if (!isNaN(data.datetime)) {
-          $(this).text(inWords(data.datetime));
-        }
-        return this;
-      }
-    
-      function prepareData(element) {
-        element = $(element);
-        if (!element.data("timeago")) {
-          element.data("timeago", { datetime: $t.datetime(element) });
-          var text = $.trim(element.text());
-          if (text.length > 0 && !($t.isTime(element) && element.attr("title"))) {
-            element.attr("title", text);
-          }
-        }
-        return element.data("timeago");
-      }
-    
-      function inWords(date) {
-        return $t.inWords(distance(date));
-      }
-    
-      function distance(date) {
-        return (new Date().getTime() - date.getTime());
-      }
-    
-      // fix for IE6 suckage
-      document.createElement("abbr");
-      document.createElement("time");
-    }(jQuery));
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
