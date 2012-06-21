@@ -588,16 +588,17 @@ class LocalConnector(openerplib.Connector):
         import openerp
         import traceback
         import xmlrpclib
+        code_string = "warning -- %s\n\n%s"
         try:
             result = openerp.netsvc.dispatch_rpc(service_name, method, args)
         except Exception,e:
         # TODO change the except to raise LibException instead of their emulated xmlrpc fault
             if isinstance(e, openerp.osv.osv.except_osv):
-                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+                fault = xmlrpclib.Fault(code_string % (e.name, e.value), '')
             elif isinstance(e, openerp.exceptions.Warning):
-                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+                fault = xmlrpclib.Fault(code_string % ("Warning", e), '')
             elif isinstance(e, openerp.exceptions.AccessError):
-                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+                fault = xmlrpclib.Fault(code_string % ("AccessError", e), '')
             elif isinstance(e, openerp.exceptions.AccessDenied):
                 fault = xmlrpclib.Fault('AccessDenied', str(e))
             elif isinstance(e, openerp.exceptions.DeferredException):
