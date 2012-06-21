@@ -61,7 +61,6 @@ The main features are:
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
-        'report/mail_message_report_view.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'mail_data.xml',

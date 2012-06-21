@@ -361,7 +361,6 @@
                     <group>
                         <group>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                            <field name="project_id"  on_change="onchange_project(project_id)"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
