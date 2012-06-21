@@ -822,6 +822,16 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                 val);
         }
         return _.extend({}, domain, {own_values: {self: val}});
+    },
+    clear: function () {
+        if (!this.$element.val()) {
+            return;
+        }
+        var self = this;
+        setTimeout(function () {
+            self.$element.val('');
+        }, 0);
+
     }
 });
 /**
