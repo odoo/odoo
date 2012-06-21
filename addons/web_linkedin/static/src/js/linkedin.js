@@ -159,8 +159,7 @@ openerp.web_linkedin = function(instance) {
         },
         APIKeyWarning: function(e) {
             var self = this;
-            e.message="";
-            instance.web.dialog($(QWeb.render("Register.Linkedin", _t(e))), {
+            instance.web.dialog($(QWeb.render("Register.Linkedin")), {
                 title: _t("Configure your Linkedin Key API"),
                 modal: true,
                 width : 840, 
