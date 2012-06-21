@@ -5004,6 +5004,7 @@ class Model(BaseModel):
     The system will later instantiate the class once per database (on
     which the class' module is installed).
     """
+    _auto = True
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = False # True in a TransientModel
 
@@ -5016,6 +5017,7 @@ class TransientModel(BaseModel):
        records they created. The super-user has unrestricted access
        to all TransientModel records.
     """
+    _auto = True
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = True
 
@@ -5031,6 +5033,7 @@ class AbstractModel(BaseModel):
        """
     _auto = False # don't create any database backend for AbstractModels
     _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = False
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
