@@ -704,7 +704,7 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     on_menu_click: function(ev) {
         var needaction = !!$(ev.target).filter('div.oe_menu_counter').length;
-		ev.preventDefault();
+        ev.preventDefault();
         this.menu_click($(ev.currentTarget).data('menu'), needaction);
     },
 });
