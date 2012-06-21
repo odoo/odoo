@@ -121,7 +121,7 @@ class mail_thread(osv.Model):
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
 
     #------------------------------------------------------
-    # Generic message api
+    # mail.message wrappers and tools
     #------------------------------------------------------
 
     def message_create(self, cr, uid, thread_id, vals, context=None):
@@ -169,9 +169,9 @@ class mail_thread(osv.Model):
 
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
-
+        
         # Set as unread if writer is not the document responsible
-        #model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
+        model_pool.message_create_check_state(cr, uid, [res_id], context=context)
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
@@ -218,6 +218,10 @@ class mail_thread(osv.Model):
         if not login_lst: return []
         user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context=context)
         return user_ids
+
+    #------------------------------------------------------
+    # Generic message api
+    #------------------------------------------------------
 
     def message_capable_models(self, cr, uid, context=None):
         ret_dict = {}
@@ -381,7 +385,6 @@ class mail_thread(osv.Model):
                             original = msg_dict.get('original'),
                             context = context)
 
-    # Message loading
     def _message_add_ancestor_ids(self, cr, uid, ids, child_ids, root_ids, context=None):
         """ Given message child_ids
             Find their ancestors until root ids"""
@@ -425,6 +428,7 @@ class mail_thread(osv.Model):
         msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
         msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
         msgs = sorted(msgs, key=lambda d: (-d['id']))
+        print 'tatayoyo'
         return msgs
 
     def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
@@ -456,7 +460,7 @@ class mail_thread(osv.Model):
         return msgs
 
     #------------------------------------------------------
-    # Email specific
+    # Mail gateway
     #------------------------------------------------------
     # message_process will call either message_new or message_update.
 
@@ -809,7 +813,8 @@ class mail_thread(osv.Model):
         # Trying to unsubscribe somebody not in subscribers: returns False
         # if special management is needed; allows to know that an automatically
         # subscribed user tries to unsubscribe and allows to warn him
-        if not user_ids and not uid in self.message_get_subscribers(cr, uid, ids, context=context):
+        mail_thread_model = self.pool.get('mail.thread')
+        if not user_ids and not uid in mail_thread_model.message_get_subscribers(cr, uid, ids, context=context):
             return False
         subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
@@ -835,13 +840,13 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    def message_mark_as_read(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_state': True}, context=context)
-    
-    def message_create_mark_as_unread(self, cr, uid, ids, context=None):
+    def message_create_check_state(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
-                self.mark_as_unread(cr, uid, [obj.id], context=None)
+                self.mark_as_unread(cr, uid, [obj.id], context=context)
+
+    def message_mark_as_read(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'message_state': True}, context=context)
     
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_state': False}, context=context)
