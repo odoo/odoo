@@ -1995,7 +1995,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
         this._super(field_manager, node);
         this.set({'value': 0});
         if (this.node.attrs.digits) {
-            this.digits = py.eval(node.attrs.digits);
+            this.digits = this.node.attrs.digits;
         } else {
             this.digits = this.field.digits;
         }
