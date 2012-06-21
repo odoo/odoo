@@ -78,11 +78,11 @@
                         From <field name="date_from" />
                         to <field name="date_to"/>
                     </h2>
-                    <group col="4">
-                        <field name="name" class="oe_edit_only"/>
-                        <field name="department_id" class="oe_edit_only"/>
-                        <field name="company_id" groups="base.group_multi_company" class="oe_edit_only"/>
-                        <field name="user_id" invisible="1" class="oe_edit_only"/>
+                    <group col="4" class="oe_edit_only">
+                        <field name="name"/>
+                        <field name="department_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="user_id" invisible="1"/>
                     </group>
                     <notebook>
                         <page string="Daily">
@@ -94,19 +94,23 @@
                                 <button name="date_today" string="Today" type="object" icon="terp-go-today"/>
                                 <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
                             </group>
-
-                            <field colspan="3" context="{'name':date_current,'user_id':user_id}" height="100" name="attendances_ids" nolabel="1">
-                                <tree string="Attendances" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="action"/>
-                                    <field invisible="1" name="employee_id"/>
-                                </tree>
-                            </field>
-                            <group col="4" colspan="1">
+                            <group colspan="4" col="3">
+                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                    <tree string="Attendances" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="action"/>
+                                        <field invisible="1" name="employee_id"/>
+                                    </tree>
+                                </field>
+                                <group colspan="2" col="2">
+                                    <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
+                                    <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                                </group>
+                            </group>
+                            
+                            <group col="4">
                                 <field name="state_attendance"/>
-                                <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
-                                <field name="total_attendance_day" widget="float_time" colspan="4"/>
+                                <field name="total_attendance_day" widget="float_time"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
