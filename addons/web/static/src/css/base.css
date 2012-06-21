@@ -103,7 +103,7 @@
 .openerp h4 {
   margin: 4px 0;
 }
-.openerp a.button:link, .openerp a.button:visited, .openerp button, .openerp input[type='submit'] {
+.openerp a.button:link, .openerp a.button:visited, .openerp button, .openerp input[type='submit'], .openerp .oe_form_editable button.oe_highlight {
   display: inline-block;
   border: 1px solid #ababab;
   color: #404040;
@@ -128,7 +128,7 @@
   -webkit-font-smoothing: antialiased;
   outline: none;
 }
-.openerp a.button:hover, .openerp button:hover, .openerp input[type='submit']:hover {
+.openerp a.button:hover, .openerp button:hover, .openerp input[type='submit']:hover, .openerp .oe_form_editable button.oe_highlight:hover {
   background-color: #f6f6f6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
   background-image: -webkit-linear-gradient(top, #f6f6f6, #e3e3e3);
@@ -138,7 +138,7 @@
   background-image: linear-gradient(to bottom, #f6f6f6, #e3e3e3);
   cursor: pointer;
 }
-.openerp a.button:focus, .openerp button:focus, .openerp input[type='submit']:focus {
+.openerp a.button:focus, .openerp button:focus, .openerp input[type='submit']:focus, .openerp .oe_form_editable button.oe_highlight:focus {
   border: 1px solid #80bfff;
   background-color: #f6f6f6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
@@ -151,7 +151,7 @@
   -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
   box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
-.openerp a.button:active, .openerp a.button.active, .openerp button:active, .openerp button.active, .openerp input[type='submit']:active, .openerp input[type='submit'].active {
+.openerp a.button:active, .openerp a.button.active, .openerp button:active, .openerp button.active, .openerp input[type='submit']:active, .openerp input[type='submit'].active, .openerp .oe_form_editable button.oe_highlight:active {
   background: #e3e3e3;
   background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
   background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
@@ -160,7 +160,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.openerp a.button.disabled, .openerp button:disabled, .openerp input[type='submit']:disabled {
+.openerp a.button.disabled, .openerp button:disabled, .openerp input[type='submit']:disabled, .openerp .oe_form_editable button.oe_highlight:disabled {
   background: #efefef !important;
   border: 1px solid #d1d1d1 !important;
   -moz-box-shadow: none !important;

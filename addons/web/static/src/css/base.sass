@@ -144,7 +144,7 @@ $colour4: #8a89ba
         margin: 4px 0
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, input[type='submit']
+    a.button:link, a.button:visited, button, input[type='submit'], .oe_form_editable button.oe_highlight
         display: inline-block
         border: 1px solid #ababab
         color: #404040
@@ -159,23 +159,23 @@ $colour4: #8a89ba
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover, input[type='submit']:hover
+    a.button:hover, button:hover, input[type='submit']:hover, .oe_form_editable button.oe_highlight:hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
 
-    a.button:focus, button:focus, input[type='submit']:focus
+    a.button:focus, button:focus, input[type='submit']:focus, .oe_form_editable button.oe_highlight:focus
         border: 1px solid #80bfff
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, .oe_form_editable button.oe_highlight:active
         background: #e3e3e3
         background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
         background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
         background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
         @include box-shadow(none)
 
-    a.button.disabled, button:disabled, input[type='submit']:disabled
+    a.button.disabled, button:disabled, input[type='submit']:disabled, .oe_form_editable button.oe_highlight:disabled
         background: #efefef !important
         border: 1px solid #d1d1d1 !important
         @include box-shadow(none !important)
