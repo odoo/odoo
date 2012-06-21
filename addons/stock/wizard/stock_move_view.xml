@@ -51,8 +51,8 @@
                         <field name="product_id"  readonly="1"/>
                         <label for="product_qty"/>
                         <div>
-                            <field name="product_qty" class="oe_form_inline"/>
-                            <field name="product_uom" class="oe_form_inline" readonly="1"/>
+                            <field name="product_qty" class="oe_inline"/>
+                            <field name="product_uom" class="oe_inline" readonly="1"/>
                         </div>
                         <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection"/>
                     </group>
@@ -82,8 +82,8 @@
                         <field name="product_id" readonly="1"/>
                         <label for="qty"/>
                         <div>
-                            <field name="qty" readonly="1" class="oe_form_inline"/>
-                            <field name="product_uom" readonly="1" class="oe_form_inline"/>
+                            <field name="qty" readonly="1" class="oe_inline"/>
+                            <field name="product_uom" readonly="1" class="oe_inline"/>
                         </div>
                         <field name="location_id" invisible="1"/>
                         <field name="use_exist"/>
