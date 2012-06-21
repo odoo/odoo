@@ -166,26 +166,7 @@
                     <notebook>
                         <page string="Purchase Order">
                             <field name="order_line">
-                            	<form string="Purchase Order Lines" version="7.0">
-                            	<header>
-                                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
-                                </header>
-                                <group col="4" colspan="4">
-                                	<group>
-                                		<field name="product_id"/>
-                                		<field name="product_qty"/>
-                                    	<field name="price_unit"/>
-                                    	<field name="taxes_id" widget="many2many_tags"
-												domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/> 
-                                	</group>
-                                	<group>
-                                		<field name="name"/>
-                                		<field name="date_planned"/>
-										<field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-										<field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                	</group>
-                                </group>
-                            	</form>
+                            	
                                 <tree string="Purchase Order Lines">
                                 	<field name="date_planned"/>
                                     <field name="name"/>
@@ -351,40 +332,28 @@
             <field name="model">purchase.order.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0">
-                    <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-                        <label for="product_id" class="oe_edit_only"/>
-                        <group>
-                            <group>
-                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                                <label for="product_qty"/>
-                                <div>
-                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
-                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
-                                </div>
-                                <field name="price_unit"/>
-                            </group>
-                            <group>
-                                <field name="date_planned" widget="date"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
-                                <field name="taxes_id" widget="many2many_tags"
-                                    domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
-                            </group>
-                            <group string="Notes" colspan="4">
-                                <field name="notes"/>
-                            </group>
-                            <group string="Invoices" colspan="4">
-                                <field name="invoiced"/>
-                                <field name="invoice_lines" nolabel="1" colspan="2"/>
-                            </group>
-                            <separator string="Stock Moves"/>
-                            <field name="move_ids"/>
-                        </group>
-                    </sheet>
-                </form>
+                <form string="Purchase Order Lines" version="7.0">
+				    <header>
+				        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
+				    </header>
+				    <group col="4" colspan="4">
+				    <group>
+					    <field name="product_id"/>
+					    <field name="product_qty"/>
+				     	<field name="price_unit"/>
+				     	<field name="taxes_id" widget="many2many_tags"
+					        domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/> 
+				    </group>
+				    <group>
+					    <field name="name"/>
+					    <field name="date_planned"/>
+				        <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+				        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+				    </group>
+				    </group>
+				    <separator string="Notes"/>
+				    <field name="notes" placeholder="Add a note on the purchase line..."/>
+				</form>
             </field>
         </record>
 
