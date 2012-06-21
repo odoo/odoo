@@ -367,7 +367,12 @@
             </field>
         </record>
         
-        <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">
+  <!-- Timesheet Button on Employee Form -->
+  <act_window
+           context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
+           id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
+           
+      <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.employee.extd_form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
@@ -377,11 +382,6 @@
                  </div>
             </field>
         </record>
-
-  <!-- Timesheet Button on Employee Form -->
-  <act_window
-           context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-           id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
 
     </data>
 </openerp>

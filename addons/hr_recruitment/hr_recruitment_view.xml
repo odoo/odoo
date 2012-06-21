@@ -111,25 +111,29 @@
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
+                    <h1><field name="name" string="Subject"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
-                    <h2><field name="partner_name"/></h2>
+                    <h2><field name="partner_name"/>
                     <field name="type_id" placeholder="Degree"/>
+                    apply for<field name="job_id" on_change="onchange_job(job_id)"/>
+                    </h2>
                 </div>
 
                 <group>
                     <group>
                         <field name="user_id"/>
-                        <field name="title_action"/>
-                        <field name="date_action"/>
+                        <label for="title_action"/>
+                        <div>
+                            <field name="date_action" nolabel="1"/> -
+                            <field name="title_action" class="oe_inline" nolabel="1" placeholder="Call for proposal"/>
+                        </div>
                     </group>
                     <group>
-                        <field name="job_id" on_change="onchange_job(job_id)"/>
                         <field name="priority" string="Appreciation"/>
                         <field name="survey" invisible="1"/>
                         <field name="response" invisible="1"/>
                         <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
-                        <field name="state" groups="base.group_no_one"/>
+                        <field name="state" nolabel="1" groups="base.group_no_one"/>
                     </group>
                 </group>
                 <notebook>
@@ -140,10 +144,6 @@
                                 <div>
                                     <field name="partner_id" class="oe_inline"
                                         on_change="onchange_partner_id(partner_id, email_from)"/>
-                                    <button class="oe_inline"
-                                        string="Create" help="Create a new contact for this applicant" icon="gtk-index"
-                                        name="%(action_hr_recruitment_partner_create)d" type="action"
-                                        attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 </div>
                                 <field name="email_from" widget="email"/>
                                 <field name="partner_phone"/>

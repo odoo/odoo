@@ -200,7 +200,7 @@ class hr_applicant(base_stage, osv.Model):
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'HR Manager'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date_open': fields.datetime('Opened', readonly=True, select=True),
