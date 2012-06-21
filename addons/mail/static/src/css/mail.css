@@ -170,7 +170,7 @@
     margin-left: 66px;
 }
 
-.openerp div.oe_mail_thread_subthread li.oe_mail_thread_msg:last-child {
+.openerp div.oe_mail_thread_subthread .oe_mail_thread_msg:last-child {
     margin-bottom: 8px;
 }
 
@@ -179,13 +179,13 @@
     border-bottom: 1px solid #D2D9E7;
 }
 
-.openerp li.oe_mail_thread_msg:after {
+.openerp .oe_mail_thread_msg:after {
     content: "";
     display: block;
     clear: both; 
 }
 
-.openerp li.oe_mail_thread_msg > div:after {
+.openerp .oe_mail_thread_msg > div:after {
     content: "";
     display: block;
     clear: both; 
@@ -246,15 +246,6 @@
 /* Styling (should be openerp)    */
 /* ------------------------------ */
 
-.openerp ul.oe_mail {
-    padding: 0;
-    margin: 0;
-}
-
-.openerp li.oe_mail {
-    list-style-type: none;
-}
-
 .openerp input.oe_mail, textarea.oe_mail {
     width: 432px;
     padding: 4px;
@@ -291,7 +282,7 @@
 }
 
 /* ------------------------------ */
-/* New layouts' style             */
+/* Messages layout                */
 /* ------------------------------ */
 
 .openerp .oe_mail_msg .oe_mail_msg_title {
@@ -325,64 +316,20 @@
     font-weight: bold;
 }
 
-/* Gear menu */
-.openerp .oe_mail_msg_content a.oe_gear_menuaction {
+/* Dropdown menu */
+.openerp .oe_mail_msg_content .oe_dropdown_toggle {
     position: absolute;
     top: 0px;
     right: 3px;
-    display: none;
-    color: #4c4c4c;
-    cursor: pointer;
 }
-.openerp .oe_mail_msg_content:hover .oe_gear_menuaction {
-    display: block;
+.openerp .oe_mail_msg_content .oe_dropdown_arrow:after {
+    border-top: 4px solid transparent;
 }
-.openerp .oe_mail_msg_content a.oe_gear_menuaction:hover {
-    text-decoration: none;
-}
-.openerp .oe_mail_msg_content ul.oe_gear_menu {
-    list-style-type: none;
-    display: none;
-    position: absolute;
-    top: 30px;
-    right: -140px;
-    padding: 4px;
-    border: 1px solid #afafb6;
-    min-width: 160px;
-    overflow-x: hidden;
-    z-index: 900;
-    background: white;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-.openerp .oe_mail_msg_content ul.oe_gear_menu > li {
-    float: none;
-}
-.openerp .oe_mail_msg_content .oe_gear_menu > li > a {
-    display: block;
-    padding: 3px 6px;
-    line-height: 14px;
-    color: #4c4c4c;
-    text-decoration: none;
-}
-.openerp .oe_mail_msg_content .oe_gear_menu > li > a:hover {
-    background: #f0f0fa;
-    background: -moz-linear-gradient(#f0f0fa, #eeeef6);
-    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
-    background: -webkit-linear-gradient(#f0f0fa, #eeeef6);
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    -box-shadow: none;
-}
-.openerp .oe_mail_msg_content .oe_gear_menu p {
-    margin-left: 12px;
+.openerp .oe_mail_msg_content:hover .oe_dropdown_arrow:after {
+    border-top: 4px solid #404040;
 }
 
-/* Attachments */
+/* Attachments list */
 .openerp ul.oe_mail_msg_attachments {
     display: none;
     width: 100%;
@@ -397,6 +344,3 @@
     padding: 0;
     list-style-type: square;
 }
-
-
-

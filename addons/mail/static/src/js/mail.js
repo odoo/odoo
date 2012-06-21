@@ -182,7 +182,7 @@ openerp.mail = function(session) {
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
+                $(event.srcElement).parents('.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
                 }
@@ -196,9 +196,9 @@ openerp.mail = function(session) {
                 if (! msg_id) return false;
                 //console.log(msg_id);
                 var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
+                $(event.srcElement).parents('.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
-                    $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
+                    $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
                 }
                 return false;
             });
@@ -300,7 +300,7 @@ openerp.mail = function(session) {
                     self.display_comment(record);
                     self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
                                                             'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id});
-                    self.$element.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
+                    self.$element.find('.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$element.find('div.oe_mail_thread_subthread:last'));
                 }
                 else if (self.params.thread_level == 0) {
@@ -749,7 +749,7 @@ openerp.mail = function(session) {
             this.search['context'] = _.extend(this.params.context, this.search_results.context);
             this.display_show_more = true;
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
-            this.$element.find('div.oe_mail_wall_threads').empty();
+            this.$element.find('ul.oe_mail_wall_threads').empty();
             return this.fetch_comments(this.params.limit, 0);
         },
 
@@ -782,13 +782,13 @@ openerp.mail = function(session) {
                 var model_name = self.comments_structure.msgs[root_id]['model'];
                 var res_id = self.comments_structure.msgs[root_id]['res_id'];
                 var render_res = session.web.qweb.render('WallThreadContainer', {});
-                $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
+                $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
                 var thread = new mail.Thread(self, {
                     'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
                     'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true}
                     );
                 self.thread_list.push(thread);
-                return thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
+                return thread.appendTo(self.$element.find('li.oe_mail_wall_thread:last'));
             });
             // update TODO
             this.comments_structure['root_ids'] = _.union(this.comments_structure['root_ids'], this.comments_structure['new_root_ids']);

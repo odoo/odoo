@@ -15,8 +15,8 @@
                 <button class="oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
             </div>
             <div class="oe_clear"></div>
-            <div class="oe_mail_wall_threads">
-            </div>
+            <ul class="oe_mail_wall_threads">
+            </ul>
             <div class="oe_mail_wall_more">
                 <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
             </div>
@@ -57,7 +57,7 @@
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.Thread.default" t-attf-class="oe_mail oe_mail_thread_msg">
+    <div t-name="mail.Thread.default" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
             <img t-if="record.type == 'email'" class="oe_email_icon oe_left" src="/mail/static/src/img/email_icon.png"/>
             <img t-if="record.type == 'notification' || record.type == 'comment'" class="oe_mail_msg_image oe_left" t-att-src="record.mini_url"/>
@@ -66,22 +66,23 @@
             </div>
             <t t-if="record.type == 'tmp'"><t t-call="mail.Thread.default.ThreadDisplay"/></t>
         </div>
-    </li>
+    </div>
 
     <t t-name="mail.Thread.default.NoteDisplay">
-        <a class="oe_gear_menuaction oe_i">B</a>
-        <ul class="oe_gear_menu">
-            <t t-if="display['show_delete']">
-                <t t-if="thread._is_author(record.user_id[0])">
-                    <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a></li>
+        <span class="oe_dropdown_toggle oe_dropdown_arrow">
+            <ul class="oe_dropdown_menu">
+                <t t-if="display['show_delete']">
+                    <t t-if="thread._is_author(record.user_id[0])">
+                        <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a></li>
+                    </t>
                 </t>
-            </t>
-            <t t-if="display['show_hide']">
-                <t t-if="!(thread._is_author(record.user_id[0]))">
-                    <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></li>
+                <t t-if="display['show_hide']">
+                    <t t-if="!(thread._is_author(record.user_id[0]))">
+                        <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></li>
+                    </t>
                 </t>
-            </t>
-        </ul>
+            </ul>
+        </span>
         
         <div class="oe_mail_msg">
              <t t-if="record.subject">
