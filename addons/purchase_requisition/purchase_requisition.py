@@ -206,6 +206,20 @@ class purchase_requisition(osv.osv):
 
 purchase_requisition()
 
+class mail_message(osv.osv):
+    _inherit = 'mail.message'
+    
+    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
+                             email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
+                             res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
+                             context=None):
+        purchase_order_obj = self.pool.get('purchase.order')
+        requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
+        result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model,res_id=res_id, context=context)
+        if requisition_id:
+            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', res_id=requisition_id, context=context)
+        return result
+
 class purchase_requisition_line(osv.osv):
 
     _name = "purchase.requisition.line"
@@ -278,27 +292,30 @@ class procurement_order(osv.osv):
         'requisition_id' : fields.many2one('purchase.requisition','Latest Requisition')
     }
     def make_po(self, cr, uid, ids, context=None):
+        res = {}
         sequence_obj = self.pool.get('ir.sequence')
-        res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
-        for proc_id, po_id in res.items():
-            procurement = self.browse(cr, uid, proc_id, context=context)
-            requisition_id=False
-            if procurement.product_id.purchase_requisition:
-                requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
-                    'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
+        requisition_obj = self.pool.get('purchase.requisition')
+        warehouse_obj = self.pool.get('stock.warehouse')
+        procurement = self.browse(cr, uid, ids, context=context)[0]
+        if procurement.product_id.purchase_requisition:
+             seq_name = sequence_obj.get(cr, uid, 'purchase.order.requisition')
+             res[procurement.id] = requisition_obj.create(cr, uid, 
+                   {
+                    'name': seq_name,
                     'origin': procurement.origin,
                     'date_end': procurement.date_planned,
-                    'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
+                    'warehouse_id':warehouse_id and warehouse_id[0] or False,
                     'company_id':procurement.company_id.id,
                     'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
                         'product_qty': procurement.product_qty
 
-                    })],
-                    'purchase_ids': [(6,0,[po_id])]
+                   })],
                 })
-            self.write(cr,uid,[proc_id],{'requisition_id':requisition_id},context=context)
+             self.write(cr,uid,[procurement.id],{'state': 'running','requisition_id': res[procurement.id]},context=context)
+        else:
+            res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         return res
 
 procurement_order()
