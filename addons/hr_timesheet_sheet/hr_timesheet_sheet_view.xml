@@ -366,6 +366,17 @@
                 </tree>
             </field>
         </record>
+        
+        <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.employee.extd_form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <div class="oe_right oe_button_box" position="inside">
+                     <button name="%(act_hr_employee_2_hr_timesheet)d" string="Timesheets" type="action"/>
+                 </div>
+            </field>
+        </record>
 
   <!-- Timesheet Button on Employee Form -->
   <act_window

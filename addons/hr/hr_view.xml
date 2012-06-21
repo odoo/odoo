@@ -26,54 +26,52 @@
                         <!-- Put here related buttons -->
                     </div>
                     <field class="oe_right" name="photo" widget='image' on_change="onchange_photo(photo)"/>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-
-                        <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
-                        <h2><field name="company_id" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h2>
-
-                        <label for="department_id" class="oe_edit_only"/>
-                        <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
-                    </div>
+                    <label for="name" class="oe_edit_only"/>
+                       <h1><field name="name"/>,
+                        <field name="company_id" class="oe_inline" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>at
+                        <field name="job_id" class="oe_inline oe_edit_only" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                    </h1>
+                    <label for="department_id" class="oe_edit_only"/>
+                    <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                    <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                    <group colspan="4" col="4">
+                        <field name="work_email" widget="email" />
+                        <field name="work_phone"/>
+                        <field name="address_id" on_change="onchange_address_id(address_id)" />
+                        <field name="mobile_phone"/>
+                    </group>
                     <notebook>
                         <page string="Personal Information">
                             <group>
-                                <group string="General">
-                                    <field name="user_id" on_change="onchange_user(user_id)"/>
-                                    <field name="active"/>
+                                <group string="Linked User" colspan="4" col="4">
+                                    <field name="identification_id" groups="base.group_hr_user"/>
                                     <field name="parent_id" />
+                                    <field name="passport_id" groups="base.group_hr_user"/>
+                                    <field name="coach_id"/>
+                                    <field name="otherid" groups="base.group_hr_user"/>
+                                    <field name="active"/>
                                 </group>
-                                <group groups="base.group_hr_user" string="Social IDs">
-                                    <field name="identification_id"/>
-                                    <field name="passport_id"/>
-                                    <field name="otherid"/>
-                                </group>
-                                <group groups="base.group_hr_user" string="Status">
-                                    <field name="gender"/>
-                                    <field name="marital"/>
-                                    <field name="country_id"/>
+                                <!-- <group string="General">
+                                    <field name="user_id" on_change="onchange_user(user_id)"/>
+                                </group> -->
+                               <!--  <group groups="base.group_hr_user" string="Status">
                                     <field name="birthday"/>
-                                </group>
-                                <group string="Contact Information">
-                                    <field name="address_home_id"/>
-                                    <field name="address_id" on_change="onchange_address_id(address_id)" />
-                                    <field name="work_phone"/>
-                                    <field name="mobile_phone"/>
-                                    <field name="work_email" widget="email" />
+                                </group> -->
+                                <!-- <group string="Contact Information">
                                     <field name="work_location"/>
-                                </group>
-                                <group string="Job Information">
-                                    <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                                    <field name="coach_id" />
-                                </group>
+                                </group> -->
                             </group>
+                            <separator string="Notes"/>
+                            <field name="notes" placeholder="Other Information ..."/>
                         </page>
-                        <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids" widget="many2many_tags"/>
-                        </page>
-                        <page string="Notes" groups="base.group_hr_user">
-                            <field name="notes"/>
+                        <page string="Miscellaneous" groups="base.group_hr_user">
+                            <group colspan="4" col="4">
+                                 <field name="country_id"/>
+                                 <field name="gender"/>
+                                 <field name="marital"/>
+                                 <field name="address_home_id"/>
+                                 <field name="birthday"/>
+                            </group>
                         </page>
                     </notebook>
                     </sheet>

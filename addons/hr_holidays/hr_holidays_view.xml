@@ -491,7 +491,10 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="coach_id" position="after">
+                <div class="oe_right oe_button_box" position="inside">
+                     <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action"/>
+                 </div>
+                <field name="active" position="before">
                     <field name="remaining_leaves"/>
                 </field>
             </field>

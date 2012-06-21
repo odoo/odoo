@@ -14,24 +14,26 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//page[@string='Personal Information']" position="after">
-                    <page string="Miscellaneous" groups="base.group_hr_user">
-                        <group colspan="2" col="2">
-                            <separator string="Personal Info" colspan="2"/>
-                            <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
-                            <field name="place_of_birth"/>
-                            <field name="children"/>
-                            <!-- <field name="basic" invisible="0"/> -->
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Job Info" colspan="2"/>
-                            <field name="manager" select="1"/>
-                            <field name="vehicle" select="1"/>
-                            <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1" string="Medical Examination"/>
-                        </group>
-                    </page>
-                </xpath>
+                <div class="oe_right oe_button_box" position="inside">
+                     <button name="%(act_hr_employee_payslip_list)d" string="Payslips" type="action"/>
+                 </div>
+                  <xpath expr="//field[@name='identification_id']" position="before">
+                    <field name="manager" select="1"/>
+                 </xpath>
+                 <field name="otherid" position="after">
+                         <field name="vehicle" select="1"/>
+                         <field name="medic_exam" select="1" string="Medical Examination"/>
+                         <field name="vehicle_distance" select="1"/>
+                  </field>
+                <field name="address_home_id" position="after">
+                    <field name="children"/>
+                </field>
+                <field name="birthday" position="after">
+                    <field name="place_of_birth"/>
+                </field>
+                <field name="marital" position="before">
+                    <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
+                </field>
             </data>
             </field>
         </record>
@@ -45,9 +47,10 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//group[@name='right_column']" position="before">
-                    <separator string="Payslip Info" colspan="2"/>
-                    <field name="struct_id" required="1"/>
+                <xpath expr="//group[@name='right_column']" position="inside">
+                    <group string="Payslip Info" colspan="2" col="2">
+                        <field name="struct_id" required="1"/>
+                    </group>
                 </xpath>
                  <xpath expr="//field[@name='working_hours']" position="after">
                     <field name="schedule_pay"/>
@@ -753,7 +756,6 @@
         <!--  Shortcuts -->
 
         <act_window name="Payslips"
-            domain="[('employee_id', '=', active_id)]"
             context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
             res_model="hr.payslip"
             src_model="hr.employee"
