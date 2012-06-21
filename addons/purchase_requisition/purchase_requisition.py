@@ -215,9 +215,15 @@ class mail_message(osv.osv):
                              context=None):
         purchase_order_obj = self.pool.get('purchase.order')
         requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
-        result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model,res_id=res_id, context=context)
+        result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc,
+                     email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
+                     res_id=res_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                     context=context)
         if requisition_id:
-            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', res_id=requisition_id, context=context)
+            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
+                             email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
+                             res_id=requisition_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                             context=context)
         return result
 
 class purchase_requisition_line(osv.osv):
