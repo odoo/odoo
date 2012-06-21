@@ -8,9 +8,7 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25" groups="base.group_no_one"/>
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
-        <menuitem id="base.menu_hr_reports" parent="hr.menu_hr_root" sequence="40" name="Reporting"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
 
         <!--
         ==========
@@ -24,30 +22,29 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                    <div class="oe_right oe_form_button_box">
+                    <div class="oe_right oe_button_box">
                         <!-- Put here related buttons -->
                     </div>
                     <field class="oe_right" name="photo" widget='image' on_change="onchange_photo(photo)"/>
-                    <div class="oe_form_title">
-                        <label for="name" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
-                        <label for="department_id" class="oe_form_readonly_hidden"/>
-                        <h2>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>,
-                            <field name="department_id" on_change="onchange_department_id(department_id)" />
-                        </h2>
+
+                        <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
+                        <h2><field name="company_id" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h2>
+
+                        <label for="department_id" class="oe_edit_only"/>
+                        <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                     </div>
                     <notebook>
                         <page string="Personal Information">
                             <group>
-                                <group>
+                                <group string="General">
                                     <field name="user_id" on_change="onchange_user(user_id)"/>
                                     <field name="active"/>
                                     <field name="parent_id" />
                                 </group>
                                 <group groups="base.group_hr_user" string="Social IDs">
-                                    <field name="ssnid"/>
-                                    <field name="sinid"/>
                                     <field name="identification_id"/>
                                     <field name="passport_id"/>
                                     <field name="otherid"/>
@@ -67,13 +64,13 @@
                                     <field name="work_location"/>
                                 </group>
                                 <group string="Job Information">
-                                    <field name="job_id" domain="[('state','!=','old')]"/>
+                                    <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                     <field name="coach_id" />
                                 </group>
                             </group>
                         </page>
                         <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids"/>
+                            <field name="category_ids" widget="many2many_tags"/>
                         </page>
                         <page string="Notes" groups="base.group_hr_user">
                             <field name="notes"/>
@@ -134,6 +131,7 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
+                <field name="last_login"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -143,6 +141,11 @@
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
+                                    <li id="last_login">
+                                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                              <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                        </span>
+                                    </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
@@ -315,7 +318,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="hr.menu_hr_configuration" sequence="1"/>
+            parent="hr.menu_hr_configuration" sequence="1" groups="base.group_no_one"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories Structure</field>
@@ -352,24 +355,27 @@
                 <form string="Job" version="7.0">
                     <header>
                         <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
-                        <button name="job_open" string="In Position" states="old,recruit" type="object"/>
-                        <button name="job_old" string="Mark as Old" states="open,recruit" type="object"/>
+                        <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <group col="4">
-                            <field name="name" />
-                            <field name="department_id" />
-                            <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                            <field name="no_of_employee"/>
-                            <field name="expected_employees"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="department_id" />
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                                <field name="no_of_employee"/>
+                                <field name="expected_employees"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Description">
-                                <separator string="Job Description"/>
+                                <label for="description"/>
                                 <field name="description"/>
-                                <separator string="Requirements"/>
+                                <label for="requirements"/>
                                 <field name="requirements"/>
                             </page>
                             <page string="Employees">
@@ -421,9 +427,26 @@
                     <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                     </group>
                 </search>
-             </field>
-         </record>
-
+            </field>
+        </record>
+        
+        <record id="view_hr_job_employee_form" model="ir.ui.view">
+            <field name="name">hr.job.employee.form</field>
+            <field name="model">hr.job</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Job" version="7.0">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="department_id" />
+                    </group>
+                    <label for="description"/>
+                    <field name="description"/>
+                </form>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
@@ -435,7 +458,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_hr_management" id="menu_hr_job" action="action_hr_job" sequence="6"/>
+        <menuitem parent="hr.menu_hr_configuration" id="menu_hr_job" action="action_hr_job" sequence="6"/>
 
     </data>
 </openerp>

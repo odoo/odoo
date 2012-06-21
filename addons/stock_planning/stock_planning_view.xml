@@ -12,7 +12,7 @@
             <field name="model">stock.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                     <header>
                         <button name="button_open" string="Open" states="draft" type="object"/>
                         <button name="button_close" string="Close" states="open" type="object"/>
@@ -81,13 +81,13 @@
             <field name="model">stock.sale.forecast</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                 <header>
                     <button name="action_validate" string="Approve" states="draft" type="object" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet string="Stock and Sales Forecast" layout="auto">
-                    <group colspan = "4" col = "4" class="oe_form_header">
+                    <group colspan = "4" col = "4" class="oe_header">
                         <group colspan = "2" col="2" >
                             <field name="company_id" select="1"
                                         groups="base.group_multi_company"
