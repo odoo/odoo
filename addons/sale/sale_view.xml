@@ -10,7 +10,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Shop" version="7.0">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
@@ -127,7 +127,7 @@
                     <h1>
                         <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
                         <label string="Sale Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
-                        <field name="name" class="oe_form_inline" readonly="1"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
                     </h1>
                     <group>
                         <group>
@@ -161,16 +161,16 @@
                                             <div>
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                    name="product_uom_qty" class="oe_form_inline"
+                                                    name="product_uom_qty" class="oe_inline"
                                                     on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
-                                                <field name="product_uom" groups="product.group_uom" class="oe_form_inline"
+                                                <field name="product_uom" groups="product.group_uom" class="oe_inline"
                                                     on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
 
                                             </div>
                                             <label for="product_uos_qty"/>
                                             <div>
-                                                <field groups="product.group_uos" name="product_uos_qty" class="oe_form_inline"/>
-                                                <field groups="product.group_uos" name="product_uos" class="oe_form_inline"/>
+                                                <field groups="product.group_uos" name="product_uos_qty" class="oe_inline"/>
+                                                <field groups="product.group_uos" name="product_uos" class="oe_inline"/>
                                             </div>
                                             <field name="price_unit"/>
                                             <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -215,10 +215,10 @@
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-                            <group class="oe_form_subtotal_footer" colspan="2" name="sale_total">
+                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
-                                <field name="amount_total" class="oe_form_subtotal_footer_separator"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
                             <separator string="Notes"/>
                             <field name="note" placeholder="Add a global note on the sale order..."/>
@@ -418,9 +418,9 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
                     <sheet>
-                    <label for="order_id" class="oe_form_readonly_hidden"/>
+                    <label for="order_id" class="oe_edit_only"/>
                     <h1><field name="order_id"/></h1>
-                    <label for="order_partner_id" class="oe_form_readonly_hidden"/>
+                    <label for="order_partner_id" class="oe_edit_only"/>
                     <h2><field name="order_partner_id"/></h2>
                     <group>
                         <group>
@@ -428,8 +428,8 @@
                             <field name="name" groups="base.group_no_one"/>
                             <label name="product_uom_qty"/>
                             <div>
-                                <field name="product_uom_qty" readonly="1" class="oe_form_inline"/>
-                                <field name="product_uom" groups="product.group_uom" class="oe_form_inline"/>
+                                <field name="product_uom_qty" readonly="1" class="oe_inline"/>
+                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                             </div>
                         </group><group>
                             <field name="price_unit"/>
@@ -523,7 +523,7 @@
         </record>
 
         <act_window
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
+            context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
             id="act_res_partner_2_sale_order"
             name="Quotations and Sales"
             groups="base.group_sale_salesman"
@@ -531,7 +531,7 @@
             src_model="res.partner"/>
 
         <act_window
-            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            context="{'search_default_product_id': active_id, 'default_product_id': active_id}"
             id="action_order_line_product_tree"
             name="Sales Order Lines"
             res_model="sale.order.line"

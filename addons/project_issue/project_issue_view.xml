@@ -77,9 +77,9 @@
                     <field name="stage_id" widget="statusbar"/>
                 </header>
                 <sheet string="Issue">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="project_id" class="oe_form_readonly_hidden"/>
+                    <label for="project_id" class="oe_edit_only"/>
                     <h2><field name="project_id" required="True" on_change="on_change_project(project_id)"/></h2>
                     <group>
                         <group>

@@ -90,8 +90,8 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Sales Receipt" layout="auto">
-                    <div class="oe_form_title">
-                        <label for="number" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="number" class="oe_edit_only"/>
                         <h1><field name="number" readonly="0" /></h1>
                     </div>
 
@@ -132,13 +132,13 @@
                                     <field name="narration" placeholder="Internal Notes" nolabel="1" />
                                 </group>
                                 <group>
-                                    <group class="oe_form_subtotal_footer" string="Total">
+                                    <group class="oe_subtotal_footer" string="Total">
                                         <field name="tax_id" 
                                             on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
                                             widget="selection"
                                             domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                         <field name="tax_amount" nolabel="1"/>
-                                        <field name="amount" class="oe_form_subtotal_footer_separator" />
+                                        <field name="amount" class="oe_subtotal_footer_separator" />
                                         <button type="object"
                                             icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax"
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
@@ -227,8 +227,8 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Supplier Voucher">
-                    <div class="oe_form_title">
-                        <label for="number" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="number" class="oe_edit_only"/>
                         <h1><field name="number" readonly="0" /></h1>
                     </div>
 
@@ -271,7 +271,7 @@
                                 <group>
                                     <field name="narration" placeholder="Internal Notes" nolabel="1" />
                                 </group>
-                                <group class="oe_form_subtotal_footer">
+                                <group class="oe_subtotal_footer">
                                     <!--
                                     <div>
                                         <label for="tax_id" />
@@ -287,7 +287,7 @@
                                         domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
                                         />
                                     <field name="tax_amount" />
-                                    <field name="amount" string="Total" class="oe_form_subtotal_footer_separator"/>
+                                    <field name="amount" string="Total" class="oe_subtotal_footer_separator"/>
                                 </group>                                    
 
                             </group>
