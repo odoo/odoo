@@ -146,7 +146,7 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+               <form string="Draft Invoice" version="7.0">
                 <header>
                     <button name="invoice_open" states="draft,proforma2" string="Validate"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid'/>
@@ -156,34 +156,24 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Supplier Invoice">
-                    <group>
+                    <group col="4" colspan="4">
                         <group>
-                            <field string="Supplier" name="partner_id"
-                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
-                              context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
-                              domain="[('supplier', '=', True)]"/>
-                            <field name="fiscal_position" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="number"/>
                             <field name="date_invoice"/>
+                            <field name="date_due"/>
                             <field name="period_id" domain="[('state', '=', 'draft')]"
                                 groups="account.group_account_user" widget="selection"/>
-                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"
-                                groups="account.group_account_user"/>
-                            <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
-                                name="account_id" groups="account.group_account_user"/>
-                            <field name="currency_id"/>
-                            <field name="type" invisible="1"/>
                         </group>
                         <group>
+                            <field name="fiscal_position" widget="selection"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                    <group>
                             <label for="reference"/>
                             <div>
                                 <field name="reference_type"/>
                                 <field name="reference" placeholder="Payment Reference"/>
                             </div>
-                            <field name="date_due"/>
-                        </group>
                     </group>
                     <notebook>
                         <page string="Invoice">
