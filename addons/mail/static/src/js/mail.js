@@ -72,7 +72,7 @@ openerp.mail = function(session) {
      * either it will fetch [limit] messages related to [res_model]:[res_id].
      */
     mail.Thread = session.web.Widget.extend({
-        template: 'Thread',
+        template: 'mail.Thread',
 
         /**
          * @param {Object} parent parent
@@ -122,7 +122,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             // customize display
             if (! this.display.show_post_comment) {
-                this.$element.find('div.oe_mail_thread_act').hide();
+                this.$element.find('div.oe_mail_thread_action').hide();
             }
             // add events
             this.add_events();
@@ -171,7 +171,7 @@ openerp.mail = function(session) {
             });
             // event: click on 'reply' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-                var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
+                var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_action:first');
                 act_dom.toggle();
                 event.preventDefault();
             });
@@ -184,7 +184,7 @@ openerp.mail = function(session) {
                 var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
                 $(event.srcElement).parents('.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
-                    $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
+                    $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
                 }
                 return false;
             });
@@ -539,7 +539,7 @@ openerp.mail = function(session) {
     /* ThreadView widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         // QWeb template to use when rendering the object
-        template: 'RecordThread',
+        template: 'mail.RecordThread',
 
        init: function() {
             this._super.apply(this, arguments);
@@ -581,7 +581,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             var self = this;
             this.reinit();
-            if (! this.view.datarecord.id) { this.$element.find('ul.oe_mail_thread').hide(); return; }
+            if (! this.view.datarecord.id) { this.$element.find('.oe_mail_thread').hide(); return; }
             // fetch followers
             var fetch_sub_done = this.fetch_subscribers();
             // create and render Thread widget
@@ -645,7 +645,7 @@ openerp.mail = function(session) {
     
     /* WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
-        template: 'Wall',
+        template: 'mail.Wall',
 
         /**
          * @param {Object} parent parent
@@ -695,7 +695,7 @@ openerp.mail = function(session) {
         add_event_handlers: function () {
             var self = this;
             // post a comment
-            this.$element.find('button.oe_mail_wall_button_comment').click(function () { return self.do_comment(); });
+            this.$element.find('.oe_mail_wall_action button').click(function () { return self.do_comment(); });
             // display more threads
             this.$element.find('button.oe_mail_wall_button_more').click(function () { return self.do_more(); });
         },
@@ -781,7 +781,7 @@ openerp.mail = function(session) {
                 var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
                 var model_name = self.comments_structure.msgs[root_id]['model'];
                 var res_id = self.comments_structure.msgs[root_id]['res_id'];
-                var render_res = session.web.qweb.render('WallThreadContainer', {});
+                var render_res = session.web.qweb.render('mail.WallThreadContainer', {});
                 $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
                 var thread = new mail.Thread(self, {
                     'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
@@ -835,7 +835,7 @@ openerp.mail = function(session) {
         
         /** Action: Posts a comment */
         do_comment: function () {
-            var comment_node = this.$element.find('textarea.oe_mail_wall_action_textarea');
+            var comment_node = this.$element.find('.oe_mail_wall_action textarea');
             var body_text = comment_node.val();
             comment_node.val('');
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(this.proxy('init_and_fetch_comments'));

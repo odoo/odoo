@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <div t-name="Wall" class="oe_mail_wall">
+    <div t-name="mail.Wall" class="oe_mail_wall">
         <table class="oe_view_manager_header">
             <tr class="oe_header_row">
                 <td><h2 class="oe_view_title">All Feeds</h2></td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
         </table>
-        <div class="oe_mail_wall_left">
-            <div class="oe_mail_wall_act">
+        <div class="oe_mail_wall_main">
+            <div class="oe_mail_wall_action">
                 <img class="oe_mail_msg_image oe_left" alt="User img"/>
                 <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="What are you working on?"/>
                 <button class="oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
@@ -21,13 +21,13 @@
                 <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
             </div>
         </div>
-        <div class="oe_mail_wall_right"></div>
+        <div class="oe_mail_wall_aside"></div>
     </div>
 
-    <t t-name="WallThreadContainer">
+    <t t-name="mail.WallThreadContainer">
     </t>
 
-    <div t-name="RecordThread" class="oe_mail_recthread">
+    <div t-name="mail.RecordThread" class="oe_mail_recthread">
         <h4>History and Comments</h4>
         <div class="oe_mail_recthread_left"></div>
         <div class="oe_mail_recthread_right">
@@ -43,8 +43,8 @@
         </div>
     </div>
 
-    <div t-name="Thread" class="oe_mail oe_mail_thread">
-        <div class="oe_mail_thread_act">
+    <div t-name="mail.Thread" class="oe_mail oe_mail_thread">
+        <div class="oe_mail_thread_action">
             <img class="oe_mail_msg_image oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
                 <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
