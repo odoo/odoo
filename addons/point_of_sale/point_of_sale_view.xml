@@ -58,7 +58,7 @@
                                     </group>
                                 </form>
                             </field>
-                            <group class="oe_form_subtotal_footer">
+                            <group class="oe_subtotal_footer">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
@@ -651,11 +651,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="PoS Categories" version="7.0">
+                	<sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
                         <field name="sequence"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
