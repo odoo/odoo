@@ -305,6 +305,7 @@ class procurement_order(osv.osv):
         procurement = self.browse(cr, uid, ids, context=context)[0]
         if procurement.product_id.purchase_requisition:
              seq_name = sequence_obj.get(cr, uid, 'purchase.order.requisition')
+             warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
              res[procurement.id] = requisition_obj.create(cr, uid, 
                    {
                     'name': seq_name,
