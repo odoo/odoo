@@ -669,7 +669,6 @@ instance.web.Menu =  instance.web.Widget.extend({
     menu_click: function(id, needaction) {
         if (!id) { return; }
 
-        this.do_hide_more();
         // find back the menuitem in dom to get the action
         var $item = this.$element.find('a[data-menu=' + id + ']');
         if (!$item.length) {
