@@ -241,24 +241,26 @@
     </record>
     
     <record model="ir.ui.view" id="view_account_coda_form">
-      <field name="name">account.coda.form</field>
-      <field name="model">account.coda</field>
-      <field name="type">form</field>
-      <field name="arch" type="xml">
-          <form string="CODA File" version="7.0">
-              <group col="4">
-                  <field name="coda_creation_date"/>
-                  <field name="name"/>
-                  <field name="coda_data" filename="name"/>
-                  <field name="date"/>
-                  <field name="user_id"/>
-                  <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-              </group>
-              <separator string="Additional Information"/>
-              <field name="note"/>
-              <field name="statement_ids"/>
-          </form>
-      </field>
+        <field name="name">account.coda.form</field>
+        <field name="model">account.coda</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="CODA File" version="7.0">
+                <sheet>
+                    <group col="4">
+                        <field name="coda_creation_date"/>
+                        <field name="name"/>
+                        <field name="coda_data" filename="name"/>
+                        <field name="date"/>
+                        <field name="user_id"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <separator string="Additional Information"/>
+                    <field name="note"/>
+                    <field name="statement_ids"/>
+                </sheet>
+            </form>
+        </field>
     </record>
     
     <record id="view_account_coda_filter" model="ir.ui.view">
@@ -322,57 +324,59 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="CODA Bank Statement" version="7.0">
-              <group col="4">
-                  <field name="name"/>
-                  <field name="date"/>
-                  <field name="coda_bank_account_id"/>
-                  <field name="currency"/>
-                  <field name="period_id"/>
-                  <field name="type"/>
-                  <newline/>
-                  <field name="balance_start"/>
-                  <field name="balance_end_real"/>
-              </group>
-              <notebook>
-                <page string="Transactions">
-                  <field name="line_ids">
-                    <tree string="CODA Statement Lines">
-                      <field name="sequence" string="Seq"/>
+              <sheet>
+                  <group col="4">
+                      <field name="name"/>
                       <field name="date"/>
-                      <field name="val_date"/>
-                      <field name="ref"/>
-                      <field name="name" width="250"/>
+                      <field name="coda_bank_account_id"/>
+                      <field name="currency"/>
+                      <field name="period_id"/>
                       <field name="type"/>
-                      <field name="partner_id"/>
-                      <field name="account_id"/>
-                      <field name="amount"/>
-                      <field name="globalisation_amount" string="Glob. Amount"/>
-                      <field name="globalisation_id" string="Glob. Id"/>
-                    </tree>
-                    <form string="CODA Statement Lines" version="7.0">
-                      <group col="4">
+                      <newline/>
+                      <field name="balance_start"/>
+                      <field name="balance_end_real"/>
+                  </group>
+                  <notebook>
+                    <page string="Transactions">
+                      <field name="line_ids">
+                        <tree string="CODA Statement Lines">
                           <field name="sequence" string="Seq"/>
                           <field name="date"/>
                           <field name="val_date"/>
-                          <field name="name"/>
+                          <field name="ref"/>
+                          <field name="name" width="250"/>
                           <field name="type"/>
                           <field name="partner_id"/>
-                          <field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                          <field name="account_id"/>
                           <field name="amount"/>
-                          <field name="ref"/>
-                          <field name="globalisation_amount"/>
-                          <field name="globalisation_level"/>
-                          <field name="globalisation_id"/>
-                      </group>
-                      <separator string="Notes"/>
-                      <field name="note"/>
-                    </form>
-                  </field>
-                </page>
-              </notebook>
-              <group colspan="4">
-                <field name="balance_end"/>
-              </group>
+                          <field name="globalisation_amount" string="Glob. Amount"/>
+                          <field name="globalisation_id" string="Glob. Id"/>
+                        </tree>
+                        <form string="CODA Statement Lines" version="7.0">
+                          <group col="4">
+                              <field name="sequence" string="Seq"/>
+                              <field name="date"/>
+                              <field name="val_date"/>
+                              <field name="name"/>
+                              <field name="type"/>
+                              <field name="partner_id"/>
+                              <field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                              <field name="amount"/>
+                              <field name="ref"/>
+                              <field name="globalisation_amount"/>
+                              <field name="globalisation_level"/>
+                              <field name="globalisation_id"/>
+                          </group>
+                          <separator string="Notes"/>
+                          <field name="note"/>
+                        </form>
+                      </field>
+                    </page>
+                  </notebook>
+                  <group colspan="4">
+                    <field name="balance_end"/>
+                  </group>
+              </sheet>
           </form>
       </field>
     </record>
