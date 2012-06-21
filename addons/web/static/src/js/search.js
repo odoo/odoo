@@ -824,14 +824,9 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
         return _.extend({}, domain, {own_values: {self: val}});
     },
     clear: function () {
-        if (!this.$element.val()) {
-            return;
+        if (this.$element.attr('value') !== undefined) {
+            this.$element.removeAttr('value');
         }
-        var self = this;
-        setTimeout(function () {
-            self.$element.val('');
-        }, 0);
-
     }
 });
 /**
@@ -952,6 +947,7 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
                 return d.promise();
             }
         }
+        this.$element.find('option[selected]').removeAttr("selected");
         return d.resolve().promise();
     }
 });
