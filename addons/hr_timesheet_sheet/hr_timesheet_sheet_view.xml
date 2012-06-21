@@ -78,10 +78,13 @@
                         From <field name="date_from" />
                         to <field name="date_to"/>
                     </h2>
-                    <group col="4" class="oe_edit_only">
+                    <group col="4" colspan="4">
                         <field name="name"/>
+                        <field name="total_attendance" widget="float_time"/>
                         <field name="department_id"/>
+                        <field name="total_timesheet" widget="float_time"/>
                         <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="total_difference" widget="float_time"/>
                         <field name="user_id" invisible="1"/>
                     </group>
                     <notebook>
@@ -152,11 +155,6 @@
                                     <field name="total_difference" widget="float_time"/>
                                 </tree>
                             </field>
-                            <group colspan="4" col="6">
-                                <field name="total_attendance" widget="float_time" class="oe_edit_only"/>
-                                <field name="total_timesheet" widget="float_time" class="oe_edit_only"/>
-                                <field name="total_difference" widget="float_time" class="oe_edit_only"/>
-                            </group>
                         </page>
                     </notebook>
                 </sheet>

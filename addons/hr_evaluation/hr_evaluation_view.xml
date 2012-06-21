@@ -132,7 +132,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Notes" position="before">
+                <page string="Miscellaneous" position="after">
                     <page string="Appraisal" groups="base.group_hr_user">
                         <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
                         <field name="evaluation_date"/>
@@ -157,14 +157,17 @@
                 </header>
                 <sheet>
                     <group>
-                        <group string="Appraisal Data">
-                            <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
-                            <field name="plan_id"/>
+                        <label for="employee_id" class="oe_edit_only"/>
+                         <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
+                         
+                        <label for="plan_id" class="oe_edit_only"/>
+                         <h1><field name="plan_id"/></h1>
+                         <group colspan="4" col="3">
                             <field name="date"/>
-                        </group>
-                        <group attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}" string="Ending Summary">
-                            <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
-                            <field name="date_close" readonly="1"/>
+                            <group attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
+                                <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
+                                <field name="date_close" readonly="1"/>
+                            </group>
                         </group>
                     </group>
                     <notebook>
@@ -178,11 +181,11 @@
                                             <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
                                         </div>
                                         <field name="date_deadline"/>
-                                        <field name="response" readonly="1"/>
                                         <field name="user_to_review_id"/>
+                                        <field name="response" readonly="1"/>
                                         <field name="user_id" string="Interviewer"/>
                                     </group>
-                                    <group col="4" string="Status">
+                                    <group col="4" string="Status" invisible="1">
                                          <field name="state"/>
                                          <div>
                                              <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
@@ -287,12 +290,12 @@
                     </header>
                     <sheet>
                         <group col="4">
-                             <field name="user_to_review_id"/>
-                             <field name="user_id" string="Interviewer"/>
-                             <field name="date_deadline"/>
                              <field name="survey_id"/>
-                             <field name="evaluation_id"/>
+                             <field name="date_deadline"/>
+                             <field name="user_to_review_id"/>
                              <field name="response" readonly="1"/>
+                             <field name="user_id" string="Interviewer"/>
+                             <field name="evaluation_id"/>
                         </group>
                     </sheet>
                 </form>
