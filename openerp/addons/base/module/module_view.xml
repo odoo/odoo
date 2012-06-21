@@ -69,8 +69,7 @@
             <field name="model">ir.module.module</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-
-              <kanban create="false">
+                <kanban create="false">
                   <field name="icon"/>
                   <field name="name"/>
                   <field name="state"/>
@@ -78,22 +77,19 @@
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette oe_kanban_auto_height">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <a type="edit">
-                          <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
-                        </a>
+                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         <div class="oe_module_desc">
                           <h4><a type="edit"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
                              <field name="name"/><br/>
                           </p>
-                          <button type="object" name="button_immediate_install" states="uninstalled" class="oe_button">Install</button>
-                          <button t-if="installed" class="oe_button" disabled="disabled">Installed</button>
+                          <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
+                          <button t-if="installed" disabled="disabled">Installed</button>
                         </div>
                       </div>
                     </t>
                   </templates>
-              </kanban>
-
+                </kanban>
             </field>
         </record>
 
@@ -121,25 +117,24 @@
             <field name="arch" type="xml">
                 <form string="Module" version="7.0">
                 <header>
-                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_form_button_hi"/>
-                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_form_button_hi"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)"
-                                        icon="terp-dialog-close" type="object"
-                                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
+                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_highlight"/>
+                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_highlight"/>
+                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"
+                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
                     <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
                     <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
                     <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="uninstalled"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_form_button_box">
-                        <field name="icon" widget='image'/>
+                    <div class="oe_right oe_button_box">
+                        <field name="icon_image" widget="image"/>
                     </div>
-                    <div class="oe_form_title">
-                        <label for="shortdesc" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="shortdesc" class="oe_edit_only"/>
                         <h1><field name="shortdesc"/></h1>
-                        <label for="category_id" class="oe_form_readonly_hidden"/>
-                        <h2><field name="category_id" class="oe_form_inline"/></h2>
+                        <label for="category_id" class="oe_edit_only"/>
+                        <h2><field name="category_id" class="oe_inline"/></h2>
                     </div>
                     <group>
                         <group>
@@ -158,7 +153,6 @@
                         </page>
                         <page string="Technical Data">
                             <group col="4">
-                                <field name="name"/>
                                 <field name="demo"/>
                                 <field name="application"/>
                             </group>
@@ -170,11 +164,11 @@
                             </field>
                         </page>
                         <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <separator string="Created Menus"/>
+                            <label for="menus_by_module" string="Created Menus"/>
                             <field name="menus_by_module"/>
-                            <separator string="Created Views"/>
+                            <label for="views_by_module" string="Created Views"/>
                             <field name="views_by_module"/>
-                            <separator string="Defined Reports"/>
+                            <label for="reports_by_module" string="Defined Reports"/>
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>
@@ -197,7 +191,7 @@
             </field>
         </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <field name="name">Modules</field>
+            <field name="name">Install a Module</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -205,7 +199,8 @@
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
         </record>
-        <menuitem action="open_module_tree" id="menu_module_tree" parent="base.menu_management" sequence="1"/>
+        <menuitem id="menu_module_tree" parent="base.menu_management" name="Modules"
+            sequence="1" action="open_module_tree"/>
 
     </data>
 </openerp>

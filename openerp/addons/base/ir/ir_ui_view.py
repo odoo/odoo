@@ -94,20 +94,26 @@ class view(osv.osv):
            its inherited views, by rendering it using ``fields_view_get()``.
            
            @param browse_record view: view to validate
-           @return: True if the view hierarchy was rendered without any error, False if an error occurred.  
+           @return: the rendered definition (arch) of the view, always utf-8 bytestring (legacy convention)
+               if no error occurred, else False.  
         """
         try:
-            self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
-            return True
+            fvg = self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            return fvg['arch']
         except:
             _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
             return False
 
     def _check_xml(self, cr, uid, ids, context=None):
         for view in self.browse(cr, uid, ids, context):
+            # Sanity check: the view should not break anything upon rendering!
+            view_arch_utf8 = self._check_render_view(cr, uid, view, context=context)
+            # always utf-8 bytestring - legacy convention
+            if not view_arch_utf8: return False
+
             # RNG-based validation is not possible anymore with 7.0 forms
-            # TODO 7.0: provide alternative assertion-based validation!
-            view_docs = [etree.fromstring(view.arch.encode('utf8'))]
+            # TODO 7.0: provide alternative assertion-based validation of view_arch_utf8
+            view_docs = [etree.fromstring(view_arch_utf8)]
             if view_docs[0].tag == 'data':
                 # A <data> element is a wrapper for multiple root nodes
                 view_docs = view_docs[0]
@@ -117,10 +123,6 @@ class view(osv.osv):
                     for error in validator.error_log:
                         _logger.error(tools.ustr(error))
                     return False
-
-            # Second sanity check: the view should not break anything upon rendering!
-            if not self._check_render_view(cr, uid, view, context=context):
-                return False
         return True
 
     _constraints = [
