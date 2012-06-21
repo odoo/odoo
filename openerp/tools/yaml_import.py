@@ -366,19 +366,16 @@ class YamlInterpreter(object):
         fields = fields or {}
 
         def process_val(key, val):
-            if fg[key]['type']=='many2one':
+            if fg[key]['type'] == 'many2one':
                 if type(val) in (tuple,list):
                     val = val[0]
-            elif (fg[key]['type']=='one2many'):
-                if val is False:
-                    val = []
+            elif fg[key]['type'] == 'one2many':
                 if len(val) and type(val[0]) == dict:
                     val = map(lambda x: (0,0,x), val)
-            elif (fg[key]['type']=='many2many'):
-                if val is False:
-                    val = []
-                if len(val):
-                    val = map (lambda x: [6,0,[x]], val)
+            elif fg[key]['type'] == 'many2many':
+                if val and isinstance(val,(list,tuple)):
+                    if isinstance(val[0], (int,long)):
+                        val = [(6,0,val)]
             return val
 
         # Process all on_change calls
