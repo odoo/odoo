@@ -357,17 +357,20 @@
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <group>
-                            <group>
-                                <field name="name" />
-                                <field name="department_id" />
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
-                            <group>
-                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                                <field name="no_of_employee"/>
-                                <field name="expected_employees"/>
-                            </group>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" />
+                            (<field name="department_id"/>)
+                        </h1>
+                        <label for="employee_ids" class="oe_edit_only"/>
+                        <h2>
+                            <field name="employee_ids" widget="many2many_tags" mode="tree,form"/>
+                        </h2>
+                        <group col="4">
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                            <field name="no_of_employee"/>
+                            <field name="expected_employees"/>
                         </group>
                         <notebook>
                             <page string="Description">
@@ -375,9 +378,6 @@
                                 <field name="description"/>
                                 <label for="requirements"/>
                                 <field name="requirements"/>
-                            </page>
-                            <page string="Employees">
-                                <field name="employee_ids" widget="many2many" mode="tree,form"/>
                             </page>
                         </notebook>
                     </sheet>

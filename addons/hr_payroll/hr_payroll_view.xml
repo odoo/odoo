@@ -80,7 +80,7 @@
             <field name="model">hr.payroll.structure</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Function">
+                <form string="Employee Function" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -224,6 +224,12 @@
                 </tree>
             </field>
         </record>
+        
+        <act_window name="Payslip Computation Details"
+            context="{'default_slip_id': active_id,'search_default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
 
         <record id="view_hr_payslip_form" model="ir.ui.view">
             <field name="name">hr.payslip.form</field>
@@ -240,6 +246,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
+                    <div class="oe_right oe_button_box">
+                        <button name="%(act_payslip_lines)d" string="Payslip Computation Details" type="action"/>
+                    </div>
                     <label for="employee_id" class="oe_edit_only"/>
                     <h1><field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/></h1>
                     <label for="date_from" class="oe_edit_only" string="Period"/>
@@ -335,13 +344,13 @@
                             </field>
                        </page>
                        <page string="Other Information">
-                            <group col="2" string="Other Information">
+                            <group col="2">
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="payslip_run_id" domain="[('state','=','draft')]"/>
                                 <field name="paid" readonly="1"/>
-                            </group>
-                            <group string="Notes">
-                            <field name="note"/>
+                                <div>
+                                    <field name="note" Placeholder="Add an internal note..."/>
+                                </div>
                             </group>
                        </page>
                     </notebook>
@@ -740,11 +749,18 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <group col="4">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
                         <field name="name"/>
-                        <field name="credit_note"/>
-                        <field name="date_start"/>
+                    </h1>
+                    <h2>
+                        Period from 
+                        <field name="date_start"/> 
+                        to 
                         <field name="date_end"/>
+                    </h2>
+                    <group col="4">
+                        <field name="credit_note"/>
                     </group>
                     <field name="slip_ids"/>
                 </sheet>
@@ -762,13 +778,6 @@
         <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
 
         <!--  Shortcuts -->
-
-        <act_window name="Payslip Computation Details"
-        	domain="[('slip_id', '=', active_id)]"
-        	context="{'default_slip_id': active_id}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.payslip"
-        	id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
         	domain="[('register_id', '=', active_id)]"
