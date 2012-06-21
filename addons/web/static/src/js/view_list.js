@@ -364,6 +364,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         var total = dataset.size();
+        this.$pager.toggleClass('oe_list_pager_single_page', (total <= this.limit()));
         var spager = '-';
         if (total) {
             var range_start = this.page * this.limit() + 1;

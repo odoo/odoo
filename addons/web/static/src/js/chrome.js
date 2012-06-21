@@ -9,8 +9,7 @@ instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
     init: function() {
         this._super.apply(this, arguments);
-        // move to instance.web.notification
-        instance.notification = this;
+        instance.web.notification = this;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -141,7 +140,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     on_resized: function() {
-        //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     destroy: function () {
         this.close();
@@ -208,7 +206,14 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             buttons: buttons
         }).open();
         dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
-    }
+    },
+    on_javascript_exception: function(exception) {
+	this.on_traceback({
+	    type: _t("Client Error"),
+	    message: exception,
+	    data: {debug: ""}
+	});
+    },
 });
 
 instance.web.Loading = instance.web.Widget.extend({
@@ -577,10 +582,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.renderElement();
         this.limit_entries();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$element.on('click', 'a.oe_menu_more_link', function() {
-            self.$element.find('.oe_menu_more').toggle();
-            return false;
-        });
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
@@ -601,15 +602,11 @@ instance.web.Menu =  instance.web.Widget.extend({
             $index.after($more);
             $more.find('.oe_menu_more').append($index.next().nextAll());
         }
-        this.do_hide_more();
     },
     auto_limit_entries: function() {
         // TODO: auto detect overflow and bind window on resize
         var width = $(window).width();
         return Math.floor(width / 125);
-    },
-    do_hide_more: function() {
-        this.$element.find('.oe_menu_more').hide();
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -708,9 +705,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     on_menu_click: function(ev) {
         var needaction = !!$(ev.target).filter('div.oe_menu_counter').length;
+		ev.preventDefault();
         this.menu_click($(ev.currentTarget).data('menu'), needaction);
-        ev.stopPropagation();
-        return false;
     },
 });
 
@@ -723,20 +719,12 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        $('html').bind('click', function() {
-            self.$element.find('.oe_dropdown_options').hide();
-        });
-        this.$element.find('.oe_dropdown_toggle').click(function() {
-            self.$element.find('.oe_dropdown_options').toggle();
-            return false;
-        });
-        this.$element.on('click', '.oe_dropdown_options li a[data-menu]', function() {
+        this.$element.on('click', '.oe_dropdown_menu li a[data-menu]', function(ev) {
+            ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
             if (f) {
                 f($(this));
             }
-            self.$element.find('.oe_dropdown_options').hide();
-            return false;
         });
     },
     change_password :function() {
@@ -879,6 +867,27 @@ instance.web.WebClient = instance.web.Widget.extend({
         });
         this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
+        });
+        this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
+            var $menu = $(this).find('.oe_dropdown_menu');
+            var state = $menu.is('.oe_opened');
+            setTimeout(function() {
+                // Do not alter propagation
+                $menu.toggleClass('oe_opened', !state);
+                if (!state) {
+                    // Move $menu if outside window's edge
+                    var doc_width = $(document).width();
+                    var offset = $menu.offset();
+                    var menu_width = $menu.width();
+                    var x = doc_width - offset.left - menu_width - 15;
+                    if (x < 0) {
+                        $menu.offset({ left: offset.left + x }).width(menu_width);
+                    }
+                }
+            }, 0);
+        });
+        instance.web.bus.on('click', this, function() {
+            self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
         });
     },
     show_common: function() {

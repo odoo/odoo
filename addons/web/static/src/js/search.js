@@ -1571,7 +1571,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                         $filter.remove();
                     });
                 })
-                .prependTo($filter);
+                .appendTo($filter);
         }
 
         $filter.unbind('click').click(function () {
