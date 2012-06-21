@@ -87,8 +87,12 @@
     </t>
 
     <ul t-name="Thread" class="oe_mail oe_mail_thread">
-        <div class="oe_mail_thread_act"></div>
-        <div class="oe_mail_thread_display"></div>
+        <div class="oe_mail_thread_act">
+            <!-- contains the composition form -->
+        </div>
+        <div class="oe_mail_thread_display">
+            <!-- contains the threads -->
+        </div>
         <div class="oe_mail_thread_more">
             <button class="oe_mail_button_more" type="button">Load more messages</button>
         </div>
@@ -98,9 +102,15 @@
         <div t-attf-class="oe_mail_msg_#{record.type}">
             <img class="oe_mail_msg_menu_icon" src="/mail/static/src/img/wheel_menu.png" alt="menu"/>
             <ul class="oe_mail_msg_menu">
-                <t t-if="display['show_delete']"><t t-if="thread._is_author(record.user_id[0])">
-                    <li><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
-                </t></t>
+                <t t-if="display['show_delete']">
+<!--
+                    <t t-if="thread._is_author(record.user_id[0])">
+-->
+                        <li><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+<!--
+                    </t>
+-->
+                </t>
                 <t t-if="display['show_hide']">
                     <li><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
                     <li><a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
@@ -148,12 +158,18 @@
                     <span class="oe_mail_oe_space oe_fade"> · </span>
                 </li>
             </t>
-            <t t-if="display['show_delete']"><t t-if="thread._is_author(record.user_id[0])">
-                <li>
-                    <a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a>
-                    <span class="oe_mail_oe_space oe_fade"> · </span>
-                </li>
-            </t></t>
+            <t t-if="display['show_delete']">
+<!--
+                <t t-if="thread._is_author(record.user_id[0])">
+-->
+                    <li>
+                        <a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a>
+                        <span class="oe_mail_oe_space oe_fade"> · </span>
+                    </li>
+<!--
+                </t>
+-->
+            </t>
             <t t-if="display['show_hide']">
                 <li>
                     <a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Remove from Wall</a>

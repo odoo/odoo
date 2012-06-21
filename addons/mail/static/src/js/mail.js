@@ -6,14 +6,14 @@ openerp.mail = function(session) {
 
     /**
      * ------------------------------------------------------------
-     * ChatterMixin class
+     * ChatterUtils
      * ------------------------------------------------------------
      * 
-     * This mixin class holds a few tools method that will be used by
+     * This class holds a few tools method that will be used by
      * the various Chatter widgets.
      */
 
-    mail.ChatterMixin = {
+    mail.ChatterUtils = {
 
         /**
         * mail_int_mapping: structure to keep a trace of internal links mapping
@@ -27,15 +27,9 @@ openerp.mail = function(session) {
         */
         //var mail_msg_struct = {}; // TODO: USE IT OR NOT :)
 
-        init: function(parent, params) {
-            this._super(parent);
-            this.test = 'prout'
-        },
-
-        do_bind_chatter_events: function() {
-            var self = this;
+        do_bind_chatter_events: function(widget) {
             // event: click on an internal link
-            this.$element.delegate('a.oe_mail_oe_internal_link', 'click', function (event) {
+            widget.$element.delegate('a.oe_mail_oe_internal_link', 'click', function (event) {
                 event.preventDefault();
                 // lazy implementation: fetch data and try to redirect
                 if (! event.srcElement.dataset.resModel) return false;
@@ -44,33 +38,21 @@ openerp.mail = function(session) {
                 var res_id = event.srcElement.dataset.resId;
                 if ((! res_login) && (! res_id)) return false;
                 if (! res_id) {
-                    var ds = new session.web.DataSet(self, res_model);
+                    var ds = new session.web.DataSet(widget, res_model);
                     var defer = ds.call('search', [[['login', '=', res_login]]]).then(function (records) {
                         if (records[0]) {
-                            self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
+                            widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
                         }
                         else return false;
                     });
                 }
-                else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
+                else widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
             });
         },
 
         /** get an image in /web/binary/image?... */
         get_image: function(session_prefix, session_id, model, field, id) {
             return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
-        },
-
-        /** Removes html tags, except b, em, br, ul, li */
-        do_text_remove_html_tags: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li)\\s*&gt;', 'gi'), '<$1$2>');
-            return html;
-        },
-        
-        /** Replaces line bracks by html line breaks (br) */
-        do_text_nl2br: function (str, is_xhtml) {   
-            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
-            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
         },
 
         /** checks if tue current user is the message author */
@@ -94,7 +76,7 @@ openerp.mail = function(session) {
         *                          'for_thread_msgs': [records],
         *                          'ancestors': [msg_ids], } }
         */
-        chatter_sort_comments: function(cs, records, parent_id) {
+        sort_comments: function(cs, records, parent_id) {
             var cur_iter = 0; var max_iter = 10; var modif = true;
             while ( modif && (cur_iter++) < max_iter) {
                 modif = false;
@@ -129,7 +111,122 @@ openerp.mail = function(session) {
                 });
             }
             return cs;
-    }
+        },
+
+        /**
+         *    CONTENT MANIPULATION
+         * 
+         * Regular expressions
+         * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
+         *   logins that are emails
+         *      1. '(void)'
+         *      2. login@log.log
+         * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
+         *   for internal links to model ir.attachment, id=3, and with
+         *   optional label 'My Label'. Note that having a '|Label' is not
+         *   mandatory, because the regex should still be correct.
+         *      1. '(void)'
+         *      2. 'ir'
+         *      3. 'attachment'
+         *      4. '3'
+         *      5. 'My Label'
+         */
+
+        /** Removes html tags, except b, em, br, ul, li */
+        do_text_remove_html_tags: function (string) {
+            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li)\\s*&gt;', 'gi'), '<$1$2>');
+            return html;
+        },
+        
+        /** Replaces line breaks by html line breaks (br) */
+        do_text_nl2br: function (str, is_xhtml) {   
+            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
+            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
+        },
+
+        /**
+         * Replaces some expressions
+         * - @login - shorcut to link to a res.user, given its login
+         * - [ir.attachment,3|My Label] - shortcut to an internal
+         *   document
+         * - :name - shortcut to an image
+         */
+        do_replace_expressions: function (string) {
+            var self = this;
+            var icon_list = ['al', 'pinky']
+            /* shortcut to user: @login */
+            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var login = regex_res[2];
+                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="oe_mail_internal_link" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
+                regex_res = regex_login.exec(string);
+            }
+            /* shortcut for internal document */
+            var regex_login = new RegExp(/(^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_id = regex_res[4];
+                if (! regex_res[5]) {
+                    var label = res_model + ':' + res_id }
+                else {
+                    var label = regex_res[5];
+                }
+                string = string.replace(regex_res[0], regex_res[1] + '<a href="#model=' + res_model + '&id=' + res_id + '>' + label + '</a>');
+                regex_res = regex_login.exec(string);
+            }
+            /* special shortcut: :name, try to find an icon if in list */
+            var regex_login = new RegExp(/(^|\s):((\w)*)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var icon_name = regex_res[2];
+                if (_.include(icon_list, icon_name))
+                    string = string.replace(regex_res[0], regex_res[1] + '<img src="/mail/static/src/img/_' + icon_name + '.png" width="22px" height="22px" alt="' + icon_name + '"/>');
+                regex_res = regex_login.exec(string);
+            }
+            return string;
+        },
+
+        /**
+         * Checks a string to find an expression that will be replaced
+         * by an internal link and requiring a name_get to replace
+         * the expression.
+         * :param mapping: structure to keep a trace of internal links mapping
+         *                  mapping['model'] = {
+         *                      name_get': [[id,label], [id,label], ...]
+         *                      'to_fetch_ids': [id, id, ...]
+         *                  }
+         * CURRENTLY NOT IMPLEMENTED */
+        do_check_for_name_get_mapping: function(string, mapping) {
+            /* shortcut to user: @login */
+            //var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
+            //var regex_res = regex_login.exec(string);
+            //while (regex_res != null) {
+                //var login = regex_res[2];
+                //if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
+                //this.map_hash['res.users']['login'].push(login);
+                //regex_res = regex_login.exec(string);
+            //}
+            /* document link with name_get: [res.model,name] */
+            /* internal link with id: [res.model,id], or [res.model,id|display_name] */
+            //var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            //regex_res = regex_intlink.exec(string);
+            //while (regex_res != null) {
+                //var res_model = regex_res[2] + '.' + regex_res[3];
+                //var res_name = regex_res[4];
+                //if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
+                //this.map_hash[res_model]['name'].push(res_name);
+                //regex_res = regex_intlink.exec(string);
+            //}
+        },
+        
+        /**
+         * Updates the mapping; check for to_fetch_ids for each recorded
+         * model, and perform a name_get to update the mapping.
+         * CURRENTLY NOT IMPLEMENTED */
+        do_update_name_get_mapping: function(mapping) {
+        },
     };
 
 
@@ -142,28 +239,26 @@ openerp.mail = function(session) {
      * This form is an OpenERP form_view, build on a mail.compose.message
      * wizard.
      */
-    
-    /* Add ComposeMessage widget to registry */
-    session.web.form.widgets.add('mail.compose_message', 'openerp.mail.ComposeMessage');
-    
-    /* ComposeMessage is an extension of a Widget */
-    mail.ComposeMessage = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
+
+    mail.ComposeMessage = session.web.Widget.extend({
         template: 'mail.compose_message',
         
         init: function(parent, params) {
             this._super(parent);
-            session.mail.ChatterMixin.init.call(this, {});
             // options
             this.params = params || {};
             this.params.extended_mode = params.extended_mode || false;
+            // create a context for the default_get of the compose form
+            var context = {caca: 'prout'};
             // create a form_view on the mail.compose.message wizard
-            this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message');
+            this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
                 }
             );
+            //debugger;
         },
         
         /**
@@ -174,7 +269,7 @@ openerp.mail = function(session) {
             var self = this;
             this._super.apply(this, arguments);
             // get user image
-            var user_avatar = this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.session.uid);
+            var user_avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.session.uid);
             this.$element.find('img.oe_mail_msg_image').attr('src', user_avatar);
             // bind events
             var msg_node = this.$element.find('div.oe_mail_msg_content');
@@ -206,7 +301,16 @@ openerp.mail = function(session) {
         destroy: function() {
             this._super.apply(this, arguments);
         },
-    })),
+        
+        do_action: function() {
+            //debugger;
+            var context = arguments[0].context;
+            context.caca = 'prout';
+            this._super.apply(this, arguments);
+            console.log(this);
+            console.log(arguments);
+        },
+    }),
 
 
     /** 
@@ -225,11 +329,7 @@ openerp.mail = function(session) {
      * [res_model]:[res_id].
      */
 
-    /* Add ThreadDisplay widget to registry */
-    session.web.form.widgets.add('Thread', 'openerp.mail.Thread');
-
-    /* Thread is an extension of a Widget */
-    mail.Thread = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
+    mail.Thread = session.web.Widget.extend({
         template: 'Thread',
 
         /**
@@ -304,7 +404,7 @@ openerp.mail = function(session) {
         add_events: function() {
             var self = this;
             // generic events from Chatter Mixin
-            this.do_bind_chatter_events();
+            mail.ChatterUtils.do_bind_chatter_events(this);
             // event: click on 'more' at bottom of thread
             this.$element.find('button.oe_mail_button_more').click(function () {
                 self.do_more();
@@ -415,7 +515,7 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
-            this.chatter_sort_comments(this.comments_structure, records, this.params.parent_id);
+            mail.ChatterUtils.sort_comments(this.comments_structure, records, this.params.parent_id);
             
             /* WIP: map matched regexp -> records to browse with name */
             //_(records).each(function (record) {
@@ -447,16 +547,14 @@ openerp.mail = function(session) {
             if (this.params.thread_level == 0) this.params.offset += records.length;
         },
 
-        /**
-         * Display a record
-         */
+        /** Displays a record, performs text/link formatting */
         display_comment: function (record) {
-            record.body = this.do_text_nl2br(record.body, true);
+            record.body = mail.ChatterUtils.do_text_nl2br(record.body, true);
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
-            else { record.mini_url = this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]); }    
+            else { record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
-            record.body = this.do_text_remove_html_tags(record.body);
-            record.body = this.do_replace_internal_links(record.body);
+            record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
+            record.body = mail.ChatterUtils.do_replace_expressions(record.body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // render
@@ -467,7 +565,7 @@ openerp.mail = function(session) {
         },
         
         display_current_user: function () {
-            return this.$element.find('img.oe_mail_msg_image').attr('src', this.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid));
+            return this.$element.find('img.oe_mail_msg_image').attr('src', mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid));
         },
         
         do_comment: function () {
@@ -481,7 +579,7 @@ openerp.mail = function(session) {
         /**
          * Create a domain to fetch new comments according to
          * comment already present in comments_structure
-         * @param {Object} comments_structure (see chatter_sort_comments)
+         * @param {Object} comments_structure (see sort_comments)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
         get_fetch_domain: function (comments_structure) {
@@ -514,80 +612,7 @@ openerp.mail = function(session) {
             return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
 
-
-        /**
-         *    CONTENT MANIPULATION
-         * 
-         * Regular expressions
-         * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
-         *   logins that are emails
-         *      1. '(void')
-         *      2. login@log.log
-         * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
-         *   for internal links to model ir.attachment, id=3, and with
-         *   optional label 'My Label'. Note that having a '|Label' is not
-         *   mandatory, because the regex should still be correct.
-         *      1. '(void)'
-         *      2. 'ir'
-         *      3. 'attachment'
-         *      4. '3'
-         *      5. 'My Label'
-         */
-
-        /**
-         * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-         * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-         */
-        do_replace_internal_links: function (string) {
-            var self = this;
-            var icon_list = ['al', 'pinky']
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var login = regex_res[2];
-                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
-                regex_res = regex_login.exec(string);
-            }
-            /* special shortcut: :name, try to find an icon if in list */
-            var regex_login = new RegExp(/(^|\s):((\w)*)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var icon_name = regex_res[2];
-                if (_.include(icon_list, icon_name))
-                    string = string.replace(regex_res[0], regex_res[1] + '<img src="/mail/static/src/img/_' + icon_name + '.png" width="22px" height="22px" alt="' + icon_name + '"/>');
-                regex_res = regex_login.exec(string);
-            }
-            return string;
-        },
-        
-        /**
-         * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-         * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-         */
-        do_check_for_internal_links: function(string) {
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var login = regex_res[2];
-                if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
-                this.map_hash['res.users']['login'].push(login);
-                regex_res = regex_login.exec(string);
-            }
-            /* document link with name_get: [res.model,name] */
-            /* internal link with id: [res.model,id], or [res.model,id|display_name] */
-            var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            regex_res = regex_intlink.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_name = regex_res[4];
-                if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
-                this.map_hash[res_model]['name'].push(res_name);
-                regex_res = regex_intlink.exec(string);
-            }
-        },
-    }));
+    });
 
 
     /** 
@@ -602,7 +627,7 @@ openerp.mail = function(session) {
     session.web.form.widgets.add('mail_thread', 'openerp.mail.RecordThread');
 
     /* mail_thread widget: thread of comments */
-    mail.RecordThread = session.web.form.AbstractField.extend(_.extend({}, session.mail.ChatterMixin, {
+    mail.RecordThread = session.web.form.AbstractField.extend({
         // QWeb template to use when rendering the object
         template: 'mail.record_thread',
 
@@ -620,7 +645,7 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this.do_bind_chatter_events();
+            mail.ChatterUtils.do_bind_chatter_events(this);
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
             if (! this.params.see_subscribers_options) {
                 this.$element.find('button.oe_mail_button_followers').hide(); }
@@ -672,7 +697,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_followers h4').html('Followers (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
-                record.avatar_url = self.get_image(self.session.prefix, self.session.session_id, 'res.users', 'avatar', record.id);
+                record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.users', 'avatar', record.id);
                 $(session.web.qweb.render('mail.record_thread.subscriber', {'record': record})).appendTo(user_list);
             });
             if (self.is_subscriber) {
@@ -700,7 +725,7 @@ openerp.mail = function(session) {
             else { this.$element.find('button.oe_mail_button_followers').html('Show followers'); }
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
-    }));
+    });
 
 
     /** 
@@ -715,7 +740,7 @@ openerp.mail = function(session) {
     session.web.client_actions.add('mail.wall', 'session.mail.Wall');
     
     /* WallView widget: a wall of messages */
-    mail.Wall = session.web.Widget.extend(_.extend({}, session.mail.ChatterMixin, {
+    mail.Wall = session.web.Widget.extend({
         template: 'mail.wall',
 
         /**
@@ -723,7 +748,7 @@ openerp.mail = function(session) {
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
          * @param {Number} [params.search_view_id=false] search view id for messages
-         * @var {Array} comments_structure see chatter_sort_comments
+         * @var {Array} comments_structure see sort_comments
          */
         init: function (parent, params) {
             this._super(parent);
@@ -845,7 +870,7 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             var self = this;
             this.do_update_show_more(records.length >= self.params.limit);
-            this.sort_comments(records);
+            mail.ChatterUtils.sort_comments(this.comments_structure, records, false);
             _(this.comments_structure['new_root_ids']).each(function (root_id) {
                 var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
                 var model_name = self.comments_structure.msgs[root_id]['model'];
@@ -867,9 +892,9 @@ openerp.mail = function(session) {
         /**
          * Add records to comments_structure object: see function for details
          */
-        sort_comments: function(records) {
-            this.chatter_sort_comments(this.comments_structure, records, false);
-        },
+        //sort_comments: function(records) {
+            //this.chatter_sort_comments(this.comments_structure, records, false);
+        //},
 
         /**
          * Create a domain to fetch new comments according to
@@ -908,6 +933,6 @@ openerp.mail = function(session) {
             comment_node.val('');
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html', 'tweet']).then(this.proxy('init_and_fetch_comments'));
         },
-    }));
+    });
         
 };
