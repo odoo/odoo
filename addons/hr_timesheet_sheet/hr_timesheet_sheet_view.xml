@@ -75,14 +75,14 @@
                     <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
                     <label for="date_from" class="oe_edit_only" string="Timesheet Period"/>
                     <h2>
-                        From <field name="date_from"/>
+                        From <field name="date_from" />
                         to <field name="date_to"/>
                     </h2>
                     <group col="4">
-                        <field name="name"/>
-                        <field name="department_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="user_id" invisible="1"/>
+                        <field name="name" class="oe_edit_only"/>
+                        <field name="department_id" class="oe_edit_only"/>
+                        <field name="company_id" groups="base.group_multi_company" class="oe_edit_only"/>
+                        <field name="user_id" invisible="1" class="oe_edit_only"/>
                     </group>
                     <notebook>
                         <page string="Daily">
@@ -149,9 +149,9 @@
                                 </tree>
                             </field>
                             <group colspan="4" col="6">
-                                <field name="total_attendance" widget="float_time"/>
-                                <field name="total_timesheet" widget="float_time"/>
-                                <field name="total_difference" widget="float_time"/>
+                                <field name="total_attendance" widget="float_time" class="oe_edit_only"/>
+                                <field name="total_timesheet" widget="float_time" class="oe_edit_only"/>
+                                <field name="total_difference" widget="float_time" class="oe_edit_only"/>
                             </group>
                         </page>
                     </notebook>
