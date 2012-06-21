@@ -987,7 +987,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
     render_new_field :function( result ) {
         var self = this;
         var action = {
-            context: {'default_model_id': result.id, 'manual': true, 'module' : result.modules},
+            context: {'default_model_id': result.id, 'manual': true, 'module' : result.model},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
