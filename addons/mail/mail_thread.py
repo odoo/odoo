@@ -69,11 +69,10 @@ class mail_thread(osv.Model):
             subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
             res[id] = {
                 'message_ids': message_ids,
-                'message_summary': "(%d,%d)" % (len(message_ids), len(subscriber_ids)),
+                'message_summary': "<span>Msg: %d</span> . <span>Fol: %d</span>" % (len(message_ids), len(subscriber_ids)),
             }
         return res
-    
-    # OpenChatter: message_ids is a dummy field that should not be used
+
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
             type='one2many', obj='mail.message', _fields_id = 'res_id',
@@ -82,8 +81,10 @@ class mail_thread(osv.Model):
         'message_state': fields.boolean('Read',
             help="When checked, new messages require your attention."),
         'message_summary': fields.function(_get_message_ids, method=True,
-            type='char', size=128, string='Summary', multi="_get_message_ids",
-            help="Holds the Chatter summary (number of messages, ...)."),
+            type='text', string='Summary', multi="_get_message_ids",
+            help="Holds the Chatter summary (number of messages, ...). "\
+                 "This summary is directly in html format in order to "\
+                 "be inserted in kanban views."),
     }
     
     _defaults = {
