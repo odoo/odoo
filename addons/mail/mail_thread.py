@@ -73,12 +73,12 @@ class mail_thread(osv.Model):
         'message_ids': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id',
                         help="Functional field holding messages related to the current document."),
-        'message_thread_read': fields.boolean('Read',
+        'message_state': fields.boolean('Read',
                         help="When checked, new messages require your attention."),
     }
     
     _defaults = {
-        'message_thread_read': True,
+        'message_state': True,
     }
 
     #------------------------------------------------------
@@ -836,7 +836,7 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def message_mark_as_read(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_thread_read': True}, context=context)
+        return self.write(cr, uid, ids, {'message_state': True}, context=context)
     
     def message_create_mark_as_unread(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -844,7 +844,7 @@ class mail_thread(osv.Model):
                 self.mark_as_unread(cr, uid, [obj.id], context=None)
     
     def message_mark_as_unread(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_thread_read': False}, context=context)
+        return self.write(cr, uid, ids, {'message_state': False}, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
