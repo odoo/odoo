@@ -100,7 +100,7 @@
                             states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
                     <button name="stage_next" string="Next Stage" type="object"
                             states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                    <button name="case_reset" string="Reset to Draft" type="object" class="oe_form_button_return_flow"
+                    <button name="case_reset" string="Reset to Draft" type="object" 
                             states="cancel,done"/>
                     <button name="case_cancel" string="Cancel" type="object" 
                             states="draft,open,pending"/>

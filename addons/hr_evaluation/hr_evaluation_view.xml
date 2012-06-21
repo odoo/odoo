@@ -151,7 +151,7 @@
                     <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object" class="oe_highlight"/>
                     <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object" class="oe_highlight"/>
                     <button name="button_done" string="Done" states="progress" type="object" class="oe_highlight"/>
-                    <button name="button_draft" string="Reset to Draft" states="cancel" type="object" class="oe_form_button_return_flow"/>
+                    <button name="button_draft" string="Reset to Draft" states="cancel" type="object" />
                     <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                 </header>

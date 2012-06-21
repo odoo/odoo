@@ -23,7 +23,7 @@
                     <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}" class="oe_highlight"/>
                     <button name="done" string="Post Entries" icon="gtk-apply" type="workflow" states="paid" class="oe_highlight"/>
                     <button name="refund" string="Return Products" type="object"
-                        attrs="{'invisible':[('state','=','draft')]}" class="oe_form_button_return_flow"/>
+                        attrs="{'invisible':[('state','=','draft')]}" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                 </header>
                 <sheet>
