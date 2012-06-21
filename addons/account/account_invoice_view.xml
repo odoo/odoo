@@ -146,7 +146,7 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+               <form string="Draft Invoice" version="7.0">
                 <header>
                     <button name="invoice_open" states="draft,proforma2" string="Validate"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid'/>
@@ -156,33 +156,35 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Supplier Invoice">
-                    <group>
-                        <group>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="number" class="oe_inline"/>
+                        </h1>
+                        <h2>
+                            <field name="origin" placeholder="PO0025"/>from
                             <field string="Supplier" name="partner_id"
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                            <field name="fiscal_position" widget="selection"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_invoice"/>
+                            <field name="date_due"/>
+                            <field name="type" invisible="1"/>
+                            <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                         </group>
                         <group>
-                            <field name="number"/>
-                            <field name="date_invoice"/>
-                            <field name="period_id" domain="[('state', '=', 'draft')]"
-                                groups="account.group_account_user" widget="selection"/>
-                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"
-                                groups="account.group_account_user"/>
-                            <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
-                                name="account_id" groups="account.group_account_user"/>
+                            <field name="fiscal_position" widget="selection"/>
                             <field name="currency_id"/>
-                            <field name="type" invisible="1"/>
+                            <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]" name="account_id" groups="account.group_account_user" invisible="1"/>
                         </group>
                         <group>
                             <label for="reference"/>
                             <div>
-                                <field name="reference_type"/>
                                 <field name="reference" placeholder="Payment Reference"/>
                             </div>
-                            <field name="date_due"/>
                         </group>
                     </group>
                     <notebook>
@@ -233,28 +235,26 @@
                         <page string="Other Info">
                             <group col="4">
                                 <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-                                <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
-                                <newline/>
-                                <field name="payment_term" widget="selection"/>
-                                <field name="name"/>
-                                <newline/>
-                                <field name="origin" placeholder="PO0025"/>
                                 <field name="user_id"/>
-                                <field name="move_id" groups="account.group_account_user"/>
+                                <field name="name" invisible="1"/>
+                                <newline/>
+                                <field name="move_id" groups="account.group_account_user" invisible="1"/>
+                                <field name="payment_term" widget="selection"/>
+                                <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             </group>
                         </page>
                         <page string="Payments">
                             <field name="payment_ids">
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
-                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name"/>
-                                    <field name="journal_id"/>
-                                    <field name="debit"/>
-                                    <field name="credit"/>
                                     <field name="amount_currency"/>
                                     <field name="currency_id"/>
+                                    <field name="move_id" invisible="1"/>
+                                    <field name="journal_id" invisible="1"/>
+                                    <field name="debit" invisible="1"/>
+                                    <field name="credit" invisible="1"/>
                                 </tree>
                             </field>
                         </page>
