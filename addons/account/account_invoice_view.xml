@@ -222,26 +222,20 @@
                         <page string="Other Info">
                             <group col="4">
                                 <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-                                <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                <field name="user_id"/>
                                 <newline/>
                                 <field name="payment_term" widget="selection"/>
-                                <field name="name"/>
                                 <newline/>
-                                <field name="origin" placeholder="PO0025"/>
-                                <field name="user_id"/>
-                                <field name="move_id" groups="account.group_account_user"/>
+                                <field name="name"/>
+                                <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             </group>
                         </page>
                         <page string="Payments">
                             <field name="payment_ids">
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
-                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name"/>
-                                    <field name="journal_id"/>
-                                    <field name="debit"/>
-                                    <field name="credit"/>
                                     <field name="amount_currency"/>
                                     <field name="currency_id"/>
                                 </tree>
