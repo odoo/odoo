@@ -493,7 +493,7 @@ class mail_thread(osv.osv):
         #if alias found then call message_process method.
         if alias_id:
             user_id = self._get_user(self, cr, uid, alias_id, context)
-            self.message_process(self, cr, user_id, alias_id.alias_model_id.id, message, custom_values = alias_id.alias_defaults or {}, thread_id = alias_id.alias_force_thread_id or {}, context)
+            self.message_process(self, cr, user_id, alias_id.alias_model_id.id, message, custom_values = alias_id.alias_defaults or {}, thread_id = alias_id.alias_force_thread_id or {}, context=context)
         #if alis not found give Exception
         else:
             #_logger.warning("This mailbox does not exist so mail gate will reject this mail.")
