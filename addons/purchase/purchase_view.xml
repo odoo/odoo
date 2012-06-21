@@ -143,11 +143,13 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
                 </header>
                 <sheet>
-                    <h1>
-                        <label string="Draft Purchase Order " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
-                        <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
-                        <field name="name" class="oe_inline" readonly="1"/>
-                    </h1>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Draft Purchase Order " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
