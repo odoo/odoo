@@ -156,28 +156,36 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Supplier Invoice">
-                    <group>
-                        <field string="Supplier" name="partner_id"
+                    <div class="oe_title">
+                        <h1>
+                            <field name="number" class="oe_inline"/>
+                        </h1>
+                        <h2>
+                            <field name="origin" placeholder="PO0025"/>from
+                            <field string="Supplier" name="partner_id"
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
-                              domain="[('supplier', '=', True)]" invisible="1"/>
+                              domain="[('supplier', '=', True)]"/>
+                        </h2>
+                    </div>
+                    <group>
                         <group>
                             <field name="date_invoice"/>
                             <field name="date_due"/>
-                            <field name="period_id" domain="[('state', '=', 'draft')]"
-                                groups="account.group_account_user" widget="selection"/>
+                            <field name="type" invisible="1"/>
+                            <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                         </group>
                         <group>
                             <field name="fiscal_position" widget="selection"/>
                             <field name="currency_id"/>
+                            <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]" name="account_id" groups="account.group_account_user" invisible="1"/>
                         </group>
-                    </group>
-                    <group>
+                        <group>
                             <label for="reference"/>
                             <div>
-                                <field name="reference_type"/>
                                 <field name="reference" placeholder="Payment Reference"/>
                             </div>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Invoice">
@@ -228,7 +236,9 @@
                             <group col="4">
                                 <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                 <field name="user_id"/>
+                                <field name="name" invisible="1"/>
                                 <newline/>
+                                <field name="move_id" groups="account.group_account_user" invisible="1"/>
                                 <field name="payment_term" widget="selection"/>
                                 <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             </group>
