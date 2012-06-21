@@ -94,10 +94,8 @@
             <p class="oe_mail_msg_subtitle">
                 <t t-if="params.thread_level > 0">
                     <a href="#" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}' class="oe_mail_internal_link"><t t-raw="record.record_name"/></a>
-                     · 
                 </t>
                 <span class="oe_mail_msg_author"><a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a></span>
-                 · 
                 <span class="oe_mail_msg_date" t-att-title="record.date"><t t-raw="record.timerelative"/></span>
             </p>
             
@@ -108,9 +106,9 @@
             
             <ul class="oe_mail_msg_footer">
               <t t-if="display['show_reply']">
-                <li><a href="#" class="oe_mail_msg_reply">Reply</a> · </li>
+                <li><a href="#" class="oe_mail_msg_reply">Reply</a></li>
               </t>
-              <li><a href="#">Like</a> · </li>
+              <li><a href="#">Like</a></li>
               <t t-if="record.attachment_ids.length > 0">
                 <li>
                     <a href="#" class="oe_mail_msg_view_attachments">
