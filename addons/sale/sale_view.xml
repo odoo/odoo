@@ -10,7 +10,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Shop" version="7.0">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
@@ -107,13 +107,13 @@
                         <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                         <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                         <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                        <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_form_button_hi"/>
+                        <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_highlight"/>
                         <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
-                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
-                        <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_form_button_hi"/>
+                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_highlight"/>
+                        <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_highlight"/>
                         <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
                         <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
-                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_form_button_hi" type="object"/>
+                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                         <button name="action_view_invoice" string="Open Invoice" type="object" 
                           attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                         <button name="action_view_delivery" string="Open Delivery Order" type="object" 
@@ -129,19 +129,19 @@
                     <h1>
                         <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
                         <label string="Sale Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
-                        <field name="name" class="oe_form_inline" readonly="1"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
                     </h1>
                     <group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" />
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                         </group><group>
                             <field name="date_order"/>
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="client_order_ref"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                         </group>
                     </group>
                     <notebook>
@@ -163,16 +163,16 @@
                                             <div>
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                    name="product_uom_qty" class="oe_form_inline"
+                                                    name="product_uom_qty" class="oe_inline"
                                                     on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
-                                                <field name="product_uom" groups="product.group_uom" class="oe_form_inline"
+                                                <field name="product_uom" groups="product.group_uom" class="oe_inline"
                                                     on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
 
                                             </div>
                                             <label for="product_uos_qty"/>
                                             <div>
-                                                <field groups="product.group_uos" name="product_uos_qty" class="oe_form_inline"/>
-                                                <field groups="product.group_uos" name="product_uos" class="oe_form_inline"/>
+                                                <field groups="product.group_uos" name="product_uos_qty" class="oe_inline"/>
+                                                <field groups="product.group_uos" name="product_uos" class="oe_inline"/>
                                             </div>
                                             <field name="price_unit"/>
                                             <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -196,8 +196,7 @@
                                         </group>
                                         <separator string="Properties" colspan="2"/>
                                         <field name="property_ids" colspan="4" nolabel="1" />
-                                        <separator string="Notes" groups="base.group_sale_notes_subtotal"/>
-                                        <field name="notes" groups="base.group_sale_notes_subtotal"/>
+                                        <field name="notes" groups="base.group_sale_notes_subtotal" placeholder="Add a note on order line..."/>
                                         <div groups="base.group_no_one">
                                             <separator colspan="4" string="Invoice Lines"/>
                                             <field colspan="4" name="invoice_lines" nolabel="1"/>
@@ -207,6 +206,7 @@
                                     </group>
                                 </form>
                                 <tree string="Sales Order Lines">
+                                    <field name="sequence" />
                                     <field name="name"/>
                                     <field name="product_uom_qty" string="Quantity"/>
                                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
@@ -217,13 +217,13 @@
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-                            <group class="oe_form_subtotal_footer" colspan="2" name="sale_total">
+                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
-                                <field name="amount_total" class="oe_form_subtotal_footer_separator"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
                             <separator string="Notes"/>
-                            <field name="note" placeholder="Our quotation is valid for 30 days..."/>
+                            <field name="note" placeholder="Add a global note on the sale order..."/>
                         </page>
                         <page string="Other Information">
                             <group>
@@ -236,30 +236,37 @@
                                 <group>
                                     <field name="user_id"/>
                                     <field groups="base.group_no_one" name="origin"/>
-                                    <field name="invoiced"/>
-                                    <field name="shipped"/>
                                 </group>
                                 <group name="sale_pay">
                                     <field name="payment_term" widget="selection"/>
                                     <field name="fiscal_position" widget="selection"/>
                                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 </group>
+                                <group>
+                                    <field name="invoiced"/>
+                                    <field name="shipped"/>
+                                </group>
                             </group>
                         </page>
                         <page string="History">
                             <separator string="Invoices"/>
-                            <field name="invoice_ids" context="{'form_view_ref':'account.invoice_form'}"/>
+                            <field name="invoice_ids" context="{'form_view_ref':'account.invoice_form'}">
+                                <tree string="Invoices" colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'">
+                                    <field name="date_invoice" />
+                                    <field name="number" />
+                                    <field name="partner_id" />
+                                    <field name="user_id" />
+                                    <field name="date_due" />
+                                    <field name="amount_total" />
+                                    <field name="state" />
+                                </tree>
+                            </field>
                             <separator string="Delivery Orders"/>
                             <field name="picking_ids" context="{'default_type': 'out'}">
                                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                                     <field name="name"/>
-                                    <field name="partner_id"/>
-                                    <field name="origin"/>
-                                    <field name="date"/>
+                                    <field name="partner_id" string="Customer" />
                                     <field name="min_date"/>
-                                    <field name="backorder_id"/>
-                                    <field name="invoice_state"/>
-                                    <field name="stock_journal_id" widget="selection"/>
                                     <field name="state"/>
                                     <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" context="{'default_type': 'out'}"/>
                                 </tree>
@@ -412,9 +419,10 @@
                         <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
-                    <label for="order_id" class="oe_form_readonly_hidden"/>
+                    <sheet>
+                    <label for="order_id" class="oe_edit_only"/>
                     <h1><field name="order_id"/></h1>
-                    <label for="order_partner_id" class="oe_form_readonly_hidden"/>
+                    <label for="order_partner_id" class="oe_edit_only"/>
                     <h2><field name="order_partner_id"/></h2>
                     <group>
                         <group>
@@ -422,8 +430,8 @@
                             <field name="name" groups="base.group_no_one"/>
                             <label name="product_uom_qty"/>
                             <div>
-                                <field name="product_uom_qty" readonly="1" class="oe_form_inline"/>
-                                <field name="product_uom" groups="product.group_uom" class="oe_form_inline"/>
+                                <field name="product_uom_qty" readonly="1" class="oe_inline"/>
+                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                             </div>
                         </group><group>
                             <field name="price_unit"/>
@@ -435,6 +443,7 @@
                     </group>
                     <separator string="Notes" groups="base.group_sale_notes_subtotal"/>
                     <field name="notes" groups="base.group_sale_notes_subtotal"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -516,7 +525,7 @@
         </record>
 
         <act_window
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
+            context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
             id="act_res_partner_2_sale_order"
             name="Quotations and Sales"
             groups="base.group_sale_salesman"
@@ -524,7 +533,7 @@
             src_model="res.partner"/>
 
         <act_window
-            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            context="{'search_default_product_id': active_id, 'default_product_id': active_id}"
             id="action_order_line_product_tree"
             name="Sales Order Lines"
             res_model="sale.order.line"
