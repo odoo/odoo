@@ -24,7 +24,7 @@ from operator import itemgetter
 from osv import osv, fields
 from tools.translate import _
 
-class ir_needaction_users_rel(osv.osv):
+class ir_needaction_users_rel(osv.Model):
     '''
     ir_needaction_users_rel holds data related to the needaction
     mechanism inside OpenERP. A row in this model is characterized by:
@@ -78,7 +78,7 @@ class ir_needaction_users_rel(osv.osv):
         return True
 
 
-class ir_needaction_mixin(osv.osv):
+class ir_needaction_mixin(osv.Model):
     '''Mixin class for objects using the need action feature.
     
     Need action feature can be used by objects willing to be able to
