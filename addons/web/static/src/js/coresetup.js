@@ -332,11 +332,14 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             .appendTo(document.body)
             .load(function () {
                 try {
-                    if (options.error) {
-                        options.error(JSON.parse(
-                            this.contentDocument.body.childNodes[1].textContent
-                        ));
-                    }
+                   if (options.error) {
+                         if (!this.contentDocument.body.childNodes[1]) {
+                            options.error(this.contentDocument.body.childNodes);
+                        }
+                        else {
+                            options.error(JSON.parse(this.contentDocument.body.childNodes[1].textContent));
+                        }
+                   }
                 } finally {
                     complete();
                 }
