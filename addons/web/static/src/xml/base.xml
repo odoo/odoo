@@ -1397,7 +1397,7 @@
 <t t-name="SearchView.addtodashboard.selection">
     <select  title = "Select Dashboard to add this filter to">
         <t t-foreach="selections" t-as="element">
-        <option t-att-value="element.res_id"><t t-esc="element.name"/></option>
+        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
         </t>
     </select>
 </t>

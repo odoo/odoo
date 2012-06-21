@@ -1635,11 +1635,12 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         this.$element
         .on('click', 'h4', this.proxy('show_option'))
         .on('submit', 'form', function (e) {e.preventDefault(); self.add_dashboard();});
-        return $.when(this.load_data(),this.data_loaded).pipe(self.proxy("render_data"));
+        return $.when(this.load_data(),this.data_loaded).pipe(this.proxy("render_data"));
     },
     load_data:function(){
-        var self = this,
-        ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"],['view_id','!=',false]])
+        // get from database if dashboard position change than also works(from Reporting to else).
+        /*var self = this,
+        ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"]])
                                     .query(['name','id']),
         map_data =  function(){
             var ir_actions_values = arguments[0],ir_values = arguments[1];
@@ -1663,7 +1664,30 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
             ir_value._execute().done(function(ir_values){
                 map_data(ir_actions_values,ir_values);
             })
-        });
+        });*/
+       
+       //===============================get from instance.webclient.menu (with less rpc call)
+       
+      var dashbaord_menu = instance.webclient.menu.data.data.children,self = this,
+        map_data = function(result){
+            _.detect(dashbaord_menu,function(dash){
+                var id = _.pluck(dash.children,"id");
+                var indexof = _.indexOf(id, result.res_id);
+                if(indexof !== -1){
+                    self.dashboard_data = dash.children[indexof].children
+                    console.log(self.dashboard_data);
+                    return;
+                }
+                self.data_loaded.resolve();
+            });
+        };
+        return  new instance.web.Model('ir.model.data')
+            .query(['res_id'])
+                .filter([['name','=','menu_reporting_dashboard']])
+                    .first()
+                        .done(function (result) {
+                            map_data(result)
+                         });
     },
     
     render_data: function(){
