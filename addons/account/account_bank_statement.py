@@ -283,7 +283,6 @@ class account_bank_statement(osv.osv):
                   create the move from.
            :return: int/long of the res.partner to use as counterpart
         """
-        import pdb;pdb.set_trace()
         partner_id = ((st_line.partner_id) and st_line.partner_id.id) or False
         return partner_id
         
