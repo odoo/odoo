@@ -2409,7 +2409,7 @@ instance.web.form.CompletionFieldMixin = {
             }
             // create...
             values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, {"default_name": search_val});
+                self._search_create_popup("form", undefined, {});
             }});
 
             return values;
