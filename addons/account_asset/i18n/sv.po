@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-18 23:18+0000\n"
+"PO-Revision-Date: 2012-06-20 14:47+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-20 05:10+0000\n"
+"X-Launchpad-Export-Date: 2012-06-21 05:48+0000\n"
 "X-Generator: Launchpad (build 15435)\n"
 
 #. module: account_asset
@@ -441,7 +441,7 @@ msgstr "Objektinformation"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Asset durations to modify"
-msgstr ""
+msgstr "Tillgångsvaraktighet att ändra"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -465,6 +465,9 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
 msgstr ""
+"Välj metod för beräkning av avskrivningen.\n"
+"  * Linjär: beräknas baserat på: bruttovärde / antal avskrivningar\n"
+"  * Avtagande: beräknas på: restvärdet * avskrivningsfaktor"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -477,11 +480,16 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"Välj beräkningsmetod för datum och antal avskrivningsrader.\n"
+"  * Antal avskrivningar: Bestämt antal avskrivningsrader och tiden mellan "
+"två avskrivningar.\n"
+"  * Slutdatum: Ange tiden mellan två avskrivningar och ett definitivt "
+"slutdatum för avskrivningen."
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr ""
+msgstr "Aktiva tillgångar"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -497,7 +505,7 @@ msgstr "Företag"
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr ""
+msgstr "Antal avskrivningsrader"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -552,7 +560,7 @@ msgstr "Beräkna"
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Sök tillgångskategori"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -572,12 +580,12 @@ msgstr "Avslutad tillgång"
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Tillgångens status"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr ""
+msgstr "Avskrivningsnamn"
 
 #. module: account_asset
 #: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
@@ -668,7 +676,7 @@ msgstr "Avskrivet belopp"
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
-msgstr ""
+msgstr "Hoppa över preleminär status"
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:account.asset.category:0
@@ -689,7 +697,7 @@ msgstr "Journal"
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
-msgstr ""
+msgstr "Andel redan avskrivet"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -706,6 +714,11 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that state."
 msgstr ""
+"När en tillgång skapas, är status 'Preleminär'.\n"
+"Om tillgången bekräftas, övergår status till 'Aktiv' och avskrivningsrader "
+"kan bokföras.\n"
+"Du kan manuellt stänga en tillgång när avskrivningen är slutförd. Om den "
+"sista avskrivningsraden är bokförd, avslutas tillgången automatiskt."
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -718,6 +731,8 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
+"Kryssa denna ruta om du automatiskt vill bekräfta tillgångar i denna "
+"kategori när det skapas via leverantörsfakturor."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -770,11 +785,13 @@ msgid ""
 "search can also be used to personalise your Assets reports and so, match "
 "this analysis to your needs;"
 msgstr ""
+"Från denna rapport får du en översikt över all avskrivning. Sökverktyget kan "
+"även personalisera din tillgångsrapport och matcha ditt analysbehov."
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "Ange tiden mellan två avskrivningar i månader"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
