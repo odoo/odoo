@@ -160,19 +160,35 @@
     </t>
 
     <t t-name="ProductListWidget">
-        <ol id="products-screen-ol" class="product-list">
-        </ol>
+        <div class='product-list-container'>
+            <ol id="products-screen-ol" class="product-list">
+            </ol>
+            <span class="placeholder-ScrollbarWidget" />
+        </div>
     </t>
 
     <t t-name="SearchProductScreenWidget">
-        <div id="products-screen">
-            <span class="placeholder-ProductCategoriesWidget" />
-            <span class="placeholder-ProductListWidget" />
+        <div id="products-screen" class="screen">
+            <table class="layout-table">
+
+                <tr class="header-row">
+                    <td class="header-cell">
+                        <span class="placeholder-ProductCategoriesWidget" />
+                    </td>
+                </tr>
+
+                <tr class="content-row">
+                    <td class="content-cell">
+                        <span class="placeholder-ProductListWidget" />
+                    </td>
+                </tr>
+
+            </table>
         </div>
     </t>
 
     <t t-name="PaymentScreenWidget">
-        <div id="payment-screen" class="step-screen">
+        <div id="payment-screen" class="screen">
             <header><h2>Payment</h2></header>
             <div class="pos-step-container">
                 <div class="pos-payment-container">
@@ -213,7 +229,7 @@
     </t> <!-- pos-payment-screen -->
 
     <t t-name="ReceiptScreenWidget">
-        <div id="receipt-screen" class="step-screen" >
+        <div id="receipt-screen" class="screen" >
             <header><h2>Receipt</h2></header>
             <div class="pos-step-container">
                 <div class="pos-receipt-container">
@@ -223,7 +239,7 @@
     </t>
 
     <t t-name="WelcomeScreenWidget">
-        <div class="welcome-screen step-screen">
+        <div class="welcome-screen screen">
             <header><h2>Welcome</h2></header>
             <img src="/point_of_sale/static/src/img/scan.png" />
             <p> Please scan an item or your member card </p>
@@ -232,14 +248,14 @@
 
 
     <t t-name="ScanProductScreenWidget">
-        <div class="scan-product-screen step-screen">
+        <div class="scan-product-screen screen">
             <header><h2>Please scan an item</h2></header>
             <img src="/point_of_sale/static/src/img/scan.png" />
         </div>
     </t>
 
     <t t-name="ClientPaymentScreenWidget">
-        <div class="scan-product-screen step-screen">
+        <div class="scan-product-screen screen">
             <header><h2>Payment</h2></header>
             <img src="/point_of_sale/static/src/img/bancontact.png" />
             <p>Please insert your card in the reader and follow the instructions to complete
@@ -248,7 +264,7 @@
     </t>
 
     <t t-name="ScaleInviteScreenWidget">
-        <div class="scale-invite-screen step-screen">
+        <div class="scale-invite-screen screen">
             <header><h2>Please put your product on the scale</h2></header>
             <img src="/point_of_sale/static/src/img/scale.png" />
         </div>
@@ -341,6 +357,20 @@
         </li>
     </t>
 
+    <t t-name="ScrollbarWidget">
+        <div class='scrollbar'>
+            <div class='up-button button oe_e'>
+                &amp;atilde;
+            </div>
+
+            <div class='scroller'>
+            </div>
+
+            <div class='down-button button oe_e'>
+                &amp;auml;
+            </div>
+        </div>
+    </t>
     <t t-name="OrderlineWidget">
         <tr>
             <td>
@@ -364,6 +394,25 @@
                 <t t-esc="widget.format_currency(widget.model.get('list_price') * (1 - widget.model.get('discount')/100) * widget.model.get('quantity'))"/>
             </td>
         </tr>
+    </t>
+
+    <t t-name="OrderlineWidget2">
+        <li class="orderline">
+            <h4 class="product-name">
+                Pizza
+            </h4>
+            <span class="price">
+                3.14$
+            </span>
+            <ul class="info-list">
+                <li class="info">
+                    5 pizza at $0.51/pizza
+                </li>
+                <li class="info">
+                    25 discount
+                </li>
+            </ul>
+        </li>
     </t>
 
     <t t-name="PaymentlineWidget">

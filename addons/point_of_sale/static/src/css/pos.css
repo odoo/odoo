@@ -129,6 +129,7 @@
     position: absolute;
     top: 56px;
     bottom: 0;
+    background: #F0EEEE; //#E6E4E4; //yellow; //#F0EEEE;
 }
 .point-of-sale #leftpane {
     -webkit-box-sizing:border-box;
@@ -272,7 +273,6 @@
     top: 0;
     bottom: 105px;
     left: 440px;
-    //height:100%;
     right: 0;
     vertical-align: top;
 }
@@ -285,10 +285,17 @@
     background: -webkit-gradient(linear, left top, left bottom, from(white), to(#d3d3d3));
 }
 .point-of-sale .product-list {
-    overflow: auto;
-    position: absolute;
-    top: 72px;
-    bottom: 0;
+    padding:10px;
+    overflow: hidden;
+    height:100%;
+}
+.point-of-sale .product-list-container {
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    //background:url('../img/bg_callout_gradient_scratched_stars.png');
 }
 .point-of-sale .breadcrumb li {
     float: left;
@@ -338,6 +345,7 @@
     display: none;
 }
 .point-of-sale #categories {
+    background:#f0f0f0;
     border-bottom: 1px solid #cecbcb;
 }
 .point-of-sale #categories h4 {
@@ -359,15 +367,17 @@
     vertical-align: top;
     display: inline-block;
     font-size: 11px;
-    margin: 5px;
+    margin: 10px;
     max-width: 120px;
-    border: 1px solid lightgray;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    -moz-box-shadow: 0px 1px 4px #777777;
-    -webkit-box-shadow: 0px 1px 4px #777777;
-    -box-shadow: 0px 1px 4px #777777;
+    background:#fff;
+    border: 1px solid #fff;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 3px;
+    -moz-box-shadow: 0px 1px 8px #777777;
+    -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
+    -box-shadow: 0px 1px 8px rgba(0,0,0,0.9);
+    -webkit-filter: blur(3px);
 }
 .point-of-sale .product-img {
     position: relative;
@@ -375,6 +385,7 @@
     height: 100px;
     background: white;
     text-align: center;
+    -webkit-filter: blur(3px);
 }
 .point-of-sale .price-tag {
     position: absolute;
@@ -424,15 +435,43 @@
     font-weight: 900;
 }
 
-.point-of-sale .step-screen {
+.point-of-sale .screen {
+    position:absolute;
     text-align: center;
+    top:0px;
+    bottom:0px;
+    width:100%;
 }
-.point-of-sale .step-screen header h2 {
+.point-of-sale .screen header h2 {
     margin-top: 0px;
     padding-top: 7px;
 }
-.point-of-sale .step-screen p{
+.point-of-sale .screen p{
     font-size: 18px;
+}
+
+.point-of-sale .screen .layout-table {
+    border:none;
+    width:100%;
+    height:100%;
+}
+
+.point-of-sale .screen .header-row {
+    width:100%;
+    height:0px;
+}
+
+.point-of-sale .screen .header-cell{
+    width:100%;
+    height:0px;
+}
+.point-of-sale .screen .content-row {
+    width:100%;
+    height:100%;
+}
+.point-of-sale .screen .content-cell{
+    width:100%;
+    position:relative;
 }
 
 .point-of-sale .pos-step-container {
@@ -459,7 +498,7 @@
     font-size: 0.8em;
     font-weight: bold;
 }
-.point-of-sale .step-screen button {
+.point-of-sale .screen button {
     width: 50%;
     text-align: center;
     padding: 7px 0 7px 0;
@@ -522,6 +561,8 @@
         margin: 0;
     }
 }
+
+/* ----------------------- ACTION BAR ---------------------- */
 
 .point-of-sale .pos-actionbar{
     position:absolute;
@@ -608,6 +649,8 @@
 .point-of-sale .pos-actionbar .button.rightalign{
     float:right;
 }
+
+/* ----------------------- POP-UPS ---------------------- */
 
 .point-of-sale .modal-dialog{
     position: absolute;
@@ -699,150 +742,61 @@
     line-height:180px;
 }
 
-/* Onscreen Keyboard http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ */
+/* ----------------------- SCROLLBAR ---------------------- */
 
-.point-of-sale .keyboard_frame{
-    display: none;
+.point-of-sale .scrollbar{  
     position:absolute;
-    left:    0;
-    bottom:  0px;
-    margin:  0;
-    padding: 0;
-    padding-top: 15px;
-    width: 100%;
-    height: 0px;    /* 235px, animated via jquery */
-	background-color: #BBB;
-    overflow:hidden;
-    -webkit-box-shadow: 0px 0px 10px rgba(0,0,0, 0.3);
-    -webkit-touch-callout: none;
+    top:0px;
+    right:0px;
+    width:48px;
+    height:100%;
+    background: rgba(0,0,0,0.1);
+
+}
+.point-of-sale .scrollbar .button{
+    width:100%;
+    height: 48px;
+    line-height: 38px;
+    text-align: center;
+    font-size:48px;
+    border-radius: 4px;
+    cursor: pointer;
     -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    z-index:10000;
-
+    transition: all 250ms ease-in-out;
 }
-.point-of-sale .keyboard_frame .close_button{
-    height:40px;
-    width:60px;
-    text-align:center;
-    background-color: #DDD;
-    font-size: 12px;
-    line-height:40px;
-    border: 1px solid #CCC;
-	-webkit-border-radius: 5px;
-    -webkit-box-shadow: 0px 2px 5px rgba(0,0,0, 0.2);
+.point-of-sale .scrollbar .button{
+    background: rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
+    color:white;
+    text-shadow: rgba(255,255,255,0.5) 0px 0px 10px;
+    -webkit-transition: all 250ms ease-in-out;
+}
+.point-of-sale .scrollbar .button.disabled{
+    background: rgba(0,0,0,0.3);
+    color:rgba(255,255,255,0.5);
+    -webkit-transition: all 250ms ease-in-out;
+}
+
+/*
+.point-of-sale .scrollbar .button{
+    background: -webkit-linear-gradient(-90deg,#efefef,#d8d8d8);
+    border: 1px solid #ababab;
+    -webkit-box-shadow: 0px 1px 4px rgba(0,0,0,0.2);
+}*/
+.point-of-sale .scrollbar .down-button{
     position:absolute;
-    top:0;
-    right:15px;
-	cursor: pointer;
+    bottom:0px;
 }
-.point-of-sale .keyboard li {
-	float: left;
-	text-align: center;
-	background-color: #fff;
-	border: 1px solid #f0f0f0;
-    top:0;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-    -webkit-box-shadow: 0px 2px 5px rgba(0,0,0, 0.2);
-    -webkit-transition-property: top, background-color;
-    -webkit-transition-duration: 0.2s;
-    -webkit-transition-timing-function: linear;
+.point-of-sale .scrollbar .up-button{
+    position:absolute;
+    top:0px;
 }
-.point-of-sale .keyboard li:hover {
-	position: relative;
-	top: 2px;
-	left: 0px;
-	border-color: #ddd;
-    background-color:#e5e5e5;
-	cursor: pointer;
-    -webkit-transition-property: top, background-color;
-    -webkit-transition-duration: 0.1s;
-    -webkit-transition-timing-function: ease-out;
-}
-.point-of-sale .uppercase {
-	text-transform: uppercase;
-}
-.point-of-sale .on {
-	display: none;
-}
-.point-of-sale .firstitem{
-	clear: left;
-}
-.point-of-sale .keyboard .lastitem {
-	margin-right: 0;
-}
-
-/* ---- full sized keyboard ---- */
-
-.point-of-sale .full_keyboard {
-    list-style: none;
-    font-size: 14px;
-    width: 680px;
-    height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-.point-of-sale .full_keyboard li{
-	margin: 0 5px 5px 0;
-	width: 40px;
-	height: 40px;
-	line-height: 40px;
-}
-.point-of-sale .full_keyboard .tab, .point-of-sale .full_keyboard .delete {
-	width: 70px;
-}
-.point-of-sale .full_keyboard .capslock {
-	width: 80px;
-}
-.point-of-sale .full_keyboard .return {
-	width: 77px;
-}
-.point-of-sale .full_keyboard .left-shift {
-	width: 95px;
-}
-.point-of-sale .full_keyboard .right-shift {
-	width: 109px;
-}
-.point-of-sale .full_keyboard .space {
-	clear: left;
-	width: 673px;
-}
-
-/* ---- simplified keyboard ---- */
-
-.point-of-sale .simple_keyboard {
-    list-style: none;
-    font-size: 16px;
-    width: 545px;
-    height: 220px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.point-of-sale .simple_keyboard li{
-    margin: 0 5px 5px 0;
-    width: 49px;
-    height: 49px;
-    line-height: 49px;
-}
-.point-of-sale .simple_keyboard .firstitem.row_asdf{
-    margin-left:25px;
-}
-.point-of-sale .simple_keyboard .firstitem.row_zxcv{
-    margin-left:55px;
-}
-.point-of-sale .simple_keyboard .delete{
-    width: 103px;
-}
-.point-of-sale .simple_keyboard .return{
-    width: 103px;
-}
-.point-of-sale .simple_keyboard .space{
-    width:268px;
-}
-.point-of-sale .simple_keyboard .numlock{
-    width:103px;
+.point-of-sale .scrollbar .scroller{
+    position:absolute;
+    top:33%;
+    bottom:50%;
+    width:100%;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
 }
 

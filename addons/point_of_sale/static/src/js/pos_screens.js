@@ -157,7 +157,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
     });
-    
 
     module.PopUpWidget = module.PosBaseWidget.extend({
         show: function(){
@@ -171,7 +170,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
     });
-
 
     module.HelpPopupWidget = module.PopUpWidget.extend({
         template:'HelpPopupWidget',
@@ -330,7 +328,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     click: function(){  
                         clearInterval(this.intervalID);
                         self.pos.proxy.weighting_end();
-                        self.pos_widget.screen_selector.set_current_screen('scan');
+                        if( self.pos_widget.screen_selector.get_user_mode() === 'client'){
+                            self.pos_widget.screen_selector.set_current_screen('scan');
+                        }else{
+                            self.pos_widget.screen_selector.set_current_screen('products');
+                        }
                     }
                 }
             );
@@ -539,7 +541,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         label: 'weight',
                         icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
                         click: function(){  
-                            self.pos_widget.screen_selector.set_current_screen('scale_product');
+                            self.pos_widget.screen_selector.set_current_screen('scale_invite');
                         }
                     });
             }
