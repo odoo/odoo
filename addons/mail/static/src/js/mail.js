@@ -231,8 +231,7 @@ openerp.mail = function(session) {
                 
                 //build attachments download urls and compute time-relative from dates
                 for (var k in records) {
-                    // TODO use timeago records[k].timerelative = $.timeago(records[k].date);
-                    records[k].timerelative = records[k].date;
+                    records[k].timerelative = $.timeago(records[k].date);
                     
                     if (records[k].attachments) {
                         for (var l in records[k].attachments) {
