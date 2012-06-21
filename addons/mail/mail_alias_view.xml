@@ -47,19 +47,23 @@
                 <search string="Search Alias">
                     <field name="alias_name"/>
                     <field name="alias_model_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'alias_user_id'}"/>
+                        <filter string="Model" name="Model" context="{'group_by':'alias_model_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
 
         <record id="action_view_mail_alias" model="ir.actions.act_window">
-            <field name="name">Alias</field>
+            <field name="name">Mail Alias</field>
             <field name="res_model">mail.alias</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mail_alias_search"/>
         </record>
 
-        <menuitem id="mail_alias_menu" name="Mail Alias" parent="base.menu_email" action="action_view_mail_alias"/>
+        <menuitem id="mail_alias_menu" parent="base.menu_email" action="action_view_mail_alias"/>
 
     </data>
 </openerp>
