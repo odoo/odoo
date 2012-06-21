@@ -6,37 +6,8 @@
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_hr_manager" sequence="45"/>
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
-
-        <!-- Employee View -->
-        <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form2</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-            <data>
-                <div class="oe_right oe_button_box" position="inside">
-                     <button name="%(act_hr_employee_payslip_list)d" string="Payslips" type="action"/>
-                 </div>
-                  <xpath expr="//field[@name='identification_id']" position="before">
-                    <field name="manager" select="1"/>
-                 </xpath>
-                 <field name="otherid" position="after">
-                         <field name="vehicle" select="1"/>
-                         <field name="medic_exam" select="1" string="Medical Examination"/>
-                         <field name="vehicle_distance" select="1"/>
-                  </field>
-                <field name="address_home_id" position="after">
-                    <field name="children"/>
-                </field>
-                <field name="birthday" position="after">
-                    <field name="place_of_birth"/>
-                </field>
-                <field name="marital" position="before">
-                    <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
-                </field>
-            </data>
-            </field>
-        </record>
+        
+        
         <!-- End Employee View -->
 
         <!-- Contract View -->
@@ -47,7 +18,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//group[@name='right_column']" position="inside">
+                <xpath expr="//group[@string='Advantages']" position="before">
                     <group string="Payslip Info" colspan="2" col="2">
                         <field name="struct_id" required="1"/>
                     </group>
@@ -416,7 +387,44 @@
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
+        <act_window name="Payslips"
+                    context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
+                    res_model="hr.payslip"
+                    src_model="hr.employee"
+                    view_id ="view_hr_payslip_tree"
+                    id="act_hr_employee_payslip_list"
+                    groups="base.group_hr_manager"/>
 
+        <!-- Employee View -->
+        <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <div class="oe_right oe_button_box" position="inside">
+                     <button name="%(act_hr_employee_payslip_list)d" string="Payslips" type="action"/>
+                 </div>
+                  <xpath expr="//field[@name='identification_id']" position="before">
+                    <field name="manager" select="1"/>
+                 </xpath>
+                 <field name="otherid" position="after">
+                         <field name="vehicle" select="1"/>
+                         <field name="medic_exam" select="1" string="Medical Examination"/>
+                         <field name="vehicle_distance" select="1"/>
+                  </field>
+                <field name="address_home_id" position="after">
+                    <field name="children"/>
+                </field>
+                <field name="birthday" position="after">
+                    <field name="place_of_birth"/>
+                </field>
+                <field name="marital" position="before">
+                    <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
+                </field>
+            </data>
+            </field>
+        </record>
         <!-- Salary Category-->
         <record id="hr_salary_rule_category_form" model="ir.ui.view">
             <field name="name">hr.salary.rule.category.form</field>
@@ -754,14 +762,6 @@
         <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
 
         <!--  Shortcuts -->
-
-        <act_window name="Payslips"
-            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-            res_model="hr.payslip"
-            src_model="hr.employee"
-            view_id ="view_hr_payslip_tree"
-            id="act_hr_employee_payslip_list"
-            groups="base.group_hr_manager"/>
 
         <act_window name="Payslip Computation Details"
         	domain="[('slip_id', '=', active_id)]"
