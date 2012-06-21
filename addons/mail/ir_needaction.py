@@ -35,7 +35,7 @@ class ir_needaction_mixin(osv.Model):
         """
         result = super(ir_needaction_mixin, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_thread_read == False and obj.user_id:
+            if obj.message_state == False and obj.user_id:
                 result[obj.id].add(obj.user_id.id)
         return result
 

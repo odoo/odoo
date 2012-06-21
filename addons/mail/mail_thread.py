@@ -62,23 +62,33 @@ class mail_thread(osv.Model):
     _name = 'mail.thread'
     _description = 'Email Thread'
 
-    def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
+    def _get_message_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
-            res[id] = self._message_load_ids(cr, uid, [id], context=context)
+            message_ids = self.message_load_ids(cr, uid, [id], context=context)
+            subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+            res[id] = {
+                'message_ids': message_ids,
+                'message_summary': "<span>Msg: %d</span> . <span>Fol: %d</span>" % (len(message_ids), len(subscriber_ids)),
+            }
         return res
 
-    # OpenChatter: message_ids is a dummy field that should not be used
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
-                        type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id',
-                        help="Functional field holding messages related to the current document."),
-        'message_thread_read': fields.boolean('Read',
-                        help="When checked, new messages require your attention."),
+            type='one2many', obj='mail.message', _fields_id = 'res_id',
+            string='Temp messages', multi="_get_message_ids",
+            help="Functional field holding messages related to the current document."),
+        'message_state': fields.boolean('Read',
+            help="When checked, new messages require your attention."),
+        'message_summary': fields.function(_get_message_ids, method=True,
+            type='text', string='Summary', multi="_get_message_ids",
+            help="Holds the Chatter summary (number of messages, ...). "\
+                 "This summary is directly in html format in order to "\
+                 "be inserted in kanban views."),
     }
     
     _defaults = {
-        'message_thread_read': True,
+        'message_state': True,
     }
 
     #------------------------------------------------------
@@ -121,7 +131,7 @@ class mail_thread(osv.Model):
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
 
     #------------------------------------------------------
-    # Generic message api
+    # mail.message wrappers and tools
     #------------------------------------------------------
 
     def message_create(self, cr, uid, thread_id, vals, context=None):
@@ -143,11 +153,11 @@ class mail_thread(osv.Model):
         
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
-
+        
         # Set as unread if writer is not the document responsible
-        #model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
-
-        # special: if install mode, do not push (demo data: avoid crowdy Wall)
+        self.message_create_check_state(cr, uid, [thread_id], context=context)
+        
+        # special: if install mode, do not push demo data
         if context.get('install_mode', False):
             return msg_id
         
@@ -210,7 +220,11 @@ class mail_thread(osv.Model):
         if not login_lst: return []
         user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context=context)
         return user_ids
-    
+
+    #------------------------------------------------------
+    # Generic message api
+    #------------------------------------------------------
+
     def message_capable_models(self, cr, uid, context=None):
         ret_dict = {}
         for model_name in self.pool.obj_list():
@@ -496,7 +510,7 @@ class mail_thread(osv.Model):
         return msgs
 
     #------------------------------------------------------
-    # Email specific
+    # Mail gateway
     #------------------------------------------------------
     # message_process will call either message_new or message_update.
 
@@ -860,7 +874,8 @@ class mail_thread(osv.Model):
         # Trying to unsubscribe somebody not in subscribers: returns False
         # if special management is needed; allows to know that an automatically
         # subscribed user tries to unsubscribe and allows to warn him
-        if not user_ids and not uid in self.message_get_subscribers(cr, uid, ids, context=context):
+        mail_thread_model = self.pool.get('mail.thread')
+        if not user_ids and not uid in mail_thread_model.message_get_subscribers(cr, uid, ids, context=context):
             return False
         subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
@@ -981,16 +996,17 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    def message_mark_as_read(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_thread_read': True}, context=context)
-
-    def message_create_mark_as_unread(self, cr, uid, ids, context=None):
+    def message_create_check_state(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
-                self.mark_as_unread(cr, uid, [obj.id], context=None)
+                print 'poinpoinponi'
+                self.message_mark_as_unread(cr, uid, [obj.id], context=context)
+
+    def message_mark_as_read(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'message_state': True}, context=context)
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_thread_read': False}, context=context)
+        return self.write(cr, uid, ids, {'message_state': False}, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

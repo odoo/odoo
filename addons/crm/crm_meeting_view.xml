@@ -234,7 +234,6 @@
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:needaction_pending==True"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="needaction_pending" invisible="1"/>
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>
@@ -243,6 +242,7 @@
                 <field name="partner_id" string="Partner" />
                 <field name="location" />
                 <field name="categ_id"/>
+                <field name="needaction_pending" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -282,20 +282,24 @@
         <field name="model">crm.meeting</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-                <search string="Search Meetings">
-                       <group>
-                           <field name="name" string="Meeting / Partner"
-                               filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
-                           <field name="user_id">
-                               <filter icon="terp-personal"
-                                   domain="[('user_id','=',uid)]"
-                                   help="My Meetings" />
-                           </field>
-                           <field name="partner_id"/>
-                       </group>
-                </search>
-            </field>
-        </record>
+            <search string="Search Meetings">
+                <filter icon="terp-mail-message-new"
+                    string="Inbox" help="Unread messages"
+                    name="needaction_pending"
+                    domain="[('needaction_pending','=',True)]"/>
+                <group>
+                    <field name="name" string="Meeting / Partner"
+                        filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
+                    <field name="user_id">
+                        <filter icon="terp-personal"
+                            domain="[('user_id','=',uid)]"
+                            help="My Meetings" />
+                    </field>
+                    <field name="partner_id"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
         <!-- Calendar Attendee Form View -->
 
