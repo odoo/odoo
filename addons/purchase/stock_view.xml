@@ -108,7 +108,11 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
-            <field name="help">If you set the Invoicing Control on a purchase order as "Bases on incoming shipments", you can track here all the product receptions and create invoices for those receptions.</field>
+            <field name="help">
+                Here you can track all the product receptions of purchase orders where the invoicing is "Based on Incoming Shipments",
+                and for which you have not received a supplier invoice yet.
+                You can generate a supplier invoice based on those receptions.
+            </field>
        </record>
 
         <menuitem action="action_picking_tree4_picking_to_invoice"
