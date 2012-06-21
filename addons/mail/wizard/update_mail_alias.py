@@ -19,6 +19,18 @@
 #
 ##############################################################################
 
-import mail_compose_message
-import update_mail_alias
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from osv import orm
+from osv import fields
+
+class transient_update_maildomain(orm.TransientModel):
+    
+    _name = "transient.update.maildomain"
+    _description = "Update Mail Domain"
+    _columns = {
+        'name' : fields.text('Domain', required=True),
+    }
+    def update_domain(self, cr, uid, ids, context=None):
+        config_parameter_pool = self.pool.get("ir.config_parameter")
+        for record in self.browse(cr, uid, ids, context):
+            config_parameter_pool.set_param(cr, uid, "mail.catchall.domain", record.name, context)
+        return {'type': 'ir.actions.act_window_close'}

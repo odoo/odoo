@@ -56,7 +56,9 @@ The main features are:
     'depends': ['base', 'base_tools'],
     'data': [
         'wizard/mail_compose_message_view.xml',
+        'wizard/update_mail_alias_wizard.xml',
         'mail_message_view.xml',
+        'mail_alias_data.xml',
         'mail_subscription_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
