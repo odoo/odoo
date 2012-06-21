@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record model="ir.ui.view" id="transient_update_maildomain_form">
+            <field name="name">transient.update.maildomain.form</field>
+            <field name="model">transient.update.maildomain</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Configure Mail Domain" version="7.0">
+                    <header>
+                        <button name="update_domain" string="Configure" 
+                            type="object" class="oe_highlight"/>
+                    </header>
+                    <group colspan="4">
+                        <separator string="Email Domain" colspan="4"/>
+                        <field name="name" nolabel="1" colspan="4"  placeholder="openerp.my.openerp.com"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_transient_update_maildomain_form" model="ir.actions.act_window">
+            <field name="name">Configure Mail Domain</field>
+            <field name="res_model">transient.update.maildomain</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_action_transient_update_maildomain"
+                  parent="base.menu_email"  
+                  action="action_transient_update_maildomain_form" 
+                  sequence="100"/>
+    </data>
+</openerp>
