@@ -144,7 +144,7 @@ $colour4: #8a89ba
         margin: 4px 0
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, input[type='submit'], .oe_form_editable button.oe_highlight
+    a.button:link, a.button:visited, button, input[type='submit']
         display: inline-block
         border: 1px solid #ababab
         color: #404040
@@ -159,23 +159,20 @@ $colour4: #8a89ba
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover, input[type='submit']:hover, .oe_form_editable button.oe_highlight:hover
+    a.button:hover, button:hover, input[type='submit']:hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
 
-    a.button:focus, button:focus, input[type='submit']:focus, .oe_form_editable button.oe_highlight:focus
+    a.button:focus, button:focus, input[type='submit']:focus
         border: 1px solid #80bfff
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, .oe_form_editable button.oe_highlight:active
-        background: #e3e3e3
-        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
-        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
-        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
+        @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
-    a.button.disabled, button:disabled, input[type='submit']:disabled, .oe_form_editable button.oe_highlight:disabled
+    a.button.disabled, button:disabled, input[type='submit']:disabled
         background: #efefef !important
         border: 1px solid #d1d1d1 !important
         @include box-shadow(none !important)
@@ -1216,6 +1213,19 @@ $colour4: #8a89ba
         font-weight: bold
         &:hover
             background: #ED6F6A
+    .oe_form_editable
+        .oe_highlight
+            color: #404040
+            background: none
+        button.oe_highlight
+            @include vertical-gradient(#efefef, #d8d8d8)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        button.oe_highlight:active
+            @include vertical-gradient(#e3e3e3, #f6f6f6)
+            @include box-shadow(none)
+        button.oe_highlight:hover
+            @include vertical-gradient(#f6f6f6, #e3e3e3)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
         display: none !important
     .oe_form_readonly
