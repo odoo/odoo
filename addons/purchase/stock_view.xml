@@ -27,11 +27,11 @@
        <record model="ir.actions.act_window" id="act_purchase_order_2_stock_picking">
             <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.picking.in</field>
+            <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="stock.view_picking_in_form"/>
             <field name="context">{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}</field>
-            <field name="target">new</field>
         </record>
         
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
