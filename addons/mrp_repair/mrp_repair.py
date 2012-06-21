@@ -128,7 +128,7 @@ class mrp_repair(osv.osv):
             ('ready','Ready to Repair'),
             ('2binvoiced','To be Invoiced'),
             ('invoice_except','Invoice Exception'),
-            ('done','Done')
+            ('done','Repaired')
             ], 'Status', readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' state is used when a user confirms the repair order. \
@@ -655,7 +655,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                     ('draft','Draft'),
                     ('confirmed','Confirmed'),
                     ('done','Done'),
-                    ('cancel','Canceled')], 'Status', required=True, readonly=True,
+                    ('cancel','Cancelled')], 'Status', required=True, readonly=True,
                     help=' * The \'Draft\' state is set automatically as draft when repair order in draft state. \
                         \n* The \'Confirmed\' state is set automatically as confirm when repair order in confirm state. \
                         \n* The \'Done\' state is set automatically when repair order is completed.\
