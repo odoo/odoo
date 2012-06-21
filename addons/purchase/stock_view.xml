@@ -24,22 +24,14 @@
             </field>
         </record>
 
-        <act_window
-            id="act_purchase_order_2_stock_picking"
-            name="Incoming Shipments"
-            res_model="stock.picking.in"
-            src_model="purchase.order"
-            context="{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}" />
-       
-        <record id="action_picking_in_tree_view" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="stock.view_picking_in_tree"/>
-        </record>
-        <record id="action_picking_in_form_view" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+       <record model="ir.actions.act_window" id="act_purchase_order_2_stock_picking">
+            <field name="name">Incoming Shipments</field>
+            <field name="res_model">stock.picking.in</field>
+            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="stock.view_picking_in_form"/>
+            <field name="context">{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}</field>
+            <field name="target">new</field>
         </record>
         
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
