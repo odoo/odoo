@@ -86,22 +86,17 @@
                         <page string="Description">
                             <field name="line_ids" context="{'currency_id': currency_id}">
                                 <form string="Expense Lines" version="7.0">
-                                    <group col="6" colspan="4">
+                                    <group col="4" colspan="4">
                                         <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
-                                        <field name="name" colspan="4"/>
-                                        <newline/>
                                         <field name="unit_amount"/>
-                                        <field name="unit_quantity"/>
-                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
-                                    </group>
-                                    <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
-                                        <separator string="Customer Project" colspan="2"/>
-                                        <field domain="[('type','=','normal')]" name="analytic_account"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="References" colspan="2"/>
-                                        <field name="date_value" />
+                                        <field name="name"/>
+                                        <group colspan="2" col="4">
+                                            <field name="unit_quantity"/>
+                                            <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" class="oe_edit_only"/>
+                                        </group>
                                         <field name="ref"/>
+                                        <field name="date_value" />
+                                        <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                     </group>
                                 </form>
                             </field>
