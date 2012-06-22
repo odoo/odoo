@@ -87,17 +87,17 @@
                                     <field name="trial_date_start" />
                                     <field name="trial_date_end" />
                                 </group>
-                                <group name="right_column" colspan="4" col="4">
-                                    <group string="Advantages" colspan="2" col="2">
-                                        <field name="advantages" nolabel="1" />
-                                    </group>
-                                </group>
                             </group>
+							<group col="4">
+								<group col="1" name="advantages" colspan="2">
+									<field name="advantages"/>
+								</group>
+							</group>
                             <separator string="Notes"/>
                             <field name="notes"/>
                         </page>
                         <page string="Work Permit">
-                            <group>
+                            <group col="4">
                                 <field name="visa_no"/>
                                 <field name="permit_no"/>
                                 <field name="visa_expire"/>

@@ -18,8 +18,8 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//group[@string='Advantages']" position="before">
-                    <group string="Payslip Info" colspan="2" col="2">
+                <xpath expr="//group[@name='advantages']" position="before">
+                    <group col="3" colspan="2">
                         <field name="struct_id" required="1"/>
                     </group>
                 </xpath>
