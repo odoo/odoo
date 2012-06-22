@@ -1671,14 +1671,12 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
       var dashbaord_menu = instance.webclient.menu.data.data.children,self = this,
         map_data = function(result){
             _.detect(dashbaord_menu,function(dash){
-                var id = _.pluck(dash.children,"id");
-                var indexof = _.indexOf(id, result.res_id);
+                var id = _.pluck(dash.children,"id"),indexof = _.indexOf(id, result.res_id);
                 if(indexof !== -1){
                     self.dashboard_data = dash.children[indexof].children
-                    console.log(self.dashboard_data);
+                    self.data_loaded.resolve();
                     return;
                 }
-                self.data_loaded.resolve();
             });
         };
         return  new instance.web.Model('ir.model.data')
