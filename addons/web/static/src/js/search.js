@@ -1640,7 +1640,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
     load_data:function(){
         // get from database if dashboard position change than also works(from Reporting to else).
         /*var self = this,
-        ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"]])
+        ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"],['view_id','!=',false]])
                                     .query(['name','id']),
         map_data =  function(){
             var ir_actions_values = arguments[0],ir_values = arguments[1];

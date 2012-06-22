@@ -231,6 +231,14 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }
     },
     renderElement: function() {
+        var check = _.detect(this.node.children, function(column, column_index) {
+            return _.detect(column.children,function(element){
+                return element.tag === "action"? element: false;
+            });
+        });
+        if (!check) {
+            return this.no_result();
+        }
         // We should start with three columns available
         for (var i = this.node.children.length; i < 3; i++) {
             this.node.children.push({
@@ -241,6 +249,15 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }
         var rendered = QWeb.render(this.form_template, this);
         this.$element.html(rendered);
+    },
+    no_result: function() {
+        if (this.view.options.action.help) {
+            this.$element.append(
+                $('<div class="oe_view_nocontent">')
+                    .append($('<img>', { src: '/web_dashboard/static/src/img/view_todo_arrow.png' }))
+                    .append($('<div>').html(this.view.options.action.help || " "))
+            );
+        }
     },
     do_reload: function() {
         var view_manager = this.view.getParent(),
