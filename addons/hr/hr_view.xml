@@ -27,10 +27,12 @@
                     </div>
                     <field class="oe_right" name="photo" widget='image' on_change="onchange_photo(photo)"/>
                     <label for="name" class="oe_edit_only"/>
-                       <h1><field name="name"/>,
-                        <field name="company_id" class="oe_inline" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>at
-                        <field name="job_id" class="oe_inline oe_edit_only" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                    </h1>
+                       <h1><field name="name"/>,</h1>
+                    <label for="company_id" class="oe_edit_only"/>
+                        <h1><field name="company_id" class="oe_inline" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h1>
+                     <label for="job_id" class="oe_edit_only"/>
+                        <h1>at <field name="job_id" class="oe_inline" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/></h1>
+                    
                     <label for="department_id" class="oe_edit_only"/>
                     <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                     <h3><field name="category_ids" widget="many2many_tags"/></h3>
