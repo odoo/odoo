@@ -35,7 +35,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@string='My Sale Orders']" position="after">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
                     <filter string="My Sales Team(s)"
                         icon="terp-personal+"
                         domain="[('section_id.user_id','=',uid)]"

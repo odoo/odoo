@@ -32,15 +32,15 @@
                     <filter icon="terp-document-new"
                         string="Draft"
                         domain="[('state','=',('draft'))]"/>
-                      <filter icon="terp-camera_test"
+                    <filter icon="terp-camera_test"
                           string="Confirm"
                           domain="[('state','=',('confirm'))]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-personal"
+                    <filter icon="terp-personal"
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
-                        <field name="user_id" widget="selection"/>
+                    <separator orientation="vertical"/>
+                    <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                   <group expand="1" string="Group By...">

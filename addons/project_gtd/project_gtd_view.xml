@@ -116,7 +116,6 @@
                 <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
                 <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                 <filter string="Inbox" domain="[('timebox_id','=', False)]" help="Tasks having no timebox assigned yet"/>
-                <field name="context_id" widget="selection" context="{'context_show': True}"/>
                 <group expand="0" string="Display">
                     <filter string="Show Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>
                     <filter string="Show Deadlines" context="{'deadline_visible': False}" domain="[]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>

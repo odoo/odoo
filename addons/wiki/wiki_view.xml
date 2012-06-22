@@ -167,6 +167,7 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('section','ilike',self), ('tags','ilike',self)]"
                         string="Wiki"/>
+                    <separator orientation="vertical"/>
                     <field name="write_date" groups="base.group_no_one"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
