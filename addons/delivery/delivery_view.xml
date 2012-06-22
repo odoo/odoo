@@ -143,9 +143,9 @@
                     <field colspan="4" name="name"/>
                     <div>
                         <label string="condition" for="type"/>
-                        <field name="type" class="oe_form_inline"/>
-                        <field name="operator" class="oe_form_inline"/>
-                        <field name="max_value" class="oe_form_inline"/>
+                        <field name="type" class="oe_inline"/>
+                        <field name="operator" class="oe_inline"/>
+                        <field name="max_value" class="oe_inline"/>
                     </div>
                     <group col="4">
                         <field name="list_price"/>
@@ -192,7 +192,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
+                <field name="company_id" position="before">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </field>
@@ -260,7 +260,7 @@
                     <group>
                         <label for="carrier_id"/>
                         <div>
-                            <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_form_inline"/>
+                            <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
                             <button name="delivery_set" states="draft" string="Add to Sale Order" type="object"/>
                         </div>
                         <label string="If you do not 'Add to Sale Order', the delivery charges will be added based on the delivery order."/>

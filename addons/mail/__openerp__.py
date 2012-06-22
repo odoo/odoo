@@ -61,7 +61,6 @@ The main features are:
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
-        'report/mail_message_report_view.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'mail_data.xml',
@@ -91,6 +90,9 @@ The main features are:
     ],
     'qweb': [
         'static/src/xml/mail.xml',
+    ],
+    'demo': [
+        'mail_demo.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

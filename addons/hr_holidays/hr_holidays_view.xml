@@ -99,7 +99,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
@@ -143,7 +143,7 @@
                     </page>
                 </notebook>
             </sheet>
-            <div class="oe_form_sheet_width">
+            <div class="oe_sheet_width">
                 <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
             </div>
             </form>
@@ -249,7 +249,6 @@
             </field>
         </record>
 
-        <!-- My leave dashboard -->
         <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">

@@ -131,8 +131,8 @@
                                         <field name="date"/>
                                         <label for="amount_currency"/>
                                         <div>
-                                            <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_form_inline"/>
-                                            <field name="currency" nolabel="1" class="oe_form_inline"/>
+                                            <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                            <field name="currency" nolabel="1" class="oe_inline"/>
                                         </div>
                                         <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)"/>
                                         <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
@@ -151,8 +151,8 @@
                                     <group col="4" string="General Information">
                                         <label for="amount"/>
                                         <div>
-                                            <field name="amount" class="oe_form_inline"/>
-                                            <field name="company_currency" class="oe_form_inline"/>
+                                            <field name="amount" class="oe_inline"/>
+                                            <field name="company_currency" class="oe_inline"/>
                                         </div>
                                         <separator colspan="4" string="Entry Information"/>
                                         <field name="create_date" readonly="1"/>
@@ -259,8 +259,8 @@
                                 <field name="date"/>
                                 <label for="amount_currency"/>
                                 <div>
-                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_form_inline"/>
-                                    <field name="currency" class="oe_form_inline"/>
+                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                    <field name="currency" class="oe_inline"/>
                                 </div>
                                 <field name="partner_id" on_change="onchange_partner(partner_id, False)"/>
                                 <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
