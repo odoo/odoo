@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Groups" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="category_id"/>
                         <field name="name"/>
@@ -57,6 +58,7 @@
                             <field name="comment"/>
                         </page>
                     </notebook>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -80,12 +82,12 @@
                     <field name="id" invisible="1"/>
                     <sheet>
                         <div class="oe_right">
-                            <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)" class="oe_form_avatar"/>
+                            <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)" class="oe_avatar"/>
                         </div>
-                        <div class="oe_form_title">
-                            <label for="name" class="oe_form_readonly_hidden"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <label for="company_id" class="oe_form_readonly_hidden"/>
+                            <label for="company_id" class="oe_edit_only"/>
                             <h2><field name="company_id" context="{'user_preference': 0}"/></h2>
                         </div>
                         <group>
@@ -193,15 +195,16 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                    <div class="oe_right oe_form_avatar">
+                   <sheet>
+                    <div class="oe_right oe_avatar">
                         <field name="avatar" widget='image' on_change="onchange_avatar(avatar)"/>
                     </div>
-                    <div class="oe_form_title">
+                    <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1" class="oe_form_readonly_hidden"/>
-                            (<field name="login" readonly="1" class="oe_form_readonly_hidden"/>)
+                            <field name="name" readonly="1" class="oe_edit_only"/>
+                            (<field name="login" readonly="1" class="oe_edit_only"/>)
                         </h1>
-                        <label for="company_id" class="oe_form_readonly_hidden"/>
+                        <label for="company_id" class="oe_edit_only"/>
                         <h2>
                             <field name="company_id" widget="selection" readonly="0"
                                 groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
@@ -215,6 +218,7 @@
                         <field name="user_email" widget="email" readonly="0"/>
                         <field name="signature" readonly="0"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
