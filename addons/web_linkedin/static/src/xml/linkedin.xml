@@ -35,25 +35,25 @@
 <t t-name="Register.Linkedin" style="height:300px;overflow:auto;">
     <div>
         <div>
-            <p>Go to...
+            <p>1) Go to : 
                 <a href="https://www.linkedin.com/secure/developer" class="oe_secondary_menu_section" target="_blank">
                     https://www.linkedin.com/secure/developer
                 </a>
             </p>
-            <p>Log you in Linkedin if you did not yet</p>
-            <p>Add a new Application</p>
-            <p>Fill in the form</p>
+            <p>2) Log you in Linkedin if you did not yet</p>
+            <p>3) Add a New Application</p>
+            <p>4) Fill in the Form</p>
         </div>
         <div>
-            <img src='/web_linkedin/static/src/img/help_to_fill_form.png' height="500" width="800" border="2"/>
+            <img src='/web_linkedin/static/src/img/help_to_fill_form.png' height="500" width="800" border="1" style="margin-left:15px;"/>
         </div>
         <div>
-            <p>Copy the API Key:
-                <input type="text" id="apikey"/><button id="register" class="oe_form_button_save_dirty" onclick="">Apply</button>
+            <p>5) Copy the API Key:
+                <input type="text" id="apikey"/><button id="register" class="oe_form_button_save_dirty" >Apply</button>
             </p>
         </div>
         <div>
-            <img src='/web_linkedin/static/src/img/apikey.png' height="300" width="500" border="2"/>
+            <img src='/web_linkedin/static/src/img/apikey.png' width="800" border="1" style="margin-left:15px;"/>
         </div>
     </div>
 </t>
@@ -69,14 +69,14 @@
     <div>Record Not Found.</div>
 </t>
 <t t-name="Linkedincontact">
-    <div id="searchresults" class="openerp" style="-webkit-margin-start:-70px; -moz-margin-start:-70px; z-index:2000; position:absolute;">
+    <div id="searchresults" class="openerp">
     <div class="search-box" >
     <table>
         <t t-if="result and result.people._total>0">
         <tr id="searchresultscontact">
             <td width="70px;">
                 <span>
-                    <label style="font-size:12px;"><b>Persons</b></label>
+                    <label class="lbl-ldnbox"><b>Persons</b></label>
                 </span>
                 <br/>
             </td>
@@ -118,7 +118,7 @@
       <tr id="searchresultscompany">
         <td width="70px;">
             <span>
-            <label style="font-size:12px;"><b>Companies</b></label>
+            <label class="lbl-ldnbox"><b>Companies</b></label>
             </span>
             <br/>
         </td>
