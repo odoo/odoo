@@ -133,6 +133,11 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
+                        <separator orientation="vertical"/>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
                        <filter icon="gtk-media-pause" string="Template"
@@ -446,6 +451,8 @@
                     <field name="kanban_state"/>
                     <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
+                    <field name="message_summary"/>
+                    <field name="needaction_pending"/>
                     <templates>
                         <t t-name="task_details">
                             <ul class="oe_kanban_tooltip" t-if="record.project_id.raw_value">
@@ -591,6 +598,11 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <group>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
+                        <separator orientation="vertical"/>
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>

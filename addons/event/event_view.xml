@@ -264,6 +264,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
+                    <filter icon="terp-mail-message-new"
+                        string="Inbox" help="Unread messages"
+                        name="needaction_pending"
+                        domain="[('needaction_pending','=',True)]"/>
+                    <separator orientation="vertical"/>
                     <group>
                         <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
@@ -448,6 +453,11 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
