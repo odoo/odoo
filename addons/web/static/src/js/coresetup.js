@@ -224,6 +224,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }
             return loaded.then(function() {
                 self.on_modules_loaded();
+                self.trigger('module_loaded');
                 if (!no_session_valid_signal) {
                     self.on_session_valid();
                 }
@@ -477,64 +478,6 @@ instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance
     }
 });
 
-/** Configure default qweb */
-instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
-/**
- * Lazy translation function, only performs the translation when actually
- * printed (e.g. inserted into a template)
- *
- * Useful when defining translatable strings in code evaluated before the
- * translation database is loaded, as class attributes or at the top-level of
- * an OpenERP Web module
- *
- * @param {String} s string to translate
- * @returns {Object} lazy translation object
- */
-instance.web._lt = function (s) {
-    return {toString: function () { return instance.web._t(s); }}
-};
-instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
-instance.web.qweb.default_dict = {
-    '_' : _,
-    '_t' : instance.web._t
-};
-instance.web.qweb.preprocess_node = function() {
-    // Note that 'this' is the Qweb Node
-    switch (this.node.nodeType) {
-        case 3:
-        case 4:
-            // Text and CDATAs
-            var translation = this.node.parentNode.attributes['t-translation'];
-            if (translation && translation.value === 'off') {
-                return;
-            }
-            var ts = _.str.trim(this.node.data);
-            if (ts.length === 0) {
-                return;
-            }
-            var tr = instance.web._t(ts);
-            if (tr !== ts) {
-                this.node.data = tr;
-            }
-            break;
-        case 1:
-            // Element
-            var attr, attrs = ['label', 'title', 'alt'];
-            while (attr = attrs.pop()) {
-                if (this.attributes[attr]) {
-                    this.attributes[attr] = instance.web._t(this.attributes[attr]);
-                }
-            }
-    }
-};
-
-/** Configure blockui */
-if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
-}
-
 /** Custom jQuery plugins */
 $.fn.getAttributes = function() {
     var o = {};
@@ -563,10 +506,6 @@ $.Mutex = (function() {
     };
     return Mutex;
 })();
-
-/** Setup default session */
-instance.connection = new instance.web.Session();
-instance.web.qweb.default_dict['__debug__'] = instance.connection.debug;
 
 $.async_when = function() {
     var async = false;
@@ -603,6 +542,79 @@ $.async_when = function() {
 		return old_async_when.apply(this, arguments);
 };
 
+/** Setup blockui */
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+}
+
+/** Setup default session */
+instance.connection = new instance.web.Session();
+
+/** Configure default qweb */
+instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
+/**
+ * Lazy translation function, only performs the translation when actually
+ * printed (e.g. inserted into a template)
+ *
+ * Useful when defining translatable strings in code evaluated before the
+ * translation database is loaded, as class attributes or at the top-level of
+ * an OpenERP Web module
+ *
+ * @param {String} s string to translate
+ * @returns {Object} lazy translation object
+ */
+instance.web._lt = function (s) {
+    return {toString: function () { return instance.web._t(s); }}
+};
+instance.web.qweb = new QWeb2.Engine();
+instance.web.qweb.default_dict['__debug__'] = instance.connection.debug; // Which one ?
+instance.web.qweb.debug = instance.connection.debug;
+instance.web.qweb.default_dict = {
+    '_' : _,
+    '_t' : instance.web._t
+};
+instance.web.qweb.preprocess_node = function() {
+    // Note that 'this' is the Qweb Node
+    switch (this.node.nodeType) {
+        case 3:
+        case 4:
+            // Text and CDATAs
+            var translation = this.node.parentNode.attributes['t-translation'];
+            if (translation && translation.value === 'off') {
+                return;
+            }
+            var ts = _.str.trim(this.node.data);
+            if (ts.length === 0) {
+                return;
+            }
+            var tr = instance.web._t(ts);
+            if (tr !== ts) {
+                this.node.data = tr;
+            }
+            break;
+        case 1:
+            // Element
+            var attr, attrs = ['label', 'title', 'alt'];
+            while (attr = attrs.pop()) {
+                if (this.attributes[attr]) {
+                    this.attributes[attr] = instance.web._t(this.attributes[attr]);
+                }
+            }
+    }
+};
+
+/** Setup jQuery timeago */
+var timeago_setup = function () {
+    var s = $.timeago.settings.strings;
+    _.each(s, function(v,k) {
+        if(_.isString(v)) {
+            s[k] = instance.web._t(v);
+        }
+    });
+}
+instance.connection.on('module_loaded', this, timeago_setup);
+
 /**
  * Registry for all the client actions key: tag value: widget
  */
@@ -612,8 +624,6 @@ instance.web.client_actions = new instance.web.Registry();
  * Client action to reload the whole interface.
  * If params has an entry 'menu_id', it opens the given menu entry.
  */
-instance.web.client_actions.add("reload", "instance.web.Reload");
-
 instance.web.Reload = instance.web.Widget.extend({
     init: function(parent, params) {
         this._super(parent);
@@ -634,6 +644,7 @@ instance.web.Reload = instance.web.Widget.extend({
         window.location = url;
     }
 });
+instance.web.client_actions.add("reload", "instance.web.Reload");
 
 };
 
