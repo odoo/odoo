@@ -40,6 +40,9 @@ class purchase_config_settings(osv.osv_memory):
         'group_uom':fields.boolean("Manage Different Units of Measure for Products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
+        'group_purchase_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
+            implied_group='purchase.group_delivery_invoice_address',
+            help="Allows you to specify different delivery and invoice addresses on a purchase order."),
         'module_purchase_analytic_plans': fields.boolean('Use Multiple Analytic Accounts on Purchases',
             help ="""Allows the user to maintain several analysis plans. These let you split
                 lines on a purchase order between several accounts and analytic plans.

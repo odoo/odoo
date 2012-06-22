@@ -49,7 +49,6 @@ class account_config_settings(osv.osv_memory):
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
         'code_digits': fields.integer('# of Digits', help="No. of Digits to use for account code"),
-        'seq_journal': fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
         'sale_tax': fields.many2one("account.tax.template", "Default Sale Tax"),
         'purchase_tax': fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sales Tax (%)'),
@@ -128,7 +127,6 @@ class account_config_settings(osv.osv_memory):
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
-        'seq_journal': True,
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
@@ -237,7 +235,6 @@ class account_config_settings(osv.osv_memory):
                 'company_id': config.company_id.id,
                 'chart_template_id': config.chart_template_id.id,
                 'code_digits': config.code_digits or 6,
-                'seq_journal': config.seq_journal,
                 'sale_tax': config.sale_tax.id,
                 'purchase_tax': config.purchase_tax.id,
                 'sale_tax_rate': config.sale_tax_rate,
