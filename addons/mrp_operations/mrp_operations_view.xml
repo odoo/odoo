@@ -80,7 +80,7 @@
             <sheet string="Work Orders">
                 <group col="4">
                     <field colspan="4" name="name"/>
-                    <field name="workcenter_id" widget="selection"/>
+                    <field name="workcenter_id"/>
                     <field name="production_id"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
@@ -350,7 +350,7 @@
         <field name="model">mrp.production</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <field name="priority" position="after">
+            <field name="date_finished" position="after">
                 <field name="allow_reorder"/>
             </field>
         </field>

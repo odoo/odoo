@@ -472,9 +472,9 @@ class mrp_production(osv.osv):
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-        'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
+        'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
             help="This is the Internal Picking List that brings the finished product to the production plan"),
-        'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
+        'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
         'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
         'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
@@ -1112,9 +1112,9 @@ class mrp_production_product_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'product_uos_qty': fields.float('Product UOS Qty'),
+        'product_uos_qty': fields.float('Product UOS Quantity'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }
