@@ -1814,15 +1814,20 @@ class Reports(View):
             report = zlib.decompress(report)
         report_mimetype = self.TYPES_MAPPING.get(
             report_struct['format'], 'octet-stream')
+        file_name = None
         if 'name' not in action:
             reports = req.session.model('ir.actions.report.xml')
-            res_id = reports.search([('report_name', '=',action['report_name']),],
+            res_id = reports.search([('report_name', '=', action['report_name']),],
                                     0, False, False, context)
-            action['name'] = reports.read(res_id, ['name'], context)[0]['name']
+            if len(res_id) > 0:
+                file_name = reports.read(res_id[0], ['name'], context)['name']
+            else:
+                file_name = action['report_name']
 
         return req.make_response(report,
              headers=[
-                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['name'], report_struct['format'])),
+                 # maybe we should take of what characters can appear in a file name?
+                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (file_name, report_struct['format'])),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})
