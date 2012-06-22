@@ -33,6 +33,7 @@
                         <field name="expects_chart_of_accounts"/>
                     </group>
 
+                    <div style="background-color: #FFCCAA; padding: 0px 5px;">
                     <group string="Select a Chart of Accounts to Install"
                         attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
                         <group>
@@ -49,7 +50,9 @@
                         <button string="Install More Chart Templates" icon="gtk-go-forward"
                             name="%(open_account_charts_modules)d" type="action"/>
                     </group>
+                    </div>
 
+                    <div style="background-color: #FFCCAA; padding: 0px 5px;">
                     <group string="No Fiscal Year Defined for This Company"
                         attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
                         <label for="date_start" string="Date Range"/>
@@ -59,6 +62,7 @@
                         </div>
                         <field name="period"/>
                     </group>
+                    </div>
 
                     <group string="Accounting Configuration">
                         <group>
