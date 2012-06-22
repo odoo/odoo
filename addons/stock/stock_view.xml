@@ -78,7 +78,7 @@
             <field name="arch" type="xml">
                 <search string="Search Inventory">
                     <group>
-                        <field name="name" string="Inventory Reference" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Inventory Reference"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <separator orientation="vertical"/>
@@ -288,6 +288,7 @@
                         <field name="name" string="Pack" filter_domain="['|',('name','ilike',self),('serial','ilike',self)]"/>
                         <separator orientation="vertical"/>
                         <field name="date" />
+                        <separator orientation="vertical"/>
                         <field name="active"/>
                     </group>
                 </search>
@@ -554,7 +555,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Locations">
-                    <field name="name" string="Stock Locations" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Stock Locations"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="in_location"
                         string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations" />
@@ -1291,8 +1292,8 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group>
-                        <field name="origin" string="Stock Moves" filter_domain="[('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
+                        <field name="origin" string="Stock Moves"/>
+                        <separator orientation="vertical" groups="base.group_no_one"/>
                         <field name="date" groups="base.group_no_one"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
@@ -1478,7 +1479,7 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group>
-                        <field name="origin" string="Stock Moves" filter_domain="[('origin','ilike',self)]"/>
+                        <field name="origin" string="Stock Moves"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
@@ -1509,7 +1510,7 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group>
-                        <field name="origin" string="Stock Moves" filter_domain="[('origin','ilike',self)]"/>
+                        <field name="origin" string="Stock Moves"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
@@ -1704,7 +1705,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Journal">
-                    <field name="name" string="Stock Journal" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Stock Journal"/>
                     <separator orientation="vertical"/>
                     <field name="user_id"/>
                 </search>

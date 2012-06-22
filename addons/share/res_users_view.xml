@@ -30,7 +30,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Groups">
-                    <field name="name" filter_domain="[('name','ilike',self)]" string="Group"/>
+                    <field name="name" string="Group"/>
                     <separator orientation="vertical"/>
                     <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner"
                         domain="[('share','=',False)]"/>

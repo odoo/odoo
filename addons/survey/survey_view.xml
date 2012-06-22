@@ -258,7 +258,7 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
-                        <field name="title" string="Survey" filter_domain="[('title','ilike',self)]"/>
+                        <field name="title" string="Survey"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
@@ -473,7 +473,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey Page">
-                    <field name="title" string="Page" filter_domain="[('title','ilike',self)]"/>
+                    <field name="title" string="Page"/>
                     <separator orientation="vertical"/>
                     <field name="survey_id"/>
                     <newline/>
@@ -679,7 +679,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Question">
-                    <field name="question" string="Question" filter_domain="[('question','ilike',self)]"/>
+                    <field name="question" string="Question"/>
                     <separator orientation="vertical"/>
                     <field name="page_id"/>
                     <field name="survey" widget="selection"/>
@@ -1102,7 +1102,7 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
-                        <field name="email" string="Survey" filter_domain="[('email','ilike',self)]"/>
+                        <field name="email" string="Survey"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
                         <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
