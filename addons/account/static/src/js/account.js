@@ -3,6 +3,7 @@ var _t = instance.web._t,
    _lt = instance.web._lt;
 instance.web.views.add('form_clone', 'instance.account.extend_form_view');
 instance.web.form.tags.add('list_button','instance.account.list_button')
+instance.web.form.widgets.add('many2one_pager','instance.account.many2one_pager')
 instance.account.extend_actionmanager = instance.web.ActionManager.include({
     ir_actions_act_window: function (action, on_close) {
         var self = this;
@@ -84,6 +85,19 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         this._super.apply(this,arguments);
         this.original_domain = this.getParent().action.domain;
     },
+    on_loaded: function(data) {
+         this._super.apply(this,arguments);
+         var self = this
+         this.$element.on('click','a[data-pager-action]',function() {
+            var action = $(this).data('pager-action');
+            self.on_pager_action(action);
+        });
+    },
+    do_update_pager: function(hide_index) {
+        var index = hide_index ? '-' : this.dataset.index + 1;
+        this.$element.find('span.oe_pager_index_extend').html(index).end()
+                   .find('span.oe_pager_count_extend').html(this.dataset.ids.length);
+    },
     on_pager_action: function(action) {
         var self = this
         var viewmanager = self.getParent();
@@ -95,6 +109,32 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         })
     }
 })
+instance.account.many2one_pager = instance.web.form.FieldMany2One.extend({
+    template: "FieldMany2One_Pager",
+    display_string: function(str) {
+        var self = this;
+        if (!this.get("effective_readonly")) {
+            this.$input.val(str);
+        } else {
+            this.$element.find('a.oe_form_uri')
+                 .unbind('click')
+                 .text(str)
+                 .click(function () {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: self.field.relation,
+                        res_id: self.get("value"),
+                        context: self.build_context(),
+                        views: [[false, 'form']],
+                        target: 'current'
+                    });
+                    return false;
+                 });
+        }
+    },
+})
+
+
 instance.account.list_button = instance.web.form.WidgetButton.extend({
     on_click: function() {
         var list_view = this.view.getParent().list_view.controller
