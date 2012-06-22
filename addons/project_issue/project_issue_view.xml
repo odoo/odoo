@@ -90,7 +90,6 @@
                             <field name="version_id" widget="selection"/>
                             <field name="priority"/>
                             <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
-                            <field name="state" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <field name="description" placeholder="Add a description..." />
@@ -110,6 +109,10 @@
                                 <separator string="References" colspan="4"/>
                                 <field name="id"/>
                                 <field name="active"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <separator string="State" colspan="4"/>
+                                <field name="state" groups="base.group_no_one"/>
                             </group>
                         </page>
                     </notebook>
