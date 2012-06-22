@@ -35,6 +35,7 @@ res_widget()
 
 class res_widget_user(osv.osv):
     _name="res.widget.user"
+    _rec_name="user_id"
     _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence'),

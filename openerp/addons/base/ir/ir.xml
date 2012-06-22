@@ -1068,18 +1068,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="External Identifiers" version="7.0">
-                  <sheet>
-                    <group col="4">
-                        <field name="name"/>
+                  <group>
+                    <group>
+                        <field name="complete_name"/>
                         <field name="module"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="display_name"/>
                         <field name="model"/>
                         <field name="res_id"/>
+                    </group>
+                    <group>
                         <field name="noupdate"/>
-                        <newline/>
                         <field name="date_update" />
                         <field name="date_init" />
                     </group>
-                   </sheet> 
+                  </group>
                 </form>
             </field>
         </record>
@@ -1090,10 +1095,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="External Identifiers">
-                    <field name="module"/>
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="res_id"/>
+                    <field name="complete_name"/>
+                    <field name="display_name"/>
+                    <field name="model" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
