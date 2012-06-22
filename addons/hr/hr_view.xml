@@ -52,7 +52,6 @@
                                     <group string="Linked User">
                                         <field name="parent_id" />
                                         <field name="coach_id"/>
-                                        
                                     </group>
                                     <group>
                                         <field name="identification_id" groups="base.group_hr_user"/>
@@ -64,6 +63,7 @@
                                     <field name="user_id" on_change="onchange_user(user_id)"/>
                                 </group> -->
                                 </group>
+                                <separator string="Notes"/>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
                             <page string="Personal Information" groups="base.group_hr_user">
