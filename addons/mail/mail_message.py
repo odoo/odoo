@@ -518,12 +518,13 @@ class mail_message(osv.osv):
                                                 context=context)
                 if res:
                     message.write({'state':'sent', 'message_id': res})
+                    message_sent = True
                 else:
                     message.write({'state':'exception'})
+                    message_sent = False
 
                 # if auto_delete=True then delete that sent messages as well as attachments
-                message.refresh()
-                if message.state == 'sent' and message.auto_delete:
+                if message_sent and message.auto_delete:
                     self.pool.get('ir.attachment').unlink(cr, uid,
                                                           [x.id for x in message.attachment_ids \
                                                                 if x.res_model == self._name and \
