@@ -94,16 +94,40 @@ class account_analytic_account(osv.osv):
         return res
 
     def set_close(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'close'}, context=context)
+        self.write(cr, uid, ids, {'state':'close'}, context=context)
+        self.set_close_send_note(cr, uid, ids, context)
+        return True
 
     def set_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        self.set_cancel_send_note(cr, uid, ids, context)
+        return True
 
     def set_open(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.set_open_send_note(cr, uid, ids, context)
+        return True
 
     def set_pending(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.set_pending_send_note(cr, uid, ids, context)
+        return True
+    
+    def set_open_send_note(self, cr, uid, ids, context=None):
+        message = _("Contract has been <b>opened</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+    def set_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Contract has been <b>closed</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+    def set_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Contract has been <b>cancelled</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_pending_send_note(self, cr, uid, ids, context=None):
+        message = _("Contract has been <b>pending</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 account_analytic_account()
 

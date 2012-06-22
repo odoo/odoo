@@ -272,7 +272,20 @@ class account_analytic_account(osv.osv):
         else:
             account = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account, context=context)
-
+    
+    def create(self, cr, uid, vals, context=None):
+        contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        if contract:
+            self.create_send_note(cr, uid, [contract], context=context)
+        return contract
+    # ------------------------------------------------
+    # OpenChatter methods and notifications
+    # ------------------------------------------------
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+            
 account_analytic_account()
 
 
