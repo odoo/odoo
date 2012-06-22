@@ -24,6 +24,7 @@ from lxml import etree
 from tools import graph
 from tools.safe_eval import safe_eval as eval
 import tools
+from tools.view_validation import valid_view
 import os
 import logging
 
@@ -53,14 +54,11 @@ class view(osv.osv):
         result = dict((r.id, etree.fromstring(r.arch.encode('utf8')).tag) for r in records)
         return result
 
-    def _set_type_field(self, cr, uid, ids, name, value, args, context=None):
-        print "ignoring", value
-
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
-        'type': fields.function(_type_field, fnct_inv=_set_type_field, type='selection', selection=[
+        'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),
             ('form','Form'),
             ('mdx','mdx'),
@@ -84,6 +82,11 @@ class view(osv.osv):
 
     # Holds the RNG schema
     _relaxng_validator = None  
+
+    def create(self, cr, uid, values, context=None):
+        if 'type' in values:
+            _logger.warning("Setting the `type` field is deprecated in the `ir.ui.view` model.")
+        return super(osv.osv, self).create(cr, uid, values, context)
 
     def _relaxng(self):
         if not self._relaxng_validator:
@@ -131,6 +134,8 @@ class view(osv.osv):
                 if (view_arch.get('version') < '7.0') and validator and not validator.validate(view_arch):
                     for error in validator.error_log:
                         _logger.error(tools.ustr(error))
+                    return False
+                if not valid_view(view_arch):
                     return False
         return True
 
