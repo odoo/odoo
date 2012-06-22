@@ -83,5 +83,3 @@ class mail_alias(osv.Model):
             values.update({'alias_name': prob_alias})
             return values
         
-        
-        
