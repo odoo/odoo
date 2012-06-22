@@ -3039,14 +3039,14 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.dataset.child_name = this.options.child_name;
         this.setup_form_view();
     },
-    on_write: function(id, data) {
+    on_write: function(id, data, options) {
         if (!this.options.auto_write)
             return;
         var self = this;
         var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.child_name = this.options.child_name;
-        wdataset.write(id, data, {}, function(r) {
+        wdataset.write(id, data, options, function(r) {
             self.on_write_completed();
         });
     },
