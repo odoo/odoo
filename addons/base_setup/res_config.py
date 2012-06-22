@@ -40,7 +40,7 @@ class base_config_settings(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'name': 'Your Company',
             'view_type': 'form',
-            'view_mode': 'form,tree',
+            'view_mode': 'form',
             'res_model': 'res.company',
             'res_id': user.company_id.id,
          }
