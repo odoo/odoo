@@ -8,7 +8,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Dashboard">
-                <field name="name"/>
+                <field name="name" filter_domain="[('name','ilike',self)]" string="Dashboard"/>
                 <field name="line_ids"/>
             </search>
         </field>

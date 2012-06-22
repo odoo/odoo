@@ -70,8 +70,7 @@
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <xpath expr='//filter[@string="Member"]' position='after'>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test" string="Billable" domain="[('to_invoice','!=', False)]" help="Billable Project"/>
+                   <filter icon="terp-camera_test" string="Billable" domain="[('to_invoice','!=', False)]" help="Billable Project"/>
                 </xpath>
             </field>
         </record>
@@ -81,9 +80,9 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                     <field name="account_id" position="replace">
-                    <field name="account_id" string="Analytic account/project" />
-                </field>
+                 <field name="account_id" position="replace">
+                 <field name="account_id" string="Analytic account/project" />
+                 </field>
             </field>
          </record>
         <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">

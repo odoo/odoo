@@ -26,17 +26,7 @@
         <field name="arch" type="xml">
             <search string="Lunch Order Analysis">
                 <group>
-                    <filter icon="terp-go-year" string="  365 Days  "
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in last 365 days"/>
-                    <filter icon="terp-go-month" string="   30 Days   "
-                        name="month"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in last 30 days"/>
-                    <filter icon="terp-go-week"
-                         string="    7 Days    "
-                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                         help="Tasks during last 7 days"/>
+                    <field name="date"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">

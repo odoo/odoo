@@ -265,21 +265,21 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group>
+                        <field name="name" string="Events" filter_domain="[('name','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Upcoming"
-                                name="upcoming"
-                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                                help="Upcoming events from today" />
-                        <field name="name"/>
-                        <field name="type" widget="selection"/>
-                        <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                               string="My Events"
                                 help="My Events"
                               domain="[('user_id','=',uid)]"/>
-                        </field>
+                        <filter icon="terp-go-today" string="Upcoming"
+                                name="upcoming"
+                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                                help="Upcoming events from today" />
+                        <separator orientation="vertical"/>
+                        <field name="type" widget="selection"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -337,6 +337,7 @@
             <field name="arch" type="xml">
                 <tree string="Registration" >
                     <field name="create_date"/>
+                    <field name="partner_id"/>
                     <field name="name"/>
                     <field name="email"/>
                     <field name="event_id" />
@@ -448,19 +449,18 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group>
+                        <field name="name" string="Participant"
+                            filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
-                        <separator orientation="vertical"/>
-                        <field name="event_id" widget="selection"/>
-                        <field name="name" string="Participant"
-                            filter_domain="['|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
-                        <field name="user_id">
                         <filter icon="terp-personal"
                               string="My Registrations"
                                 help="My Registrations"
                               domain="[('user_id','=',uid)]"/>
-                        </field>
-                        <field name="origin"/>
+                        <separator orientation="vertical"/>
+                        <field name="event_id" widget="selection"/>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
