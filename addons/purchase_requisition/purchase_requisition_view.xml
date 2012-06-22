@@ -124,7 +124,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group>
-                    <field name="name" string="Purchase Requisition" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Purchase Requisition"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>

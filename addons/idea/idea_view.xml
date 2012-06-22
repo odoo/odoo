@@ -8,8 +8,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas Categories">
-                <field name="name" string="Category" filter_domain="[('name','ilike',self)]"/>
-                <field name="name"/>
+                <field name="name" string="Category"/>
             </search>
         </field>
     </record>
@@ -109,7 +108,7 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group>
-                    <field name="name" string="Idea" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Idea"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>

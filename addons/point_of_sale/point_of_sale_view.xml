@@ -138,7 +138,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <field name="name" filter_domain="[('name','ilike',self)]" string="Sales Order"/>
+                    <field name="name" string="Sales Order"/>
                     <field name="date_order"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>

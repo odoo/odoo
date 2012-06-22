@@ -111,7 +111,7 @@
         <field name="priority">50</field>
         <field name="arch" type="xml">
            <search string="My Tasks">
-                <field name="name" string="My Tasks" filter_domain="[('name','ilike',self)]"/>
+                <field name="name" string="My Tasks"/>
                 <separator orientation="vertical"/>
                 <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
                 <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>

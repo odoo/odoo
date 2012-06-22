@@ -191,7 +191,7 @@
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
                   <group>
-                       <field name="name" string="Reair Orders" filter_domain="[('name','ilike',self)]"/>
+                       <field name="name" string="Reair Orders"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
                        <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />

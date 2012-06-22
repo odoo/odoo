@@ -10,7 +10,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Version">
-                    <field name="name" string="Issue Version" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Issue Version"/>
+                    <separator orientation="vertical"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -306,7 +307,7 @@
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
                     <group>
-                        <field name="name" string="Feature description" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Feature description"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <separator orientation="vertical"/>

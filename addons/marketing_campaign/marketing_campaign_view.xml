@@ -87,7 +87,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Campaigns">
-                <field name="name" filter_domain="[('name','ilike',self)]" string="Campaign"/>
+                <field name="name" string="Campaign"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
                 <filter icon="terp-check" string="Running" domain="[('state','=','running')]"/>
@@ -192,7 +192,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Segments">
-                <field name="name" filter_domain="[('name','ilike',self)]" string="Segment"/>
+                <field name="name" string="Segment"/>
                 <field name="date_run"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
@@ -391,7 +391,7 @@
         <field name="arch" type="xml">
             <search string="Marketing Campaign Activities">
                 <group>
-                    <field name="res_name" filter_domain="[('name','ilike',self)]" string="Marketing Campaign Activity"/>
+                    <field name="res_name" string="Marketing Campaign Activity"/>
                     <separator orientation="vertical"/>
                     <field name="date"/>
                     <separator orientation="vertical"/>

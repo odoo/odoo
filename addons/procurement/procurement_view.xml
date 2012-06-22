@@ -106,7 +106,7 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group>
-                       <field name="origin" string="Procurement" filter_domain="[('origin','ilike',self)]"/>
+                       <field name="origin" string="Procurement"/>
                        <separator orientation="vertical"/>
                        <field name="date_planned"/>
                        <separator orientation="vertical"/>
@@ -187,7 +187,7 @@
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
                     <group>
-                        <field name="name" string="Reordering Rules" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Reordering Rules"/>
                         <separator orientation="vertical"/>
                         <field name="warehouse_id" widget="selection"/>
                         <field name="location_id" groups="stock.group_locations"/>
