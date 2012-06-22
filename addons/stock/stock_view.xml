@@ -119,20 +119,13 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
-                        <div class="oe_edit_only">
-                            <label for="name"  /> 
-                        </div>
-                        <h1>
-                            <field name="name" placeholder="Annual inventory"/>
-                        </h1>
-                    </div>
-                <group>
-                    <group>
-                        <field name="date"/>
+                    <h1>
+                        <field name="name" placeholder="Annual inventory" class="oe_inline"/>
+                        <field name="date" class="oe_inline"/>
+                    </h1>
+                    <div>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                </group>
+                    </div>
                     <notebook>
                     <page string="General Informations">
                         <field name="inventory_line_id">
@@ -160,7 +153,8 @@
                                 </group>
                             </form>
                         </field>
-                    </page><page string="Posted Inventory">
+                    </page>
+                    <page string="Posted Inventory">
                          <field name="move_ids" context="{'inventory_id':active_id}" >
                             <tree string="Stock Moves">
                                 <field name="product_id"/>
@@ -334,7 +328,9 @@
                             <field name="prefix"/>
                             <field name="name"/>
                             <field name="ref"/>
-                            <field name="date"/>
+                            <group string="Dates">
+                                <field name="date"/>
+                            </group>
                         </group>
                         <group string="Traceability">
                             <field name="stock_available"/>
@@ -730,7 +726,7 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
-                        <span attr="{'invisible': [('origin','=',False)]}"></span>
+                        <label string="-" attrs="{'invisible':[('origin','=',False)]}"/> 
                         <field name="origin" placeholder="PO0032" class="oe_inline"/>
                     </h1>
                     <label for="partner_id" class="oe_edit_only"/>
