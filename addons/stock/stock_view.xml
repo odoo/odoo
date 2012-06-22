@@ -740,7 +740,7 @@
                     <group>
                         <group>
                             <field name="backorder_id" readonly="1"/>
-                            <field name="invoice_state" string="Invoice Control"/>
+                            <field name="invoice_state" string="Invoice Control" groups="account.group_account_invoice"/>
                             <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
                         </group>
                         <group>
@@ -817,7 +817,7 @@
 
                                         <group string="Locations" groups="stock.group_locations">
                                             <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                                            <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
                                         </group>
 
                                         <group groups="stock.group_tracking_lot" string="Traceability">
@@ -1061,8 +1061,8 @@
                     <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
-                    <field name="invoice_state"/>
-                    <field name="stock_journal_id" widget="selection"/>
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                    <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1454,7 +1454,7 @@
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         <field name="location_id" groups="stock.group_locations"/>
                         <field name="location_dest_id" groups="stock.group_locations"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" groups="stock.group_locations"/>
                     </group>
                     <group>
                         <label for="tracking_id"/>
