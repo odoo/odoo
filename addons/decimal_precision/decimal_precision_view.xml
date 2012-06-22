@@ -6,9 +6,11 @@
             <field name="name">Decimal Precision</field>
             <field name="model">decimal.precision</field>
             <field name="arch" type="xml">
-                <form string="Decimal Precision">
-                    <field name="name" select="1"/>
-                    <field name="digits"/>
+                <form string="Decimal Precision" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="digits"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -18,7 +20,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Decimal Precision">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="digits"/>
                 </tree>
             </field>

@@ -56,7 +56,6 @@ re-invoice your customer's expenses if your work by project.
         'security/ir_rule.xml',
         'report/hr_expense_report_view.xml',
         'board_hr_expense_view.xml',
-        'board_hr_expense_manager_view.xml',
         'hr_expense_installer_view.xml',
     ],
     'demo_xml': [

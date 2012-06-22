@@ -8,9 +8,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="amount_total" position="after">
-                <field name="margin" groups="base.group_user"/>
-            </field>
+            <xpath expr="//group[@name='sale_total']" position="inside">
+                <field name="margin"/>
+            </xpath>
         </field>
     </record>
 

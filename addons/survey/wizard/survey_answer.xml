@@ -1,42 +1,40 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
 
-		<!--
-			Survey Question Wizard
-		 -->
+        <!--
+            Survey Question Wizard
+         -->
+        <record id="view_survey_question_message" model="ir.ui.view">
+            <field name="name">Answer Survey</field>
+            <field name="model">survey.question.wiz</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Your Messages"  version="7.0">
+                    <field name="name" nolabel="1" colspan="4" />
+                </form>
+            </field>
+        </record>
 
-		<record id="view_survey_question_message" model="ir.ui.view">
-			<field name="name">Survey Question</field>
-			<field name="model">survey.question.wiz</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Your Messages">
-					<field name="name" nolabel="1" colspan="4" />
-				</form>
-			</field>
-		</record>
+        <record id="view_survey_question_message1" model="ir.ui.view">
+            <field name="name">Survey Search</field>
+            <field name="model">survey.question.wiz</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Your Messages">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
 
-		<record id="view_survey_question_message1" model="ir.ui.view">
-			<field name="name">Survey Search</field>
-			<field name="model">survey.question.wiz</field>
-			<field name="type">search</field>
-			<field name="arch" type="xml">
-				<search string="Your Messages">
-					<field name="name"/>
-				</search>
-			</field>
-		</record>
+        <record id="action_view_survey_question_message" model="ir.actions.act_window">
+            <field name="name">Answer Survey</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">survey.question.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-		<record id="action_view_survey_question_message" model="ir.actions.act_window">
-			<field name="name">Survey Question</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">survey.question.wiz</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>
-
-
-	</data>
+    </data>
 </openerp>
