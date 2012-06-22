@@ -25,7 +25,7 @@ import authorizer
 import abstracted_fs
 import logging
 from tools import config
-
+_logger = logging.getLogger(__name__)
 def start_server():
     HOST = config.get('ftp_server_host', '127.0.0.1')
     PORT = int(config.get('ftp_server_port', '8021'))
@@ -35,7 +35,7 @@ def start_server():
         PASSIVE_PORTS = int(pps[0]), int(pps[1])
 
     class ftp_server(threading.Thread):
-
+        
         def run(self):
             autho = authorizer.authorizer()
             ftpserver.FTPHandler.authorizer = autho
@@ -45,17 +45,17 @@ def start_server():
             if PASSIVE_PORTS:
                 ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
 
-            ftpserver.log = lambda msg: logging.getLogger('document.ftp').info(msg)
+            ftpserver.log = lambda msg: _logger.info(msg)
             ftpserver.logline = lambda msg: None
-            ftpserver.logerror = lambda msg: logging.getLogger('document.ftp').error(msg)
+            ftpserver.logerror = lambda msg: self.logger.error(msg)
 
             ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
             ftpd.serve_forever()
 
     if HOST.lower() == 'none':
-        logging.getLogger('document.ftp').info("\n Server FTP Not Started\n")
+        _logger.info("\n Server FTP Not Started\n")
     else:
-        logging.getLogger('document.ftp').info("\n Serving FTP on %s:%s\n" % (HOST, PORT))
+        _logger.info("\n Serving FTP on %s:%s\n" % (HOST, PORT))
         ds = ftp_server()
         ds.daemon = True
         ds.start()
