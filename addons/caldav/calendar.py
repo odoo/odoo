@@ -34,6 +34,7 @@ import logging
 from caldav_node import res_node_calendar
 from orm_utils import get_last_modified
 from tools.safe_eval import safe_eval as eval
+_logger = logging.getLogger(__name__)
 
 try:
     import vobject
@@ -240,7 +241,6 @@ def map_data(cr, uid, obj, context=None):
 
 class CalDAV(object):
     __attribute__ = {}
-    _logger = logging.getLogger('document.caldav')
 
     def ical_set(self, name, value, type):
         """ set calendar Attribute
