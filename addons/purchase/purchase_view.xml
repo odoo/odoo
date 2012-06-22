@@ -166,9 +166,8 @@
                     <notebook>
                         <page string="Purchase Order">
                             <field name="order_line">
-                            	
                                 <tree string="Purchase Order Lines">
-                                	<field name="date_planned"/>
+                                    <field name="date_planned"/>
                                     <field name="name"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" groups="product.group_uom"/>
@@ -176,13 +175,13 @@
                                     <field name="price_subtotal"/>  
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer" col="4">
+                            <group class="oe_subtotal_footer">
                                 <field name="amount_untaxed"/>
-                                <newline/>
                                 <field name="amount_tax"/>
-                                <newline/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" colspan="2"/>
-                                <field name="amount_total" class="oe_subtotal_footer_separator" colspan="2"/>
+                                <div class="oe_subtotal_footer_separator oe_inline" colspan="2">
+                                    <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline"/>
+                                    <field name="amount_total"/>
+                                </div>
                             </group>
                             <div class="oe_clear"/>
                             <label for="notes"/>
