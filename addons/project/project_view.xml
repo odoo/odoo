@@ -389,15 +389,16 @@
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
-                            <group class="oe_form_subtotal_footer" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                            <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
                                 <field name="effective_hours" widget="float_time"/>
                                 <label for="remaining_hours" string="Remaining" groups="project.group_time_work_estimation_tasks"/>
                                 <div>
                                     <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" target="new" states="open,pending" icon="gtk-edit"/>
                                     <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" groups="project.group_time_work_estimation_tasks"/>
                                 </div>
-                                <field name="total_hours" widget="float_time" class="oe_form_subtotal_footer_separator"/>
+                                <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <div class="oe_clear"/>
                         </page>
                         <page string="Delegations History" groups="project.group_delegate_task">
                             <separator string="Parent Tasks"/>
