@@ -14,12 +14,12 @@
             <field name="model">hr.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string ="Configure Human Resources" layout="manual">
-                    <div class="oe_form_topbar">
+                <form string="Configure Human Resources" version="7.0">
+                    <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
-                    </div>
-                    <sheet layout="auto">
+                    </header>
+                    <group col="4">
                         <separator string="Additional Features" colspan="4"/>
                         <field name="module_hr_expense"/>
                         <field name="module_hr_recruitment"/>
@@ -37,7 +37,7 @@
                         <field name="module_hr_timesheet_sheet"/>
 
                         <group name="config_recruitment" colspan="4"/>
-                    </sheet>
+                     </group>
                 </form>
             </field>
         </record>

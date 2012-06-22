@@ -5,13 +5,13 @@
             <field name="model">ir.header_img</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
-                    <group col="6" colspan="4">
+                <form version="7.0">
+                    <group>
                         <field name="name"/>
                         <field name="type"/>
                         <field name='company_id' />
                     </group>
-                    <field name="img" widget="image" colspan="4"/>
+                    <field name="img" widget="image" class="oe_right"/>
                 </form>
             </field>
         </record>
@@ -21,28 +21,25 @@
             <field name="model">ir.header_webkit</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
-                    <field name="name" colspan="4"/>
-                    <notebook colspan="4">
-                        <page string="Company and Page Setup" >
-                            <field name='company_id' colspan="4"/>
-                            <field name="orientation" />
-                            <field name="format" />
-                            <field name="margin_top" />
-                            <field name="margin_bottom" />
-                            <field name="margin_left" />
-                            <field name="margin_right" />
-                        </page>
-                        <page string="CSS Style" >
-                            <field name="css" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Header" >
-                            <field name="html" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Footer" >
-                            <field name="footer_html" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
+                <form version="7.0">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name='company_id'/>
+                            <field name="orientation"/>
+                            <field name="format"/>
+                        </group><group>
+                            <field name="margin_top"/>
+                            <field name="margin_bottom"/>
+                            <field name="margin_left"/>
+                            <field name="margin_right"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="css"/>
+                        <field name="html"/>
+                        <field name="footer_html"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -53,7 +50,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_header_img" id="menu_header_img" parent="base.menu_res_company_global" sequence="14"/>
+        <menuitem action="action_header_img" id="menu_header_img" parent="base.menu_custom" sequence="14"/>
 
         <record id="action_header_webkit" model="ir.actions.act_window">
             <field name="name">Webkit Headers/Footers</field>
@@ -61,7 +58,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_header_webkit" id="menu_header_webkit" parent="base.menu_res_company_global" sequence="14"/>
+        <menuitem action="action_header_webkit" id="menu_header_webkit" parent="base.menu_custom" sequence="14"/>
 
     </data>
 </openerp>

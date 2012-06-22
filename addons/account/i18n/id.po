@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-10 18:23+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-06-06 10:35+0000\n"
+"Last-Translator: Budi Iskandar <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:49+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-06-22 04:38+0000\n"
+"X-Generator: Launchpad (build 15461)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -184,11 +184,6 @@ msgstr "Sumber Akun"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Seluruh Ayat Analitik"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Invoice/Tagihan yang Dibuat dalam 15 Hari Terakhir"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -711,18 +706,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Perusahaan harus merupakan entitas yang sama untuk merekonsiliasi seluruh "
 "catatan"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Akun Piutang"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1301,6 +1284,8 @@ msgid ""
 "You can not use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal !"
 msgstr ""
+"Anda tidak bisa menggunakan akun umum pada jurnal ini, cek tab \"Entry "
+"Controls\" pada jurnal sesuai !"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1337,7 +1322,7 @@ msgstr "Lainnya"
 #. module: account
 #: view:account.subscription:0
 msgid "Draft Subscription"
-msgstr ""
+msgstr "Draft Berlangganan"
 
 #. module: account
 #: view:account.account:0
@@ -1411,7 +1396,7 @@ msgstr "Pilih periode awal dan akhir"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 msgid "Profit and Loss"
-msgstr ""
+msgstr "Laba/Rugi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -1558,7 +1543,7 @@ msgstr ""
 #. module: account
 #: view:account.entries.report:0
 msgid "# of Entries "
-msgstr ""
+msgstr "# entris "
 
 #. module: account
 #: help:account.fiscal.position,active:0
@@ -1566,6 +1551,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
+"Dengan me-unchek field Active, And a dapat menyembunyikan fiscal position "
+"tampa menghapusnya."
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -1643,7 +1630,7 @@ msgstr "Pencarian statement Bank"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr ""
+msgstr "Jurnal item belum di Post"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1729,11 +1716,6 @@ msgid "Responsible"
 msgstr "Bertanggung Jawab"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Sales Berdasarkan tipe akun"
-
-#. module: account
 #: view:account.invoice.refund:0
 msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
@@ -1751,7 +1733,7 @@ msgstr "Penagihan"
 #: code:addons/account/report/account_partner_balance.py:115
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Partner Lain-lain"
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -1763,7 +1745,7 @@ msgstr "Jumlah Setahun"
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
-msgstr ""
+msgstr "Anda Memilih satuan yang tidak kompatibel dengan productnya"
 
 #. module: account
 #: view:account.change.currency:0
@@ -1784,7 +1766,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending Accounts"
-msgstr ""
+msgstr "Akun Tunda"
 
 #. module: account
 #: view:account.tax.template:0
@@ -2829,13 +2811,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Penjualan menurut Akun"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Panduan ini akan membuat entri akuntansi yang berulang"
@@ -3223,7 +3198,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
+msgid "Set Your Accounting Options"
 msgstr ""
 
 #. module: account
@@ -6364,11 +6339,6 @@ msgid "Supplier Refund"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr ""
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Baris Catatan"
@@ -6912,11 +6882,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Akun Penghasilan"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr ""
@@ -7135,7 +7100,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -10924,6 +10889,9 @@ msgstr ""
 #~ msgid "Accounting Entries-"
 #~ msgstr "Entri Akuntansi"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Invoice/Tagihan yang Dibuat dalam 15 Hari Terakhir"
+
 #, python-format
 #~ msgid "You can not delete posted movement: \"%s\"!"
 #~ msgstr ""
@@ -10992,8 +10960,15 @@ msgstr ""
 #~ msgid "You can not use this general account in this journal !"
 #~ msgstr "Anda tidak dapat menggunakan akun umum ini di jurnal ini !"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Akun Piutang"
+
 #~ msgid "Description on invoices"
 #~ msgstr "Uraian pada tagihan"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Akun Penghasilan"
 
 #~ msgid "Period length (days)"
 #~ msgstr "Lama periode (hari)"
@@ -11179,6 +11154,9 @@ msgstr ""
 #~ msgid "The account is not defined to be reconciled !"
 #~ msgstr "Akun ini tidak didefinisikan untuk direkonsiliasi!"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Sales Berdasarkan tipe akun"
+
 #~ msgid "Error! You cannot define overlapping fiscal years"
 #~ msgstr "Error! Anda tidak dapat menetapkan tumpang tindih tahun fiskal"
 
@@ -11224,6 +11202,9 @@ msgstr ""
 #, python-format
 #~ msgid " Journal"
 #~ msgstr " Jurnal"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Penjualan menurut Akun"
 
 #~ msgid "Reference Number"
 #~ msgstr "Nomor Referensi"

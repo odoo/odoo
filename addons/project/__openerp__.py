@@ -28,7 +28,7 @@
     "category": "Project Management",
     "sequence": 8,
     "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
-    "depends": ["base_setup", "product", "analytic", "board",  "mail", "resource","web_kanban"],
+    "depends": ["base_setup", "base_status", "product", "analytic", "board",  "mail", "resource","web_kanban"],
     "description": """
 Project management module tracks multi-level projects, tasks, work done on tasks, eso.
 ======================================================================================
@@ -54,7 +54,6 @@ Dashboard for project members that includes:
         "res_partner_view.xml",
         "report/project_report_view.xml",
         "board_project_view.xml",
-        'board_project_manager_view.xml',
         'report/project_cumulative.xml',
         'res_config_view.xml',
     ],

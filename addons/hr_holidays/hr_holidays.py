@@ -76,12 +76,12 @@ class hr_holidays_status(osv.osv):
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you set a meeting type, OpenERP will create a meeting in the calendar once a leave is validated.'),
         'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
-        'limit': fields.boolean('Allow to Override Limit', help='If you tick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
+        'limit': fields.boolean('Allow to Override Limit', help='If you select this checkbox, the system allows the employees to take more leaves than the available ones for this type.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
         'max_leaves': fields.function(_user_left_days, string='Maximum Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
         'leaves_taken': fields.function(_user_left_days, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
         'remaining_leaves': fields.function(_user_left_days, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
-        'double_validation': fields.boolean('Apply Double Validation', help="If its True then its Allocation/Request have to be validated by second validator")
+        'double_validation': fields.boolean('Apply Double Validation', help="When selected, the Allocation/Leave Requests for this type require a second validation to be approved."),
     }
     _defaults = {
         'color_name': 'red',
@@ -112,25 +112,24 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name': fields.char('Description', required=True, size=64),
-        'state': fields.selection([('draft', 'New'), ('cancel', 'Cancelled'),('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
-            ('validate1', 'Waiting Second Approval'), ('validate', 'Approved')],
-            'Status', readonly=True, help='The status is set to \'Draft\', when a holiday request is created.\
-            \nThe status is \'Waiting Approval\', when holiday request is confirmed by user.\
-            \nThe status is \'Refused\', when holiday request is refused by manager.\
-            \nThe status is \'Approved\', when holiday request is approved by manager.'),
+        'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
+            'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
+            \nThe state is \'To Approve\', when holiday request is confirmed by user.\
+            \nThe state is \'Refused\', when holiday request is refused by manager.\
+            \nThe state is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
-        'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
-        'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
-        'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
+        'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, select=True),
+        'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
         #'manager_id': fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
         #'notes': fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'manager_id': fields.many2one('hr.employee', 'First Approval', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
-        'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)]}),
-        'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)]}),
+        'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True),
         'case_id': fields.many2one('crm.meeting', 'Meeting'),
-        'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone", select=True),
+        'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone", select=True),
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
@@ -281,6 +280,7 @@ class hr_holidays(osv.osv):
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
+                    'leave_id': record.id,
                 }
                 case_id = meeting_obj.create(cr, uid, vals)
                 self._create_resource_leave(cr, uid, [record], context=context)
@@ -397,11 +397,11 @@ class hr_holidays(osv.osv):
         for obj in self.browse(cr, uid, ids):
             if obj.holiday_status_id.double_validation:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request has been <b>validated</b>. A second validation is necessary and is now pending.")
+                    _("The %s request has been <b>approved</b>. A second validation is necessary and is now pending.")
                     % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
             else:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request has been <b>validated</b>. The validation process is now over.")
+                    _("The %s request has been <b>approved</b>. The validation process is now over.")
                     % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
     
     def holidays_valid2_notificate(self, cr, uid, ids, context=None):
@@ -513,9 +513,14 @@ class hr_employee(osv.osv):
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),        
-        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
 hr_employee()
+
+class crm_meeting(osv.osv):
+    _inherit = 'crm.meeting'
+    _columns = {
+        'leave_id': fields.many2one('hr.holidays','Leave'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

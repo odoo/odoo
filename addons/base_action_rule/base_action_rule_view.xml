@@ -12,80 +12,83 @@
             <field name="model">base.action.rule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Action Rule">
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="model_id" select="1" on_change="onchange_model_id(model_id)"/>
-                        <field name="filter_id" />
-                        <field name="sequence"/>
-                        <field name="active"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Conditions">
-                            <group col="2" colspan="2" name="model">
-                                <separator colspan="4" string="Conditions on Model Fields"/>
-                                <field name="regex_name" colspan="2"/>
-                                <field name="trg_user_id"/>
-                            </group>
-                            <group col="2" colspan="2" name="partner">
-                                <separator colspan="4" string="Conditions on Model Partner"/>
-                                <field name="trg_partner_id"/>
-                                <field name="trg_partner_categ_id"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Conditions on States"/>
-                                <field name="trg_state_from"/>
-                                <field name="trg_state_to"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Conditions on Timing"/>
-                                <field name="trg_date_type"/>
-                                <group col="3" colspan="2" attrs="{'invisible': [('trg_date_type', '=', 'none')]}">
-                                    <field name="trg_date_range" string="Delay After Trigger Date"/>
-                                    <field name="trg_date_range_type" nolabel="1"/>
+                <form string="Action Rule" version="7.0">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="model_id" on_change="onchange_model_id(model_id)"/>
+                            <field name="filter_id" />
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <notebook>
+                            <page string="Conditions">
+                                <group>
+                                    <group name="model" string="Conditions on Model Fields">
+                                        <field name="regex_name"/>
+                                        <field name="trg_user_id"/>
+                                    </group>
+                                    <group name="partner" string="Conditions on Model Partner">
+                                        <field name="trg_partner_id"/>
+                                        <field name="trg_partner_categ_id"/>
+                                    </group>
+                                    <group string="Conditions on States">
+                                        <field name="trg_state_from"/>
+                                        <field name="trg_state_to"/>
+                                    </group>
+                                    <group string="Conditions on Timing">
+                                        <field name="trg_date_type"/>
+                                        <group attrs="{'invisible': [('trg_date_type', '=', 'none')]}">
+                                            <field name="trg_date_range" string="Delay After Trigger Date"/>
+                                            <field name="trg_date_range_type"/>
+                                        </group>
+                                    </group>
                                 </group>
-                            </group>
-                            <separator colspan="4" string="Note"/>
-                            <label align="0.0" colspan="4" width="900"
-                                string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action described in the 'Actions' tab." />
-                        </page>
-                        <page string="Actions">
-                            <separator colspan="4" string="Fields to Change"/>
-                            <field name="act_user_id"/>
-                            <field name="act_state"/>
-                            <separator colspan="4" string="Server Action to be Triggered"/>
-                            <field name="server_action_id"/>
-                        </page>
-                        <page string="Email Actions">
-                                <separator colspan="4" string="Email Reminders"/>
-                                <field name="act_remind_partner"/>
-                                <field name="act_remind_attach"/>
-                                <field name="act_remind_user"/>
-                                <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
-                                    <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                                <separator string="Note"/>
+                                <label string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action described in the 'Actions' tab." />
+                            </page>
+                            <page string="Actions">
+                                <group string="Fields to Change" col="4">
+                                    <field name="act_user_id"/>
+                                    <field name="act_state"/>
                                 </group>
-                                <separator colspan="4" string="Email Information"/>
-                                <field name="act_email_from" />
-                                <field name="act_email_to" />
-                                <field name="act_mail_to_user"/>
-                                <field colspan="4" name="act_mail_to_email"/>
-                                <field name="act_mail_to_watchers"/>
-                                <field colspan="4" name="act_email_cc"/>
-                            <separator colspan="4" string="Email Body"/>
-                            <field colspan="4" name="act_mail_body" height="250"
-                                nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
-                            <separator colspan="4" string="Special Keywords to be Used in the Body"/>
-                            <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
-                            <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>
-                            <label align="0.0" string="%%(object_description)s = Object description" colspan="2"/>
-                            <label align="0.0" string="%%(object_date)s = Creation date" colspan="2"/>
-                            <label align="0.0" string="%%(partner)s = Partner name" colspan="2"/>
-                            <label align="0.0" string="%%(partner_email)s = Partner Email" colspan="2"/>
-                            <label align="0.0" string="%%(object_user)s = Responsible name" colspan="2"/>
-                            <label align="0.0" string="%%(object_user_email)s = Responsible Email" colspan="2"/>
-                            <label align="0.0" string="%%(object_user_phone)s = Responsible phone" colspan="2"/>
-                        </page>
-                    </notebook>
+                                <group col="2" string="Server Action to be Triggered">
+                                    <field name="server_action_id"/>
+                                </group>
+                            </page>
+                            <page string="Email Actions">
+                                <group col="4">
+                                    <separator colspan="4" string="Email Reminders"/>
+                                    <field name="act_remind_partner"/>
+                                    <field name="act_remind_attach"/>
+                                    <field name="act_remind_user"/>
+                                    <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
+                                        <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                                    </group>
+                                    <separator colspan="4" string="Email Information"/>
+                                    <field name="act_email_from" />
+                                    <field name="act_email_to" />
+                                    <field name="act_mail_to_user"/>
+                                    <field colspan="4" name="act_mail_to_email"/>
+                                    <field name="act_mail_to_watchers"/>
+                                    <field colspan="4" name="act_email_cc"/>
+                                    <separator colspan="4" string="Email Body"/>
+                                    <field colspan="4" name="act_mail_body" height="250"
+                                        nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
+                                    <separator colspan="4" string="Special Keywords to be Used in the Body"/>
+                                    <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
+                                    <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>
+                                    <label align="0.0" string="%%(object_description)s = Object description" colspan="2"/>
+                                    <label align="0.0" string="%%(object_date)s = Creation date" colspan="2"/>
+                                    <label align="0.0" string="%%(partner)s = Partner name" colspan="2"/>
+                                    <label align="0.0" string="%%(partner_email)s = Partner Email" colspan="2"/>
+                                    <label align="0.0" string="%%(object_user)s = Responsible name" colspan="2"/>
+                                    <label align="0.0" string="%%(object_user_email)s = Responsible Email" colspan="2"/>
+                                    <label align="0.0" string="%%(object_user_phone)s = Responsible phone" colspan="2"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
            </record>
