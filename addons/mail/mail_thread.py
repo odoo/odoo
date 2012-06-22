@@ -456,7 +456,7 @@ class mail_thread(osv.osv):
         user_obj = self.pool.get('res.user')
         user_id = 1
         if alias.alias_user_id:
-            user_id = alias_id.alias_user_id.id
+            user_id = alias.alias_user_id.id
         #if user_id not defined in the alias then search related user using name of Email sender
         else:
             from_email = msg.get('from')
@@ -472,35 +472,36 @@ class mail_thread(osv.osv):
             send notification mail sender that this mailbox does not exist so your mail have been rejected.
         """
 
-        alias_obj = self.pool.get('mail.alias')
-        user_obj = self.pool.get('res.user')
-        mail_message = self.pool.get('mail.compose.message')
-
+        alias_pool = self.pool.get('mail.alias')
+        user_pool = self.pool.get('res.user')
+        mail_compose_pool = self.pool.get('mail.compose.message')
+        mail_message_pool = self.pool.get('mail.message')
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
-
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
         # we must use utf-8 strings here :-(
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt, save_original=save_original)
-
+        msg = mail_message_pool.parse_message(msg_txt)
         alias_name = msg.get('to')
-        alias_ids = mail_alias.search(cr, uid, [('alias_name','=',alias_name)],context)
-        alias_id = mail_alias.browse(cr, uid, alias_ids[0], context)
+        alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)],context)
+        alias_id = alias_pool.browse(cr, uid, alias_ids[0], context)
         #if alias found then call message_process method.
         if alias_id:
-            user_id = self._get_user(self, cr, uid, alias_id, context)
-            self.message_process(self, cr, user_id, alias_id.alias_model_id.id, message, custom_values = alias_id.alias_defaults or {}, thread_id = alias_id.alias_force_thread_id or {}, context=context)
-        #if alis not found give Exception
+            user_id = self._get_user( cr, uid, alias_id, context)
+            self.message_process(cr, user_id, alias_id.alias_model_id.model, message, 
+                                custom_values = alias_id.alias_defaults or {}, 
+                                thread_id = alias_id.alias_force_thread_id or False,
+                                 context=context)
+        #if mail_alias not found give Exception
         else:
             #_logger.warning("This mailbox does not exist so mail gate will reject this mail.")
-            from_email = user_obj.browse(cr, uid, uid, context).user_email
+            from_email = user_pool.browse(cr, uid, uid, context).user_email
             sub = "Mail Rejection" + msg.get('subject')
             message = "Respective mailbox does not exist so your mail have been rejected" + msg
-            mail_message.send_mail(cr, uid, {'email_from': from_email,'email_to': msg.get('from'),'subject': sub, 'body_text': message}, context)
+            mail_compose_pool.send_mail(cr, uid, {'email_from': from_email,'email_to': msg.get('from'),'subject': sub, 'body_text': message}, context)
 
         return True
 
