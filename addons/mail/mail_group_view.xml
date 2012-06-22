@@ -69,6 +69,9 @@
                                 <field name="public" nolabel="1"/>
                                 <label string="This group is visible by non members" colspan="2"/>
                             </group>
+                            <group colspan="1" col="2">
+                                <field name="alias_id" widget="selection" required="0" invisible="1"/>
+                            </group>
                         </group>
                         <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
                                 options='{"thread_level": 1}'/>

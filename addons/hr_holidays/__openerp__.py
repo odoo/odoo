@@ -65,7 +65,6 @@ Note that:
         'wizard/hr_holidays_summary_department_view.xml',
         'wizard/hr_holidays_summary_employees_view.xml',
         'board_hr_holidays_view.xml',
-        'board_hr_manager_holidays_view.xml',
         ],
     'demo_xml': ['hr_holidays_demo.xml',],
     'test': ['test/test_hr_holiday.yml',

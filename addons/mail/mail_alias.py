@@ -48,7 +48,9 @@ class mail_alias(osv.Model):
                                                "existing record will cause the creation of a new record "
                                                "of this model (e.g. a Project Task)",
                                           # only allow selecting mail_thread models!
-                                          domain="[('field_ids', 'in', 'message_ids')]"),
+                                          #TODO kept doamin temporarily in comment, need to redefine domain
+                                          #domain="[('field_id', 'in', 'message_ids')]"
+                                          ),
         'alias_user_id': fields.many2one('res.users', 'Owner',
                                            help="The owner of records created upon receiving emails on this alias. "
                                                 "If this field is kept empty the system will attempt to find the right owner "
@@ -66,17 +68,18 @@ class mail_alias(osv.Model):
         'alias_defaults': '{}',
         'alias_user_id': lambda s,c,u,ctx: u
     }
-    _sql_constraint = [
-        ('mailbox_uniq', 'unique (alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
+    _sql_constraints = [
+        ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
     ]
     
-    def create_unique_alias(self, cr, uid, values, context=None):
-        # TODO: call create() with `values` after checking that `alias_name`
-        # is unique. If not unique, append a sequential number after it until
-        # a unique one if found. 
-        # E.g if create_unique_alias is called with {'alias_name': 'abc'}
-        # and 'abc', 'abc1', 'abc2' alias exist, replace alias_name with 'abc3'. 
-        return
-        
-        
+    def create_unique_alias(self, cr, uid, values, sequence = 1 ,context=None):
+        config_parameter_pool = self.pool.get("ir.config_parameter")
+        domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)
+        prob_alias = "%s%s@%s"%(values['alias_name'], sequence, domain)
+        search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
+        if search_alias:    
+            values = self.create_unique_alias(cr, uid, values, sequence+1, context)
+        else:
+            values.update({'alias_name': prob_alias})
+            return values
         
