@@ -1197,7 +1197,7 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-        context = {'lang': lang, 'partner_id': partner_id}
+        context.update(lang=lang, partner_id=partner_id)
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context_partner = {'lang': lang, 'partner_id': partner_id}
@@ -1213,12 +1213,10 @@ class sale_order_line(osv.osv):
         result = res.get('value', {})
         warning_msgs = res.get('warning') and res['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
-
+        
         uom2 = False
-        if uom:
+        if uom and context.get('uom_change'):
             uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
         if uos:
             if product_obj.uos_id:
                 uos2 = product_uom_obj.browse(cr, uid, uos)
@@ -1252,6 +1250,10 @@ class sale_order_line(osv.osv):
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
+            
+        if not context.get('uom_change'):
+            res['value'].update(product_uom=product_obj.uom_id.id)
+            uom = product_obj.uom_id.id
 
         elif uos and not uom: # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
@@ -1309,6 +1311,7 @@ class sale_order_line(osv.osv):
             lang=False, update_tax=True, date_order=False, context=None):
         context = context or {}
         lang = lang or ('lang' in context and context['lang'])
+        context.update(uom_change=True)
         res = self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
