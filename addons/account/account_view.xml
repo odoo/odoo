@@ -378,7 +378,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Journal View">
-                    <field name="name" filter_domain="[('name','ilike',self)]" string="Journal View"/>
+                    <field name="name" string="Journal View"/>
                 </search>
             </field>
         </record>
@@ -520,7 +520,7 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Bank Statement"/>
+                        <field name="name" string="Bank Statement"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <separator orientation="vertical"/>
@@ -565,7 +565,7 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Bank Statement"/>
+                        <field name="name" string="Bank Statement"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <separator orientation="vertical"/>
@@ -1619,7 +1619,7 @@
             <field name="arch" type="xml">
                 <search string="Journal Entry Model">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Journal Entry Model"/>
+                        <field name="name" string="Journal Entry Model"/>
                         <separator orientation="vertical"/>
                         <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
                         <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
@@ -1712,7 +1712,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payment Term">
-                    <field name="name" filter_domain="[('name','ilike',self)]" string="Payment Term"/>
+                    <field name="name" string="Payment Term"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -1798,7 +1798,7 @@
             <field name="arch" type="xml">
                 <search string="Entry Subscription">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Account Subscription"/>
+                        <field name="name" string="Account Subscription"/>
                         <separator orientation="vertical"/>
                         <field name="date_start"/>
                         <separator orientation="vertical"/>
@@ -2140,7 +2140,7 @@
             <field name="arch" type="xml">
                 <search string="Search Chart of Account Templates">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Account Template"/>
+                        <field name="name" string="Account Template"/>
                         <separator orientation="vertical"/>
                         <field name="account_root_id"/>
                         <field name="bank_account_view_id"/>
@@ -2456,7 +2456,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fiscal Position">
-                    <field name="name" filter_domain="[('name','ilike',self)]" string="Fiscal Position Template"/>
+                    <field name="name" string="Fiscal Position Template"/>
                 </search>
             </field>
         </record>
@@ -2746,7 +2746,8 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="arch" type="xml">
                 <search string="Account Report">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Account Report"/>
+                        <field name="name" string="Account Report"/>
+                        <separator orientation="vertical"/>
                         <field name="account_report_id"/>
                         <field name="type"/>
                     </group>

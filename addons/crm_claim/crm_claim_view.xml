@@ -196,7 +196,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                    <field name="name" string="Claims" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Claims"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-check" string="New" name="current"
                         domain="[('state','=','draft')]"
@@ -211,7 +211,6 @@
                         domain="[('state','=','pending')]"
                         help="All pending Claims"
                     />
-                    <separator orientation="vertical"/>
                     <filter string="Unassigned Claims"
                             icon="terp-personal-"
                             domain="[('user_id','=', False)]"

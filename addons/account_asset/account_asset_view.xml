@@ -64,7 +64,8 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Asset Category">
-                <field name="name" filter_domain="[('name','ilike',self)]" string="Asset Category"/>
+                <field name="name" string="Asset Category"/>
+                <separator orientation="vertical"/>
                 <field name="journal_id"/>
             </search>
         </field>

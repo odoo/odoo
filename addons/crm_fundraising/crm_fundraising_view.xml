@@ -163,7 +163,7 @@
                 <field name="arch" type="xml">
                     <search string="Search Funds">
                         <group>
-                            <field name="name" string="Fund Description" filter_domain="[('name','ilike',self)]"/>
+                            <field name="name" string="Fund Description"/>
                             <separator orientation="vertical" />
                             <filter icon="terp-check" string="New"
                                 domain="[('state','=','draft')]" name="current"

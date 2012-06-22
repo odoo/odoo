@@ -13,7 +13,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stage Search">
-                    <field name="name" string="Stage Name" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Stage Name"/>
+                    <separator orientation="vertical"/>
                     <field name="state"/>
                     <field name="type"/>
                 </search>

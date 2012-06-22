@@ -519,7 +519,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Contribution Registers">
-                    <field name="name" string="Contribution Registers" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Contribution Registers"/>
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </search>
@@ -691,13 +691,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslip Batches">
-                    <field name="name" string="Payslip Batches" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Payslip Batches"/>
                     <separator orientation="vertical"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
+                    <filter name="done_filter" icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
                 </search>
             </field>
         </record>

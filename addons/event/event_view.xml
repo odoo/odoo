@@ -265,7 +265,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group>
-                        <field name="name" string="Events" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Events"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>

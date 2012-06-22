@@ -48,7 +48,6 @@
             <field name="arch" type="xml">
                 <search string="Payment Mode">
                     <field name="name"
-                        filter_domain="[('name','ilike',self)]"
                         string="Payment Mode"/>
                     <separator orientation="vertical"/>
                     <field name="journal" widget='selection'/>
@@ -212,7 +211,6 @@
                 <search string="Search Payment Orders">
                     <group>
                         <field name="reference"
-                            filter_domain="[('reference','ilike',self)]"
                             string="Payment Order"/>
                         <separator orientation="vertical"/>
                         <field name="date_done"/>

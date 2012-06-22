@@ -12,7 +12,6 @@
                         <separator orientation="vertical"/>
                         <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
                         <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
@@ -353,7 +352,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave Type">
-                    <field name="name" string="Leave Types" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Leave Types"/>
                     <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
@@ -420,7 +419,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leave Type">
-                    <field name="name" string="Leave Types" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Leave Types"/>
                     <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>

@@ -177,12 +177,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <field name="name" string="Phonecalls" filter_domain="[('name','ilike',self)]"/>
+               <field name="name" string="Phonecalls"/>
                <separator orientation="vertical"/>
                <field name="date"/>
                <separator orientation="vertical"/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
-              <filter string="Unassigned Phonecalls"
+               <filter string="Unassigned Phonecalls"
                        icon="terp-personal-"
                        domain="[('user_id','=',False)]"
                        help="Unassigned Phonecalls"/>

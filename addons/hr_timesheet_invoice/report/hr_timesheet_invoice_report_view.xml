@@ -150,7 +150,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group>
-                        <field name="name" string="Timesheet by users" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Timesheet by users"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
                         <field name="month"/>
@@ -283,7 +283,7 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                     <group>
-                        <field name="name" string="Timesheet by account" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Timesheet by account"/>
                         <separator orientation="vertical"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id"/>
@@ -352,7 +352,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by account">
                     <group>
-                        <field name="name" string="Timesheet by account" filter_domain="[('name','ilike',self)]"/>
+                        <field name="name" string="Timesheet by account"/>
                         <separator orientation="vertical"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id"/>

@@ -105,7 +105,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name" string="Employees" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Employees"/>
                     <separator orientation="vertical"/>
                     <field name="department_id" widget="selection"/>
                     <field name="job_id" widget="selection"/>
@@ -410,7 +410,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <field name="name" string="Job" filter_domain="[('name','ilike',self)]"/>
+                    <field name="name" string="Job"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"  
                             domain="[('state','=','open')]" 

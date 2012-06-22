@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <search string="Appraisal Plan">
                    <group>
-                       <field name="name" string="Appraisal Plans" filter_domain="[('name','ilike',self)]"/>
+                       <field name="name" string="Appraisal Plans"/>
                        <separator orientation="vertical"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -322,6 +322,7 @@
                 <search string="Search Appraisal">
                    <group>
                         <field name="date_deadline"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                         <separator orientation="vertical"/>
                         <field name="user_to_review_id"/>

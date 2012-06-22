@@ -72,7 +72,7 @@
             <field name="arch" type="xml">
                 <search string="Search Followup">
                     <group>
-                        <field name="name" filter_domain="[('name','ilike',self)]" string="Followup"/>
+                        <field name="name" string="Followup"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
