@@ -92,30 +92,42 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.$element.remove();
             }, this));
             this.order = options.order;
-        },
-        start: function() {
-            this.$element.click(_.bind(this.clickHandler, this));
-            this.refresh();
+
+            if(options.selected){
+                this.select();
+            }else{
+                this.selected = false;
+            }
         },
         clickHandler: function() {
             this.select();
         },
         renderElement: function() {
             this._super();
-            this.select();
+            this.$element.click(_.bind(this.clickHandler, this));
+            if(this.selected){
+                this.$element.addClass('selected');
+            }
         },
-        refresh: function() {
+        refresh: function(){
             this.renderElement();
-            var heights = _.map(this.$element.prevAll(), function(el) {return $(el).outerHeight();});
-            heights.push($('#current-order thead').outerHeight());
-            var position = _.reduce(heights, function(memo, num){ return memo + num; }, 0);
-            $('#current-order').scrollTop(position);
         },
         select: function() {
-            $('tr.selected').removeClass('selected');
-            this.$element.addClass('selected');
+            console.log('SELECT:',this);
+            if(this.order.selected_widget){
+                this.order.selected_widget.deselect();
+            }
+            this.selected = true;
+            this.order.selected_widget = this;
             this.order.selected = this.model;
             this.on_selected();
+            this.$element.addClass('selected');
+        },
+        deselect: function(){
+            this.selected = false;
+            this.order.selected_widget = null;
+            this.order.selected = null;
+            this.$element.removeClass('selected');
         },
         on_selected: function() {},
     });
@@ -163,12 +175,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var line = new module.OrderlineWidget(null, {
                     model: newLine,
                     pos: this.pos,
-                    order: this.pos.get('selectedOrder')
+                    order: this.pos.get('selectedOrder'),
+                    selected:true,
             });
             line.on_selected.add(_.bind(this.selected_line, this));
             this.selected_line();
-            line.appendTo(this.$element.find('#current-order-content'));
-            this.update_summary();
+            line.appendTo(this.$('.order'));
         },
         selected_line: function() {
         	var reset = false;
@@ -178,32 +190,20 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         	this.currentSelected = this.pos.get('selectedOrder').selected;
         	if (reset && this.numpadState)
         		this.numpadState.reset();
-            this.update_summary();
         },
         renderElement: function() {
             this._super();
-            var $content = this.$element.find('#current-order-content');
+            var $content = this.$('.order');
             $content.empty();
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new module.OrderlineWidget(null, {
                         model: orderLine,
-                        order: this.pos.get('selectedOrder')
+                        order: this.pos.get('selectedOrder'),
+                        selected:true,
                 });
             	line.on_selected.add(_.bind(this.selected_line, this));
                 line.appendTo($content);
             }, this));
-            this.update_summary();
-        },
-        update_summary: function() {
-            var currentOrder, tax, total, totalTaxExcluded;
-            currentOrder = this.pos.get('selectedOrder');
-            total = currentOrder.getTotal();
-            totalTaxExcluded = currentOrder.getTotalTaxExcluded();
-            tax = currentOrder.getTax();
-            this.pos_widget.action_bar.set_total_value(Math.round(total*100)/100);
-            $('#subtotal').html(totalTaxExcluded.toFixed(2)).hide().fadeIn();
-            $('#tax').html(tax.toFixed(2)).hide().fadeIn();
-            $('#total').html(total.toFixed(2)).hide().fadeIn();
         },
     });
 

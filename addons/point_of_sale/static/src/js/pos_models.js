@@ -493,6 +493,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             discount: 0,
             weighted: false,
             product_type: 'unit',
+            unit: 'Unit',
         },
         initialize: function(attributes) {
             this.pos = attributes.pos;

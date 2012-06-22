@@ -25,33 +25,8 @@
                 <div id="leftpane">
                     <div id="placeholder-OrderWidget"></div>
                     <footer>
-
-                        <ul id="amounts">
-                            <li>
-                                Subtotal:
-                                <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
-                                <span id="subtotal">0</span> 
-                                <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
-                            </li>
-
-                            <li>
-                                Tax:
-                                <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
-                                <span id="tax">0</span> 
-                                <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
-                            </li>
-
-                            <li>
-                                Total:
-                                <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
-                                <span id="total">0</span> 
-                                <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
-                            </li>
-                        </ul>
-
                         <div id="placeholder-PaypadWidget"></div>
                         <div id="placeholder-NumpadWidget"></div>
-
                     </footer>
                 </div>
                 <div id="rightpane">
@@ -63,22 +38,6 @@
         </div>
     </t>
 
-    <t t-name="OrderWidget">
-        <div id="current-order">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Product</td>
-                        <td>Price</td>
-                        <td>Disc (%)</td>
-                        <td>Qty</td>
-                        <td>Total</td>
-                    </tr>
-                </thead>
-                <tbody id="current-order-content"></tbody>
-            </table>
-        </div>
-    </t>
 
     <t t-name="SynchNotificationWidget">
         <span>
@@ -371,46 +330,44 @@
             </div>
         </div>
     </t>
-    <t t-name="OrderlineWidget">
-        <tr>
-            <td>
-                <t t-esc="widget.model.get('name')"/>
-            </td>
-            <td>
-                <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
-            </td>
-            <td>
-                <t t-esc="widget.model.get('discount').toFixed(2)"/>
-            </td>
-            <td>
-                <t t-if="widget.model.get('weighted')">
-                    <t t-esc="Math.round(widget.model.get('quantity')*100)/100+' Kg'"/>
-                </t>
-                <t t-if="!widget.model.get('weighted')">
-                    <t t-esc="Math.round(widget.model.get('quantity')*100)/100"/>
-                </t>
-            </td>
-            <td>
-                <t t-esc="widget.format_currency(widget.model.get('list_price') * (1 - widget.model.get('discount')/100) * widget.model.get('quantity'))"/>
-            </td>
-        </tr>
+
+    <t t-name="OrderWidget">
+        <div class="order-container">
+            <ul class="order">
+            </ul>
+        </div>
     </t>
 
-    <t t-name="OrderlineWidget2">
+    <t t-name="OrderlineWidget">
         <li class="orderline">
-            <h4 class="product-name">
-                Pizza
-            </h4>
+            <span class="product-name">
+                <t t-esc="widget.model.get('name')"/>
+            </span>
             <span class="price">
-                3.14$
+                <t t-esc="widget.format_currency(widget.model.getPriceWithTax())"/>
             </span>
             <ul class="info-list">
-                <li class="info">
-                    5 pizza at $0.51/pizza
-                </li>
-                <li class="info">
-                    25 discount
-                </li>
+                <t t-if="widget.model.get('quantity') !== 1.0">
+                    <li class="info">
+                        <em>
+                            <t t-esc="widget.model.get('quantity')" />
+                        </em>
+                        <t t-esc="widget.model.get('unit')" />
+                        at
+                        <t t-esc="widget.format_currency(widget.model.get('list_price'))" />
+                        /
+                        <t t-esc="widget.model.get('unit')" />
+                    </li>
+                </t>
+                <t t-if="widget.model.get('discount') > 0">
+                    <li class="info">
+                        With a 
+                        <em>
+                            <t t-esc="widget.model.get('discount')" />%
+                        </em>
+                        discount
+                    </li>
+                </t>
             </ul>
         </li>
     </t>
