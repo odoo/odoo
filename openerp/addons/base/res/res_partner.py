@@ -50,6 +50,8 @@ class res_partner_category(osv.osv):
             context = {}
         if context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -136,7 +138,7 @@ class res_partner(osv.osv):
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
-        'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
+        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner or Company"),
@@ -285,7 +287,9 @@ class res_partner(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        if not len(ids):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if not ids:
             return []
         if context.get('show_ref'):
             rec_name = 'ref'

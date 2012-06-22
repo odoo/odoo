@@ -17,10 +17,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Widgets" version="7.0">
+                  <sheet>
                     <group>
                         <field name="title"/>
                         <field name="content"/>
                     </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -62,11 +64,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User Widgets" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="widget_id"/>
                         <field name="user_id"/>
                         <field name="sequence"/>
                     </group>
+                  </sheet>  
                 </form>
             </field>
         </record>
