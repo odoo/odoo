@@ -68,42 +68,35 @@
                         <t t-if="!thread._is_author(record.user_id[0]) &amp;&amp; display['show_hide']">
                             <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></li>
                         </t>
+                        <li t-if="record.type == 'email'"><a href="#" class="oe_mail_msg_details">Details</a></li>
                     </ul>
                 </span>
-                
                 <div class="oe_mail_msg">
-                     <t t-if="record.subject">
-                        <h1 class="oe_mail_msg_title">
-                            <a href="#" class="oe_mail_internal_link"><t t-raw="record.subject"/></a>
-                        </h1>
-                    </t>
-                    
-                    <p class="oe_mail_msg_subtitle">
-                        <t t-if="params.thread_level > 0">
-                            <a href="#" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}' class="oe_mail_internal_link"><t t-raw="record.record_name"/></a>
+                    <h1 t-if="record.subject &amp;&amp; record.subject != 'Reply'" class="oe_mail_msg_title">
+                        <t t-raw="record.subject"/>
+                    </h1>
+                    <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
+                        <a href="#" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}' class="oe_mail_internal_link"><t t-raw="record.record_name"/></a>
+                    </div>
+                    <div class="oe_mail_msg_body">
+                        <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a>
+                        <t t-raw="record.body_head"/>
+                        <t t-if="record.body_tail"><a href="#" class="oe_mail_msg_more">... See more</a>
+                            <span class="oe_mail_msg_tail"><t t-raw="record.body_tail"/></span>
                         </t>
-                        <span class="oe_mail_msg_author"><a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a></span>
-                        <span class="oe_mail_msg_date" t-att-title="record.date"><t t-raw="record.timerelative"/></span>
-                    </p>
-
-                    <div class="oe_mail_msg_body"><t t-raw="record.body"/></div>
-                    <t t-if="record.tr_body">
-                        <div class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></div>
-                    </t>
-
+                    </div>
                     <ul class="oe_mail_msg_footer">
-                      <t t-if="display['show_reply']">
-                        <li><a href="#" class="oe_mail_msg_reply">Reply</a></li>
-                      </t>
+                      <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
+                      <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
+                      <!-- uncomment when merging vote
                       <li><a href="#">Like</a></li>
-                      <t t-if="record.attachment_ids.length > 0">
-                        <li>
-                            <a href="#" class="oe_mail_msg_view_attachments">
-                                <t t-if="record.attachment_ids.length == 1">Attachment</t>
-                                <t t-if="record.attachment_ids.length > 1">Attachments (<t t-raw="record.attachment_ids.length"/>)</t>
-                            </a>
-                        </li>
-                      </t>
+                      -->
+                      <li t-if="record.attachment_ids.length > 0">
+                          <a href="#" class="oe_mail_msg_view_attachments">
+                              <t t-if="record.attachment_ids.length == 1">Attachment</t>
+                              <t t-if="record.attachment_ids.length > 1">Attachments (<t t-raw="record.attachment_ids.length"/>)</t>
+                          </a>
+                      </li>
                     </ul>
                     <t t-if="record.attachment_ids.length > 0">
                         <div class="oe_clear"></div>
@@ -117,6 +110,4 @@
             </div>
         </div>
     </div>
-
-
 </template>

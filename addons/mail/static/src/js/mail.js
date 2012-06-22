@@ -57,8 +57,6 @@ openerp.mail = function(session) {
         return cs;
     }
 
-    /* Add ThreadDisplay widget to registry */
-    session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
     /** 
      * ThreadDisplay widget: this widget handles the display of a thread of
      * messages. The [thread_level] parameter sets the thread level number:
@@ -206,6 +204,13 @@ openerp.mail = function(session) {
                 act_dom.toggle();
                 return false;
             });
+            // see more
+            this.$element.on('click','a.oe_mail_msg_more', function (event) {
+                console.log("sadf");
+                $(this).siblings('.oe_mail_msg_tail').show();
+                $(this).hide();
+                return false;
+            });
         },
         
         destroy: function () {
@@ -230,15 +235,6 @@ openerp.mail = function(session) {
                 else { self.display.show_more = true; records.pop(); }
                 
                 //build attachments download urls and compute time-relative from dates
-                for (var k in records) {
-                    records[k].timerelative = $.timeago(records[k].date);
-                    
-                    if (records[k].attachments) {
-                        for (var l in records[k].attachments) {
-                            records[k].attachments[l].url = self.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id='+records[k].attachments[l].id;
-                        }
-                    }
-                }
                 
                 self.display_comments(records);
                 if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
@@ -259,13 +255,16 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
+            for (var k in records) {
+                records[k].timerelative = $.timeago(records[k].date);
+                if (records[k].attachments) {
+                    for (var l in records[k].attachments) {
+                        var url = self.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id='+records[k].attachments[l].id;
+                        records[k].attachments[l].url = url;
+                    }
+                }
+            }
             this.cs = this.sort_comments_tmp(records);
-            
-            /* WIP: map matched regexp -> records to browse with name */
-            //_(records).each(function (record) {
-                //self.do_check_internal_links(record.body_text);
-            //});
-            
             _(records).each(function (record) {
                 var sub_msgs = [];
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
@@ -302,23 +301,19 @@ openerp.mail = function(session) {
             }
             // body text manipulation
             record.body = this.do_clean_text(record.body);
-            record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
             record.body = this.do_replace_internal_links(record.body);
-            if (record.tr_body) record.tr_body = this.do_replace_internal_links(record.tr_body);
+
+            // split for see mode
+            var split = this.do_truncate_string(record.body, this.params.msg_more_limit);
+            record.body_head = split[0];
+            record.body_tail = split[1];
+
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
-            // render
-            // OPTIONS
+
 
             var rendered = session.web.qweb.render('mail.Thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
             $( rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
-            // truncated: hide full-text, show summary, add buttons
-            if (record.tr_body) {
-                var node_body = this.$element.find('.oe_mail_msg_body:last');
-                var node_body_short = this.$element.find('.oe_mail_msg_body_short:last').append('... <a href="#" class="expand">See more</a>');
-                node_body.hide();
-                node_body_short.find('a:last').click(function() { node_body_short.hide(); node_body.show(); return false; });
-            }
         },
        
         /**
@@ -461,9 +456,9 @@ openerp.mail = function(session) {
         do_truncate_string: function(string, max_length) {
             // multiply by 1.2: prevent truncating an just too little long string
             if (string.length <= (max_length * 1.2)) {
-                return false;
+                return [string, ""];
             } else {
-                return string.slice(0, max_length);
+                return [string.slice(0, max_length), string.slice(max_length)];
             }
         },
         
@@ -512,10 +507,9 @@ openerp.mail = function(session) {
         },
 
     });
+    session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
 
-    /* Add ThreadView widget to registry */
-    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
-    /* ThreadView widget: thread of comments */
+    /** ThreadView widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.RecordThread',
 
@@ -616,11 +610,9 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
+    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
 
-
-    /* Add WallView widget to registry */
-    session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
-    /* WallView widget: a wall of messages */
+    /** WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
         template: 'mail.Wall',
 
@@ -818,6 +810,7 @@ openerp.mail = function(session) {
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(this.proxy('init_and_fetch_comments'));
         },
     });
+    session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
 
 };
 

@@ -199,11 +199,6 @@
 .openerp .oe_mail_msg_comment, 
 .openerp .oe_mail_msg_email {
     padding: 8px;
-}
-
-.openerp .oe_mail_msg_comment, 
-.openerp .oe_mail_msg_email, 
-.openerp .oe_mail_msg_notification {
     background: white;
     border-top: 1px solid #ccc;
 }
@@ -314,10 +309,13 @@
     color: #888;
 }
 
-.openerp .oe_mail_msg_body, 
-.openerp .oe_mail_msg_body_short {
+.openerp .oe_mail_msg_body {
     margin-bottom: .5em;
     text-align: justify;
+}
+
+.openerp .oe_mail_msg_tail {
+    display: none;
 }
 
 /* Read more/less link */
