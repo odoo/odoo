@@ -35,20 +35,14 @@ class base_config_settings(osv.osv_memory):
     }
 
     def open_company(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
-        company_obj = self.pool.get('res.company')
-        company_id = company_obj.browse(cr, uid, uid, context=context).id
-
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
+            'type': 'ir.actions.act_window',
             'name': 'Your Company',
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'res.company',
-            'res_id': company_id,
-            'view_id': False,
-            'type': 'ir.actions.act_window',
+            'res_id': user.company_id.id,
          }
 
 # Preferences wizard for Sales & CRM.
