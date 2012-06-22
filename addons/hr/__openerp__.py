@@ -48,7 +48,7 @@ You can manage:
         'process/hr_process.xml',
         'hr_installer.xml',
         'hr_data.xml',
-        'hr_board.xml',
+        'board_hr_view.xml',
         'res_config_view.xml',
     ],
     'demo_xml': [

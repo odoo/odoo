@@ -22,18 +22,18 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                    <div class="oe_right oe_form_button_box">
+                    <div class="oe_right oe_button_box">
                         <!-- Put here related buttons -->
                     </div>
                     <field class="oe_right" name="photo" widget='image' on_change="onchange_photo(photo)"/>
-                    <div class="oe_form_title">
-                        <label for="name" class="oe_form_readonly_hidden"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
 
-                        <label for="company_id" class="oe_form_readonly_hidden" groups="base.group_multi_company"/>
+                        <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                         <h2><field name="company_id" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h2>
 
-                        <label for="department_id" class="oe_form_readonly_hidden"/>
+                        <label for="department_id" class="oe_edit_only"/>
                         <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                     </div>
                     <notebook>
