@@ -718,6 +718,9 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             // Set the cache duration in seconds.
             url += '&cache=' + parseInt(cache, 10);
         }
+        if (typeof(id)=="string" && this.record[field].value && this.record[field].value.substr(0, 10).indexOf(' ') == -1) {
+            url = 'data:image/png;base64,' + this.record[field].value;
+        }
         return url;
     },
     kanban_text_ellipsis: function(s, size) {
