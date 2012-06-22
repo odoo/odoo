@@ -258,6 +258,11 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                  <group>
+                    <filter icon="terp-mail-message-new"
+                        string="Inbox" help="Unread messages"
+                        name="needaction_pending"
+                        domain="[('needaction_pending','=',True)]"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
                     <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]"  help="Approved purchase orders"/>
                     <separator orientation="vertical"/>

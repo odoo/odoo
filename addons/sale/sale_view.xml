@@ -287,6 +287,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
+                    <filter icon="terp-mail-message-new"
+                        string="Inbox" help="Unread messages"
+                        name="needaction_pending"
+                        domain="[('needaction_pending','=',True)]"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
