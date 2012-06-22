@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Contract Management In Project",
+    "name" : "Contract On Project",
     "version": "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",

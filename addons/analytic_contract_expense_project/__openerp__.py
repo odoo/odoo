@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Contracts Management',
+    'name': 'Contract on Hr expense with Project',
     'version': '1.1',
     'category': 'Sales Management',
     'description': """
