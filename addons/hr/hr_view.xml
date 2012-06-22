@@ -30,13 +30,14 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" class="oe_inline"/>
-                                <label class="oe_inline" string="," attrs="{'invisible': [('job_id', '=', False)]}"/>
-                                <field class="oe_inline" name="job_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                                <label class="oe_inline" string="at" attrs="{'invisible': [('work_location', '=', False)]}"/>
-                                <field class="oe_inline" name="work_location" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                <label class="oe_inline" string="," attrs="{'invisible': [('company_id', '=', False)]}"/>
+                                <field class="oe_inline" name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                <label class="oe_inline" string="at" attrs="{'invisible': [('job_id', '=', False)]}"/>
+                                <field class="oe_inline" name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                             </h1>
                             <label for="department_id" class="oe_edit_only"/>
                             <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                            <label for="category_ids" class="oe_edit_only"/>
                             <h3><field name="category_ids" widget="many2many_tags"/></h3>
                         </div>
                         <group colspan="4" col="4">

@@ -132,10 +132,12 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Miscellaneous" position="after">
+                <page string="Personal Information" position="after">
                     <page string="Appraisal" groups="base.group_hr_user">
-                        <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
-                        <field name="evaluation_date"/>
+                        <group col="4">
+                            <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
+                            <field name="evaluation_date"/>
+                        </group>
                     </page>
                 </page>
             </field>
