@@ -510,6 +510,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         if (result.domain) {
             function edit_domain(node) {
+                if (typeof node !== "object") {
+                    return;
+                }
                 var new_domain = result.domain[node.attrs.name];
                 if (new_domain) {
                     node.attrs.domain = new_domain;
