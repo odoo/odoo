@@ -536,7 +536,6 @@ class account_move_line(osv.osv):
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'last_reconciliation_date': fields.related('partner_id', 'last_reconciliation_date', type='datetime', relation='res.partner', string='Latest Reconciliation Date',readonly=True),
         'lastest_entry': fields.function(_latest_entry_date, type='date', string="Latest Entry"),
-        'lastest_entry2': fields.function(_latest_entry_date, type='date', string="Latest Recnciliation"),
         'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float')
 
     }

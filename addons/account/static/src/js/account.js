@@ -60,7 +60,8 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
         })
     },
     setup_exended_list_view: function(parent){
-        var from_view,
+        var self = this,
+            from_view,
             obj_from_view;
         view_id = this.action.extended_form_view_id[0]
         from_view = this.registry.get_object('form_clone');
@@ -70,8 +71,10 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
         obj_from_view = new from_view(self, this.dataset_form, view_id, options={});
         obj_from_view.template = 'ExtendedFormView' 
         view_promise = obj_from_view.appendTo(this.$element.find('.oe_extended_form_view'))
-        $.when(view_promise && this.dataset_loaded).then(function() {
-            obj_from_view.on_pager_action('first')
+        $.when(view_promise, this.dataset_loaded).then(function() {
+            if (!_.isEmpty(self.dataset_form.ids)) {
+                obj_from_view.on_pager_action('first')
+            }
         })
     } 
     
