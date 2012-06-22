@@ -168,7 +168,7 @@ openerp.web_linkedin = function(instance) {
                 {
                     text: _t("Ok"),
                     click: function() { $(this).dialog("close"); }
-                }],
+                }]
             });
             this.dialog.parent().find('.ui-dialog-titlebar').append('<button class="close">No Thanks</button>').click(function(){
                 self.dialog.remove();
@@ -176,14 +176,15 @@ openerp.web_linkedin = function(instance) {
             $('.close').css({ 'margin': '10px 0 0 19px'})
             $("#register").click(function() {
                 var key = $("#apikey").val();
-                var user = new instance.web.DataSet(self, "res.users");
-                user.call("set_linkedin_api_key", [key]);
                 if(key.length){
+                    var user = new instance.web.DataSet(self, "res.users");
+                    user.call("set_linkedin_api_key", [key]);
                     self.dialog.remove(),
                     user.__parentedParent.view.reload();
                 }
                 else {
                     $("#apikey").css({'background-color':'#F66 '})
+                    self.notification.warn(_t("Linkedin Search"), _t("Please Enter Required Key."));
                 }
                 
             })
