@@ -6,7 +6,7 @@
             <field name="name">crm settings</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <group name="config_fetchmail" position="after">
                     <field name="fetchmail_lead"/>
@@ -31,7 +31,7 @@
         </record>
 
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
-            sequence="1" action="base.action_sale_config"/>
+            sequence="1" action="base_setup.action_sale_config"/>
 
     </data>
 </openerp>

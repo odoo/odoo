@@ -33,14 +33,14 @@ class base_config_settings(osv.osv_memory):
         'module_share': fields.boolean('Allow Sharing Resources to External Users',
             help="""As an example, you will be able to share a project or some tasks to  your customers, or quotes/sales to several persons at your customer  company, or your agenda availabilities to your contacts."""),
     }
-    
+
     def open_company(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-            
-        company_obj = self.pool.get('res.company')        
+
+        company_obj = self.pool.get('res.company')
         company_id = company_obj.browse(cr, uid, uid, context=context).id
-                            
+
         return {
             'name': 'Your Company',
             'view_type': 'form',
@@ -50,5 +50,28 @@ class base_config_settings(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
          }
-         
+
+# Preferences wizard for Sales & CRM.
+# It is defined here because it is inherited independently in modules sale, crm,
+# plugin_outlook and plugin_thunderbird.
+class sale_config_settings(osv.osv_memory):
+    _name = 'sale.config.settings'
+    _inherit = 'res.config.settings'
+    _columns = {
+        'module_crm': fields.boolean('CRM'),
+        'module_plugin_thunderbird': fields.boolean('Thunderbird Plugin',
+            help="""The plugin allows you archive email and its attachments to the selected
+                OpenERP objects. You can select a partner, or a lead and
+                attach the selected mail as a .eml file in
+                the attachment of a selected record. You can create documents for CRM Lead,
+                Partner from the selected emails.
+                This installs the module plugin_thunderbird."""),
+        'module_plugin_outlook': fields.boolean('Outlook Plugin',
+            help="""The Outlook plugin allows you to select an object that you would like to add
+                to your email and its attachments from MS Outlook. You can select a partner,
+                or a lead object and archive a selected
+                email into an OpenERP mail message with attachments.
+                This installs the module plugin_outlook."""),
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
