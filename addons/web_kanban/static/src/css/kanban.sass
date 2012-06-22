@@ -21,11 +21,7 @@
 
 .openerp .oe_kanban_view
     // KanbanView {{{
-    position: absolute
-    top: 118px
-    bottom: 0
-    left: 221px
-    right: 0
+    height: inherit
     .ui-sortable-placeholder
         border: 1px dotted black
         visibility: visible !important
@@ -36,10 +32,13 @@
         float: right
     .oe_kanban_clear
         clear: both
+    .oe_kanban_content
+        div:first-child
+            margin-right: 12px
     // }}}
     // KanbanGroups {{{
     .oe_kanban_groups
-        height: 100%
+        height: inherit
         width: 100%
     .oe_kanban_group_title
         margin: 1px 1px 4px
@@ -48,12 +47,26 @@
         font-weight: bold
         color: #333333
         text-shadow: 0 1px 0 white
+
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
         padding: 6px 7px 6px 6px
+
+    .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         background: #f0eeee
+
+    .oe_kanban_group_header.oe_kanban_no_group
+        display: none
+
+    .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
+
+    .oe_form
+        .oe_kanban_column
+            padding: 0px
+            background: #ffffff
+
     .oe_kanban_column
         height: 100%
     .oe_kanban_aggregates
@@ -267,7 +280,7 @@
             margin-bottom: 0
         &:hover
             @include box-shadow(0 0 3px rgba(0,0,0,0.6))
-            .oe_kanban_menuaction
+            .oe_dropdown_kanban
                 display: block
         h3
             margin: 0 16px 0 0
@@ -306,46 +319,23 @@
         white-space: nowrap
     // }}}
     // KanbanDropDown {{{
-    a.oe_kanban_menuaction
+    .oe_dropdown_kanban
         position: absolute
-        top: 0px
+        top: -8px
         right: 3px
         display: none
         color: #4c4c4c
         cursor: pointer
         &:hover
             text-decoration: none
-    .oe_kanban_menu
-        display: none
-        position: absolute
-        top: 30px
-        right: -140px
-        padding: 4px
-        border: 1px solid #afafb6
-        min-width: 160px
-        overflow-x: hidden
-        z-index: 900
-        background: white
-        @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        p
-            margin-left: 12px
-        > li > a
-            display: block
-            padding: 3px 6px
-            line-height: 14px
-            color: #4c4c4c
-            text-decoration: none
-        > li > a:hover
-            background: #f0f0fa
-            background: -moz-linear-gradient(#f0f0fa, #eeeef6)
-            background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6))
-            background: -webkit-linear-gradient(#f0f0fa, #eeeef6)
-            @include box-shadow(none)
+        .oe_dropdown_menu
+            right: -140px
+            min-width: 160px
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker
         padding: 3px 6px
+        white-space: nowrap
     .oe_kanban_colorpicker li
         float: left
         a
@@ -393,6 +383,11 @@
 
     .oe_kanban_color_9
         background-color: #FFC7F1
+
+.openerp .oe_form .oe_kanban_view
+    .oe_kanban_column, .oe_kanban_group_header
+        padding: 0px
+        background: #ffffff
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

@@ -77,7 +77,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         } else if (state.client_action) {
             this.null_action();
-            this.ir_actions_client(state.client_action);
+            var action = state.client_action;
+            if(_.isString(action)) {
+                action = {
+                    tag: action,
+                    params: state,
+                };
+            }
+            this.ir_actions_client(action);
         }
 
         $.when(action_loaded || null).then(function() {
@@ -150,6 +157,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.inner_viewmanager.$element.addClass("oe_view_manager_global");
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -320,7 +328,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
 
         this.$element
-            .find('.oe_view_manager_switch a').parent().removeClass('active')
+            .find('.oe_view_manager_switch a').parent().removeClass('active');
         this.$element
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
@@ -329,9 +337,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
+                    var container = self.$element.find(".oe_view_manager_view_" + view_name + ":first");
                     if (view_name === view_type) {
+                        container.show();
                         controller.do_show(view_options || {});
                     } else {
+                        container.hide();
                         controller.do_hide();
                     }
                 }
@@ -728,14 +739,9 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         this._super(this);
         this.redraw();
-        this.$element.on('click','.oe_dropdown_toggle',function(event) {
-            $(this).parent().find('ul').toggle();
-            return false;
-        });
         this.$element.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
             var index = $(this).data('index');
-            $(this).closest('ul').hide();
             var item = self.items[section][index];
             if (item.callback) {
                 item.callback.apply(self, [item]);
@@ -744,13 +750,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else if (item.url) {
                 return true;
             }
-            return false;
+            event.preventDefault();
         });
     },
     redraw: function() {
         var self = this;
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
-        this.$element.find('ul').hide();
 
         // Hides Sidebar sections when item list is empty
         this.$('.oe_form_dropdown_section').each(function() {
