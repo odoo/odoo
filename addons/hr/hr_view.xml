@@ -36,8 +36,8 @@
                                 <field class="oe_inline" name="work_location" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                             </h1>
                             <label for="department_id" class="oe_edit_only"/>
-                            <h2><field name="department_id" on_change="onchange_department_id(department_id)" class="oe_inline"/></h2>
-                            <h3><field name="category_ids" widget="many2many_tags" class="oe_inline"/></h3>
+                            <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                            <h3><field name="category_ids" widget="many2many_tags"/></h3>
                         </div>
                         <group colspan="4" col="4">
                             <field name="work_email" widget="email" />
