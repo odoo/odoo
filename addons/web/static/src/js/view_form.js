@@ -2617,12 +2617,39 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         });
     },
     do_button_action: function (name, id, callback) {
-        var self = this;
         var _super = _.bind(this._super, this);
 
         this.o2m.view.do_save().then(function () {
             _super(name, id, callback);
         });
+    },
+    reload_content: function () {
+        var self = this;
+        return this._super().then(function () {
+            _.each(self.groups.children, self.proxy('hook_form_action'));
+        });
+    },
+    /**
+     * Goes through all the lists in order to override their form's
+     * execute_action to perform a simple reload_record after the action is
+     * done.
+     *
+     * Goes through ListView.List.save_row to do so, to ensure it has a valid
+     * form as there are no other hook points
+     */
+    hook_form_action: function (list) {
+        var self = this;
+        var _save_row = list.save_row;
+        list.save_row = function () {
+            var _execute_action = this.edition_form.do_execute_action;
+            this.edition_form.do_execute_action = function (action, dataset, record_id, _callback) {
+                return _execute_action.call(this, action, dataset, record_id, function () {
+                    self.reload_record(
+                        self.records.get(record_id));
+                });
+            };
+            return _save_row.apply(this, arguments);
+        }
     }
 });
 
