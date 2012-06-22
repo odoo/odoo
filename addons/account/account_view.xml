@@ -982,7 +982,7 @@
             <field name="arch" type="xml">
                 <form string="Journal Item" layout="manual"  version="7.0">
                     <h3>
-                    <field name="partner_id"/>
+                    <field name="partner_id" widget="many2one_pager"/>
                     </h3>
                     <group col="6">
                         <field name = "last_reconciliation_date" col="3"/>
