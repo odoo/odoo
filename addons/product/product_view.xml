@@ -311,12 +311,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Categories" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="sequence" invisible="1"/>
-                        <field name="type"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="type"/>
+                        </group>
+                        <group name="basic" col="4"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -415,9 +418,9 @@
                         </group>
                         <group string="Ratio &amp; Precision">
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <field name="rounding"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <label string="  e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                            <field name="rounding" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                            <field name="factor" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                            <label string="  e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                             <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                             <label string="  e.g: 1 * (this unit) = ratio * (reference unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
