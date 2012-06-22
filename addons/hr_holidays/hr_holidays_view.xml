@@ -449,8 +449,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
             <field name="arch" type="xml">
-                <field name="date_to" position="after">
-                    <field name="holiday_id"/>
+                <field name="name" position="after">
+                    <field name="holiday_id" string="Leave Request"/>
                 </field>
             </field>
         </record>
