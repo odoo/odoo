@@ -479,7 +479,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * record or saving an existing one depending on whether the record
      * already has an id property.
      *
-     * @param {Function} success callback on save success
+     * @param {Function} [success] callback on save success
      * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
      */
     do_save: function(success, prepend_on_create) {
@@ -2609,7 +2609,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             var button_result = self.o2m.dataset.call_button.apply(self.o2m.dataset, arguments);
             self.o2m.reload_current_view();
             return button_result;
-        }
+        };
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
                 self.o2m.reload_current_view();
@@ -2618,8 +2618,11 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     },
     do_button_action: function (name, id, callback) {
         var self = this;
-        var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
-        return this._super(name, id, _.bind(def.resolve, def));
+        var _super = _.bind(this._super, this);
+
+        this.o2m.view.do_save().then(function () {
+            _super(name, id, callback);
+        });
     }
 });
 
