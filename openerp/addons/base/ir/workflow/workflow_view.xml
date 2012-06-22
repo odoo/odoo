@@ -165,7 +165,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow Activity">
-                <field name="name" filter_domain="[('name','ilike',self)]" string="Workflow Activity"/>
+                <field name="name" string="Workflow Activity"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Flow Start"
                 domain="[('flow_start', '=',True)]" />
@@ -175,7 +175,6 @@
                 <field name="wkf_id"/>
                 <field name="action_id"/>
                 <field name="kind"/>
-                <field name="action"/>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
@@ -299,7 +298,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow Instances">
-                <field name="res_type" filter_domain="[('res_type','ilike',self)]" string="Resource Object"/>
+                <field name="res_type" string="Resource Object"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
                 <separator orientation="vertical"/>
@@ -364,7 +363,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Workflow Workitems">
-                <field name="state" filter_domain="[('state','ilike',self)]" string="State"/>
+                <field name="state" string="State"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
                 <separator orientation="vertical"/>
