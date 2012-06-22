@@ -41,10 +41,10 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
-                <label for="name" class="oe_edit_only"/>
-                <label for="origin" class="oe_edit_only"/>
                 <h1>
-                    <field name="name" class="oe_inline"/>, 
+                    <field name="name" class="oe_inline"/>
+                    <label for="origin" class="oe_edit_only"/>
+                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
                     <field name="origin" class="oe_inline"/>
                 </h1>
                 <group>
