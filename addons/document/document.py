@@ -38,7 +38,7 @@ class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
    
-
+   
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
         """Migrate ir.attachments to the document module.
 

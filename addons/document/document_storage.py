@@ -37,7 +37,6 @@ import string
 import pooler
 import nodes
 from content_index import cntIndex
-_logger = logging.getLogger(__name__)
 _doclog = logging.getLogger(__name__)
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config.get('root_path'), 'filestore'))
 
@@ -128,7 +127,7 @@ class nodefd_file(nodes.node_descriptor):
                 mime, icont = cntIndex.doIndex(None, filename=filename,
                         content_type=None, realfname=fname)
             except Exception:
-                _logger.debug('Cannot index file:', exc_info=True)
+                _doclog.debug('Cannot index file:', exc_info=True)
                 pass
 
             try:
@@ -148,7 +147,7 @@ class nodefd_file(nodes.node_descriptor):
                 cr.commit()
                 cr.close()
             except Exception:
-                _logger.warning('Cannot save file indexed content:', exc_info=True)
+                _doclog.warning('Cannot save file indexed content:', exc_info=True)
 
         elif self.mode in ('a', 'a+' ):
             try:
@@ -162,7 +161,7 @@ class nodefd_file(nodes.node_descriptor):
                 cr.commit()
                 cr.close()
             except Exception:
-                _logger.warning('Cannot save file appended content:', exc_info=True)
+                _doclog.warning('Cannot save file appended content:', exc_info=True)
 
 
 
@@ -189,7 +188,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
+            _doclog.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -215,7 +214,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
                     mime, icont = cntIndex.doIndex(data, filename=filename,
                             content_type=None, realfname=None)
                 except Exception:
-                    _logger.debug('Cannot index file:', exc_info=True)
+                    _doclog.debug('Cannot index file:', exc_info=True)
                     pass
 
                 try:
@@ -239,7 +238,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
                     (out, len(data), par.file_id))
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db file #%d for close:', par.file_id)
+            _doclog.exception('Cannot update db file #%d for close:', par.file_id)
             raise
         finally:
             cr.close()
@@ -269,7 +268,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
+            _doclog.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -318,7 +317,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
                     (base64.encodestring(data), len(data), par.file_id))
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db file #%d for close:', par.file_id)
+            _doclog.exception('Cannot update db file #%d for close:', par.file_id)
             raise
         finally:
             cr.close()

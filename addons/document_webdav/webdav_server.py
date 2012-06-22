@@ -54,10 +54,7 @@ from DAV.propfind import PROPFIND
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 from xml.dom import minidom
 from redirect import RedirectHTTPHandler
-
-_logger_DAV = logging.getLogger(__name__)
 _logger = logging.getLogger(__name__)
-_log_web = logging.getLogger(__name__)
 khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
 def OpenDAVConfig(**kw):
@@ -480,7 +477,7 @@ class dummy_dav_interface(object):
         uri2 = uri.split('/')
         if len(uri2) < 3:
             return True
-        _logger_DAV.debug("Requested uri: %s", uri)
+        _logger.debug("Requested uri: %s", uri)
         return None # no
 
     def is_collection(self, uri):
@@ -577,7 +574,7 @@ try:
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
         reg_http_service(directory, DAVHandler, DAVAuthProvider)
-        _logger_DAV.info("WebDAV service registered at path: %s/ "% directory)
+        _logger.info("WebDAV service registered at path: %s/ "% directory)
         
         if not (config.get_misc('webdav', 'no_root_hack', False)):
             # Now, replace the static http handler with the dav-enabled one.
@@ -599,7 +596,7 @@ try:
             reg_http_service('/', DAVStaticHandler)
 
 except Exception, e:
-    _logger_DAV.error('Cannot launch webdav: %s' % e)
+    _logger.error('Cannot launch webdav: %s' % e)
 
 
 def init_well_known():
@@ -645,7 +642,7 @@ def init_principals_redirect():
     if dbname:
         PrincipalsRedirect.redirect_paths[''] = '/webdav/%s/principals' % dbname
         reg_http_service('/principals', PrincipalsRedirect)
-        _log_web.info(
+        _logger.info(
                 "Registered HTTP redirect handler for /principals to the %s db.",
                 dbname)
 

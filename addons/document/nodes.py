@@ -41,9 +41,7 @@ from StringIO import StringIO
 #       file: objct = ir.attachement
 #   root: if we are at the first directory of a ressource
 #
-_nodefd = logging.getLogger(__name__)
 _logger = logging.getLogger(__name__)
-_loggernode = logging.getLogger(__name__)
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
@@ -1475,7 +1473,7 @@ class nodefd_content(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _loggernode.error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -1501,7 +1499,7 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _loggernode.exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -1529,7 +1527,7 @@ class nodefd_static(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _nodefd.error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -1554,7 +1552,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _nodefd.exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:
             cr.close()
