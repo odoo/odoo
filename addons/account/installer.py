@@ -149,7 +149,7 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self._logger.debug('Installing chart of accounts %s', chart)
+        _logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()

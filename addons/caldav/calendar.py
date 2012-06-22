@@ -725,13 +725,13 @@ class Calendar(CalDAV, osv.osv):
                 objs.append(cal_children[child.name.lower()])
             elif child.name.upper() == 'CALSCALE':
                 if child.value.upper() != 'GREGORIAN':
-                    self._logger.warning('How do I handle %s calendars?',child.value)
+                    _logger.warning('How do I handle %s calendars?',child.value)
             elif child.name.upper() in ('PRODID', 'VERSION'):
                 pass
             elif child.name.upper().startswith('X-'):
-                self._logger.debug("skipping custom node %s", child.name)
+                _logger.debug("skipping custom node %s", child.name)
             else:
-                self._logger.debug("skipping node %s", child.name)
+                _logger.debug("skipping node %s", child.name)
         
         res = []
         for obj_name in list(set(objs)):
