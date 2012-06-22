@@ -472,6 +472,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
+                console.error(e);
                 instance.webclient.crashmanager.on_javascript_exception(e);
                 return $.Deferred().reject();
             }
@@ -520,6 +521,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
+            instance.webclient.crashmanager.on_javascript_exception(e);
             return $.Deferred().reject();
         }
     },
