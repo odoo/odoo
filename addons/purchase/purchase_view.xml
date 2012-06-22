@@ -394,11 +394,13 @@
                     <sheet>
                         <label for="order_id" class="oe_edit_only"/>
                         <h1>
-                            <field name="order_id" class="oe_inline"/> 
+                            <field name="order_id" class="oe_inline"/>
+                            <label string="," attrs="{'invisible':[('date_order','=',False)]}"/> 
                             <field name="date_order" class="oe_inline"/>
                         </h1>
                         <label for="partner_id" class="oe_edit_only"/>
                         <h2><field name="partner_id"/></h2>
+    
                         <group>
                             <group>
                                 <field name="name"/>
