@@ -2743,6 +2743,11 @@ openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
     render_row_as_form: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
+            self.edition_form.$element
+                .undelegate('button.oe-edit-row-save', 'click')
+                .delegate('button.oe-edit-row-save', 'click', function () {
+                    self.cancel_pending_edition();
+                });
             $(self.edition_form).bind('form-blur', function () {
                 if (self.__return_blur) {
                     delete self.__return_blur;
