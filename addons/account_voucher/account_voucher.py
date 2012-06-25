@@ -53,6 +53,15 @@ class account_voucher(osv.osv):
             res[voucher.id] = paid
         return res
 
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        amount = 0.0
+        for voucher in self.browse(cr, uid, ids, context=context):
+            for line in voucher.line_cr_ids:
+                amount += line.amount
+            res[voucher.id] = amount
+        return res
+
     def _get_type(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -312,6 +321,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Invoice Total'),
     }
     _defaults = {
         'period_id': _get_period,
@@ -1337,6 +1347,7 @@ class account_voucher_line(osv.osv):
         'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True, digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
         'currency_id': fields.function(_currency_id, string='Currency', type='many2one', relation='res.currency', readonly=True),
+       
     }
     _defaults = {
         'name': '',

@@ -304,6 +304,7 @@
                 <sheet>
                     <div class="oe_title">
                         <div class="oe_edit_only">
+                        customer
                             <label for="parter_id" /> 
                         </div>
                         <h1>
@@ -312,12 +313,13 @@
                     </div>
                     <div>
                         Pay
+                      <h2>
                         <field name="amount"
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
                             class="oe_inline"
                             on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
-                        by
+                         by
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
@@ -325,14 +327,15 @@
                             class="oe_inline"
                             on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
+                         </h2>
 
                     </div>
 
                     <group col="6">
                         <field name="currency_id" invisible="1"/>
                         <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                          <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
@@ -376,7 +379,7 @@
                             </field>
                             <group col="3">
                                 <group col="2" string="Internal Notes">
-                                    <field name="narration" colspan="2" nolabel="1"/>
+                                    <field name="narration" colspan="2" nolabel="1" placeholder="Add an internal note"/>
                                 </group>
                                 <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
                                     <separator string="Currency Options" colspan="4"/>
@@ -385,6 +388,7 @@
                                     <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
                                     <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
                                 </group>
+                                <group>
                                 <group col="2">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="writeoff_amount"/>
@@ -396,8 +400,13 @@
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="analytic_id"
                                            groups="analytic.group_analytic_accounting"/>
-                                </group>
+                                </group>  
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                            	</group>
+                            	</group>
                             </group>
+                            
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
@@ -425,6 +434,7 @@
                         </page>
                     </notebook>
                     </sheet>
+                    
                 </form>
             </field>
         </record>

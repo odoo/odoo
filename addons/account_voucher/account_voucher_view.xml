@@ -53,11 +53,13 @@
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
+                        <field name="name"/>
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
-                        <field name="name" colspan="2"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="reference"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                       
+                       
                         <field name="account_id" widget="selection" invisible="True"/>
                     </group>
                     <notebook colspan="4">
