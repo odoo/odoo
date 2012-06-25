@@ -206,7 +206,6 @@ openerp.mail = function(session) {
             });
             // see more
             this.$element.on('click','a.oe_mail_msg_more', function (event) {
-                console.log("sadf");
                 $(this).siblings('.oe_mail_msg_tail').show();
                 $(this).hide();
                 return false;
@@ -234,8 +233,6 @@ openerp.mail = function(session) {
                 if (records.length <= self.params.limit) self.display.show_more = false;
                 else { self.display.show_more = true; records.pop(); }
                 
-                //build attachments download urls and compute time-relative from dates
-                
                 self.display_comments(records);
                 if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
                 else  self.$element.find('div.oe_mail_thread_more:last').hide();
@@ -255,6 +252,8 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
+            
+            //build attachments download urls and compute time-relative from dates
             for (var k in records) {
                 records[k].timerelative = $.timeago(records[k].date);
                 if (records[k].attachments) {
@@ -303,7 +302,7 @@ openerp.mail = function(session) {
             record.body = this.do_clean_text(record.body);
             record.body = this.do_replace_internal_links(record.body);
 
-            // split for see mode
+            // split for see more
             var split = this.do_truncate_string(record.body, this.params.msg_more_limit);
             record.body_head = split[0];
             record.body_tail = split[1];

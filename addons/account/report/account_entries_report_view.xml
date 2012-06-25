@@ -68,6 +68,10 @@
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <group>
+                    <field name="date"/>
+                    <field name="date_created"/>
+                    <field name="date_maturity"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-go-year" string="This F.Year"
                             name="thisyear"
                             context="{'year':'current_year'}"
@@ -95,10 +99,6 @@
                     <field name="partner_id"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="date_created"/>
-                    <field name="date"/>
-                    <field name="date_maturity"/>
                  </group>
                 <newline/>
                 <group expand="1" string="Group By...">
