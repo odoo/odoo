@@ -52,6 +52,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
+
+        this.__clicked_inside = false;
+        this.__blur_timeout = null;
     },
     start: function() {
         this._super();
@@ -80,8 +83,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.sidebar.stop();
         }
         _.each(this.widgets, function(w) {
+            $(w).unbind('.formBlur');
             w.stop();
         });
+        this.$element.unbind('.formBlur');
         this._super();
     },
     reposition: function ($e) {
@@ -98,8 +103,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.rendered = QWeb.render(this.form_template, { 'frame': frame, 'widget': this });
         }
         this.$element.html(this.rendered);
+        this.$element.bind('mousedown.formBlur', function () {
+            self.__clicked_inside = true;
+        });
         _.each(this.widgets, function(w) {
             w.start();
+            $(w).bind('widget-focus.formBlur', self.proxy('widgetFocused'))
+                .bind('widget-blur.formBlur', self.proxy('widgetBlurred'));
         });
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
@@ -128,6 +138,29 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }]);
         }
         this.has_been_loaded.resolve();
+    },
+
+    widgetFocused: function() {
+        // Clear click flag if used to focus a widget
+        this.__clicked_inside = false;
+        if (this.__blur_timeout) {
+            clearTimeout(this.__blur_timeout);
+            this.__blur_timeout = null;
+        }
+    },
+    widgetBlurred: function() {
+        if (this.__clicked_inside) {
+            // clicked in an other section of the form (than the currently
+            // focused widget) => just ignore the blurring entirely?
+            this.__clicked_inside = false;
+            return;
+        }
+        var self = this;
+        // clear timeout, if any
+        this.widgetFocused();
+        this.__blur_timeout = setTimeout(function () {
+            $(self).trigger('form-blur');
+        }, 0);
     },
 
     do_load_state: function(state, warm) {
@@ -549,7 +582,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return $.Deferred().reject();
         } else {
             return $.when(this.reload()).pipe(function () {
-                return $.when(r).then(success); }, null);
+                return r; })
+                    .then(success);
         }
     },
     /**
@@ -583,8 +617,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 this.sidebar.attachments.do_update();
             }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
-            this.reload();
-            return $.when(_.extend(r, {created: true})).then(success);
+            return $.when(this.reload()).pipe(function () {
+                return _.extend(r, {created: true}); })
+                    .then(success);
         }
     },
     on_action: function (action) {
@@ -924,6 +959,18 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
 
         this.width = this.node.attrs.width;
     },
+    /**
+     * Sets up blur/focus forwarding from DOM elements to a widget (`this`)
+     *
+     * @param {jQuery} $e jQuery object of elements to bind focus/blur on
+     */
+    setupFocus: function ($e) {
+        var self = this;
+        $e.bind({
+            focus: function () { $(self).trigger('widget-focus'); },
+            blur: function () { $(self).trigger('widget-blur'); }
+        });
+    },
     start: function() {
         this.$element = this.view.$element.find(
             '.' + this.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
@@ -1210,10 +1257,12 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find("button").click(this.on_click);
+        var $button = this.$element.find('button');
+        $button.click(this.on_click);
         if (this.help || openerp.connection.debug) {
             this.do_attach_tooltip();
         }
+        this.setupFocus($button);
     },
     on_click: function() {
         var self = this;
@@ -1327,11 +1376,13 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         if (this['for'] && (this['for'].help || openerp.connection.debug)) {
             this.do_attach_tooltip(self['for']);
         }
-        this.$element.find("label").dblclick(function() {
+        var $label = this.$element.find('label');
+        $label.dblclick(function() {
             var widget = self['for'] || self;
             openerp.log(widget.element_class , widget);
             window.w = widget;
         });
+        this.setupFocus($label);
     }
 });
 
@@ -1458,7 +1509,9 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').change(this.on_ui_change);
+        var $input = this.$element.find('input');
+        $input.change(this.on_ui_change);
+        this.setupFocus($input);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -1499,7 +1552,9 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     template: 'FieldEmail',
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('button').click(this.on_button_clicked);
+        var $button = this.$element.find('button');
+        $button.click(this.on_button_clicked);
+        this.setupFocus($button);
     },
     on_button_clicked: function() {
         if (!this.value || !this.is_valid()) {
@@ -1514,7 +1569,9 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
     template: 'FieldUrl',
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('button').click(this.on_button_clicked);
+        var $button = this.$element.find('button');
+        $button.click(this.on_button_clicked);
+        this.setupFocus($button);
     },
     on_button_clicked: function() {
         if (!this.value) {
@@ -1564,12 +1621,14 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
             showButtonPanel: true
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
-            if (!self.readonly && !self.picker('widget').is(':visible')) {
-                self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
-                self.$input_picker.show();
-                self.picker('show');
-                self.$input_picker.hide();
+            if (self.readonly || self.picker('widget').is(':visible')) {
+                self.$input.focus();
+                return;
             }
+            self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
+            self.$input_picker.show();
+            self.picker('show');
+            self.$input_picker.hide();
         });
         this.set_readonly(false);
         this.value = false;
@@ -1579,7 +1638,10 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     },
     on_picker_select: function(text, instance) {
         var date = this.picker('getDate');
-        this.$input.val(date ? this.format_client(date) : '').change();
+        this.$input
+            .val(date ? this.format_client(date) : '')
+            .change()
+            .focus();
     },
     set_value: function(value) {
         this.value = value;
@@ -1639,6 +1701,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
         this.datewidget = this.build_widget();
         this.datewidget.on_change.add_last(this.on_ui_change);
         this.datewidget.appendTo(this.$element);
+        this.setupFocus(this.datewidget.$input);
     },
     set_value: function(value) {
         this._super(value);
@@ -1669,8 +1732,10 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     template: 'FieldText',
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('textarea').change(this.on_ui_change);
+        var $textarea = this.$element.find('textarea');
+        $textarea.change(this.on_ui_change);
         this.resized = false;
+        this.setupFocus($textarea);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -1731,7 +1796,9 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$element.find('input').click(self.on_ui_change);
+        var $input = this.$element.find('input');
+        $input.click(self.on_ui_change);
+        this.setupFocus($input);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -1801,7 +1868,8 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
         //   row
         var ischanging = false;
         this._super.apply(this, arguments);
-        this.$element.find('select')
+        var $select = this.$element.find('select');
+        $select
             .change(this.on_ui_change)
             .change(function () { ischanging = true; })
             .click(function () { ischanging = false; })
@@ -1810,6 +1878,7 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
                 e.stopPropagation();
                 ischanging = false;
             });
+        this.setupFocus($select);
     },
     set_value: function(value) {
         value = value === null ? false : value;
@@ -1920,6 +1989,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 };
                 bindings[self.cm_id + "_open"] = function() {
                     if (!self.value) {
+                        self.focus();
                         return;
                     }
                     var pop = new openerp.web.form.FormOpenPopup(self.view);
@@ -1933,6 +2003,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                     );
                     pop.on_write_completed.add_last(function() {
                         self.set_value(self.value[0]);
+                        self.focus();
                     });
                 };
                 _.each(_.range(self.related_entries.length), function(i) {
@@ -1975,13 +2046,13 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 return;
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
+                self.$input.focus();
             } else {
                 if (self.value) {
                     self.$input.autocomplete("search", "");
                 } else {
                     self.$input.autocomplete("search");
                 }
-                self.$input.focus();
             }
         });
         var anyoneLoosesFocus = function() {
@@ -2020,6 +2091,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             minLength: 0,
             delay: 0
         });
+
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) {
@@ -2028,6 +2100,8 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             }
             isSelecting = false;
         });
+
+        this.setupFocus(this.$input.add(this.$menu_btn));
     },
     // autocomplete component content handling
     get_search_result: function(request, response) {
@@ -2129,6 +2203,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             var dataset = new openerp.web.DataSetStatic(self, self.field.relation, self.build_context());
             dataset.name_get([element_ids[0]], function(data) {
                 self._change_int_ext_value(data[0]);
+                self.focus();
             });
         });
     },
@@ -2508,23 +2583,20 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 	    }, this));
     },
     is_valid: function() {
-        this.validate();
-        return this._super();
-    },
-    validate: function() {
-        this.invalid = false;
         if (!this.viewmanager.views[this.viewmanager.active_view])
-            return;
+            return true;
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-        if (this.viewmanager.active_view === "form") {
-            for (var f in view.fields) {
-                f = view.fields[f];
-                if (!f.is_valid()) {
-                    this.invalid = true;
-                    return;
-                }
-            }
+        switch (this.viewmanager.active_view) {
+        case 'form':
+            return _(view.fields).chain()
+                .invoke('is_valid')
+                .all(_.identity)
+                .value();
+            break;
+        case 'list':
+            return view.is_valid();
         }
+        return true;
     },
     is_dirty: function() {
         this.save_any_view();
@@ -2556,6 +2628,47 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     _template: 'One2Many.listview',
+    init: function (parent, dataset, view_id, options) {
+        this._super(parent, dataset, view_id, _.extend(options || {}, {
+            ListType: openerp.web.form.One2ManyList
+        }));
+    },
+    is_valid: function () {
+        var form;
+        // A list not being edited is always valid
+        if (!(form = this.first_edition_form())) {
+            return true;
+        }
+        // If the form has not been modified, the view can only be valid
+        // NB: is_dirty will also be set on defaults/onchanges/whatever?
+        // oe_form_dirty seems to only be set on actual user actions
+        if (!form.$element.is('.oe_form_dirty')) {
+            return true;
+        }
+
+        // Otherwise validate internal form
+        return _(form.fields).chain()
+            .invoke(function () {
+                this.validate();
+                this.update_dom(true);
+                return this.is_valid();
+            })
+            .all(_.identity)
+            .value();
+    },
+    first_edition_form: function () {
+        var get_form = function (group_or_list) {
+            if (group_or_list.edition) {
+                return group_or_list.edition_form;
+            }
+            return _(group_or_list.children).chain()
+                .map(get_form)
+                .compact()
+                .first()
+                .value();
+        };
+        return get_form(this.groups);
+    },
     do_add_record: function () {
         if (this.options.editable) {
             this._super.apply(this, arguments);
@@ -2609,7 +2722,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             var button_result = self.o2m.dataset.call_button.apply(self.o2m.dataset, arguments);
             self.o2m.reload_current_view();
             return button_result;
-        }
+        };
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
                 self.o2m.reload_current_view();
@@ -2620,6 +2733,37 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         var self = this;
         var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
         return this._super(name, id, _.bind(def.resolve, def));
+    }
+});
+openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
+    KEY_RETURN: 13,
+    // blurring caused by hitting the [Return] key, should skip the
+    // autosave-on-blur and let the handler for [Return] do its thing
+    __return_blur: false,
+    render_row_as_form: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.edition_form.$element
+                .undelegate('button.oe-edit-row-save', 'click')
+                .delegate('button.oe-edit-row-save', 'click', function () {
+                    self.cancel_pending_edition();
+                });
+            $(self.edition_form).bind('form-blur', function () {
+                if (self.__return_blur) {
+                    delete self.__return_blur;
+                    return;
+                }
+                if (!self.edition_form.widget_is_stopped) {
+                    self.view.ensure_saved();
+                }
+            });
+        });
+    },
+    on_row_keyup: function (e) {
+        if (e.which === this.KEY_RETURN) {
+            this.__return_blur = true;
+        }
+        this._super(e);
     }
 });
 
@@ -3140,9 +3284,14 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
         }
     },
     start: function() {
+        var self = this;
         this._super();
         this.selection.start();
         this.m2o.start();
+        $(this.selection).add($(this.m2o)).bind({
+            'focus': function () { $(self).trigger('widget-focus'); },
+            'blur': function () { $(self).trigger('widget-blur'); }
+        })
     },
     is_valid: function() {
         return this.required === false || typeof(this.get_value()) === 'string';
