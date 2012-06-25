@@ -29,6 +29,7 @@
             <field name="arch" type="xml">
                 <tree string="Expenses" colors="blue:state=='draft'">
                     <field name="employee_id"/>
+                    <field name="department_id" invisible="1"/>
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
@@ -135,22 +136,17 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <group>
-                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
-                      <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
-                        help="Confirmed Expense"/>
-                      <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
-                        help="Expenses to Invoice"/>
+                      <field name="name" string="Expenses"/>
                       <separator orientation="vertical"/>
-                      <filter icon="terp-go-month" string="This Month" name="this"
-                              domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
+                      <field name="date"/>
+                      <separator orientation="vertical"/>
+                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
+                      <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" help="Confirmed Expense"/>
+                      <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay" help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
                       <field name="employee_id"/>
-                      <field name="date"/>
-                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                    </field>
-                      <field name="name"/>
-                      <field name="user_id"  string="User">
-                      </field>
+                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}"/>
+                      <field name="user_id"  string="User"/>
                 </group>
                 <newline />
                 <group expand="0" string="Group By...">
