@@ -2,30 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Server action: mark as unread -->
-<!--
-        <record id="actions_server_mail_thread_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
-            <field name="condition" eval="True"/>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="crm.model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code" eval="&quot;&quot;&quot;self.message_mark_as_unread(cr, uid, [object.id], context=context)&quot;&quot;&quot;"/>
-        </record>
--->
-
-        <!-- Server action: mark as read -->
-<!--
-        <record id="actions_server_mail_thread_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
-            <field name="condition" eval="True"/>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="mail.model_mail_thread"/>
-            <field name="state">code</field>
-            <field name="code" eval="&quot;&quot;&quot;self.message_mark_as_read(cr, uid, [object.id], context=context)&quot;&quot;&quot;"/>
-        </record>
--->
-
         <!-- toplevel menu -->
         <menuitem id="mail_feeds_main" name="Feeds" sequence="0"
             web_icon="static/src/img/feeds.png"

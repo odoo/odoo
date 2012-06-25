@@ -2,34 +2,42 @@
 <openerp>
     <data>
 
+        <!-- Read/Unread actions -->
         <record id="actions_server_crm_unread" model="ir.actions.server">
             <field name="name">Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="state">code</field>
-            <field name="code">object.message_mark_as_unread()</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
-
-        <record id="act_multi_crm_lead_mark_unread" model="ir.values">
-            <field name="name">actions_server_crm_unread</field>
+        <record id="action_crm_lead_mark_unread" model="ir.values">
+            <field name="name">action_crm_lead_mark_unread</field>
             <field name="action_id" ref="actions_server_crm_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_unread'))" />
             <field name="key">action</field>
             <field name="model_id" ref="model_crm_lead" />
             <field name="model">crm.lead</field>
             <field name="key2">client_action_multi</field>
         </record>
 
-<!--
-        <record id="act_multi_hr_holidays_mark_unread" model="ir.values">
-            <field name="name">Hr holidays Mark unread</field>
-            <field name="value" eval="'ir.actions.server,' + str(ref('mail.actions_server_mail_thread_unread'))" />
+        <record id="actions_server_crm_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_crm_lead_mark_read" model="ir.values">
+            <field name="name">action_crm_lead_mark_read</field>
+            <field name="action_id" ref="actions_server_crm_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_read'))" />
             <field name="key">action</field>
-            <field name="model_id" ref="hr_holidays.model_hr_holidays" />
-            <field name="model">hr_holidays</field>
+            <field name="model_id" ref="model_crm_lead" />
+            <field name="model">crm.lead</field>
             <field name="key2">client_action_multi</field>
         </record>
--->
 
         <!--
             CRM CASE STAGE

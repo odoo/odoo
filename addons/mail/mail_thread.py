@@ -181,7 +181,7 @@ class mail_thread(osv.Model):
         msg_id = message_obj.create(cr, uid, vals, context=context)
         
         # Set as unread if writer is not the document responsible
-        self.message_create_check_state(cr, uid, [thread_id], context=context)
+        self.message_create_and_set_unread(cr, uid, [thread_id], context=context)
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
@@ -438,6 +438,9 @@ class mail_thread(osv.Model):
         msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
         msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, [], context=context)
         
+        # Set as read
+        self.message_check_and_set_read(cr, uid, ids, context=context)
+        
         """ Retrieve all attachments names """
         map_id_to_name = {}
         
@@ -461,7 +464,6 @@ class mail_thread(osv.Model):
         
         """ Sort and return messages """
         msgs = sorted(msgs, key=lambda d: (-d['id']))
-        print 'tatayoyo'
         return msgs
 
     def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
@@ -873,17 +875,26 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    def message_create_check_state(self, cr, uid, ids, context=None):
+    def message_create_and_set_unread(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
-                print 'poinpoinponi'
+            if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id != uid):
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
-    def message_mark_as_read(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_state': True}, context=context)
-    
+    def message_check_and_set_unread(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id == uid):
+                self.message_mark_as_unread(cr, uid, [obj.id], context=context)
+
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_state': False}, context=context)
+
+    def message_check_and_set_read(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.message_state and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.id == uid:
+                self.message_mark_as_read(cr, uid, [obj.id], context=context)
+    
+    def message_mark_as_read(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'message_state': True}, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
