@@ -875,6 +875,7 @@ instance.web.WebClient = instance.web.Widget.extend({
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
         });
         this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
+            ev.preventDefault();
             var $menu = $(this).find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
