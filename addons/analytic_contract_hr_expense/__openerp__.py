@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Contracts Management',
+    'name': 'Contracts Management: hr_expense link',
     'version': '1.1',
     'category': 'Sales Management',
     'description': """
