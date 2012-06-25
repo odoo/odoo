@@ -65,22 +65,20 @@
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">
                     <group col="8" colspan="4">
+                        <field name="name" string="Picking to Invoice" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" name="available" string="Available"
                             domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
                         <filter icon="terp-dialog-close" name="done" string="Received"
                             domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders"
                             domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                        <separator orientation="vertical"/>
                         <filter string="To Invoice" name="to_invoice" icon="terp-dolar"
                             domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="origin"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>                    
+                    </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <separator orientation="vertical"/>
@@ -100,7 +98,7 @@
         </record>
  
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
-            <field name="name">Bases on incoming shipments</field>
+            <field name="name">Based on Incoming Shipments</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -108,7 +106,11 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
-            <field name="help">If you set the Invoicing Control on a purchase order as "Bases on incoming shipments", you can track here all the product receptions and create invoices for those receptions.</field>
+            <field name="help">
+                Here you can track all the product receptions of purchase orders where the invoicing is "Based on Incoming Shipments",
+                and for which you have not received a supplier invoice yet.
+                You can generate a supplier invoice based on those receptions.
+            </field>
        </record>
 
         <menuitem action="action_picking_tree4_picking_to_invoice"
