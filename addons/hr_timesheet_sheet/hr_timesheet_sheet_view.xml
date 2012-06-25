@@ -62,28 +62,32 @@
                     <label for="employee_id" class="oe_edit_only"/>
                     <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
                     <label for="date_from" class="oe_edit_only" string="Timesheet Period"/>
-                    <h2>
-                        From <field name="date_from" />
-                        to <field name="date_to"/>
-                    </h2>
-                    <group col="4" colspan="4">
-                        <field name="name"/>
-                        <field name="total_attendance" widget="float_time"/>
-                        <field name="department_id"/>
-                        <field name="total_timesheet" widget="float_time"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="total_difference" widget="float_time"/>
-                        <field name="user_id" invisible="1"/>
+                    <h2>From <field name="date_from"/> to <field name="date_to"/></h2>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="total_attendance" widget="float_time"/>
+                            <field name="total_timesheet" widget="float_time"/>
+                            <field name="total_difference" widget="float_time"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Daily">
-                            <group col="6" colspan="4">
-                                <button name="button_dummy" string="Go to:" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                <field name="date_current" nolabel="1"/>
-                                <label string=""/>
-                                <button icon="terp-gtk-go-back-ltr" name="date_previous" string="" type="object"/>
-                                <button name="date_today" string="Today" type="object" icon="terp-go-today"/>
-                                <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
+                            <group>
+                                <div>
+                                    <button name="button_dummy" class="oe_inline" string="Go to" type="object" icon="terp-gtk-jump-to-ltr"/> :
+                                    <field name="date_current" class="oe_inline"/>
+                                </div>
+                                <div align="right">
+                                    <button class="oe_inline" icon="terp-gtk-go-back-ltr" name="date_previous" string="" type="object"/>
+                                    <button class="oe_inline" name="date_today" string="Today" type="object" icon="terp-go-today"/>
+                                    <button class="oe_inline" icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
+                                </div>
                             </group>
                             <group colspan="4" col="3">
                                 <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1">
@@ -93,12 +97,13 @@
                                         <field invisible="1" name="employee_id"/>
                                     </tree>
                                 </field>
-                                <group class="oe_right">
-                                    <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                    <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                                <group>
+                                    <div align="right">
+                                        <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
+                                        <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                                    </div>
                                 </group>
                             </group>
-                            
                             <group col="4">
                                 <field name="state_attendance"/>
                                 <field name="total_attendance_day" widget="float_time"/>
