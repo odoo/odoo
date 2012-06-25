@@ -189,12 +189,10 @@
             <field name="name">Computech Systems</field>
         </record>
 
-        <!--        TODO: Improve contact-->
-        <record id="res_partner_address_fabien0" model="res.partner">
-            <field eval="&quot;&quot;&quot;Felix&quot;&quot;&quot;" name="name"/>
+        <record id="res_partner_address_41" model="res.partner">
+            <field name="name">Steven Hamilton</field>
             <field name="parent_id" ref="res_partner_company_1"/>
             <field name="use_parent_address" eval="1"/>
-            <field eval="1" name="active"/>
         </record>
 
         <record id="res_company_1" model="res.company">
@@ -213,12 +211,10 @@
             <field name="name">SoftSys Technologies</field>
         </record>
 
-        <!--        TODO: Improve contact -->
-        <record id="res_partner_address_eric0" model="res.partner">
-            <field eval="&quot;&quot;&quot;Edwin&quot;&quot;&quot;" name="name"/>
+        <record id="res_partner_address_40" model="res.partner">
+            <field name="name">Donald Thompson</field>
             <field name="parent_id" ref="res_partner_company_2"/>
             <field name="use_parent_address" eval="1"/>
-            <field eval="1" name="active"/>
         </record>
 
         <record id="res_company_2" model="res.company">
@@ -257,7 +253,7 @@
             <field name="lot_output_id" ref="stock.stock_location_output"/>
             <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
             <field name="lot_stock_id" ref="stock_location_shop0"/>
-            <field name="partner_id" ref="res_partner_address_fabien0"/>
+            <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
             <field name="lot_input_id" ref="stock_location_shop0"/>
         </record>
@@ -265,7 +261,7 @@
             <field name="lot_output_id" ref="stock.stock_location_output"/>
             <field name="name">Shop 2</field>
             <field name="lot_stock_id" ref="stock_location_shop1"/>
-            <field name="partner_id" ref="res_partner_address_eric0"/>
+            <field name="partner_id" ref="res_partner_address_40"/>
             <field name="company_id" ref="res_company_1"/>
             <field name="lot_input_id" ref="stock_location_shop1"/>
         </record>
