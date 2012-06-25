@@ -161,7 +161,7 @@ def encode_rfc2822_address_header(header_text):
 
  
 class ir_mail_server(osv.osv):
-    """Represents an SMTP server, able to send outgoing e-mails, with SSL and TLS capabilities."""
+    """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
 
     _columns = {
