@@ -365,14 +365,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leave Type" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="double_validation"/>
-                        <field name="categ_id" widget="selection"/>
-                        <field name="limit"/>
-                        <field name="color_name"/>
-                        <field name="active"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="categ_id"/>
+                                <field name="color_name"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="double_validation"/>
+                                <field name="limit"/>
+                            </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
