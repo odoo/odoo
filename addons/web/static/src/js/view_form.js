@@ -512,7 +512,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * record or saving an existing one depending on whether the record
      * already has an id property.
      *
-     * @param {Function} success callback on save success
+     * @param {Function} [success] callback on save success
      * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
      */
     do_save: function(success, prepend_on_create) {
@@ -2730,9 +2730,11 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         });
     },
     do_button_action: function (name, id, callback) {
-        var self = this;
-        var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
-        return this._super(name, id, _.bind(def.resolve, def));
+        var _super = _.bind(this._super, this);
+
+        this.o2m.view.do_save().then(function () {
+            _super(name, id, callback);
+        });
     }
 });
 openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
@@ -2743,11 +2745,24 @@ openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
     render_row_as_form: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
+            // Replace the "Save Row" button with "Cancel Edition"
             self.edition_form.$element
                 .undelegate('button.oe-edit-row-save', 'click')
                 .delegate('button.oe-edit-row-save', 'click', function () {
                     self.cancel_pending_edition();
                 });
+
+            // Overload execute_action on the edition form to perform a simple
+            // reload_record after the action is done, rather than fully
+            // reload the parent view (or something)
+            var _execute_action = self.edition_form.do_execute_action;
+            self.edition_form.do_execute_action = function (action, dataset, record_id, _callback) {
+                return _execute_action.call(this, action, dataset, record_id, function () {
+                    self.view.reload_record(
+                        self.view.records.get(record_id));
+                });
+            };
+
             $(self.edition_form).bind('form-blur', function () {
                 if (self.__return_blur) {
                     delete self.__return_blur;

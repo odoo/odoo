@@ -487,6 +487,19 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     reload: function () {
         return this.reload_content();
     },
+    reload_record: function (record) {
+        return this.dataset.read_ids(
+            [record.get('id')],
+            _.pluck(_(this.columns).filter(function (r) {
+                    return r.tag === 'field';
+                }), 'name')
+        ).then(function (records) {
+            _(records[0]).each(function (value, key) {
+                record.set(key, value, {silent: true});
+            });
+            record.trigger('change', record);
+        });
+    },
 
     do_load_state: function(state, warm) {
         var reload = false;
@@ -1026,17 +1039,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
      * @returns {$.Deferred} promise to the finalization of the reloading
      */
     reload_record: function (record) {
-        return this.dataset.read_ids(
-            [record.get('id')],
-            _.pluck(_(this.columns).filter(function (r) {
-                    return r.tag === 'field';
-                }), 'name')
-        ).then(function (records) {
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
-            });
-            record.trigger('change', record);
-        });
+        return this.view.reload_record(record);
     },
     /**
      * Renders a list record to HTML
