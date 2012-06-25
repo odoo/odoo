@@ -247,13 +247,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         if (this.$buttons) {
             this.$buttons.show();
-            this.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
         }
         if (this.$pager) {
             this.$pager.show();
         }
         this.$element.show().css('visibility', 'hidden');
-        this.$element.removeClass('oe_form_dirty');
+        this.$element.add(this.$buttons).removeClass('oe_form_dirty');
         return this.has_been_loaded.pipe(function() {
             var result;
             if (self.dataset.index === null) {
@@ -329,16 +328,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (record.id) {
                 self.do_push_state({id:record.id});
             }
-            self.$element.removeClass('oe_form_dirty');
-            self.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
+            self.$element.add(self.$buttons).removeClass('oe_form_dirty');
         });
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
     },
     do_notify_change: function() {
-        this.$element.addClass('oe_form_dirty');
-        this.$buttons.find('.oe_form_button_save').addClass('oe_form_button_save_dirty');
+        this.$element.add(this.$buttons).addClass('oe_form_dirty');
     },
     on_pager_action: function(action) {
         if (this.can_be_discarded()) {
