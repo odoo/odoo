@@ -36,7 +36,7 @@ class outlook_installer(osv.osv_memory):
         res = super(outlook_installer, self).default_get(cr, uid, fields, context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         res['plugin32'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi'
-         res['plugin64'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi'
+        res['plugin64'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi'
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
