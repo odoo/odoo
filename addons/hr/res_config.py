@@ -31,7 +31,7 @@ class hr_config_settings(osv.osv_memory):
         'module_hr_attendance': fields.boolean('Track Attendances',
             help ="""This installs the module hr_attendance."""),
         'module_hr_timesheet': fields.boolean('Manage Timesheets',
-            help ="""This installs the module hr_timesheet."""),                                
+            help ="""This installs the module hr_timesheet."""),
         'module_hr_holidays': fields.boolean('Leaves & Holidays',
             help ="""This installs the module hr_holidays."""),
         'module_hr_expense': fields.boolean('Expenses',
@@ -47,26 +47,15 @@ class hr_config_settings(osv.osv_memory):
     }
 
     def onchange_hr_timesheet(self, cr, uid, ids, timesheet, context=None):
+        """ module_hr_timesheet implies module_hr_attendance """
         if timesheet:
-            vals =  {'value': {
-                'module_hr_timesheet': timesheet,
-                'module_hr_attendance': timesheet,
-            }}
-        if timesheet == False:
-            vals =  {'value': {
-            'module_hr_timesheet': timesheet,
-        }}
-        return vals
-    
+            return {'value': {'module_hr_attendance': True}}
+        return {}
+
     def onchange_hr_attendance(self, cr, uid, ids, attendance, context=None):
-        if attendance:
-            vals =  {'value': {
-                'module_hr_attendance': attendance,
-            }}
-        if attendance == False:
-            vals =  {'value': {
-            'module_hr_attendance': attendance,
-            'module_hr_timesheet': attendance,
-        }}
-        return vals
+        """ module_hr_timesheet implies module_hr_attendance """
+        if not attendance:
+            return {'value': {'module_hr_timesheet': False}}
+        return {}
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
