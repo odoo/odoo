@@ -19,18 +19,23 @@
                     </xpath>
                     <xpath expr="//button[@string='Cancel']" position="replace"></xpath>
                     <xpath expr="//separator[@string='title']" position="after">
-                        <group colspan="8" height="450" width="750">
+                        <group>
                             <field name="thunderbird" invisible="1"/>
-                            <field name="name" invisible="1"/>
-                            <field name="pdf_name" invisible="1"/>
-                            <newline/>
-                            <field name="plugin_file" filename="name" widget="url"/>
-                            <newline/>
-                            <field name="pdf_file" filename="pdf_name" widget="url"/>
-                            <newline/>
-                            <separator string="Installation and Configuration Steps" colspan="4"/>
-                            <field name="description" nolabel="1" colspan="8"/>
+                            <field name="plugin_name" invisible="1"/>
+                            <field name="plugin_file" filename="plugin_name" widget="url"/>
+                            <field name="pdf_file" widget="url"/>
                         </group>
+                        <separator string="Installation and Configuration Steps"/>
+                        <p>Thunderbird plugin installation:</p>
+                        <ul>
+                            <li>1. Save the Thunderbird plug-in.</li>
+                            <li>2. From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
+                            <li>4. Select the plug-in (the file named openerp_plugin.xpi).</li>
+                            <li>5. Click "Install Now".</li>
+                            <li>6. Restart Thunderbird.</li>
+                            <li>7. From the Thunderbird menubar: OpenERP -> Configuration.</li>
+                            <li>8. Configure your openerp server.</li>
+                        </ul>
                     </xpath>
                     <separator string="title" position="attributes">
                          <attribute name="string">Install Thunderbird Plug-In</attribute>
