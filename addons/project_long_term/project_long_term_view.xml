@@ -70,16 +70,16 @@
             <field name="arch" type="xml">
                 <search string="Planning of Users">
                     <group>
-                        <field name="user_id"/>
-                        <field name="phase_id"/>
-                        <field name="project_id"/>
+                       <field name="user_id"/>
+                       <field name="phase_id"/>
+                       <field name="project_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter name="user" string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
+                       <filter name="user" string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                       <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
             </field>
@@ -151,9 +151,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet>
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="project_id" class="oe_form_readonly_hidden"/>
+                    <label for="project_id" class="oe_edit_only"/>
                     <h2>
                         <field name="project_id" on_change="onchange_project(project_id)" colspan="3"/>
                     </h2>
@@ -164,7 +164,7 @@
                         </group><group>
                             <label for="duration"/>
                             <div>
-                                <field name="duration" class="oe_form_inline"/>
+                                <field name="duration" class="oe_inline"/>
                                 <field name="product_uom"/>
                             </div>
                         </group>
@@ -213,7 +213,7 @@
                                 </group>
                             </group>
                            <separator string="Force Assigned Users"/>
-                           <field name="user_force_ids"/>
+                           <field name="user_force_ids" widget="many2many_tags" />
                            <separator string="Previous Phases"/>
                            <field name="previous_phase_ids"/>
                            <separator string="Next Phases"/>
@@ -272,18 +272,19 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group>
+                        <field name="name" string="Project Phases"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <separator orientation="vertical"/>
                         <filter string="New" domain="[('state','=','draft')]"  name="current" help="New Phases" icon="terp-check"/>
                         <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
+                        <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-violet"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="project_id">
-                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-violet"/>
-                        </field>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
+                        <field name="project_id"/>
                     </group>
-                    <newline/>
+                    <newline/> 
                     <group expand="0" string="Group By...">
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>

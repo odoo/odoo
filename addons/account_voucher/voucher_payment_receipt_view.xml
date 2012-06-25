@@ -9,17 +9,16 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id" string="Customer"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id"/>
                     </group>
@@ -42,17 +41,16 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id"/>
                     </group>
@@ -304,19 +302,34 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet>
-                    <group col="6">
-                        <field name="partner_id" domain="[('customer','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
-                        <field name="currency_id" invisible="1"/>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="parter_id" /> 
+                        </div>
+                        <h1>
+                            <field name="partner_id" domain="[('customer','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
+                        </h1>
+                    </div>
+                    <div>
+                        Pay
                         <field name="amount"
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
+                            class="oe_inline"
                             on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+                        by
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
                             widget="selection"
+                            class="oe_inline"
                             on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
+
+                    </div>
+
+                    <group col="6">
+                        <field name="currency_id" invisible="1"/>
                         <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
                         <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>

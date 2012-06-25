@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
-       <!-- Group Kanban View  !-->
+
+        <!-- Group Kanban View  !-->
         <record model="ir.ui.view" id="view_group_kanban">
             <field name="name">mail.group.kanban</field>
             <field name="model">mail.group</field>
@@ -50,27 +50,30 @@
             <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Group">
-                    <group colspan="4" col="8">
-                        <group colspan="6" col="4">
-                            <separator string="General Information" colspan="4"/>
-                            <field name="name" colspan="2"/>
-                            <field name="responsible_id" colspan="2"/>
-                            <newline/>
-                            <field name="description" colspan="4"/>
-                        </group>
-                        <group colspan="1" col="2">
-                            <separator string="Group Image" colspan="2"/>
-                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
-                        </group>
-                        <group colspan="1" col="2">
-                            <separator string="Privacy Settings" colspan="2"/>
-                            <field name="public" nolabel="1"/>
-                            <label string="This group is visible by non members" colspan="2"/>
-                        </group>
-                    </group>
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
-                            options='{"thread_level": 1}'/>
+                <form string="Group Form" version="7.0">
+                    <div style="padding: 8px">
+                        <div class="oe_right">
+                            <field name="photo" widget='image' on_change="onchange_photo(photo)"/>
+                        </div>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/> 
+                            </div>
+                            <h1><field name="name"/></h1>
+                            <div class="oe_edit_only">
+                                <label for="responsible_id"/> 
+                            </div>
+                            <field name="responsible_id" class="oe_inline"/>
+                            <div class="oe_edit_only">
+                                <label for="public"/> 
+                                <field name="public" class="oe_inline"/>
+                            </div>
+                            <field name="description" colspan="4" nolabel="1"/>
+                        </div>
+                    </div>
+                    <footer>
+                        <field name="message_ids" colspan="4" widget="ThreadView" options='{"thread_level": 1}'/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -96,8 +99,9 @@
             <field name="type">search</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <search string="Search groups">
-                    <field name="name"/>
+                <search string="Search Groups">
+                    <field name="name" string="Group"/>
+                    <separator orientation="vertical"/>
                     <field name="responsible_id"/>
                 </search>
             </field>
