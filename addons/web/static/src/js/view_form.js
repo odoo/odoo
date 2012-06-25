@@ -1949,8 +1949,8 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     initialize_content: function() {
         var self = this;
         var $input = this.$element.find('input');
-        $input.find('input').change(function() {
-            self.set({'value': instance.web.parse_value(self.$element.find('input').val(), self)});
+        $input.change(function() {
+            self.set({'value': instance.web.parse_value($input.val(), self)});
         });
         this.setupFocus($input);
     },
