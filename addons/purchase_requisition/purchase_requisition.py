@@ -98,7 +98,7 @@ class purchase_requisition(osv.osv):
         self.message_append_note(cr, uid, ids, body=_("""Purchase Requisition has been set to <b>draft</b>."""), context=context)
      
     def done_to_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>done</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
         
     def draft_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
@@ -283,7 +283,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Purchase Requisition', help="Check this box so that procurement generates  purchase requisition instead of only generating requests for quotation.")
+        'purchase_requisition': fields.boolean('Purchase Requisition', help="Check this box to generates purchase requisition instead of generating requests for quotation from procurement.")
     }
     _defaults = {
         'purchase_requisition': False
