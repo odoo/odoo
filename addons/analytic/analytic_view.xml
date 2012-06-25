@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                     <sheet string="Analytic Account">
-                        <label for="name" class="oe_form_readonly_hidden"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name"/>
                         </h1>
@@ -29,8 +29,10 @@
                             <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','not in',['contract', 'template'])]}">
                                 <group name="master">
                                     <group string="Validity" name="contract">
-                                        <field name="date_start"/>
-                                        <field name="date"/>
+                                        <label for="date_start" string="Duration"/>
+                                        <div name="duration">
+                                            <field name="date_start" class="oe_form_inline"/> - <field name="date" class="oe_form_inline"/>
+                                        </div>
                                     </group>
                                     <group name="project">
                                         <separator string="Project Management" name="project_sep" invisible="1"/>

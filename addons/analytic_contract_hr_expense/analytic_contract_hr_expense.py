@@ -123,7 +123,7 @@ class account_analytic_account(osv.osv):
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['charge_expenses'] = template.charge_expenses
-            res['value']['expense_max'] = template.expense_max
+            res['value']['est_expenses'] = template.est_expenses
         return res
 
     def open_hr_expense(self, cr, uid, ids, context=None):

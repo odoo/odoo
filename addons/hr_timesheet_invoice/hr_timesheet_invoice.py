@@ -69,7 +69,7 @@ class account_analytic_account(osv.osv):
             help="Keep empty if this contract is not limited to a total fixed price."),
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invocing Ratio',
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
@@ -94,16 +94,28 @@ class account_analytic_account(osv.osv):
         return res
 
     def set_close(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'close'}, context=context)
+        self.write(cr, uid, ids, {'state':'close'}, context=context)
+        message = _("Contract has been <b>closed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        message = _("Contract has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_open(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        message = _("Contract has been <b>opened</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_pending(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        message = _("Contract has been set as <b>pending</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
 account_analytic_account()
 

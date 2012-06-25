@@ -19,6 +19,7 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -71,6 +72,7 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -170,6 +172,7 @@
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
                     <field name="user_id" invisible="1" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

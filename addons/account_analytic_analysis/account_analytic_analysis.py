@@ -494,7 +494,6 @@ class account_analytic_account(osv.osv):
         res['value']['pricelist_id'] = template.pricelist_id.id
         res['value']['description'] = template.description
         return res
-
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):

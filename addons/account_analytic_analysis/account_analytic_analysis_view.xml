@@ -23,11 +23,10 @@
                 <xpath expr='//field[@name="type"]' position='after'>
                     <field name="template_id" on_change="on_change_template(template_id,context)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                 </xpath>
-                <xpath expr='//field[@name="date"]' position="after" version="7.0">
+                <xpath expr='//div[@name="duration"]' position="after" version="7.0">
                     <label for="quantity_max"/>
                     <div>
-                        <field name="quantity_max" class="oe_form_inline"/> / Remaining:
-                        <field name="remaining_hours" class="oe_form_inline"/>
+                        <field name="quantity_max" class="oe_form_inline"/> / Remaining: <field name="remaining_hours" class="oe_form_inline"/>
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
