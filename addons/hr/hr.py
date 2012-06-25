@@ -190,7 +190,7 @@ class hr_employee(osv.osv):
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
-        'work_email': fields.char('Work E-mail', size=240),
+        'work_email': fields.char('Work Email', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
