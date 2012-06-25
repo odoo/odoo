@@ -31,7 +31,7 @@
        </field>
     </record>
 
-    <record id="account.journal_col11" model="account.journal.column">
+    <record id="journal_col11" model="account.journal.column">
         <field eval="&quot;&quot;&quot;Analytic Distribution&quot;&quot;&quot;" name="name"/>
         <field eval="11" name="sequence"/>
         <field name="view_id" ref="account.account_journal_view"/>
@@ -196,7 +196,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Plans">
-                <field name="name"/>
+                <field name="name" string="Analytic Plan"/>
             </search>
         </field>
     </record>

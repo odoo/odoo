@@ -2,18 +2,6 @@
 <openerp>
     <data>
 
-       <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
-         <field name="name">hr.timesheet.sheet.graph</field>
-         <field name="model">hr_timesheet_sheet.sheet</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Timesheets" type="bar">
-                 <field name="name"/>
-                 <field name="total_attendance" operator="+"/>
-                 <field name="total_timesheet" operator="+"/>
-             </graph>
-         </field>
-        </record>
         <record id="hr_timesheet_account_form" model="ir.ui.view">
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
@@ -71,9 +59,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
                 </header>
                 <sheet>
-                    <label for="employee_id" class="oe_form_readonly_hidden"/>
+                    <label for="employee_id" class="oe_edit_only"/>
                     <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
-                    <label for="date_from" class="oe_form_readonly_hidden" string="Timesheet Period"/>
+                    <label for="date_from" class="oe_edit_only" string="Timesheet Period"/>
                     <h2>
                         From <field name="date_from"/>
                         to <field name="date_to"/>
@@ -167,11 +155,12 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group>
+                        <field name="date_from"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id"/>
-                        <field name="date_from"/>
                         <field name="department_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -238,7 +227,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
-                <field name="date" position="after">
+                <field name="user_id" position="before">
                     <field name="sheet_id"/>
                 </field>
             </field>
@@ -254,8 +243,8 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
             <field name="arch" type="xml">
-                <field name="action" position="after">
-                    <field name="sheet_id" />
+                <field name="employee_id" position="after">
+                    <field name="sheet_id"/>
                 </field>
             </field>
         </record>
@@ -339,17 +328,6 @@
                     <field name="total_difference" widget="float_time"/>
                     <field name="state"/>
                 </tree>
-            </field>
-        </record>
-        <record id="view_hr_timesheet_sheet_graph" model="ir.ui.view">
-            <field name="name">hr.timesheet.sheet.sheet.graph</field>
-            <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Available Attendance" type="bar">
-                    <field name="name"/>
-                    <field name="total_attendance" operator="+"/>
-                </graph>
             </field>
         </record>
 

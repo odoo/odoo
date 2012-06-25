@@ -45,7 +45,6 @@ reports, etc.""",
         'wizard/hr_timesheet_analytic_profit_view.xml',
         'wizard/hr_timesheet_invoice_create_view.xml',
         'wizard/hr_timesheet_invoice_create_final_view.xml',
-        'board_hr_timesheet_invoice.xml',
     ],
     'demo': [
         'hr_timesheet_invoice_demo.xml',

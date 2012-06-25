@@ -47,12 +47,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payment Mode">
-                    <field name="name"/>
+                    <field name="name"
+                        string="Payment Mode"/>
+                    <separator orientation="vertical"/>
                     <field name="journal" widget='selection'/>
                     <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                     <newline/>
                     <group expand="0" string="Group By...">
-                      <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
                     </group>
                 </search>
             </field>
@@ -131,8 +133,8 @@
                                         <field name="date"/>
                                         <label for="amount_currency"/>
                                         <div>
-                                            <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_form_inline"/>
-                                            <field name="currency" nolabel="1" class="oe_form_inline"/>
+                                            <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                            <field name="currency" nolabel="1" class="oe_inline"/>
                                         </div>
                                         <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)"/>
                                         <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
@@ -151,8 +153,8 @@
                                     <group col="4" string="General Information">
                                         <label for="amount"/>
                                         <div>
-                                            <field name="amount" class="oe_form_inline"/>
-                                            <field name="company_currency" class="oe_form_inline"/>
+                                            <field name="amount" class="oe_inline"/>
+                                            <field name="company_currency" class="oe_inline"/>
                                         </div>
                                         <separator colspan="4" string="Entry Information"/>
                                         <field name="create_date" readonly="1"/>
@@ -208,13 +210,16 @@
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
                     <group>
+                        <field name="reference"
+                            string="Payment Order"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_done"/>
+                        <separator orientation="vertical"/>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
                         <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
                         <separator orientation="vertical"/>
-                        <field name="reference"/>
                         <field name="mode" widget='selection'/>
-                        <field name="date_done"/>
                         <field name="state"/>
                     </group>
                     <newline/>
@@ -259,8 +264,8 @@
                                 <field name="date"/>
                                 <label for="amount_currency"/>
                                 <div>
-                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_form_inline"/>
-                                    <field name="currency" class="oe_form_inline"/>
+                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                    <field name="currency" class="oe_inline"/>
                                 </div>
                                 <field name="partner_id" on_change="onchange_partner(partner_id, False)"/>
                                 <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>

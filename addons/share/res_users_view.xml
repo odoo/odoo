@@ -7,11 +7,13 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_users_search"/>
             <field name="arch" type="xml">
-                <xpath expr="/search/field[@name='company_ids']" position="after">
-                    <field name="share">
-                        <filter name="no_share" string="Regular users only (no share user)" icon="terp-partner"
-                            domain="[('share','=',False)]"/>
-                    </field>
+                <xpath expr="//field[@name='name']" position="after">
+                    <separator orientation="vertical"/>
+                    <filter name="no_share" string="Regular users only (no share user)" icon="terp-partner"
+                        domain="[('share','=',False)]"/>
+                </xpath>
+                <xpath expr="//field[@name='company_ids']" position="after">
+                    <field name="share"/>
                 </xpath>
             </field>
         </record>
@@ -29,11 +31,12 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Groups">
-                    <field name="name"/>
-                    <field name="share">
-                        <filter name="no_share" string="Regular groups only (no share groups" icon="terp-partner"
-                            domain="[('share','=',False)]"/>
-                    </field>
+                    <field name="name" string="Group"/>
+                    <separator orientation="vertical"/>
+                    <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner"
+                        domain="[('share','=',False)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="share"/>
                 </search>
             </field>
         </record>
@@ -49,9 +52,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page//field[@name='users']" position="attributes">
+                <field name="users" position="attributes">
                     <attribute name="context">{'search_default_no_share':1}</attribute>
-                </xpath>
+                </field>
+                <field name="name" position="after">
+                    <field name="share"/>
+                </field>
             </field>
         </record>
     </data>
