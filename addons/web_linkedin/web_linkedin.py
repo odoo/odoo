@@ -32,7 +32,7 @@ from osv import fields, osv
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
-            'default_linkedin_api_key': fields.char('LinkedIn API key', size=128),
+            'linkedin_api_key': fields.char('LinkedIn API key', size=128),
     }
 
 company()
@@ -43,10 +43,10 @@ class users(osv.osv):
     def set_linkedin_api_key(self, cr, uid, key, context=None):
         company_obj = self.pool.get('res.company')
         company_id = company_obj._company_default_get(cr, uid, 'res.users', context=context)
-        company_obj.write(cr, uid, [company_id], {'default_linkedin_api_key': key })
+        company_obj.write(cr, uid, [company_id], {'linkedin_api_key': key })
         ir_values = self.pool.get('ir.values')
         ir_values.set_default(cr, uid, 'res.company', 'linkedin_api_key', key)
-        
+
         return True
 users()
 
@@ -63,7 +63,7 @@ class res_partner(osv.osv):
          company_obj = self.pool.get('res.company')
          res = super(res_partner, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
          company_id = company_obj._company_default_get(cr, user, 'res.users', context=context)
-         linkedin_api_key = company_obj.browse(cr, user, company_id, context=context).default_linkedin_api_key
+         linkedin_api_key = company_obj.browse(cr, user, company_id, context=context).linkedin_api_key
          fields = res['fields']
          if fields.get('name'):
              ctx = fields.get('name').get('context')

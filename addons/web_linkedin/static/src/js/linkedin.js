@@ -16,9 +16,31 @@ openerp.web_linkedin = function(instance) {
             this.$element.find('#loader').hide();
             if (!this.get("effective_readonly")) {
                 this._super();
-                var context = new instance.web.CompoundContext(this.build_context());
-                var build_context = this.build_context();
-                this.apikey = build_context.__contexts[0].api_key;
+                self.user = new instance.web.DataSetSearch(self, 'res.users', null, null)
+                .read_slice(['id','name','company_id'], {"domain": [['id','=',self.session.uid]]}).then(function(results) {
+                    self.company_id = results[0].company_id[0];
+                    self.company = new instance.web.DataSetSearch(self, 'res.company', null, null)
+                    .read_slice(['linkedin_api_key','name'], {"domain": [['id','=',self.company_id]]}).then(function(records) {
+                        self.apikey = records[0].linkedin_api_key;
+                        if (self.apikey) {
+                            var head = document.head || document.getElementsByTagName('head')[0];
+                            var tag = document.createElement('script');
+                            tag.type = 'text/javascript';
+                            tag.src = "http://platform.linkedin.com/in.js";
+                            tag.innerHTML = 'api_key : '+self.apikey+'\n';
+                            tag.innerHTML = tag.innerHTML + 'authorize : true';
+                            var temp = 0;
+                            $(head).find('script').each( function(i,val) {
+                                if($(val).attr('src')=="http://platform.linkedin.com/in.js"){
+                                    temp = 1;
+                                }
+                            });
+                            if(temp != 1) {
+                                head.appendChild( tag );
+                            }
+                        }
+                    });
+                });
                 if(this.view.fields['linkedin_id']){
                     if(this.view.datarecord['linkedin_id']){
                         this.$element.find('#linkedindefault').hide();
@@ -27,39 +49,6 @@ openerp.web_linkedin = function(instance) {
                         this.$element.find('#linkedinrecord').hide();
                         this.$element.find('#linkedindefault').show();
                     }
-                }
-                try {
-                    IN.init({ api_key : this.apikey });
-                } catch(e) {
-                    if(!this.apikey){
-                        this.APIWarning = e;
-                    }
-                    if (e.type == "undefined_method") {
-                        this.APIWarning = e;
-                    }
-                }
-                var head = document.head || document.getElementsByTagName('head')[0];
-                var tag = document.createElement('script');
-                tag.type = 'text/javascript';
-                tag.src = "http://platform.linkedin.com/in.js";
-                if(this.apikey){
-                    // Registered API key is necessary to integrate with LinkedIn.
-                    tag.innerHTML = 'api_key : '+this.apikey+'\n';
-                }
-                tag.innerHTML = tag.innerHTML + 'authorize : true';
-                // On load script Loading text is displayed
-                /*if(this.$element.find("#imagediv").find('.oe_loading')){
-                    this.$element.find("#imagediv").find('.oe_loading').remove();
-                }
-                tag.onload=this.$element.find("#imagediv").append('<span class="oe_loading">Loading....</span>');*/
-                var temp = 0;
-                $(head).find('script').each( function(i,val) {
-                    if($(val).attr('src')=="http://platform.linkedin.com/in.js"){
-                        temp = 1;
-                    }
-                });
-                if(temp != 1) {
-                    head.appendChild( tag );
                 }
                 this.notification = new instance.web.Notification(this);
                 this.notification.appendTo(this.$element);
@@ -111,42 +100,44 @@ openerp.web_linkedin = function(instance) {
             var self = this;
             this.msg_Counter=0; /* used to display notification, when record not found on Linkedin search */
             this.removeTemplate( 1 );
-            if(!this.apikey){
-                this.APIKeyWarning(this.APIWarning);
+            if (this.apikey){
+                if (IN.ENV.auth.oauth_token) {
+                    if (self.$element.find("input").val()) {
+                        self.$element.find('#loader').show();
+                        $('.linkedin_icon').css('display', 'none');
+                        /* People Search */
+                        IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
+                        .params({
+                            "first-name": self.$element.find("input").val(),
+                            "count" : 4
+                        })
+                        .result( self.do_fetch_detail );
+                        /* Company Search */
+                        IN.API.Raw("/company-search:(companies:(id,name,description,industry,logo-url,website-url,locations,twitter-id))")
+                        .params({
+                            "keywords": self.$element.find("input").val(),
+                            "count" : 4
+                        })
+                        .result( self.do_fetch_detail );
+                    }else{
+                        this.notification.warn(_t("Linkedin Search"), _t("Please Enter Required Field."));
+                    }
+                }
+                else {
+                    self.do_authorize();
+                    //IN.User.authorize();
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+            } else {
+                this.APIKeyWarning();
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
                 return false;
             }
-            if (IN.ENV.auth.oauth_token) {
-                if (self.$element.find("input").val()) {
-                    self.$element.find('#loader').show();
-                    $('.linkedin_icon').css('display', 'none');
-                    /* People Search */
-                    IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
-                    .params({
-                        "first-name": self.$element.find("input").val(),
-                        "count" : 4
-                    })
-                    .result( self.do_fetch_detail );
-                    /* Company Search */
-                    IN.API.Raw("/company-search:(companies:(id,name,description,industry,logo-url,website-url,locations,twitter-id))")
-                    .params({
-                        "keywords": self.$element.find("input").val(),
-                        "count" : 4
-                    })
-                    .result( self.do_fetch_detail );
-                }else{
-                    this.notification.warn(_t("Linkedin Search"), _t("Please Enter Required Field."));
-                }
-            }
-            else {
-                //self.do_authorize();
-                IN.User.authorize();
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
         },
         do_authorize: function(resultCallback){
             this.check_authorized();
@@ -180,7 +171,7 @@ openerp.web_linkedin = function(instance) {
                     var user = new instance.web.DataSet(self, "res.users");
                     user.call("set_linkedin_api_key", [key]);
                     self.dialog.remove(),
-                    user.__parentedParent.view.reload();
+                    self.__parentedParent.reload();
                 }
                 else {
                     $("#apikey").css({'background-color':'#F66 '})
