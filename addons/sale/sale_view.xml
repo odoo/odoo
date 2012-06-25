@@ -142,7 +142,6 @@
                             <field name="date_order"/>
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="client_order_ref"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                         </group>
                     </group>
                     <notebook>
