@@ -1830,22 +1830,19 @@
                     </header>
                     <sheet>
                         <group>
-                            <group>
+                            <group col="2">
                                 <field name="name"/>
                                 <field name="model_id"/>
                                 <field name="ref"/>
                             </group>
-                            <newline/>
     
-                            <group string="Starts on">
+                            <group col="2">
                                 <field name="date_start"/>
+                                <field name="period_type"/>
+                                <field name="period_nbr"/>
                                 <field name="period_total"/>
                             </group>
     
-                            <group string="Valid Up to">
-                                <field name="period_nbr"/>
-                                <field name="period_type"/>
-                            </group>
                         </group>
                         <separator string="Subscription Lines"/>
                         <field name="lines_id" widget="one2many_list"/>

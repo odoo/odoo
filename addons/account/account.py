@@ -2347,7 +2347,7 @@ class account_subscription(osv.osv):
         'ref': fields.char('Reference', size=16),
         'model_id': fields.many2one('account.model', 'Model', required=True),
         'date_start': fields.date('Start Date', required=True),
-        'period_total': fields.integer('Number of Periods', required=True),
+        'period_total': fields.integer('Number of Period(s)', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True),
