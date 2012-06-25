@@ -25,7 +25,7 @@ from osv.orm import except_orm
 import logging
 import nodes
 from tools.translate import _
-_loggerdir = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Directory'
@@ -79,7 +79,7 @@ class document_directory(osv.osv):
             return root_id
         except Exception, e:
             
-            _loggerdir.warning('Cannot set directory root:'+ str(e))
+            _logger.warning('Cannot set directory root:'+ str(e))
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
 
