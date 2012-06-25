@@ -32,10 +32,10 @@
       refreshMillis: 60000,
       allowFuture: false,
       strings: {
-        prefixAgo: "timeago-prefixAgo",
-        prefixFromNow: "timeago-prefixFromNow",
-        suffixAgo: "timeago-suffixAgo", //ago
-        suffixFromNow: "timeago-suffixFromNow", //from now
+        prefixAgo: null,
+        prefixFromNow: null,
+        suffixAgo: "ago",
+        suffixFromNow: "from now",
         seconds: "less than a minute",
         minute: "about a minute",
         minutes: "%d minutes",
@@ -49,7 +49,8 @@
         years: "%d years",
         wordSeparator: " ",
         numbers: []
-      }
+      },
+      translator: function(str) {}
     },
     inWords: function(distanceMillis) {
       var $l = this.settings.strings;
