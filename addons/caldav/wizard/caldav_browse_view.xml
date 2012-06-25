@@ -7,18 +7,30 @@
             <field name="model">caldav.browse</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Browse Caldav" >
-                    <group colspan="4" width="700" height="500">
-                        <separator string="Browse Caldav" colspan="4"/>
-                        <field name="url" colspan="4" />
-                        <separator string="Description" colspan="4"/>
-                        <field name="description"  colspan="4"  nolabel="1"/>
-                        <separator colspan="4"/>
-                        <group col="4" colspan="4">
-                            <label string="" colspan="2"/>
-                            <button special="cancel" string="_Close" icon="gtk-close"/>
+                <form string="Browse Caldav" version="7.0">
+                    <header>
+                        <button special="cancel" string="_Close" icon="gtk-close"/>
+                    </header>
+                    <sheet>
+                        <group colspan="4" width="700" height="500">
+                            <separator string="Browse Caldav" colspan="4"/>
+                            <field name="url" colspan="2" />
+                            <separator string="Help" colspan="4"/>
+                            <label string=" * Webdav server that provides remote access to calendar" colspan="4"/>
+                            <label string=" * Synchronisation of calendar using WebDAV" colspan="4"/>
+                            <label string=" * Customize calendar event and todo attribute with any of OpenERP model" colspan="4"/>
+                            <label string=" * Provides iCal Import/Export functionality" colspan="4"/>
+                            <label string=" To access Calendars using CalDAV clients, point them to:
+        http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c" colspan="4"/>
+                            <label string=" To access OpenERP Calendar using WebCal to remote site use the URL like:
+        http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics" colspan="4"/>
+                            <label string=" Where,
+        HOSTNAME: Host on which OpenERP server(With webdav) is running
+        PORT : Port on which OpenERP server is running (By Default : 8069)
+        DATABASE_NAME: Name of database on which OpenERP Calendar is created" colspan="4"/>
+                            <separator colspan="4"/>
                         </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -28,18 +40,15 @@
            <field name="model">user.preference</field>
            <field name="type">form</field>
             <field name="arch" type="xml">
-               <form string="Caldav's host name configuration">
-                	<label string="Configure your openerp hostname. For example : " colspan="4"></label>
-                    <newline/>
-                    <label string="database.my.openerp.com  or companyserver.com" colspan="4"/>
-                    <newline/>
-                    <separator colspan="4"/>
-                    <field name="host_name"  colspan="4" width="250" />
-                    <separator colspan="4"/>
-                    <group col="4" colspan="4">
-                       <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+               <form string="Caldav's host name configuration" version="7.0">
+                    <header>
                        <button name="next_window" string="Next" type="object" icon="gtk-go-forward"/>
-                    </group>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="host_name"  colspan="2" width="250" placeholder="For example : database.my.openerp.com or companyserver.com"/>
+                        </group>
+                    </sheet>
                </form>
             </field>
         </record>
@@ -49,19 +58,18 @@
             <field name="model">user.preference</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="User Preference">
-                    <separator string="" colspan="4"/>
-                    <field name="service"  colspan="4" width="250" readonly="1"/>
-                    <field name="collection"  colspan="4" width="250" invisible="1" />
-                    <field name="calendar"  colspan="4" width="250" domain="[('collection_id','=', collection)]" readonly="1"/>
-                    <field name="device"  colspan="4" width="250" />
-                    <separator colspan="4"/>
-                    
-                    <group col="4" colspan="4">
-                        <label string="" colspan="2"/>
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                <form string="User Preference" version="7.0">
+                    <header>
                         <button name="open_window" string="_Open" type="object" icon="gtk-ok"/>
-                    </group>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="service"  colspan="2" readonly="1"/>
+                            <field name="collection"  colspan="2" invisible="1" />
+                            <field name="calendar"  colspan="2" domain="[('collection_id','=', collection)]" readonly="1"/>
+                            <field name="device"  colspan="2"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
