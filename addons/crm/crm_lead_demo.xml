@@ -250,6 +250,80 @@
             <field eval="1000" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
+        <record id="crm_case_rdroundfundingunits25" model="crm.lead">
+            <field eval="1" name="active"/>
+            <field name="type">opportunity</field>
+            <field name="type_id" ref="crm.type_lead2"/>
+            <field name="partner_id" ref="base.res_partner_14"/>
+            <field eval="'3'" name="priority"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field eval="30000.0" name="planned_revenue"/>
+            <field eval="30" name="probability"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="categ_id" ref="crm.categ_oppor3"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field eval="'Interest in your Kitchen Design Project'" name="name"/>
+            <field eval="'Send Catalogue by E-Mail'" name="title_action"/>
+            <field eval="time.strftime('%Y-01-10')" name="date_action"/>
+            <field eval="time.strftime('%Y-02-23')" name="date_deadline"/>
+            <field name="partner_name">Lucie Vonck</field>
+            <field name="street">Chaussée de Namur</field>
+            <field name="city">Grand-Rosière</field>
+            <field eval="1367" name="zip"/>
+            <field name="country_id" ref="base.be"/>
+            <field name="color">8</field>
+        </record>
+        <!-- Some messages linked to the previous opportunity -->
+        <record id="message_email0" model="mail.message">
+            <field name="subject">Kitchen design</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Email0 inquiry]]></field>
+            <field name="type">email</field>
+            <field name="state">sent</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_note0" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[Internal note0]]></field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_note0_comment0" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[comment on note0]]></field>
+            <field name="parent_id" ref="message_note0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_note0_comment1" model="mail.message">
+            <field name="subject">Reply</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[comment1 on note0]]></field>
+            <field name="parent_id" ref="message_note0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        <record id="message_email1" model="mail.message">
+            <field name="subject">Your inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="subtype">html</field>
+            <field name="body_html"><![CDATA[hello, outgoing email]]></field>
+            <field name="type">email</field>
+            <field name="state">received</field>
+            <field name="user_id" ref="base.user_root"></field>
+        </record>
+        
         <record id="crm_case_unifliege" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
