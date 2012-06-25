@@ -1667,11 +1667,11 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         });*/
        
        //===============================get from instance.webclient.menu (with less rpc call)
-       
-      var dashbaord_menu = instance.webclient.menu.data.data.children,self = this,
+      var self = this,dashbaord_menu = instance.webclient.menu.data.data.children,
+        ir_model_data = new instance.web.Model('ir.model.data',{},[['name','=','menu_reporting_dashboard']]).query(['res_id']),
         map_data = function(result){
             _.detect(dashbaord_menu,function(dash){
-                var id = _.pluck(dash.children,"id"),indexof = _.indexOf(id, result.res_id);
+                var id = _.pluck(dash.children, "id"),indexof = _.indexOf(id, result.res_id);
                 if(indexof !== -1){
                     self.dashboard_data = dash.children[indexof].children
                     self.data_loaded.resolve();
@@ -1679,13 +1679,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
                 }
             });
         };
-        return  new instance.web.Model('ir.model.data')
-            .query(['res_id'])
-                .filter([['name','=','menu_reporting_dashboard']])
-                    .first()
-                        .done(function (result) {
-                            map_data(result)
-                         });
+        return ir_model_data._execute().done(function(result){map_data(result[0])}); 
     },
     
     render_data: function(){
