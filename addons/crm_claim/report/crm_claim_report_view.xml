@@ -54,20 +54,6 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                       <filter string="Year" icon="terp-go-year" name="year"
-                               domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                               help="Claims created in current year"/>
-                        <separator orientation="vertical" />
-
-                       <filter string="Month" icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                           help="Claims created in current month"/>
-
-                       <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Claims created in last month"/>
-
-                        <separator orientation="vertical" />
                         <filter icon="terp-document-new"
                             string="New"
                             domain="[('state','=','draft')]"/>
@@ -77,27 +63,22 @@
                         <filter icon="terp-gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"/>
-
-                        <separator orientation="vertical" />
-                        <field name="section_id" string="Sales Team"
-                            context="{'invisible_section': False}">
-
-                            <filter icon="terp-personal+"
+                        <filter string="My Sales Team(s)"
+                                icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My Sales Team(s)" />
-
-                        </field>
-                        <field name="company_id" groups="base.group_multi_company">
-                            <filter icon="terp-go-home"
+                        <filter string="My Company"
+                                icon="terp-go-home"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id.company_id','=',uid)]"
                                 help="My company"/>
-                        </field>
-
-                        <field name="user_id" string="Salesperson">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
+                        <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                        <separator orientation="vertical"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="user_id" string="Salesperson"/>
+                        <field name="section_id" string="Sales Team"
+                            context="{'invisible_section': False}"/>
                     </group>
                     <newline/>
                     <group  expand="0" string="Extended Filters...">
@@ -116,6 +97,7 @@
                         <field name="priority" />
                         <field name="type_action" />
                         <newline/>
+                        <field name="create_date" />
                         <field name="date_closed" />
                         <field name="date_deadline" />
                     </group>
