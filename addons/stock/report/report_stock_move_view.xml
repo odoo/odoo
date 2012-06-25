@@ -49,17 +49,7 @@
              </graph>
          </field>
     </record>
-    <record id="view_stock_graph_board" model="ir.ui.view">
-         <field name="name">report.stock.move.graph</field>
-         <field name="model">report.stock.move</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Moves Analysis" type="bar">
-                 <field name="day"/>
-                 <field name="product_qty" operator="+"/>
-             </graph>
-         </field>
-    </record>
+
     <record id="view_stock_search" model="ir.ui.view">
         <field name="name">report.stock.move.search</field>
         <field name="model">report.stock.move</field>
@@ -67,37 +57,21 @@
         <field name="arch" type="xml">
             <search string="Moves Analysis">
                 <group>
-                <filter icon="terp-go-year" string="Year"
-                    name="year"
-                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                    help="Current year"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-go-month" string="Month"
-                    name="month"
-                    domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                    help="Current month"/>
-                <filter icon="terp-go-month"
-                    string="Month-1"
-                    name="month-1"
-                    domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                     help="Last month"/>
-                <separator orientation="vertical"/>
-                <filter string="Done"
-                    name="done"
-                    icon="terp-dialog-close"
-                    domain="[('state','=','done')]"
-                    help = "Completed Stock-Moves"/>
-                <filter string="Todo"
-                    icon="terp-gtk-go-back-rtl"
-                    domain="[('state','in',('assigned','waiting','confirmed'))]"
-                    help = "Future Stock-Moves"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
-                <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
-                <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
-                <separator orientation="vertical"/>
-                <field name="product_id" default_focus="1"/>
-                <field name="partner_id" context="{'contact_display':'partner'}"/>
+                    <filter string="Done"
+                        name="done"
+                        icon="terp-dialog-close"
+                        domain="[('state','=','done')]"
+                        help = "Completed Stock-Moves"/>
+                    <filter string="Todo"
+                        icon="terp-gtk-go-back-rtl"
+                        domain="[('state','in',('assigned','waiting','confirmed'))]"
+                        help = "Future Stock-Moves"/>
+                    <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
+                    <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
+                    <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="product_id" default_focus="1"/>
+                    <field name="partner_id" context="{'contact_display':'partner'}"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters...">
@@ -190,33 +164,15 @@
         <field name="arch" type="xml">
             <search string="Inventory Analysis">
                 <group>
-                    <filter icon="terp-go-year" string="Year"
-                        name="year"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        help="Current year"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Month"
-                        name="month"
-                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Current month"/>
-                    <filter icon="terp-go-month"
-                        string="Month-1"
-                        name="month-1"
-                        domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Last month"/>
-                    <separator orientation="vertical"/>
                     <filter string="Real"
                         name="real"
                         icon="terp-check"
                         domain="[('state','=','done')]"
                         help="Analysis of current inventory (only moves that have already been processed)"/>
-
                     <filter string="Future"
                         icon="terp-stock"
                         domain="[('state','in',('assigned','done','waiting','confirmed'))]"
                         help = "Analysis including future moves (similar to virtual stock)"/>
-
-                    <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
                     <separator orientation="vertical"/>
                     <field name="product_id" default_focus="1"/>
