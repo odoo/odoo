@@ -44,9 +44,9 @@ class sale_configuration(osv.osv_memory):
                 This installs the module account_analytic_analysis."""),
         'module_account_analytic_analysis': fields.boolean('Manage Customer Contracts',
             help = """Allows to define your customer contracts conditions: invoicing
-            method (fixed price, on timesheet, advance invoice), the exact pricing 
-            (650€/day for a developer), the duration (one year support contract). 
-            You will be able to follow the progress of the contract and invoice automatically. 
+            method (fixed price, on timesheet, advance invoice), the exact pricing
+            (650€/day for a developer), the duration (one year support contract).
+            You will be able to follow the progress of the contract and invoice automatically.
             It installs the account_analytic_analysis module."""),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
@@ -61,7 +61,7 @@ class sale_configuration(osv.osv_memory):
             help = "You will be able to configure, per sale order, if you deliver all  products at once or if you deliver each product when it is available.  This may have an impact on the shipping price."),
         'group_sale_pricelist':fields.boolean("Pricelist per Customer",
             implied_group='product.group_sale_pricelist',
-            help="""Allows to manage different prices based on rules per category of customers. 
+            help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_uom':fields.boolean("Allow Different Units of Measure",
             implied_group='product.group_uom',
@@ -74,12 +74,12 @@ class sale_configuration(osv.osv_memory):
             help="Allows you to apply some discount per sale order line."),
         'group_multiple_shops': fields.boolean("Manage Multiple Shops",
             implied_group='stock.group_locations',
-            help="This allows to configure and use multiple shops."),                
+            help="This allows to configure and use multiple shops."),
         'module_sale_layout': fields.boolean("Notes & Subtotals per Line",
             help="""Allows to format sale order lines using notes, separators, titles and subtotals.
                 This installs the module sale_layout."""),
         'module_warning': fields.boolean("Alerts by Products or Customers",
-            help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer. 
+            help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
             Supplier: don't forget to ask for an express delivery."""),
         'module_sale_margin': fields.boolean("Display Margins on Sale Orders",
@@ -108,11 +108,11 @@ class sale_configuration(osv.osv_memory):
             if decimal.decimal_precision > 20:
                 return False
         return True
-    
+
     _constraints = [
         (_check_decimal, 'Digits must be between 0 to 20 ', ['decimal_precision']),
     ]
-    
+
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
@@ -194,15 +194,14 @@ class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
         'module_sale_analytic_plans': fields.boolean('Several Analytic Accounts on Sales',
-            help="""This allows install module sale_analytic_plans."""),                 
+            help="""This allows install module sale_analytic_plans."""),
         'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sale orders."),
     }
-    
+
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
-        if not module_sale_analytic_plans:
-            return {'value': {'group_analytic_account_for_sales': False}}
-        return {'value': {'group_analytic_account_for_sales': True}}
+        """ change group_analytic_account_for_sales following module_sale_analytic_plans """
+        return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
