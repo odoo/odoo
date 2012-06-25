@@ -1559,21 +1559,26 @@ $colour4: #8a89ba
     .oe_form .oe_form_field_one2many > .oe_view_manager
         .oe_list_pager_single_page
             display: none
-    .oe_form_field_one2many > .oe_view_manager
-        .oe_header_row_top
-            display: none
-        .oe_view_manager_header2
-            td
-                padding: 0px 8px
-                line-height: 16px
-                .oe_i
-                    font-size: 13px
-                .oe_pager_group
-                    height: auto
+    .oe_form_field_one2many
+        // TODO: oe_form_field_one2many_list?
+        .oe-listview .oe-edit-row-save
+            background-image: url(/web/static/src/img/iconset-b-remove.png)
+
+        &> .oe_view_manager
+            .oe_header_row_top
+                display: none
+            .oe_view_manager_header2
+                td
+                    padding: 0px 8px
                     line-height: 16px
-                    li
+                    .oe_i
+                        font-size: 13px
+                    .oe_pager_group
                         height: auto
                         line-height: 16px
+                        li
+                            height: auto
+                            line-height: 16px
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe-listview
