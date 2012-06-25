@@ -949,7 +949,7 @@ class import_sugarcrm(osv.osv):
         'user' : fields.boolean('User', help="Check this box to import sugarCRM Users into OpenERP users, warning if a user with the same login exist in OpenERP, user information will be erase by sugarCRM user information", readonly=True),
         'opportunity': fields.boolean('Leads & Opp', help="Check this box to import sugarCRM Leads and Opportunities into OpenERP Leads and Opportunities"),
         'contact': fields.boolean('Contacts', help="Check this box to import sugarCRM Contacts into OpenERP addresses"),
-        'account': fields.boolean('Accounts', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
+        'account': fields.boolean('Partner/Account', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
         'employee': fields.boolean('Employee', help="Check this box to import sugarCRM Employees into OpenERP employees"),
         'meeting': fields.boolean('Meetings', help="Check this box to import sugarCRM Meetings and Tasks into OpenERP meetings"),
         'call': fields.boolean('Calls', help="Check this box to import sugarCRM Calls into OpenERP calls"),
