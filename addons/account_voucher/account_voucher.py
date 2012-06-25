@@ -247,7 +247,18 @@ class account_voucher(osv.osv):
                     rate = voucher_rate * company_currency_rate
             res[voucher.id] =  voucher.amount / rate
         return res
-
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        print ids, "\n name ",name, "\n args ::> ", args, "\n context ::> ",context
+        res = {}
+        amount = 0.0
+        for voucher in self.browse(cr, uid, ids, context=context):
+            print "voucher :> ",voucher 
+            for line in voucher.line_dr_ids:
+                print "line :> ",line
+                amount += line.amount
+                print "amount ::>>  ",amount
+            res[voucher.id] = amount
+        return res
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
@@ -312,6 +323,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Invoice Total'),
     }
     _defaults = {
         'period_id': _get_period,

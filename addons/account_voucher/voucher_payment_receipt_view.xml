@@ -150,8 +150,10 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Bill Payment">
-                    <group col="6">
-                        <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
+                	<h1>
+                		<field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
+            		</h1>
+                    <group col="4">
                         <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
@@ -204,6 +206,9 @@
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
+                            <group class="oe_subtotal_footer">
+	                        	<field name="amount_total" class="oe_subtotal_footer_separator"/>
+	                        </group>
                             <group>
                                 <group string="Internal Notes">
                                     <field name="narration" colspan="2" nolabel="1"/>
@@ -228,7 +233,9 @@
                                         <field name="analytic_id"
                                                groups="analytic.group_analytic_accounting"/>
                                     </group>
+	                                
                                 </group>
+                                
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
