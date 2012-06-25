@@ -69,7 +69,7 @@ class account_analytic_account(osv.osv):
             help="Keep empty if this contract is not limited to a total fixed price."),
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invocing Ratio',
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invocing Ratio',
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),

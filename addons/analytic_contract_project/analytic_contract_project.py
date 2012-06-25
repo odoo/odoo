@@ -70,5 +70,14 @@ class project_project(osv.osv):
             'context': view_context,
             'nodestroy': True,
         }
-
 project_project()
+
+class task(osv.osv):
+    _inherit = "project.task"
+    
+    def create(self, cr, uid, vals, context=None):
+        task_id = super(task, self).create(cr, uid, vals, context=context)
+        task_browse = self.browse(cr,uid,task_id,context)
+        self.pool.get('account.analytic.account').message_append_note(cr, uid, [task_browse.project_id.analytic_account_id.id], body=_("Task has been <b>created</b>."), context=context)
+        return task_id
+task()
