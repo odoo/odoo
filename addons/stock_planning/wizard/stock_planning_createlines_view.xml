@@ -16,14 +16,8 @@
                             <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="forecasted_products"/>
-                        </group>
-                        <newline/>
-                        <group string="Period">
-                            <field name="period_id" widget="one2many_list" nolabel="1"/>
-                        </group>
-                        <newline/>
-                        <group string="Product category">
-                            <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}" widget="one2many_list" nolabel="1"/>
+                            <field name="period_id"/>
+                            <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}"/>
                         </group>
                     </sheet>
                 </form>
