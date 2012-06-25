@@ -55,7 +55,7 @@ class project_task_type(osv.osv):
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
-    _inherits = {'account.analytic.account': "analytic_account_id"}
+    _inherits = {'account.analytic.account': "analytic_account_id","mail.alias":"alias_id"}
     _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -164,6 +164,8 @@ class project(osv.osv):
         for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
             res[task.project_id.id] += 1
         return res
+    def _get_alias_model(self, cr, uid, context=None):
+        return [('model_project_task', "Tasks")]
 
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
@@ -205,8 +207,9 @@ class project(osv.osv):
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias'),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1"),
      }
-    
     def dummy(self, cr, uid, ids, context):
         return True
        
@@ -221,6 +224,7 @@ class project(osv.osv):
         'sequence': 10,
         'type_ids': _get_type_common,
         'use_tasks': True,
+        'alias_model':'model_project_task',
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -482,9 +486,17 @@ def Project():
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        obj_id = super(project, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
+        model_pool = self.pool.get('ir.model.data')
+        alias_pool = self.pool.get('mail.alias')
+        model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model'))
+        vals.update({'alias_name':"project",
+                     'alias_model_id': res_id})
+        alias_pool.create_unique_alias(cr, uid, vals, context=context)
+        res = super( project, self).create(cr, uid, vals, context)
+        record = self.read(cr, uid, res, context)
+        alias_pool.write(cr, uid, [record['alias_id']], {"alias_force_thread_id":record['id'],'alias_defaults':res}, context)
+        self.create_send_note(cr, uid, [res], context=context)
+        return res
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Project has been <b>created</b>."), context=context)
@@ -504,8 +516,7 @@ def Project():
     def set_close_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>closed</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
-
-
+            
 class task(base_stage, osv.osv):
     _name = "project.task"
     _description = "Task"

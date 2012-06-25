@@ -46,6 +46,9 @@
                             <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="progress_rate" widget="progressbar"/>
+                            
+                             <field name="alias_id"  required="0" />
+                            <field name="alias_model" />
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -204,6 +207,7 @@
                     <field name="date"/>
                     <field name="color"/>
                     <field name="task_count"/>
+                    <field name="alias_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
@@ -228,7 +232,9 @@
                                         <div>Deadline</div>
                                         <div><field name="date"/></div>
                                     </div>
-
+                                    <div  t-if="record.alias_id.raw_value">
+                                        <a  t-attf-href="mailto:#{record.alias_id.raw_value}"><field name="alias_id"/></a>
+                                    </div>
                                     <div class="oe_kanban_project_fields oe_kanban_project_progress">
                                         <div>Progress</div>
                                         <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
