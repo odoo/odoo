@@ -96,15 +96,15 @@
                     <group>
                         <group>
                             <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
+                            <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                            <field name="name" colspan="2"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="currency_id"/>
                             <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
-                            <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
+                            <field name="name" colspan="2"/>
                             <field name="account_id"
                                  attrs="{'invisible':[('pay_now','!=','pay_now')]}"
                                   domain="[('type','=','liquidity')]"/>
