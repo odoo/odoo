@@ -169,10 +169,7 @@ $colour4: #8a89ba
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
     a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
-        background: #e3e3e3
-        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
-        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
-        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
     a.button.disabled, button:disabled, input[type='submit']:disabled
@@ -220,8 +217,8 @@ $colour4: #8a89ba
         color: #888
     .oe_bold
         font-weight: bold
-    .oe_inline 
-        width: auto
+    .oe_inline
+        width: auto !important
     .oe_highlight
         color: white
         background: #DC5F59
@@ -235,11 +232,18 @@ $colour4: #8a89ba
         @include vertical-gradient(#DF6B66, #BF3A33)
         //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    .oe_title
+        width: 55%
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden
     .oe_button_box
         width: 200px
         text-align: center
     .oe_avatar
-        float: left
         margin: 0 16px 0 0
         img
             height: 50px
@@ -311,92 +315,91 @@ $colour4: #8a89ba
         display: none
     // }}}
     // Dropdown {{{
-    .oe_dropdown_toggle:after
+    .oe_dropdown, .oe_dropdown_hover, .oe_dropdown_toggle
+        position: relative
+        cursor: pointer
+    .oe_dropdown_hover:hover .oe_dropdown_menu, .oe_dropdown_menu.oe_opened
+        display: block
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 28px
+        z-index: 1
+        border: 1px solid #afafb6
+        background: white
+        padding: 8px
+        min-width: 120px
+        text-align: left
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        > li
+            &:hover
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+                @include box-shadow(none)
+            list-style-type: none
+            float: none
+            display: block
+            position: relative
+            > a
+                white-space: nowrap
+                display: block
+                padding: 3px 6px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+    .oe_dropdown_arrow:after
         width: 0
         height: 0
         display: inline-block
         content: "&darr"
         text-indent: -99999px
         vertical-align: top
+        margin-top: 8px
+        margin-left: 4px
         border-left: 4px solid transparent
         border-right: 4px solid transparent
-        border-top: 4px solid white
+        border-top: 4px solid#404040
         @include opacity(0.5)
-        margin-top: 7px
-        margin-left: 6px
-        border-top-color: #404040
-    .oe_dropdown_menu
-        display: none
-        position: absolute
-        top: 28px
-        left: 0px
-        padding: 8px
-        border: 1px solid #afafb6
-        min-width: 120px
-        overflow-x: hidden
-        z-index: 900
-        text-align: left
-        background: white
-        @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        li
-            &:hover
-                @include vertical-gradient(#f0f0fa, #eeeef6)
-                @include box-shadow(none)
-            position: relative
-            list-style-type: none
-            float: none
-            display: block
-            background-color: none
-            a
-                display: block
-                padding: 3px 6px
-                clear: both
-                font-weight: normal
-                line-height: 14px
-                color: #4c4c4c
-                text-decoration: none
-                cursor: pointer
-                &:hover
-                    text-decoration: none
-            .oe_sidebar_delete_item
-                position: absolute
-                bottom: 1px
-                right: 4px
-                display: none
-                width: 12px
-                height: 12px
-                line-height: 12px
-                padding: 1px
-                color: #8786b7
-                line-height: 8px
-                text-align: center
-                font-weight: bold
-                text-shadow: 0 1px 1px white
-                &:hover
-                    text-decoration: none
-                    color: white
-                    background: #8786b7
-                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                    @include radius(2px)
-            &:hover
-                .oe_sidebar_delete_item
-                    display: inline-block
+
     .oe_sidebar
         white-space: nowrap
-        .oe_dropdown_menu li
-            padding-right: 16px
-        .oe_sidebar_add_attachment
-            cursor: pointer
-            padding-left: 6px
-            margin-top: 6px
-            span
-                font-weight: bold
-            .oe_hidden_input_file
-                width: 200px
-            &:hover
-                @include vertical-gradient(#f0f0fa, #eeeef6)
-                @include box-shadow(none)
+        .oe_dropdown_menu
+            .oe_sidebar_add_attachment
+                height: 20px
+                cursor: pointer
+                padding-left: 6px
+                margin-top: 6px
+                span
+                    font-weight: bold
+                .oe_hidden_input_file
+                    width: 200px
+                &:hover
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+            li
+                .oe_sidebar_delete_item
+                    position: absolute
+                    top: 4px
+                    right: 4px
+                    display: none
+                    width: 12px
+                    height: 12px
+                    padding: 1px
+                    color: #8786b7
+                    line-height: 8px
+                    text-align: center
+                    font-weight: bold
+                    text-shadow: 0 1px 1px white
+                    &:hover
+                        text-decoration: none
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        @include radius(2px)
+                &:hover
+                    .oe_sidebar_delete_item
+                        display: inline-block
     // }}}
     // Loading {{{
     .oe_loading
@@ -552,20 +555,17 @@ $colour4: #8a89ba
         border-top: solid 1px #d3d3d3
         @include vertical-gradient(#646060, #262626)
         .oe_topbar_item
-            li
-                float: left
-                a
-                    display: block
-                    padding: 5px 10px 7px
-                    line-height: 20px
-                    height: 20px
-                    color: #eee
-                    vertical-align: top
-                    text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-                    &:hover
-                        background: #303030
-                        color: white
-                        @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+            display: block
+            padding: 5px 10px 7px
+            line-height: 20px
+            height: 20px
+            color: #eee
+            vertical-align: top
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            &:hover
+                background: #303030
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
             .oe_active
                 background: #303030
                 font-weight: bold
@@ -579,19 +579,24 @@ $colour4: #8a89ba
             @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
-        .oe_dropdown_toggle:after
-            width: 0
-            height: 0
-            display: inline-block
-            content: "&darr"
-            text-indent: -99999px
-            vertical-align: top
-            margin-top: 8px
-            margin-left: 4px
-            border-left: 4px solid transparent
-            border-right: 4px solid transparent
+        .oe_dropdown_arrow:after
             border-top: 4px solid white
-            @include opacity(0.5)
+        .oe_dropdown_menu
+            background: #333
+            background: rgba(37,37,37,0.9)
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include background-clip()
+            li
+                float: none
+                a
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
     // }}}
     // Webclient.leftbar {{{
     .oe_leftbar
@@ -635,48 +640,8 @@ $colour4: #8a89ba
         li
             list-style-type: none
             float: left
-        .oe_dropdown
-            position: relative
-
-        .oe_dropdown_options
-            float: left
-            background: #333
-            background: rgba(37,37,37,0.9)
-            display: none
-            position: absolute
-            top: 32px
+        .oe_dropdown_menu
             right: -1px
-            border: 0
-            z-index: 900
-            margin-left: 0
-            margin-right: 0
-            padding: 6px 0
-            zoom: 1
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 1px 1px
-            @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            @include background-clip()
-            li
-                float: none
-                display: block
-                background-color: none
-                a
-                    white-space: nowrap
-                    display: block
-                    padding: 4px 15px
-                    clear: both
-                    font-weight: normal
-                    line-height: 18px
-                    color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
-                hr
-                    border-top: 1px solid #999
-                    border-bottom: 0
     // }}}
     // Systray {{{
     .oe_systray > div
@@ -684,42 +649,6 @@ $colour4: #8a89ba
         padding: 0 4px 0 4px
     .oe_systray
         float: right
-
-        .oe_systray_dropdown
-            position: relative
-        .oe_systray_dropdown:hover .oe_systray_dropdown_options
-            display: block
-        .oe_systray_dropdown_options
-            background: #333
-            background: rgba(37,37,37,0.9)
-            display: none
-            position: absolute
-            z-index: 900
-            border: 0
-            margin-left: 0
-            margin-right: 0
-            padding: 6px 0
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 1px 1px
-            @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            @include background-clip()
-            li
-                float: none
-                display: block
-                background-color: none
-                a
-                    display: block
-                    padding: 4px 15px
-                    clear: both
-                    font-weight: normal
-                    line-height: 18px
-                    color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
     // }}}
     // Menu {{{
     .oe_menu
@@ -745,20 +674,6 @@ $colour4: #8a89ba
             font-weight: bold
             color: white
             @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-    .oe_menu_more_container
-        position: relative
-        .oe_menu_more
-            position: absolute
-            padding: 0
-            background-color: #646060
-            z-index: 1
-            border: 1px solid black
-            border-bottom-left-radius: 5px
-            border-bottom-right-radius: 5px
-            li
-                float: none
-                a
-                    white-space: nowrap
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
@@ -943,6 +858,8 @@ $colour4: #8a89ba
             .oe_vm_switch_list:after, .oe_vm_switch_tree:after
                 padding: 2px
                 content: "i"
+            .oe_vm_switch_form:after
+                content: "m"
             .oe_vm_switch_graph:after
                 font-family: "mnmliconsRegular" !important
                 font-size: 21px
@@ -1296,14 +1213,25 @@ $colour4: #8a89ba
         font-weight: bold
         &:hover
             background: #ED6F6A
+    .oe_form_editable
+        .oe_highlight
+            color: #404040
+            background: none
+        button.oe_highlight
+            @include vertical-gradient(#efefef, #d8d8d8)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        button.oe_highlight:active
+            @include vertical-gradient(#e3e3e3, #f6f6f6)
+            @include box-shadow(none)
+        button.oe_highlight:hover
+            @include vertical-gradient(#f6f6f6, #e3e3e3)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
-        display: none !important
-    .oe_form_editable .oe_edit_only
         display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
-    .oe_form_nosheet > *:not(.oe_form_topbar)
+    .oe_form_nosheet > *:not(header)
         margin-left: 10px !important
         margin-right: 10px !important
     // }}}
@@ -1322,14 +1250,6 @@ $colour4: #8a89ba
             min-width: 650px
             max-width: 960px
             margin: 0 auto
-    .oe_form_title
-        width: 55%
-    .oe_form_title:after
-        content: "."
-        display: block
-        height: 0
-        clear: both
-        visibility: hidden
     ul.oe_form_steps
         height: 30px
         padding: 0
@@ -1359,21 +1279,20 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold
             color: #b33630
-    .oe_form_subtotal_footer
-        width: auto
-        float: right
+    .oe_form .oe_subtotal_footer
+        width: 1% !important
         td.oe_form_group_cell
             text-align: right
-            padding: 0
+            padding: 0 !important
         td.oe_form_group_cell_label
-            border: none
+            border-right: none
         .oe_form_field
             width: auto !important
-        .oe_form_subtotal_footer_separator
+        .oe_subtotal_footer_separator
             border-top: 1px solid #cacaca
-            font-size: 120%
+            font-sie: 120%
             font-weight: bold
-        label.oe_form_subtotal_footer_separator
+        label.oe_subtotal_footer_separator
             font-weight: bold !important
             padding: 2px 8px 2px 0px !important
     // no sheet in popups
@@ -1468,7 +1387,7 @@ $colour4: #8a89ba
         .oe_form_field_text textarea,
         .oe_form_field_selection select
             width: inherit
-        .oe_form_sheet textarea
+        .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
         .oe_form_field_float input
             width: 100px
@@ -1528,6 +1447,7 @@ $colour4: #8a89ba
             white-space: nowrap
         .oe_form_field_boolean
             padding-top: 4px
+            width: auto
         .oe_form_field_many2manytags
             .text-wrap
                 width: 100% !important
@@ -1664,7 +1584,6 @@ $colour4: #8a89ba
     .oe-listview-content
         width: 100%
         td:first-child, th:first-child
-            width: 17px
             &:after
                 border-width: 0
         > thead
