@@ -134,26 +134,24 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group>
+                       <field name="complete_name" string="Project Name"/> 
+                       <separator orientation="vertical"/>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
-                       <filter icon="gtk-media-pause" string="Template"
-                            name="Template" domain="[('state', '=','template')]" help="Templates of Projects"/>
-                       <separator orientation="vertical"/>
+                       <filter icon="gtk-media-pause" string="Template" name="Template" domain="[('state', '=','template')]" help="Templates of Projects"/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
+                       <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                        <separator orientation="vertical"/>
-                       <field name="name" string="Project Name"/>
-                       <field name="user_id" string="Project Manager">
-                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
-                       </field>
+                       <field name="user_id" string="Project Manager"/>
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />
-                    <group expand="0" string="Group By...">
-                        <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
-                         <separator orientation="vertical"/>
-                        <filter string="Parent" name="Parent"  help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
-                    </group>
+                   <group expand="0" string="Group By...">
+                       <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
+                       <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string="Parent" name="Parent"  help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
+                   </group>
                </search>
             </field>
         </record>
@@ -366,7 +364,6 @@
                     <group>
                         <group>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                            <field name="project_id"  on_change="onchange_project(project_id)"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
@@ -390,15 +387,16 @@
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
-                            <group class="oe_form_subtotal_footer" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                            <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
                                 <field name="effective_hours" widget="float_time"/>
                                 <label for="remaining_hours" string="Remaining" groups="project.group_time_work_estimation_tasks"/>
                                 <div>
                                     <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" target="new" states="open,pending" icon="gtk-edit"/>
                                     <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" groups="project.group_time_work_estimation_tasks"/>
                                 </div>
-                                <field name="total_hours" widget="float_time" class="oe_form_subtotal_footer_separator"/>
+                                <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <div class="oe_clear"/>
                         </page>
                         <page string="Delegations History" groups="project.group_delegate_task">
                             <separator string="Parent Tasks"/>
@@ -597,19 +595,19 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <group>
+                        <field name="name" string="Tasks"/>
+                        <separator orientation="vertical"/>
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
                         <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
+                        <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
+                        <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" 
+                            help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                        <separator orientation="vertical"/>
                         <field name="project_id"/>
-                        <field name="user_id">
-                            <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
-                            <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                        </field>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -687,11 +685,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
-                   <group>
-                       <filter icon="terp-check" string="Common" name="common" domain="[('case_default', '=', 1)]" help="Stages common to all projects"/>
+                    <group>
+                       <field name="name" string="Tasks Stages"/>
                        <separator orientation="vertical"/>
-                       <field name="name"/>
-                   </group>
+                       <filter icon="terp-check" string="Common" name="common" domain="[('case_default', '=', 1)]" help="Stages common to all projects"/>
+                    </group>
                 </search>
             </field>
         </record>
