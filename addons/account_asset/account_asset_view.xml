@@ -64,7 +64,8 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Asset Category">
-                <field name="name"/>
+                <field name="name" string="Asset Category"/>
+                <separator orientation="vertical"/>
                 <field name="journal_id"/>
             </search>
         </field>
@@ -204,12 +205,14 @@
         <field name="arch" type="xml">
             <search string="Account Asset">
                 <group col="10" colspan="12">
+                    <field name="name" string="Asset"/>
+                    <separator orientation="vertical"/>
+                    <field name="purchase_date"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
                     <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="category_id"/>
-                    <field name="purchase_date"/>
                     <field name="partner_id"/>
                 </group>
             </search>
