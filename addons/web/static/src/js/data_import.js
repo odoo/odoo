@@ -55,7 +55,8 @@ instance.web.DataImport = instance.web.Dialog.extend({
                 .filter(function (field) {
                     return field.required &&
                            !_.include(self.fields_with_defaults, field.id); })
-                .pluck('name')
+                .pluck('id')
+                .uniq()
                 .value();
             convert_fields(self);
             self.all_fields.sort();
@@ -133,6 +134,10 @@ instance.web.DataImport = instance.web.Dialog.extend({
             switch (field.type) {
             case 'many2many':
             case 'many2one':
+                // push a copy for the bare many2one field, to allow importing
+                // using name_search too - even if we default to exporting the XML ID
+                var many2one_field = _.extend({}, f)
+                parent.fields.push(many2one_field);
                 f.name += '/id';
                 break;
             case 'one2many':
@@ -261,10 +266,14 @@ instance.web.DataImport = instance.web.Dialog.extend({
         fields = fields || this.fields;
         var f;
         f = _(fields).detect(function (field) {
-            // TODO: levenshtein between header and field.string
             return field.name === name
-                || field.string.toLowerCase() === name.toLowerCase();
         });
+        if (!f) {
+            f = _(fields).detect(function (field) {
+                // TODO: levenshtein between header and field.string
+                return field.string.toLowerCase() === name.toLowerCase();
+            });
+        }
         if (f) { return f.name; }
 
         // if ``name`` is a path (o2m), we need to recurse through its .fields
@@ -274,9 +283,13 @@ instance.web.DataImport = instance.web.Dialog.extend({
         var column_name = name.substring(0, index);
         f = _(fields).detect(function (field) {
             // field.name for o2m is $foo/id, so we want to match on id
-            return field.id === column_name
-                || field.string.toLowerCase() === column_name.toLowerCase()
+            return field.id === column_name;
         });
+        if (!f) {
+            f = _(fields).detect(function (field) {
+                return field.string.toLowerCase() === column_name.toLowerCase();
+            });
+        }
         if (!f) { return undefined; }
 
         // if we found a matching field for the first path section, recurse in
@@ -330,7 +343,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
         if (_.isEmpty(duplicates)) {
             this.toggle_import_button(required_valid);
         } else {
-            var $err = $('<div id="msg" style="color: red;">Destination fields should only be selected once, some fields are selected more than once:</div>').insertBefore(this.$element.find('#result'));
+            var $err = $('<div id="msg" style="color: red;">'+_t("Destination fields should only be selected once, some fields are selected more than once:")+'</div>').insertBefore(this.$element.find('#result'));
             var $dupes = $('<dl>').appendTo($err);
             _(duplicates).each(function(elements, value) {
                 $('<dt>').text(value).appendTo($dupes);
@@ -344,16 +357,30 @@ instance.web.DataImport = instance.web.Dialog.extend({
 
     },
     check_required: function() {
-        if (!this.required_fields.length) { return true; }
+        var self = this;
+        if (!self.required_fields.length) { return true; }
+
+        // Resolve field id based on column name, as there may be
+        // several ways to provide the value for a given field and
+        // thus satisfy the requirement. 
+        // (e.g. m2o_id or m2o_id/id columns may be provided)
+        var resolve_field_id = function(column_name) {
+            var f = _.detect(self.fields, function(field) {
+                return field.name === column_name;
+            });
+            if (!f) { return column_name; };
+            return f.id;
+        };
 
         var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
             .pluck('value')
             .compact()
+            .map(resolve_field_id)
             .value();
 
         var missing_fields = _.difference(this.required_fields, selected_fields);
         if (missing_fields.length) {
-            this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + missing_fields + '.</div>');
+            this.$element.find("#result").before('<div id="message" style="color:red">' + _t("*Required Fields are not selected :") + missing_fields + '.</div>');
             return false;
         }
         return true;

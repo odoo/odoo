@@ -588,26 +588,22 @@ class LocalConnector(openerplib.Connector):
         import openerp
         import traceback
         import xmlrpclib
+        code_string = "warning -- %s\n\n%s"
         try:
-            result = openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except Exception,e:
+            return openerp.netsvc.dispatch_rpc(service_name, method, args)
+        except openerp.osv.osv.except_osv, e:
         # TODO change the except to raise LibException instead of their emulated xmlrpc fault
-            if isinstance(e, openerp.osv.osv.except_osv):
-                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + str(e.value), '')
-            elif isinstance(e, openerp.exceptions.Warning):
-                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
-            elif isinstance(e, openerp.exceptions.AccessError):
-                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
-            elif isinstance(e, openerp.exceptions.AccessDenied):
-                fault = xmlrpclib.Fault('AccessDenied', str(e))
-            elif isinstance(e, openerp.exceptions.DeferredException):
-                info = e.traceback
-                formatted_info = "".join(traceback.format_exception(*info))
-                fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-            else:
-                info = sys.exc_info()
-                formatted_info = "".join(traceback.format_exception(*info))
-                fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
-            raise fault
-        return result
+            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
+        except openerp.exceptions.Warning, e:
+            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
+        except openerp.exceptions.AccessError, e:
+            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
+        except openerp.exceptions.AccessDenied, e:
+            raise xmlrpclib.Fault('AccessDenied', str(e))
+        except openerp.exceptions.DeferredException, e:
+            formatted_info = "".join(traceback.format_exception(*e.traceback))
+            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+        except Exception, e:
+            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
+            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
 
