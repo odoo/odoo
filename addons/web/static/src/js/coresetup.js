@@ -606,12 +606,7 @@ instance.web.qweb.preprocess_node = function() {
 
 /** Setup jQuery timeago */
 var timeago_setup = function () {
-    var s = $.timeago.settings.strings;
-    _.each(s, function(v,k) {
-        if(_.isString(v)) {
-            s[k] = instance.web._t(v);
-        }
-    });
+    $.timeago.settings.translator = instance.web._t;
 }
 instance.connection.on('module_loaded', this, timeago_setup);
 

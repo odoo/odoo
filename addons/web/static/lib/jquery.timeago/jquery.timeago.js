@@ -1,6 +1,9 @@
 /**
  * Timeago is a jQuery plugin that makes it easy to support automatically
  * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
+ * 
+ * Please note that the library has been slightly modified for i18n's sake.
+ * 
  *
  * @name timeago
  * @version 0.11.3
@@ -50,7 +53,7 @@
         wordSeparator: " ",
         numbers: []
       },
-      translator: function(str) {}
+      translator: null
     },
     inWords: function(distanceMillis) {
       var $l = this.settings.strings;
@@ -71,8 +74,9 @@
 
       function substitute(stringOrFunction, number) {
         var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, distanceMillis) : stringOrFunction;
-        var value = ($l.numbers && $l.numbers[number]) || number;
-        return string.replace(/%d/i, value);
+        
+        // return the proper string and the numeric value that goes in it
+        return stringAndNumber = {'string': string, 'value': ($l.numbers && $l.numbers[number]) || number};
       }
 
       var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
@@ -86,9 +90,18 @@
         days < 365 && substitute($l.months, Math.round(days / 30)) ||
         years < 1.5 && substitute($l.year, 1) ||
         substitute($l.years, Math.round(years));
-
+      
+      var string = stringAndNumber.string;
+      var value = stringAndNumber.value;
       var separator = $l.wordSeparator === undefined ?  " " : $l.wordSeparator;
-      return $.trim([prefix, words, suffix].join(separator));
+      
+      // compose and translate the final string
+      var fullString = $.trim([prefix, string, suffix].join(separator));
+      var translatedString = $t.settings.translator ? 
+              $t.settings.translator(fullString) : 
+              fullString;
+      
+      return translatedString.replace(/%d/i, value);
     },
     parse: function(iso8601) {
       var s = $.trim(iso8601);
