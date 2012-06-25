@@ -206,9 +206,10 @@ openerp.web.list_editable = function (instance) {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': record_id,
-                        'class': (row ? $(row).attr('class') : '') + ' oe_form',
+                        'class': (row ? $(row).attr('class') : ''),
                         click: function (e) {e.stopPropagation();}
                     })
+                    .addClass('oe_form oe_form_container')
                     .delegate('button.oe-edit-row-save', 'click', function () {
                         self.save_row();
                     })
@@ -436,8 +437,7 @@ openerp.web.list_editable = function (instance) {
                 w.appendTo($td);
                 $td.appendTo($element);
             });
-            save = QWeb.render('ListView.row.save');
-            $(save).appendTo($element);
+            $(QWeb.render('ListView.row.save')).appendTo($element);
         },
     });
 };
