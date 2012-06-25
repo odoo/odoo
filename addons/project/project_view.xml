@@ -337,9 +337,7 @@
                          <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
                                 states="cancelled" context="{'button_reactivate':True}"/>
                         <button name="action_close" string="Done" type="object"
-                                states="open" class="oe_highlight"/>
-                        <button name="action_close" string="Done" type="object"
-                                states="draft,pending" />        
+                                states="open,draft,pending" class="oe_highlight"/>
                         <button name="do_pending" string="Pending" type="object"
                                 states="open" />
                         <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
