@@ -269,18 +269,14 @@
                                     <field name="partner_id"/>
                                 </div>
                                 <div style="padding-left: 0.5em">
-                                    <i>
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                        <span t-attf-class="#{red || ''}">
-                                            <field name="date_action"/>
-                                        </span>
-                                        <t t-if="record.date_action.raw_value"> : </t>
-                                        <field name="title_action"/>
-                                    </i>
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                    <t t-if="record.date_action.raw_value"> : </t>
+                                    <field name="title_action"/>
                                 </div>
                                 <div class="oe_right">
                                     <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority"/>
                                     <!--
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
                                     <span t-attf-class="oe_kanban_status #{red}"> </span>
