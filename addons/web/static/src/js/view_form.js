@@ -472,6 +472,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
+                console.error(e);
                 instance.webclient.crashmanager.on_javascript_exception(e);
                 return $.Deferred().reject();
             }
@@ -509,6 +510,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         if (result.domain) {
             function edit_domain(node) {
+                if (typeof node !== "object") {
+                    return;
+                }
                 var new_domain = result.domain[node.attrs.name];
                 if (new_domain) {
                     node.attrs.domain = new_domain;
@@ -520,6 +524,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
+            instance.webclient.crashmanager.on_javascript_exception(e);
             return $.Deferred().reject();
         }
     },
@@ -552,6 +557,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
             this.set({mode: "view"});
+            this.on_record_loaded(this.datarecord);
         }
         return false;
     },
@@ -2023,6 +2029,7 @@ instance.web.DateTimeWidget = instance.web.OldWidget.extend({
         this.$input_picker = this.$element.find('input.oe_datepicker_container');
         this.$input.change(this.on_change);
         this.picker({
+            onClose: this.on_picker_select,
             onSelect: this.on_picker_select,
             changeMonth: true,
             changeYear: true,
