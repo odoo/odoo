@@ -85,11 +85,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
-            // FIXME: use widget events
-            $(w).unbind('.formBlur');
+            w.off('focused blurred');
             w.destroy();
         });
-        this.$element.unbind('.formBlur');
+        this.$element.off('.formBlur');
         this._super();
     },
     on_loaded: function(data) {
@@ -111,7 +110,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.rendering_engine.render_to($dest);
         }
 
-        this.$element.bind('mousedown.formBlur', function () {
+        this.$element.on('mousedown.formBlur', function () {
             self.__clicked_inside = true;
         });
 
@@ -225,7 +224,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         // clear timeout, if any
         this.widgetFocused();
         this.__blur_timeout = setTimeout(function () {
-            $(self).trigger('form-blur');
+            self.trigger('blurred');
         }, 0);
     },
 
@@ -914,8 +913,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.fields[name] = field;
         this.fields_order.push(name);
 
-        $(field).bind('widget-focus.formBlur', this.proxy('widgetFocused'))
-                .bind('widget-blur.formBlur', this.proxy('widgetBlurred'));
+        field.on('focused', null, this.proxy('widgetFocused'))
+             .on('blurred', null, this.proxy('widgetBlurred'));
         if (this.get_field(name).translate) {
             this.translatable_fields.push(field);
         }
@@ -1523,9 +1522,9 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
      */
     setupFocus: function ($e) {
         var self = this;
-        $e.bind({
-            focus: function () { $(self).trigger('widget-focus'); },
-            blur: function () { $(self).trigger('widget-blur'); }
+        $e.on({
+            focus: function () { self.trigger('focused'); },
+            blur: function () { self.trigger('blurred'); }
         });
     },
     process_modifiers: function() {
@@ -3272,7 +3271,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
                 });
             };
 
-            $(self.edition_form).bind('form-blur', function () {
+            self.edition_form.on('blurred', function () {
                 if (self.__return_blur) {
                     delete self.__return_blur;
                     return;
@@ -4092,6 +4091,9 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
         this.selection.renderElement();
         this.selection.start();
+        this.selection
+            .on('focused', null, function () {self.trigger('focused')})
+            .on('blurred', null, function () {self.trigger('blurred')});
 
         this.m2o = new instance.web.form.FieldMany2One(this, { attrs: {
             name: 'm2o'
@@ -4102,10 +4104,9 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
         this.m2o.renderElement();
         this.m2o.start();
-        $(this.selection).add($(this.m2o)).bind({
-            'focus': function () { $(self).trigger('widget-focus'); },
-            'blur': function () { $(self).trigger('widget-blur'); }
-        });
+        this.m2o
+            .on('focused', null, function () {self.trigger('focused')})
+            .on('blurred', null, function () {self.trigger('blurred')});
     },
     is_false: function() {
         return typeof(this.get_value()) !== 'string';
