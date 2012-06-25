@@ -10,18 +10,20 @@
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                     </header>
-                    <newline/>
-                    <separator string="Wiki" colspan="4"/>
-                    <field name="module_wiki_faq"/>
-                    <newline/>
-                    <field name="module_wiki_quality_manual"/>
+                    <group>
+                        <newline/>
+                        <separator string="Wiki" colspan="4"/>
+                        <field name="module_wiki_faq"/>
+                        <newline/>
+                        <field name="module_wiki_quality_manual"/>
 
-                    <separator string="Documents" colspan="4"/>
-                    <field name="module_document"/>
-                    <newline/>
-                    <field name="module_document_ftp"/>
-                    <newline/>
-                    <field name="module_document_webdav"/>
+                        <separator string="Documents" colspan="4"/>
+                        <field name="module_document"/>
+                        <newline/>
+                        <field name="module_document_ftp"/>
+                        <newline/>
+                        <field name="module_document_webdav"/>
+                    </group>
                 </form>
             </field>
         </record>
