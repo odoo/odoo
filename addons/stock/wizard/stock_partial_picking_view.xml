@@ -17,11 +17,12 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                     <header>
-                        <button name="do_partial" string="_Transfer" type="object" icon="gtk-go-forward" />
-                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
-                        <field name="hide_tracking" invisible="1"/>
+                        <button name="do_partial" string="_Transfer" type="object" icon="gtk-go-forward" class="oe_highlight"/>
                     </header>
-                    <separator string="Transfer Products" name="product_separator"/>
+                    <group>
+                        <field name="hide_tracking" invisible="1"/>
+                        <separator string="Transfer Products" name="product_separator"/>
+                    </group>
                     <field name="move_ids" context="{'hide_tracking': hide_tracking}">
                         <tree editable="bottom" string="Product Moves">
                             <field name="product_id" />

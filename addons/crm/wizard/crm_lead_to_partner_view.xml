@@ -10,11 +10,10 @@
           <field name="arch" type="xml">
               <form string="Create a Partner" version="7.0">
                   <header>
-                      <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                      <button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
+                      <button name="make_partner" string="Continue" type="object" icon="gtk-ok" class="oe_highlight"/>
                   </header>
-                  <separator string="Create a Partner"/>
                   <group col="4">
+                      <separator string="Create a Partner"/>
                       <field name="action"/>
                       <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                   </group>

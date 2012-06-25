@@ -8,10 +8,11 @@
             <field name="arch" type="xml">
                <form string="View Stock of Products" version="7.0">
                     <header>
-                        <button name="action_open_window" string="Open Product" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel" />
+                        <button name="action_open_window" string="Open Product" type="object" icon="gtk-ok" class="oe_highlight"/>
                     </header>
-                    <separator string="Stock Location Analysis"/>
+                    <group>
+                        <separator string="Stock Location Analysis"/>
+                    </group>
                     <group>
                         <field name="from_date"/>
                         <field name="to_date"/>

@@ -9,11 +9,12 @@
             <field name="arch" type="xml">
                 <form string="Merge Inventories" version="7.0">
                     <header>
-                        <button name="do_merge" string="Yes" type="object" icon="gtk-apply"/>
-                        <button special="cancel" string="_Cancel" icon='gtk-cancel'/>
+                        <button name="do_merge" string="Yes" type="object" icon="gtk-apply" class="oe_highlight"/>
                     </header>
-                    <separator string="Merge Inventories" />
-                    <label string="Do you want to merge theses inventories?"/>
+                    <group>
+                        <separator string="Merge Inventories" />
+                    </group>
+                        <label string="Do you want to merge theses inventories?"/>
                 </form>
             </field>
         </record>

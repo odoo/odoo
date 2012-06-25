@@ -1983,8 +1983,7 @@
             <field name="arch" type="xml">
                 <form string="Create Account" version="7.0">
                     <header>
-                        <button icon="gtk-ok" name="action_create" string="Add" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_highlight"/>
                     </header>
                     <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
                     <field name="cparent_id"/>
@@ -2355,7 +2354,6 @@
                 <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <button name="action_skip" position="replace"/>
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>

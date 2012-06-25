@@ -8,10 +8,11 @@
         <field name="arch" type="xml">
             <form string="My Current Timesheet" version="7.0">
                <header>
-                    <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button  icon="terp-camera_test" name="open_timesheet" string="Open" type="object"/>
+                    <button  icon="terp-camera_test" name="open_timesheet" string="Open" type="object" class="oe_highlight"/>
                </header>
-               <separator string="It will open your current timesheet"/>
+               <group>
+                    <separator string="It will open your current timesheet"/>
+               </group>
            </form>
         </field>
     </record>
