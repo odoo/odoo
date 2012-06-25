@@ -8,13 +8,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Parameters">
+                    <field name="name" string="Name"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-project"
                         string="Generic"
                         help="Parameters that are used by all resources."
                         domain="[('res_id','=',False)]"/>
                     <separator orientation="vertical"/>
-                    <field name="fields_id" />
-                    <field name="name"/>
+                    <field name="fields_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -25,6 +26,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="company_id" groups="base.group_multi_company"/>
@@ -39,6 +41,7 @@
                     <field name="value_text"  attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}"/>
                     <field name="value_reference"  attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
                     <field name="value_binary"  attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
+                  </sheet>
                 </form>
             </field>
         </record>

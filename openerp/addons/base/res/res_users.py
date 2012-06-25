@@ -112,6 +112,7 @@ class users(osv.osv):
     __admin_ids = {}
     _uid_cache = {}
     _name = "res.users"
+    _description = 'Users'
     _order = 'name'
 
     WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"
@@ -225,7 +226,7 @@ class users(osv.osv):
 
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
+            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load a Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "

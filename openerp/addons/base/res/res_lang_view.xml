@@ -24,6 +24,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Languages" version="7.0">
+                   <sheet>
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="code" />
@@ -97,7 +98,7 @@
                         <label align="0.0" string="12. %%w              ==> 5 ( Friday is the 6th day)"/>
                         <newline/>
                     </group>
-
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -108,11 +109,12 @@
             <field name="arch" type="xml">
                 <search string="Languages">
                      <group>
+                        <field name="name"
+                            filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
+                            string="Language"/>
+                        <separator orientation="vertical"/>
                         <filter string="Translatable" icon="terp-tools" domain="[('translatable','=',True)]"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="iso_code"/>
                         <field name="direction"/>
                     </group>
                 </search>
