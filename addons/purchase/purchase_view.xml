@@ -193,18 +193,26 @@
                             <field name="notes"/>
                         </page>
                         <page string="Delivery &amp; Invoicing">
-                            <group string="Delivery" col="4">
-                                <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
-                                <field name="minimum_planned_date"/>
-                                <field name="validator" groups="base.group_no_one"/>
-                                <field name="location_id" groups="stock.group_locations"/>
-                                <field name="date_approve"/>
-                                <field name="shipped" groups="base.group_no_one"/>
+                            <group string="Delivery">
+                                <group>
+                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
+                                    <field name="minimum_planned_date"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="shipped" groups="base.group_no_one"/>
+                                </group>
+                                <group>
+                                    <field name="validator" groups="base.group_no_one"/>
+                                    <field name="date_approve"/>
+                                </group>
                             </group>
                             <group string="Invoicing" col="4">
-                                <field name="invoice_method"/>
-                                <field name="fiscal_position" widget="selection"/>
-                                <field name="invoiced"/>
+                                <group>
+                                    <field name="invoice_method"/>
+                                    <field name="fiscal_position"/>
+                                </group>
+                                <group>
+                                    <field name="invoiced"/>
+                                </group>
                             </group>
                             <separator string="Invoices"/>
                             <field name="invoice_ids" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
