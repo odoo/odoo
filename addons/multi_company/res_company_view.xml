@@ -49,7 +49,8 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">
-                    <field name="name"/>
+                    <field name="name" string="Multi Company"/>
+                    <separator orientation="vertical"/>
                     <field name="company_id" widget="selection"/>
                     <field name="company_dest_id" widget="selection"/>
                     <field name="object_id"/>

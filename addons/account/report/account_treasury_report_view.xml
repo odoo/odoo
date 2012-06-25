@@ -36,12 +36,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Treasury Analysis">
-                <group colspan="10" col="12">
+                <group>
                     <field name="fiscalyear_id"/>
                     <field name="period_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
-                 <newline/>
+                <newline/>
             </search>
         </field>
     </record>

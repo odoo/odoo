@@ -38,8 +38,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
-                    <field name="name" />
-                    <field name="namespace" />
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]"
+                    string="Document property"/>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Dir" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'dir_id'}"/>
@@ -139,8 +140,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
-                    <field name="name" />
-                    <field name="namespace" />
+                    <field name="name"
+                    filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]"
+                    string="Document Property"/>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Document" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'file_id'}"/>
