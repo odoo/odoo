@@ -211,7 +211,6 @@
 
         <record id="res_partner_10" model="res.partner">
             <field name="name">The Jackson Group</field>
-            <!--contact: John M. Brown-->
             <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_9')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Miami</field>
@@ -268,7 +267,6 @@
 
         <record id="res_partner_14" model="res.partner">
             <field name="name">Chamber Works</field>
-            <!--      Contact: Angel Cook-->
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field eval="15000.00" name="credit_limit"/>
@@ -376,12 +374,6 @@
             <field name="zip">L25 4RL</field>
         </record>
 
-        <!--record id="res_partner_notsotinysarl0" model="res.partner">
-            <field name="name">NotSoTiny SARL</field>
-            <field name="address" eval="[]"/>
-            <field name="website">notsotiny.be</field>
-        </record-->
-
         <record id="res_partner_22" model="res.partner">
             <field name="name">Vicking Direct</field>
             <field eval="[(6,0,[ref('res_partner_category_18')])]" name="category_id"/>
@@ -401,155 +393,232 @@
         Resource: res.partner.address
         -->
 
+        <record id="res_partner_main1" model="res.partner">
+            <field name="name">Mark Davis</field>
+            <field name="parent_id" ref="main_partner"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_main2" model="res.partner">
+            <field name="name">Roger Scott</field>
+            <field name="parent_id" ref="main_partner"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
         <record id="res_partner_address_1" model="res.partner">
             <field name="name">Tang Tsui</field>
             <field name="parent_id" ref="res_partner_1"/>
             <field name="use_parent_address" eval="1"/>
         </record>
 
-        <record id="res_partner_address_1_x" model="res.partner">
-            <field name="name">Michel Schumacher</field>
-            <field name="parent_id" ref="res_partner_9"/>
-            <field name="use_parent_address" eval="1"/>
-        </record>
-
         <record id="res_partner_address_2" model="res.partner">
-            <field name="name">Laurent Jacot</field>
-            <field name="parent_id" ref="res_partner_10"/>
+            <field name="name">Joseph Walters</field>
+            <field name="parent_id" ref="res_partner_1"/>
             <field name="use_parent_address" eval="1"/>
-            
         </record>
 
-        <record id="res_partner_address_3000" model="res.partner">
-            <field name="name">Laith Jubair</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_13"/>
-        </record>
         <record id="res_partner_address_3" model="res.partner">
             <field name="name">Thomas Passot</field>
+            <field name="parent_id" ref="res_partner_2"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_8"/>
+        </record>
+
+        <record id="res_partner_address_4" model="res.partner">
+            <field name="name">Michel Fletcher</field>
+            <field name="parent_id" ref="res_partner_2"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_5" model="res.partner">
+            <field name="name">Chao Wang</field>
+            <field name="parent_id" ref="res_partner_3"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
 
         <record id="res_partner_address_6" model="res.partner">
-            <field name="name">Etienne Lacarte</field>
+            <field name="name">Zhi Ch'ang</field>
+            <field name="parent_id" ref="res_partner_3"/>
+            <field model="res.partner.title" name="title" search="[('name','ilike','miss')]"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_6"/>
         </record>
+
         <record id="res_partner_address_7" model="res.partner">
-            <field name="name">Jean Guy Lavente</field>
-            <field name="use_parent_address" eval="1"/>
+            <field name="name">Richard Ellis</field>
             <field name="parent_id" ref="res_partner_4"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
+
         <record id="res_partner_address_8" model="res.partner">
-            <field name="name">Sylvie Lelitre</field>
-            <field name="parent_id" ref="res_partner_2"/>
+            <field name="name">Paul Williams</field>
+            <field name="parent_id" ref="res_partner_4"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="title" ref="base.res_partner_title_madam"/>
         </record>
-        <record id="res_partner_address_8delivery" model="res.partner">
-            <field name="name">Paul Lelitre</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_2"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-        </record>
-        <record id="res_partner_address_8invoice" model="res.partner">
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_2"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-        </record>
+       
         <record id="res_partner_address_9" model="res.partner">
-            <field name="parent_id" ref="res_partner_2"/>
+            <field name="name">Brian Williams</field>
+            <field name="parent_id" ref="res_partner_4"/>
             <field name="use_parent_address" eval="1"/>
             <field name="title" ref="base.res_partner_title_sir"/>
+        </record>
+
+        <record id="res_partner_address_10" model="res.partner">
+            <field name="name">David Simpson</field>
+            <field name="parent_id" ref="res_partner_5"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
 
         <record id="res_partner_address_11" model="res.partner">
-            <field name="name">Sebastien LANGE</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_16"/>
-        </record>
-        <record id="res_partner_address_10" model="res.partner">
-            <field name="name">David Simpson</field>
-            <field name="use_parent_address" eval="1"/>
+            <field name="name">John M. Brown</field>
             <field name="parent_id" ref="res_partner_5"/>
-        </record>
-
-        <record id="res_partner_address_zen" model="res.partner">
-            <field name="name">Chao Wang</field>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_3"/>
         </record>
 
         <record id="res_partner_address_12" model="res.partner">
             <field name="type">default</field>
-            <field name="name">Loïc Dupont</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_10"/>
+            <field name="name">James Miller</field>
+            <field name="parent_id" ref="res_partner_6"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
+
         <record id="res_partner_address_13" model="res.partner">
-            <field name="name">Carl</field>
+            <field name="name">Charlie Bernard</field>
+            <field name="parent_id" ref="res_partner_7"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_14"/>
         </record>
+
         <record id="res_partner_address_14" model="res.partner">
-            <field name="name">Lucien Ferguson</field>
+            <field name="name">Jessica Dupont</field>
+            <field name="parent_id" ref="res_partner_7"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_15"/>
         </record>
+
         <record id="res_partner_address_15" model="res.partner">
             <field name="type">default</field>
-            <field name="name">Marine Leclerc</field>
-            <field name="street">rue Grande</field>
-            <field name="city">Brest</field>
-            <field name="zip">29200</field>
-            <field name="email">marine@leclerc.fr</field>
-            <field name="phone">+33-298.334558</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_11"/>
+            <field name="name">Phillipp Miller</field>
+            <field name="parent_id" ref="res_partner_8"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
+
         <record id="res_partner_address_16" model="res.partner">
-            <field name="type">invoice</field>
-            <field name="name">Claude Leclerc</field>
-            <field name="street">rue Grande</field>
-            <field name="city">Brest</field>
-            <field name="zip">29200</field>
-            <field name="email">claude@leclerc.fr</field>
-            <field name="phone">+33-298.334598</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_11"/>
-        </record>
-
-        <record id="res_partner_address_accent" model="res.partner">
-            <field name="name">William Thomas</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_21"/>
-        </record>
-
-        <record id="res_partner_address_Camptocamp" model="res.partner">
-            <field name="name">Luc Maurer</field>
             <field name="type">default</field>
+            <field name="name">Ayaan Agarwal</field>
+            <field name="parent_id" ref="res_partner_9"/>
             <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_12"/>
         </record>
 
-        <record id="res_partner_address_nebula" model="res.partner">
-            <field name="name">Jack Daniels</field>
+        <record id="res_partner_address_17" model="res.partner">
+            <field name="name">Daniel Jackson</field>
+            <field name="parent_id" ref="res_partner_10"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_18" model="res.partner">
+            <field name="name">William Thomas</field>
+            <field name="parent_id" ref="res_partner_10"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_19" model="res.partner">
+            <field name="type">default</field>
+            <field name="name">Sergio Pérez</field>
+            <field name="parent_id" ref="res_partner_11"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_20" model="res.partner">
+            <field name="name">Laura Castro</field>
+            <field name="parent_id" ref="res_partner_11"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_21" model="res.partner">
+            <field name="name">Luc Maurer</field>
+            <field name="parent_id" ref="res_partner_12"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_22" model="res.partner">
+            <field name="name">Laith Jubair</field>
+            <field name="parent_id" ref="res_partner_13"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_23" model="res.partner">
+            <field name="name">Angel Cook</field>
+            <field name="parent_id" ref="res_partner_14"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_24" model="res.partner">
+            <field name="name">Robert Anderson</field>
+            <field name="parent_id" ref="res_partner_14"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_25" model="res.partner">
+            <field name="name">Jacob Taylor</field>
+            <field name="parent_id" ref="res_partner_15"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_26" model="res.partner">
+            <field name="name">Arthur Gomez</field>
+            <field name="parent_id" ref="res_partner_16"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_27" model="res.partner">
+            <field name="name">Julia Rivero</field>
+            <field name="parent_id" ref="res_partner_16"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_28" model="res.partner">
+            <field name="name">Benjamin Flores</field>
             <field name="parent_id" ref="res_partner_17"/>
             <field name="use_parent_address" eval="1"/>
         </record>
 
-
-        <record id="res_partner_address_0" model="res.partner">
-            <field name="name">Brus</field>
-            <field eval="'Brussels'" name="city"/>
-            <field name="country_id" ref="base.be"/>
+        <record id="res_partner_address_29" model="res.partner">
+            <field name="name">George Wilson</field>
+            <field name="parent_id" ref="res_partner_18"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
 
-        <record id="res_partner_address_brussels0" model="res.partner">
-            <field name="name">Paul Brown</field>
+        <record id="res_partner_address_30" model="res.partner">
+            <field name="name">Lucas Jones</field>
+            <field name="parent_id" ref="res_partner_18"/>
             <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Edward Foster</field>
+            <field name="parent_id" ref="res_partner_19"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Robin Smith</field>
+            <field name="parent_id" ref="res_partner_21"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Morgan Rose</field>
+            <field name="parent_id" ref="res_partner_21"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Kevin Clarke</field>
+            <field name="parent_id" ref="res_partner_21"/>
+            <field name="use_parent_address" eval="1"/>
+        </record>
+
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Peter Mitchell</field>
             <field name="parent_id" ref="res_partner_22"/>
+            <field name="use_parent_address" eval="1"/>
         </record>
 
         <!--
