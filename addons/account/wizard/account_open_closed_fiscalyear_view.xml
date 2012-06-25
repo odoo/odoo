@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Choose Fiscal Year " version="7.0">
                     <header>
-                        <button icon="terp-gtk-go-back-rtl" string="Open" name="remove_entries" type="object" class="oe_highlight"/>
+                        <button icon="terp-gtk-go-back-rtl" string="Open" name="remove_entries" type="object" class="oe_highlight_editable" />
                     </header>
                     <group>
                         <field name="fyear_id" domain="[('state','=','draft')]"/>
