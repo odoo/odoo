@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
-                    <button name="set_done" string="Done" type="object" states="open,pending" class="oe_highlight"/>
+                    <button name="set_done" string="Done" type="object" states="open,pending" />
                     <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight"/>
                     <button name="set_open" string="Re-open project" type="object" states="cancelled,close" />
                     <button name="set_pending" string="Pending" type="object" states="open" />
@@ -337,7 +337,7 @@
                          <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
                                 states="cancelled" context="{'button_reactivate':True}"/>
                         <button name="action_close" string="Done" type="object"
-                                states="open,draft,pending" class="oe_highlight"/>
+                                states="open,draft,pending" />
                         <button name="do_pending" string="Pending" type="object"
                                 states="open" />
                         <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
