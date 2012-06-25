@@ -30,7 +30,7 @@ from tools.translate import _
 import nodes
 import logging
 
-_loggerdoc = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
@@ -57,7 +57,7 @@ class document_file(osv.osv):
 
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
         if not parent_id:
-            _loggerdoc.warning("at _attach_parent_id(), still not able to set the parent!")
+            _logger.warning("at _attach_parent_id(), still not able to set the parent!")
             return False
 
         if ids is not None:
