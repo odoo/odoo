@@ -120,8 +120,8 @@
                 <tree string="Working Time" editable="top">
                     <field name="name"/>
                     <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time" />
-                    <field name="hour_to" widget="float_time" />
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
                 </tree>
             </field>
         </record>
@@ -132,11 +132,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Working Time" version="7.0">
-                    <field colspan="4" name="name"/>
-                    <field name="date_from"/>
-                    <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
+                    <group colspan="4"> 
+                        <field name="name"/>
+                        <field name="date_from"/>
+                        <field name="dayofweek"/>
+                        <label for="hour_from" string="Hours"/>
+                        <div>
+                            <field name="hour_from" widget="float_time"/>-
+                            <field name="hour_to" widget="float_time"/>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -232,9 +237,12 @@
                            <field name="calendar_id" string="Working Period"/>
                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                        </group>
-                       <group col="4">
-                       <field name="date_from" string="Duration"/>
-                       <field name="date_to" nolabel="1"/>
+                       <group col="2" colspan="4">
+                           <label for="date_from" string="Duration"/> 
+                           <div>
+                               <field name="date_from" nolabel="1"/> - 
+                               <field name="date_to" nolabel="1"/>
+                           </div>
                        </group>
                    </group>
                    </sheet>
