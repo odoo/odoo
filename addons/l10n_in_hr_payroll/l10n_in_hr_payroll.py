@@ -154,7 +154,7 @@ class payroll_advice(osv.osv):
             old_line_ids = advice_line_pool.search(cr, uid, [('advice_id','=',advice.id)], context=context)
             if old_line_ids:
                 advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
-            slip_ids = payslip_pool.search(cr, uid, [('date_from','<=',advice.date), ('date_to','>=',advice.date)], context=context)
+            slip_ids = payslip_pool.search(cr, uid, [('date_from','<=',advice.date), ('date_to','>=',advice.date), ('state', '=', 'done')], context=context)
 #            if not slip_ids:
 #                advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
 #                a_date = advice_date.strftime('%B')+'-'+advice_date.strftime('%Y')
