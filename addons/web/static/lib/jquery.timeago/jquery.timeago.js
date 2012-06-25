@@ -32,10 +32,10 @@
       refreshMillis: 60000,
       allowFuture: false,
       strings: {
-        prefixAgo: null,
-        prefixFromNow: null,
-        suffixAgo: "ago",
-        suffixFromNow: "from now",
+        prefixAgo: "timeago-prefixAgo",
+        prefixFromNow: "timeago-prefixFromNow",
+        suffixAgo: "timeago-suffixAgo", //ago
+        suffixFromNow: "timeago-suffixFromNow", //from now
         seconds: "less than a minute",
         minute: "about a minute",
         minutes: "%d minutes",
