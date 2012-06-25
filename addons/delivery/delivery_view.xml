@@ -60,13 +60,10 @@
                                                 <field name="country_ids" widget="many2many_tags"/>
                                                 <field name="state_ids" widget="many2many_tags"/>
                                             </group>
-                                            <group>
-                                                <div>
-                                                    <label for="zip_from" class="oe_inline"/>
-                                                    <field name="zip_from" class="oe_inline"/>
-                                                    <label string="-" class="oe_inline"/>
-                                                    <field name="zip_to" class="oe_inline"/>
-                                                </div>
+                                            <group class="oe_inline" col="4">
+                                                <field name="zip_from" string="Zip"/>
+                                                <label  string="-"/>
+                                                <field name="zip_to" nolabel="1"/>
                                             </group>
                                         </page>
                                     </notebook>
