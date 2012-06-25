@@ -9,8 +9,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field ref="base.res_partner_2" name="partner_id"/>
-            <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
-            <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
+            <field ref="base.res_partner_address_3" name="partner_invoice_id"/>
+            <field ref="base.res_partner_address_3" name="partner_shipping_id"/>
             <field name="order_policy">picking</field>
             <field name="invoice_quantity">procurement</field> 
             <field name="note">Invoice after delivery</field>          
@@ -65,8 +65,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_4"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_4"/>
             <field name="invoice_quantity">order</field>
             <field name="order_policy">prepaid</field>
             
@@ -99,9 +99,9 @@
             <field name="shop_id" ref="shop"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_8"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_8"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_20"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_20"/>
             <field name="order_policy">prepaid</field>
         </record>
         <record id="line5" model="sale.order.line">
@@ -164,8 +164,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_zen"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_zen"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_5"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_5"/>
         </record>
         <record id="line9" model="sale.order.line">
             <field name="order_id" ref="order5"/>
@@ -196,8 +196,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_13"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_3000"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_3000"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_22"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_22"/>
         </record>
         <record id="order6_line0" model="sale.order.line">
             <field name="order_id" ref="order6"/>
@@ -229,8 +229,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_12"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_3000"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_3000"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_22"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_22"/>
         </record>
         <record id="order7_line0" model="sale.order.line">
             <field name="order_id" ref="order7"/>
