@@ -169,10 +169,7 @@ $colour4: #8a89ba
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
     a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
-        background: #e3e3e3
-        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
-        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
-        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
     a.button.disabled, button:disabled, input[type='submit']:disabled
@@ -220,8 +217,8 @@ $colour4: #8a89ba
         color: #888
     .oe_bold
         font-weight: bold
-    .oe_inline 
-        width: auto
+    .oe_inline
+        width: auto !important
     .oe_highlight
         color: white
         background: #DC5F59
@@ -1216,9 +1213,20 @@ $colour4: #8a89ba
         font-weight: bold
         &:hover
             background: #ED6F6A
+    .oe_form_editable
+        .oe_highlight
+            color: #404040
+            background: none
+        button.oe_highlight
+            @include vertical-gradient(#efefef, #d8d8d8)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        button.oe_highlight:active
+            @include vertical-gradient(#e3e3e3, #f6f6f6)
+            @include box-shadow(none)
+        button.oe_highlight:hover
+            @include vertical-gradient(#f6f6f6, #e3e3e3)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
-        display: none !important
-    .oe_form_editable .oe_edit_only
         display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
@@ -1271,21 +1279,20 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold
             color: #b33630
-    .oe_form_subtotal_footer
-        width: auto
-        float: right
+    .oe_form .oe_subtotal_footer
+        width: 1% !important
         td.oe_form_group_cell
             text-align: right
-            padding: 0
+            padding: 0 !important
         td.oe_form_group_cell_label
-            border: none
+            border-right: none
         .oe_form_field
             width: auto !important
-        .oe_form_subtotal_footer_separator
+        .oe_subtotal_footer_separator
             border-top: 1px solid #cacaca
-            font-size: 120%
+            font-sie: 120%
             font-weight: bold
-        label.oe_form_subtotal_footer_separator
+        label.oe_subtotal_footer_separator
             font-weight: bold !important
             padding: 2px 8px 2px 0px !important
     // no sheet in popups
@@ -1380,7 +1387,7 @@ $colour4: #8a89ba
         .oe_form_field_text textarea,
         .oe_form_field_selection select
             width: inherit
-        .oe_form_sheet textarea
+        .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
         .oe_form_field_float input
             width: 100px
@@ -1440,6 +1447,7 @@ $colour4: #8a89ba
             white-space: nowrap
         .oe_form_field_boolean
             padding-top: 4px
+            width: auto
         .oe_form_field_many2manytags
             .text-wrap
                 width: 100% !important
