@@ -345,7 +345,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ScaleProductScreenWidget = module.BaseScreenWidget.extend({
         template:'ScaleProductSelectionScreenWidget',
-        start: function(){
+        renderElement: function(){
+            this._super();
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{
                 pos:this.pos,
                 product_type: 'weightable',
@@ -520,7 +521,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show_leftpane:   true,
         show_total:      true,
 
-        start: function(){
+        renderElement: function(){
+            this._super();
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{});
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
@@ -569,7 +571,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.company = this.pos.get('company');
             this.shop_obj = this.pos.get('shop');
         },
-        start: function() {
+        renderElement: function() {
+            this._super();
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.change_selected_order();
         },

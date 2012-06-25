@@ -288,9 +288,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }, this));
         },
-        start: function() {
-            $('button.select-order', this.$element).click(_.bind(this.selectOrder, this));
-            $('button.close-order', this.$element).click(_.bind(this.closeOrder, this));
+        renderElement:function(){
+            this._super();
+            this.$('button.select-order').click(_.bind(this.selectOrder, this));
+            this.$('button.close-order').click(_.bind(this.closeOrder, this));
         },
         selectOrder: function(event) {
             this.pos.set({
@@ -318,7 +319,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.template = 'ActionButtonWidgetWithIcon';
             }
         },
-        start: function(){
+        renderElement: function(){
+            this._super();
             if(this.click_action){
                 this.$element.click(_.bind(this.click_action, this));
             }
@@ -388,10 +390,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.set_category();
         },
 
-        start: function(){
-            this.search_and_categories();
-        },
-
         // changes the category. if undefined, sets to root category
         set_category : function(category){
             if(!category){
@@ -428,6 +426,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.renderElement();
                 self.search_and_categories(category);
             });
+            this.search_and_categories();
         },
         
         set_product_type: function(type){       // 'all' | 'weightable'
@@ -507,8 +506,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos.get('products').bind('reset', function(){
                 self.renderElement();
             });
-        },
-        start: function(){
         },
         set_weight: function(weight){
             for(var i = 0; i < this.product_list.length; i++){
