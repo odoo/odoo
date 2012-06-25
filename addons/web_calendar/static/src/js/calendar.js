@@ -119,13 +119,56 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
         scheduler.config.api_date = "%Y-%m-%d %H:%i";
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
-        scheduler.config.start_on_monday = true;
+        scheduler.config.start_on_monday = Date.CultureInfo.firstDayOfWeek !== 0; //Sunday = Sunday, Others = Monday
         scheduler.config.time_step = 30;
         scheduler.config.scroll_hour = 8;
         scheduler.config.drag_resize = true;
         scheduler.config.drag_create = true;
         scheduler.config.mark_now = true;
         scheduler.config.day_date = '%l %j';
+
+        scheduler.locale = {
+            date:{
+                month_full: Date.CultureInfo.monthNames,
+                month_short: Date.CultureInfo.abbreviatedMonthNames,
+                day_full: Date.CultureInfo.dayNames,
+                day_short: Date.CultureInfo.abbreviatedDayNames
+            },
+            labels:{
+                dhx_cal_today_button: _t("Today"),
+                day_tab: _t("Day"),
+                week_tab: _t("Week"),
+                month_tab: _t("Month"),
+                new_event: _t("New event"),
+                icon_save: _t("Save"),
+                icon_cancel: _t("Cancel"),
+                icon_details: _t("Details"),
+                icon_edit: _t("Edit"),
+                icon_delete: _t("Delete"),
+                confirm_closing: "",//Your changes will be lost, are your sure ?
+                confirm_deleting: _t("Event will be deleted permanently, are you sure?"),
+                section_description: _t("Description"),
+                section_time: _t("Time period"),
+                full_day: _t("Full day"),
+
+                /*recurring events*/
+                confirm_recurring: _t("Do you want to edit the whole set of repeated events?"),
+                section_recurring: _t("Repeat event"),
+                button_recurring: _t("Disabled"),
+                button_recurring_open: _t("Enabled"),
+
+                /*agenda view extension*/
+                agenda_tab: _t("Agenda"),
+                date: _t("Date"),
+                description: _t("Description"),
+
+                /*year view extension*/
+                year_tab: _t("Year"),
+
+                /* week agenda extension */
+                week_agenda_tab: _t("Agenda")
+            }
+        };
 
         scheduler.init(this.$element.find('.oe_calendar')[0], null, this.mode || 'month');
 
