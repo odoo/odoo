@@ -3271,7 +3271,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
                 });
             };
 
-            self.edition_form.on('blurred', function () {
+            self.edition_form.on('blurred', null, function () {
                 if (self.__return_blur) {
                     delete self.__return_blur;
                     return;
