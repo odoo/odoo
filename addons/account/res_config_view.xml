@@ -33,7 +33,7 @@
                         <field name="expects_chart_of_accounts"/>
                     </group>
 
-                    <div style="background-color: #FFCCAA; padding: 0px 5px;">
+                    <div class="oe_form_button_save_dirty">
                     <group string="Select a Chart of Accounts to Install"
                         attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
                         <group>
@@ -52,7 +52,7 @@
                     </group>
                     </div>
 
-                    <div style="background-color: #FFCCAA; padding: 0px 5px;">
+                    <div class="oe_form_button_save_dirty">
                     <group string="No Fiscal Year Defined for This Company"
                         attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
                         <label for="date_start" string="Date Range"/>
