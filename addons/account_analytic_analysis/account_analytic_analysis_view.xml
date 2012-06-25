@@ -26,25 +26,17 @@
                 <xpath expr='//div[@name="duration"]' position="after" version="7.0">
                     <label for="quantity_max"/>
                     <div>
-                        <field name="quantity_max" class="oe_form_inline"/> / Remaining:
-                        <field name="remaining_hours" class="oe_form_inline"/>
+                        <field name="quantity_max" class="oe_form_inline"/> / Remaining: <field name="remaining_hours" class="oe_form_inline"/>
                     </div>
                 </xpath>
-                 <xpath expr="//field[@name='use_timesheets']" position="replace">
-                    <group colspan="2" col="4">
-                        <field name="use_timesheets" on_change="on_change_use_timesheets(use_timesheets, context)"/>
-                        <field name="to_invoice" attrs="{'required': [('invoice_on_timesheets', '=', True)],'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
+                    <group name='invoice_on_timesheets' string="Invoice on Timesheets Options" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" col="4">
+                        <field name="pricelist_id" attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                        <field name="to_invoice" widget="selection" attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
                     </group>
                 </xpath>
-                <xpath expr="//group[@name='invoice_on_timesheets']" position="replace"/>
                 <xpath expr='//group[@name="master"]' position='after'>
                     <separator name="toinvoice" string="Invoicing"/>
-                    <group>
-                        <group>
-                            <field name="pricelist_id" attrs="{'required': [('invoice_on_timesheets', '=', True)],'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                        </group>
-                        <group></group>
-                    </group>
                     <table width="100%%">
                         <tr>
                             <th></th>
