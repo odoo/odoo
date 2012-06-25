@@ -549,9 +549,24 @@ class hr_applicant(base_stage, osv.Model):
 class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
+    _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
     }
+    
+    def create(self, cr, uid, vals, context=None):
+        model_pool = self.pool.get('ir.model.data')
+        alias_pool = self.pool.get('mail.alias')
+        res_id = model_pool.get_object( cr, uid, "hr_recruitment", "model_hr_applicant")
+        vals.update({'alias_name': "job",
+                     'alias_model_id': res_id.id})
+        name = alias_pool.create_unique_alias(cr, uid, vals, context=context)
+        res = super( hr_job, self).create(cr, uid, vals, context)
+        record = self.read(cr, uid, res, context)
+        alias_pool.write(cr, uid, [record['alias_id']], {"alias_defaults": {'job_id': record['id']}}, context)
+        return res
+
     
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:
