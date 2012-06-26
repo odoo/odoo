@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
+      <act_window
+            id="act_event_list_register_event"
+            name="Registration"
+            res_model="event.registration"
+            src_model="event.event"
+            view_mode="calendar,tree,form,graph"
+            context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
+            view_type="form"/>
         <menuitem  name="Events" id="event_main_menu"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
 
@@ -73,7 +80,7 @@
 		            </group>  
 		        </div> 
                 <div>
-                	<h2 class="oe_inline">From <field name="date_begin"/> to <field name="date_end"/></h2>
+                	<h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/></h2>
                     <group>
                         <group>
                             <label for="address_id" string="Address"/>
@@ -140,7 +147,7 @@
                                     </group>
                             </form>
                             </field>
-                            <group class="oe_subtotal_footer" colspan="4" style="margin-left:450px" name="regi_total">
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="regi_total">
                                 <field name="register_current"/>
                                 <field name="register_prospect"/>
                                 <field name="register_attended" class="oe_subtotal_footer_separator" />
@@ -326,15 +333,6 @@
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
-
-      <act_window
-            id="act_event_list_register_event"
-            name="Registration"
-            res_model="event.registration"
-            src_model="event.event"
-            view_mode="form,calendar,tree,graph"
-            context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
-            view_type="form"/>
 
       <act_window
             id="act_register_event_partner"
