@@ -242,4 +242,7 @@ class hr_payslip(osv.osv):
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice')
     }
+
+hr_payslip()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
