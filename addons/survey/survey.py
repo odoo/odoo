@@ -699,7 +699,7 @@ class survey_request(osv.osv):
     _columns = {
         'date_deadline': fields.date("Deadline date"),
         'user_id': fields.many2one("res.users", "User"),
-        'email': fields.char("Email, size=64),
+        'email': fields.char("Email", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response': fields.many2one('survey.response', 'Answer'),
         'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
