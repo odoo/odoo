@@ -366,7 +366,9 @@
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" class="oe_inline"/>
-                            (<field name="department_id" class="oe_inline"/>)
+                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                            <field name="department_id" class="oe_inline"/>
+                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
                         </h1>
                         <label for="employee_ids" class="oe_edit_only"/>
                         <h2>

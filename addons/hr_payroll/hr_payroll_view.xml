@@ -345,14 +345,17 @@
                             </field>
                        </page>
                        <page string="Other Information">
-                            <group col="2">
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="payslip_run_id" domain="[('state','=','draft')]"/>
-                                <field name="paid" readonly="1"/>
-                                <div>
-                                    <field name="note" Placeholder="Add an internal note..."/>
-                                </div>
+                            <group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="payslip_run_id" domain="[('state','=','draft')]"/>
+                                    <field name="paid" readonly="1"/>
+                                </group>
+                                <group/>
                             </group>
+                            <div colspan="4">
+                                <field name="note" Placeholder="Add an internal note..."/>
+                            </div>
                        </page>
                     </notebook>
                     </sheet>
