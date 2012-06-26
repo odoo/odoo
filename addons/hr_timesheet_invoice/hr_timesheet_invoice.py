@@ -70,9 +70,8 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
-            help="Fill this field if you plan to automatically generate invoices based " \
-            "on the costs in this analytic account: timesheets, expenses, ..." \
-            "You can configure an automatic invoice rate on analytic accounts."),
+            help="This field allows you to define the rate in case you plan to reinvoice " \
+            "the costs in this analytic account: timesheets, expenses, ..."),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
