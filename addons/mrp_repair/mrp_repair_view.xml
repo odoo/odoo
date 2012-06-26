@@ -133,27 +133,34 @@
                         <!-- <field name="invoice_id"/> -->
                         <field name="fees_lines">
                             <form string="Fees" version="7.0">
-                                <notebook>
-                                    <page string="Fees Line">
-                                        <group col="4">
-                                            <field name='name'/>
-                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
-                                            <label for="product_uom_qty"/>
-                                            <div>
-                                                <field name="product_uom_qty" string="Quantity" class="oe_inline"/>
-                                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
-                                            </div>
-                                            <field name="price_unit"/>
-                                            <field name="price_subtotal"/>
-                                            <field name="to_invoice"/>
-                                            <field name="invoiced"/>
-                                            <field widget="many2many_tags" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                        </group>
-                                     </page>
-                                     <page string="History">
+                                <label for="name" class="oe_edit_only"/>
+                                <h2>
+                                    <field name="name"/>
+                                </h2>
+                                <group string="Product Information">
+                                    <group>
+                                        <field name="to_invoice"/>
+                                        <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
+                                        <label for="product_uom_qty"/>
+                                        <div>
+                                            <field name="product_uom_qty" string="Quantity" class="oe_inline"/>
+                                            <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field name="price_unit"/>
+                                        <field widget="many2many_tags" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <field name="price_subtotal"/>
+                                    </group>
+                                </group>
+                                <group string="History">
+                                    <group>
+                                        <field name="invoiced"/>
+                                    </group>
+                                    <group>
                                         <field name="invoice_line_id" />
-                                    </page>
-                                  </notebook>
+                                    </group>
+                                </group>
                             </form>
                             <tree string="Fees" editable="bottom">
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
