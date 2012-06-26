@@ -241,45 +241,45 @@
         <field name="arch" type="xml">
             <form string="Documents" version="7.0">
                 <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="user_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <group>
+                        <label for="name" string="Attachment Name"/>
+                        <h1>
+                            <field name="name" />
+                        </h1>
                     </group>
-                    <notebook colspan="4">
-                    <page string="Attachment">
+                    <group>
+                        <label for="datas" string="File Content"/>
+                        <h2>
+                            <field name="datas" filename="datas_fname"/>
+                        </h2>
+                    </group>
+                    <group>
                         <group>
-                            <group string="Data">
-                                <field name="type"/>
-                                <newline />
-                                <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            </group>
-                            <group>
-                                <field name="res_id" invisible="True"/>
-                                <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <separator string="Related to" colspan="2"/>
-                                <field name="partner_id"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Created">
-                                <field name="create_uid" readonly="1"/>
-                                <field name="create_date" readonly="1"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Modified">
-                                <field name="write_uid" readonly="1"/>
-                                <field name="write_date" readonly="1"/>
-                            </group>
+                            <field name="user_id"/>
+                            <field name="parent_id"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="index_content"/>
                         </group>
-                    </page>
-                    <page string="Indexed Content - experimental" groups="base.group_no_one">
-                        <field name="index_content"/>
-                    </page>
-                    <page string="Notes">
-                        <field name="description"/>
-                    </page>
+                        <group>
+                            <field name="res_id" invisible="True"/>
+                            <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
+                            <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="History">
+                            <group>
+                                <group groups="base.group_no_one" string="Created">
+                                    <field name="create_uid" readonly="1"/>
+                                    <field name="create_date" readonly="1"/>
+                                </group>
+                                <group groups="base.group_no_one" string="Modified">
+                                    <field name="write_uid" readonly="1"/>
+                                    <field name="write_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
