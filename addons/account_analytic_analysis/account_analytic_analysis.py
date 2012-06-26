@@ -485,6 +485,8 @@ class account_analytic_account(osv.osv):
             return {}
         res = {'value':{}}
         template = self.browse(cr, uid, template_id, context=context)
+        res['value']['date_start'] = template.date_start
+        res['value']['date'] = template.date
         res['value']['fix_price_invoices'] = template.fix_price_invoices
         res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
         res['value']['quantity_max'] = template.quantity_max
