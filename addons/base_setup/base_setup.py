@@ -97,27 +97,4 @@ class specify_partner_terminology(osv.osv_memory):
                 self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
         return {}
 
-# Preferences wizard for Sales & CRM.
-# It is defined here because it is inherited independently in modules sale, crm,
-# plugin_outlook and plugin_thunderbird.
-class sale_config_settings(osv.osv_memory):
-    _name = 'sale.config.settings'
-    _inherit = 'res.config.settings'
-    _columns = {
-        'module_crm': fields.boolean('CRM'),
-        'module_plugin_thunderbird': fields.boolean('Thunderbird Plugin',
-            help="""The plugin allows you archive email and its attachments to the selected
-                OpenERP objects. You can select a partner, a task, a project, an analytical
-                account, or any other object and attach the selected mail as a .eml file in
-                the attachment of a selected record. You can create documents for CRM Lead,
-                HR Applicant and Project Issue from the selected emails.
-                This installs the module plugin_thunderbird."""),
-        'module_plugin_outlook': fields.boolean('Outlook Plugin',
-            help="""The Outlook plugin allows you to select an object that you would like to add
-                to your email and its attachments from MS Outlook. You can select a partner, a task,
-                a project, an analytical account, or any other object and archive a selected
-                email into an OpenERP mail message with attachments.
-                This installs the module plugin_outlook."""),
-    }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
