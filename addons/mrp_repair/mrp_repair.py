@@ -346,7 +346,10 @@ class mrp_repair(osv.osv):
         """
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids, context=context):
-            mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
+            if repair.invoiced or repair.invoice_method == 'none':
+                mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)           
+            else:
+                raise osv.except_osv(_('Warning!'),_('Repair order is not invoiced.'))
         self.write(cr,uid,ids,{'state':'cancel'})
         self.set_cancel_send_note(cr, uid, ids, context)
         return True
