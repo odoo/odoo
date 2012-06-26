@@ -1520,8 +1520,12 @@ class Action(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
-        return clean_action(req, req.session.model('ir.actions.server').run(
-            [action_id], req.session.eval_context(req.context)))
+        return_action = req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context))
+        if return_action:
+            return clean_action(req, return_action)
+        else:
+            return False
 
 class Export(View):
     _cp_path = "/web/export"
