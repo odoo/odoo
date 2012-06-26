@@ -362,50 +362,54 @@
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
                     <field name="state" select="1" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
-                <sheet string="Registration" layout="auto">
-                    <group col="6" colspan="4">
-                        <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                        <field name="nb_register"/>
-                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
-                        <field name="origin"/>
+               <sheet string="Registration">
+                    <group colspan="6" col="7">
+                        <group colspan="3">
+                            <h1>
+                                <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" class="oe_tital"/>
+                            </h1>
+                        </group>
+                        <group colspan="4">
+                            <h1>
+                                ( <field name="event_begin_date" class="oe_inline"/> - <field name="event_end_date" class="oe_inline"/> )
+                            </h1>
+                        </group>  
+                    </group>              
+                    <group colspan="2" col="2">
+                        <h2>
+                            <field name="nb_register"/>Participates
+                        </h2>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Additional Information">
-                            <group colspan="2" col="2">
-                                <separator string="Contact Information" colspan="2"/>
-                                <field name="name"/>
-                                <field name="email"/>
-                                <field name="phone"/>
-                            </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
-                                <field name="date_closed"/>
-                                <field name="event_begin_date" />
-                                <field name="event_end_date" />
-                            </group>
-                        </page>
-                        <page string="Emails">
-<!--
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree">
-                                <tree string="History">
-                                    <field name="display_text" string="History Information"/>
-                                    <field name="reply_to" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('reply_to', '=', False)]}"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                        icon="terp-mail-replied" type="action" />
-                                </tree>
-                            </field>
--->
-                            <button string="Send New Email"
+                    <group colspan="4" col="4">
+                        <group colspan="2">
+                            <field name="name" invisible="1"/>
+                            <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group colspan="4" col="4">
+                        <group colspan="2">
+                            <label for="email" string="E-Mail"/>
+                            <group colspan="1">
+                                <field name="email" invisible="1"/>
+                                <button string="Send New Email"
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
-                           </page>
-
-                    </notebook>
+                            </group>
+                        </group>
+                        <group colspan="2">
+                            <field name="nb_register"/>
+                        </group>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="phone"/>
+                    </group>
+                   <group colspan="2" col="2" groups="base.group_no_one">
+                        <field name="create_date"/>
+                        <field name="date_closed"/>
+                    </group>
                     </sheet>
                     <div class="oe_sheet_width">
                         <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
