@@ -12,15 +12,16 @@
                 <form string="Sales Shop" version="7.0">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
+                    <label for="warehouse_id" class="oe_edit_only"/>
+                    <h2><field name="warehouse_id" required="1" widget="selection"/></h2>
                     <group>
-                        <group>
-                            <field name="warehouse_id" required="1" widget="selection"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        </group>
                         <group>
                             <field name="payment_default_id"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        </group>
+                        <group>
                             <field name="project_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                     </group>
                 </form>
