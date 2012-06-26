@@ -68,9 +68,14 @@ class mail_thread(osv.osv):
             res[id] = self.message_load_ids(cr, uid, [id], context=context)
         return res
 
+    def _search_message_ids(self, cr, uid, obj, name, args, context=None):
+        msg_obj = self.pool.get('mail.message')
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', args[0][2]), ('model', '=', self._name)], context=context)
+        return [('id', 'in', msg_ids)]
+
     # OpenChatter: message_ids is a dummy field that should not be used
     _columns = {
-        'message_ids': fields.function(_get_message_ids, method=True,
+        'message_ids': fields.function(_get_message_ids, method=True, fnct_search=_search_message_ids,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
     }
 
