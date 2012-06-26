@@ -9,16 +9,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
+                   <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
+                   <separator orientation="vertical"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
-                   <separator orientation="vertical"/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <separator orientation="vertical"/>
-                   <field name="name"
-                        filter_domain="['|', ('name','ilike',self),('default_code','ilike',self)]"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
-                   <newline/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <separator orientation="vertical" groups="base.group_multi_company"/>
@@ -302,8 +300,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Categories">
+                    <field name="name" string="Product Categories"/>
+                    <separator orientation="vertical"/>
                     <field name="parent_id"/>
-                    <field name="name"/>
                 </search>
             </field>
         </record>

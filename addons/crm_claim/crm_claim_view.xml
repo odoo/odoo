@@ -198,6 +198,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
+                    <field name="name" string="Claims"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-check" string="New" name="current"
                         domain="[('state','=','draft')]"
                         help="New Claims"/>
@@ -207,16 +209,14 @@
                         help="In Progress Claims"/>
                     <filter icon="terp-gtk-media-pause"
                         string="Pending"
-                        domain="[('state','=','pending')]"
-                        help="All pending Claims"/>
+                        domain="[('state','=','pending')]"/>
+                    <filter string="Unassigned Claims"
+                            icon="terp-personal-"
+                            domain="[('user_id','=', False)]"
+                            help="Unassigned Claims" />
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="user_id" widget="selection">
-                            <filter icon="terp-personal-"
-                                domain="[('user_id','=', False)]"
-                                help="Unassigned Claims"/>
-                    </field>
+                    <field name="user_id" widget="selection"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
