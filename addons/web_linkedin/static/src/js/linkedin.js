@@ -156,7 +156,7 @@ openerp.web_linkedin = function(instance) {
                 modal: true,
                 width : 840, 
                 height:500,
-                close: function(){ self.dialog.remove();},
+                close: function(){ self.dialog.remove();}
             });
             this.dialog.parent().find('.ui-dialog-titlebar').append('<button class="close">No Thanks</button>').click(function(){
                 self.dialog.remove();
