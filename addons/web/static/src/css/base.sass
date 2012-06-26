@@ -169,10 +169,7 @@ $colour4: #8a89ba
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
     a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
-        background: #e3e3e3
-        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
-        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
-        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
     a.button.disabled, button:disabled, input[type='submit']:disabled
@@ -235,6 +232,16 @@ $colour4: #8a89ba
         @include vertical-gradient(#DF6B66, #BF3A33)
         //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    .oe_form_dirty
+        .oe_highlight_on_dirty
+            color: white
+            background: #dc5f59
+            font-weight: bold
+        button.oe_highlight_on_dirty
+            @include vertical-gradient(#dc5f59, #b33630)
+            @include box-shadow(none)
+            &:hover
+                background: #ED6F6A
     .oe_title
         width: 55%
     .oe_title:after
@@ -1208,14 +1215,19 @@ $colour4: #8a89ba
         input, select, textarea
             background-color: #F66 !important
             border: 1px solid #D00 !important
-    .oe_form_button_save_dirty
-        color: white
-        background: #dc5f59
-        @include vertical-gradient(#dc5f59, #b33630)
-        @include box-shadow(none)
-        font-weight: bold
-        &:hover
-            background: #ED6F6A
+    .oe_form_editable
+        .oe_highlight
+            color: #404040
+            background: none
+        button.oe_highlight
+            @include vertical-gradient(#efefef, #d8d8d8)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        button.oe_highlight:active
+            @include vertical-gradient(#e3e3e3, #f6f6f6)
+            @include box-shadow(none)
+        button.oe_highlight:hover
+            @include vertical-gradient(#f6f6f6, #e3e3e3)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
         display: none !important
     .oe_form_readonly
@@ -1269,21 +1281,20 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold
             color: #b33630
-    .oe_form_subtotal_footer
-        width: auto
-        float: right
+    .oe_form .oe_subtotal_footer
+        width: 1% !important
         td.oe_form_group_cell
             text-align: right
-            padding: 0
+            padding: 0 !important
         td.oe_form_group_cell_label
-            border: none
+            border-right: none
         .oe_form_field
             width: auto !important
-        .oe_form_subtotal_footer_separator
+        .oe_subtotal_footer_separator
             border-top: 1px solid #cacaca
-            font-size: 120%
+            font-sie: 120%
             font-weight: bold
-        label.oe_form_subtotal_footer_separator
+        label.oe_subtotal_footer_separator
             font-weight: bold !important
             padding: 2px 8px 2px 0px !important
     // no sheet in popups
@@ -1550,21 +1561,26 @@ $colour4: #8a89ba
     .oe_form .oe_form_field_one2many > .oe_view_manager
         .oe_list_pager_single_page
             display: none
-    .oe_form_field_one2many > .oe_view_manager
-        .oe_header_row_top
-            display: none
-        .oe_view_manager_header2
-            td
-                padding: 0px 8px
-                line-height: 16px
-                .oe_i
-                    font-size: 13px
-                .oe_pager_group
-                    height: auto
+    .oe_form_field_one2many
+        // TODO: oe_form_field_one2many_list?
+        .oe-listview .oe-edit-row-save
+            background-image: url(/web/static/src/img/iconset-b-remove.png)
+
+        &> .oe_view_manager
+            .oe_header_row_top
+                display: none
+            .oe_view_manager_header2
+                td
+                    padding: 0px 8px
                     line-height: 16px
-                    li
+                    .oe_i
+                        font-size: 13px
+                    .oe_pager_group
                         height: auto
                         line-height: 16px
+                        li
+                            height: auto
+                            line-height: 16px
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe-listview

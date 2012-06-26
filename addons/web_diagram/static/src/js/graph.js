@@ -75,6 +75,8 @@
             dummy_circle.animate({'r': close_button_radius},400,'linear');
         }
         dummy_circle.hover(hover_in,hover_out);
+        close_circle.hover(hover_in,hover_out);
+        close_label.hover(hover_in,hover_out);
 
         function click_action(){
             if(!visible){ return; }
@@ -97,6 +99,8 @@
             }
         }
         dummy_circle.click(click_action);
+        close_circle.click(click_action);
+        close_label.click(click_action);
 
         this.show = function(){
             if(!visible){

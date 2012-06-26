@@ -36,6 +36,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
+                state['title'] = this.inner_action.name;
                 state['model'] = this.inner_action.res_model;
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
@@ -894,8 +895,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         // TODO fme: should add the language to fields_view_get because between the fields view get
         // and the moment the user opens the translation dialog, the user language could have been changed
         this.view_language = view.session.user_context.lang;
-        this['on_button' + _t("Save")] = this.on_button_Save;
-        this['on_button' + _t("Close")] = this.on_button_Close;
+        this['on_button_' + _t("Save")] = this.on_btn_save;
+        this['on_button_' + _t("Close")] = this.on_btn_close;
         this._super(view, {
             width: '80%',
             height: '80%'
@@ -976,7 +977,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             }
         });
     },
-    on_button_Save: function() {
+    on_btn_save: function() {
         var trads = {},
             self = this,
             trads_mutex = new $.Mutex();
@@ -999,7 +1000,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         });
         this.close();
     },
-    on_button_Close: function() {
+    on_btn_close: function() {
         this.close();
     }
 });
