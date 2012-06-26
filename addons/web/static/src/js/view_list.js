@@ -64,7 +64,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.records = new Collection();
 
-        this.set_groups(new instance.web.ListView.Groups(this));
+        this.set_groups(new (this.options.GroupsType)(this));
 
         if (this.dataset instanceof instance.web.DataSetStatic) {
             this.groups.datagroup = new instance.web.StaticDataGroup(this.dataset);
@@ -87,6 +87,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.no_leaf = false;
     },
+    set_default_options: function (options) {
+        this._super(options);
+        _.defaults(this.options, {
+            GroupsType: instance.web.ListView.Groups,
+            ListType: instance.web.ListView.List
+        });
+    },
+
     /**
      * Retrieves the view's number of records per page (|| section)
      *
@@ -549,6 +557,20 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     reload: function () {
         return this.reload_content();
     },
+    reload_record: function (record) {
+        return this.dataset.read_ids(
+            [record.get('id')],
+            _.pluck(_(this.columns).filter(function (r) {
+                    return r.tag === 'field';
+                }), 'name')
+        ).then(function (records) {
+            _(records[0]).each(function (value, key) {
+                record.set(key, value, {silent: true});
+            });
+            record.trigger('change', record);
+        });
+    },
+
     do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
@@ -1055,11 +1077,11 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
      * @returns {Object} object with the keys ``ids`` and ``records``, holding respectively the ids of all selected records and the records themselves.
      */
     get_selection: function () {
+        var result = {ids: [], records: []};
         if (!this.options.selectable) {
-            return [];
+            return result;
         }
         var records = this.records;
-        var result = {ids: [], records: []};
         this.$current.find('th.oe-record-selector input:checked')
                 .closest('tr').each(function () {
             var record = records.get($(this).data('id'));
@@ -1102,17 +1124,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
      * @returns {$.Deferred} promise to the finalization of the reloading
      */
     reload_record: function (record) {
-        return this.dataset.read_ids(
-            [record.get('id')],
-            _.pluck(_(this.columns).filter(function (r) {
-                    return r.tag === 'field';
-                }), 'name')
-        ).then(function (records) {
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
-            });
-            record.trigger('change', record);
-        });
+        return this.view.reload_record(record);
     },
     /**
      * Renders a list record to HTML
@@ -1275,7 +1287,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
-            var child = self.children[group.value] = new instance.web.ListView.Groups(self.view, {
+            var child = self.children[group.value] = new (self.view.options.GroupsType)(self.view, {
                 records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
@@ -1378,7 +1390,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     },
     render_dataset: function (dataset) {
         var self = this,
-            list = new instance.web.ListView.List(this, {
+            list = new (this.view.options.ListType)(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
