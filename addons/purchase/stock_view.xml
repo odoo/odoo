@@ -23,16 +23,6 @@
                 </field>
             </field>
         </record>
-
-       <record model="ir.actions.act_window" id="act_purchase_order_2_stock_picking">
-            <field name="name">Incoming Shipments</field>
-            <field name="res_model">stock.picking.in</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="stock.view_picking_in_form"/>
-            <field name="context">{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}</field>
-        </record>
         
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
@@ -55,7 +45,7 @@
                  <xpath expr="//div[contains(@class, 'oe_title')]" position="before">
                     <div class="oe_right oe_button_box" name="buttons">
                         <button type="action"
-                            name="%(act_purchase_order_2_stock_picking)d"
+                            name="%(stock.action_picking_tree4)d"
                             string="Incoming Shipments" states="approved"/>
                     </div>
                 </xpath>
