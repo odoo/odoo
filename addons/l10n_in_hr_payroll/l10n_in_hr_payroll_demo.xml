@@ -5,7 +5,7 @@
         <!-- Hr Salary structure-->
 
         <record id="hr_payroll_salary_structure_ind_emp" model="hr.payroll.structure">
-            <field name="code">IND</field>
+            <field name="code">NE</field>
             <field name="name">Non-executive employees</field>
             <field eval="[(6, 0, [ref('hr_salary_rule_medical'), ref('hr_salary_rule_da'), ref('hr_salary_rule_lta'), ref('hr_salary_rule_telephone'), ref('hr_salary_rule_internet'), ref('hr_payroll_rule_child1'), ref('hr_salary_rule_gratuity')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
