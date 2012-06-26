@@ -23,7 +23,7 @@ from osv import fields, osv
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
-    _description = 'Account Follow Up'
+    _description = 'Account Follow-Up'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
