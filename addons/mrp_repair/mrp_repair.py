@@ -120,7 +120,7 @@ class mrp_repair(osv.osv):
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
         'address_id': fields.many2one('res.partner', 'Delivery Address', domain="[('parent_id','=',partner_id)]"),
         'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner"),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, states={'draft':[('readonly',False)]},domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
             ('cancel','Cancelled'),
@@ -140,7 +140,7 @@ class mrp_repair(osv.osv):
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)]}),
         'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
-        'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
+        'guarantee_limit': fields.date('Guarantee limit', states={'draft':[('readonly',False)]},help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='The pricelist comes from the selected partner, by default.'),
         'partner_invoice_id':fields.many2one('res.partner', 'Invoicing Address'),
@@ -156,7 +156,7 @@ class mrp_repair(osv.osv):
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
+        'deliver_bool': fields.boolean('Deliver', states={'draft':[('readonly',False)]},help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired': fields.boolean('Repaired', readonly=True),
         'amount_untaxed': fields.function(_amount_untaxed, string='Untaxed Amount',
@@ -220,7 +220,7 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         data = {}
-        data['value'] = {}
+        data['value'] = {'guarantee_limit':False}
         if not prod_id:
             return data
         if move_id:
@@ -230,6 +230,7 @@ class mrp_repair(osv.osv):
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
+            data['value']['prodlot_id'] = move.prodlot_id.id
             if move.partner_id:
                 data['value']['partner_id'] = move.partner_id.id
             else:
@@ -498,6 +499,7 @@ class mrp_repair(osv.osv):
             else:
                 pass
             self.write(cr, uid, [order.id], val)
+            self.set_end_repair_send_note(cr, uid, [order.id], context)
         return True
 
     def wkf_repair_done(self, cr, uid, ids, *args):
@@ -559,7 +561,7 @@ class mrp_repair(osv.osv):
                 res[repair.id] = picking
             else:
                 self.write(cr, uid, [repair.id], {'state': 'done'})
-                self.set_done_send_note(cr, uid, ids, context)
+            self.set_done_send_note(cr, uid, [repair.id], context)
         return res
     
     def create(self, cr, uid, vals, context=None):
@@ -568,10 +570,10 @@ class mrp_repair(osv.osv):
         return repair_id
     
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Repair order has been <b>created</b>."), context=context)
+        return self.message_append_note(cr, uid, ids, body=_("Repair has been <b>created</b>."), context=context)
     
     def set_start_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair order has been <b>Started</b>.")
+        message = _("Repair has been <b>Started</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
     
     def set_toinvoiced_send_note(self, cr, uid, ids, context=None):
@@ -584,19 +586,19 @@ class mrp_repair(osv.osv):
         return self.message_append_note(cr, uid, ids, body=message, context=context)
     
     def set_end_repair_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair order is now <b>Ended</b>.")
+        message = _("Repair is now <b>Ended</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair order has been <b>cancelled</b>.")
+        message = _("Repair has been <b>cancelled</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
     
     def set_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair order is now <b>Ready</b>.")
+        message = _("Repair is now <b>Ready</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def set_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair order is now <b>Done</b>.")
+        message = _("Repair is now <b>Done</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 

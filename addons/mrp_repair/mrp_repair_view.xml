@@ -40,7 +40,7 @@
                    <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" attrs="{'invisible':['|',('invoice_method','!=','none')]}"/>
                    <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" attrs="{'invisible':['|',('invoice_method','!=','none')]}"/>
                    <button name="cancel" states="draft" string="Cancel Repair"/>
-                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ready" />
+                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" />
                </header>
                <sheet string="Repairs order">
                     <label for="product_id" class="oe_edit_only"/>
@@ -68,11 +68,6 @@
                     </group>
                 <notebook>
                     <page string="Operations">
-                        <group col="4">
-                            <field
-                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
-                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                        </group>
                         <field name="operations">
                             <form string="Operations" version="7.0">
                                 <notebook>
@@ -91,9 +86,9 @@
                                             <field name="to_invoice"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <field name="invoiced"/>
-                                            <field name='prodlot_id'/>
-                                            <field name="location_id"/>
-                                            <field name="location_dest_id"/>
+                                            <field name='prodlot_id' groups="stock.group_production_lot" string="Serial Number"/>
+                                            <field name="location_id" groups="stock.group_locations"/>
+                                            <field name="location_dest_id" groups="stock.group_locations"/>
                                         </group>
                                     </page>
                                     <page string="History">
@@ -108,29 +103,32 @@
                                 <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                 <field name='name'/>
-                                <field name="prodlot_id" />
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
+                                <field name="prodlot_id" groups="stock.group_production_lot" string="Serial Number"/>
+                                <field name="location_id" groups="stock.group_locations"/>
+                                <field name="location_dest_id" groups="stock.group_locations"/>
                                 <field name="product_uom_qty" string="Quantity"/>
-                                <field name="product_uom" string="Unit of Measure"/>
+                                <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags"/>
                                 <field name="to_invoice"/>
                                 <field name="price_subtotal"/>
                             </tree>
                         </field>
-                        <group class="oe_subtotal_footer">
+                        <group class="oe_subtotal_footer oe_right">
                             <field name="amount_untaxed" sum="Untaxed amount"/>
                             <field name="amount_tax"/>
                             <field name="amount_total" sum="Total amount" class="oe_subtotal_footer_separator"/>
-                            <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         </group>
+                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <div class="oe_clear"/>
                     </page>
                     <page string="Invoicing">
                         <group col="4">
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
+                            <field
+                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
+                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         </group>
                         <!-- <field name="invoice_id"/> -->
                         <field name="fees_lines">
@@ -161,7 +159,7 @@
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
                                 <field name='name'/>
                                 <field name="product_uom_qty" string="Quantity"/>
-                                <field name="product_uom" string="Unit of Measure"/>
+                                <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="to_invoice"/>
                                 <field name="price_subtotal"/>
@@ -176,15 +174,13 @@
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
                             <group col="2">
-                                <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
+                                <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
                             </group>
                         </group>
                     </page>
                     <page string="Notes">
-                        <separator string="Internal Notes"/>
-                        <field name="internal_notes"/>
-                        <separator string="Quotation Notes"/>
-                        <field name="quotation_notes"/>
+                        <field name="internal_notes" placeholder="Add internal notes..."/>
+                        <field name="quotation_notes" placeholder="Add quotation notes..."/>
                     </page>
                 </notebook>
                 </sheet>
