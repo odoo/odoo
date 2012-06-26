@@ -1109,7 +1109,7 @@ $(document).ready(function () {
             mockifyRPC(instance.connection);
         }
     });
-    asyncTest('checkboxing', function () {
+    asyncTest('checkboxing', 6, function () {
         var view = makeSearchView();
         instance.connection.responses['/web/searchview/get_filters'] = function () {
             return {result: [{
@@ -1129,13 +1129,34 @@ $(document).ready(function () {
                 ok($row.hasClass("oe_searchview_custom_private"),
                     "should have private filter note/class");
                 equal(view.query.length, 1, "should have only one facet");
-                    var values = view.query.at(0).values;
-                    equal(values.length, 1,
-                        "should have only one value in the facet");
+                var values = view.query.at(0).values;
+                equal(values.length, 1,
+                    "should have only one value in the facet");
                 equal(values.at(0).get('label'), 'filter name',
                     "displayed label should be the name of the filter");
                 equal(values.at(0).get('value'), null,
                     "should have no value set");
+            })
+    });
+    asyncTest('removal', 1, function () {
+        var view = makeSearchView();
+        instance.connection.responses['/web/searchview/get_filters'] = function () {
+            return {result: [{
+                name: "filter name",
+                user_id: 42
+            }]};
+        };
+        var $fix = $('#qunit-fixture');
+
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $row = $fix.find('.oe_searchview_custom li:first').click();
+
+                view.query.remove(view.query.at(0));
+                ok(!$row.hasClass('oe_selected'),
+                    "should not be checked anymore");
             })
     });
 
