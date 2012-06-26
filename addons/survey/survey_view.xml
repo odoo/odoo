@@ -26,18 +26,36 @@
                     <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                 </header>
                 <sheet>
-                    <group col="6" colspan="6">
-                    <field name="title" select="1"/>
-                        <field name="responsible_id"/>
-                        <field name="id" invisible="1"/>
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                            string="Test Survey" type="action" icon="gtk-new"
-                            context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                            string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                            string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
+                
+                <div class="oe_right oe_button_box">
+                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
+                        string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}" />
+                    <button name="122" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}" />
+                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
+                        string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}" invisible="1"/>
+                </div>
+                <group class="oe_inline">
+                    <h1>
+                        <field name="title" select="1"/>
+                        <field name="type"/>
+                    </h1>
+                </group>
+
+                    <group>
+                        <group>
+                            <field name="responsible_id"/>
+                            <field name="id" invisible="1"/>
+                            <field name="send_response"/>
+                        </group>
+                        <group>
+
+                        <field name="max_response_limit"
+                            attrs="{'readonly':[('state','in',('open','close'))]}"/>
+                        <field name="response_user"
+                            attrs="{'readonly':[('state','in',('open','close'))]}"/>
+                        </group>
                     </group>
+
                     <notebook>
                         <page string="Survey">
                             <field name="page_ids" colspan="4" nolabel="1" mode="form,tree">
@@ -189,14 +207,7 @@
                             </field>
                         </page>
                         <page string="Other">
-                            <group colspan="6" col='4'>
-                                <field name="max_response_limit"
-                                    attrs="{'readonly':[('state','in',('open','close'))]}"/>
-                                <field name="response_user"
-                                    attrs="{'readonly':[('state','in',('open','close'))]}"/>
-                                <field name="type"/>
-                                <field name="send_response"/>
-                            </group>
+
                             <separator colspan="4" string="Survey Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
