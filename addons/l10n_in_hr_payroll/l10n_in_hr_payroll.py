@@ -50,9 +50,9 @@ class hr_contract(osv.osv):
         'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver."),
         'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll'), help="Professional tax deducted from salary"),
         'leave_avail_dedution': fields.float('Leave Availed Deduction ', digits_compute=dp.get_precision('Payroll'), help="Deduction for emergency leave of employee."),
-        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance."), 
-        'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage.(%)"), 
-        'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'), help="Deduction for company provided transport."), 
+        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance."),
+        'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage.(%)"),
+        'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'), help="Deduction for company provided transport."),
     }
 
 hr_contract()
@@ -81,15 +81,15 @@ class hr_employee(osv.osv):
             if employee.join_date:
                 date_start = datetime.strptime(employee.join_date, DATETIME_FORMAT)
                 diffyears = current_date.year - date_start.year
-                difference  = current_date - date_start.replace(current_date.year)
+                difference = current_date - date_start.replace(current_date.year)
                 days_in_year = isleap(current_date.year) and 366 or 365
-                difference_in_years = diffyears + (difference.days + difference.seconds/86400.0)/days_in_year
+                difference_in_years = diffyears + (difference.days + difference.seconds / 86400.0) / days_in_year
                 total_years = relativedelta(current_date, date_start).years
                 total_months = relativedelta(current_date, date_start).months
                 if total_months < 10:
-                    year_month= float(total_months)/10 + total_years
+                    year_month = float(total_months) / 10 + total_years
                 else:
-                    year_month = float(total_months)/100 + total_years
+                    year_month = float(total_months) / 100 + total_years
                 res[employee.id] = year_month
             else:
                 res[employee.id] = 0.0
@@ -114,10 +114,10 @@ class payroll_advice(osv.osv):
         'note': fields.text('Description'),
         'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips."),
         'state':fields.selection([
-            ('draft','Draft'),
-            ('confirm','Confirm'),
-            ('cancel','Cancelled'),
-        ],'State', select=True, readonly=True),
+            ('draft', 'Draft'),
+            ('confirm', 'Confirm'),
+            ('cancel', 'Cancelled'),
+        ], 'State', select=True, readonly=True),
         'number':fields.char('Number', size=16, readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Chaque Nos', size=256),
@@ -126,8 +126,8 @@ class payroll_advice(osv.osv):
     }
     
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date': lambda * a: time.strftime('%Y-%m-%d'),
+        'state': lambda * a: 'draft',
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
@@ -150,10 +150,10 @@ class payroll_advice(osv.osv):
         payslip_line_pool = self.pool.get('hr.payslip.line')
 
         for advice in self.browse(cr, uid, ids, context=context):
-            old_line_ids = advice_line_pool.search(cr, uid, [('advice_id','=',advice.id)], context=context)
+            old_line_ids = advice_line_pool.search(cr, uid, [('advice_id', '=', advice.id)], context=context)
             if old_line_ids:
                 advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
-            slip_ids = payslip_pool.search(cr, uid, [('date_from','<=',advice.date), ('date_to','>=',advice.date), ('state', '=', 'done')], context=context)
+            slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
 #            if not slip_ids:
 #                advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
 #                a_date = advice_date.strftime('%B')+'-'+advice_date.strftime('%Y')
@@ -161,10 +161,10 @@ class payroll_advice(osv.osv):
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
-                line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id','=',slip.id), ('code', '=', 'NET')], context=context)
+                line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
-                    advice_line= {
+                    advice_line = {
                             'advice_id': advice.id,
                             'name': slip.employee_id.bank_account_id.acc_number,
                             'employee_id': slip.employee_id.id,
@@ -186,7 +186,7 @@ class payroll_advice(osv.osv):
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
                 raise osv.except_osv(_('Error !'), _('You can not confirm Payment advice without advice lines.'))
-            advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
+            advice_date = datetime.strptime(advice.date, DATETIME_FORMAT)
             advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
             number = seq_obj.get(cr, uid, 'payment.advice')
             sequence_num = 'PAY' + '/' + advice_year + '/' + number
