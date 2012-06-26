@@ -70,6 +70,9 @@ The main features are:
         'res_users_view.xml',
         'mail_alias_view.xml',
     ],
+    'demo_xml': [
+        'mail_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '001056784984222247309',

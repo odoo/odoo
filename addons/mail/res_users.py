@@ -29,6 +29,7 @@ class res_users(osv.osv):
     """
     _name = 'res.users'
     _inherit = ['res.users', 'mail.thread']
+    _inherits = {'mail.alias': 'alias_id'}
     
     _columns = {
         'notification_email_pref': fields.selection([
@@ -38,6 +39,7 @@ class res_users(osv.osv):
                         ('none', 'Never')
                         ], 'Receive Feeds by E-mail', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
     }
     
     _defaults = {
@@ -56,8 +58,16 @@ class res_users(osv.osv):
         return init_res
     
     def create(self, cr, uid, data, context=None):
+        # create default alias same as the login
+        model_pool = self.pool.get('ir.model.data')
+        alias_pool = self.pool.get('mail.alias')
+        res_id = model_pool.get_object( cr, uid, "mail", "model_res_users")
+        data.update({'alias_name': data.get('login'),
+                     'alias_model_id': res_id.id})
+        name = alias_pool.create_unique_alias(cr, uid, data, context=context)
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         user = self.browse(cr, uid, [user_id], context=context)[0]
+        alias_pool.write(cr, uid, [user.alias_id.id], {"alias_force_thread_id": user.id}, context)
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
         # create a welcome message to broadcast
@@ -66,7 +76,18 @@ class res_users(osv.osv):
         # TODO: clean the broadcast feature. As this is not cleany specified, temporarily remove the message broadcasting that is not buggy but not very nice.
         #self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
         return user_id
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        # if login of user have been changed then change alias of user also.
+        if vals.get('login'):
+            alias_id = self.browse(cr, uid, ids[0]).alias_id
+            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+            name = vals.get('login') + '@' + domain
+            self.pool.get('mail.alias').write(cr, uid, [alias_id.id], {'alias_name': name}, context=context)
+        return result
 
+    
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """ Override of message_load_ids
             User discussion page :
