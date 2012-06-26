@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    'name': 'India payroll',
+    'name': 'Indian payroll',
     'category': 'Localization',
     'init_xml': [],
     'author': 'OpenERP SA',
@@ -27,7 +27,7 @@
     'depends': ['hr_payroll'],
     'version': '1.0',
     'description': """
-Indian Payroll Rules.
+Indian Payroll Salary Rules.
 =======================
 
     -Configuration of hr_payroll for India localization

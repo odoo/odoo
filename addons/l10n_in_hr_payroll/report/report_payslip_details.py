@@ -1,11 +1,8 @@
-#!/usr/bin/env python
 #-*- coding:utf-8 -*-
-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    d$
+#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
