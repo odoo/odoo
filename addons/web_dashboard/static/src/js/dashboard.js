@@ -163,16 +163,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {
-            var action_view_mode = action.view_mode.split(',');
             action.views = _.map(view_mode.split(','), function(mode) {
-                if (_.indexOf(action_view_mode, mode) < 0) {
-                    return [false, mode == 'tree' ? 'list': mode];
-                } else {
-                    mode = mode === 'tree' ? 'list' : mode;
-                    return _.find(action.views, function(view) {
-                        return view[1] == mode;
-                    });
-                }
+                mode = mode === 'tree' ? 'list' : mode;
+                return _(action.views).find(function(view) { return view[1] == mode; })
+                    || [false, mode];
             });
         }
 

@@ -311,9 +311,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         return this._super();
     },
-    open_record: function(id) {
+    open_record: function(id, editable) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form', null, { editable: true });
+            this.do_switch_view('form', null, { editable: editable });
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }
@@ -611,7 +611,40 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         if (this.$element.find('.oe_kanban_global_click').length) {
             this.$element.on('click', function(ev) {
                 if (!ev.isTrigger && !$(ev.target).data('events')) {
-                    //self.on_card_clicked(ev);
+                    var trigger = true;
+                    var elem = ev.target;
+                    var ischild = true;
+                    var children = [];
+                    while (elem) {
+                        var events = $(elem).data('events');
+                        if (elem == ev.currentTarget) {
+                            ischild = false;
+                        }
+                        if (ischild) {
+                            children.push(elem);
+                            if (events && events.click) {
+                                // do not trigger global click if one child has a click event registered
+                                trigger = false;
+                            }
+                        }
+                        if (trigger && events && events.click) {
+                            _.each(events.click, function(click_event) {
+                                if (click_event.selector) {
+                                    // For each parent of original target, check if a
+                                    // delegated click is bound to any previously found children
+                                    _.each(children, function(child) {
+                                        if ($(child).is(click_event.selector)) {
+                                            trigger = false;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        elem = elem.parentElement;
+                    }
+                    if (trigger) {
+                        self.on_card_clicked(ev);
+                    }
                 }
             });
         }
@@ -660,7 +693,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 self.view.form_dialog.open();
             });
         } else {
-            this.view.open_record(this.id);
+            this.view.open_record(this.id, true);
         }
     },
     do_action_object: function ($action) {

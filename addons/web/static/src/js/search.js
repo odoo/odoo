@@ -1540,6 +1540,14 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         var self = this;
         this.model = new instance.web.Model('ir.filters');
         this.filters = {};
+        this.view.query
+            .on('remove', function (facet) {
+                if (!facet.get('is_custom_filter')) {
+                    return;
+                }
+                self.clear_selection();
+            })
+            .on('reset', this.proxy('clear_selection'));
         this.$element.on('submit', 'form', this.proxy('save_current'));
         this.$element.on('click', 'h4', function () {
             self.$element.toggleClass('oe_opened');
@@ -1548,6 +1556,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
         }).pipe(this.proxy('set_filters'));
+    },
+    clear_selection: function () {
+        this.$element.find('li.oe_selected').removeClass('oe_selected');
     },
     append_filter: function (filter) {
         var self = this;
@@ -1583,8 +1594,10 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                     get_groupby: function () { return [filter.context]; },
                     get_domain: function () { return filter.domain; }
                 },
+                is_custom_filter: true,
                 values: [{label: filter.name, value: null}]
             }]);
+            $filter.addClass('oe_selected');
         });
     },
     set_filters: function (filters) {
