@@ -30,14 +30,18 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
                 <sheet string="Order">
-                    <group col="4">
-                        <field name="user_id"/>
-                        <field name="date"/>
-                        <field name="product" on_change="onchange_product(product)"/>
-                        <field name="category"/>
-                        <field name="descript"/>
-                        <field name="price"/>
-                        <field name="cashmove"/>
+                    <group>
+                        <group>
+                            <field name="product" on_change="onchange_product(product)"/>
+                            <field name="descript"/>
+                            <field name="price"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="cashmove"/>
+                        </group>
                     </group>
                 </sheet>
                 </form>
