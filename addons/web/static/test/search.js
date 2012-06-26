@@ -1094,6 +1094,51 @@ $(document).ready(function () {
             });
     });
 
+    module('saved_filters', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.formats(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            mockifyRPC(instance.connection);
+        }
+    });
+    asyncTest('checkboxing', function () {
+        var view = makeSearchView();
+        instance.connection.responses['/web/searchview/get_filters'] = function () {
+            return {result: [{
+                name: "filter name",
+                user_id: 42
+            }]};
+        };
+        var $fix = $('#qunit-fixture');
+
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $row = $fix.find('.oe_searchview_custom li:first').click();
+
+                ok($row.hasClass('oe_selected'), "should check/select the filter's row");
+                ok($row.hasClass("oe_searchview_custom_private"),
+                    "should have private filter note/class");
+                equal(view.query.length, 1, "should have only one facet");
+                    var values = view.query.at(0).values;
+                    equal(values.length, 1,
+                        "should have only one value in the facet");
+                equal(values.at(0).get('label'), 'filter name',
+                    "displayed label should be the name of the filter");
+                equal(values.at(0).get('value'), null,
+                    "should have no value set");
+            })
+    });
+
     module('advanced', {
         setup: function () {
             instance = window.openerp.init([]);
