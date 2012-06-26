@@ -27,7 +27,7 @@ import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction_mixin','mail.thread']
     _description = 'Analytic Account'
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
@@ -156,7 +156,11 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
         'code': fields.char('Code/Reference', size=24, select=True),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
+                                 help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
+                                  "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
+                                  "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
+                                  "The special type 'Template of Project' allows you to define a template with default data that you can reuse easily."),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
@@ -272,20 +276,25 @@ class account_analytic_account(osv.osv):
         else:
             account = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account, context=context)
-    
+
     def create(self, cr, uid, vals, context=None):
         contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
         if contract:
             self.create_send_note(cr, uid, [contract], context=context)
         return contract
-    # ------------------------------------------------
-    # OpenChatter methods and notifications
-    # ------------------------------------------------
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'pending':
+                result[obj.id] = [obj.user_id.id]
+        return result
+
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
-            
+
 account_analytic_account()
 
 
@@ -310,17 +319,17 @@ class account_analytic_line(osv.osv):
     }
 
     _order = 'date desc'
-    
+
     def _check_no_view(self, cr, uid, ids, context=None):
         analytic_lines = self.browse(cr, uid, ids, context=context)
         for line in analytic_lines:
             if line.account_id.type == 'view':
                 return False
         return True
-    
+
     _constraints = [
         (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
-    ]    
+    ]
 
 account_analytic_line()
 

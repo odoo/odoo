@@ -8,7 +8,8 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
+                <tree toolbar="1" fonts="bold:state=='pending',needaction_pending==True" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="complete_name"/>
                     <field name="code"/>
                     <field name="quantity"/>
