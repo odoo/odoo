@@ -8,22 +8,17 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
+                        <field name="date_from"/>
+                        <separator orientation="vertical"/>
+                        <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                        <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
-                        <filter icon="terp-go-month" name="This Month" string="Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-month" name="This Month-1" string=" Month-1"
-                         domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                         help="Holidays during last month"/>
                         <separator orientation="vertical"/>
-                        <field name="employee_id">
-                            <filter icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
-                        </field>
-                        <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
-                        </field>
+                        <field name="employee_id"/>
+                        <field name="department_id" widget="selection"/>
                         <field name="holiday_status_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -99,7 +94,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
@@ -143,7 +138,7 @@
                     </page>
                 </notebook>
             </sheet>
-            <div class="oe_form_sheet_width">
+            <div class="oe_sheet_width">
                 <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
             </div>
             </form>
@@ -249,7 +244,6 @@
             </field>
         </record>
 
-        <!-- My leave dashboard -->
         <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">
@@ -358,7 +352,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave Type">
-                    <field name="name"/>
+                    <field name="name" string="Leave Types"/>
+                    <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
             </field>
@@ -424,7 +419,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leave Type">
-                    <field name="name"/>
+                    <field name="name" string="Leave Types"/>
+                    <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
             </field>
@@ -517,6 +513,15 @@
                 </xpath>
             </field>
         </record>
+
+        <act_window
+            id="act_hr_leave_request_to_meeting"
+            name="Leave Meetings"
+            src_model="hr.holidays"
+            res_model="crm.meeting"
+            domain="[('leave_id', '=', active_id)]"
+            view_mode="tree,form,calendar,gantt"
+            view_type="form"/>
 
     </data>
 </openerp>

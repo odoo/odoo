@@ -8,21 +8,20 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                         <field name="period_id"/>
                     </group>
-                   <newline/>
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -40,21 +39,20 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id" string="Customer"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                         <field name="period_id"/>
                     </group>
-                   <newline/>
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -90,15 +88,32 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Sales Receipt" layout="auto">
-                    <group col="6">
-                        <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
-                        <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
-                        <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
-                        <field name="number"/>
-                        <field name="name" colspan="2"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <div class="oe_title">
+                        <label for="number" class="oe_edit_only"/>
+                        <h1><field name="number" readonly="0" /></h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
+                            <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                            <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                            <field name="name" colspan="2"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
+                            <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
+                            <field name="account_id"
+                                 attrs="{'invisible':[('pay_now','!=','pay_now')]}"
+                                  domain="[('type','=','liquidity')]"/>
+                            <field name="reference"
+                                 attrs="{'invisible':[('pay_now','!=','pay_now')]}"
+                            />
+                            <field name="paid" invisible="1"/>
+                        </group>
                         <field name="type" invisible="True"/>
-                        <field name="currency_id"/>
                     </group>
                     <notebook>
                         <page string="Sales Information">
@@ -111,26 +126,21 @@
                                 </tree>
                             </field>
                             <group col="3">
-                                <group string="Internal Notes" col="1">
-                                    <field name="narration"/>
+                                <group colspan="1">
+                                    <field name="narration" placeholder="Internal Notes" nolabel="1" />
                                 </group>
-                                <group col="2">
-                                    <separator string="Payment Options" colspan="2"/>
-                                    <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
-                                    <field name="account_id"
-                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                          domain="[('type','=','liquidity')]"/>
-                                         <!-- should select income accounts only. Or use the journal for this ? -->
-                                    <field name="reference"
-                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                    />
-                                    <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                                    <field name="paid" invisible="1"/>
-                                </group>
-                                <group col="4">
-                                    <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
+                                <group>
+                                    <group class="oe_subtotal_footer" string="Total">
+                                        <field name="tax_id" 
+                                            on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
+                                            widget="selection"
+                                            domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
+                                        <field name="tax_amount" nolabel="1"/>
+                                        <field name="amount" class="oe_subtotal_footer_separator" />
+                                        <button type="object"
+                                            icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax"
+                                            attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </group>                                    
                                 </group>
                             </group>
                         </page>
@@ -215,18 +225,35 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Supplier Voucher">
+                    <div class="oe_title">
+                        <label for="number" class="oe_edit_only"/>
+                        <h1><field name="number" readonly="0" /></h1>
+                    </div>
+
                     <field name="pay_now" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
+                            <field name="date" string="Bill Date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                            <field name="date_due"/>
+                            <field name="name" colspan="2"/>
+
+                        </group>
+                        <group>
+                            <field name="paid" invisible="1"/>
+                            <field name="currency_id"/>
+                            <field name="journal_id"
+                                domain="[('type','in',['purchase','purchase_refund'])]"
+                                widget="selection"
+                                on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
+                            <field name="reference"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+
+                    </group>
                     <group col="6">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
-                        <field name="date" string="Bill Date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
-                        <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
-                        <field name="number"/>
-                        <field name="name" colspan="2"/>
-                        <field name="reference"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                         <field name="type" invisible="True"/>
-                        <field name="currency_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Bill Information">
@@ -238,20 +265,29 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <group col="3">
-                                <group col="1" string="Internal Notes">
-                                    <field name="narration"/>
+                            <group>
+                                <group>
+                                    <field name="narration" placeholder="Internal Notes" nolabel="1" />
                                 </group>
-                                <group col="2">
-                                    <separator string="Payment Terms" colspan="2"/>
-                                    <field name="date_due"/>
-                                    <field name="paid" invisible="1"/>
-                                </group>
-                                <group col="4">
-                                    <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
-                                </group>
+                                <group class="oe_subtotal_footer">
+                                    <!--
+                                    <div>
+                                        <label for="tax_id" />
+                                        <button type="object" 
+                                            icon="terp-stock_format-scientific" 
+                                            name="compute_tax"
+                                            attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </div>
+                                    -->
+                                    <field name="tax_id" 
+                                        on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
+                                        widget="selection"
+                                        domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
+                                        />
+                                    <field name="tax_amount" />
+                                    <field name="amount" string="Total" class="oe_subtotal_footer_separator"/>
+                                </group>                                    
+
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">

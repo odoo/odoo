@@ -58,7 +58,7 @@
                                     </group>
                                 </form>
                             </field>
-                            <group class="oe_form_subtotal_footer">
+                            <group class="oe_subtotal_footer">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
@@ -138,18 +138,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
+                    <field name="name" string="Sales Order"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_order"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
                     <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
-                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="user_id"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
@@ -651,11 +649,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="PoS Categories" version="7.0">
+                	<sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
                         <field name="sequence"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
