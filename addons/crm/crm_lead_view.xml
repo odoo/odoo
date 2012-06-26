@@ -13,7 +13,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stage Search">
-                    <field name="name"/>
+                    <field name="name" string="Stage Name"/>
+                    <separator orientation="vertical"/>
                     <field name="state"/>
                     <field name="type"/>
                 </search>
@@ -244,7 +245,7 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
@@ -312,6 +313,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
+                <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                <!-- subjects is not set as store=True so, it is placed outside filter_domain-->
+                <field name="subjects"/>     
+                <separator orientation="vertical"/>
+                <field name="create_date"/>
+                <separator orientation="vertical"/>
                 <filter icon="terp-check"
                     string="New"
                     name="new" help="New Leads"
@@ -324,39 +331,21 @@
                     string="Pending"
                     name="pending"
                     domain="[('state','=','pending')]"/>
-
-                <separator orientation="vertical"/>
-                <filter icon="terp-go-today" string="Today"
-                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                    help="Todays' Leads" />
-                <filter icon="terp-go-week" string="7 Days"
-                    help="Leads creating during last 7 days"
-                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
-                />
-                <separator orientation="vertical"/>
-                <field name="name" string="Lead / Customer"
-                    filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
-                <field name="user_id">
-                    <filter icon="terp-personal-"
+                <filter string="Unassigned Leads"
+                        icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
-                </field>
-                <field name="subjects"/>
-                <field name="section_id" widget="selection"
-                    context="{'invisible_section': False}">
-                    <filter icon="terp-personal+"
+                <filter string="Leads Assigned to Me or My Team(s)"
+                        icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                        help="My Sales Team(s)"/>
-                    <filter icon="terp-personal+"
-                        context="{'invisible_section': False}"
-                        domain="[]"
-                        help="Show Sales Team"/>
-                </field>
+                        help="Leads that are assigned to one of the sale teams I manage, or to me"/>
                 <separator orientation="vertical"/>
-                <field name="country_id" context="{'invisible_country': False}">
-                    <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                </field>
+                <field name="user_id"/>
+                <field name="section_id" widget="selection"
+                    context="{'invisible_section': False}"/>
+                <field name="country_id" context="{'invisible_country': False}"/>
+                <separator orientation="vertical"/>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
@@ -374,6 +363,15 @@
                     <separator orientation="vertical" groups="base.group_no_one"/>
                     <filter string="Creation" help="Create date" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                </group>
+                <separator orientation="vertical"/>
+                <group string="Display">
+                    <filter string="Show Countries" icon="terp-personal+" context="{'invisible_country': False}" help="Show Countries"/>
+                    <filter string="Show Sales Team"
+                        icon="terp-personal+"
+                        context="{'invisible_section': False}"
+                        domain="[]"
+                        help="Show Sales Team"/>
                 </group>
            </search>
         </field>
@@ -567,6 +565,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
+                <field name="name" string="Opportunity / Customer"
+                    filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
+                <separator orientation="vertical"/>
                 <filter icon="terp-check"
                     string="New"  help="New Opportunities"
                     name="new"
@@ -579,25 +580,20 @@
                     string="Pending"  help="Pending Opportunities"
                     name="pending"
                     domain="[('state','=','pending')]"/>
-                <separator orientation="vertical"/>
-                <field name="name" string="Opportunity / Customer"
-                    filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                <field name="user_id">
-                    <filter icon="terp-personal-"
+                <filter string="Unassigned Opportunities"
+                        icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
-                </field>
-                <field name="section_id"
-                    context="{'invisible_section': False, 'default_section_id': self}">
-                    <filter icon="terp-personal+"
+               <filter string="Opportunities Assigned to Me or My Team(s)"  icon="terp-personal+"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         context="{'invisible_section': False}"
-                        help="My Sales Team(s)" />
-                    <filter icon="terp-personal+"
-                        context="{'invisible_section': False}"
-                        domain="[]"
-                        help="Show Sales Team"/>
-                </field>
+                        help="Opportunities that are assigned to either me or one of the sale teams I manage" />
+                <separator orientation="vertical"/>
+                <field name="user_id"/>
+                <field name="country"/>
+                <field name="partner_id"/>
+                <field name="section_id"
+                    context="{'invisible_section': False, 'default_section_id': self}"/>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="16">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
@@ -613,6 +609,13 @@
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                     <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}" />
+                </group>
+                <group string="Display">
+                    <filter string="Show Sales Team"
+                        icon="terp-personal+"
+                        context="{'invisible_section': False}"
+                        domain="[]"
+                        help="Show Sales Team"/>
                 </group>
             </search>
         </field>
