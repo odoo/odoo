@@ -76,7 +76,7 @@ class hr_employee(osv.osv):
         """
         res = {}
         c_date = time.strftime(DATETIME_FORMAT)
-        current_date = datetime.strptime(c_date,DATETIME_FORMAT)
+        current_date = datetime.strptime(c_date, DATETIME_FORMAT)
         for employee in self.browse(cr, uid, ids, context=context):
             if employee.join_date:
                 date_start = datetime.strptime(employee.join_date, DATETIME_FORMAT)
@@ -96,8 +96,8 @@ class hr_employee(osv.osv):
         return res
     
     _columns = {
-        'join_date': fields.date('Join Date', help="joining date of employee "),
-        'number_of_year':fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience."),
+        'join_date': fields.date('Join Date', help="Joining date of employee "),
+        'number_of_year': fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience."),
         }
     
 hr_employee()
