@@ -7,7 +7,7 @@
           <field name="arch" type="xml">
                <form string="Convert to Opportunity" version="7.0">
                     <header>
-                        <button name="action_apply" string="Create Opportunity" type="object" icon="gtk-ok" class="oe_highlight_editable" />
+                        <button name="action_apply" string="Create Opportunity" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
                     </header>
                     <field name="action"/>
                     <group attrs="{'invisible':[('action','!=','exist')]}">
@@ -37,7 +37,7 @@
 	          <field name="arch" type="xml">
 	               <form string="Convert to Opportunity" version="7.0">
 	                    <header>
-	                        <button name="mass_convert" string="Convert into Opportunities" type="object" icon="gtk-ok" class="oe_highlight_editable" />
+	                        <button name="mass_convert" string="Convert into Opportunities" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
 	                    </header>
                         <field name="action"/>
                         <field name="name" colspan="4"/>
