@@ -207,13 +207,12 @@
                                <group>
                                     <field name="constraint_date_start"/>
                                     <field name="constraint_date_end"/>
+                                     <field name="user_force_ids" widget="many2many_tags"/>
                                 </group>
                                 <group>
                                     <field name="sequence"/>
                                 </group>
                             </group>
-                           <separator string="Force Assigned Users"/>
-                           <field name="user_force_ids" widget="many2many_tags" />
                            <separator string="Previous Phases"/>
                            <field name="previous_phase_ids"/>
                            <separator string="Next Phases"/>
@@ -326,7 +325,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='effective_hours']" position="after">
+                <xpath expr="//field[@name='user_id']" position="after">
                     <field name="phase_id" context="{'default_project_id' : project_id}"/>
                 </xpath>
             </field>
