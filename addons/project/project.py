@@ -753,7 +753,7 @@ class task(base_stage, osv.osv):
 
     _order = "priority, sequence, date_start, name, id"
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set task priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
