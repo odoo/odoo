@@ -47,7 +47,7 @@ def start_server():
 
             ftpserver.log = lambda msg: _logger.info(msg)
             ftpserver.logline = lambda msg: None
-            ftpserver.logerror = lambda msg: self.logger.error(msg)
+            ftpserver.logerror = lambda msg: _logger.error(msg)
 
             ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
             ftpd.serve_forever()
