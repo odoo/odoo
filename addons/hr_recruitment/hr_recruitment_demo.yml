@@ -1,4 +1,13 @@
 -
+  !record {model: mail.alias, id: alias_id_1, view: False}:
+    alias_name: 'Developer@openerp.my.openerp.com'
+    alias_model_id: model_hr_applicant
+    alias_user_id: base.user_root
+    alias_defaults: '{}'
+-
+  !record {model: hr.job, id: hr.job_developer, view: False}:
+    alias_id: alias_id_1
+-
   !record {model: hr.applicant, id: hr_case_salesman0}:
     date: !eval time.strftime('%Y-%m-01 10:35:50')
     type_id: degree_graduate

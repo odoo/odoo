@@ -473,7 +473,7 @@ class mail_thread(osv.osv):
         """
 
         alias_pool = self.pool.get('mail.alias')
-        user_pool = self.pool.get('res.user')
+        user_pool = self.pool.get('res.users')
         mail_compose_pool = self.pool.get('mail.compose.message')
         mail_message_pool = self.pool.get('mail.message')
         if isinstance(message, xmlrpclib.Binary):
@@ -486,10 +486,11 @@ class mail_thread(osv.osv):
         msg_txt = email.message_from_string(message)
         msg = mail_message_pool.parse_message(msg_txt)
         alias_name = msg.get('to')
-        alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)],context)
-        alias_id = alias_pool.browse(cr, uid, alias_ids[0], context)
+        alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)])
+        
         #if alias found then call message_process method.
-        if alias_id:
+        if alias_ids:
+            alias_id = alias_pool.browse(cr, uid, alias_ids[0], context)
             user_id = self._get_user( cr, uid, alias_id, context)
             self.message_process(cr, user_id, alias_id.alias_model_id.model, message, 
                                 custom_values = alias_id.alias_defaults or {}, 
@@ -500,7 +501,7 @@ class mail_thread(osv.osv):
             #_logger.warning("This mailbox does not exist so mail gate will reject this mail.")
             from_email = user_pool.browse(cr, uid, uid, context).user_email
             sub = "Mail Rejection" + msg.get('subject')
-            message = "Respective mailbox does not exist so your mail have been rejected" + msg
+            message = "Respective mailbox does not exist so your mail have been rejected" + msg.get('body')
             mail_compose_pool.send_mail(cr, uid, {'email_from': from_email,'email_to': msg.get('from'),'subject': sub, 'body_text': message}, context)
 
         return True
