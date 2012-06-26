@@ -27,7 +27,7 @@ import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
-    _inherit = ['ir.needaction_mixin','mail.thread']
+    _inherit = ['mail.thread']
     _description = 'Analytic Account'
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
@@ -282,13 +282,6 @@ class account_analytic_account(osv.osv):
         if contract:
             self.create_send_note(cr, uid, [contract], context=context)
         return contract
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'pending':
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
