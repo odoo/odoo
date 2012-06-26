@@ -26,7 +26,7 @@
                 <xpath expr='//div[@name="duration"]' position="after" version="7.0">
                     <label for="quantity_max"/>
                     <div>
-                        <field name="quantity_max" class="oe_form_inline"/> / Remaining: <field name="remaining_hours" class="oe_form_inline"/>
+                        <field name="quantity_max" class="oe_inline"/> / Remaining: <field name="remaining_hours" class="oe_inline"/> 
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
@@ -50,31 +50,32 @@
                             <td>
                                 <label for="fix_price_invoices"/>
                             </td><td>
-                                <field name="fix_price_invoices" class="oe_form_inline"/>
+                                <field name="fix_price_invoices" class="oe_inline"/>
                             </td><td>
-                                <field class="oe_form_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
                                 <button name="%(action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                                <button name="open_sale_order_lines" string="Lines To Invoice" type="object" context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/></td>
+                                <button name="open_sale_order_lines" string="Lines To Invoice" type="object" context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                            </td>
                         </tr><tr attrs="{'invisible':[('use_timesheets','=',False)]}">
                             <td>
                                 <label for="invoice_on_timesheets"/>
                             </td><td>
                                 <field name="invoice_on_timesheets"/>
                             </td><td>
-                                <field class="oe_form_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="timesheet_ca_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="timesheet_ca_invoiced" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_form_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
                                 <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
                                 <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Timesheets to Invoice" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
@@ -84,13 +85,13 @@
                                 <label string="Total"/>
                             </th><td>
                             </td><td>
-                                <field name="est_total" class="oe_form_inline" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field name="est_total" class="oe_inline" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field name="invoiced_total" class="oe_form_inline"/>
+                                <field name="invoiced_total" class="oe_inline"/>
                             </td><td>
-                                <field name="remaining_total" class="oe_form_inline"/>
+                                <field name="remaining_total" class="oe_inline"/>
                             </td><td>
-                                <field name="toinvoice_total" class="oe_form_inline"/>
+                                <field name="toinvoice_total" class="oe_inline"/>
                             </td><td>
                             </td>
                         </tr>
