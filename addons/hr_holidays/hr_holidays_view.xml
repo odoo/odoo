@@ -86,11 +86,17 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
-                            <field name="double_validation" invisible="1"/>
+                            <group>
+                                <group>
+                                    <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                                    <field name="double_validation" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="manager_id" groups="base.group_no_one"/>
+                                    <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
+                                </group>
+                            </group>
                             <newline/>
-                            <field name="manager_id" groups="base.group_no_one"/>
-                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
                             <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
                         </page>
                     </notebook>
