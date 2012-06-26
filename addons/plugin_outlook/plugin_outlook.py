@@ -22,29 +22,21 @@
 from osv import fields
 from osv import osv
 import addons
-
 import base64
 
 class outlook_installer(osv.osv_memory):
     _name = 'outlook.installer'
     _inherit = 'res.config.installer'
-
     _columns = {
-        'name':fields.char('Outlook Plug-in 32bits', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
-        'name2':fields.char('Outlook Plug-in 64bits', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
-        'description':fields.text('Description', readonly=True)
+        'plugin32': fields.char('Outlook Plug-in 32bits', size=256, readonly=True, help="Outlook plug-in file. Save this file and install it in Outlook."),
+        'plugin64': fields.char('Outlook Plug-in 64bits', size=256, readonly=True, help="Outlook plug-in file. Save this file and install it in Outlook."),
     }
 
-    _defaults = {
-        'name' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi',
-        'name2' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi',
-        'description' : """
-Click on icon next to the link above to download the installer either for 32 or 64 bits and execute it.
-
-System requirements:
-    1.  MS Outlook 2005 or above.
-    2.  MS .Net Framework 3.5 or above.
-"""
-        }
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(outlook_installer, self).default_get(cr, uid, fields, context)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        res['plugin32'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi'
+        res['plugin64'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi'
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
