@@ -76,11 +76,11 @@
                         </group>
                         <group>
                             <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
-                            <label for="number_of_days_temp"/>
+                            <label for="number_of_days_temp" string="Duration"/>
                             <div>
                                 <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/> - 
                                 <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
-                                <field name="number_of_days_temp" string="Duration"/> days
+                                <field name="number_of_days_temp"/> days
                             </div>
                         </group>
                     </group>
