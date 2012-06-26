@@ -13,8 +13,8 @@
                 <field name="move_id"/>
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="location_id"/>
-                <field name="location_dest_id"/>
+                <field name="location_id" groups="stock.group_locations"/>
+                <field name="location_dest_id" groups="stock.group_locations"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
