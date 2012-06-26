@@ -164,6 +164,7 @@ openerp.web_linkedin = function(instance) {
                 modal: true,
                 width : 840, 
                 height:500,
+                close: function(){ self.dialog.remove();},
                 buttons:[
                 {
                     text: _t("Ok"),
