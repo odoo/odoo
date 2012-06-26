@@ -843,6 +843,25 @@ $(document).ready(function () {
 
         deepEqual(f.get_domain(facet), [['foo', '=', 42]],
             "m2o should use identity if default domain");
+        deepEqual(f.get_context(facet), {default_foo: 42},
+            "m2o should use value as context default");
+    });
+    test("M2O default multiple values", function () {
+        var f = new instance.web.search.ManyToOneField(
+            {}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [
+                {label: "Foo", value: 42},
+                {label: "Bar", value: 36}
+            ]
+        });
+
+        deepEqual(f.get_domain(facet).__domains,
+            [['|'], [['foo', '=', 42]], [['foo', '=', 36]]],
+            "m2o should or multiple values");
+        equal(f.get_context(facet), null,
+            "m2o should not have default context in case of multiple values");
     });
     test("M2O custom operator", function () {
         var f = new instance.web.search.ManyToOneField(
@@ -854,6 +873,8 @@ $(document).ready(function () {
 
         deepEqual(f.get_domain(facet), [['foo', 'boos', 'Foo']],
             "m2o should use label with custom operators");
+        deepEqual(f.get_context(facet), {default_foo: 42},
+            "m2o should use value as context default");
     });
     test("M2O custom domain & context", function () {
         var f = new instance.web.search.ManyToOneField({attrs: {

@@ -1530,6 +1530,15 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             return [[name, '=', facetValue.get('value')]];
         }
         return this._super(name, operator, facetValue);
+    },
+    get_context: function (facet) {
+        var values = facet.values;
+        if (!this.attrs.context && values.length === 1) {
+            var c = {};
+            c['default_' + this.attrs.name] = values.at(0).get('value');
+            return c;
+        }
+        return this._super(facet);
     }
 });
 
