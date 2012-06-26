@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import hr_payroll
 import l10n_in_hr_payroll
 import report
 
