@@ -266,64 +266,60 @@
                 <field name="type_id"/>
                 <field name="job_id"/>
                  <field name="title_action"/>
-                    <templates>
+<templates>
                         <t t-name="kanban-box">
-                            <t t-if="record.priority.raw_value == '1'" t-set="border">oe_kanban_color_green</t>
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
                                         <li><a type="edit">Edit...</a></li>
                                         <li><a type="delete">Delete</a></li>
+                                        <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
+                                        <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content" >
-                                    <h3 class="oe_kanban_ellipsis"><field name="name"/>
-                                    </h3> 
-                                    <div style="margin-bottom:2;padding-top:5px;white-space: nowrap;" >                               
+                                    <div>
+                                        <b><field name="name"/></b><br/>
                                         <field name="partner_name"/>
-                                        <div class="oe_kanban_right">
-                                          <span class="oe_kanban_highlight">
-                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
-                                               <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['2']">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['1']">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                         </span>
-                                     </div>
-                                  </div>
-                                  <div style="white-space: nowrap;" >
-                                        <div t-if="record.type_id.raw_value">
-                                          (<field name="type_id"/>)
+                                        <div style="white-space: nowrap;" >
+                                            <div t-if="record.type_id.raw_value">
+                                              (<field name="type_id"/>)
+                                            </div>
                                         </div>
-                                  </div>
-                                   <div style="padding-top:5px;white-space: nowrap;" >
-                                      <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
-                                   </div>
-                                   <div style="padding-top:5px;white-space: nowrap;" >
-                                      <t t-if="record.title_action.raw_value">
-                                          <field name="title_action" /> on 
-                                           <field name="date_action" />
-                                       </t>
+                                        <div style="padding-top:5px;white-space: nowrap;" >
+                                            <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
+                                        </div>
+                                        <div style="padding-top:5px;white-space: nowrap;" >
+                                            <t t-if="record.title_action.raw_value">
+                                                <field name="title_action" /> on 
+                                                <field name="date_action" />
+                                            </t>
+                                        </div>
                                     </div>
-                                    <div align="left" width="22" style="padding-top:5px;white-space: nowrap;" >
-                                      <div align="right">
-                                           <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-                                      </div>
+                                    <div class="oe_kanban_right">
+                                        <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                        <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
+                                            <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                        </a>
+                                        <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
+                                            <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16" title="Good"/>
+                                        </a>
+                                        <a type="object" name="set_priority" args="['2']">
+                                            <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16" title="Very Good"/>
+                                        </a>
+                                        <a type="object" name="set_priority" args="['1']">
+                                            <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
+                                        </a>
+                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
+                                    <div class="oe_kanban_footer_left"></div>
                                 </div>
+                                <div class="oe_clear"></div>
                             </div>
                         </t>
-                    </templates>
+                    </templates>                   
                 </kanban>
             </field>
         </record>
