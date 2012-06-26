@@ -62,7 +62,6 @@ class payroll_advice_report(report_sxw.rml_parse):
         return self.total_bysal
 
     def get_detail(self, line_ids):
-        print line_ids
         result = []
         self.total_bysal = 0.00
         for l in line_ids:
@@ -76,6 +75,6 @@ class payroll_advice_report(report_sxw.rml_parse):
             result.append(res) 
         return result
 
-report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'l10n_in_hr_payroll/report/report_payroll_advice.rml', parser=payroll_advice_report)
+report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'l10n_in_hr_payroll/report/report_payroll_advice.rml', parser=payroll_advice_report, header="external")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
