@@ -92,10 +92,8 @@ class mail_alias(osv.Model):
             #check the new alias, If only alias then concat the domain
             #if we have alias_name with random domain we will concat our domain.
             if vals.get('alias_name').count("@") == 0:
-                print "0"
                 vals.update({'alias_name': "%s@%s"%(vals.get('alias_name'), domain)})
             elif vals.get('alias_name').count("@") == 1:
-                print "1"
                 name =  "%s@%s"%(vals.get('alias_name').split("@")[0], domain)
                 vals.update({'alias_name': name})
             else:
