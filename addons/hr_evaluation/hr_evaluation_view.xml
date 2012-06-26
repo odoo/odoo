@@ -192,12 +192,12 @@
                                             <field name="response" readonly="1"/>
                                         </group>
                                     </group>
-                                    <!--<group col="4" string="Status">-->
-                                    <!--     <field name="state"/>-->
-                                    <!--     <div>-->
-                                    <!--         <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />-->
-                                    <!--     </div>-->
-                                    <!--</group>-->
+                                    <group col="4" string="Status" invisible="1">
+                                         <field name="state"/>
+                                         <div>
+                                             <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                                         </div>
+                                    </group>
                                 </form>
                             </field>
                         </page>
