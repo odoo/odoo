@@ -884,7 +884,6 @@ account_journal()
 class account_fiscalyear(osv.osv):
     _name = "account.fiscalyear"
     _description = "Fiscal Year"
-    _inherit = 'mail.thread'
     _columns = {
         'name': fields.char('Fiscal Year', size=64, required=True),
         'code': fields.char('Code', size=6, required=True),
@@ -981,7 +980,6 @@ account_fiscalyear()
 class account_period(osv.osv):
     _name = "account.period"
     _description = "Account period"
-    _inherit = 'mail.thread'
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
         'code': fields.char('Code', size=12),
