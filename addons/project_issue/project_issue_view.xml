@@ -220,52 +220,67 @@
                 <field name="priority"/>
                 <field name="user_email"/>
                 <field name="user_id"/>
-                <templates>
+                <templates>                    
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
-                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                <tr>
-                                    <td align="left" valign="middle" width="16">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                    </td>
-                                    <td align="left" valign="middle" class="oe_kanban_title">
-                                        <field name="name"/>
-                                    </td>
-                                    <td valign="top" width="22">
-                                        <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
-                                    </td>
-                                </tr>
-                                </table>
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <div t-if="record.partner_id.raw_value">
-                                        <field name="partner_id"/>
-                                    </div>
-                                    <div t-if="record.project_id.raw_value">
-                                        <field name="project_id"/>
-                                    </div>
-                                    <div t-if="record.version_id.raw_value">
-                                        <i><field name="version_id"/></i>
-                                    </div>
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_dropdown_menu">
+                                    <li><a type="edit" >Edit...</a></li>
+                                    <li><a type="delete">Delete</a></li>
+                                    <li><a name="case_open" string="Open" states="draft,pending" type="object">Open</a></li>
+                                    <li><a name="case_close" string="Close" states="open,draft,pending" type="object">Close</a></li>
+                                    <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
+                                    <li><a string="Escalate" name="case_escalate" type="object">Escalate</a></li>
+                                    <li><a string="Convert To Task" name="convert_issue_task" type="object">Convert To Task</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>                                    
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <b><field name="name"/></b>                                     
                                 </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                        <a string="Escalate" name="case_escalate"  icon="gtk-go-up" type="object"/>
-                                        <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
+                                <div>
+                                    <field name="partner_id"/>                   
+                                </div>                                 
+                                <div>
+                                    <field name="project_id"/>                   
+                                </div> 
+                                <div class="oe_kanban_footer_left">
+                                    <div class="oe_right">
+                                    <span class="oe_kanban_highlight">
+                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
+                                               <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['2']" title="High Priority"> 
+                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                         </span>
+                                    <!--
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
+                                    <span t-attf-class="oe_kanban_status #{red}"> </span>
+                                    -->
+                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
-                                    <div class="oe_kanban_right">
-                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply"/>
-                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="kanban-stop"/>
-                                    </div>
-                                    <div class="oe_kanban_clear"/>
                                 </div>
                             </div>
+                            <div class="oe_clear"></div>
                         </div>
+                        <!--
+                            <div class="oe_kanban_right">
+                                <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
+                                <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
+                                <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
+                            </div>
+                        -->
                     </t>
                 </templates>
             </kanban>
