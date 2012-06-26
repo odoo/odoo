@@ -44,15 +44,7 @@ openerp.web_linkedin = function(instance) {
                         }
                     });
                 });
-                if(this.view.fields['linkedin_id']){
-                    if(this.view.datarecord['linkedin_id']){
-                        this.$element.find('#linkedindefault').hide();
-                        this.$element.find('#linkedinrecord').show();
-                    }else{
-                        this.$element.find('#linkedinrecord').hide();
-                        this.$element.find('#linkedindefault').show();
-                    }
-                }
+                self.linkedin_icon_color();
                 this.notification = new instance.web.Notification(this);
                 this.notification.appendTo(this.$element);
                 this.$element.find(".linkedin_icon").click( this.do_load_linkedin );
@@ -165,11 +157,6 @@ openerp.web_linkedin = function(instance) {
                 width : 840, 
                 height:500,
                 close: function(){ self.dialog.remove();},
-//                buttons:[
-//                {
-//                    text: _t("Ok"),
-//                    click: function() { $(this).dialog("close"); }
-//                }]
             });
             this.dialog.parent().find('.ui-dialog-titlebar').append('<button class="close">No Thanks</button>').click(function(){
                 self.dialog.remove();
@@ -237,26 +224,9 @@ openerp.web_linkedin = function(instance) {
             }
             this.removeTemplate( 1 );
             if (this.msg_Counter == 2) {
-                // dialog box
-                /*new instance.web.dialog($(QWeb.render("SearchWarning")), {
-                    title: _t("Linkedin Search"),
-                    modal: true,
-                    buttons: [
-                        {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-                    ]
-                });*/
-                // notification
                 this.notification.warn(_t("Linkedin Search"), _t("Record Not Found."));
                 this.$element.find('#loader').hide();
-                if(this.view.fields['linkedin_id']){
-                    if(this.view.datarecord['linkedin_id']){
-                        this.$element.find('#linkedindefault').hide();
-                        this.$element.find('#linkedinrecord').show();
-                    }else{
-                        this.$element.find('#linkedinrecord').hide();
-                        this.$element.find('#linkedindefault').show();
-                    }
-                }
+                self.linkedin_icon_color();
             } else {
                 if (this.resultcontact || this.resultcompany) {
                     this.$element.find('#linkedin-field-name').append(QWeb.render( 'Linkedincontact', {'result' : this.resultcontact, 'resultcompany' : this.resultcompany})) ;
@@ -264,15 +234,7 @@ openerp.web_linkedin = function(instance) {
             }
             if(this.$element.find('#searchresults .search-box ul li')){
                 this.$element.find('#loader').hide();
-                if(this.view.fields['linkedin_id']){
-                    if(this.view.datarecord['linkedin_id']){
-                        this.$element.find('#linkedindefault').hide();
-                        this.$element.find('#linkedinrecord').show();
-                    }else{
-                        this.$element.find('#linkedinrecord').hide();
-                        this.$element.find('#linkedindefault').show();
-                    }
-                }
+                self.linkedin_icon_color();
             }
             this.$element.find('#searchresults .search-box ul li').click( function() {
                 self.getdata( this );
@@ -662,16 +624,7 @@ openerp.web_linkedin = function(instance) {
             field.reload_current_view();
             if (self.t_count == self.o2m_count) {
                 self.$element.find('#loader').hide();
-                //$('.linkedin_icon').css('display', 'block');
-                if(this.view.fields['linkedin_id']){
-                    if(this.view.datarecord['linkedin_id']){
-                        this.$element.find('#linkedindefault').hide();
-                        this.$element.find('#linkedinrecord').show();
-                    }else{
-                        this.$element.find('#linkedinrecord').hide();
-                        this.$element.find('#linkedindefault').show();
-                    }
-                }
+                self.linkedin_icon_color();
             }
          },
          /* Name of Searched Linkedin Record is valid or Not */
@@ -681,6 +634,18 @@ openerp.web_linkedin = function(instance) {
             } else {
                 return false;
             }
+         },
+         // Linkedin icon color changed to distinguise record based on linkedin or not.
+         linkedin_icon_color: function(e) {
+             if(this.view.fields['linkedin_id']){
+                 if(this.view.datarecord['linkedin_id']){
+                     this.$element.find('#linkedindefault').hide();
+                     this.$element.find('#linkedinrecord').show();
+                 }else{
+                     this.$element.find('#linkedinrecord').hide();
+                     this.$element.find('#linkedindefault').show();
+                 }
+             }
          }
     });
 };
