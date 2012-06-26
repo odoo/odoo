@@ -23,7 +23,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
             <field name="model">stock.picking.in</field>
@@ -45,7 +45,7 @@
                  <xpath expr="//div[contains(@class, 'oe_title')]" position="before">
                     <div class="oe_right oe_button_box" name="buttons">
                         <button type="action"
-                            name="%(stock.action_picking_tree4)d"
+                            name="%(act_purchase_order_2_stock_picking)d"
                             string="Incoming Shipments" states="approved"/>
                     </div>
                 </xpath>
@@ -72,6 +72,7 @@
                         <separator orientation="vertical"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="purchase_id" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
@@ -90,7 +91,16 @@
                 </search>
             </field>
         </record>
- 
+        <record id="act_purchase_order_2_stock_picking" model="ir.actions.act_window">
+            <field name="name">Incoming Shipments</field>
+            <field name="res_model">stock.picking.in</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('type','=','in')]</field>
+            <field name="context">{'search_default_purchase_id': active_id,'default_type': 'in'}</field>
+            <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
+        </record>
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">Based on Incoming Shipments</field>
             <field name="res_model">stock.picking</field>
