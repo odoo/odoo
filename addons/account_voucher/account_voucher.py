@@ -337,8 +337,7 @@ class account_voucher(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
-        if voucher:
-            self.create_send_note(cr, uid, [voucher], context=context)
+        self.create_send_note(cr, uid, [voucher], context=context)
         return voucher
 
     def compute_tax(self, cr, uid, ids, context=None):
@@ -1256,9 +1255,7 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
-
-            message = _("%s '%s' is <b>posted</b>.") % (self._get_document_type(voucher.type),name) 
-            self.message_append_note(cr, uid, [voucher.id], body=message, context=context)
+            self.post_send_note(cr, uid, [voucher.id], context=context)
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
             # We automatically reconcile the account move lines.
@@ -1283,26 +1280,31 @@ class account_voucher(osv.osv):
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
 
-    # --------------------------------------
+    # -----------------------------------------
     # OpenChatter notifications and need_action
-    # --------------------------------------
-    
-    def _get_document_type(self, type):
-        type_dict = {
-                'payment': 'Supplier Payment',
-                'purchase': 'Purchase Receipt',
-                'sale': 'Sales Receipt',
-                'receipt': 'Customer Payment',
-        }
-        return type_dict.get(type, 'Payment')
+    # -----------------------------------------
+    _document_type = {
+        'sale': 'Sales Receipt',
+        'purchase': 'Purchase Receipt',
+        'payment': 'Supplier Payment',
+        'receipt': 'Customer Payment',
+        False: 'Payment',
+    }
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
-    
+            message = "%s <b>created</b>." % self._document_type[obj.type or False]
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+
+    def post_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
+            message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
 
 account_voucher()
 
