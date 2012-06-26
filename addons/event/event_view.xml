@@ -61,40 +61,53 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
                 <sheet>
-
-                <div class="oe_right" style="height: 200px"></div>
-                <div class="oe_title">
-                    <h1><field name="name"/></h1>
+                	<div class="oe_right oe_button_box">
+	                    <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
+	                </div>
+                <!--div class="oe_right" style="height: 200px"></div-->
+                <div class="oe_title" style="width: 650px" >
+	            	<label for="name" class="oe_edit_only"/>
+		            <group colspan="6" col="6">
+		            	<group colspan="2"><h1><field name="name"/></h1></group>
+	                    <group colspan="4"><h1><label string="(" attrs="{'invisible': [('type', '=', '')]}" /><field name="type" nolabel="1" on_change="onchange_event_type(type,context)" class="oe_inline"/><label string=")" attrs="{'invisible': [('type', '=', '')]}" /></h1></group>
+		            </group>  
+		        </div> 
+                <div>
+                	<h2 class="oe_inline">From <field name="date_begin"/> to <field name="date_end"/></h2>
                     <group>
                         <group>
-                            <field name="type" on_change="onchange_event_type(type,context)"/>
-                            <field name="user_id"/>
-                            <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
+                            <label for="address_id" string="Address"/>
+                            <div>
+                                <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
+                            	<field name="street" />                            
+                            	<div>
+                                     <field name="city" class="oe_inline" placeholder="City"/>
+                            	     <field name="zip" class="oe_inline"/>
+                                </div>
+                            </div>
                         </group>
                         <group>
-                            <field name="date_begin"/>
-                            <field name="date_end"/>
-                            <field name="register_min"/>
-                            <field name="register_max"/>
-                        </group>
-                    </group>
+	                      	<field name="register_min"/>
+	                       	<field name="register_max"/>
+	                   	</group>
+                     </group>
                 </div>
-
                 <notebook>
                     <page string="Event Description">
                         <field name="note" colspan="4" nolabel="1"/>
                     </page>
                     <page string="Internal Data">
-                         <group class="oe_group_label_border" colspan="2" col="2">
-                            <field name="register_current"/>
-                            <field name="register_prospect"/>
-                            <field name="register_attended"/>
-                         </group> 
-                         <group class="oe_group_label_border" colspan="2" col="2">
+                      <group>
+                          <group class="oe_group_label_border">
                             <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
                             <field name="speaker_confirmed"/>
-                        </group>
-                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                          </group>
+                          <group class="oe_group_label_border">
+                            <field name="register_current"/>
+                            <field name="register_prospect"/>
+                          </group> 
+                      </group>
+                      <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                             <tree string="Registration" editable="top">
                                 <field name="name" />
                                 <field name="email" />
@@ -126,6 +139,12 @@
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </group>
                             </form>
+                            <group class="oe_subtotal_footer" colspan="4" style="margin-left:450px" name="regi_total">
+                                <field name="register_current"/>
+                                <field name="register_prospect"/>
+                                <field name="register_attended" class="oe_subtotal_footer_separator" />
+                            </group>
+							<separator string="" class="oe_clear"/>
                             </field>
                     </page>
                     </notebook>
@@ -313,7 +332,7 @@
             name="Registration"
             res_model="event.registration"
             src_model="event.event"
-            view_mode="calendar,tree,form,graph"
+            view_mode="form,calendar,tree,graph"
             context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
             view_type="form"/>
 
