@@ -25,17 +25,20 @@ openerp.web_linkedin = function(instance) {
                         if (self.apikey) {
                             var head = document.head || document.getElementsByTagName('head')[0];
                             var tag = document.createElement('script');
+                            tag.setAttribute('id', 'addedScript');
                             tag.type = 'text/javascript';
                             tag.src = "http://platform.linkedin.com/in.js";
                             tag.innerHTML = 'api_key : '+self.apikey+'\n';
                             tag.innerHTML = tag.innerHTML + 'authorize : true';
                             var temp = 0;
                             $(head).find('script').each( function(i,val) {
-                                if($(val).attr('src')=="http://platform.linkedin.com/in.js"){
-                                    temp = 1;
+                                if ($(val).attr('src')) {
+                                    if ($(val).attr('src') == "http://platform.linkedin.com/in.js") {
+                                        temp = 1;
+                                    }
                                 }
                             });
-                            if(temp != 1) {
+                            if (temp != 1 ) {
                                 head.appendChild( tag );
                             }
                         }
@@ -101,6 +104,13 @@ openerp.web_linkedin = function(instance) {
             this.msg_Counter=0; /* used to display notification, when record not found on Linkedin search */
             this.removeTemplate( 1 );
             if (this.apikey){
+                if (IN.ENV.auth) {
+                    if (IN.ENV.auth.api_key != this.apikey){
+                        return false;
+                    }
+                }else{
+                    return false;
+                }
                 if (IN.ENV.auth.oauth_token) {
                     if (self.$element.find("input").val()) {
                         self.$element.find('#loader').show();
@@ -125,7 +135,6 @@ openerp.web_linkedin = function(instance) {
                 }
                 else {
                     self.do_authorize();
-                    //IN.User.authorize();
                 }
                 e.preventDefault();
                 e.stopPropagation();
