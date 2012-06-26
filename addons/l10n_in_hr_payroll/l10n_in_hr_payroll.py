@@ -37,10 +37,10 @@ class hr_contract(osv.osv):
     """
 
     _inherit = 'hr.contract'
-    _description = 'contract'
+    _description = 'HR Contract'
     
     _columns = {
-        'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll')),
+        'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
         'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll'), help="Income from house property."),
         'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll'), help="Saving income for bank account."),
         'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'), help="Other income of employee."),
@@ -56,7 +56,6 @@ class hr_contract(osv.osv):
     }
 
 hr_contract()
-
 
 class hr_employee(osv.osv):
     '''
@@ -113,7 +112,7 @@ class payroll_advice(osv.osv):
     _columns = {
         'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
-        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Date is used to search Payslips."),
+        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips."),
         'state':fields.selection([
             ('draft','Draft'),
             ('confirm','Confirm'),
