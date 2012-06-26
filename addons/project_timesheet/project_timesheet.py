@@ -105,7 +105,7 @@ class project_work(osv.osv):
         project_obj = self.pool.get('project.project')
         task_obj = self.pool.get('project.task')
         uom_obj = self.pool.get('product.uom')
-        
+
         vals_line = {}
         context = kwargs.get('context', {})
         if not context.get('no_analytic_entry',False):
@@ -115,7 +115,7 @@ class project_work(osv.osv):
             vals_line['user_id'] = vals['user_id']
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
-            
+
             #calculate quantity based on employee's product's uom 
             vals_line['unit_amount'] = vals['hours']
 
@@ -153,7 +153,7 @@ class project_work(osv.osv):
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
         result = {}
-        
+
         if isinstance(ids, (long, int)):
             ids = [ids,]
 
@@ -172,7 +172,7 @@ class project_work(osv.osv):
                 for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
                     if result.get(fld, False):
                         vals_line[fld] = result[fld]
-                        
+
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
@@ -182,7 +182,7 @@ class project_work(osv.osv):
 
                 if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
-                    
+
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id, company_id=False,
@@ -192,7 +192,7 @@ class project_work(osv.osv):
                     vals_line['amount'] = amount_unit['value']['amount']
 
             self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
-            
+
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):

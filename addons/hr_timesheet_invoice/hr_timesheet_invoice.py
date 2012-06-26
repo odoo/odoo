@@ -69,7 +69,7 @@ class account_analytic_account(osv.osv):
             help="Keep empty if this contract is not limited to a total fixed price."),
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invocing Ratio',
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
@@ -95,39 +95,27 @@ class account_analytic_account(osv.osv):
 
     def set_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'close'}, context=context)
-        self.set_close_send_note(cr, uid, ids, context)
+        message = _("Contract has been <b>closed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-        self.set_cancel_send_note(cr, uid, ids, context)
+        message = _("Contract has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        self.set_open_send_note(cr, uid, ids, context)
+        message = _("Contract has been <b>opened</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
-        self.set_pending_send_note(cr, uid, ids, context)
+        message = _("Contract has been set as <b>pending</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
-    
-    def set_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Contract has been <b>opened</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
-    
-    def set_close_send_note(self, cr, uid, ids, context=None):
-        message = _("Contract has been <b>closed</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
-    
-    def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Contract has been <b>cancelled</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
-
-    def set_pending_send_note(self, cr, uid, ids, context=None):
-        message = _("Contract has been <b>pending</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 account_analytic_account()
 

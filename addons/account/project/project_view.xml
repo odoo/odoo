@@ -19,6 +19,7 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -71,6 +72,7 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -164,12 +166,13 @@
                     <field name="name"/>
                     <field name="journal_id" invisible="context.get('to_invoice', False)"/>
                     <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount,product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount,product_uom_id)" sum="Total Quantity"/>
-                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount,product_uom_id)" invisible="not context.get('to_invoice', False)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity"/>
+                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
                     <field name="user_id" invisible="1" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -241,16 +244,16 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="account_id"/>
-                        <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                        <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                         <field name="journal_id"/>
-                        <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id, journal_id)"/>
-                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                        <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
+                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                         <field invisible="True" name="general_account_id"/>
                         <field name="amount"/>
                         <field name="currency_id" />
                         <field name="amount_currency" />
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     </group>
                 </form>
             </field>
