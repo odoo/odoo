@@ -258,6 +258,18 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
+    def onchange_address_id(self, cr, uid, ids, address, context=None):
+        data ={}
+        if not address:
+            return data
+        addr_obj = self.pool.get('res.partner')
+        addr_id =  addr_obj.browse(cr, uid, address, context=context)
+        data = {
+            'street':addr_id.street,
+            'zip':addr_id.zip,
+            'city':addr_id.city,
+            }
+        return {'value': data}
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)

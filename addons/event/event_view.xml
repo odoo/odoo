@@ -85,7 +85,7 @@
                         <group>
                             <label for="address_id" string="Address"/>
                             <div>
-                                <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
+                                <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}" on_change="onchange_address_id(address_id, context)" />
                             	<field name="street" />                            
                             	<div>
                                      <field name="city" class="oe_inline" placeholder="City"/>
