@@ -165,11 +165,11 @@ openerp.web_linkedin = function(instance) {
                 width : 840, 
                 height:500,
                 close: function(){ self.dialog.remove();},
-                buttons:[
-                {
-                    text: _t("Ok"),
-                    click: function() { $(this).dialog("close"); }
-                }]
+//                buttons:[
+//                {
+//                    text: _t("Ok"),
+//                    click: function() { $(this).dialog("close"); }
+//                }]
             });
             this.dialog.parent().find('.ui-dialog-titlebar').append('<button class="close">No Thanks</button>').click(function(){
                 self.dialog.remove();
