@@ -41,18 +41,18 @@ class hr_contract(osv.osv):
     
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
-        'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll'), help="Income from house property."),
-        'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll'), help="Saving income for bank account."),
-        'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'), help="Other income of employee."),
-        'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are sold before one year."),
-        'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are kept for more than a year."),
-        'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll'), help="Amount of food coupon per day."),
-        'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver."),
+        'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll'), help="Income from house property"),
+        'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll'), help="Saving income for bank account"),
+        'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'), help="Other income of employee"),
+        'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are sold before one year"),
+        'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are kept for more than a year"),
+        'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll'), help="Amount of food coupon per day"),
+        'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver"),
         'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll'), help="Professional tax deducted from salary"),
-        'leave_avail_dedution': fields.float('Leave Availed Deduction ', digits_compute=dp.get_precision('Payroll'), help="Deduction for emergency leave of employee."),
-        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance."),
-        'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage.(%)"),
-        'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'), help="Deduction for company provided transport."),
+        'leave_avail_dedution': fields.float('Leave Availed Deduction ', digits_compute=dp.get_precision('Payroll'), help="Deduction for emergency leave of employee"),
+        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
+        'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
+        'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'), help="Deduction for company provided transport"),
     }
 
 hr_contract()
@@ -96,8 +96,8 @@ class hr_employee(osv.osv):
         return res
     
     _columns = {
-        'join_date': fields.date('Join Date', help="Joining date of employee "),
-        'number_of_year': fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience."),
+        'join_date': fields.date('Join Date', help="Joining date of employee"),
+        'number_of_year': fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience"),
         }
     
 hr_employee()
@@ -112,7 +112,7 @@ class payroll_advice(osv.osv):
     _columns = {
         'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
-        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips."),
+        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
         'state':fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirm'),
@@ -171,6 +171,7 @@ class payroll_advice(osv.osv):
                             'bysal': line.total
                             }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
+                payslip_pool.write(cr, uid, slip_ids, {'advice_id': advice.id}, context=context)
         return True
 
     def confirm_sheet(self, cr, uid, ids, context=None):
@@ -222,7 +223,7 @@ class payroll_advice_line(osv.osv):
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
-        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice',),
+        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
         'name': fields.char('Bank Account No.', size=32, required=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
@@ -231,4 +232,14 @@ class payroll_advice_line(osv.osv):
 
 payroll_advice_line()
 
+class hr_payslip(osv.osv):
+    '''
+    Employee Pay Slip
+    '''
+
+    _inherit = 'hr.payslip'
+    _description = 'Pay Slip'
+    _columns = {
+        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice')
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
