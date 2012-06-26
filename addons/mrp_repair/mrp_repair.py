@@ -28,6 +28,7 @@ import decimal_precision as dp
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
+    _inherit = 'mail.thread'
     _description = 'Repair Order'
 
     def _amount_untaxed(self, cr, uid, ids, field_name, arg, context=None):
@@ -329,6 +330,7 @@ class mrp_repair(osv.osv):
                 self.write(cr, uid, [o.id], {'state': '2binvoiced'})
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
+                self.set_confirm_send_note(cr, uid, ids)
                 if not o.operations:
                     raise osv.except_osv(_('Error !'),_('You cannot confirm a repair order which has no line.'))
                 for line in o.operations:
@@ -345,10 +347,12 @@ class mrp_repair(osv.osv):
         for repair in self.browse(cr, uid, ids, context=context):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
         self.write(cr,uid,ids,{'state':'cancel'})
+        self.set_cancel_send_note(cr, uid, ids, context)
         return True
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
         self.action_invoice_create(cr, uid, ids)
+        self.set_toinvoiced_send_note(cr, uid, ids)
         return True
 
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
@@ -464,6 +468,7 @@ class mrp_repair(osv.osv):
             self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             self.write(cr, uid, [repair.id], {'state': 'ready'})
+        self.set_ready_send_note(cr, uid, ids, context)
         return True
 
     def action_repair_start(self, cr, uid, ids, context=None):
@@ -475,6 +480,7 @@ class mrp_repair(osv.osv):
             repair_line.write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             repair.write({'state': 'under_repair'})
+        self.set_start_send_note(cr, uid, ids, context)
         return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
@@ -553,7 +559,46 @@ class mrp_repair(osv.osv):
                 res[repair.id] = picking
             else:
                 self.write(cr, uid, [repair.id], {'state': 'done'})
+                self.set_done_send_note(cr, uid, ids, context)
         return res
+    
+    def create(self, cr, uid, vals, context=None):
+        repair_id = super(mrp_repair, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [repair_id], context=context)
+        return repair_id
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Repair order has been <b>created</b>."), context=context)
+    
+    def set_start_send_note(self, cr, uid, ids, context=None):
+        message = _("Repair order has been <b>Started</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+    def set_toinvoiced_send_note(self, cr, uid, ids, context=None):
+        for repair in self.browse(cr,uid,ids,context):
+            message = _("Invoice is created with <b>%s<b> reference.") % (repair.invoice_id.origin)
+            return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+    def set_confirm_send_note(self, cr, uid, ids, context=None):
+        message = _("Repair order has been <b>Confirmed</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+    def set_end_repair_send_note(self, cr, uid, ids, context=None):
+        message = _("Repair order is now <b>Ended</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Repair order has been <b>cancelled</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+    def set_ready_send_note(self, cr, uid, ids, context=None):
+        message = _("Repair order is now <b>Ready</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_done_send_note(self, cr, uid, ids, context=None):
+        message = _("Repair order is now <b>Done</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
 
 
 mrp_repair()
