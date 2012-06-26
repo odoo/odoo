@@ -10,12 +10,10 @@
             <form string="Create Entries From Models" version="7.0">
                 <header>
                     <button icon="gtk-execute" string="Create Entries" name="create_entries" type="object"/>
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                 </header>
-                <separator string="This wizard will create recurring accounting entries"/>
                 <label string="Create manual recurring entries in a chosen journal."/>
                 <group>
-                    <field name="model"/>
+                    <field name="model" nolabel="1"/>
                 </group>
             </form>
             </field>
