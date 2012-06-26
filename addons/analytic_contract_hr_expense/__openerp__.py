@@ -19,8 +19,29 @@
 #
 ##############################################################################
 
-import project_task_delegate
-import project_task_reevaluate
+
+{
+    'name': 'Contracts Management: hr_expense link',
+    'version': '1.1',
+    'category': 'Sales Management',
+    'description': """
+This module is for modifying account analytic view to show some data related to the hr_expense module.
+======================================================================================================
+
+""",
+    "author": "OpenERP S.A.",
+    "website": "http://www.openerp.com/",
+    "depends": ["hr_expense","account_analytic_analysis"],
+    "init_xml": [],
+    "update_xml": [
+                    "analytic_contract_hr_expense_view.xml",
+                    ],
+    'demo_xml': [],
+    "css" : [
+             ],
+    'installable': True,
+    'auto_install': True,
+    'certificate': '',
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

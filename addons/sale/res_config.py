@@ -95,9 +95,6 @@ class sale_configuration(osv.osv_memory):
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
-        'module_analytic_journal_billing_rate': fields.boolean("Billing Rates by Contract",
-            help="""Allows you to define the default invoicing rate for a specific journal on a given account.
-                This installs the module analytic_journal_billing_rate."""),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),

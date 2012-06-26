@@ -19,8 +19,19 @@
 #
 ##############################################################################
 
-import project_task_delegate
-import project_task_reevaluate
-
+{
+    "name" : "Contract On Project",
+    "version": "1.1",
+    "author" : "OpenERP SA",
+    "website" : "http://www.openerp.com",
+    "depends" : ["project", "account_analytic_analysis"],
+    "description": """
+        Add "Contract Data" in project view.
+    """,
+    "init_xml" : [],
+    "update_xml": ["analytic_contract_project_view.xml"],
+    'demo_xml': [],
+    'installable': True,
+    'auto_install': True,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
