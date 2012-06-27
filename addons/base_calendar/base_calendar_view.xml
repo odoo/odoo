@@ -28,37 +28,40 @@
                             statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
                     </header>
                     <sheet>
-                        <group col="4">
-                            <field name="email" string="Invitation To"/>
-                            <field name="cutype" string="Invitation Type" />
-                            <field name="rsvp" />
-                            <field name="role" string="Role" />
-                            <field name="sent_by_uid" string="Invitation From" />
+
+                        <div class="oe_title">
+                            <label for="email" string="Invitation To" class="oe_edit_only" /> 
+                            <h1>
+                                <field name="email" class="oe_inline" />
+                                (<field name="language" class="oe_inline" />)
+                            </h1>
+                            
+                            <h2>
+                                From <field name="event_date" class="oe_inline" />
+                                to <field name="event_end_date" class="oe_inline"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="sent_by_uid" string="Invitation From" />
+                                <field name="user_id" string="Invited User"/>
+                                <field name="partner_id" string="Contact" />
+                            </group>
+                            <group>
+                                <field name="cutype" string="Invitation Type" />
+                                <field name="role" string="Role" />
+                                <field name="rsvp" />
+                                <field name="ref" readonly="1"/>
+                            </group>
                         </group>
-                        <notebook>
-                            <page string="Invitation">
-                                <group>
-                                    <group string="Invitation Detail">
-                                        <field name="user_id" string="Invited User"/>
-                                        <field name="partner_id" string="Contact" />
-                                    </group>
-                                    <group string="Event Detail">
-                                        <field name="event_date" />
-                                        <field name="event_end_date" />
-                                        <field name="language"/>
-                                        <field name="ref" readonly="1"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Delegation Info">
-                                <separator string="Delegated From" colspan="4" />
-                                <field name="parent_ids"
-                                    readonly="1" />
-                                <separator string="Delegated To" colspan="4" />
-                                <field name="child_ids"
-                                    readonly="1" />
-                            </page>
-                        </notebook>
+                        <group>
+                            <group string="Delegrated From">
+                                <field name="parent_ids" readonly="1" nolabel="1" />
+                            </group>
+                            <group string="Delegrated To" >
+                                <field name="child_ids" readonly="1" nolabel="1" />
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -91,6 +94,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
+                   <field name="email" string="Email"/>
+                   <separator orientation="vertical"/>
+                   <field name="event_date"/>
+                   <separator orientation="vertical"/>
                    <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
                        domain="[('state','=', 'needs-action')]"
                        help="Invitations To Review" />
@@ -104,11 +111,9 @@
                        domain="[('state','=', 'delegated')]"
                        help="Delegated Invitations" />
                    <separator orientation="vertical"/>
-                   <field name="email"/>
                    <field name="user_id" string="Responsible"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type"/>
-                   <field name="event_date"/>
                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]"
@@ -432,6 +437,8 @@
             <field name="arch" type="xml">
                 <search string="Search Events">
                        <group>
+                           <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>
+                           <separator orientation="vertical"/>
                            <filter icon="terp-go-today" string="My Events"
                                domain="[('user_id','=',uid)]"
                                help="My Events" />
@@ -439,9 +446,6 @@
                            <filter icon="terp-check" string="Confirmed"
                                domain="[('state','=','confirmed')]"
                                help="Confirmed Events" />
-                           <separator orientation="vertical"/>
-                           <field name="name" string="Summary"/>
-                           <field name="location" string="Location"/>
                            <separator orientation="vertical"/>
                            <field name="user_id"/>
                            <separator orientation="vertical"/>
@@ -462,7 +466,6 @@
                             <separator orientation="vertical" />
                             <filter string="Date" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date'}" />
-
                         </group>
                 </search>
             </field>

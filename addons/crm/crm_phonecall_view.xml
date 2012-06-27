@@ -65,50 +65,48 @@
             <form version="7.0">
             <header>
                 <button name="case_open" string="Confirm" type="object"
-                        states="draft,pending" icon="gtk-go-forward"/>
+                        states="draft,pending"/>
                 <button name="case_close" string="Held" type="object"
-                        states="open,pending" icon="gtk-jump-to"/>
+                        states="open,pending"/>
                 <button name="case_reset" string="Reset to Todo" type="object"
-                        states="cancel" icon="gtk-convert"/>
+                        states="cancel"/>
                 <button name="case_cancel" string="Cancel" type="object"
-                        states="draft,open,pending" icon="gtk-cancel"/>
+                        states="draft,open,pending"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
-                    icon="gtk-index" type="action"
+                    type="action"
                     attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Schedule Other Call"
-                    icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
-                <button string="Schedule a Meeting" name="action_make_meeting" icon="gtk-redo" type="object"/>
+                <button string="Schedule a Meeting" name="action_make_meeting" type="object"/>
                 <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done"/>
             </header>
             <sheet string="Phone Call">
+                  <div class="oe_title">
+                      <div class="oe_edit_only">
+                          <label for="name" string="Title"/> 
+                      </div>
+                      <h1><field name="name" required="1"/></h1>
+                      <div class="oe_edit_only">
+                        <label for="partner_phone" string="Phone" />
+                      </div>
+                      <h2><field name="partner_phone"/></h2>
+                  </div>
                  <group col="4">
-                    <field name="name" required="1"/>
-                    <field name="partner_phone"/>
-                    <field name="duration" widget="float_time"/>
-
-                    <field name="date"/>
-                    <field name="user_id"/>
+                    <field name="date" />
+                    <field name="user_id" />
+                    <field name="duration" widget="float_time" />
                     <field name="section_id" colspan="1" widget="selection" />
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" />
+                    <field name="categ_id" widget="selection"
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"/>
+                    <field name="partner_mobile" />
+                    <field name="priority"/>
+                    <field name="opportunity_id"/>
                 </group>
 
-                <group>
-                    <group string="Contacts">
-                        <field name="partner_id"
-                            on_change="onchange_partner_id(partner_id)" />
-                        <field name="partner_mobile"/>
-                    </group>
-                    <group string="Categorization">
-                        <field name="categ_id" widget="selection"
-                            domain="[('object_id.model', '=', 'crm.phonecall')]"/>
-                        <field name="priority"/>
-                        <field name="opportunity_id"/>
-                    </group>
-                </group>
-                <separator string="Description"/>
-                <field name="description"/>
+                <field name="description" placeholder="Description..." />
             </sheet>
             <footer>
                 <field name="message_ids" widget="ThreadView"/>
@@ -179,82 +177,24 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                   name="today"
-                   help="Todays's Phonecalls"
-               />
-               <filter icon="terp-go-week"
-                   string="7 Days"
-                   help="Phonecalls during last 7 days"
-                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-               />
-
+               <field name="name" string="Phonecalls"/>
                <separator orientation="vertical"/>
-               <field name="name"/>
-               <field name="partner_id"/>
-               <field name="user_id">
-                   <filter icon="terp-personal-"
-                       domain="[('user_id','=',False)]"
-                       help="Unassigned Phonecalls" />
-               </field>
-               <field name="section_id"
-                   widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+"
-                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                       help="My Sales Team(s)" />
-               </field>
-               <newline/>
-               <group expand="0" string="Group By...">
-                   <filter string="Partner" icon="terp-partner" domain="[]"
-                       context="{'group_by':'partner_id'}" />
-                   <filter string="Responsible" icon="terp-personal"
-                       domain="[]" context="{'group_by':'user_id'}" />
-                   <separator orientation="vertical" />
-                   <filter string="Creation" icon="terp-go-month" help="Creation Date"
-                       domain="[]" context="{'group_by':'create_date'}" />
-                   <filter string="Date" icon="terp-go-month" domain="[]"
-                       context="{'group_by':'date'}" help="Date of Call" />
-               </group>
-           </search>
-        </field>
-    </record>
-    <!-- Scheduled a phonecall search view-->
-    <record id="view_crm_case_scheduled_phonecalls_filter" model="ir.ui.view">
-        <field name="name">CRM - Scheduled Calls Search</field>
-        <field name="model">crm.phonecall</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Scheduled Phonecalls">
+               <field name="date"/>
+               <separator orientation="vertical"/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
-               <separator orientation="vertical"/>
-               <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                   name="today"
-                   help="Todays's Phonecalls"
-               />
-               <filter icon="terp-go-week"
-                   string="7 Days"
-                   help="Phonecalls during last 7 days"
-                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-               />
-
-               <separator orientation="vertical"/>
-               <field name="name"/>
-               <field name="partner_id"/>
-               <field name="user_id">
-                   <filter icon="terp-personal-"
+               <filter string="Unassigned Phonecalls"
+                       icon="terp-personal-"
                        domain="[('user_id','=',False)]"
-                       help="Unassigned Phonecalls" />
-               </field>
+                       help="Unassigned Phonecalls"/>
+               <filter string="Phone Calls Assigned to Me or My Team(s)"
+                        icon="terp-personal+"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       help="Phone Calls that are assigned to me or to my team(s)" />
+               <separator orientation="vertical"/>
+               <field name="partner_id"/>
+               <field name="user_id"/>
                <field name="section_id"
-                   widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+"
-                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                       help="My Sales Team(s)" />
-               </field>
+                   widget="selection" string="Sales Team"/>
                <newline/>
                <group expand="0" string="Group By...">
                    <filter string="Partner" icon="terp-partner" domain="[]"

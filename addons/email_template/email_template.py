@@ -29,11 +29,12 @@ from osv import fields
 import tools
 from tools.translate import _
 from urllib import quote as quote
+_logger = logging.getLogger(__name__)
 
 try:
     from mako.template import Template as MakoTemplate
 except ImportError:
-    logging.getLogger('init').warning("email_template: mako templates not available, templating features will not work!")
+    _logger.warning("email_template: mako templates not available, templating features will not work!")
 
 class email_template(osv.osv):
     "Templates for sending email"
@@ -75,7 +76,7 @@ class email_template(osv.osv):
                 result = u''
             return result
         except Exception:
-            logging.exception("failed to render mako template value %r", template)
+            _logger.exception("failed to render mako template value %r", template)
             return u""
 
     def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):

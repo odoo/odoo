@@ -26,6 +26,7 @@ import logging
 from osv import fields, osv
 import tools
 from tools.translate import _
+_logger = logging.getLogger(__name__)
 
 class crm_lead(base_stage, osv.osv):
         """ CRM Leads """
@@ -40,8 +41,8 @@ class crm_meeting(base_state, osv.Model):
     _columns = {
         # base_state required fields
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
-                        select=True, help='Sales team to which Case belongs to.'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]},
+                        select=True, groups='base.group_sale_salesman', help='Sales team to which Case belongs to.'),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Write Date' , readonly=True),
@@ -180,7 +181,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
         return user_id
 
 res_users()
