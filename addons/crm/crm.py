@@ -164,10 +164,10 @@ class crm_case_section(osv.osv):
         model, res_id = model_pool.get_object_reference( cr, uid, "crm", "model_crm_lead")
         vals.update({'alias_name': "sales",
                      'alias_model_id': res_id})
-        name = alias_pool.create_unique_alias(cr, uid, vals, context=context)
+        alias_pool.create_unique_alias(cr, uid, vals, context=context)
         res = super(crm_case_section, self).create(cr, uid, vals, context)
         record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{'section_id':res,'type':'lead'}},context)
+        alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{ 'section_id': res, 'type': 'lead'}}, context)
         return res
 
 class crm_case_categ(osv.osv):
