@@ -218,7 +218,7 @@ class project(osv.osv):
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
-        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1"),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility'),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
