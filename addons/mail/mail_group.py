@@ -129,7 +129,7 @@ class mail_group(osv.osv):
         'member_count': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
         'is_subscriber': fields.function(get_member_ids, type='boolean', string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer', string='Messages count for last month'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias')
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True)
     }
 
     _defaults = {
