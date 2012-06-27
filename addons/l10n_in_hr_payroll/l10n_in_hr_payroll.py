@@ -227,7 +227,7 @@ class payroll_advice_line(osv.osv):
         'name': fields.char('Bank Account No.', size=32, required=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
-        'company_id': fields.related('advice_id', 'company_id', type='many2one', required=True, relation='res.company', string='Company'),
+        'company_id': fields.related('advice_id', 'company_id', type='many2one', required=True, relation='res.company', string='Company', store=True),
     }
 
 payroll_advice_line()
