@@ -78,7 +78,7 @@
         <field name="inherit_id" ref="document.view_document_directory_form" />
         <field name="type">form</field>
         <field name="arch" type="xml">
-        <page string="Dynamic context" position="after" version="7.0">
+        <xpath expr="/form/notebook/page[@string='Dynamic context']" position="after" version="7.0">
         <page string="WebDAV properties">
             <label string="These properties will be added to WebDAV requests" colspan="4" />
 
@@ -98,7 +98,7 @@
                 </form>
             </field>
         </page>
-        </page>
+        </xpath>
     </field>
     </record>
 

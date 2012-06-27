@@ -14,6 +14,7 @@
                 </header>
                 <notebook>
                     <page string="Billing Data">
+                       <group>
                        <group string="Do you want to show details of work in invoice?">
                            <field name="date"/>
                            <field name="time"/>
@@ -22,6 +23,11 @@
                        </group>
                        <group  string="Force to use a specific product">
                            <field name="product"/>
+                       </group>
+                       <group colspan="4">
+                          <button special="cancel" string="Cancel" icon='gtk-cancel' colspan="1"/>
+                          <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="terp-gtk-go-back-rtl"/>
+                       </group>
                        </group>
                     </page>
                 </notebook>

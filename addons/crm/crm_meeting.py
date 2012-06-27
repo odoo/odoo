@@ -26,6 +26,7 @@ import logging
 from osv import fields, osv
 import tools
 from tools.translate import _
+_logger = logging.getLogger(__name__)
 
 class crm_lead(base_stage, osv.osv):
         """ CRM Leads """
@@ -173,7 +174,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
         return user_id
 
 res_users()
