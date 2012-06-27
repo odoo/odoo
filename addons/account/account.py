@@ -24,11 +24,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-import netsvc
+import logging
 import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
+_logger = logging.getLogger(__name__)
 
 def check_cycle(self, cr, uid, ids, context=None):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
@@ -212,7 +213,6 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
-    logger = netsvc.Logger()
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -295,8 +295,7 @@ class account_account(osv.osv):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                      'Filters: %s'%filters)
+            _logger.debug('Filters: %s',(filters))
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -312,8 +311,7 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                      'Status: %s'%cr.statusmessage)
+            _logger.debug('Status: %s',(cr.statusmessage))
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
@@ -2095,9 +2093,7 @@ class account_tax(osv.osv):
         }
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
-        logger = netsvc.Logger()
-        logger.notifyChannel("warning", netsvc.LOG_WARNING,
-            "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
+        _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
     def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
