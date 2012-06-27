@@ -327,17 +327,17 @@ class mrp_repair(osv.osv):
         """
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for o in self.browse(cr, uid, ids):
+            if not o.operations:
+                    raise osv.except_osv(_('Error !'),_('You cannot confirm a repair order which has no line.'))
             if (o.invoice_method == 'b4repair'):
                 self.write(cr, uid, [o.id], {'state': '2binvoiced'})
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
-                if not o.operations:
-                    raise osv.except_osv(_('Error !'),_('You cannot confirm a repair order which has no line.'))
                 for line in o.operations:
                     if line.product_id.track_production and not line.prodlot_id:
                         raise osv.except_osv(_('Warning'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
-        self.set_confirm_send_note(cr, uid, ids,context)
+        self.set_confirm_send_note(cr, uid, ids)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
