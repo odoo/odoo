@@ -222,6 +222,11 @@ class project_issue(base_stage, osv.osv):
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'partner_street': fields.related('partner_id', 'street', type='char', string='Street', readonly=True),
+        'partner_city': fields.related('partner_id', 'city', type='char', string='City', readonly=True),
+        'partner_state_id': fields.related('partner_id', 'state_id', type='char', string='State', readonly=True),
+        'partner_country_id': fields.related('partner_id', 'country_id', type='char', string='Country', readonly=True),
+        'partner_phone': fields.related('partner_id', 'phone', type='char', string='Phone', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,

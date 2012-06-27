@@ -266,7 +266,15 @@
                 <field name="type_id"/>
                 <field name="job_id"/>
                  <field name="title_action"/>
-<templates>
+                <templates>
+                        <t t-name="kanban-tooltip">
+                               <ul class="oe_kanban_tooltip">
+                                  <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
+                                  <li t-if="record.email_from.raw_value"><b>Email :</b> <field name="email_from"/></li>
+                                  <li t-if="record.partner_phone.raw_value"><b>Phone:</b> <field name="partner_phone"/></li>
+                                  <li t-if="record.partner_mobile.raw_value"><b>Mobile:</b> <field name="partner_mobile"/></li>
+                               </ul>
+                         </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
@@ -279,7 +287,7 @@
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
-                                <div class="oe_kanban_content" >
+                                <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                     <div>
                                         <b><field name="name"/></b><br/>
                                         <field name="partner_name"/>
@@ -292,16 +300,18 @@
                                             <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
                                         </div>
                                         <div style="padding-top:5px;white-space: nowrap;" >
-                                            <t t-if="record.title_action.raw_value">
-                                                <field name="title_action" /> on 
-                                                <field name="date_action" />
+                                            <t t-if="record.title_action.raw_value">                                               
+                                                <ul>
+                                                   <li> <field name="title_action" /> </li>
+                                                   <li><ul><li><field name="date_action" /></li></ul></li>                                                                                                     
+                                                  </ul>
                                             </t>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_right">
                                         <t t-set="priority" t-value="record.priority.raw_value || 5"/>
                                         <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
-                                            <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                            <img src="/web/static/src/img/icons/star-off.png" width="16" height="16" title="Good"/>
                                         </a>
                                         <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
                                             <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16" title="Good"/>

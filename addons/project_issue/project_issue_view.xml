@@ -221,6 +221,19 @@
                 <field name="user_email"/>
                 <field name="user_id"/>
                 <templates>                    
+                    <t t-name="kanban-tooltip">
+                       <ul class="oe_kanban_tooltip">
+                          <li><b>Customer:</b> <field name="partner_id"/></li>
+                          <li><b>Customer Address:</b> 
+                              <t t-if="record.partner_street.raw_value != false"><field name="partner_street"/></t>
+                              <t t-if="record.partner_city.raw_value != false">,<field name="partner_city"/></t>
+                              <t t-if="record.partner_state_id.raw_value != false">,<field name="partner_state_id"/></t>
+                              <t t-if="record.partner_country_id.raw_value != false">,<field name="partner_country_id"/></t>
+                          </li>
+                          <li><b>Customer Phone:</b> <field name="partner_phone"/></li>
+                          <li><b>Project:</b> <field name="project_id"/></li>
+                       </ul>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
@@ -236,15 +249,15 @@
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>                                    
                                 </ul>
                             </div>
-                            <div class="oe_kanban_content">
+                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
                                     <b><field name="name"/></b>                                     
                                 </div>
                                 <div>
-                                    <field name="partner_id"/>                   
+                                    <field name="categ_id"/>                   
                                 </div>                                 
                                 <div>
-                                    <field name="project_id"/>                   
+                                    <field name="version_id"/>                   
                                 </div> 
                                 <div class="oe_kanban_footer_left">
                                     <div class="oe_right">
