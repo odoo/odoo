@@ -1219,7 +1219,7 @@
                     <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object"/>
                     <button name="force_assign" states="confirmed" string="Set Available" type="object"/>
                     <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>
                 <sheet>
                     <group>
@@ -1410,7 +1410,7 @@
                     <button name="force_assign" states="confirmed" string="Set Available" type="object"/>
                     <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned"/>
                     <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>
                 <sheet>
                 <group>
