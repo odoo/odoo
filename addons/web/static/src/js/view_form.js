@@ -2003,7 +2003,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
         } else {
             this.$element.find('a')
                     .attr('href', 'mailto:' + this.get('value'))
-                    .text(this.get('value'));
+                    .text(this.get('value') || '');
         }
     },
     on_button_clicked: function() {
@@ -2032,7 +2032,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
             if (!s) {
                 tmp = "http://" + this.get('value');
             }
-            this.$element.find('a').attr('href', tmp).text(tmp);
+            this.$element.find('a').attr('href', tmp).text(this.get('value') ? tmp : '');
         }
     },
     on_button_clicked: function() {
