@@ -48,6 +48,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);

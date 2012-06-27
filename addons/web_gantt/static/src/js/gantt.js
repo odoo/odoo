@@ -19,6 +19,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_loaded: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).pipe(function(fields_get) {
             self.fields = fields_get.fields;
             self.has_been_loaded.resolve();

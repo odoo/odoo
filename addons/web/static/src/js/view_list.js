@@ -250,6 +250,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.setup_columns(this.fields_view.fields, grouped);
 
         this.$element.html(QWeb.render(this._template, this));
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         // Head hook
         // Selecting records
         this.$element.find('.oe_list_record_selector').click(function(){

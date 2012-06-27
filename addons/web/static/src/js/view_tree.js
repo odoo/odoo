@@ -84,6 +84,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             'fields': this.fields,
             'toolbar': has_toolbar
         }));
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
 
         this.dataset.read_slice(this.fields_list()).then(function(records) {
             if (!has_toolbar) {
