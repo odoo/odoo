@@ -541,4 +541,12 @@ class res_config_settings(osv.osv_memory):
             'tag': 'reload',
         }
 
+    def cancel(self, cr, uid, ids, context=None):
+        # ignore the current record, and send the action to reopen the view
+        act_window = self.pool.get('ir.actions.act_window')
+        action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)])
+        if action_ids:
+            return act_window.read(cr, uid, action_ids[0], [], context=context)
+        return {}
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
