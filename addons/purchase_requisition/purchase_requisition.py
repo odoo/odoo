@@ -47,14 +47,14 @@ class purchase_requisition(osv.osv):
         'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('cancel','Cancelled'),('done','Purchase Done')], 'Status', required=True)
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': 'draft',
         'exclusive': 'multiple',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition', context=c),
         'user_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -91,21 +91,16 @@ class purchase_requisition(osv.osv):
         return True
 
     def in_progress_send_note(self, cr, uid, ids, context=None):
-        for requisition in self.browse(cr, uid, ids, context=context):
-                self.message_append_note(cr, uid, [requisition.id], body=_("Draft Requisition has been  <b>sent to suppliers</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
     
     def reset_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("""Purchase Requisition has been set to <b>draft</b>."""), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
      
     def done_to_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
         
-    def draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
-    
     def cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
     def _planned_date(self, requisition, delay=0.0):
         company = requisition.company_id
@@ -231,6 +226,7 @@ class purchase_requisition_line(osv.osv):
     _name = "purchase.requisition.line"
     _description="Purchase Requisition Line"
     _rec_name = 'product_id'
+
     _columns = {
         'product_id': fields.many2one('product.product', 'Product' ),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
@@ -268,7 +264,7 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:
-                    if order.id<>po.id:
+                    if order.id != po.id:
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
