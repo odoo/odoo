@@ -239,6 +239,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         }
     },
+    /**
+     *
+     * @param {Object} [options]
+     * @param {Boolean} [editable=false] whether the form should be switched to edition mode. A value of ``false`` will keep the current mode.
+     * @param {Boolean} [reload=true] whether the form should reload its content on show, or use the currently loaded record
+     * @return {$.Deferred}
+     */
     do_show: function (options) {
         var self = this;
         options = options || {};
@@ -253,23 +260,24 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.$element.show().css('visibility', 'hidden');
         this.$element.add(this.$buttons).removeClass('oe_form_dirty');
-        return this.has_been_loaded.pipe(function() {
-            var result;
-            if (self.dataset.index === null) {
-                // null index means we should start a new record
-                result = self.on_button_new();
-            } else {
-                result = self.dataset.read_index(_.keys(self.fields_view.fields), {
-                    context : { 'bin_size' : true }
-                }).pipe(self.on_record_loaded);
-            }
-            result.pipe(function() {
-                if (options.editable) {
-                    self.set({mode: "edit"});
+
+        var shown = this.has_been_loaded;
+        if (options.reload !== false) {
+            shown = shown.pipe(function() {
+                if (self.dataset.index === null) {
+                    // null index means we should start a new record
+                    return self.on_button_new();
                 }
-                self.$element.css('visibility', 'visible');
+                return self.dataset.read_index(_.keys(self.fields_view.fields), {
+                    context: { 'bin_size': true }
+                }).pipe(self.on_record_loaded);
             });
-            return result;
+        }
+        return shown.pipe(function() {
+            if (options.editable) {
+                self.set({mode: "edit"});
+            }
+            self.$element.css('visibility', 'visible');
         });
     },
     do_hide: function () {
