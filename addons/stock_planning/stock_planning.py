@@ -29,7 +29,7 @@ from tools.translate import _
 import logging
 import decimal_precision as dp
 
-_logger = logging.getLogger('mps') 
+_logger = logging.getLogger(__name__) 
 
 
 def rounding(fl, round_value):

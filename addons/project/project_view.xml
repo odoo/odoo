@@ -10,7 +10,16 @@
             web_icon_hover="images/project-hover.png"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        
+        <act_window
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_task_all"
+            name="Tasks"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="kanban,tree,form,calendar,graph"
+            view_type="form"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -33,7 +42,7 @@
                     <field name="analytic_account_id" invisible="1" required="0"/>
                     <label for="name" class="oe_edit_only" string="Project Name"/>
                     <h1>
-                        <field name="name"/>
+                        <field name="name" string="Project Name"/>
                     </h1>
                     <label for="parent_id" class="oe_edit_only" string="Parent Project"/>
                     <h2>
@@ -41,16 +50,28 @@
                     </h2>
                     <group>
                         <group>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                        </group><group>
-                            <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="progress_rate" widget="progressbar"/>
+                            <field name="analytic_account_id" invisible="1" required="0"/>
+                            <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
+                            <field name="privacy_visibility"/>
+                        </group>
+                        <group>
+                            <table>
+                                <tr name="use_tasks_row">
+                                    <td><group><field name="use_tasks"/></group></td>
+                                    <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
+                                </tr>
+                                <tr name="use_attachment_row">
+                                    <td/>
+                                    <td><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
+                                </tr>
+                            </table>
                         </group>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Members">
-                            <field colspan="4" name="members" nolabel="1" widget="many2many_kanban">
+                    <notebook>
+                        <page string="Team" name="team">
+                            <field colspan="4" name="members" widget="many2many_kanban">
                                 <kanban quick_create="true" create="false">
                                     <field name="name"/>
                                     <templates>
@@ -68,54 +89,23 @@
                                 </kanban>
                             </field>
                         </page>
-                        <page string="Administration">
+                        <page string="Other Info">
                             <group>
-                                <group name="kanban" string="Project Management">
-                                    <field name="use_tasks"/>
-                                </group>
-                                <group string="Performance">
+                                <group string="Administration">
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="effective_hours" widget="float_time"/>
                                     <field name="resource_calendar_id"/>
                                 </group>
-                                <newline/>
-                                <group name="misc" string="Miscellaneous">
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection" required="1"/>
-                                    <field name="warn_manager"/>
+                                <group string="Miscellaneous" name="misc">
+                                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
+                                    <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Billing" groups="account.group_account_invoice">
-                            <group col="4">
-                                <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
-                                <field name="warn_customer"/>
-                                <field name="currency_id" groups="base.group_multi_company" required="1"/>
-                            </group>
-                            <group col="4">
-                                <separator colspan="2" string="Mail Header"/>
-                                <separator colspan="2" string="Mail Footer"/>
-                                <field name="warn_header" nolabel="1" colspan="2"/>
-                                <field name="warn_footer" nolabel="1" colspan="2"/>
-                            </group>
-                            <group col="3">
-                                <b>
-                                    <label string="Variables you can use for headers and footer." colspan="3"/>
-                                </b>
-                                <label string="Task: %%(name)s"/>
-                                <label string="User: %%(user_id)s"/>
-                                <label string="ID: %%(task_id)s"/>
-                                <label string="Status: %%(state)s"/>
-                                <label string="Date Start: %%(date_start)s"/>
-                                <label string="Date Stop: %%(date)s"/>
                             </group>
                         </page>
                         <page string="Tasks Stages">
                              <field name="type_ids"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="description"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -623,6 +613,22 @@
                 </search>
             </field>
         </record>
+        
+        <record id="analytic_account_inherited_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_tasks" />
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
@@ -734,11 +740,11 @@
             <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem id="menu_project_config_project" name="Stages" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="menu_project_config_project" sequence="2"/>
+        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
         <act_window context="{'search_default_user_id': active_id, 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
