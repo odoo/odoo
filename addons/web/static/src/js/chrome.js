@@ -858,6 +858,9 @@ instance.web.WebClient = instance.web.Widget.extend({
         this.$element.addClass("openerp openerp_webclient_container");
         if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
             $("body").addClass("kitten-mode-activated");
+            if ($.blockUI) {
+                $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
+            }
         }
         this.session.session_bind().then(function() {
             self.destroy_content();
