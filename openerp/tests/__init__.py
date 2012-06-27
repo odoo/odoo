@@ -11,6 +11,7 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 import test_expression
 import test_ir_sequence
 import test_orm
+import test_uninstall
 
 fast_suite = [
     test_ir_sequence,
