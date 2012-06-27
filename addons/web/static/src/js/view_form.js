@@ -591,22 +591,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_button_new: function() {
         var self = this;
         this.set({mode: "edit"});
-        var def = $.Deferred();
-        $.when(this.has_been_loaded).then(function() {
+        return $.when(this.has_been_loaded).pipe(function() {
             if (self.can_be_discarded()) {
                 var keys = _.keys(self.fields_view.fields);
                 if (keys.length) {
-                    self.dataset.default_get(keys).pipe(self.on_record_loaded).then(function() {
-                        def.resolve();
-                    });
-                } else {
-                    self.on_record_loaded({}).then(function() {
-                        def.resolve();
-                    });
+                    return self.dataset.default_get(keys)
+                            .pipe(self.on_record_loaded);
                 }
+                return self.on_record_loaded({});
             }
         });
-        return def.promise();
     },
     on_button_edit: function() {
         return this.set({mode: "edit"});
@@ -665,6 +659,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 values = {},
                 first_invalid_field = null;
             for (var f in self.fields) {
+                if (!self.fields.hasOwnProperty(f)) { continue; }
                 f = self.fields[f];
                 if (!f.is_valid()) {
                     form_invalid = true;
@@ -680,8 +675,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
-                for (var f in self.fields) {
-                    self.fields[f]._check_css_flags();
+                for (var g in self.fields) {
+                    if (!self.fields.hasOwnProperty(g)) { continue; }
+                    self.fields[g]._check_css_flags();
                 }
                 first_invalid_field.focus();
                 self.on_invalid();
@@ -798,10 +794,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var ids = this.get_selected_ids();
         values["id"] = ids.length > 0 ? ids[0] : false;
         _.each(this.fields, function(value_, key) {
-        	if (_.include(blacklist, key))
+        	if (_.include(blacklist, key)) {
         		return;
-            var val = value_.get_value();
-            values[key] = val;
+            }
+            values[key] = value_.get_value();
         });
         return values;
     },
@@ -973,7 +969,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 }
             });
         }
-        selector = 'form[version!="7.0"] page,form[version!="7.0"]';
     },
     render_to: function($target) {
         var self = this;
@@ -1107,7 +1102,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         if (found)
             return;
 
-        $label = $('<label/>').attr({
+        var $label = $('<label/>').attr({
             'for' : name,
             "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
             "string": $field.attr('string'),
@@ -1324,7 +1319,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         return $new_label;
     },
     handle_common_properties: function($new_element, $node) {
-        var str_modifiers = $node.attr("modifiers") || "{}"
+        var str_modifiers = $node.attr("modifiers") || "{}";
         var modifiers = JSON.parse(str_modifiers);
         var ic = null;
         if (modifiers.invisible !== undefined)
@@ -1449,24 +1444,27 @@ instance.web.form.compute_domain = function(expr, fields) {
  */
 instance.web.form.InvisibilityChangerMixin = {
     init: function(field_manager, invisible_domain) {
-        this._ic_field_manager = field_manager
+        var self = this;
+        this._ic_field_manager = field_manager;
         this._ic_invisible_modifier = invisible_domain;
         this._ic_field_manager.on("view_content_has_changed", this, function() {
-            var result = this._ic_invisible_modifier === undefined ? false :
-                instance.web.form.compute_domain(this._ic_invisible_modifier, this._ic_field_manager.fields);
-            this.set({"invisible": result});
+            var result = self._ic_invisible_modifier === undefined ? false :
+                instance.web.form.compute_domain(
+                    self._ic_invisible_modifier,
+                    self._ic_field_manager.fields);
+            self.set({"invisible": result});
         });
         this.set({invisible: this._ic_invisible_modifier === true, force_invisible: false});
         var check = function() {
-            if (this.get("invisible") || this.get('force_invisible')) {
-                this.set({"effective_invisible": true});
+            if (self.get("invisible") || self.get('force_invisible')) {
+                self.set({"effective_invisible": true});
             } else {
-                this.set({"effective_invisible": false});
+                self.set({"effective_invisible": false});
             }
         };
         this.on('change:invisible', this, check);
         this.on('change:force_invisible', this, check);
-        _.bind(check, this)();
+        check.call(this);
     },
     start: function() {
         this.on("change:effective_invisible", this, this._check_visibility);
@@ -1528,6 +1526,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         var compute_domain = instance.web.form.compute_domain;
         var to_set = {};
         for (var a in this.modifiers) {
+            if (!this.modifiers.hasOwnProperty(a)) { continue; }
             if (!_.include(["invisible"], a)) {
                 var val = compute_domain(this.modifiers[a], this.view.fields);
                 to_set[a] = val;
@@ -1731,18 +1730,18 @@ instance.web.form.FieldInterface = {
     /**
      * Get the current value of the widget.
      * 
-     * Must always return a syntaxically correct value to be passed to the "write" method of the osv class in
+     * Must always return a syntactically correct value to be passed to the "write" method of the osv class in
      * the OpenERP server, although it is not assumed to respect the constraints applied to the field.
-     * For example if the field is marqued as "required", a call to get_value() can return false.
+     * For example if the field is marked as "required", a call to get_value() can return false.
      * 
      * get_value() can also be called *before* a call to set_value() and, in that case, is supposed to
-     * return a defaut value according to the type of field.
+     * return a default value according to the type of field.
      * 
      * This method is always assumed to perform synchronously, it can not return a promise.
      * 
      * If there was no user interaction to modify the value of the field, it is always assumed that
      * get_value() return the same semantic value than the one passed in the last call to set_value(),
-     * altough the syntax can be different. This can be the case for type of fields that have a different
+     * although the syntax can be different. This can be the case for type of fields that have a different
      * syntax for "read" and "write" (example: m2o: set_value([0, "Administrator"]), get_value() => 0).
      */
     get_value: function() {},
@@ -1757,7 +1756,7 @@ instance.web.form.FieldInterface = {
      */
     is_valid: function() {},
     /**
-     * Returns true if the field holds a value which is syntaxically correct, ignoring
+     * Returns true if the field holds a value which is syntactically correct, ignoring
      * the potential semantic restrictions applied to the field.
      */
     is_syntax_valid: function() {},
@@ -1787,6 +1786,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
      * @param node
      */
     init: function(field_manager, node) {
+        var self = this
         this._super(field_manager, node);
         this.field_manager = field_manager;
         this.name = this.node.attrs.name;
@@ -1798,11 +1798,11 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         // "force_readonly"
         this.set({"readonly": this.modifiers['readonly'] === true});
         var test_effective_readonly = function() {
-            this.set({"effective_readonly": this.get("readonly") || !!this.get("force_readonly")});
+            self.set({"effective_readonly": self.get("readonly") || !!self.get("force_readonly")});
         };
         this.on("change:readonly", this, test_effective_readonly);
         this.on("change:force_readonly", this, test_effective_readonly);
-        _.bind(test_effective_readonly, this)();
+        test_effective_readonly.call(this);
         
         this.on("change:value", this, function() {
             if (! this._inhibit_on_change)
@@ -2278,6 +2278,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
 instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.$checkbox = $("input", this.$element);
         this.setupFocus(this.$checkbox);
@@ -2285,10 +2286,10 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
             this.set({'value': this.$checkbox.is(':checked')});
         }, this));
         var check_readonly = function() {
-            this.$checkbox.prop('disabled', this.get("effective_readonly"));
+            self.$checkbox.prop('disabled', self.get("effective_readonly"));
         };
         this.on("change:effective_readonly", this, check_readonly);
-        _.bind(check_readonly, this)();
+        check_readonly.call(this);
     },
     set_value: function(value_) {
         this._super.apply(this, arguments);
