@@ -525,6 +525,8 @@ instance.web.Login =  instance.web.Widget.extend({
         }
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
+        $e.find("form input[name=login]").attr("disabled", "disabled");
+        $e.find("form input[name=password]").attr("disabled", "disabled")
         this.do_login(db, login, password);
     },
     /**
@@ -557,6 +559,8 @@ instance.web.Login =  instance.web.Widget.extend({
         },function () {
         	self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
+            self.$element.find("form input[name=login]").removeAttr("disabled");
+            self.$element.find("form input[name=password]").removeAttr("disabled");
         });
     }
 });
