@@ -24,16 +24,30 @@
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Campaign">
-                <group>
-                    <group>
+                <group colspan="6" col="6">
+                    <group colspan="2">
                         <field name="name"/>
                         <field name="mode"/>
                         <field name="fixed_cost"/>
                     </group>
-                    <group>
+                    <group colspan="2">
                         <field name="object_id"/>
                         <field name="partner_field_id"/>
                         <field name="unique_field_id"/>
+                    </group>
+                    <group colspan="2">
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <group colspan="1">
+                                <button type="action"
+                                name="%(act_marketing_campaing_followup)d"
+                                string="Follow-Up" />
+                            </group>
+                            <group colspan="1">
+                                <button type="action"
+                                name="%(act_marketing_campaing_segment_opened)d"
+                                string="Segments" />
+                            </group>
+                        </div>
                     </group>
                 </group>
                 <separator string="Activities"/>
@@ -146,12 +160,7 @@
                         <field name="name"/>
                         <field name="campaign_id" on_change="onchange_campaign_id(campaign_id)"/>
                         <field name="object_id" invisible="1"/>
-                    </group>
-                    <group>
-                        <field name="ir_filter_id"/>
-                    </group>
-                    <group>
-                       <field name="sync_mode" required="True"/>
+                        <field name="sync_mode" required="True"/>
                        <label for="sync_last_date"/>
                        <div>
                            <field name="sync_last_date" class="oe_inline"/>
@@ -160,6 +169,7 @@
                        <field name="date_next_sync"/>
                     </group>
                     <group>
+                        <field name="ir_filter_id"/>
                         <field name="date_run" readonly="1"/>
                         <field name="date_done" readonly="1"/>
                     </group>
