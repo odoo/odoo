@@ -1472,15 +1472,6 @@
     </t>
     <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
 </t>
-<t t-extend="ListView.row">
-    <!-- adds back padding to row being rendered after edition, if necessary
-         (if not deletable add back padding), otherwise the row being added is
-         missing columns
-     -->
-    <t t-jquery="&gt; :last" t-operation="after">
-        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
-    </t>
-</t>
 
 <t t-name="view_editor">
     <table class="oe_view_editor">

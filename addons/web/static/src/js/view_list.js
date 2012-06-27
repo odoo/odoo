@@ -146,7 +146,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$element.addClass('oe-listview');
+        this.$element.addClass('oe-listview').css('position: relative');
         return this.reload_view(null, null, true);
     },
     /**

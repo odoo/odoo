@@ -53,7 +53,7 @@ openerp.web.list_editable = function (instance) {
             // otherwise rely on view default
             // view' @editable is handled separately as we have not yet
             // fetched and processed the view at this point.
-            this.options.editable = (
+            this.options.editable = true || (
                     ! this.options.read_only && ((force && "bottom") || this.defaults.editable));
         },
         /**
@@ -77,9 +77,24 @@ openerp.web.list_editable = function (instance) {
             }
         },
         on_loaded: function (data, grouped) {
+            var self = this, form_ready = $.when();
             // tree/@editable takes priority on everything else if present.
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
-            return this._super(data, grouped);
+            var result = this._super(data, grouped);
+            if (this.options.editable || true) {
+                // TODO: [Return], [Esc] events
+                this.form = new instance.web.FormView(this, this.dataset, false, {
+                    initial_mode: 'edit',
+                    $buttons: $(),
+                    $pager: $()
+                });
+                this.form.embedded_view = this.view_to_form_view();
+                form_ready = this.form.prependTo(this.$element).then(function () {
+                    self.form.do_hide();
+                });
+            }
+
+            return $.when(result, form_ready);
         },
         /**
          * Ensures the editable list is saved (saves any pending edition if
@@ -91,6 +106,72 @@ openerp.web.list_editable = function (instance) {
          */
         ensure_saved: function () {
             return this.groups.ensure_saved();
+        },
+        view_to_form_view: function () {
+            var view = $.extend(true, {}, this.fields_view);
+            view.arch.tag = 'form';
+            _.extend(view.arch.attrs, {
+                'class': 'oe_form_container',
+                version: '7.0'
+            });
+            _(view.arch.children).each(function (widget) {
+                var modifiers = JSON.parse(widget.attrs.modifiers || '{}');
+                widget.attrs.nolabel = true;
+                if (modifiers['tree_invisible'] || widget.tag === 'button') {
+                    modifiers.invisible = true;
+                }
+                widget.attrs.modifiers = JSON.stringify(modifiers);
+            });
+            return view;
+        },
+        /**
+         * Set up the edition of a record of the list view "inline"
+         *
+         * @param {Number} id id of the record to edit, null for new record
+         * @param {Number} index index of the record to edit in the dataset, null for new record
+         * @param {Object} cells map of field names to the DOM elements used to display these fields for the record being edited
+         */
+        edit_record: function (id, index, cells) {
+            // TODO: save previous edition if any
+            var self = this;
+            var record = this.records.get(id);
+            var e = {
+                id: id,
+                record: record,
+                cancel: false
+            };
+            this.trigger('edit:before', e);
+            if (e.cancel) {
+                return;
+            }
+            return this.form.on_record_loaded(record.attributes).pipe(function () {
+                return self.form.do_show({reload: false});
+            }).then(function () {
+                // TODO: automatic focus of ?first field
+                // TODO: [Save] button
+                // TODO: save on action button?
+                _(cells).each(function (cell, field_name) {
+                    var $cell = $(cell);
+                    var position = $cell.position();
+                    var field = self.form.fields[field_name];
+
+                    // FIXME: this is shit. Is it possible to prefilter?
+                    if (field.get('effective_readonly')) {
+                        // Readonly fields can just remain the list's, form's
+                        // usually don't have backgrounds &al
+                        field.$element.hide();
+                        return;
+                    }
+                    field.$element.show().css({
+                        top: position.top,
+                        left: position.left,
+                        width: $cell.outerWidth(),
+                        minHeight: $cell.outerHeight()
+                    });
+                });
+                self.trigger('edit:after', record, self.form)
+            });
+
         }
     });
 
@@ -147,24 +228,6 @@ openerp.web.list_editable = function (instance) {
             this.pad_table_to(5);
             return cancelled;
         },
-        /**
-         * Adapts this list's view description to be suitable to the inner form
-         * view of a row being edited.
-         *
-         * @returns {Object} fields_view_get's view section suitable for putting into form view of editable rows.
-         */
-        get_form_fields_view: function () {
-            // deep copy of view
-            var view = $.extend(true, {}, this.group.view.fields_view);
-            _(view.arch.children).each(function (widget) {
-                widget.attrs.nolabel = true;
-                if (widget.tag === 'button') {
-                    delete widget.attrs.string;
-                }
-            });
-            view.arch.attrs.col = 2 * view.arch.children.length;
-            return view;
-        },
         on_row_keyup: function (e) {
             var self = this;
             switch (e.which) {
@@ -200,81 +263,19 @@ openerp.web.list_editable = function (instance) {
             }
         },
         render_row_as_form: function (row) {
-            var self = this;
-            return this.ensure_saved().pipe(function () {
-                var record_id = $(row).data('id');
-                var $new_row = $('<tr>', {
-                        id: _.uniqueId('oe-editable-row-'),
-                        'data-id': record_id,
-                        'class': (row ? $(row).attr('class') : ''),
-                        click: function (e) {e.stopPropagation();}
-                    })
-                    .addClass('oe_form oe_form_container')
-                    .delegate('button.oe-edit-row-save', 'click', function () {
-                        self.save_row();
-                    })
-                    .delegate('button', 'keyup', function (e) {
-                        e.stopImmediatePropagation();
-                    })
-                    .keyup(function () {
-                        return self.on_row_keyup.apply(self, arguments); })
-                    .keydown(function (e) { e.stopPropagation(); })
-                    .keypress(function (e) {
-                        if (e.which === KEY_RETURN) {
-                            return false;
-                        }
-                    });
+            var record_id = $(row).data('id');
+            var index = _(this.dataset.ids).indexOf(record_id);
 
-                if (row) {
-                    $new_row.replaceAll(row);
-                } else if (self.options.editable) {
-                    var $last_child = self.$current.children('tr:last');
-                    if (self.records.length) {
-                        if (self.options.editable === 'top') {
-                            $new_row.insertBefore(
-                                self.$current.children('[data-id]:first'));
-                        } else {
-                            $new_row.insertAfter(
-                                self.$current.children('[data-id]:last'));
-                        }
-                    } else {
-                        $new_row.prependTo(self.$current);
-                    }
-                    if ($last_child.is(':not([data-id])')) {
-                        $last_child.remove();
-                    }
-                }
-                self.edition = true;
-                self.edition_id = record_id;
-                self.dataset.index = _(self.dataset.ids).indexOf(record_id);
-                if (self.dataset.index === -1) {
-                    self.dataset.index = null;
-                }
-                self.edition_form = _.extend(new instance.web.ListEditableFormView(self.view, self.dataset, false), {
-                    $element: $new_row,
-                    editable_list: self
-                });
-                // put in $.when just in case  FormView.on_loaded becomes asynchronous
-                return $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
-                    $new_row.find('> td')
-                      .end()
-                      .find('td:last').removeClass('oe-field-cell').end();
-                    // pad in case of groupby
-                    _(self.columns).each(function (column) {
-                        if (column.meta) {
-                            $new_row.prepend('<td>');
-                        }
-                    });
-                    // Add column for the save, if
-                    // there is none in the list
-                    if (!self.options.deletable) {
-                        self.view.pad_columns(
-                            1, {except: $new_row});
-                    }
-
-                    self.edition_form.do_show();
-                });
+            var cells = {};
+            row.children('td').each(function (index, el) {
+                cells[el.getAttribute('data-field')] = el
             });
+
+            // TODO: creation (record_id === null?)
+            return this.view.edit_record(
+                record_id,
+                index !== -1 ? index : null,
+                cells);
         },
         handle_onwrite: function (source_record_id) {
             var self = this;
@@ -368,76 +369,6 @@ openerp.web.list_editable = function (instance) {
         },
         new_record: function () {
             this.render_row_as_form();
-        },
-        render_record: function (record) {
-            var index = this.records.indexOf(record),
-                 self = this;
-            // FIXME: context dict should probably be extracted cleanly
-            return QWeb.render('ListView.row', {
-                columns: this.columns,
-                options: this.options,
-                record: record,
-                row_parity: (index % 2 === 0) ? 'even' : 'odd',
-                view: this.view,
-                render_cell: function () {
-                    return self.render_cell.apply(self, arguments); },
-                edited: !!this.edition_form
-            });
         }
-    });
-    
-    instance.web.ListEditableFormView = instance.web.FormView.extend({
-        init: function() {
-            this._super.apply(this, arguments);
-            this.rendering_engine = new instance.web.ListEditableRenderingEngine(this);
-            this.options.initial_mode = "edit";
-        },
-        renderElement: function() {}
-    });
-    
-    instance.web.ListEditableRenderingEngine = instance.web.form.FormRenderingEngineInterface.extend({
-        init: function(view) {
-            this.view = view;
-        },
-        set_fields_view: function(fields_view) {
-            this.fvg = fields_view;
-        },
-        set_tags_registry: function(tags_registry) {
-            this.tags_registry = tags_registry;
-        },
-        set_fields_registry: function(fields_registry) {
-            this.fields_registry = fields_registry;
-        },
-        render_to: function($element) {
-            var self = this;
-    
-            var xml = instance.web.json_node_to_xml(this.fvg.arch);
-            var $xml = $(xml);
-            
-            if (this.view.editable_list.options.selectable)
-                $("<td>").appendTo($element);
-                
-            $xml.children().each(function(i, el) {
-                var modifiers = JSON.parse($(el).attr("modifiers") || "{}");
-                var $td = $("<td>");
-                if (modifiers.tree_invisible === true)
-                    $td.hide();
-                var tag_name = el.tagName.toLowerCase();
-                var w;
-                if (tag_name === "field") {
-                    var name = $(el).attr("name");
-                    var key = $(el).attr('widget') || self.fvg.fields[name].type;
-                    var obj = self.view.fields_registry.get_object(key);
-                    w = new (obj)(self.view, instance.web.xml_to_json(el));
-                    self.view.register_field(w, $(el).attr("name"));
-                } else {
-                    var obj = self.tags_registry.get_object(tag_name);
-                    w = new (obj)(self.view, instance.web.xml_to_json(el));
-                }
-                w.appendTo($td);
-                $td.appendTo($element);
-            });
-            $(QWeb.render('ListView.row.save')).appendTo($element);
-        },
     });
 };
