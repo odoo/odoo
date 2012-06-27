@@ -25,7 +25,7 @@
                     <div class="oe_right oe_button_box">
                         <!-- Put here related buttons -->
                     </div>
-                    <field class="oe_right" name="photo" widget='image' on_change="onchange_photo(photo)"/>
+                    <field class="oe_right" name="image_small" widget='image' on_change="onchange_image(image_small)"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -136,7 +136,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
-                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>

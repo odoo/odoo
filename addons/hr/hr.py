@@ -20,11 +20,9 @@
 ##############################################################################
 
 import addons
-import io
 import logging
 from osv import fields, osv
-from PIL import Image
-import StringIO
+import tools
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -149,32 +147,34 @@ class hr_employee(osv.osv):
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
 
-    def onchange_photo(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {'photo_big': value, 'photo': value} }
-        return {'value': {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context), 'photo': self._photo_resize(cr, uid, value, context=context)} }
+    def _get_image_resized(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for hr_employee in self.browse(cr, uid, ids, context=context):
+            result[hr_employee.id] = {'image_medium': False, 'image_small': False}
+            if hr_employee.image:
+                result[hr_employee.id]['image_medium'] = tools.resize_image_medium(hr_employee.image)
+                result[hr_employee.id]['image_small'] = tools.resize_image_small(hr_employee.image)
+        return result
     
-    def _set_photo(self, cr, uid, id, name, value, args, context=None):
+    def _set_image_resized(self, cr, uid, id, name, value, args, context=None):
         if not value:
-            vals = {'photo_big': value}
+            vals = {'image': value}
         else:
-            vals = {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context)}
+            vals = {'image': tools.resize_image_big(value)}
         return self.write(cr, uid, [id], vals, context=context)
     
-    def _photo_resize(self, cr, uid, photo, heigth=180, width=150, context=None):
-        image_stream = io.BytesIO(photo.decode('base64'))
-        img = Image.open(image_stream)
-        img.thumbnail((heigth, width), Image.ANTIALIAS)
-        img_stream = StringIO.StringIO()
-        img.save(img_stream, "JPEG")
-        return img_stream.getvalue().encode('base64')
-    
-    def _get_photo(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for hr_empl in self.browse(cr, uid, ids, context=context):
-            if hr_empl.photo_big:
-                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo_big, context=context)
-        return result
+    def onchange_image(self, cr, uid, ids, value, context=None):
+        if not value:
+            return {'value': {
+                    'image': value,
+                    'image_medium': value,
+                    'image_small': value,
+                    }}
+        return {'value': {
+                    'image': tools.resize_image_big(value),
+                    'image_medium': tools.resize_image_medium(value),
+                    'image_small': tools.resize_image_small(value),
+                    }}
     
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
@@ -200,11 +200,29 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
-        'photo_big': fields.binary('Big-sized employee photo', help="This field holds the photo of the employee. The photo field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. Full-sized photo are however resized to 540x450 px."),
-        'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Employee photo', type="binary",
+        'image': fields.binary("Photo",
+            help="This field holds the photo used as image for the "\
+                 "user. The avatar field is used as an interface to "\
+                 "access this field. The image is base64 encoded, "\
+                 "and PIL-supported. It is stored as a 540x450 px "\
+                 "image, in case a bigger image must be used."),
+        'image_medium': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
+            string="Medium-sized photo", type="binary", multi="_get_image_resized",
             store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
-            }, help="Image used as photo for the employee. It is automatically resized as a 180x150 px image. A larger photo is stored inside the photo_big field."),
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized photo of the user. It is automatically "\
+                 "resized as a 180x180px image, with aspect ratio keps. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
+            string="Smal-sized photo", type="binary", multi="_get_image_resized",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized photo of the user. It is automatically "\
+                 "resized as a 50x50px image, with aspect ratio keps. "\
+                 "Use this field in form views or some kanban views."),
+        'active': fields.boolean('Active'),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
@@ -251,12 +269,12 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
-        photo_path = addons.get_module_resource('hr','images','photo.png')
-        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
+        image_path = addons.get_module_resource('hr', 'images', 'photo.png')
+        return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': 1,
-        'photo': _get_photo,
+        'image_medium': _get_photo,
         'marital': 'single',
         'color': 0,
     }
