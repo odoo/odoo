@@ -7,7 +7,9 @@
           <field name="arch" type="xml">
                <form string="Convert to Opportunity" version="7.0">
                     <header>
-                        <button name="action_apply" string="Create Opportunity" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
+                        <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <field name="action"/>
                     <group attrs="{'invisible':[('action','!=','exist')]}">
@@ -37,7 +39,9 @@
 	          <field name="arch" type="xml">
 	               <form string="Convert to Opportunity" version="7.0">
 	                    <header>
-	                        <button name="mass_convert" string="Convert into Opportunities" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
+	                        <button name="mass_convert" string="Convert into Opportunities" type="object" class="oe_highlight_on_dirty"/>
+	                        or
+                            <button string="Cancel" class="oe_link" special="cancel" />
 	                    </header>
                         <field name="action"/>
                         <field name="name" colspan="4"/>
