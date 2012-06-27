@@ -53,9 +53,6 @@ class account_period_close(osv.osv_memory):
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
 
-                    # Log message for Period
-                    for period_id, name in period_pool.name_get(cr, uid, [id]):
-                        period_pool.log(cr, uid, period_id, "Period '%s' is closed, no more modification allowed for this period." % (name))
         return {'type': 'ir.actions.act_window_close'}
 
 account_period_close()

@@ -39,6 +39,7 @@ The user can also publish notes.
         'board_view.xml',
         'board_data_admin.xml',
         'board_data_home.xml',
+        'board_mydashboard_view.xml'
     ],
     'demo_xml': [
         'board_demo.xml'

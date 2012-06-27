@@ -23,7 +23,6 @@
 import time
 from osv import osv, fields
 import decimal_precision as dp
-import netsvc
 from tools.translate import _
 
 class account_bank_statement(osv.osv):

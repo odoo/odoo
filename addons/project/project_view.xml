@@ -10,7 +10,16 @@
             web_icon_hover="images/project-hover.png"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        
+        <act_window
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_task_all"
+            name="Tasks"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="kanban,tree,form,calendar,graph"
+            view_type="form"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -31,26 +40,38 @@
                 </header>
                 <sheet string="Project" layout="auto">
                     <field name="analytic_account_id" invisible="1" required="0"/>
-                    <label for="name" class="oe_form_readonly_hidden" string="Project Name"/>
+                    <label for="name" class="oe_edit_only" string="Project Name"/>
                     <h1>
-                        <field name="name"/>
+                        <field name="name" string="Project Name"/>
                     </h1>
-                    <label for="parent_id" class="oe_form_readonly_hidden" string="Parent Project"/>
+                    <label for="parent_id" class="oe_edit_only" string="Parent Project"/>
                     <h2>
                         <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                     </h2>
                     <group>
                         <group>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                        </group><group>
-                            <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="progress_rate" widget="progressbar"/>
+                            <field name="analytic_account_id" invisible="1" required="0"/>
+                            <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
+                            <field name="privacy_visibility"/>
+                        </group>
+                        <group>
+                            <table>
+                                <tr name="use_tasks_row">
+                                    <td><group><field name="use_tasks"/></group></td>
+                                    <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
+                                </tr>
+                                <tr name="use_attachment_row">
+                                    <td/>
+                                    <td><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
+                                </tr>
+                            </table>
                         </group>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Members">
-                            <field colspan="4" name="members" nolabel="1" widget="many2many_kanban">
+                    <notebook>
+                        <page string="Team" name="team">
+                            <field colspan="4" name="members" widget="many2many_kanban">
                                 <kanban quick_create="true" create="false">
                                     <field name="name"/>
                                     <templates>
@@ -68,54 +89,23 @@
                                 </kanban>
                             </field>
                         </page>
-                        <page string="Administration">
+                        <page string="Other Info">
                             <group>
-                                <group name="kanban" string="Project Management">
-                                    <field name="use_tasks"/>
-                                </group>
-                                <group string="Performance">
+                                <group string="Administration">
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="effective_hours" widget="float_time" />
                                     <field name="resource_calendar_id"/>
                                 </group>
-                                <newline/>
-                                <group name="misc" string="Miscellaneous">
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection" required="1"/>
-                                    <field name="warn_manager"/>
+                                <group string="Miscellaneous" name="misc">
+                                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
+                                    <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Billing" groups="account.group_account_invoice">
-                            <group col="4">
-                                <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
-                                <field name="warn_customer"/>
-                                <field name="currency_id" groups="base.group_multi_company" required="1"/>
-                            </group>
-                            <group col="4">
-                                <separator colspan="2" string="Mail Header"/>
-                                <separator colspan="2" string="Mail Footer"/>
-                                <field name="warn_header" nolabel="1" colspan="2"/>
-                                <field name="warn_footer" nolabel="1" colspan="2"/>
-                            </group>
-                            <group col="3">
-                                <b>
-                                    <label string="Variables you can use for headers and footer." colspan="3"/>
-                                </b>
-                                <label string="Task: %%(name)s"/>
-                                <label string="User: %%(user_id)s"/>
-                                <label string="ID: %%(task_id)s"/>
-                                <label string="Status: %%(state)s"/>
-                                <label string="Date Start: %%(date_start)s"/>
-                                <label string="Date Stop: %%(date)s"/>
                             </group>
                         </page>
                         <page string="Tasks Stages">
                              <field name="type_ids"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="description"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -133,26 +123,24 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group>
+                       <field name="complete_name" string="Project Name"/> 
+                       <separator orientation="vertical"/>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
-                       <filter icon="gtk-media-pause" string="Template"
-                            name="Template" domain="[('state', '=','template')]" help="Templates of Projects"/>
-                       <separator orientation="vertical"/>
+                       <filter icon="gtk-media-pause" string="Template" name="Template" domain="[('state', '=','template')]" help="Templates of Projects"/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
+                       <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                        <separator orientation="vertical"/>
-                       <field name="name" string="Project Name"/>
-                       <field name="user_id" string="Project Manager">
-                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
-                       </field>
+                       <field name="user_id" string="Project Manager"/>
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />
-                    <group expand="0" string="Group By...">
-                        <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
-                         <separator orientation="vertical"/>
-                        <filter string="Parent" name="Parent"  help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
-                    </group>
+                   <group expand="0" string="Group By...">
+                       <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
+                       <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string="Parent" name="Parent"  help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
+                   </group>
                </search>
             </field>
         </record>
@@ -207,12 +195,14 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
-                                <a class="oe_kanban_menuaction oe_i">B</a>
-                                <ul class="oe_kanban_menu">
-                                    <li><a type="edit">Edit...</a></li>
-                                    <li><a type="delete">Delete</a></li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li><a type="edit">Edit...</a></li>
+                                        <li><a type="delete">Delete</a></li>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
 
@@ -348,14 +338,17 @@
                         <field name="stage_id" widget="statusbar"/>
                     </header>
                     <sheet string="Task">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name"/>
                     </h1>
+                    <label for="project_id" class="oe_edit_only"/>
+                    <h2>
+                        <field name="project_id"  on_change="onchange_project(project_id)"/>
+                    </h2>
                     <group>
                         <group>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                            <field name="project_id"  on_change="onchange_project(project_id)"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
@@ -379,15 +372,16 @@
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
-                            <group class="oe_form_subtotal_footer" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                            <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
                                 <field name="effective_hours" widget="float_time"/>
                                 <label for="remaining_hours" string="Remaining" groups="project.group_time_work_estimation_tasks"/>
                                 <div>
                                     <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" target="new" states="open,pending" icon="gtk-edit"/>
                                     <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" groups="project.group_time_work_estimation_tasks"/>
                                 </div>
-                                <field name="total_hours" widget="float_time" class="oe_form_subtotal_footer_separator"/>
+                                <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <div class="oe_clear"/>
                         </page>
                         <page string="Delegations History" groups="project.group_delegate_task">
                             <separator string="Parent Tasks"/>
@@ -586,19 +580,19 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <group>
+                        <field name="name" string="Tasks"/>
+                        <separator orientation="vertical"/>
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
                         <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
+                        <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
+                        <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" 
+                            help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                        <separator orientation="vertical"/>
                         <field name="project_id"/>
-                        <field name="user_id">
-                            <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
-                            <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                        </field>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -615,6 +609,22 @@
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
                     </group>
                 </search>
+            </field>
+        </record>
+        
+        <record id="analytic_account_inherited_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_tasks" />
+                </xpath>
             </field>
         </record>
 
@@ -676,11 +686,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
-                   <group>
-                       <filter icon="terp-check" string="Common" name="common" domain="[('case_default', '=', 1)]" help="Stages common to all projects"/>
+                    <group>
+                       <field name="name" string="Tasks Stages"/>
                        <separator orientation="vertical"/>
-                       <field name="name"/>
-                   </group>
+                       <filter icon="terp-check" string="Common" name="common" domain="[('case_default', '=', 1)]" help="Stages common to all projects"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -728,11 +738,11 @@
             <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem id="menu_project_config_project" name="Stages" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="menu_project_config_project" sequence="2"/>
+        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
         <act_window context="{'search_default_user_id': active_id, 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
@@ -744,9 +754,9 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
-                    <separator string="Project Management" colspan="4"/>
-                    <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
-                    <newline/>
+                    <group string="Project Management">
+                        <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
+                    </group>
                 </page>
             </field>
         </record>
