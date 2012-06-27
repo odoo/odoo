@@ -11,7 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Send Invitation" version="7.0">
                     <header>
-                        <button icon="gtk-go-forward" name="action_send" string="_Send" type="object" class="oe_highlight_on_dirty"  />
+                        <button name="action_send" string="_Send" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
                         <separator string="Select Partner" colspan="4"/>
