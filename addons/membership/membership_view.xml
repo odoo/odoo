@@ -60,6 +60,7 @@
                                 <field name="default_code" />
                                 <field name="type" />
                                 <field name="categ_id" />
+                                <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
                             </group>
                             <group>
                                 <field name="membership" invisible="1"/>
@@ -81,7 +82,6 @@
                                     domain="[('type', '!=', 'view')]" />
                             </group>
                         </group>
-                        <field name="taxes_id" widget="many2many_tags"/>
                         <group>
                             <field name="company_id"
                                 groups="base.group_multi_company"
