@@ -146,42 +146,44 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Work Center" version="7.0">
-                    <group col="4">
-                        <group>
-                            <field name="name"/>
-                            <field name="resource_type"/>
-                            <field name="calendar_id" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="code"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="active"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="General Information">
+                    <sheet>
+                        <group col="4">
                             <group>
-                                <group string="Capacity Information">
-                                    <field name="time_efficiency"/>
-                                    <field name="capacity_per_cycle"/>
-                                    <field name="time_cycle" widget="float_time"/>
-                                    <field name="time_start" widget="float_time"/>
-                                    <field name="time_stop" widget="float_time"/>
-                                </group>
-                                <group string="Costing Information">
-                                    <field name="product_id" on_change="on_change_product_cost(product_id)"/>
-                                    <field name="costs_hour"/>
-                                    <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="costs_cycle"/>
-                                    <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
-                                    <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
-                                </group>
+                                <field name="name"/>
+                                <field name="resource_type"/>
+                                <field name="calendar_id" widget="selection"/>
                             </group>
-                            <label for="note"/>
-                            <field name="note"/>
-                        </page>
-                    </notebook>
+                            <group>
+                                <field name="code"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="General Information">
+                                <group>
+                                    <group string="Capacity Information">
+                                        <field name="time_efficiency"/>
+                                        <field name="capacity_per_cycle"/>
+                                        <field name="time_cycle" widget="float_time"/>
+                                        <field name="time_start" widget="float_time"/>
+                                        <field name="time_stop" widget="float_time"/>
+                                    </group>
+                                    <group string="Costing Information">
+                                        <field name="product_id" on_change="on_change_product_cost(product_id)"/>
+                                        <field name="costs_hour"/>
+                                        <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="costs_cycle"/>
+                                        <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
+                                        <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
+                                    </group>
+                                </group>
+                                <label for="note"/>
+                                <field name="note"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -237,16 +239,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing Work Centers" version="7.0">
-                    <group col="4" string="General Information">
-                        <field colspan="4" name="name"/>
-                        <field name="sequence"/>
-                        <field name="workcenter_id"/>
-                        <field name="cycle_nbr"/>
-                        <field name="hour_nbr" widget="float_time"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>
-                    <label for="note"/>
-                    <field name="note"/>
+                    <sheet>
+                        <group col="4" string="General Information">
+                            <field colspan="4" name="name"/>
+                            <field name="sequence"/>
+                            <field name="workcenter_id"/>
+                            <field name="cycle_nbr"/>
+                            <field name="hour_nbr" widget="float_time"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                        <label for="note"/>
+                        <field name="note"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -257,25 +261,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing" version="7.0">
-                    <group col="4">
-                        <group>
-                            <field name="name"/>
-                            <field name="code"/>
+                    <sheet>
+                        <group col="4">
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="location_id"/>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                <field name="active"/>
+                           </group>
                         </group>
-                        <group>
-                            <field name="location_id"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            <field name="active"/>
-                       </group>
-                    </group>
-                    <notebook>
-                        <page string="Work Center Operations">
-                           <field name="workcenter_lines"/>
-                        </page>
-                        <page string="Notes">
-                           <field name="note"/>
-                        </page>
-                    </notebook>
+                        <notebook>
+                            <page string="Work Center Operations">
+                                <field name="workcenter_lines"/>
+                                <label string="Notes"/>
+                                <field name="note"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -350,12 +355,12 @@
 	                        <group>
 	                            <field name="type"/>
 	                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-	                            <label name="product_uso_qty" />
-                                <div>
-                                <field name="product_uos_qty" 
-                                    groups="product.group_uos" 
-                                    class="oe_inline"/>
-                                <field name="product_uos" groups="product.group_uos" colspan="4" class="oe_inline"/>
+	                            <label for="product_uos_qty" groups="product.group_uos" string="Product UoS Quantity"/>
+                                <div groups="product.group_uos" >
+                                    <field name="product_uos_qty" 
+                                        class="oe_inline"/>
+                                    <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/> 
+                                    <field name="product_uos" class="oe_inline"/>
                                 </div>
 	                        </group>
 	                    </group>
@@ -364,7 +369,7 @@
 	                            <field name="bom_lines" widget="one2many_list">
 	                                <tree string="Components" editable="bottom">
 	                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
-	                                    <field name="product_qty"/>
+	                                    <field name="product_qty" string="Product Quantity"/>
 	                                    <field name="product_uom"/>
 	                                    <field name="name" invisible="1"/>
 	                                    <field name="date_start"/>
@@ -459,7 +464,7 @@
                     <field name="code"/>
                     <field name="product_id" string="Component Product"/>
                     <field name="bom_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_qty" string="Product Quantity"/>
                     <field name="product_uom"/>
                     <field name="type"/>
                     <field name="method"/>
@@ -650,12 +655,11 @@
                         </group>
                         <group>
                             <field name="user_id"/>
-                            <label name="product_uso_qty" />
-                            <div>
-                                <field name="product_uos_qty" 
-                                    groups="product.group_uos" 
-                                    class="oe_inline"/>
-                                <field name="product_uos" groups="product.group_uos" colspan="4" class="oe_inline"/>
+                            <label for="product_uos_qty" groups="product.group_uos" string="Product UoS Quantity"/>
+                            <div groups="product.group_uos">
+                                <field name="product_uos_qty" class="oe_inline"/>
+                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
+                                <field name="product_uos" class="oe_inline"/>
                             </div>
                         </group>
                     </group>
@@ -669,82 +673,94 @@
                                     <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                                     <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                 </group>
-                             </group>
-                                <separator string="Products to Consume"/>
-                                <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
-                                    <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
-                                        <field name="product_id" />
-                                        <field name="product_qty"  string="Quantity"/>
-                                        <field name="product_uom"  string="Unit of Measure"/>
-                                        <field name="location_id"  string="Source Loc."/>
-                                        <field name="state" invisible="1"/>
-                                        <button name="%(stock.move_consume)d"
-                                            string="Consume Products" type="action"
-                                            icon="gtk-go-forward" context="{'consume': True}"
-                                            states="draft,waiting,confirmed,assigned" />
-                                        <button
-                                               name="%(stock.track_line)d"
-                                               string="Split in Serial Numbers"
-                                               type="action" icon="gtk-justify-fill"
-                                               states="draft,waiting,confirmed,assigned" />
-                                        <button name="%(stock.move_scrap)d"
-                                            string="Scrap Products" type="action"
-                                            icon="gtk-convert" context="{'scrap': True}"
-                                            states="draft,waiting,confirmed,assigned"/>
-                                    </tree>
-                                </field>
-                                <separator string="Consumed Product"/>
-                                <field name="move_lines2" domain="[('state','in', ('done', 'cancel'))]">
-                                   <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
-                                       <field name="product_id" readonly="1"/>
-                                       <field name="product_qty" readonly="1"/>
-                                       <field name="product_uom" readonly="1" string="Unit of Measure"/>
-                                       <field name="prodlot_id" context="{'product_id': product_id}"/>
-                                       <field name="state" invisible="1"/>
-                                       <field name="scrapped" invisible="1"/>
-                                       <button
-                                           name="%(stock.move_scrap)d"
-                                           string="Scrap Products" type="action"
-                                           icon="gtk-convert"
-                                           states="done,cancel"/>
-                                   </tree>
-                                </field>
+                            </group>
+                            <group col="4">
+                                <group col="1" colspan="2">
+                                    <separator string="Products to Consume"/>
+                                    <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                        <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
+                                            <field name="product_id" />
+                                            <field name="product_qty"  string="Quantity"/>
+                                            <field name="product_uom"  string="Unit of Measure"/>
+                                            <field name="location_id"  string="Source Loc."/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.move_consume)d"
+                                                string="Consume Products" type="action"
+                                                icon="gtk-go-forward" context="{'consume': True}"
+                                                states="draft,waiting,confirmed,assigned" />
+                                            <button
+                                                   name="%(stock.track_line)d"
+                                                   string="Split in Serial Numbers"
+                                                   type="action" icon="gtk-justify-fill"
+                                                   states="draft,waiting,confirmed,assigned" />
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group col="1" colspan="2">
+                                    <separator string="Consumed Product"/>
+                                    <field name="move_lines2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
+                                       <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
+                                           <field name="product_id" readonly="1"/>
+                                           <field name="product_qty" readonly="1"/>
+                                           <field name="product_uom" readonly="1" string="Unit of Measure"/>
+                                           <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                           <field name="state" invisible="1"/>
+                                           <field name="scrapped" invisible="1"/>
+                                           <button
+                                               name="%(stock.move_scrap)d"
+                                               string="Scrap Products" type="action"
+                                               icon="gtk-convert"
+                                               states="done,cancel"/>
+                                       </tree>
+                                    </field>
+                                </group>
+                            </group>
                         </page>
                         <page string="Finished Products">
-                            <separator string="Products to Produce"/>
-                            <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
-                                <tree string="Products to Finish">
-                                    <field name="product_id" />
-                                    <field name="product_qty"/>
-                                    <field name="product_uom"  string="Unit of Measure"/>
-                                    <field name="state" invisible="1"/>
-                                    <button name="%(stock.action_partial_move_server)d"
-                                        string="Partial"
-                                        type="action" states="confirmed,assigned"
-                                        icon="gtk-justify-fill"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action"
-                                        icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" />
-                                </tree>
-                            </field>
-                            <separator string="Produced Products"/>
-                            <field name="move_created_ids2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
-                                <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
-                                    <field name="product_id" readonly="1"/>
-                                    <field name="product_qty" readonly="1"/>
-                                    <field name="product_uom" readonly="1" string="Unit of Measure"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
-                                    <field name="prodlot_id" context="{'product_id': product_id}"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <field name="state" invisible="1"/>
-                                    <button name="%(stock.track_line)d"
-                                         string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action" icon="gtk-convert"
-                                        states="done,cancel" />
-                                </tree>
-                            </field>
+                            <group col="4">
+                                <group col="1" colspan="2">
+                                    <separator string="Products to Produce"/>
+                                    <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                        <tree string="Products to Finish">
+                                            <field name="product_id" />
+                                            <field name="product_qty"/>
+                                            <field name="product_uom"  string="Unit of Measure"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.action_partial_move_server)d"
+                                                string="Partial"
+                                                type="action" states="confirmed,assigned"
+                                                icon="gtk-justify-fill"/>
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned" />
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group col="1" colspan="2">
+                                    <separator string="Produced Products"/>
+                                    <field name="move_created_ids2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
+                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
+                                            <field name="product_id" readonly="1"/>
+                                            <field name="product_qty" readonly="1"/>
+                                            <field name="product_uom" readonly="1" string="Unit of Measure"/>
+                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
+                                            <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                            <field name="scrapped" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.track_line)d"
+                                                 string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action" icon="gtk-convert"
+                                                states="done,cancel" />
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
                         </page>
                         <page string="Work Orders">
                             <button name="action_compute" states="draft"
