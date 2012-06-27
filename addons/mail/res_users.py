@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+from lxml import etree
 
 class res_users(osv.osv):
     """ Update of res.users class

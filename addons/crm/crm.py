@@ -21,6 +21,7 @@
 
 import base64
 import time
+from lxml import etree
 from osv import fields
 from osv import osv
 import tools

@@ -22,7 +22,7 @@
 from base_status.base_stage import base_stage
 import time
 from datetime import datetime, timedelta
-
+from lxml import etree
 from osv import fields, osv
 from crm import crm
 import tools

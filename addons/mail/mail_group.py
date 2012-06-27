@@ -30,6 +30,7 @@ from PIL import Image
 import StringIO
 import tools
 from tools.translate import _
+from lxml import etree
 
 class mail_group(osv.osv):
     """
