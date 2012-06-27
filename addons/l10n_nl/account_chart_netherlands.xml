@@ -4129,7 +4129,9 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 
 <!-- Binnen Nederland -->
 <!-- Verkoop BTW -->
+
         <record id="btw_0" model="account.tax.template">
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Verkopen/omzet onbelast (nul-tarief)</field>
             <field name="description">0% BTW</field>
@@ -4142,6 +4144,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">sale</field>
         </record>
         <record id="btw_6" model="account.tax.template">
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Verkopen/omzet laag</field>
             <field name="description">6% BTW</field>
@@ -4156,6 +4159,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">sale</field>
         </record>
         <record id="btw_19" model="account.tax.template">
+            <field name="sequence">5</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Verkopen/omzet hoog</field>
             <field name="description">19% BTW</field>
@@ -4171,6 +4175,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         </record>
 <!-- TODO - nakijken btw overig op percentage-->
         <record id="btw_overig" model="account.tax.template">
+            <field name="sequence">15</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Verkopen/omzet overig</field>
             <field name="description">variabel BTW</field>
@@ -4187,6 +4192,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 
 <!--Inkoop BTW -->
         <record id="btw_6_buy" model="account.tax.template">
+            <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW te vorderen laag (inkopen)</field>
             <field name="description">6% BTW</field>
@@ -4199,6 +4205,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
         <record id="btw_19_buy" model="account.tax.template">
+            <field name="sequence">5</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW te vorderen hoog (inkopen)</field>
             <field name="description">19% BTW</field>
@@ -4211,6 +4218,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
         <record id="btw_overig_buy" model="account.tax.template">
+            <field name="sequence">15</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW te vorderen overig (inkopen)</field>
             <field name="description">variabel BTW</field>
@@ -4224,6 +4232,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         </record>
 <!--BTW verlegd-->
 	<record id="btw_verk_0" model="account.tax.template">
+	       <field name="sequence">15</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW af te dragen verlegd (verkopen)</field>
             <field name="description">0% BTW verlegd</field>
@@ -4236,6 +4245,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
         <record id="btw_ink_0" model="account.tax.template">
+            <field name="sequence">15</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW af te dragen verlegd (inkopen)</field>
             <field name="description">19% BTW verlegd</field>
@@ -4249,6 +4259,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
         </record>
 				        <record id="btw_ink_0_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">BTW af te dragen verlegd (inkopen1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4261,6 +4272,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_ink_0_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">BTW af te dragen verlegd (inkopen2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4273,6 +4285,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
         <record id="btw_ink2_0" model="account.tax.template">
+            <field name="sequence">15</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW te vorderen verlegd (inkopen)</field>
             <field name="description">19% BTW verlegd</field>
@@ -4286,6 +4299,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
         </record>
 				        <record id="btw_ink2_0_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">BTW te vorderen verlegd (inkopen1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4298,6 +4312,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_ink2_0_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">BTW te vorderen verlegd (inkopen2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4312,9 +4327,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 <!-- Binnen de EU -->
 <!-- BTW inkoop -->
         <record id="btw_I_6" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU laag</field>
-	    <field name="description">6% BTW import binnen EU</field>
+            <field name="description">6% BTW import binnen EU</field>
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4323,6 +4339,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
 				        <record id="btw_I_6_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import binnen EU laag(1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4335,6 +4352,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_I_6_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import binnen EU laag(2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4347,9 +4365,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
         <record id="btw_I_19" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU hoog</field>
-	    <field name="description">19% BTW import binnen EU</field>
+            <field name="description">19% BTW import binnen EU</field>
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4358,6 +4377,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
 				        <record id="btw_I_19_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import binnen EU hoog(1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4370,6 +4390,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_I_19_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import binnen EU hoog(2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4382,9 +4403,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
         <record id="btw_I_overig" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU overig</field>
-	    <field name="description">0% BTW import binnen EU</field>
+            <field name="description">0% BTW import binnen EU</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4393,6 +4415,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
 				        <record id="btw_I_overig_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import binnen EU overig(1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4405,6 +4428,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_I_overig_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import binnen EU overig(2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4418,9 +4442,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				        </record>
 <!-- BTW verkoop -->				        
         <record id="btw_X0" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Verkopen export binnen EU</field>
-	    <field name="description">BTW export binnen EU</field>
+            <field name="description">BTW export binnen EU</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
@@ -4430,9 +4455,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">sale</field>
         </record>
         <record id="btw_X2" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Installatie/afstandsverkopen binnen EU</field>
-	    <field name="description">Inst./afst.verkopen binnen EU</field>
+            <field name="description">Inst./afst.verkopen binnen EU</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
@@ -4445,9 +4471,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 <!-- Buiten de EU -->
 <!-- BTW inkoop -->
         <record id="btw_E1" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import buiten EU laag</field>
-	    <field name="description">BTW import buiten EU</field>
+            <field name="description">BTW import buiten EU</field>
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4456,6 +4483,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
 				        <record id="btw_E1_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import buiten EU laag(1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4468,6 +4496,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_E1_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import buiten EU laag(2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4480,9 +4509,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
         <record id="btw_E2" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import buiten EU hoog</field>
-	    <field name="description">BTW import buiten EU</field>
+            <field name="description">BTW import buiten EU</field>
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4491,6 +4521,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
 				        <record id="btw_E2_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import buiten EU hoog(1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4503,6 +4534,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_E2_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import buiten EU hoog(2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4515,9 +4547,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
         <record id="btw_E_overig" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import buiten EU overig</field>
-	    <field name="description">BTW import buiten EU</field>
+            <field name="description">BTW import buiten EU</field>
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4526,6 +4559,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">purchase</field>
         </record>
 				        <record id="btw_E_overig_1" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import buiten EU overig(1)</field>
 				            <field eval="1.00" name="amount"/>
@@ -4538,6 +4572,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type_tax_use">purchase</field>
 				        </record>
 				        <record id="btw_E_overig_2" model="account.tax.template">
+				            <field name="sequence">99</field>
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
 				            <field name="name">Inkopen import buiten EU overig(2)</field>
 				            <field eval="-1.00" name="amount"/>
@@ -4551,9 +4586,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				        </record>
 <!-- BTW Verkoop -->
         <record id="btw_X1" model="account.tax.template">
+            <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Verkopen export buiten EU</field>
-	    <field name="description">BTW export buiten EU</field>
+            <field name="description">BTW export buiten EU</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
