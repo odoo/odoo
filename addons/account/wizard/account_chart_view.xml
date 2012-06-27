@@ -9,12 +9,13 @@
                 <form string="Account charts" version="7.0">
                     <header>
                         <button icon="terp-gtk-go-back-rtl" string="Open Charts" name="account_chart_open_window" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                     </header>
-                    <group colspan="4">
+                    <group col="4">
                         <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)"/>
+                        <label align="0.7" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
+                    </group>
+                    <group>
                         <field name="target_move"/>
-                        <label align="0.7" colspan="4" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
                         <separator string="Periods" colspan="4"/>
                         <field name="period_from"/>
                         <field name="period_to"/>
@@ -24,7 +25,7 @@
         </record>
 
         <record id="action_account_chart" model="ir.actions.act_window">
-            <field name="name">Chart of Accounts</field>
+            <field name="name">Select an Accounting Setup</field>
             <field name="res_model">account.chart</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -35,6 +36,7 @@
 
         <menuitem icon="STOCK_INDENT" action="action_account_chart"
             id="menu_action_account_tree2"
+            name="Chart of Accounts"
             parent="account.menu_finance_charts" />
     </data>
 </openerp>
