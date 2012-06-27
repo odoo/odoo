@@ -90,13 +90,41 @@ openerp.web_linkedin = function(instance) {
                     if (self.$element.find("input").val()) {
                         self.$element.find('#loader').show();
                         $('.linkedin_icon').css('display', 'none');
+                        var firstNames = [];
+                        var lastNames = [];
+                        var text = self.$element.find("input").val().split(' ');
                         /* People Search */
-                        IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
-                        .params({
-                            "keywords": self.$element.find("input").val(),
-                            "count" : 4
-                        })
-                        .result( self.do_fetch_detail );
+                        if (text.length == 2) {
+                            firstNames.push(text[0]);
+                            lastNames.push(text[1]);
+                            IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
+                            .params({
+                                "first-name": firstNames[0],
+                                "last-name": lastNames[0],
+                                "count" : 4
+                            })
+                            .result( self.do_fetch_detail );
+                            IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
+                            .params({
+                                "first-name": lastNames[0],
+                                "last-name": firstNames[0],
+                                "count" : 4
+                            })
+                            .result( self.do_fetch_detail );
+                        } else {
+                            IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
+                            .params({
+                                "first-name": self.$element.find("input").val(),
+                                "count" : 4
+                            })
+                            .result( self.do_fetch_detail );
+                            IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
+                            .params({
+                                "last-name": self.$element.find("input").val(),
+                                "count" : 4
+                            })
+                            .result( self.do_fetch_detail );
+                        }
                         /* Company Search */
                         IN.API.Raw("/company-search:(companies:(id,name,description,industry,logo-url,website-url,locations,twitter-id))")
                         .params({
@@ -208,7 +236,7 @@ openerp.web_linkedin = function(instance) {
                 this.resultcompany = result;
             }
             this.removeTemplate( 1 );
-            if (this.msg_Counter == 2) {
+            if (this.msg_Counter == 3) {
                 this.notification.warn(_t("Linkedin Search"), _t("Record Not Found."));
                 this.$element.find('#loader').hide();
                 self.linkedin_icon_color();
