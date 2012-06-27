@@ -27,6 +27,14 @@ $colour4: #8a89ba
     font-weight: normal
     font-style: normal
 
+@mixin reset()
+    border: none
+    padding: 0
+    margin: 0
+    background: none
+    @include radius(none)
+    @include box-shadow(none)
+
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -135,9 +143,10 @@ $colour4: #8a89ba
     li
         list-style-type: none
     input, textarea, select
-        padding: 4px
+        padding: 1px 4px
         border: 1px solid #ccc
         @include radius(3px)
+        background: white
     img
         vertical-align: middle
     h4
@@ -232,6 +241,16 @@ $colour4: #8a89ba
         @include vertical-gradient(#DF6B66, #BF3A33)
         //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    .oe_form_dirty
+        .oe_highlight_on_dirty
+            color: white
+            background: #dc5f59
+            font-weight: bold
+        button.oe_highlight_on_dirty
+            @include vertical-gradient(#dc5f59, #b33630)
+            @include box-shadow(none)
+            &:hover
+                background: #ED6F6A
     .oe_title
         width: 55%
     .oe_title:after
@@ -250,6 +269,17 @@ $colour4: #8a89ba
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
             border: none
+    .oe_button.oe_link
+        @include reset()
+        img
+            display: none
+        span
+            @include reset()
+            color: #8A89BA
+            font-weight: bold
+            &:hover
+                text-decoration: underline
+
     //.oe_edit_only 
     // }}}
     // Tooltips {{{
@@ -1120,6 +1150,11 @@ $colour4: #8a89ba
                         position: absolute
                         top: 0
                         right: 5px
+            .oe_searchview_dashboard
+                form
+                    display: none
+                    margin-top: 2px
+
             .oe_searchview_advanced
                 form
                     display: none
@@ -1205,14 +1240,6 @@ $colour4: #8a89ba
         input, select, textarea
             background-color: #F66 !important
             border: 1px solid #D00 !important
-    .oe_form_button_save_dirty
-        color: white
-        background: #dc5f59
-        @include vertical-gradient(#dc5f59, #b33630)
-        @include box-shadow(none)
-        font-weight: bold
-        &:hover
-            background: #ED6F6A
     .oe_form_editable
         .oe_highlight
             color: #404040
@@ -1559,21 +1586,26 @@ $colour4: #8a89ba
     .oe_form .oe_form_field_one2many > .oe_view_manager
         .oe_list_pager_single_page
             display: none
-    .oe_form_field_one2many > .oe_view_manager
-        .oe_header_row_top
-            display: none
-        .oe_view_manager_header2
-            td
-                padding: 0px 8px
-                line-height: 16px
-                .oe_i
-                    font-size: 13px
-                .oe_pager_group
-                    height: auto
+    .oe_form_field_one2many
+        // TODO: oe_form_field_one2many_list?
+        .oe-listview .oe-edit-row-save
+            background-image: url(/web/static/src/img/iconset-b-remove.png)
+
+        &> .oe_view_manager
+            .oe_header_row_top
+                display: none
+            .oe_view_manager_header2
+                td
+                    padding: 0px 8px
                     line-height: 16px
-                    li
+                    .oe_i
+                        font-size: 13px
+                    .oe_pager_group
                         height: auto
                         line-height: 16px
+                        li
+                            height: auto
+                            line-height: 16px
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe-listview

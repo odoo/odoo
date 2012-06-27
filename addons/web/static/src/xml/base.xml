@@ -684,7 +684,7 @@
             <button type="button" class="oe_button oe_form_button_create">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
+            <button type="button" class="oe_button oe_form_button_save oe_highlight_on_dirty">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
         </span>
     </t>
 </div>
@@ -1238,7 +1238,6 @@
     <optgroup label="-- Actions --">
         <option value="advanced_filter">Add Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
-        <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>
     </optgroup>
 </t>
@@ -1249,16 +1248,7 @@
         <p>(Any existing filter with the same name will be replaced)</p>
     </div>
 </t>
-<t t-name="SearchView.add_to_dashboard">
-    <div>
-        <p><b>Select Dashboard to add this filter to:</b></p>
-        <select style="width: 100%; margin-right: 1em;">
-            <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
-        </select>
-        <p><b>Title of new Dashboard item:</b></p>
-        <input type="text" style="width: 100%; margin-right: 1em;"/>
-    </div>
-</t>
+
 <t t-name="SearchView.render_lines">
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
@@ -1397,6 +1387,20 @@
     <div>
     </div>
 </div>
+<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
+    <h4>Add to Dashboard</h4>
+    <form>
+         <input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/>
+         <button class="oe_apply" type="submit">save</button>
+    </form>
+</div>
+<t t-name="SearchView.addtodashboard.selection">
+    <select  title = "Select Dashboard to add this filter to">
+        <t t-foreach="selections" t-as="element">
+        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
+        </t>
+    </select>
+</t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
     <form>
@@ -1411,8 +1415,7 @@
     <li>
         <select class="searchview_extended_prop_field">
             <t t-foreach="widget.attrs.fields" t-as="field">
-                <option t-if="typeof field.store === 'undefined' || field.store || field.fnct_search"
-                        t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
+                <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
                         t-att-value="field.name">
                     <t t-esc="field.string"/>
                 </option>
@@ -1495,7 +1498,7 @@
                 <tr>
                     <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                         <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                            src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                            t-att-src='_s + "/web/static/src/img/collapse.gif"' width="16" height="16" border="0"/>
                     </td>
                     <td style="cursor: pointer;">
                         <a style="text-decoration:none" href="javascript:void(0);">
@@ -1507,22 +1510,22 @@
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
-            <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+            <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
         </td>
         <t t-if="rec.child_id.length">
             <t t-set="data" t-value="rec.child_id"/>
@@ -1546,7 +1549,6 @@
 <t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>
 </t>
-
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
