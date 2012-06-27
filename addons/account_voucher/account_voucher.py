@@ -52,7 +52,16 @@ class account_voucher(osv.osv):
                     paid = True
             res[voucher.id] = paid
         return res
-
+    def untaxed_amount(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        amount = 0.0
+        for voucher in self.browse(cr, uid, ids, context=context):
+            for line in voucher.line_cr_ids:
+                amount += line.amount
+            res[voucher.id] = amount
+        return res
+ 
+    
     def _get_type(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -312,6 +321,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'amount_untaxed': fields.function(untaxed_amount, digits_compute=dp.get_precision('Account'), string='Untaxed'),
     }
     _defaults = {
         'period_id': _get_period,
@@ -381,6 +391,7 @@ class account_voucher(osv.osv):
         return True
 
     def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context=None):
+        
         context = context or {}
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
@@ -398,7 +409,6 @@ class account_voucher(osv.osv):
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
             voucher_total += line_amount
-
         total = voucher_total
         total_tax = 0.0
         if tax_id:
@@ -415,7 +425,7 @@ class account_voucher(osv.osv):
 
         res.update({
             'amount':total or voucher_total,
-            'tax_amount':total_tax
+            'tax_amount':total_tax    
         })
         return {
             'value':res

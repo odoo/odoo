@@ -131,11 +131,12 @@
                                 </group>
                                 <group>
                                     <group class="oe_subtotal_footer" string="Total">
+                                       <field name="amount_untaxed"/>
                                         <field name="tax_id" 
                                             on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
                                             widget="selection"
                                             domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
-                                        <field name="tax_amount" nolabel="1"/>
+                                        <field name="tax_amount"/>
                                         <field name="amount" class="oe_subtotal_footer_separator" />
                                         <button type="object"
                                             icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax"
@@ -279,6 +280,7 @@
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
                                     </div>
                                     -->
+                                    
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
                                         widget="selection"
