@@ -247,10 +247,10 @@
                         <field name="type" class="oe_inline oe_right"/>
                     </h1>
                     <label for="datas" class="oe_edit_only" attrs="{'invisible':[('type','=','url')]}"/>
-                    <label for="url" class="oe_edit_only" attrs="{'invisible':[('type','=','binary')]}" />
+                    <label for="url" class="oe_edit_only" attrs="{'invisible':[('type','=','binary')]}"/>
                     <h2>
                         <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline"/>
-                        <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                        <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
                         <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}" class="oe_inline"/>
                     </h2>
                     <group>
@@ -258,7 +258,7 @@
                             <field name="user_id"/>
                             <field name="parent_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="index_content"/>
+                            <field name="index_content" string="Tab Indexed Content"/>
                         </group>
                         <group>
                             <field name="res_id" invisible="True"/>
