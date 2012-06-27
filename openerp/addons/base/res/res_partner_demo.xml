@@ -16,7 +16,6 @@
         </record>
         <record id="res_partner_category_3" model="res.partner.category">
             <field name="name">Employee</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_4" model="res.partner.category">
             <field name="name">Gold Partner</field>
@@ -32,7 +31,7 @@
         </record>
         <record id="res_partner_category_7" model="res.partner.category">
             <field name="name">IT Services</field>
-            <field name="parent_id" ref="res_partner_category_4"/>
+            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_8" model="res.partner.category">
             <field name="name">Consultancy Services</field>
@@ -40,11 +39,11 @@
         </record>
         <record id="res_partner_category_9" model="res.partner.category">
             <field name="name">Components Buyer</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_10" model="res.partner.category">
             <field name="name">Important Customer</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_11" model="res.partner.category">
             <field name="name">Services</field>
@@ -162,7 +161,7 @@
 
         <record id="res_partner_7" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
-            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_10')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_10')])]" name="category_id"/>
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field name="is_company">1</field>
