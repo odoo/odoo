@@ -184,10 +184,11 @@
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
                                 <div class="oe_subtotal_footer_separator oe_inline" colspan="2">
+                                    <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline oe_left"/>
                                     <field name="amount_total"/>
                                 </div>
                             </group>
-                            <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline"/>
+                            
                             <div class="oe_clear"/>
                             <label for="notes"/>
                             <field name="notes"/>
