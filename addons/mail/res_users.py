@@ -64,7 +64,7 @@ class res_users(osv.osv):
         res_id = model_pool.get_object( cr, uid, "mail", "model_res_users")
         data.update({'alias_name': data.get('login'),
                      'alias_model_id': res_id.id})
-        name = alias_pool.create_unique_alias(cr, uid, data, context=context)
+        name = alias_pool.create_unique_alias(cr, uid, data, sequence=False ,context=context)
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         user = self.browse(cr, uid, [user_id], context=context)[0]
         alias_pool.write(cr, uid, [user.alias_id.id], {"alias_force_thread_id": user.id}, context)
@@ -78,14 +78,13 @@ class res_users(osv.osv):
         return user_id
     
     def write(self, cr, uid, ids, vals, context=None):
-        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
         # if login of user have been changed then change alias of user also.
-        if vals.get('login'):
-            alias_id = self.browse(cr, uid, ids[0]).alias_id
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-            name = vals.get('login') + '@' + domain
-            self.pool.get('mail.alias').write(cr, uid, [alias_id.id], {'alias_name': name}, context=context)
-        return result
+        if 'login' in vals.keys():
+            for user in self.browse(cr, uid, ids, context=context):
+                domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+                name = "%s@%s"%(vals['login'], domain)
+                self.pool.get('mail.alias').write(cr, uid, [user.alias_id.id], {'alias_name': name}, context=context)
+        return super(res_users, self).write(cr, uid, ids, vals, context=context)
 
     
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):

@@ -36,7 +36,7 @@ from osv import fields
 from tools.translate import _
 from openerp import SUPERUSER_ID
 
-_logger = logging.getLogger('mail')
+_logger = logging.getLogger(__name__)
 
 def format_date_tz(date, tz=None):
     if not date:

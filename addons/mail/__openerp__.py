@@ -71,7 +71,7 @@ The main features are:
         'mail_alias_view.xml',
     ],
     'demo_xml': [
-        'mail_demo.xml',
+        'user_mail_alias_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

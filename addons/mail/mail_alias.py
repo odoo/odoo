@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from tools.translate import _
 
 class mail_alias(osv.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
@@ -72,14 +73,34 @@ class mail_alias(osv.Model):
         ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
     ]
     
-    def create_unique_alias(self, cr, uid, values, sequence = 1 ,context=None):
+    def create_unique_alias(self, cr, uid, values, sequence=1 ,context=None):
         config_parameter_pool = self.pool.get("ir.config_parameter")
         domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)
-        prob_alias = "%s%s@%s"%(values['alias_name'], sequence, domain)
-        search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
-        if search_alias:    
-            values = self.create_unique_alias(cr, uid, values, sequence+1, context)
+        if sequence:
+            prob_alias = "%s%s@%s"%(values['alias_name'], sequence, domain)
+            search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
+            if search_alias:    
+                values = self.create_unique_alias(cr, uid, values, sequence+1, context)
+            else:
+                values.update({'alias_name': prob_alias})
+                return values
         else:
-            values.update({'alias_name': prob_alias})
-            return values
-        
+            return values.update({'alias_name': "%s@%s"%(values['alias_name'],domain)})
+
+    def write(self, cr, uid, ids, vals, context=None):
+        config_parameter_pool = self.pool.get("ir.config_parameter")
+        #TODO: Do we need to check specail charactor like email address parsing
+        #     Like allowing . and _ only.
+        if 'alias_name' in vals.keys():
+            domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)
+            #check the new alias, If only alias then concat the domain
+            #if we have alias_name with random domain we will concat our domain.
+            if vals.get('alias_name').count("@") == 0:
+                vals.update({'alias_name': "%s@%s"%(vals.get('alias_name'), domain)})
+            elif vals.get('alias_name').count("@") == 1:
+                name =  "%s@%s"%(vals.get('alias_name').split("@")[0], domain)
+                vals.update({'alias_name': name})
+            else:
+                raise osv.except_osv(_("Warning !"), _("Invalid mail alias name.\n It should be e.g. 'alias@domain.com' or only alias name 'alias'."))
+        return super(mail_alias, self).write(cr, uid, ids, vals, context=context)
+
