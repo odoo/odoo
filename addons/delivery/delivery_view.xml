@@ -46,10 +46,14 @@
                                       <field name="name"/>
                                  </tree>
                                  <form string="Delivery grids" version="7.0">
-                                     <group col="4">
-                                         <field name="name"/>
-                                         <field name="active"/>
-                                         <field name="sequence"/>
+                                     <group>
+                                         <group>
+                                             <field name="name"/>
+                                         </group>
+                                         <group>
+                                             <field name="active"/>
+                                             <field name="sequence"/>
+                                         </group>
                                      </group>
                                      <notebook>
                                         <page string="Grid definition">
@@ -148,9 +152,10 @@
             <field name="arch" type="xml">
                 <form string="Grid Lines" version="7.0">
                     <sheet>
-                        <div class="oe_title" colspan="4">
-                            <field name="name" />
-                        </div>
+                        <label for="name" class="oe_edit_only"/>
+
+                            <field name="name" col="4"/>
+
                         <group col="4">
                             <group>
                                 <label string="Condition" for="type"/>
