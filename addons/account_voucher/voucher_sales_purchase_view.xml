@@ -119,7 +119,7 @@
                         <page string="Sales Information">
                             <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection" groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -167,6 +167,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <footer>
+                        <field name="message_ids" widget="ThreadView"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -181,7 +184,11 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
-            <field name="help">When you sell products to a customer, you can give him a sales receipt or an invoice. When the sales receipt is confirmed, it creates journal items automatically and you can record the customer payment related to this sales receipt.</field>
+            <field name="help">
+                Click here to create a sale receipt.
+                &lt;p&gt;
+                When the sales receipt is confirmed, you can record the customer payment related to this sales receipt.
+            </field>
         </record>
         <record id="action_sale_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -259,7 +266,7 @@
                         <page string="Bill Information">
                             <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}">
                                 <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
+                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"  groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -313,6 +320,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <footer>
+                        <field name="message_ids" widget="ThreadView"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -325,6 +335,11 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
+            <field name="help">
+                Click here to create a purchase receipt.
+                &lt;p&gt;
+                When the purchase receipt is confirmed, you can record the supplier payment related to this purchase receipt.
+            </field>
         </record>
         <record id="action_purchase_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
