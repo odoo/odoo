@@ -241,19 +241,18 @@
         <field name="arch" type="xml">
             <form string="Documents" version="7.0">
                 <sheet>
-                    <div>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" class="oe_inline"/>
-                            <field name="type" class="oe_inline"/>
-                        </h1>
-                    </div>
-                    <div>
-                        <label for="datas" class="oe_edit_only"/>
-                        <h2>
-                            <field name="datas" filename="datas_fname"/>
-                        </h2>
-                    </div>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <field name="type" class="oe_inline oe_right"/>
+                    </h1>
+               
+                    <label for="datas" class="oe_edit_only"/>
+                    <h2>
+                        <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline"/>
+                        <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                        <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}" class="oe_inline"/>
+                    </h2>
                     <group>
                         <group>
                             <field name="user_id"/>
