@@ -1621,12 +1621,11 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        var $button = this.$element.find('button');
-        $button.click(this.on_click);
+        this.$element.click(this.on_click);
         if (this.node.attrs.help || instance.connection.debug) {
             this.do_attach_tooltip();
         }
-        this.setupFocus($button);
+        this.setupFocus(this.$element);
     },
     on_click: function() {
         var self = this;

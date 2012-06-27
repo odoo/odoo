@@ -1286,7 +1286,8 @@ class SearchView(View):
                 del filter['context']
                 del filter['domain']
         return filters
-
+    
+     
     @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
         to_eval = common.nonliterals.CompoundContext(context_to_save)

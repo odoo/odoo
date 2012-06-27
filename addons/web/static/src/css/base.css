@@ -91,11 +91,12 @@
   list-style-type: none;
 }
 .openerp input, .openerp textarea, .openerp select {
-  padding: 4px;
+  padding: 1px 4px;
   border: 1px solid #cccccc;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
+  background: white;
 }
 .openerp img {
   vertical-align: middle;
@@ -307,6 +308,38 @@
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border: none;
+}
+.openerp .oe_button.oe_link {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-radius: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.openerp .oe_button.oe_link img {
+  display: none;
+}
+.openerp .oe_button.oe_link span {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-radius: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #8a89ba;
+  font-weight: bold;
+}
+.openerp .oe_button.oe_link span:hover {
+  text-decoration: underline;
 }
 .openerp.oe_tooltip {
   font-size: 12px;
@@ -1439,6 +1472,10 @@
   position: absolute;
   top: 0;
   right: 5px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_dashboard form {
+  display: none;
+  margin-top: 2px;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced form {
   display: none;

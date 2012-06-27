@@ -27,6 +27,14 @@ $colour4: #8a89ba
     font-weight: normal
     font-style: normal
 
+@mixin reset()
+    border: none
+    padding: 0
+    margin: 0
+    background: none
+    @include radius(none)
+    @include box-shadow(none)
+
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -135,9 +143,10 @@ $colour4: #8a89ba
     li
         list-style-type: none
     input, textarea, select
-        padding: 4px
+        padding: 1px 4px
         border: 1px solid #ccc
         @include radius(3px)
+        background: white
     img
         vertical-align: middle
     h4
@@ -260,6 +269,17 @@ $colour4: #8a89ba
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
             border: none
+    .oe_button.oe_link
+        @include reset()
+        img
+            display: none
+        span
+            @include reset()
+            color: #8A89BA
+            font-weight: bold
+            &:hover
+                text-decoration: underline
+
     //.oe_edit_only 
     // }}}
     // Tooltips {{{
@@ -1130,6 +1150,11 @@ $colour4: #8a89ba
                         position: absolute
                         top: 0
                         right: 5px
+            .oe_searchview_dashboard
+                form
+                    display: none
+                    margin-top: 2px
+
             .oe_searchview_advanced
                 form
                     display: none
