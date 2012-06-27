@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="BVR Import" version="7.0">
                     <header>
-                        <button name="import_bvr" string="Import" type="object" icon="gtk-ok" colspan="2" class="oe_highlight_on_dirty"  />
+                        <button name="import_bvr" string="Import" type="object" colspan="2" class="oe_highlight_on_dirty"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
                         <field name="file"/>
