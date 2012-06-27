@@ -121,7 +121,7 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias'),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
     }
     
     def _get_stage_common(self, cr, uid, context):
@@ -161,14 +161,16 @@ class crm_case_section(osv.osv):
     def create(self, cr, uid, vals, context=None):
         model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        model, res_id = model_pool.get_object_reference( cr, uid, "crm", "model_crm_lead")
-        vals.update({'alias_name': "sales",
-                     'alias_model_id': res_id})
-        name = alias_pool.create_unique_alias(cr, uid, vals, context=context)
-        res = super(crm_case_section, self).create(cr, uid, vals, context)
-        record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{'section_id':res,'type':'lead'}},context)
-        return res
+        if not vals.get('alias_id'):
+            model, res_id = model_pool.get_object_reference( cr, uid, "crm", "model_crm_lead")
+            vals.update({'alias_name': "sales",
+                         'alias_model_id': res_id})
+            alias_pool.create_unique_alias(cr, uid, vals, context=context)
+            res = super(crm_case_section, self).create(cr, uid, vals, context)
+            record = self.read(cr, uid, res, context)
+            alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{'section_id':res,'type':'lead'}},context)
+            return res
+        return super(crm_case_section, self).create(cr, uid, vals, context)
 
 class crm_case_categ(osv.osv):
     """ Category of Case """
