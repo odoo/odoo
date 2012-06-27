@@ -190,4 +190,15 @@ class hr_analytic_timesheet(osv.osv):
 
 hr_analytic_timesheet()
 
+class account_analytic_account(osv.osv):
+
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    
+    _columns = {
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+    }
+
+account_analytic_account()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
