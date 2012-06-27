@@ -84,17 +84,17 @@
 	Resource: res.partner.category
 	-->
 
-	<record id="base.res_partner_category_15" model="res.partner.category">
-		<field name="name">IT sector</field>
-		<field name="parent_id" ref="base.res_partner_category_12"/>
-	</record>
-	<record id="base.res_partner_category_16" model="res.partner.category">
-		<field name="name">Telecom sector</field>
-		<field name="parent_id" ref="base.res_partner_category_12"/>
-	</record>
 	<record id="base.res_partner_category_17" model="res.partner.category">
+		<field name="name">IT sector</field>
+		<field name="parent_id" ref="base.res_partner_category_10"/>
+	</record>
+	<record id="base.res_partner_category_18" model="res.partner.category">
+		<field name="name">Telecom sector</field>
+		<field name="parent_id" ref="base.res_partner_category_10"/>
+	</record>
+	<record id="base.res_partner_category_19" model="res.partner.category">
 		<field name="name">HR sector</field>
-		<field name="parent_id" ref="base.res_partner_category_12"/>
+		<field name="parent_id" ref="base.res_partner_category_10"/>
 	</record>
 
 
@@ -126,20 +126,20 @@
 		<field name="name">Gold partners</field>
 		<field name="answer_yes" eval="[(6,0,[partner_quality3])]" />
 		<field name="parent_id" ref="crm.crm_segmentation0"/>
-		<field name="categ_id" ref="base.res_partner_category_5"/>
+		<field name="categ_id" ref="base.res_partner_category_4"/>
 		<field name="exclusif">True</field>
 		<field name="profiling_active">True</field>
 	</record>
 	<record model="crm.segmentation" id="crm_segmentation4">
 		<field name="name">HR partners</field>
 		<field name="answer_yes" eval="[(6,0,[sector1])]" />
-		<field name="categ_id" ref="base.res_partner_category_17"/>
+		<field name="categ_id" ref="base.res_partner_category_18"/>
 		<field name="profiling_active">True</field>
 	</record>
 	<record model="crm.segmentation" id="crm_segmentation5">
 		<field name="name">Telecom partners</field>
 		<field name="answer_yes" eval="[(6,0,[sector2])]" />
-		<field name="categ_id" ref="base.res_partner_category_16"/>
+		<field name="categ_id" ref="base.res_partner_category_17"/>
 		<field name="profiling_active">True</field>
 	</record>
 	<record model="crm.segmentation" id="crm_segmentation6">
@@ -155,31 +155,31 @@
 
 	<record model="res.partner" id="base.res_partner_1">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality1'), ref('nb_employees2'), ref('sector2'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_3'), ref('base.res_partner_category_16')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_3'), ref('base.res_partner_category_17')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_2">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality1'), ref('nb_employees1'), ref('sector1'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_3'), ref('base.res_partner_category_17')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_3'), ref('base.res_partner_category_18')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_12">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality3'), ref('nb_employees3'), ref('sector3'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_5'), ref('base.res_partner_category_15')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_4'), ref('base.res_partner_category_15')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_16">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality2'), ref('nb_employees1'), ref('sector2'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_4'), ref('base.res_partner_category_16')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_4'), ref('base.res_partner_category_17')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_17">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality3'), ref('nb_employees3'), ref('sector3'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_5'), ref('base.res_partner_category_15')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_4'), ref('base.res_partner_category_15')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_12">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality2'), ref('nb_employees2'), ref('sector2'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_4'), ref('base.res_partner_category_16')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_4'), ref('base.res_partner_category_17')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_18">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality1'), ref('nb_employees1'), ref('sector1'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_3'), ref('base.res_partner_category_17')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_3'), ref('base.res_partner_category_18')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_2">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality1'), ref('nb_employees2'), ref('sector3'), ref('partner_tiny1')])]" />
@@ -191,15 +191,15 @@
 	</record>
 	<record model="res.partner" id="base.res_partner_4">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality3'), ref('nb_employees1'), ref('sector2'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_1'), ref('base.res_partner_category_16')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_1'), ref('base.res_partner_category_17')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_5">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality3'), ref('nb_employees2'), ref('sector1'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_1'), ref('base.res_partner_category_17')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_1'), ref('base.res_partner_category_18')])]"/>
 	</record>
 	<record model="res.partner" id="base.res_partner_6">
 		<field name="answers_ids" eval="[(6,0,[ref('partner_quality3'), ref('nb_employees3'), ref('sector2'), ref('partner_tiny1')])]" />
-		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_1'), ref('base.res_partner_category_16')])]"/>
+		<field name="category_id" eval="[(6,0,[ref('base.res_partner_category_1'), ref('base.res_partner_category_17')])]"/>
 	</record>
 
 </data>
