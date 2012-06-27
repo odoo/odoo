@@ -608,6 +608,18 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        # if alias_model have been changed then change alias_model_id of alias also.
+        if vals.get('alias_model'):
+            module = 'project'
+            if vals.get('alias_model') == "model_project_issue":
+                module = 'project_issue'
+            model = self.pool.get('ir.model.data').get_object( cr, uid, module, vals.get('alias_model'))
+            alias_id = self.browse(cr, uid, ids[0], context).alias_id
+            self.pool.get('mail.alias').write(cr, uid, [alias_id.id], {'alias_model_id': model.id}, context=context)
+        return super(project, self).write(cr, uid, ids, vals, context=context)
+    
 project()
 
 class account_analytic_account(osv.osv):
