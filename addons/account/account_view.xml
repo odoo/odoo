@@ -974,25 +974,6 @@
         <!--
     Entries lines
     -->
-<!--         <record id="view_move_line_extended_form_view" model="ir.ui.view">
-            <field name="name">account.move.line.form</field>
-            <field name="model">account.move.line</field>
-            <field name="type">form</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Journal Item" layout="manual"  version="7.0">
-                    <h3>
-                    <field name="partner_id" widget="many2one_pager"/>
-                    </h3>
-                    <group col="6">
-                        <field name = "last_reconciliation_date" col="3"/>
-                        <field name = "lastest_entry" col="3"/>                   
-                        <button string="Reconcile"  name="%(action_view_account_move_line_reconcile)d" widget="list_button" type="action" />
-                        <button string="Nothing to Reconcile" name="%(action_account_unreconcile)d" widget="list_button" type="action"/>   
-                    </group>
-                </form>
-            </field>
-        </record> -->
         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
