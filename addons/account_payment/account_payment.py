@@ -87,9 +87,9 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_scheduled': fields.date('Scheduled date if fixed', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
+        'date_scheduled': fields.date('Scheduled Date', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
         'reference': fields.char('Reference', size=128, required=1, states={'done': [('readonly', True)]}),
-        'mode': fields.many2one('payment.mode', 'Payment mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
+        'mode': fields.many2one('payment.mode', 'Payment Mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
@@ -103,9 +103,9 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
-        'date_created': fields.date('Creation date', readonly=True),
-        'date_done': fields.date('Execution date', readonly=True),
+            ], "Preferred Date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+        'date_created': fields.date('Creation Date', readonly=True),
+        'date_done': fields.date('Execution Date', readonly=True),
         'company_id': fields.related('mode', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
 
