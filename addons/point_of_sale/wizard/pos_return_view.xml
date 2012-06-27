@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
                     <header>
-                        <button icon='gtk-ok' name= "create_returns" string="Return Products" type="object" class="oe_highlight_on_dirty"  />
+                        <button name= "create_returns" string="Return Products" type="object" class="oe_highlight_on_dirty"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                  </form>
             </field>

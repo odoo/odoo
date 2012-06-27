@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0">
                     <header>
-                        <button icon="gtk-ok" name="send_mail" string="Send" type="object" class="oe_highlight_on_dirty"  />
+                        <button name="send_mail" string="Send" type="object" class="oe_highlight_on_dirty"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="6" colspan="4">
                         <field name="model" invisible="1"/>
