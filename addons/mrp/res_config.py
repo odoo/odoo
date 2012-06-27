@@ -28,7 +28,7 @@ class mrp_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_planning': fields.boolean('Master Manufacturing Order Schedule',
+        'module_stock_planning': fields.boolean('Master Production Schedule',
             help ="""This allows to create a manual procurement plan apart of the normal MRP scheduling,
                 which works automatically based on minimum stock rules.
                 This installs the module stock_planning."""),
@@ -68,6 +68,13 @@ class mrp_config_settings(osv.osv_memory):
         'group_mrp_properties': fields.boolean("Allow Several BoMs per Product",
             implied_group='product.group_mrp_properties',
             help="""The selection of the right Bill of Material to use will depend on the  properties specified on the sale order and the Bill of Material."""),
+        'module_product_manufacturer': fields.boolean("Define Manufacturers on Products",
+            help="""This allows you to define the following for a product:
+                    * Manufacturer
+                    * Manufacturer Product Name
+                    * Manufacturer Product Code
+                    * Product Attributes.
+                This installs the module product_manufacturer."""),        
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
