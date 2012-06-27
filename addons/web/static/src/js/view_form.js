@@ -2564,8 +2564,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             fade: true,
         });
         
-        this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
-        this.$follow_button = $(".oe-m2o-cm-button", this.$element);
+        this.$drop_down = this.$element.find(".oe_m2o_drop_down_button");
+        this.$follow_button = $(".oe_m2o_cm_button", this.$element);
         
         this.$follow_button.click(function() {
             if (!self.get('value')) {
@@ -3251,8 +3251,8 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         return this._super.apply(this, arguments).then(function () {
             // Replace the "Save Row" button with "Cancel Edition"
             self.edition_form.$element
-                .undelegate('button.oe-edit-row-save', 'click')
-                .delegate('button.oe-edit-row-save', 'click', function () {
+                .undelegate('button.oe_list_edit_row_save', 'click')
+                .delegate('button.oe_list_edit_row_save', 'click', function () {
                     self.cancel_pending_edition();
                 });
 
@@ -3852,7 +3852,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
-        this.view_form.appendTo(this.$element.find(".oe-form-view-popup-form-placeholder"));
+        this.view_form.appendTo(this.$element.find(".oe_popup_form"));
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
@@ -3983,7 +3983,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                         'read_only': true,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
-            self.view_list.appendTo($(".oe-select-create-popup-view-list", self.$element)).pipe(function() {
+            self.view_list.appendTo($(".oe_popup_list", self.$element)).pipe(function() {
                 self.view_list.do_show();
             }).pipe(function() {
                 self.searchview.do_search();
@@ -4005,7 +4005,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe-select-create-popup-view-list", self.$element));
+        this.searchview.appendTo($(".oe_popup_list", self.$element));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -4167,9 +4167,9 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
-        this.$element.find('input.oe-binary-file').change(this.on_file_change);
-        this.$element.find('button.oe_binary_file_save').click(this.on_save_as);
-        this.$element.find('.oe-binary-file-clear').click(this.on_clear);
+        this.$element.find('input.oe_form_binary_file').change(this.on_file_change);
+        this.$element.find('button.oe_form_binary_file_save').click(this.on_save_as);
+        this.$element.find('.oe_form_binary_file_clear').click(this.on_clear);
     },
     human_filesize : function(size) {
         var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -4186,10 +4186,10 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
 
         if ($(e.target).val() !== '') {
-            this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
-            this.$element.find('form.oe-binary-form').submit();
-            this.$element.find('.oe-binary-progress').show();
-            this.$element.find('.oe-binary').hide();
+            this.$element.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
+            this.$element.find('form.oe_form_binary_form').submit();
+            this.$element.find('.oe_form_binary_progress').show();
+            this.$element.find('.oe_form_binary').hide();
         }
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
@@ -4201,8 +4201,8 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             this.filename = name;
             this.on_file_uploaded_and_valid.apply(this, arguments);
         }
-        this.$element.find('.oe-binary-progress').hide();
-        this.$element.find('.oe-binary').show();
+        this.$element.find('.oe_form_binary_progress').hide();
+        this.$element.find('.oe_form_binary').show();
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
@@ -4212,7 +4212,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
         } else if (this._dirty_flag) {
-            var link = this.$('.oe_binary_file_save_data')[0];
+            var link = this.$('.oe_form_binary_file_save_data')[0];
             link.download = this.filename || "download.bin"; // Works on only on Google Chrome
             //link.target = '_blank';
             link.href = "data:application/octet-stream;base64," + value;

@@ -8,7 +8,7 @@ instance.web.views.add('kanban', 'instance.web_kanban.KanbanView');
 instance.web_kanban.KanbanView = instance.web.View.extend({
     template: "KanbanView",
     display_name: _lt('Kanban'),
-    default_nr_columns: 3,
+    default_nr_columns: 1,
     view_type: "kanban",
     quick_create_class: "instance.web_kanban.QuickCreate",
     number_of_color_schemes: 10,
@@ -798,10 +798,10 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
                 self.quick_add();
             }
         });
-        $(".oe-kanban-quick_create_add", this.$element).click(function () {
+        $(".oe_kanban_quick_create_add", this.$element).click(function () {
             self.quick_add();
         });
-        $(".oe-kanban-quick_create_close", this.$element).click(function () {
+        $(".oe_kanban_quick_create_close", this.$element).click(function () {
             self.trigger('close');
         });
         self.$input.keyup(function(e) {

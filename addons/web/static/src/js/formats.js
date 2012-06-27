@@ -309,7 +309,7 @@ instance.web.format_cell = function (row_data, column, options) {
             '</button>', {
                 title: column.string || '',
                 additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
-                    'disabled="disabled" class="oe-listview-button-disabled"' : '',
+                    'disabled="disabled" class="oe_list_button_disabled"' : '',
                 prefix: instance.connection.prefix,
                 icon: column.icon,
                 alt: column.string || ''
