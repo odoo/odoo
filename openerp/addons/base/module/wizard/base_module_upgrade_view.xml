@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="System Update" version="7.0">
                     <header>
-                        <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward" class="oe_highlight_on_dirty"  />
+                        <button name="upgrade_module" string="Update" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group>
 	                    <label string="Your system will be updated."/>

@@ -8,9 +8,9 @@
           <form version="7.0">
              <header>
                <button name="action_next" type="object"
-                       string="Apply" icon="gtk-go-forward" class="oe_highlight_on_dirty"  />
+                       string="Apply" class="oe_highlight_on_dirty"  />
                <button name="action_skip" type="object" special="cancel"
-                       string="Cancel" icon="gtk-jump-to"/>
+                       string="Cancel" class="oe_link"/>
              </header>
              <group string="res_config_contents"/>
           </form>
@@ -25,7 +25,9 @@
         <form string="Next Configuration Step" version="7.0">
             <header>
                 <button name="action_next" type="object"
-                        string="Continue" icon="gtk-go-forward" class="oe_highlight_on_dirty"  />
+                        string="Continue" class="oe_highlight_on_dirty"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel" />
             </header>
             <group>
                 <field name="note"/>
@@ -41,7 +43,9 @@
       <field name="arch" type="xml">
         <form version="7.0">
             <header>
-                <button name="action_next" icon="gtk-go-forward" type="object" string="Install Modules"  class="oe_highlight_on_dirty"  />
+                <button name="action_next" type="object" string="Install Modules"  class="oe_highlight_on_dirty"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel" />
             </header>
             <group>
                 <separator string="title" colspan="4"/>

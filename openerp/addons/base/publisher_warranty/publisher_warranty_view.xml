@@ -40,11 +40,12 @@
                             <field name="check_opw"/>
                         </group>
                         <group col="2" colspan="3">
-                            <button name="check_validity" icon="camera_test.png
-" string="Validate" type="object"
+                            <button name="check_validity" string="Validate" type="object"
                             attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
-                            <button name="check_validity" icon="camera_test.png" string="Refresh Validation Dates" type="object"
+                            <button name="check_validity" string="Refresh Validation Dates" type="object"
                             attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel" />
                         </group>
                     </group>
                   </sheet>
@@ -95,7 +96,9 @@
             <field name="arch" type="xml">
                 <form string="Register a Contract" version="7.0">
                     <header>
-                        <button name="action_validate" string="Register" type="object" icon="gtk-apply" states="draft" class="oe_highlight_on_dirty"  />
+                        <button name="action_validate" string="Register" type="object" states="draft" class="oe_highlight_on_dirty"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group colspan="4" col="8">
                         <group colspan="1">

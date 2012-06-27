@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Synchronize Terms" version="7.0">
                     <header>
-                        <button icon="gtk-ok" name="act_update" string="Update" type="object" class="oe_highlight_on_dirty"  />
+                        <button name="act_update" string="Update" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group col="8">
                         <group colspan="3">

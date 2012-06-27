@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Export Translations" version="7.0">
                     <header>
-                        <button icon="gtk-ok" name="act_getfile" string="_Export" type="object" states="choose" class="oe_highlight_on_dirty"  />
+                        <button name="act_getfile" string="_Export" type="object" states="choose" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="8">
                         <group colspan="3">
