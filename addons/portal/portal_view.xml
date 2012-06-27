@@ -66,16 +66,12 @@ the portal's users.
             </field>
         </record>
 
-        <record id="action_news" model="ir.actions.client">
+        <record id="action_news" model="ir.actions.act_window">
             <field name="name">News</field>
-            <field name="tag">mail.all_feeds</field>
-        </record>
-
-        <record id="action_about" model="ir.actions.act_window">
-            <field name="name">About</field>
-            <field name="res_model">res.company</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="base.view_company_form" />
+            <field name="res_model">mail.group</field>
+            <field name="res_id" eval="ref('portal.company_news_feed')"/>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="mail.view_group_form"/>
         </record>
 
 
@@ -96,14 +92,8 @@ the portal's users.
                     from a menuitem, so we can't use this shortcut element and 
                     use an explicit record element instead
                     -->
-                    <record id="portal_company_news" model="ir.ui.menu">
-                        <field name="name">News</field>
-                        <field name="action" ref="action_news"/>
-                        <field name="parent_id" ref="portal_company"/>
-                        <field name="sequence">10</field>
-                    </record>
-                    <menuitem name="About" id="portal_company_about" 
-                        parent="portal_company" action="action_about" sequence="50"/>
+                    <menuitem name="News" id="portal_company_news" 
+                        parent="portal_company" sequence="10" action="action_news"/>
                 <menuitem name="Orders" id="portal_orders" 
                     parent="menu_portal" sequence="20"/>
                 <menuitem name="Invoices and Payments" id="portal_invoices_payements" 
