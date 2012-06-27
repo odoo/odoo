@@ -25,7 +25,6 @@ from functools import partial
 
 import pytz
 
-import io, StringIO
 from lxml import etree
 from lxml.builder import E
 import netsvc
@@ -33,7 +32,6 @@ import openerp
 import openerp.exceptions
 from osv import fields,osv
 from osv.orm import browse_record
-from PIL import Image
 import pooler
 import random
 from service import security
@@ -349,7 +347,7 @@ class users(osv.osv):
         'password' : '',
         'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
         'context_tz': lambda self, cr, uid, context: context.get('tz', False),
-        'image': _get_image,
+        'image_medium': _get_image,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
