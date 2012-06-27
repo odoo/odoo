@@ -165,10 +165,10 @@ openerp.web_linkedin = function(instance) {
             });
             $("#register").click(function() {
                 var key = $("#apikey").val();
-                if(key.length){
+                if(key){
                     var user = new instance.web.DataSet(self, "res.users");
                     user.call("set_linkedin_api_key", [key]);
-                    self.dialog.remove(),
+                    self.dialog.remove();
                     //self.__parentedParent.reload();
                 }
                 else {
