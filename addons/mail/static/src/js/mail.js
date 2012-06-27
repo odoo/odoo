@@ -296,7 +296,7 @@ openerp.mail = function(session) {
             if (record.type == 'email') {
                 record.mini_url = ('/mail/static/src/img/email_icon.png');
             } else { 
-                record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]);
+                record.mini_url = this.thread_get_avatar('res.users', 'image_small', record.user_id[0]);
             }
             // body text manipulation
             record.body = this.do_clean_text(record.body);
@@ -368,7 +368,7 @@ openerp.mail = function(session) {
         },
         
         display_current_user: function () {
-            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.params.uid));
+            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'image_small', this.params.uid));
         },
         
         do_comment: function () {
@@ -575,7 +575,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_followers h4').html('Followers (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
-                var mini_url = self.thread_get_avatar('res.users', 'avatar', record.id);
+                var mini_url = self.thread_get_avatar('res.users', 'image_small', record.id);
                 $('<li><img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '"/>' +
                   '<a href="#" class="oe_mail_internal_link" data-res-model="res.users" data-res-id="' + record.id + '">' + record.name + '</a></li>').appendTo(user_list);
             });
