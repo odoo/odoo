@@ -16,9 +16,11 @@
                     </group>
                     <group>
                         <field name="target_move"/>
-                        <separator string="Periods" colspan="4"/>
-                        <field name="period_from"/>
-                        <field name="period_to"/>
+                        <label for="period_from" string="Periods"/>
+                        <div>
+                            <field name="period_from" class="oe_inline"/>-
+                            <field name="period_to" class="oe_inline"/>
+                        </div>
                     </group>
                 </form>
             </field>
