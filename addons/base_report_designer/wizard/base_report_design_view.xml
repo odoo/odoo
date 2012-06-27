@@ -8,11 +8,15 @@
             <field name="arch" type="xml">
             <form string="Get a report" version="7.0">
                 <header>
-                    <button name="get_report" string="Continue" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
-                    <button name="upload_report" string="Upload the modified report" type="object" icon="gtk-go-forward" class="oe_highlight_on_dirty"  />
+                    <button name="get_report" string="Continue" type="object" class="oe_highlight_on_dirty"/>
+                    <button name="upload_report" string="Upload the modified report" type="object" class="oe_highlight_on_dirty"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
-                <separator string="Select your report" colspan="4"/>
-                <field name="report_id"/>
+                <group>
+                    <separator string="Select your report" colspan="4"/>
+                    <field name="report_id"/>
+                </group>
             </form>
             </field>
        </record>

@@ -22,7 +22,7 @@
                         <field name="company_id" colspan="4" widget="selection" attrs="{'invisible' : [('has_default_company', '=', True)]}"/><!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                         <label for="date_start" string="Date Range"/>
                         <div>
-                            <field name="date_start" on_change="on_change_start_date(date_start)" class="oe_inline"/> -
+                            <field name="date_start" on_change="on_change_start_date(date_start)" class="oe_inline"/>
                             <field name="date_stop" class="oe_inline"/>
                         </div>
                         <field name="period"/>

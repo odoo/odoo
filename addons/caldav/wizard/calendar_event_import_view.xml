@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Import ICS" version="7.0">
                     <header>
-                        <button  icon="gtk-ok"  name="process_imp_ics"  string="_Import" type="object" class="oe_highlight_on_dirty"  />
+                        <button name="process_imp_ics"  string="_Import" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group colspan="4" >
                          <separator string="Select ICS File"/>

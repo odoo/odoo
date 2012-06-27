@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Close Period" version="7.0">
                     <header>
-                        <button  icon="terp-gtk-go-back-rtl" string="Close Period" name="data_save" type="object" class="oe_highlight_on_dirty"  />
+                        <button string="Close Period" name="data_save" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <separator string="Are you sure?" colspan="4"/>
                     <group>
