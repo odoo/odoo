@@ -24,7 +24,7 @@ from osv import fields, osv
 class purchase_config_settings(osv.osv_memory):
     _inherit = 'purchase.config.settings'
     _columns = {
-        'limit_amount': fields.integer('Double Validation Limit',required=True,
+        'limit_amount': fields.integer('Limit to Require a Second Approval',required=True,
             help="Amount after which validation of purchase is required."),
     }
 

@@ -25,6 +25,7 @@ import StringIO
 import odt2txt
 import sys, zipfile, xml.dom.minidom
 import logging
+_logger = logging.getLogger(__name__)
 
 def _to_unicode(s):
     try:
@@ -101,9 +102,9 @@ class DocIndex(indexer):
             (data, _) = pop.communicate()
             return _to_unicode(data)
         except OSError:
-            logger = logging.getLogger('document.DocIndex')
-            logger.warn("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
-            logger.debug("Trace of the failed file indexing attempt: ", exc_info=True)
+            
+            _logger.warn("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
+            _logger.debug("Trace of the failed file indexing attempt: ", exc_info=True)
             return False
     
 cntIndex.register(DocIndex())
