@@ -1281,15 +1281,19 @@
                 </header>
                 <sheet string="Journal Entries" layout="auto">
                     <group col="4">
-                        <field name="name" readonly="True"/>
-                        <field name="ref"/>
-                        <field name="journal_id"/>
-                        <field name="period_id"/>
-                        <field name="to_check"/>
-                        <field name="date"/>
-                        <field name="company_id" required="1" groups="base.group_multi_company"/>
-                        <field name="partner_id" invisible="1"/>
-                        <field name="amount" invisible="1"/>
+                       <group>
+                         <field name="name" readonly="True"/>
+                         <field name="journal_id"/>
+                         <field name="period_id"/>
+                         <field name="company_id" required="1" groups="base.group_multi_company"/>
+                         <field name="partner_id" invisible="1"/>
+                       </group>
+                       <group>
+                           <field name="ref"/>
+                           <field name="date"/>
+                          <field name="to_check"/>
+                          <field name="amount" invisible="1"/>
+                       </group>	
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
@@ -1381,8 +1385,7 @@
                                     <field name="reconcile_partial_id"/>
                                 </tree>
                             </field>
-                            <separator string="Internal Note"/>
-                            <field name="narration" colspan="4" nolabel="1" height="50"/>
+                            <field name="narration" colspan="4" placeholder="Add an internal note." nolabel="1" height="50"/>
                         </page>
                     </notebook>
                     </sheet>
