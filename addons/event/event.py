@@ -326,7 +326,7 @@ class event_registration(osv.osv):
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
-        'user_id': fields.many2one('res.users', 'Attendee (user)', states={'done': [('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'User', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),

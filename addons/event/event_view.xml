@@ -71,7 +71,7 @@
                 	<div class="oe_right oe_button_box">
 	                    <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
 	                </div>
-                <!--div class="oe_right" style="height: 200px"></div-->
+                
                 <div class="oe_title" style="width: 650px" >
 	            	<label for="name" class="oe_edit_only"/>
 		            <group colspan="6" col="6">
@@ -99,6 +99,7 @@
 	                   	</group>
                      </group>
                 </div>
+                <!-- <div class="oe_right" style="height: 200px"></div> -->
                 <notebook>
                     <page string="Event Description">
                         <field name="note" colspan="4" nolabel="1"/>
@@ -404,11 +405,11 @@
                             <field name="name" invisible="1"/>
                             <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
                             <label for="email" string="E-Mail"/>
-                            <group colspan="1">
-                                <field name="email" invisible="1"/>
+                            <group col="2">
+                                <field name="email" nolabel="1" class="oe_inline"/>
                                 <button string="Send New Email"
                                 name="%(mail.action_email_compose_message_wizard)d"
-                                icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
+                                icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action" class="oe_inline"/>
                             </group>
                         </group>
                         <group colspan="2">
