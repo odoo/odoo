@@ -68,6 +68,7 @@ module named account_voucher.
         'wizard/account_period_close_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
+        'account_move_line_extended.xml',
         'account_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',

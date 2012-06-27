@@ -48,7 +48,8 @@ instance.account.extend_actionmanager = instance.web.ActionManager.include({
 instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
     init: function(parent, action) {
         this._super.apply(this,arguments);
-        this.dataset_form = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        //Fix me: pass hard coded model name, find the way to fetch it from server
+        this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.partner.info', action.context, action.domain);
     },
     start : function(){
         this._super()
@@ -66,9 +67,7 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
             obj_from_view;
         view_id = this.action.extended_form_view_id[0]
         from_view = this.registry.get_object('form_clone');
-        this.dataset_form.context.extended_from = true
         this.dataset_loaded  = this.dataset_form.read_slice()
-        this.dataset_form.context.extended_from = false
         obj_from_view = new from_view(self, this.dataset_form, view_id, options={});
         obj_from_view.template = 'ExtendedFormView' 
         view_promise = obj_from_view.appendTo(this.$element.find('.oe_extended_form_view'))
