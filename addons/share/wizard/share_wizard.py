@@ -668,7 +668,8 @@ class share_wizard(osv.osv_memory):
         """Creates the appropriate share group and share users, and populates
            result_line_ids of wizard_data with one line for each user.
 
-           :return: the new group id (to which the shared access should be granted)
+           :return: a tuple composed of the new group id (to which the shared access should be granted),
+                the ids of the new share users that have been created and the ids of the existing share users
         """
         group_id = self._create_share_group(cr, uid, wizard_data, context=context)
         # First create any missing user, based on the email addresses provided
@@ -739,7 +740,7 @@ class share_wizard(osv.osv_memory):
         all_relations = obj0 + obj1 + obj2
         self._link_or_copy_current_user_rules(cr, current_user, group_id, all_relations, context=context)
         # B.
-        main_domain = wizard_data.domain if wizard_data.domain != '[]' else DOMAIN_ALL
+        main_domain = wizard_data.domain if wizard_data.domain != '[]' else str(DOMAIN_ALL)
         self._create_or_combine_sharing_rule(cr, current_user, wizard_data,
                      group_id, model_id=model.id, domain=main_domain,
                      restrict=True, context=context)
