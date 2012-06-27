@@ -19,6 +19,7 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -59,7 +60,7 @@
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="code"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -71,50 +72,11 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_account_analytic_account_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.form</field>
-            <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Analytic Account" version="7.0">
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name" colspan="4"/>
-                            <field name="parent_id" on_change="on_change_parent(parent_id)"/>
-                            <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
-                        </group>
-                        <group>
-                            <field name="type"/>
-                            <field name="code"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Account Data">
-                            <group>
-                                <group string="Contacts">
-                                    <field name="partner_id"/>
-                                    <field name="user_id"/>
-                                </group>
-                                <group name="contract" string="Contract Data">
-                                    <field name="date_start"/>
-                                    <field name="date"/>
-                                    <field name="quantity_max"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Description">
-                            <field name="description"/>
-                        </page>
-                    </notebook>
-                </sheet>
-                </form>
-            </field>
-        </record>
 
         <record id="action_account_analytic_account_form" model="ir.actions.act_window">
             <field name="name">Analytic Accounts</field>
@@ -210,6 +172,7 @@
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
                     <field name="user_id" invisible="1" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

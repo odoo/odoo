@@ -11,17 +11,21 @@
                 <header>
                     <button name="do_create" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl" class="oe_highlight_on_dirty"  />
                 </header>
-                <group>
-	                <group string="Do you want to show details of work in invoice?" colspan="4">
-	                    <field name="date"/>
-	                    <field name="time"/>
-	                    <field name="name"/>
-	                    <field name="price"/>
-	                </group>
-	                <group  string="Force to use a specific product" colspan="4">
-	                    <field name="product"/>
-	                </group>
-	            </group>
+                <notebook>
+                    <page string="Billing Data">
+                       <group>
+                       <group string="Do you want to show details of work in invoice?">
+                           <field name="date"/>
+                           <field name="time"/>
+                           <field name="name"/>
+                           <field name="price"/>
+                       </group>
+                       <group  string="Force to use a specific product">
+                           <field name="product"/>
+                       </group>
+                       </group>
+                    </page>
+                </notebook>
             </form>
             </field>
         </record>
