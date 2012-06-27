@@ -641,10 +641,37 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
+    def _display_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        result2 = {}
+        for res in self.browse(cr, uid, ids, context=context):
+            if res.id:
+                result.setdefault(res.model, {})
+                result[res.model][res.res_id] = res.id
+            result2[res.id] = False
+
+        for model in result:
+            try:
+                r = dict(self.pool.get(model).name_get(cr, uid, result[model].keys(), context=context))
+                for key,val in result[model].items():
+                    result2[val] = r.get(key, False)
+            except:
+                # some object have no valid name_get implemented, we accept this
+                pass
+        return result2
+
+    def _complete_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for res in self.browse(cr, uid, ids, context=context):
+            result[res.id] = (res.module and (res.module + '.') or '')+res.name
+        return result
+
     _columns = {
         'name': fields.char('External Identifier', required=True, size=128, select=1,
                             help="External Key/Identifier that can be used for "
                                  "data integration with third-party systems"),
+        'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
+        'display_name': fields.function(_display_name_get, type='char', string='Record Name'),
         'model': fields.char('Model Name', required=True, size=64, select=1),
         'module': fields.char('Module', required=True, size=64, select=1),
         'res_id': fields.integer('Record ID', select=1,

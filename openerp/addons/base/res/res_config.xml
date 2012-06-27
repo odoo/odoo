@@ -7,12 +7,12 @@
       <field name="arch" type="xml">
           <form version="7.0">
              <header>
-               <button name="action_skip" icon="gtk-jump-to" special="cancel"
-                       type="object" string="Cancel" colspan="1"/>
-               <button name="action_next" icon="gtk-go-forward"
-                       type="object" string="Apply" colspan="1"/>
+               <button name="action_next" type="object"
+                       string="Apply" icon="gtk-go-forward" class="oe_highlight"/>
+               <button name="action_skip" type="object" special="cancel"
+                       string="Cancel" icon="gtk-jump-to"/>
              </header>
-             <group string="res_config_contents" col="4"/>
+             <group string="res_config_contents"/>
           </form>
       </field>
     </record>
@@ -24,8 +24,8 @@
       <field name="arch" type="xml">
         <form string="Next Configuration Step" version="7.0">
             <header>
-                <button name="action_next" icon="gtk-go-forward"
-                        type="object" string="Continue"/>
+                <button name="action_next" type="object"
+                        string="Continue" icon="gtk-go-forward" class="oe_highlight"/>
             </header>
             <field name="note"/>
         </form>
@@ -39,10 +39,10 @@
       <field name="arch" type="xml">
         <form version="7.0">
             <header>
-                <button name="action_skip" icon="gtk-jump-to" special="cancel"
-                        type="object" string="Cancel" colspan="1"/>
-                <button name="action_next" icon="gtk-go-forward"
-                        type="object" string="Install Modules" colspan="1"/>
+                <button name="action_next" type="object"
+                    string="Install Modules" icon="gtk-go-forward" class="oe_highlight"/>
+                <button name="action_skip" type="object" special="cancel"
+                    string="Cancel" icon="gtk-jump-to"/>
             </header>
             <separator string="title" colspan="4"/>
         </form>

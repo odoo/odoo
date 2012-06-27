@@ -50,6 +50,8 @@ class res_partner_category(osv.osv):
             context = {}
         if context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -285,19 +287,18 @@ class res_partner(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        if not len(ids):
-            return []
-        if context.get('show_ref'):
-            rec_name = 'ref'
-        else:
-            rec_name = 'name'
-        reads = self.read(cr, uid, ids, [rec_name,'parent_id'], context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         res = []
-        for record in reads:
-            name = record.get('name', '/')
-            if record['parent_id']:
-                name =  "%s (%s)"%(name, record['parent_id'][1])
-            res.append((record['id'], name))
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            if record.parent_id:
+                name =  "%s (%s)" % (name, record.parent_id.name)
+            if context.get('show_address'):
+                name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
+                name = name.replace('\n\n','\n')
+                name = name.replace('\n\n','\n')
+            res.append((record.id, name))
         return res
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
@@ -395,7 +396,7 @@ class res_partner(osv.osv):
                                                 ('name','=','main_partner')])[0],
                 ).res_id
 
-    def _display_address(self, cr, uid, address, context=None):
+    def _display_address(self, cr, uid, address, without_company=False, context=None):
 
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
@@ -421,7 +422,8 @@ class res_partner(osv.osv):
         address_field = ['title', 'street', 'street2', 'zip', 'city']
         for field in address_field :
             args[field] = getattr(address, field) or ''
-
+        if without_company:
+            args['company_name'] = ''
         return address_format % args
 
 

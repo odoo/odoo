@@ -496,15 +496,6 @@ class res_config_settings(osv.osv_memory):
 
         return res
 
-    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
-        # overridden to make fields of installed modules readonly
-        res = super(res_config_settings, self).fields_get(cr, uid, allfields, context, write_access)
-        classified = self._get_classified_fields(cr, uid, context)
-        for name, module in classified['module']:
-            if name in res and module.state in ('installed', 'to install', 'to upgrade'):
-                res[name]['readonly'] = True
-        return res
-
     def execute(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         ir_model_data = self.pool.get('ir.model.data')
@@ -531,18 +522,31 @@ class res_config_settings(osv.osv_memory):
             if method.startswith('set_'):
                 getattr(self, method)(cr, uid, ids, context)
 
-        # module fields: install immediately the selected modules
+        # module fields: install/uninstall the selected modules
         to_install_ids = []
+        to_uninstall_ids = []
         for name, module in classified['module']:
-            if config[name] and module.state == 'uninstalled':
-                to_install_ids.append(module.id)
-        if to_install_ids:
-            ir_module.button_immediate_install(cr, uid, to_install_ids, context)
+            if config[name]:
+                if module.state == 'uninstalled': to_install_ids.append(module.id)
+            else:
+                if module.state in ('installed','upgrade'): to_uninstall_ids.append(module.id)
+
+        if to_install_ids or to_uninstall_ids:
+            ir_module.button_uninstall(cr, uid, to_uninstall_ids, context=context)
+            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
 
         # force client-side reload (update user menu and current view)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
+
+    def cancel(self, cr, uid, ids, context=None):
+        # ignore the current record, and send the action to reopen the view
+        act_window = self.pool.get('ir.actions.act_window')
+        action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)])
+        if action_ids:
+            return act_window.read(cr, uid, action_ids[0], [], context=context)
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
