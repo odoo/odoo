@@ -89,7 +89,7 @@ class res_partner_category(osv.osv):
         'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
         'parent_left' : fields.integer('Left parent', select=True),
         'parent_right' : fields.integer('Right parent', select=True),
-        'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
+        'partner_ids': fields.many2many('res.partner', id1='category_id', id2='partner_id', string='Partners'),
     }
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
@@ -144,7 +144,7 @@ class res_partner(osv.osv):
         'website': fields.char('Website',size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
-        'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Tags'),
+        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
@@ -163,7 +163,7 @@ class res_partner(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
         'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
-        'email': fields.char('E-Mail', size=240),
+        'email': fields.char('Email', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
@@ -289,19 +289,16 @@ class res_partner(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if not ids:
-            return []
-        if context.get('show_ref'):
-            rec_name = 'ref'
-        else:
-            rec_name = 'name'
-        reads = self.read(cr, uid, ids, [rec_name,'parent_id'], context=context)
         res = []
-        for record in reads:
-            name = record.get('name', '/')
-            if record['parent_id']:
-                name =  "%s (%s)"%(name, record['parent_id'][1])
-            res.append((record['id'], name))
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            if record.parent_id:
+                name =  "%s (%s)" % (name, record.parent_id.name)
+            if context.get('show_address'):
+                name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
+                name = name.replace('\n\n','\n')
+                name = name.replace('\n\n','\n')
+            res.append((record.id, name))
         return res
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
@@ -399,7 +396,7 @@ class res_partner(osv.osv):
                                                 ('name','=','main_partner')])[0],
                 ).res_id
 
-    def _display_address(self, cr, uid, address, context=None):
+    def _display_address(self, cr, uid, address, without_company=False, context=None):
 
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
@@ -425,7 +422,8 @@ class res_partner(osv.osv):
         address_field = ['title', 'street', 'street2', 'zip', 'city']
         for field in address_field :
             args[field] = getattr(address, field) or ''
-
+        if without_company:
+            args['company_name'] = ''
         return address_format % args
 
 
@@ -448,7 +446,7 @@ class res_partner_address(osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
-        'email': fields.char('E-Mail', size=240),
+        'email': fields.char('Email', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
