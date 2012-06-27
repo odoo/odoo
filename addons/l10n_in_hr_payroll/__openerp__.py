@@ -37,7 +37,6 @@ Indian Payroll Salary Rules.
     * Allow to configure Basic / Grows / Net Salary
     * Employee PaySlip
     * Allowance / Deduction
-    * Monthly Payroll Register
     * Integrated with Holiday Management
     * Medical Allowance, Travel Allowance, Child Allowance, ...
     - Payroll Advice and Report
