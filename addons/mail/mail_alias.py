@@ -73,16 +73,20 @@ class mail_alias(osv.Model):
         ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
     ]
     
-    def create_unique_alias(self, cr, uid, values, sequence = 1 ,context=None):
+    def create_unique_alias(self, cr, uid, values, sequence=1 ,context=None):
         config_parameter_pool = self.pool.get("ir.config_parameter")
         domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)
-        prob_alias = "%s%s@%s"%(values['alias_name'], sequence, domain)
-        search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
-        if search_alias:    
-            values = self.create_unique_alias(cr, uid, values, sequence+1, context)
+        if sequence:
+            prob_alias = "%s%s@%s"%(values['alias_name'], sequence, domain)
+            search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
+            if search_alias:    
+                values = self.create_unique_alias(cr, uid, values, sequence+1, context)
+            else:
+                values.update({'alias_name': prob_alias})
+                return values
         else:
-            values.update({'alias_name': prob_alias})
-            return values
+            return values.update({'alias_name': "%s@%s"%(values['alias_name'],domain)})
+
     def write(self, cr, uid, ids, vals, context=None):
         config_parameter_pool = self.pool.get("ir.config_parameter")
         #TODO: Do we need to check specail charactor like email address parsing
