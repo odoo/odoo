@@ -533,36 +533,35 @@ class mrp_repair(osv.osv):
                     'state': 'done',
                 })
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
-                if repair.deliver_bool:
-                    pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
-                    picking = pick_obj.create(cr, uid, {
-                        'name': pick_name,
-                        'origin': repair.name,
-                        'state': 'draft',
-                        'move_type': 'one',
-                        'partner_id': repair.address_id and repair.address_id.id or False,
-                        'note': repair.internal_notes,
-                        'invoice_state': 'none',
-                        'type': 'out',
-                    })
-                    move_id = move_obj.create(cr, uid, {
-                        'name': repair.name,
-                        'picking_id': picking,
-                        'product_id': repair.product_id.id,
-                        'product_qty': move.product_uom_qty or 1.0,
-                        'product_uom': repair.product_id.uom_id.id,
-                        'prodlot_id': repair.prodlot_id and repair.prodlot_id.id or False,
-                        'partner_id': repair.address_id and repair.address_id.id or False,
-                        'location_id': repair.location_id.id,
-                        'location_dest_id': repair.location_dest_id.id,
-                        'tracking_id': False,
-                        'state': 'assigned',
-                    })
-                    wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
-                    self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
-                    res[repair.id] = picking
-                else:
-                    self.write(cr, uid, [repair.id], {'state': 'done'})
+            if repair.deliver_bool:
+                pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
+                picking = pick_obj.create(cr, uid, {
+                    'name': pick_name,
+                    'origin': repair.name,
+                    'state': 'draft',
+                    'move_type': 'one',
+                    'partner_id': repair.address_id and repair.address_id.id or False,
+                    'note': repair.internal_notes,
+                    'invoice_state': 'none',
+                    'type': 'out',
+                })
+                move_id = move_obj.create(cr, uid, {
+                    'name': repair.name,
+                    'picking_id': picking,
+                    'product_id': repair.product_id.id,
+                    'product_uom': repair.product_id.uom_id.id,
+                    'prodlot_id': repair.prodlot_id and repair.prodlot_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
+                    'location_id': repair.location_id.id,
+                    'location_dest_id': repair.location_dest_id.id,
+                    'tracking_id': False,
+                    'state': 'assigned',
+                })
+                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
+                self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
+                res[repair.id] = picking
+            else:
+                self.write(cr, uid, [repair.id], {'state': 'done'})
             self.set_done_send_note(cr, uid, [repair.id], context)
         return res
     
