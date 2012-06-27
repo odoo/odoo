@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
             <form string="Search Payment lines" version="7.0">
                 <header>
-                    <button name="search_entries" string="Search" colspan="1" type="object" icon="gtk-execute" class="oe_highlight_on_dirty"  />
+                    <button name="search_entries" string="Search" colspan="1" type="object" class="oe_highlight_on_dirty"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
                 <group>
                     <field name="duedate" />
@@ -25,7 +27,9 @@
             <field name="arch" type="xml">
                 <form string="Search Payment lines" version="7.0">
                     <header>
-                        <button name="create_payment" string="_Add to payment order" colspan="1" type="object" icon="gtk-execute" class="oe_highlight_on_dirty"  />
+                        <button name="create_payment" string="_Add to payment order" colspan="1" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group>
                         <separator string="Entries"/>

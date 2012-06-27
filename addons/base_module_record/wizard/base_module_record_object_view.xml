@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Objects Recording" version="7.0">
                     <header>
-                        <button name="record_objects" icon="gtk-ok" string="Record" type="object" class="oe_highlight_on_dirty"  />
+                        <button name="record_objects" string="Record" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group> 
                         <field name="check_date"/>
@@ -86,7 +88,9 @@
             <field name="arch" type="xml">
                 <form string="Module Recording" version="7.0">
                     <header>
-                        <button string="Continue" name="inter_call" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
+                        <button string="Continue" name="inter_call" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <separator string="Module Information" colspan="4"/>
                     <field name="name"/>

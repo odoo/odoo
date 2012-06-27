@@ -107,7 +107,9 @@ class account_move_journal(osv.osv_memory):
             view = """<?xml version="1.0" encoding="utf-8"?>
             <form string="Standard entries" version="7.0">
                 <header>
-                    <button icon="terp-gtk-go-back-rtl" string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight_on_dirty"/>
+                    <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight_on_dirty"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
                 <group string="%s" colspan="4">
                     <field name="target_move" />
