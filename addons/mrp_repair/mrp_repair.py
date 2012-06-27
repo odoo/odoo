@@ -220,7 +220,7 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         data = {}
-        data['value'] = {'guarantee_limit':False}
+        data['value'] = {'guarantee_limit': False, 'location_id': False, 'prodlot_id': False, 'partner_id': False}
         if not prod_id:
             return data
         if move_id:
