@@ -30,12 +30,15 @@ from tools.translate import _
 import nodes
 import logging
 
+_logger = logging.getLogger(__name__)
+
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
-
+   
+   
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
         """Migrate ir.attachments to the document module.
 
@@ -54,7 +57,7 @@ class document_file(osv.osv):
 
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
         if not parent_id:
-            logging.getLogger('document').warning("at _attach_parent_id(), still not able to set the parent!")
+            _logger.warning("at _attach_parent_id(), still not able to set the parent!")
             return False
 
         if ids is not None:
@@ -140,8 +143,8 @@ class document_file(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx:uid,
+        'parent_id': __get_def_directory,
         'file_size': lambda self, cr, uid, ctx:0,
-        'parent_id': __get_def_directory
     }
     _sql_constraints = [
         # filename_uniq is not possible in pure SQL
@@ -336,7 +339,7 @@ class document_file(osv.osv):
                 if r:
                     unres.append(r)
             else:
-                logging.getLogger('document').warning("Unlinking attachment #%s %s that has no storage",
+                self.loggerdoc.warning("Unlinking attachment #%s %s that has no storage",
                                                 f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)
