@@ -165,29 +165,27 @@ class users(osv.osv):
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
 
-    def _get_image_resized(self, cr, uid, ids, name, args, context=None):
+    def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        for user in self.browse(cr, uid, ids, context=context):
-            result[user.id] = {'image_medium': False, 'image_small': False}
-            if user.image:
-                result[user.id]['image_medium'] = tools.resize_image_medium(user.image)
-                result[user.id]['image_small'] = tools.resize_image_small(user.image)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {'image_medium': False, 'image_small': False}
+            if obj.image:
+                result[obj.id]['image_medium'] = tools.resize_image_medium(obj.image)
+                result[obj.id]['image_small'] = tools.resize_image_small(obj.image)
         return result
     
-    def _set_image_resized(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'image': value}
-        else:
-            vals = {'image': tools.resize_image_big(value)}
-        return self.write(cr, uid, [id], vals, context=context)
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        if value:
+            value = tools.resize_image_big(value)
+        return self.write(cr, uid, [id], {'image': value}, context=context)
     
     def onchange_image(self, cr, uid, ids, value, context=None):
         if not value:
             return {'value': {
-                    'image': value,
-                    'image_medium': value,
-                    'image_small': value,
-                    }}
+                        'image': value,
+                        'image_medium': value,
+                        'image_small': value,
+                        }}
         return {'value': {
                     'image': tools.resize_image_big(value),
                     'image_medium': tools.resize_image_medium(value),
@@ -210,26 +208,24 @@ class users(osv.osv):
         'signature': fields.text('Signature', size=64),
         'image': fields.binary("Avatar",
             help="This field holds the image used as avatar for the "\
-                 "user. The avatar field is used as an interface to "\
-                 "access this field. The image is base64 encoded, "\
-                 "and PIL-supported. It is stored as a 540x450 px "\
-                 "image, in case a bigger image must be used."),
-        'image_medium': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
-            string="Medium-sized avatar", type="binary", multi="_get_image_resized",
+                 "user. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 12024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized avatar", type="binary", multi="_get_image",
             store = {
                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the user. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio keps. "\
+                 "resized as a 180x180px image, with aspect ratio kept. "\
                  "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
-            string="Smal-sized avatar", type="binary", multi="_get_image_resized",
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized avatar", type="binary", multi="_get_image",
             store = {
                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the user. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio keps. "\
-                 "Use this field in form views or some kanban views."),
+                 "Use this field anywhere a small image is required."),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -338,7 +334,7 @@ class users(osv.osv):
             pass
         return result
 
-    def _get_image(self, cr, uid, context=None):
+    def _get_default_image(self, cr, uid, context=None):
         # default image file name: avatar0 -> avatar6.png, choose randomly
         image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
         return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
@@ -347,7 +343,7 @@ class users(osv.osv):
         'password' : '',
         'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
         'context_tz': lambda self, cr, uid, context: context.get('tz', False),
-        'image_medium': _get_image,
+        'image': _get_default_image,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
