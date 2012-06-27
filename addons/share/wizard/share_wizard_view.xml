@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Sharing: preparation" version="7.0">
                     <header>
-                        <button name="go_step_1" string="Next" type="object" icon="gtk-go-forward" class="oe_highlight_on_dirty"  />
+                        <button name="go_step_1" string="Next" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <separator
                         string="Please select the action that opens the screen containing the data you want to share."/>
@@ -30,7 +32,9 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                     <header>
-                        <button name="go_step_2" string="Share" type="object" icon="gtk-go-forward" class="oe_highlight_on_dirty"  />
+                        <button name="go_step_2" string="Share" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
                         <field name="user_type" invisible="1"/>

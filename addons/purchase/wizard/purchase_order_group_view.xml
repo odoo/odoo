@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                <form string="Merge orders" version="7.0">
                     <header>
-                        <button name="merge_orders" string="Merge orders" type="object" icon="gtk-convert" class="oe_highlight_on_dirty"  />
+                        <button name="merge_orders" string="Merge orders" type="object" class="oe_highlight_on_dirty"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
                         <separator string="Are you sure you want to merge these orders?"/>
