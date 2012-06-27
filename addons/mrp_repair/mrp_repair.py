@@ -337,7 +337,7 @@ class mrp_repair(osv.osv):
                     if line.product_id.track_production and not line.prodlot_id:
                         raise osv.except_osv(_('Warning'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
-                self.set_confirm_send_note(cr, uid, [o.id])
+        self.set_confirm_send_note(cr, uid, ids,context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
