@@ -27,21 +27,20 @@ LOG_INFO='info'
 LOG_WARNING='warn'
 LOG_ERROR='error'
 LOG_CRITICAL='critical'
+_logger = logging.getLogger(__name__)
 
 def log_detail(self):
     import os
-    logger = logging.getLogger()
     logfile_name = os.path.join(tempfile.gettempdir(), "openerp_report_designer.log")
     hdlr = logging.FileHandler(logfile_name)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
     hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr)
-    logger.setLevel(logging.INFO)
+    _logger.addHandler(hdlr)
+    _logger.setLevel(logging.INFO)
 
 class Logger(object):
     def log_write(self,name,level,msg):
-        log = logging.getLogger(name)
-        getattr(log,level)(msg)
+        getattr(_logger,level)(msg)
 
     def shutdown(self):
         logging.shutdown()

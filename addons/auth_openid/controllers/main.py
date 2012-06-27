@@ -44,8 +44,8 @@ from .. import utils
 
 
 
-_logger = logging.getLogger('web.auth_openid')
-oidutil.log = logging.getLogger('openid').debug
+_logger = logging.getLogger(__name__)
+oidutil.log = _logger.debug
 
 
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
