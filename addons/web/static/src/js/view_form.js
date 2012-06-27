@@ -3460,7 +3460,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.addClass('oe_form_field_many2many');
+        this.$element.addClass('oe_form_field oe_form_field_many2many');
 
         var self = this;
 
