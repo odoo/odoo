@@ -39,18 +39,17 @@ class account_move_partner_info(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner'),
         'last_reconciliation_date':fields.datetime('Last Reconciliation'),
         'latest_date' :fields.date('Latest Entry'),
-        'followup_date': fields.date('Latest Follow-up'),   
+#        'followup_date': fields.date('Latest Follow-up'),   
         'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float')
 
     }
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'analytic_entries_report')
+        tools.drop_view_if_exists(cr, 'account_move_partner_info')
         cr.execute("""
             create or replace view account_move_partner_info as (
                 SELECT  p.id, p.id as partner_id, 
                 max(p.last_reconciliation_date) as last_reconciliation_date,
-                max(l.date) as latest_date,
-                max(l.followup_date) as followup_date
+                max(l.date) as latest_date
                 FROM account_move_line as l INNER JOIN res_partner AS p ON (l.partner_id = p.id)
                 group by p.id
                 )
