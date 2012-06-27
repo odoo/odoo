@@ -202,10 +202,10 @@ class mail_message(osv.osv):
     
     _columns = {
         'type': fields.selection([
-                        ('email', 'e-mail'),
+                        ('email', 'email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+                        ], 'Type', help="Message type: email for email message, notification for system message, comment for other messages such as user replies"),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related User', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -228,7 +228,7 @@ class mail_message(osv.osv):
     }
     
     #------------------------------------------------------
-    # E-Mail api
+    # Email api
     #------------------------------------------------------
     
     def init(self, cr):
