@@ -23,24 +23,7 @@ openerp.web_linkedin = function(instance) {
                     .read_slice(['linkedin_api_key','name'], {"domain": [['id','=',self.company_id]]}).then(function(records) {
                         self.apikey = records[0].linkedin_api_key;
                         if (self.apikey) {
-                            var head = document.head || document.getElementsByTagName('head')[0];
-                            var tag = document.createElement('script');
-                            tag.setAttribute('id', 'addedScript');
-                            tag.type = 'text/javascript';
-                            tag.src = "http://platform.linkedin.com/in.js";
-                            tag.innerHTML = 'api_key : '+self.apikey+'\n';
-                            tag.innerHTML = tag.innerHTML + 'authorize : true';
-                            var temp = 0;
-                            $(head).find('script').each( function(i,val) {
-                                if ($(val).attr('src')) {
-                                    if ($(val).attr('src') == "http://platform.linkedin.com/in.js") {
-                                        temp = 1;
-                                    }
-                                }
-                            });
-                            if (temp != 1 ) {
-                                head.appendChild( tag );
-                            }
+                            self.add_ldn_script(self.apikey);
                         }
                     });
                 });
@@ -131,7 +114,6 @@ openerp.web_linkedin = function(instance) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-
             } else {
                 this.APIKeyWarning();
                 e.preventDefault();
@@ -166,6 +148,8 @@ openerp.web_linkedin = function(instance) {
             $("#register").click(function() {
                 var key = $("#apikey").val();
                 if(key){
+                    //self.apikey = key;
+                    self.add_ldn_script(key);
                     var user = new instance.web.DataSet(self, "res.users");
                     user.call("set_linkedin_api_key", [key]);
                     self.dialog.remove();
@@ -646,6 +630,29 @@ openerp.web_linkedin = function(instance) {
                      this.$element.find('#linkedinrecord').hide();
                      this.$element.find('#linkedindefault').show();
                  }
+             }
+         },
+         // Add script of linkedin lib in head
+         add_ldn_script: function(key){
+             var self = this;
+             self.apikey = key;
+             var head = document.head || document.getElementsByTagName('head')[0];
+             var tag = document.createElement('script');
+             tag.setAttribute('id', 'addedScript');
+             tag.type = 'text/javascript';
+             tag.src = "http://platform.linkedin.com/in.js";
+             tag.innerHTML = 'api_key : '+self.apikey+'\n';
+             tag.innerHTML = tag.innerHTML + 'authorize : true';
+             var temp = 0;
+             $(head).find('script').each( function(i,val) {
+                 if ($(val).attr('src')) {
+                     if ($(val).attr('src') == "http://platform.linkedin.com/in.js") {
+                         temp = 1;
+                     }
+                 }
+             });
+             if (temp != 1 ) {
+                 head.appendChild( tag );
              }
          }
     });
