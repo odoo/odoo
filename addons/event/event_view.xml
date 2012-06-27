@@ -7,7 +7,7 @@
             res_model="event.registration"
             src_model="event.event"
             view_mode="calendar,tree,form,graph"
-            context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
+            context="{'search_default_event_id': active_id, 'default_event_id': active_id}"
             view_type="form"/>
         <menuitem  name="Events" id="event_main_menu"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
@@ -24,10 +24,10 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="default_reply_to"/>
-                        <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
-                        <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                         <field name="default_registration_min"/>
+                        <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
                         <field name="default_registration_max"/>
+                        <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                     </group>
                 </form>
             </field>
