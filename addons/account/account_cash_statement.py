@@ -197,7 +197,7 @@ class account_cash_statement(osv.osv):
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
             }),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Closing Balance', help="Closing balance based on cashBox"),
+        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Total', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
