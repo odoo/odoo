@@ -104,14 +104,21 @@
                     <field name="state" widget="statusbar" nolabel="1"/>
                 </header>
                 <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="date_start"/>
-                        <field name="date_stop"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="fiscalyear_id" widget="selection"/>
-                        <field name="special"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="fiscalyear_id" widget="selection"/>
+                            <label for="date_start" string="Duration"/>
+                            <div>
+                                <field name="date_start"/> - 
+                                <field name="date_stop" nolabel="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                            <field name="special"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                 </sheet>
                 </form>
@@ -1835,16 +1842,11 @@
                                 <field name="model_id"/>
                                 <field name="ref"/>
                             </group>
-                            <newline/>
-    
-                            <group string="Starts on">
+                            <group>
                                 <field name="date_start"/>
-                                <field name="period_total"/>
-                            </group>
-    
-                            <group string="Valid Up to">
-                                <field name="period_nbr"/>
                                 <field name="period_type"/>
+                                <field name="period_nbr"/>
+                                <field name="period_total"/>
                             </group>
                         </group>
                         <separator string="Subscription Lines"/>
