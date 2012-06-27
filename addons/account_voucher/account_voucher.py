@@ -52,15 +52,6 @@ class account_voucher(osv.osv):
                     paid = True
             res[voucher.id] = paid
         return res
-    def untaxed_amount(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        amount = 0.0
-        for voucher in self.browse(cr, uid, ids, context=context):
-            for line in voucher.line_cr_ids:
-                amount += line.amount
-            res[voucher.id] = amount
-        return res
- 
     
     def _get_type(self, cr, uid, context=None):
         if context is None:
@@ -321,7 +312,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
-        'amount_untaxed': fields.function(untaxed_amount, digits_compute=dp.get_precision('Account'), string='Untaxed'),
+        
     }
     _defaults = {
         'period_id': _get_period,
