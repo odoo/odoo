@@ -246,8 +246,8 @@
                         <field name="name" class="oe_inline"/>
                         <field name="type" class="oe_inline oe_right"/>
                     </h1>
-               
-                    <label for="datas" class="oe_edit_only"/>
+                    <label for="datas" class="oe_edit_only" attrs="{'invisible':[('type','=','url')]}"/>
+                    <label for="url" class="oe_edit_only" attrs="{'invisible':[('type','=','binary')]}" />
                     <h2>
                         <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline"/>
                         <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
