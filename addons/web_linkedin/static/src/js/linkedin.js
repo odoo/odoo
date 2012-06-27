@@ -154,7 +154,7 @@ openerp.web_linkedin = function(instance) {
             this.dialog = instance.web.dialog($(QWeb.render("Register.Linkedin")), {
                 title: _t("Connect to LinkedIn"),
                 modal: true,
-                width : 840, 
+                width : 700, 
                 height:500,
                 close: function(){ self.dialog.remove();},
                 buttons:[
