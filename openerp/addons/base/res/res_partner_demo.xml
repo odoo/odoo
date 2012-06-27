@@ -19,40 +19,40 @@
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_4" model="res.partner.category">
-            <field name="name">Partners</field>
+            <field name="name">Gold Partner</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_5" model="res.partner.category">
-            <field name="name">Gold Partners</field>
-            <field name="parent_id" ref="res_partner_category_4"/>
+            <field name="name">Silver Partner</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_6" model="res.partner.category">
-            <field name="name">Silver Partners</field>
-            <field name="parent_id" ref="res_partner_category_4"/>
+            <field name="name">Ready Partner</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_7" model="res.partner.category">
-            <field name="name">Ready Partners</field>
+            <field name="name">IT Services</field>
             <field name="parent_id" ref="res_partner_category_4"/>
         </record>
         <record id="res_partner_category_8" model="res.partner.category">
-            <field name="name">Services</field>
+            <field name="name">Consultancy Services</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_9" model="res.partner.category">
-            <field name="name">IT Services</field>
+            <field name="name">Components Buyer</field>
             <field name="parent_id" ref="res_partner_category_8"/>
         </record>
         <record id="res_partner_category_10" model="res.partner.category">
-            <field name="name">Consultancy Services</field>
+            <field name="name">Important Customer</field>
             <field name="parent_id" ref="res_partner_category_8"/>
         </record>
         <record id="res_partner_category_11" model="res.partner.category">
-            <field name="name">Components Buyer</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
+            <field name="name">Services</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
         </record>
         <record id="res_partner_category_12" model="res.partner.category">
-            <field name="name">Important Customer</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
+            <field name="name">Office Supplies</field>
+            <field name="parent_id" ref="res_partner_category_1"/>
         </record>
         <record id="res_partner_category_13" model="res.partner.category">
             <field name="name">Components Distributors</field>
@@ -70,14 +70,6 @@
             <field name="name">Retailers</field>
             <field name="parent_id" ref="res_partner_category_1"/>
         </record>
-        <record id="res_partner_category_17" model="res.partner.category">
-            <field name="name">Services</field>
-            <field name="parent_id" ref="res_partner_category_1"/>
-        </record>
-        <record id="res_partner_category_18" model="res.partner.category">
-            <field name="name">Office Supplies</field>
-            <field name="parent_id" ref="res_partner_category_1"/>
-        </record>
 
 
        <!--
@@ -86,7 +78,7 @@
 
         <record id="res_partner_1" model="res.partner">
             <field name="name">ASUSTeK</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_18')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
@@ -126,7 +118,7 @@
         
         <record id="res_partner_4" model="res.partner">
             <field name="name">Delta PC</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_14'), ref('res_partner_category_18')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
             <field eval="0" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
@@ -155,7 +147,7 @@
 
         <record id="res_partner_6" model="res.partner">
             <field name="name">Elec Import</field>
-            <field eval="[(6, 0, [ref('res_partner_category_18')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_12')])]" name="category_id"/>
             <field eval="1" name="supplier"/>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
@@ -170,7 +162,7 @@
 
         <record id="res_partner_7" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
-            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_10')])]" name="category_id"/>
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field name="is_company">1</field>
@@ -211,7 +203,7 @@
 
         <record id="res_partner_10" model="res.partner">
             <field name="name">The Jackson Group</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_9')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_4'), ref('res_partner_category_7')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Miami</field>
             <field name="zip">FL 33169</field>
@@ -238,7 +230,7 @@
 
         <record id="res_partner_12" model="res.partner">
             <field name="name">Camptocamp</field>
-            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_4')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="customer">1</field>
             <field name="is_company">1</field>
@@ -270,7 +262,7 @@
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field eval="15000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_9'), ref('res_partner_category_11')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_7'), ref('res_partner_category_9')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Detroit</field>
             <field name="zip">MI 48212</field>
@@ -286,7 +278,7 @@
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field eval="1500.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="street">89 Lingfield Tower</field>
             <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
@@ -298,7 +290,7 @@
             <field name="name">Spark Systems</field>
             <field eval="1" name="supplier"/>
             <field eval="0" name="customer"/>
-            <field eval="[(6, 0, [ref('res_partner_category_16'), ref('res_partner_category_17')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_16'), ref('res_partner_category_11')])]" name="category_id"/>
             <field name="city">São Paulo</field>
             <field name="zip">01060-324</field>
             <field name="email"></field>
@@ -325,7 +317,7 @@
         <record id="res_partner_18" model="res.partner">
             <field name="name">Think Big Systems</field>
             <field name="is_company">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_4'), ref('res_partner_category_10')])]" name="category_id"/>
             <field name="city">Boston</field>
             <field name="zip">MA 02203</field>
             <field name="email">info@thinkbig.com</field>
@@ -365,7 +357,7 @@
             <field name="name">Global Solutions</field>
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
-            <field eval="[(6, 0, [ref('res_partner_category_6')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="type">default</field>
             <field name="street">Union Road</field>
@@ -376,7 +368,7 @@
 
         <record id="res_partner_22" model="res.partner">
             <field name="name">Vicking Direct</field>
-            <field eval="[(6,0,[ref('res_partner_category_18')])]" name="category_id"/>
+            <field eval="[(6,0,[ref('res_partner_category_12')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="customer">0</field>
             <field name="is_company">1</field>
