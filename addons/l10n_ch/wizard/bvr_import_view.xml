@@ -10,7 +10,6 @@
                 <form string="BVR Import" version="7.0">
                     <header>
                         <button name="import_bvr" string="Import" type="object" icon="gtk-ok" colspan="2"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"  colspan="2"/>
                     </header>
                     <group>
                         <field name="file"/>
@@ -35,9 +34,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <field name="balance_end_real" position="after">
-                    <button name="%(wizard_bvr_import)d" icon="gtk-execute" string="Import BVR" type="action" colspan="2"/>
-                </field>
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="%(wizard_bvr_import)d" icon="gtk-execute" string="Import BVR" type="action"/>
+                </xpath>
             </field>
         </record>
     </data>
