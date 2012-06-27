@@ -96,7 +96,7 @@ class account_config_settings(osv.osv_memory):
         'module_account_voucher': fields.boolean('Manage Customer Payments',
             help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
                 This installs the module account_voucher."""),
-        'module_account_followup': fields.boolean('Manage Customer Payment Follow-Ups',
+        'module_account_followup': fields.boolean('Manage Customer Payment Follow-ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
         'module_account_invoice_layout': fields.boolean('Allow Notes and Subtotals',
