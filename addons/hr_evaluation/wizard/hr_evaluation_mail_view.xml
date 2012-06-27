@@ -9,7 +9,9 @@
         <field name="arch" type="xml">
             <form string="Evaluation Reminders" version="7.0">
                 <header>
-                    <button name="send_mail" string="Send Mail" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"  />
+                    <button name="send_mail" string="Send Mail" type="object" class="oe_highlight_on_dirty"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
                 </header>
                 <group string="Send Evaluation Reminder">
                     <field name="evaluation_id"/>

@@ -9,8 +9,11 @@
             <field name="arch" type="xml">
             <form string="Create New Employee" version="7.0">
                 <header>
-                    <button name="case_close_with_emp" string="Yes" colspan="1" type="object" icon="terp-camera_test" class="oe_highlight_on_dirty"  />
-                    <button name="case_close" string="No" icon='gtk-no' type="object"/>
+                    <button name="case_close_with_emp" string="Yes" colspan="1" type="object" class="oe_highlight_on_dirty" />
+                    or
+                    <button name="case_close" string="No" type="object"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
                 </header>
                 <group>
                     <label string="Would you like to create an employee ?" colspan="4" />
