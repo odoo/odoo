@@ -39,7 +39,7 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
-logger = logging.getLogger('fetchmail')
+_logger = logging.getLogger(__name__)
 
 class fetchmail_server(osv.osv):
     """Incoming POP/IMAP mail server account"""
