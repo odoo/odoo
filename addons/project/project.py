@@ -1135,10 +1135,15 @@ class task(base_stage, osv.osv):
         return 'Task'
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        """ Returns the user_ids that have to perform an action
+            :return: dict { record_id: [user_ids], }
+        """
+        result = super(project_task, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
+                result[obj.id].add(obj.user_id.id)
+            elif obj.state == 'draft':
+                result[obj.id].add(uid)
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
