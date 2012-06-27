@@ -152,23 +152,24 @@ openerp.web_linkedin = function(instance) {
         APIKeyWarning: function(e) {
             var self = this;
             this.dialog = instance.web.dialog($(QWeb.render("Register.Linkedin")), {
-                title: _t("Configure your Linkedin Key API"),
+                title: _t("Connect to LinkedIn"),
                 modal: true,
                 width : 840, 
                 height:500,
-                close: function(){ self.dialog.remove();}
+                close: function(){ self.dialog.remove();},
+                buttons:[
+                {
+                    text: _t("Cancel"),
+                    click: function() { self.dialog.remove(); }
+                }]
             });
-            this.dialog.parent().find('.ui-dialog-titlebar').append('<button class="close">No Thanks</button>').click(function(){
-                self.dialog.remove();
-            })
-            $('.close').css({ 'margin': '10px 0 0 19px'})
             $("#register").click(function() {
                 var key = $("#apikey").val();
                 if(key.length){
                     var user = new instance.web.DataSet(self, "res.users");
                     user.call("set_linkedin_api_key", [key]);
                     self.dialog.remove(),
-                    self.__parentedParent.reload();
+                    //self.__parentedParent.reload();
                 }
                 else {
                     $("#apikey").css({'background-color':'#F66 '})

@@ -34,27 +34,25 @@
 
 <t t-name="Register.Linkedin" style="height:300px;overflow:auto;">
     <div>
-        <div>
-            <p>1) Go to : 
-                <a href="https://www.linkedin.com/secure/developer" class="oe_secondary_menu_section" target="_blank">
-                    https://www.linkedin.com/secure/developer
-                </a>
-            </p>
-            <p>2) Log you in Linkedin if you did not yet</p>
-            <p>3) Add a New Application</p>
-            <p>4) Fill in the Form</p>
-        </div>
-        <div>
-            <img src='/web_linkedin/static/src/img/help_to_fill_form.png' height="500" width="800" border="1" style="margin-left:15px;"/>
-        </div>
-        <div>
-            <p>5) Copy the API Key:
-                <input type="text" id="apikey"/><button id="register" style="margin-left:10px; color:white;" class="btn_api" >Apply</button>
-            </p>
-        </div>
-        <div>
-            <img src='/web_linkedin/static/src/img/apikey.png' width="800" border="1" style="margin-left:15px;"/>
-        </div>
+        <p style="color:grey;"> Connect OpneERP to LinkedIn to allow synchronizing companies and people with LinkedIn contacts in order to <br/>
+            get their data automatically (photos, address, news). You just need to setup the API key once, and it will work <br/>
+            for all users of your system.
+        </p>
+        <br/>
+        <br/>
+        <p>1) Go to : 
+            <a href="https://www.linkedin.com/secure/developer" class="oe_secondary_menu_section" target="_blank">
+                https://www.linkedin.com/secure/developer
+            </a>
+        </p>
+        <p>2) Log into LinkedIn if not already done</p>
+        <p>3) Click on <b>"Add a new application"</b></p>
+        <p>4) Fill in the <b>"Application Info"</b> form with the following data:</p>
+        <p>   - Integration URL: <b>"https://yourcompany.my.openerp.com"</b></p>
+        <p>   - Javascript API domain: <b>"yourcompany.my.openerp.com"</b></p>
+        <p>5) Copy the API key here:
+            <input type="text" id="apikey"/><button id="register" style="margin-left:10px; color:white;" class="btn_api" >Apply</button>
+        </p>
     </div>
 </t>
 
