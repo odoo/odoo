@@ -484,7 +484,7 @@ instance.web.Login =  instance.web.Widget.extend({
             self.databasemanager.do_exit.add_last(function() {
                 self.databasemanager.destroy();
                 self.$element.find('.oe_login_bottom').show();
-                self.$element.find('.oe_login_pane').show();
+                self.$element.find('.oe_login_pane').show('fast');
                 self.load_db_list(true).then(self.proxy('_db_list_loaded'));
             });
         });
@@ -525,7 +525,6 @@ instance.web.Login =  instance.web.Widget.extend({
         }
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
-
         this.do_login(db, login, password);
     },
     /**
@@ -538,6 +537,7 @@ instance.web.Login =  instance.web.Widget.extend({
     do_login: function (db, login, password) {
         var self = this;
         this.$element.removeClass('oe_login_invalid');
+        self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).pipe(function() {
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
@@ -552,9 +552,10 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.$(".oe_login_pane").fadeOut("slow");
+            
             self.trigger("login");
         },function () {
+        	self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
         });
     }
