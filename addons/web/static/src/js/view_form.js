@@ -1790,8 +1790,9 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this._super(field_manager, node);
         this.field_manager = field_manager;
         this.name = this.node.attrs.name;
-        this.set({'value': false});
         this.field = this.field_manager.get_field(this.name);
+        this.widget = this.node.attrs.widget;
+        this.set({'value': false});
         this.set({required: this.modifiers['required'] === true});
         
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
