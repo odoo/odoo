@@ -241,18 +241,19 @@
         <field name="arch" type="xml">
             <form string="Documents" version="7.0">
                 <sheet>
-                    <group>
-                        <label for="name" string="Attachment Name"/>
+                    <div>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" />
+                            <field name="name" class="oe_inline"/>
+                            <field name="type" class="oe_inline"/>
                         </h1>
-                    </group>
-                    <group>
-                        <label for="datas" string="File Content"/>
+                    </div>
+                    <div>
+                        <label for="datas" class="oe_edit_only"/>
                         <h2>
                             <field name="datas" filename="datas_fname"/>
                         </h2>
-                    </group>
+                    </div>
                     <group>
                         <group>
                             <field name="user_id"/>
