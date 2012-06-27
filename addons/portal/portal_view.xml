@@ -66,12 +66,15 @@ the portal's users.
             </field>
         </record>
 
+        <record id="company_news_feed" model="mail.group">
+            <field name="name">Company's news feed</field>
+        </record>
+
         <record id="action_news" model="ir.actions.act_window">
             <field name="name">News</field>
             <field name="res_model">mail.group</field>
-            <field name="res_id" eval="ref('portal.company_news_feed')"/>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="mail.view_group_form"/>
+            <field name="res_id" ref="company_news_feed"/>
+            <field name="view_mode">form</field>
         </record>
 
 
@@ -87,13 +90,9 @@ the portal's users.
                 <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu"/>
                 <menuitem name="Our company" id="portal_company" 
                     parent="menu_portal" sequence="10"/>
-                    <!-- 
-                    right now it's not possible to directly call a client action 
-                    from a menuitem, so we can't use this shortcut element and 
-                    use an explicit record element instead
-                    -->
                     <menuitem name="News" id="portal_company_news" 
                         parent="portal_company" sequence="10" action="action_news"/>
+                
                 <menuitem name="Orders" id="portal_orders" 
                     parent="menu_portal" sequence="20"/>
                 <menuitem name="Invoices and Payments" id="portal_invoices_payements" 
