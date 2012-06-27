@@ -312,10 +312,14 @@
                 <form string="Product Categories" version="7.0">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="parent_id"/>
-                            <field name="sequence" invisible="1"/>
-                            <field name="type"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="parent_id"/>
+                                <field name="sequence" invisible="1"/>
+                            </group>
                         </group>
                         <group name="basic" col="4"/>
                     </sheet>

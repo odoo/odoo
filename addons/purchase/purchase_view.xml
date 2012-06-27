@@ -180,20 +180,20 @@
                                     <field name="price_subtotal"/>  
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer">
+                            <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
                                 <div class="oe_subtotal_footer_separator oe_inline" colspan="2">
-                                    <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline"/>
                                     <field name="amount_total"/>
                                 </div>
                             </group>
+                            <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline"/>
                             <div class="oe_clear"/>
                             <label for="notes"/>
                             <field name="notes"/>
                         </page>
                         <page string="Delivery &amp; Invoicing">
-                            <group string="Delivery">
+                            <group>
                                 <group>
                                     <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
                                     <field name="minimum_planned_date"/>
@@ -205,13 +205,13 @@
                                     <field name="date_approve"/>
                                 </group>
                             </group>
-                            <group string="Invoicing" col="4">
+                            <group string="Invoicing">
                                 <group>
                                     <field name="invoice_method"/>
-                                    <field name="fiscal_position"/>
+                                    <field name="invoiced"/>
                                 </group>
                                 <group>
-                                    <field name="invoiced"/>
+                                    <field name="fiscal_position"/>
                                 </group>
                             </group>
                             <separator string="Invoices"/>
