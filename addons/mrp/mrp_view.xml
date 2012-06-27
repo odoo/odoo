@@ -634,20 +634,22 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                 </header>
                 <sheet>
-                    <label for="product_id" class="oe_edit_only"/>
-                    <h1>
-                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]" class="oe_inline"/>
-                        <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                        <button type="action"
-                            icon="terp-accessories-archiver+" class="oe_inline"
-                            name="%(mrp.action_change_production_qty)d"
-                            string="Change Quantity" states="ready,confirmed" />
-                    </h1>
-                    <label for="routing_id"  groups="mrp.group_mrp_routings"  class="oe_edit_only"/>
-                    <h2>
-                        <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    </h2>
+                    <div class="oe_button_box oe_right">
+                        <button name="%(mrp.action_change_production_qty)d" type="action" states="ready,confirmed"
+                            string="Change Quantity" icon="terp-accessories-archiver+"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="product_id" class="oe_edit_only"/>
+                        <h1>
+                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]" class="oe_inline"/>:
+                            <field name="product_qty" class="oe_inline"/>
+                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                        </h1>
+                        <label for="routing_id" class="oe_edit_only" groups="mrp.group_mrp_routings"/>
+                        <h2>
+                            <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                        </h2>
+                    </div>
                     <group>
                         <group>
                             <field name="name"/>
@@ -777,13 +779,17 @@
                             <field name="product_lines"/>
                         </page>
                         <page string="Extra Information">
-                            <group col="4">
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="priority"/>
-                                <field name="date_start"/>
-                                <field name="date_finished"/>
-                                <field name="picking_id"/>
-                                <field name="move_prod_id" groups="stock.group_locations"/>
+                            <group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="priority"/>
+                                    <field name="picking_id"/>
+                                    <field name="move_prod_id" groups="stock.group_locations"/>
+                                </group>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="date_finished"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
