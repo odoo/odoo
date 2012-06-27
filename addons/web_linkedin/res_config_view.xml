@@ -7,11 +7,7 @@
             <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/group/group[@string='External Accesses']" position='replace'>
-                    <group string="External Accesses">
-                        <field name="module_share"/>
-                        <field name="module_portal"/>
-                    </group>
+                <xpath expr="/form/sheet/group[@string='External Accesses']" position='after'>
                     <group colspan="4" col="8">
 	                    <separator string="Linkedin Settings" colspan="4"/>
 	                    <newline/>
