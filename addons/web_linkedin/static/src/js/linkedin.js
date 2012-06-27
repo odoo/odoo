@@ -110,7 +110,7 @@ openerp.web_linkedin = function(instance) {
                         /* People Search */
                         IN.API.Raw("/people-search:(people:(id,first-name,last-name,picture-url,public-profile-url,formatted-name,location,phone-numbers,im-accounts,main-address,headline))")
                         .params({
-                            "first-name": self.$element.find("input").val(),
+                            "keywords": self.$element.find("input").val(),
                             "count" : 4
                         })
                         .result( self.do_fetch_detail );
