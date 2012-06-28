@@ -13,12 +13,10 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <group>
-	                    <label string="Your system will be updated."/>
-	                    <label string="Note that this operation might take a few minutes."/>
-	                    <separator string="Modules to Update"/>
-	                    <field name="module_info"/>
-                    </group>
+                    <div><label string="Your system will be updated."/></div>
+                    <div><label string="Note that this operation might take a few minutes."/></div>
+                    <separator string="Modules to Update"/>
+                    <field name="module_info"/>
                 </form>
             </field>
         </record>
@@ -52,10 +50,8 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <group>
-	                    <label string="The selected modules have been updated / installed !"/>
-	                    <label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/>
-                    </group>
+                    <div><label string="The selected modules have been updated / installed !"/></div>
+                    <div><label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/></div>
                 </form>
             </field>
         </record>
