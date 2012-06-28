@@ -67,7 +67,7 @@
                     <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
-                <sheet string="Leave Request" layout="auto">
+                <sheet string="Leave Request" >
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                     <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
