@@ -862,13 +862,13 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
         self.items['files'] = attachments;
         self.redraw();
-        this.$('.oe_sidebar_add_attachment .oe-binary-file').change(this.on_attachment_changed);
+        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
         this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$element.find('form.oe-binary-form').submit();
+            this.$element.find('form.oe_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));

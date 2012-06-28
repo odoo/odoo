@@ -322,9 +322,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
             }
-            if (self.default_focus_field) {
-                self.default_focus_field.focus();
-            }
             if (record.id) {
                 self.do_push_state({id:record.id});
             }
@@ -573,6 +570,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             _.each(this.fields,function(field){
                 field.set({"force_readonly": false});
             });
+            var fields_order = self.fields_order.slice(0);
+            if (self.default_focus_field) {
+                fields_order.unshift(self.default_focus_field);
+            }
+            for (var i = 0; i < fields_order.length; i += 1) {
+                var field = self.fields[fields_order[i]];
+                if (!field.get('effective_invisible') && !field.get('effective_readonly') && field.focus() !== false) {
+                    break;
+                }
+            }
         }
     },
     on_button_save: function() {
@@ -909,6 +916,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     register_field: function(field, name) {
         this.fields[name] = field;
         this.fields_order.push(name);
+        if (field.node.attrs.default_focus == '1') {
+            this.default_focus_field = field;
+        }
 
         field.on('focused', null, this.proxy('widgetFocused'))
              .on('blurred', null, this.proxy('widgetBlurred'));
@@ -1513,7 +1523,9 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         this._super.apply(this, arguments);
     },
     /**
-     * Sets up blur/focus forwarding from DOM elements to a widget (`this`)
+     * Sets up blur/focus forwarding from DOM elements to a widget (`this`).
+     *
+     * This method is an utility method that is meant to be called by child classes.
      *
      * @param {jQuery} $e jQuery object of elements to bind focus/blur on
      */
@@ -1762,7 +1774,7 @@ instance.web.form.FieldInterface = {
      */
     is_syntax_valid: function() {},
     /**
-     * Must set the focus on the field.
+     * Must set the focus on the field. Return false if field is not focusable.
      */
     focus: function() {},
 };
@@ -1790,8 +1802,9 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this._super(field_manager, node);
         this.field_manager = field_manager;
         this.name = this.node.attrs.name;
-        this.set({'value': false});
         this.field = this.field_manager.get_field(this.name);
+        this.widget = this.node.attrs.widget;
+        this.set({'value': false});
         this.set({required: this.modifiers['required'] === true});
         
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
@@ -2002,7 +2015,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
         } else {
             this.$element.find('a')
                     .attr('href', 'mailto:' + this.get('value'))
-                    .text(this.get('value'));
+                    .text(this.get('value') || '');
         }
     },
     on_button_clicked: function() {
@@ -2031,7 +2044,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
             if (!s) {
                 tmp = "http://" + this.get('value');
             }
-            this.$element.find('a').attr('href', tmp).text(tmp);
+            this.$element.find('a').attr('href', tmp).text(this.get('value') ? tmp : '');
         }
     },
     on_button_clicked: function() {
@@ -2445,15 +2458,16 @@ instance.web.form.CompletionFieldMixin = {
 
         return this.orderer.add(dataset.name_search(
                 search_val, new instance.web.CompoundDomain(self.build_domain(), [["id", "not in", blacklist]]),
-                'ilike', this.limit + 1)).pipe(function(data) {
+                'ilike', this.limit + 1, self.build_context())).pipe(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
+                x[1] = x[1].split("\n")[0];
                 return {
                     label: _.str.escapeHTML(x[1]),
-                    value:x[1],
-                    name:x[1],
-                    id:x[0]
+                    value: x[1],
+                    name: x[1],
+                    id: x[0],
                 };
             });
 
@@ -2564,8 +2578,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             fade: true,
         });
         
-        this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
-        this.$follow_button = $(".oe-m2o-cm-button", this.$element);
+        this.$drop_down = this.$element.find(".oe_m2o_drop_down_button");
+        this.$follow_button = $(".oe_m2o_cm_button", this.$element);
         
         this.$follow_button.click(function() {
             if (!self.get('value')) {
@@ -2707,7 +2721,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             return;
         }
         if (! no_recurse) {
-            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_get([self.get("value")], function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
@@ -2717,11 +2731,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     display_string: function(str) {
         var self = this;
         if (!this.get("effective_readonly")) {
-            this.$input.val(str);
+            this.$input.val(str.split("\n")[0]);
         } else {
+            str = _.escape(str).split("\n").join("<br />");
             this.$element.find('a')
                  .unbind('click')
-                 .text(str)
+                 .html(str)
                  .click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
@@ -2739,7 +2754,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
-            this.display_value["" + value_[0]] = value_[1];
+            if (! this.get_definition_options().always_reload) {
+                this.display_value["" + value_[0]] = value_[1];
+            }
             value_ = value_[0];
         }
         value_ = value_ || false;
@@ -3251,8 +3268,8 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         return this._super.apply(this, arguments).then(function () {
             // Replace the "Save Row" button with "Cancel Edition"
             self.edition_form.$element
-                .undelegate('button.oe-edit-row-save', 'click')
-                .delegate('button.oe-edit-row-save', 'click', function () {
+                .undelegate('button.oe_list_edit_row_save', 'click')
+                .delegate('button.oe_list_edit_row_save', 'click', function () {
                     self.cancel_pending_edition();
                 });
 
@@ -3852,7 +3869,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
-        this.view_form.appendTo(this.$element.find(".oe-form-view-popup-form-placeholder"));
+        this.view_form.appendTo(this.$element.find(".oe_popup_form"));
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
@@ -3983,7 +4000,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                         'read_only': true,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
-            self.view_list.appendTo($(".oe-select-create-popup-view-list", self.$element)).pipe(function() {
+            self.view_list.appendTo($(".oe_popup_list", self.$element)).pipe(function() {
                 self.view_list.do_show();
             }).pipe(function() {
                 self.searchview.do_search();
@@ -4005,7 +4022,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe-select-create-popup-view-list", self.$element));
+        this.searchview.appendTo($(".oe_popup_list", self.$element));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -4167,9 +4184,9 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
-        this.$element.find('input.oe-binary-file').change(this.on_file_change);
-        this.$element.find('button.oe_binary_file_save').click(this.on_save_as);
-        this.$element.find('.oe-binary-file-clear').click(this.on_clear);
+        this.$element.find('input.oe_form_binary_file').change(this.on_file_change);
+        this.$element.find('button.oe_form_binary_file_save').click(this.on_save_as);
+        this.$element.find('.oe_form_binary_file_clear').click(this.on_clear);
     },
     human_filesize : function(size) {
         var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -4186,10 +4203,10 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
 
         if ($(e.target).val() !== '') {
-            this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
-            this.$element.find('form.oe-binary-form').submit();
-            this.$element.find('.oe-binary-progress').show();
-            this.$element.find('.oe-binary').hide();
+            this.$element.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
+            this.$element.find('form.oe_form_binary_form').submit();
+            this.$element.find('.oe_form_binary_progress').show();
+            this.$element.find('.oe_form_binary').hide();
         }
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
@@ -4201,8 +4218,8 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             this.filename = name;
             this.on_file_uploaded_and_valid.apply(this, arguments);
         }
-        this.$element.find('.oe-binary-progress').hide();
-        this.$element.find('.oe-binary').show();
+        this.$element.find('.oe_form_binary_progress').hide();
+        this.$element.find('.oe_form_binary').show();
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
@@ -4212,7 +4229,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
         } else if (this._dirty_flag) {
-            var link = this.$('.oe_binary_file_save_data')[0];
+            var link = this.$('.oe_form_binary_file_save_data')[0];
             link.download = this.filename || "download.bin"; // Works on only on Google Chrome
             //link.target = '_blank';
             link.href = "data:application/octet-stream;base64," + value;
@@ -4455,6 +4472,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             var elem = this.$element.find("li.oe_form_steps_active span");
             elem.css("color", color);
         }
+    },
+    focus: function() {
+        return false;
     },
 });
 

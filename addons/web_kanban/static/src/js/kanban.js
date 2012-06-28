@@ -8,7 +8,7 @@ instance.web.views.add('kanban', 'instance.web_kanban.KanbanView');
 instance.web_kanban.KanbanView = instance.web.View.extend({
     template: "KanbanView",
     display_name: _lt('Kanban'),
-    default_nr_columns: 3,
+    default_nr_columns: 1,
     view_type: "kanban",
     quick_create_class: "instance.web_kanban.QuickCreate",
     number_of_color_schemes: 10,
@@ -48,6 +48,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
@@ -313,7 +314,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     open_record: function(id, editable) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form', null, { editable: editable });
+            this.do_switch_view('form', null);
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }
@@ -798,10 +799,10 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
                 self.quick_add();
             }
         });
-        $(".oe-kanban-quick_create_add", this.$element).click(function () {
+        $(".oe_kanban_quick_create_add", this.$element).click(function () {
             self.quick_add();
         });
-        $(".oe-kanban-quick_create_close", this.$element).click(function () {
+        $(".oe_kanban_quick_create_close", this.$element).click(function () {
             self.trigger('close');
         });
         self.$input.keyup(function(e) {

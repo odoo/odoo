@@ -20,7 +20,7 @@
   font-style: normal;
 }
 
-.openerp.openerp-web-client-container {
+.openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
 }
@@ -779,6 +779,7 @@
   border-top: 4px solid white;
 }
 .openerp .oe_topbar .oe_dropdown_menu {
+  top: 32px;
   background: #333333;
   background: rgba(37, 37, 37, 0.9);
   border-color: #999999;
@@ -1184,7 +1185,7 @@
 .openerp .oe_view_manager_global > .oe_view_manager_header .oe_header_row:first-child td {
   padding-top: 8px;
 }
-.openerp .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager {
+.openerp .oe_popup_form > .oe_formview > .oe_form_pager {
   display: none !important;
 }
 .openerp .oe_searchview {
@@ -1963,7 +1964,7 @@
   width: 45px;
   height: 30px;
 }
-.openerp .oe_hidden_input_file input.oe-binary-file {
+.openerp .oe_hidden_input_file input.oe_form_binary_file {
   z-index: 0;
   line-height: 0;
   font-size: 12px;
@@ -2004,7 +2005,7 @@
 .openerp .oe_form_field_many2one td:first-child {
   position: relative;
 }
-.openerp .oe_form_field_many2one span.oe-m2o-drop-down-button {
+.openerp .oe_form_field_many2one span.oe_m2o_drop_down_button {
   position: absolute;
   top: 3px;
   right: 2px;
@@ -2012,7 +2013,7 @@
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
 }
-.openerp .oe_form_field_one2many .oe-listview .oe-edit-row-save {
+.openerp .oe_form_field_one2many .oe_list .oe_list_edit_row_save {
   background-image: url(/web/static/src/img/iconset-b-remove.png);
 }
 .openerp .oe_form_field_one2many > .oe_view_manager .oe_header_row_top {
@@ -2033,28 +2034,28 @@
   height: auto;
   line-height: 16px;
 }
-.openerp .oe_form .oe_form_field_many2many > .oe-listview .oe_list_pager_single_page {
+.openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
 }
-.openerp .oe-listview-content {
+.openerp .oe_list_content {
   width: 100%;
 }
-.openerp .oe-listview-content td:first-child:after, .openerp .oe-listview-content th:first-child:after {
+.openerp .oe_list_content td:first-child:after, .openerp .oe_list_content th:first-child:after {
   border-width: 0;
 }
-.openerp .oe-listview-content > thead {
+.openerp .oe_list_content > thead {
   border-bottom: 2px solid #cacaca;
   background: #eeeeee;
   vertical-align: top;
 }
-.openerp .oe-listview-content > thead th {
+.openerp .oe_list_content > thead th {
   position: relative;
 }
-.openerp .oe-listview-content td, .openerp .oe-listview-content th {
+.openerp .oe_list_content td, .openerp .oe_list_content th {
   padding: 3px 6px;
   line-height: 18px;
 }
-.openerp .oe-listview-content th:after {
+.openerp .oe_list_content th:after {
   position: absolute;
   right: 6px;
   content: "";
@@ -2064,12 +2065,12 @@
   border-color: black transparent;
   visibility: hidden;
 }
-.openerp .oe-listview-content th.sortup:after {
+.openerp .oe_list_content th.sortup:after {
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe-listview-content th.sortdown:after {
+.openerp .oe_list_content th.sortdown:after {
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
@@ -2081,20 +2082,20 @@
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe-listview-content > tbody {
+.openerp .oe_list_content > tbody {
   cursor: pointer;
   background: white;
 }
-.openerp .oe-listview-content > tbody > tr {
+.openerp .oe_list_content > tbody > tr {
   border-top: 1px solid #dddddd;
 }
-.openerp .oe-listview-content > tbody > tr > td.oe-field-cell {
+.openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {
   padding: 3px 6px;
 }
-.openerp .oe-listview-content > tbody > tr > td, .openerp .oe-listview-content > tbody > tr > th {
+.openerp .oe_list_content > tbody > tr > td, .openerp .oe_list_content > tbody > tr > th {
   line-height: 18px;
 }
-.openerp .oe-listview-content > tbody > tr > td > button, .openerp .oe-listview-content > tbody > tr > th > button {
+.openerp .oe_list_content > tbody > tr > td > button, .openerp .oe_list_content > tbody > tr > th > button {
   border: none;
   background: transparent;
   padding: 0;
@@ -2102,16 +2103,16 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.openerp .oe-listview-content > tbody > tr > td.oe_list_checkbox:first-child, .openerp .oe-listview-content > tbody > tr th.oe_list_checkbox:first-child {
+.openerp .oe_list_content > tbody > tr > td.oe_list_checkbox:first-child, .openerp .oe_list_content > tbody > tr th.oe_list_checkbox:first-child {
   width: 17px;
 }
-.openerp .oe-listview-content > tbody > tr > td.oe_list_checkbox:first-child:after, .openerp .oe-listview-content > tbody > tr th.oe_list_checkbox:first-child:after {
+.openerp .oe_list_content > tbody > tr > td.oe_list_checkbox:first-child:after, .openerp .oe_list_content > tbody > tr th.oe_list_checkbox:first-child:after {
   border-width: 0;
 }
-.openerp .oe-listview-content > tbody > tr > td.oe_number {
+.openerp .oe_list_content > tbody > tr > td.oe_number {
   text-align: right !important;
 }
-.openerp .oe-listview-content > tbody > tr:nth-child(odd) {
+.openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;
   background-color: #f0f0fa;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
@@ -2121,13 +2122,13 @@
   background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
   background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
 }
-.openerp .oe-listview-content > tfoot {
+.openerp .oe_list_content > tfoot {
   border-top: 2px solid #cacaca;
   border-bottom: 1px solid #cacaca;
   background: #eeeeee;
   font-weight: bold;
 }
-.openerp .oe-listview-content > tbody tr:hover td, .openerp .oe-listview-content tbody tr:hover th {
+.openerp .oe_list_content > tbody tr:hover td, .openerp .oe_list_content tbody tr:hover th {
   background-color: #eeeeee;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#dedede));
   background-image: -webkit-linear-gradient(top, #eeeeee, #dedede);
@@ -2136,11 +2137,11 @@
   background-image: -o-linear-gradient(top, #eeeeee, #dedede);
   background-image: linear-gradient(to bottom, #eeeeee, #dedede);
 }
-.openerp .oe-listview-content .numeric {
+.openerp .oe_list_content .numeric {
   text-align: right;
   width: 82px;
 }
-.openerp .oe-listview-content .numeric input {
+.openerp .oe_list_content .numeric input {
   text-align: right;
 }
 .openerp .oe_trad_field.touched {
