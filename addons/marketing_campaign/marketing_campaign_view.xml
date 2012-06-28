@@ -9,6 +9,22 @@
     Marketing Campaign
     ======================
     -->
+    <act_window name="All Segments"
+        res_model="marketing.campaign.segment"
+        src_model="marketing.campaign"
+        view_type="form"
+        view_mode="tree,form"
+        id="act_marketing_campaing_segment_opened"
+        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
+    />
+
+    <!-- Campaign Followups -->
+    <act_window
+        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
+        id="act_marketing_campaing_followup"
+        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
+        src_model="marketing.campaign" view_mode="tree,form"
+        view_type="form" />
 
     <record model="ir.ui.view" id="view_marketing_campaign_form">
         <field name="name">marketing.campaign.form</field>
@@ -446,23 +462,6 @@
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
-
-    <act_window name="All Segments"
-        res_model="marketing.campaign.segment"
-        src_model="marketing.campaign"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-    />
-
-    <!-- Campaign Followups -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_followup"
-        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form" />
 
     <!-- Campaign Statistics -->
     <act_window
