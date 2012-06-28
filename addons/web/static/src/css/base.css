@@ -1162,10 +1162,10 @@
 .openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_diagram:after {
   content: "f";
 }
-.openerp .oe_view_manager_global {
+.openerp .oe_view_manager_current, .openerp .oe_view_manager_inline {
   height: 100%;
 }
-.openerp .oe_view_manager_global > .oe_view_manager_header {
+.openerp .oe_view_manager_current > .oe_view_manager_header, .openerp .oe_view_manager_inline > .oe_view_manager_header {
   border-top: 1px solid #cacaca;
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
@@ -1179,10 +1179,10 @@
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
 }
-.openerp .oe_view_manager_global > .oe_view_manager_header .oe_header_row td {
+.openerp .oe_view_manager_current > .oe_view_manager_header .oe_header_row td, .openerp .oe_view_manager_inline > .oe_view_manager_header .oe_header_row td {
   padding: 8px;
 }
-.openerp .oe_view_manager_global > .oe_view_manager_header .oe_header_row:first-child td {
+.openerp .oe_view_manager_current > .oe_view_manager_header .oe_header_row:first-child td, .openerp .oe_view_manager_inline > .oe_view_manager_header .oe_header_row:first-child td {
   padding-top: 8px;
 }
 .openerp .oe_popup_form > .oe_formview > .oe_form_pager {
@@ -1566,11 +1566,11 @@
   background-color: #ff6666 !important;
   border: 1px solid #dd0000 !important;
 }
-.openerp .oe_form_editable .oe_highlight {
+.openerp .oe_view_manager_current .oe_form_editable .oe_highlight {
   color: #404040;
   background: none;
 }
-.openerp .oe_form_editable button.oe_highlight {
+.openerp .oe_view_manager_current .oe_form_editable button.oe_highlight {
   background-color: #efefef;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
   background-image: -webkit-linear-gradient(top, #efefef, #d8d8d8);
@@ -1582,7 +1582,7 @@
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
-.openerp .oe_form_editable button.oe_highlight:active {
+.openerp .oe_view_manager_current .oe_form_editable button.oe_highlight:active {
   background-color: #e3e3e3;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6));
   background-image: -webkit-linear-gradient(top, #e3e3e3, #f6f6f6);
@@ -1594,7 +1594,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.openerp .oe_form_editable button.oe_highlight:hover {
+.openerp .oe_view_manager_current .oe_form_editable button.oe_highlight:hover {
   background-color: #f6f6f6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
   background-image: -webkit-linear-gradient(top, #f6f6f6, #e3e3e3);
