@@ -261,7 +261,7 @@ class account_voucher(osv.osv):
             ('receipt','Receipt'),
         ],'Default Type', readonly=True, states={'draft':[('readonly',False)]}),
         'name':fields.char('Memo', size=256, readonly=True, states={'draft':[('readonly',False)]}),
-        'date':fields.date('Date', readonly=True, select=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
+        'date':fields.date('Bill Date', readonly=True, select=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'line_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
@@ -404,7 +404,6 @@ class account_voucher(osv.osv):
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
             voucher_total += line_amount
-
         total = voucher_total
         total_tax = 0.0
         if tax_id:
@@ -421,7 +420,7 @@ class account_voucher(osv.osv):
 
         res.update({
             'amount':total or voucher_total,
-            'tax_amount':total_tax
+            'tax_amount':total_tax    
         })
         return {
             'value':res
