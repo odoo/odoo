@@ -392,7 +392,7 @@ class marketing_campaign_activity(osv.osv):
     _description = "Campaign Activity"
 
     _action_types = [
-        ('email', 'E-mail'),
+        ('email', 'Email'),
         ('report', 'Report'),
         ('action', 'Custom Action'),
         # TODO implement the subcampaigns.
@@ -423,7 +423,7 @@ class marketing_campaign_activity(osv.osv):
    - Report: print an existing Report defined on the resource item and save it into a specific directory
    - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
   """),
-        'email_template_id': fields.many2one('email.template', "Email Template", help='The e-mail to send when this activity is activated'),
+        'email_template_id': fields.many2one('email.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="This folder is used to store the generated reports"),
