@@ -8,8 +8,11 @@
  *   jquery selector string that will match on the widget's dom element. If there is no widget provided,
  *   it will match on the document
  * step: on each click, the target will be scrolled by it's deplayed size multiplied by this value. 
- * delay: this is the duration of the scrolling animation
+ * duration: this is the duration of the scrolling animation
  * wheel_step: the target will be scrolled by wheel_step pixels on each mouse scroll.
+ * track_bottom: the target will be kept on bottom when it's on the bottom and the size has changed
+ * on_show: this function will be called with the scrollbar as sole argument when the scrollbar is shown
+ * on_hide: this function will be called with the scrollbar as sole argument when the scrollbar is hidden
  */
 function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_sale
 
@@ -17,17 +20,39 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
         template:'ScrollbarWidget',
 
         init: function(parent,options){
+            var self = this;
             options = options || {};
             this._super(parent,options);
             this.target_widget = options.target_widget;
             this.target_selector = options.target_selector;
             this.scroll_target = this.target().scrollTop();
             this.scroll_step   = options.step || 0.8;
-            this.scroll_delay  = options.delay || 250;
+            this.scroll_duration  = options.duration || 250;
             this.wheel_step = options.wheel_step || 80;
+            this.name = options.name || 'unnamed';
+            this.bottom = false;  // true if the scroller cannot be scrolled further 
+            this.track_bottom = options.track_bottom || false;
+            this.on_show = options.on_show || function(){};
+            this.on_hide = options.on_hide || function(){};
+
+            // these handlers are declared once for the object's lifetime so that we can bind and unbind them.
+            this.resize_handler = function(){
+                setTimeout(function(){
+                    if(self.bottom && self.track_bottom){
+                        self.set_position(Number.MAX_VALUE);
+                    }
+                    self.update_scroller_dimensions();
+                    self.update_button_status();
+                    self.auto_hide(false);
+                },0);
+            };
+            this.target_mousewheel_handler = function(event,delta){
+                self.scroll(delta*self.wheel_step);
+            }
         },
 
-        start: function(){
+        renderElement: function(){
+            this._super();
             var self = this;
             this.$('.up-button').off('click').click(function(){
                 self.page_up();
@@ -35,17 +60,9 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             this.$('.down-button').off('click').click(function(){
                 self.page_down();
             });
-            this.update_scroller_dimensions();
+            this.update_scroller_dimensions(false);
             this.update_button_status();
             this.auto_hide(false);
-            $(window).resize(function(){    //FIXME REMOVE HANDLER ... 
-                self.update_scroller_dimensions();
-                self.update_button_status();
-                self.auto_hide(false);
-            });
-            this.target().bind('mousewheel',function(event,delta){
-                self.scroll(delta*self.wheel_step);
-            });
             this.$element.bind('mousewheel',function(event,delta){
                 self.scroll(delta*self.wheel_step);
             });
@@ -59,7 +76,29 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
                     self.page_down();
                 }
             });
+            $(window).unbind('resize',this.resize_handler);
+            $(window).bind('resize',this.resize_handler);
 
+            this.target().unbind('mousewheel',this.target_mousweheel_handler);
+            this.target().bind('mousewheel',this.target_mousewheel_handler);
+            
+            // because the rendering is asynchronous we must wait for the next javascript update
+            // for good dimensions values
+            setTimeout(function(){
+                self.update_scroller_dimensions(false);
+                self.update_button_status();
+                self.auto_hide(false);
+            },0);
+        },
+
+        // binds the window resize and the target scrolling events.
+        // it is good advice not to bind these multiple_times
+        bind_events:function(){
+            $(window).resize(function(){     
+            });
+            this.target().bind('mousewheel',function(event,delta){
+                self.scroll(delta*self.wheel_step);
+            });
         },
 
         // shows the scrollbar. if animated is true, it will do it in an animated fashion
@@ -69,6 +108,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             }else{
                 this.$element.show().css('width','48px');
             }
+            this.on_show(this);
         },
 
         // hides the scrollbar. if animated is true, it will do it in a animated fashion
@@ -79,6 +119,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             }else{
                 this.$element.hide().css('width','0px');
             }
+            this.on_hide(this);
         },
 
         // returns the scroller position and other information as a dictionnary with the following fields:
@@ -88,12 +129,12 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
         // bar_height: the height of the scrollbar's inner region
         scroller_dimensions: function(){
             var target = this.target()[0];
-            var scroller_height = target.clientHeight / target.scrollHeight;
-            var scroller_pos    = this.scroll_target / target.scrollHeight;
-            var button_up_height = this.$('.up-button')[0].offsetHeight;
-            var button_down_height = this.$('.down-button')[0].offsetHeight;
+            var scroller_height = target.clientHeight / target.scrollHeight || 0;
+            var scroller_pos    = this.scroll_target / target.scrollHeight || 0;
+            var button_up_height = this.$('.up-button')[0].offsetHeight || 48;
+            var button_down_height = this.$('.down-button')[0].offsetHeight || 48;
             
-            var bar_height = this.$element[0].offsetHeight;
+            var bar_height = this.$element[0].offsetHeight || 96;
             var scrollbar_height = bar_height - button_up_height - button_down_height;
             
             scroller_pos = scroller_pos * scrollbar_height + button_up_height;
@@ -105,15 +146,6 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
                      bar_height: scrollbar_height };
         },
 
-        //scrolls up or down by pixels
-        scroll: function(pixels){
-            var target = this.target()[0];
-            this.scroll_target = this.scroll_target - pixels;
-            this.scroll_target = Math.max(0,Math.min(target.scrollHeight-target.clientHeight, this.scroll_target));
-            this.target().scrollTop(this.scroll_target);
-            this.update_scroller_dimensions();
-            this.update_button_status();
-        },
 
         //checks if it should show or hide the scrollbar based on the target content and then show or hide it
         // if animated is true, then the scrollbar will be shown or hidden with an animation
@@ -139,10 +171,16 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
         //if animated is true, the scroller will move smoothly to its destination
         update_scroller_dimensions: function(animated){
             var dim = this.scroller_dimensions();
+            var target = this.target()[0];
             if(animated){
-                this.$('.scroller').animate({'top':dim.pos+'px', 'height': dim.height+'px'},this.scroll_delay);
+                this.$('.scroller').animate({'top':dim.pos+'px', 'height': dim.height+'px'},this.scroll_duration);
             }else{
                 this.$('.scroller').css({'top':dim.pos+'px', 'height': dim.height+'px'});
+            }
+            if(this.scroll_target + target.clientHeight >= target.scrollHeight){
+                this.bottom = true;
+            }else{
+                this.bottom = false;
             }
         },
 
@@ -176,32 +214,54 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
 
         //scroll one page up
         page_up: function(){
-            var target = this.target()[0]
-            if(this.scroll_target <= 0){
-                return;
-            }
-            this.scroll_target = this.scroll_target - this.get_scroll_step();
-            this.scroll_target = Math.max(0,this.scroll_target);
-            this.target().animate({'scrollTop':this.scroll_target},this.scroll_delay);
-            this.update_scroller_dimensions(true);
-            this.update_button_status();
+            return this.set_position(this.scroll_target - this.get_scroll_step(), true);
         },
 
         //scroll one page down
         page_down: function(){
-            var target = this.target()[0];
-            var max_scroll = target.scrollHeight - target.clientHeight;
-
-            if(this.scroll_target >= max_scroll){
-                this.scroll_target = max_scroll;
-                this.target().scrollTop(max_scroll);
-                return;
-            }
-            this.scroll_target = this.scroll_target + this.get_scroll_step();
-            this.scroll_target = Math.min(this.scroll_target, max_scroll);
-            this.target().animate({'scrollTop':this.scroll_target},this.scroll_delay);
-            this.update_scroller_dimensions(true);
-            this.update_button_status();
+            return this.set_position(this.scroll_target + this.get_scroll_step(), true);
         },
+
+        //scrolls up or down by pixels
+        scroll: function(pixels){
+            return this.set_position(this.scroll_target - pixels, false);
+        },
+
+        //scroll to a specific position (in pixels). 
+        //if animated is true, it will do this in an animated fashion with a duration equal to scroll_duration 
+        set_position: function(position,animated){
+            var self = this;
+            var target = this.target()[0];
+            var bottom = target.scrollHeight-target.clientHeight;
+            this.scroll_target = Math.max(0,Math.min(bottom,position));
+            if(this.scroll_target === 0){
+                this.position = 'top';
+            }else if(this.scroll_target === 'bottom'){
+                this.position = 'bottom';
+            }else{
+                this.position = 'center';
+            }
+            if(animated){
+                this.target().animate({'scrollTop':this.scroll_target},this.scroll_duration);
+                this.update_button_status();
+                this.update_scroller_dimensions(true);
+            }else{
+                this.target().scrollTop(this.scroll_target);
+                this.update_scroller_dimensions(false);
+                this.update_button_status();
+            }
+            return this.scroll_target;
+        },
+        
+        //returns the current position of the scrollbar
+        get_position: function(){
+            return this.scroll_target;
+        },
+        
+        //returns true if it cannot be scrolled further down
+        is_at_bottom: function(){
+            return this.bottom;
+        }
+            
     });
 }

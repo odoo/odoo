@@ -238,7 +238,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     true,
         show_leftpane:   true,
-        show_total:      true,
 
         help_button_action: function(){
             this.pos_widget.screen_selector.show_popup('help');
@@ -290,7 +289,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
             this.pos_widget.set_cashier_controls_visible(cashier_mode);
-            this.pos_widget.action_bar.set_element_visible('total', this.show_total);
             this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });
             this.pos_widget.action_bar.set_element_visible('logout-button', cashier_mode, function(){ self.logout_button_action(); });
             this.pos_widget.action_bar.set_element_visible('close-button', cashier_mode);
@@ -345,8 +343,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ScaleProductScreenWidget = module.BaseScreenWidget.extend({
         template:'ScaleProductSelectionScreenWidget',
-        renderElement: function(){
-            this._super();
+        start: function(){
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{
                 pos:this.pos,
                 product_type: 'weightable',
@@ -465,7 +462,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     false,
         show_leftpane:   false,
-        show_total:      false,
         
         show: function(){
             this._super();
@@ -488,7 +484,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     false,
         show_leftpane:   true,
-        show_total:      true,
 
         show: function(){
             this._super();
@@ -519,10 +514,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     true,
         show_leftpane:   true,
-        show_total:      true,
 
-        renderElement: function(){
-            this._super();
+        start: function(){ //FIXME this should work as renderElement... but then the categories aren't properly set. explore why
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{});
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
@@ -562,7 +555,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     true,
         show_leftpane:   true,
-        show_total:      true,
 
         init: function(parent, options) {
             this._super(parent,options);

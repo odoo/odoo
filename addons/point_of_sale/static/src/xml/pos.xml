@@ -11,7 +11,6 @@
                 </div>
                 <div id="loggedas">
                     <span class="placeholder-SynchNotificationWidget"></span>
-                    <button>Close</button>
                 </div>
                 <div id="rightheader">
                     <div id="order-selector">
@@ -120,8 +119,10 @@
 
     <t t-name="ProductListWidget">
         <div class='product-list-container'>
-            <ol id="products-screen-ol" class="product-list">
-            </ol>
+            <div class="product-list-scroller">
+                <ol id="products-screen-ol" class="product-list">
+                </ol>
+            </div>
             <span class="placeholder-ScrollbarWidget" />
         </div>
     </t>
@@ -333,8 +334,24 @@
 
     <t t-name="OrderWidget">
         <div class="order-container">
-            <ul class="order">
-            </ul>
+            <div class="order-scroller">
+                <div class="order">
+                    <ul class="orderlines">
+                        <t t-if="widget.pos.get('selectedOrder').get('orderLines').length === 0">
+                            <li class="orderline empty">
+                                Your shopping cart is empty
+                            </li>
+                        </t>
+
+                    </ul>
+                    <div class="summary">
+                        <span t-attf-class="line #{widget.pos.get('selectedOrder').get('orderLines').length === 0 ? 'empty' : ''}">
+                            <span class="label total">Total:</span> <span class="value total">0.00 €</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <span class="placeholder-ScrollbarWidget"></span>
         </div>
     </t>
 
@@ -352,11 +369,11 @@
                         <em>
                             <t t-esc="widget.model.get('quantity')" />
                         </em>
-                        <t t-esc="widget.model.get('unit')" />
+                        <t t-esc="widget.model.get_unit().name" />
                         at
                         <t t-esc="widget.format_currency(widget.model.get('list_price'))" />
                         /
-                        <t t-esc="widget.model.get('unit')" />
+                        <t t-esc="widget.model.get_unit().name" />
                     </li>
                 </t>
                 <t t-if="widget.model.get('discount') > 0">
@@ -470,9 +487,6 @@
                         <div class='iconlabel'>Client Mode</div>
                     </div>
                 </div>
-                <p class="total">
-                    Total: <span class="value"> 0 </span>€
-                </p>
             </div>
             <ul class="pos-actionbar-button-list">
                 <!-- <li class="button">BUTTOOON</li>

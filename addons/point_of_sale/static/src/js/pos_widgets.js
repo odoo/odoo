@@ -78,65 +78,41 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-// ---------- "Shopping Carts" ----------
-
     module.OrderlineWidget = module.PosBaseWidget.extend({
         template: 'OrderlineWidget',
         init: function(parent, options) {
             this._super(parent,options);
+
             this.model = options.model;
+            this.order = options.order;
+
             this.model.bind('change', _.bind( function() {
                 this.refresh();
             }, this));
-            this.model.bind('remove', _.bind( function() {
-                this.$element.remove();
-            }, this));
-            this.order = options.order;
-
-            if(options.selected){
-                this.select();
-            }else{
-                this.selected = false;
-            }
         },
-        clickHandler: function() {
-            this.select();
+        click_handler: function() {
+            this.order.selectLine(this.model);
+            this.on_selected();
         },
         renderElement: function() {
             this._super();
-            this.$element.click(_.bind(this.clickHandler, this));
-            if(this.selected){
+            this.$element.click(_.bind(this.click_handler, this));
+            if(this.model.get('selected')){
                 this.$element.addClass('selected');
             }
         },
         refresh: function(){
             this.renderElement();
-        },
-        select: function() {
-            console.log('SELECT:',this);
-            if(this.order.selected_widget){
-                this.order.selected_widget.deselect();
-            }
-            this.selected = true;
-            this.order.selected_widget = this;
-            this.order.selected = this.model;
-            this.on_selected();
-            this.$element.addClass('selected');
-        },
-        deselect: function(){
-            this.selected = false;
-            this.order.selected_widget = null;
-            this.order.selected = null;
-            this.$element.removeClass('selected');
+            this.on_refresh();
         },
         on_selected: function() {},
+        on_refresh: function(){},
     });
-
+    
     module.OrderWidget = module.PosBaseWidget.extend({
         template:'OrderWidget',
         init: function(parent, options) {
             this._super(parent,options);
-            console.log('OrderWidget init:',options)
             this.set_numpad_state(options.numpadState);
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bind_orderline_events();
@@ -152,11 +128,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         	}
         },
         set_value: function(val) {
-        	var param = {};
-        	param[this.numpadState.get('mode')] = val;
         	var order = this.pos.get('selectedOrder');
         	if (order.get('orderLines').length !== 0) {
-        	   order.selected.set(param);
+                var param = {};
+                param[this.numpadState.get('mode')] = val;
+        	    order.getSelectedLine().set(param);
         	} else {
         	    this.pos.get('selectedOrder').destroy();
         	}
@@ -168,42 +144,61 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         bind_orderline_events: function() {
             this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.add_line, this);
+            this.currentOrderLines.bind('add', this.renderElement, this);
             this.currentOrderLines.bind('remove', this.renderElement, this);
         },
-        add_line: function(newLine) {
-            var line = new module.OrderlineWidget(null, {
-                    model: newLine,
-                    pos: this.pos,
-                    order: this.pos.get('selectedOrder'),
-                    selected:true,
-            });
-            line.on_selected.add(_.bind(this.selected_line, this));
-            this.selected_line();
-            line.appendTo(this.$('.order'));
-        },
-        selected_line: function() {
+        update_numpad: function() {
         	var reset = false;
-        	if (this.currentSelected !== this.pos.get('selectedOrder').selected) {
+        	if (this.selected_line !== this.pos.get('selectedOrder').getSelectedLine()) {
         		reset = true;
         	}
-        	this.currentSelected = this.pos.get('selectedOrder').selected;
+        	this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
         	if (reset && this.numpadState)
         		this.numpadState.reset();
         },
         renderElement: function() {
+            var self = this;
             this._super();
-            var $content = this.$('.order');
-            $content.empty();
+            var $content = this.$('.orderlines');
             this.currentOrderLines.each(_.bind( function(orderLine) {
-                var line = new module.OrderlineWidget(null, {
+                var line = new module.OrderlineWidget(this, {
                         model: orderLine,
                         order: this.pos.get('selectedOrder'),
-                        selected:true,
                 });
-            	line.on_selected.add(_.bind(this.selected_line, this));
+            	line.on_selected.add(_.bind(this.update_numpad, this));
+                line.on_refresh.add(_.bind(this.update_summary, this));
                 line.appendTo($content);
             }, this));
+            this.update_numpad();
+            this.update_summary();
+
+            var position = this.scrollbar ? this.scrollbar.get_position() : 0;
+            var at_bottom = this.scrollbar ? this.scrollbar.is_at_bottom() : false;
+            
+            this.scrollbar = new module.ScrollbarWidget(this,{
+                target_widget:   this,
+                target_selector: '.order-scroller',
+                name: 'order',
+                track_bottom: true,
+                on_show: function(){
+                    self.$('.order-scroller').css({'width':'89%'},100);
+                },
+                on_hide: function(){
+                    self.$('.order-scroller').css({'width':'100%'},100);
+                },
+            });
+
+            this.scrollbar.replace(this.$('.placeholder-ScrollbarWidget'));
+            this.scrollbar.set_position(position);
+
+            if( at_bottom ){
+                this.scrollbar.set_position(Number.MAX_VALUE, false);
+            }
+        },
+        update_summary: function(){
+            var order = this.pos.get('selectedOrder');
+            var total = order ? order.getTotal() : 0;
+            this.$('.summary .value.total').html(this.format_currency(total));
         },
     });
 
@@ -218,7 +213,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.model.attributes.weight = options.weight || undefined;
             this.next_screen = options.next_screen || undefined;
         },
-        addToOrder: function(event) {
+        add_to_order: function(event) {
             /* Preserve the category URL */
             event.preventDefault();
             return (this.pos.get('selectedOrder')).addProduct(this.model);
@@ -234,7 +229,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
             $("a", this.$element).click(function(e){
-                self.addToOrder(e);
+                self.add_to_order(e);
                 if(self.next_screen){
                     self.pos_widget.screen_selector.set_current_screen(self.next_screen);    //FIXME There ought to be a better way to do this ...
                 }
@@ -334,10 +329,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.button_list = [];
             this.fake_buttons  = {};
             this.visibility = {};
-            this.total_visibility = true;
-            this.help_visibility  = true;
-            this.logout_visibility  = true;
-            this.close_visibility  = true;
         },
         set_element_visible: function(element, visible, action){
             if(visible != this.visibility[element]){
@@ -351,9 +342,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible && action){
                 this.$('.'+element).off('click').click(action);
             }
-        },
-        set_total_value: function(value){
-            this.$('.value').html(value);
         },
         destroy_buttons:function(){
             for(var i = 0; i < this.button_list.length; i++){
@@ -397,6 +385,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }else{
                 this.category = category;
             }
+            console.log('setting categories:',this.category);
+
             this.breadcrumb = [];
             for(var i = 1; i < this.category.ancestors.length; i++){
                 this.breadcrumb.push(this.category.ancestors[i]);
@@ -419,7 +409,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function(){
             var self = this;
             this._super();
-            this.$element.find(".oe-pos-categories-list a").click(function(event){
+            this.$(".oe-pos-categories-list a").click(function(event){
                 var id = $(event.target).data("category-id");
                 var category = self.pos.categories_by_id[id];
                 self.set_category(category);
@@ -535,7 +525,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.scrollbar = new module.ScrollbarWidget(this,{
                 target_widget:   this,
-                target_selector: '.product-list',
+                target_selector: '.product-list-scroller',
+                name: 'product-list',
             });
 
             this.scrollbar.replace(this.$('.placeholder-ScrollbarWidget'));
@@ -745,7 +736,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             window.screen_selector = this.screen_selector; //DEBUG
 
             this.pos.barcode_reader.connect();
-            
         },
 
         //FIXME this method is probably not at the right place ... 

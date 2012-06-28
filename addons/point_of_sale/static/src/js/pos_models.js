@@ -92,13 +92,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'shop':             null, 
                 'company':          null,
                 'user':             null,
+                'user_list':        null,
+                'cashier':          null,
+                'customer':         null,
 
                 'orders':           new module.OrderCollection(),
                 //this is the product list as seen by the product list widgets, it will change based on the category filters
                 'products':         new module.ProductCollection(), 
                 'cashRegisters':    null, 
 
-                'product_list':     null,   // the list of all products. 
+                'product_list':     null,   // the list of all products, does not change. 
                 'bank_statements':  null,
                 'taxes':            null,
                 'pos_session':      null,
@@ -119,11 +122,33 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var prod_def = fetch( 
                 'product.product', 
-                ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight'],
+                ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
                     self.set({'product_list': result});
                 });
+
+            var uom_def = fetch(    //unit of measure
+                'product.uom',
+                null,
+                null
+                ).then(function(result){
+                    self.set({'units': result});
+                    var units_by_id = {};
+                    for(var i = 0, len = result.length; i < len; i++){
+                        units_by_id[result[i].id] = result[i];
+                    }
+                    self.set({'units_by_id':units_by_id});
+                });
+
+            var user_def = fetch(
+                'res.users',
+                ['name','ean13']
+                [['ean13', '!=', false]]
+                ).then(function(result){
+                    self.set({'user_list':result});
+                });
+
 
             // associate the products with their categories
             var prod_process_def = $.when(cat_def, prod_def)
@@ -221,7 +246,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, prod_def, session_def, tax_def, prod_process_def, this.get_app_data(), this.flush())
+            $.when(cat_def, prod_def, user_def, uom_def, session_def, tax_def, prod_process_def, this.get_app_data(), this.flush())
                 .then(function(){ 
                     //self.build_tree();
                     self.build_categories(); 
@@ -241,6 +266,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             console.log('PosModel data has been loaded:');
             console.log('PosModel: categories:',this.get('categories'));
             console.log('PosModel: product_list:',this.get('product_list'));
+            console.log('PosModel: units:',this.get('units'));
             console.log('PosModel: bank_statements:',this.get('bank_statements'));
             console.log('PosModel: journals:',this.get('journals'));
             console.log('PosModel: taxes:',this.get('taxes'));
@@ -250,6 +276,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             console.log('PosModel: shop:',this.get('shop'));
             console.log('PosModel: company:',this.get('company'));
             console.log('PosModel: currency:',this.get('currency'));
+            console.log('PosModel: user_list:',this.get('user_list'));
             console.log('PosModel.session:',this.session);
             console.log('PosModel.categories:',this.categories);
             console.log('PosModel end of data log.');
@@ -493,7 +520,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             discount: 0,
             weighted: false,
             product_type: 'unit',
-            unit: 'Unit',
+            selected: false,
         },
         initialize: function(attributes) {
             this.pos = attributes.pos;
@@ -504,29 +531,44 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.set({weighted: true});
                 this.set({product_type: 'weight'});
             }
-
-            this.bind('change:quantity', function(unused, qty) {
-                if (qty == 0)
-                    this.trigger('killme');
-            }, this);
         },
 
         // we override the attributes set to prevent some out of range values
+        // we also round the quantity according to the unit of measure rounding methods
         set: function(attributes, options){
+            var attributes = _.clone(attributes);   //so we don't modify the argument
             if(attributes.discount > 100){
                 attributes.discount = 100;
             }else if(attributes.discount < 0){
                 attributes.discount = 0;
             }
-            if(attributes.quantity < 0){
-                attributes.quantity = 0;
-            }
-            if(attributes.list_price < 0){
-                attributes.list_price = 0;
+            if(_.isNaN(attributes.quantity)){
+                console.log(this.get('order'));
+                this.get('order').removeOrderline(this);
+                return this;
+            }else if(attributes.quantity !== undefined){
+                attributes.quantity = Math.max(0,attributes.quantity);
+                var unit = this.get_unit();
+                if(unit && attributes.quantity){
+                    attributes.quantity = Math.max(unit.rounding, Math.round( attributes.quantity / unit.rounding) * unit.rounding);
+                }
             }
             Backbone.Model.prototype.set.call(this,attributes,options);
             return this;
         },
+        // returns the unit of measure associated with the product if there is one, undefined otherwise
+        get_unit: function(){
+            var unit_id = (this.get('uos_id') || this.get('uom_id'));
+            if(!unit_id){
+                return undefined;
+            }
+            unit_id = unit_id[0];
+            if(!this.pos){
+                return undefined;
+            }
+            return this.pos.get('units_by_id')[unit_id];
+        },
+
 
         // when we add an new orderline we want to merge it with the last line to see reduce the number of items
         // in the orderline. This returns true if it makes sense to merge the two
@@ -669,6 +711,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     // there is always an active ('selected') order in the Pos, a new one is created
     // automaticaly once an order is completed and sent to the server.
 
+    
     module.Order = Backbone.Model.extend({
         initialize: function(attributes){
             Backbone.Model.prototype.initialize.apply(this, arguments);
@@ -680,7 +723,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             });
             this.pos =     attributes.pos; //TODO put that in set and remember to use 'get' to read it ... 
             this.pos_widget = attributes.pos_widget;    //FIXME we shouldn't depend on pos_widget in the models
-            this.last_orderline = undefined;
+            this.selected_orderline = undefined;
             return this;
         },
         generateUniqueId: function() {
@@ -689,41 +732,24 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         addProduct: function(product){
             var attr = product.toJSON();
             attr.pos = this.pos;
+            attr.order = this;
             var line = new module.Orderline(attr);
             var self = this;
 
-            if( this.last_orderline && this.last_orderline.can_be_merged_with(line) ){
-                this.last_orderline.merge(line);
+            var last_orderline = this.getLastOrderline();
+            if( last_orderline && last_orderline.can_be_merged_with(line) ){
+                last_orderline.merge(line);
             }else{
                 this.get('orderLines').add(line);
-                line.bind('killme', function() { 
-                    this.get('orderLines').remove(line);
-                }, this);
-                this.last_orderline = line;
             }
+            this.selectLine(this.getLastOrderline());
         },
-        addProductOld: function(product) {
-            var existing;
-
-            existing = (this.get('orderLines')).get(product.id);
-            if (existing != null) {
-                this.last_orderline = existing;
-                if(existing.get('weighted')){
-                    existing.incrementWeight(product.attributes.weight);
-                }else{
-                    existing.incrementQuantity();
-                }
-            } else {
-                var attr = product.toJSON();
-                attr.pos = this.pos;
-                var line = new module.Orderline(attr);
-                console.log('new Orderline:',line,attr);
-                this.last_orderline = line;
-                this.get('orderLines').add(line);
-                line.bind('killme', function() {
-                    this.get('orderLines').remove(line);
-                }, this);
-            }
+        removeOrderline: function( line ){
+            this.get('orderLines').remove(line);
+            this.selectLine(this.getLastOrderline());
+        },
+        getLastOrderline: function(){
+            return this.get('orderLines').at(this.get('orderLines').length -1);
         },
         addPaymentLine: function(cashRegister) {
             var newPaymentline;
@@ -787,6 +813,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 pos_session_id: this.pos.get('pos_session').id,
             };
         },
+        getSelectedLine: function(){
+            return this.selected_orderline;
+        },
+        selectLine: function(line){
+            if(line){
+                if(line !== this.selected_orderline){
+                    if(this.selected_orderline){
+                        this.selected_orderline.set({'selected':false});
+                    }
+                    this.selected_orderline = line;
+                    this.selected_orderline.set({'selected':true});
+                }
+            }else{
+                this.selected_orderline = undefined;
+            }
+        },
+            
     });
 
     module.OrderCollection = Backbone.Collection.extend({
@@ -821,15 +864,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.updateTarget();
         },
         deleteLastChar: function() {
-            var tempNewBuffer;
-            tempNewBuffer = (this.get('buffer')).slice(0, -1) || "0";
-            if (isNaN(tempNewBuffer)) {
-                tempNewBuffer = "0";
+            var tempNewBuffer = this.get('buffer').slice(0, -1);
+
+            if(!tempNewBuffer){
+                this.set({ buffer: "0" });
+                this.killTarget();
+            }else{
+                if (isNaN(tempNewBuffer)) {
+                    tempNewBuffer = "0";
+                }
+                this.set({ buffer: tempNewBuffer });
+                this.updateTarget();
             }
-            this.set({
-                buffer: tempNewBuffer
-            });
-            this.updateTarget();
         },
         switchSign: function() {
             var oldBuffer;
@@ -857,6 +903,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             if (bufferContent && !isNaN(bufferContent)) {
             	this.trigger('set_value', parseFloat(bufferContent));
             }
+        },
+        killTarget: function(){
+            this.trigger('set_value',Number.NaN);
         },
     });
 }
