@@ -55,8 +55,8 @@
         <field name="type_tax_use">sale</field>
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_base_code_id" ref="vat_code_base_due"/>
+        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 	
@@ -71,8 +71,8 @@
         <field name="type_tax_use">sale</field>
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
-        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_base_code_id" ref="vat_code_base_due"/>
+        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
     
@@ -87,8 +87,8 @@
         <field name="amount">0.15</field>
         <field name="type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="base_code_id" ref="vat_code_base_due"/>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="base_code_id" ref="vat_code_receivable_net"/>
+        <field name="tax_code_id" ref="vat_code_payable"/>
         <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
         <field name="ref_tax_code_id" ref="vat_code_payable"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
@@ -107,9 +107,9 @@
         <field name="amount">0.05</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="base_code_id" ref="vat_code_balance_net"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="tax_code_id" ref="vat_code_payable"/>
         <field name="tax_sign">1</field>
         <field name="ref_base_code_id" ref="vat_code_base_due"/>
         <field name="ref_base_sign">1</field>
@@ -128,9 +128,9 @@
         <field name="amount">0.15</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="base_code_id" ref="vat_code_balance_net"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="tax_code_id" ref="vat_code_payable"/>
         <field name="tax_sign">1</field>
         <field name="ref_base_code_id" ref="vat_code_base_due"/>
         <field name="ref_base_sign">1</field>
@@ -149,9 +149,9 @@
         <field name="amount">0.08</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="base_code_id" ref="vat_code_balance_net"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
-        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="tax_code_id" ref="vat_code_payable"/>
         <field name="tax_sign">1</field>
         <field name="ref_base_code_id" ref="vat_code_base_due"/>
         <field name="ref_base_sign">1</field>
@@ -172,13 +172,13 @@
         <field name="amount">0.12</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="base_code_id" ref="vat_code_balance_net"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
         <field name="tax_sign">1</field>
         <field name="ref_base_code_id" ref="vat_code_base_due"/>
         <field name="ref_base_sign">1</field>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
         <field name="ref_tax_sign">1</field>
         <field name="child_depend" eval="1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
@@ -215,13 +215,13 @@
         <field name="amount">0.10</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="base_code_id" ref="vat_code_balance_net"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
         <field name="tax_sign">1</field>
         <field name="ref_base_code_id" ref="vat_code_base_due"/>
         <field name="ref_base_sign">1</field>
-        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_tax_code_id" ref="vat_code_due_tva"/>
         <field name="ref_tax_sign">1</field>
         <field name="child_depend" eval="1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
