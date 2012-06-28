@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <div t-name="mail.Wall" class="oe_mail_wall">
+    <div t-name="mail.Wall" class="oe_view_manager oe_mail_wall oe_view_manager_global">
         <table class="oe_view_manager_header">
+          <colgroup>
+            <col width="33%"/>
+            <col width="33%"/>
+            <col width="34%"/>
+          </colgroup>
+          <tbody>
             <tr class="oe_header_row">
-                <td><h2 class="oe_view_title">All Feeds</h2></td>
+                <td colspan="2">
+                    <h2 class="oe_view_title">
+                        <span class="oe_view_title_text">All Feeds</span>
+                    </h2>
+                </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
+          </tbody>
         </table>
         <div class="oe_mail_wall_main">
             <div class="oe_mail_wall_action">
