@@ -34,7 +34,7 @@ from ..mail_message import to_email
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
 class mail_compose_message(osv.osv_memory):
-    """Generic E-mail composition wizard. This wizard is meant to be inherited
+    """Generic Email composition wizard. This wizard is meant to be inherited
        at model and view level to provide specific wizard features.
 
        The behavior of the wizard can be modified through the use of context
@@ -58,7 +58,7 @@ class mail_compose_message(osv.osv_memory):
     """
     _name = 'mail.compose.message'
     _inherit = 'mail.message.common'
-    _description = 'E-mail composition wizard'
+    _description = 'Email composition wizard'
 
     def default_get(self, cr, uid, fields, context=None):
         """Overridden to provide specific defaults depending on the context

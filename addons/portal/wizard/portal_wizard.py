@@ -91,12 +91,22 @@ class wizard(osv.osv_memory):
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
         def create_user_from_address(address):
-            return {    # a user config based on a contact (address)
-                'name': address.name,
-                'user_email': extract_email(address.email),
-                'lang': address.parent_id and address.parent_id.lang or 'en_US',
-                'partner_id': address.parent_id and address.parent_id.id,
-            }
+            if isinstance(address, int):
+                res_partner_obj = self.pool.get('res.partner')
+                address = res_partner_obj.browse(cr, uid, address, context=context)
+                lang = address.id and address.lang or 'en_US'
+                partner_id = address.id
+                
+            else:
+                lang = address.parent_id and address.parent_id.lang or 'en_US'
+                partner_id = address.parent_id and address.parent_id.id
+            
+            return{
+                   'name': address.name,
+                   'user_email': extract_email(address.email),
+                   'lang': lang,
+                   'partner_id': partner_id,
+                   }
         
         user_ids = []
         if context.get('active_model') == 'res.partner':
@@ -107,6 +117,8 @@ class wizard(osv.osv_memory):
                 # add one user per contact, or one user if no contact
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
+                elif p.is_company == False and p.customer == True:
+                    user_ids.extend(map(create_user_from_address, [p.id]))
                 else:
                     user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
         
@@ -148,6 +160,7 @@ class wizard(osv.osv_memory):
                     'share': True,
                     'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
                     'partner_id': u.partner_id and u.partner_id.id,
+                    'groups_id': [(6, 0, [])],
                 } for u in wiz.user_ids if u.user_email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                 {'users': [(0, 0, data) for data in new_users_data]}, context0)
@@ -197,7 +210,7 @@ class wizard_user(osv.osv_memory):
             string='User Name',
             help="The user's real name"),
         'user_email': fields.char(size=64, required=True,
-            string='E-mail',
+            string='Email',
             help="Will be used as user login.  "  
                  "Also necessary to send the account information to new users"),
         'lang': fields.selection(_lang_get, required=True,
