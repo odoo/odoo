@@ -196,14 +196,5 @@ class ir_needaction_mixin(osv.AbstractModel):
            get the number of actions it has to perform"""
         rel_obj = self.pool.get('ir.needaction_users_rel')
         return rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, count=True, context=context)
-    
-    def needaction_get_record_references(self, cr, uid, user_id, offset=None, limit=None, order=None, context=None):
-        """For a given user_id, get all the records that asks this user to
-           perform an action. Records are given as references, a list of
-           tuples (model_name, record_id).
-           This method is trans-model."""
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        rel_ids = rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
-        return map(itemgetter('res_model', 'res_id'), rel_obj.read(cr, uid, rel_ids, ['res_model', 'res_id'], context=context))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
