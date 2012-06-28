@@ -111,14 +111,12 @@ class account_move_journal(osv.osv_memory):
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
-                <group string="%s" colspan="4">
+                <group string="%s">
                     <field name="target_move" />
                 </group>
-                <group colspan="4" >
-                    <label width="300" string="%s"/>
-                    <newline/>
-                    <label width="300" string="%s"/>
-                </group>
+                <label width="300" string="%s"/>
+                <newline/>
+                <label width="300" string="%s"/>
             </form>""" % (open_string, separator_string, journal_string, period_string)
     
             view = etree.fromstring(view.encode('utf8'))

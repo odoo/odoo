@@ -12,9 +12,8 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <group colspan="4" >
+                    <group>
                         <field name="date"/>
-                        <newline/>
                         <field name="journal_ids"  domain="[('type','in',['sale','purchase','cash'])]"/>
                     </group>
                </form>
@@ -41,10 +40,8 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <group colspan="4" expand="1">
-                        <separator string="Payable and Receivables" colspan="4"/>
-                        <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
-                    </group>
+                    <separator string="Payable and Receivables"/>
+                    <field height="300" width="700" name="line_ids" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
                </form>
             </field>
         </record>

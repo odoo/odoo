@@ -1284,10 +1284,10 @@
                         <field name="partner_id" invisible="1"/>
                         <field name="amount" invisible="1"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Journal Items">
                             <field name="balance" invisible="1"/>
-                            <field colspan="4" name="line_id" widget="one2many_list"
+                            <field name="line_id" widget="one2many_list"
                               on_change="onchange_line_id(line_id)"
                               context="{'balance': balance , 'journal': journal_id }">
                                 <form string="Journal Item" version="7.0">
