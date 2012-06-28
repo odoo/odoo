@@ -168,7 +168,7 @@ class project_work(osv.osv):
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
-                result = self.get_user_related_details(cr, uid, vals['user_id'])
+                result = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
                 for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
                     if result.get(fld, False):
                         vals_line[fld] = result[fld]
