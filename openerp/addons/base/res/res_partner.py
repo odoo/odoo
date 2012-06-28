@@ -132,29 +132,18 @@ class res_partner(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = {'image_medium': False, 'image_small': False}
-            if obj.image:
-                result[obj.id]['image_medium'] = tools.resize_image_medium(obj.image)
-                result[obj.id]['image_small'] = tools.resize_image_small(obj.image)
+            resized_image_dict = tools.get_resized_images(obj.image)
+            result[obj.id] = {
+                'image_medium': resized_image_dict['image_medium'],
+                'image_small': resized_image_dict['image_small'],
+                }
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
-        if value:
-            value = tools.resize_image_big(value)
-        return self.write(cr, uid, [id], {'image': value}, context=context)
+        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
     
     def onchange_image(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {
-                        'image': value,
-                        'image_medium': value,
-                        'image_small': value,
-                        }}
-        return {'value': {
-                    'image': tools.resize_image_big(value),
-                    'image_medium': tools.resize_image_medium(value),
-                    'image_small': tools.resize_image_small(value),
-                    }}
+        return {'value': tools.get_resized_images(value)}
 
     _order = "name"
     _columns = {
@@ -326,7 +315,7 @@ class res_partner(osv.osv):
             self.update_address(cr, uid, update_ids, vals, context)
         if 'image' not in vals :
             image_value = self._get_default_image(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
-            vals.update(self.onchange_image(cr, uid, [], image_value, context=context))
+            vals.update(self.onchange_image(cr, uid, [], image_value, context=context)['value'])
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
