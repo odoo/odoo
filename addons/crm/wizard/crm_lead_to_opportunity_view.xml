@@ -42,10 +42,8 @@
               <field name="type">form</field>
               <field name="arch" type="xml">
                    <form string="Convert to Opportunity">
-                       
                             <field name="action"/>
                             <field name="name" colspan="4"/>
-                            
                             <separator string="Assigned Opportunities to" colspan="4" />
                             <field name="section_id" />
                             <group col="4" colspan="4">
@@ -61,7 +59,6 @@
                                 <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                                 <button name="mass_convert" string="Convert into Opportunities" type="object" icon="gtk-ok"/>
                             </group>
-                      
                   </form>
               </field>
            </record>

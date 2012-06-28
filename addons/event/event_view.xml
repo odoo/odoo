@@ -120,7 +120,7 @@
                                     <group col="8" colspan="4">
                                         <separator string="" colspan="4"/>
                                         <newline/>
-                                        <field name="state"  colspan="2"/>
+                                        <field name="state" colspan="2"/>
                                         <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                                         <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
@@ -360,9 +360,9 @@
                     <button name="button_reg_close" string="Attended" states="open" type="object"/>
                     <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
-                    <field name="state"  nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
+                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
-                <sheet string="Registration" >
+                <sheet string="Registration">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>

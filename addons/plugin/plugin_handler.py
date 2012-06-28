@@ -27,7 +27,8 @@ class plugin_handler(osv.osv_memory):
 
     def partner_get(self, cr, uid, address_email):
         partner_obj = self.pool.get('res.partner')
-        res_id = partner_obj.search(cr, uid, [('email', 'like', address_email)]) or 0
+        partner_ids = partner_obj.search(cr, uid, [('email', 'like', address_email)])
+        res_id = partner_ids and partner_ids[0] or 0
         url = self._make_url(cr, uid, res_id, 'res.partner')
         return ('res.partner', res_id , url)
 

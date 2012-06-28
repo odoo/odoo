@@ -28,6 +28,8 @@ from pytz import timezone
 from datetime import datetime
 import time
 from osv import *
+from tools.translate import _
+
 try:
     import gdata
     import gdata.contacts.service
@@ -285,7 +287,7 @@ class google_import(import_framework):
                 name = tools.ustr(entry.title.text)
                 if name == "None":
                     name = entry.email and entry.email[0].address or ''
-                data['name'] = name or 'Unknown'
+                data['name'] = name or _('Unknown')
                 emails = ','.join(email.address for email in entry.email)
                 data['email'] = emails
                 if table == 'Contact':
