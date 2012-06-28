@@ -448,13 +448,17 @@
             <field name="arch" type="xml">
                 <form string="Open a Window" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="res_model"/>
-                        <field name="type" readonly="1"/>
-                        <field name="src_model"/>
-                        <field name="usage"/>
-                        <field name="target"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="res_model"/>
+                            <field name="src_model"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="type" readonly="1"/>
+                            <field name="target"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="General Settings">
