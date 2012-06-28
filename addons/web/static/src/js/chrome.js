@@ -557,8 +557,6 @@ instance.web.Login =  instance.web.Widget.extend({
         },function () {
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
-            self.$element.find("form input[name=login]").removeAttr("disabled");
-            self.$element.find("form input[name=password]").removeAttr("disabled");
         });
     }
 });
