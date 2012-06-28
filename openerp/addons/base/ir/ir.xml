@@ -342,16 +342,18 @@
             <field name="arch" type="xml">
                 <form string="Report" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="usage"/>
-
-                        <field name="report_name"/>
-                        <field name="report_type"/>
-                        <field name="report_file"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="report_name"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="report_type"/>
+                            <field name="report_file"/>
+                        </group>
                     </group>
-
                     <notebook>
                         <page string="Other Configuration">
                             <group>
