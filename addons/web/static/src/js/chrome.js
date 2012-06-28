@@ -538,6 +538,7 @@ instance.web.Login =  instance.web.Widget.extend({
     do_login: function (db, login, password) {
         var self = this;
         this.$element.removeClass('oe_login_invalid');
+        self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).pipe(function() {
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
@@ -552,10 +553,12 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.$(".oe_login_pane").fadeOut("slow");
             self.trigger("login");
         },function () {
+            self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
+            self.$element.find("form input[name=login]").removeAttr("disabled");
+            self.$element.find("form input[name=password]").removeAttr("disabled");
         });
     }
 });
