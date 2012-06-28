@@ -492,6 +492,33 @@ class product_product(osv.osv):
                     (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {'image_medium': False, 'image_small': False}
+            if obj.image:
+                result[obj.id]['image_medium'] = tools.resize_image_medium(obj.image)
+                result[obj.id]['image_small'] = tools.resize_image_small(obj.image)
+        return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        if value:
+            value = tools.resize_image_big(value)
+        return self.write(cr, uid, [id], {'image': value}, context=context)
+    
+    def onchange_image(self, cr, uid, ids, value, context=None):
+        if not value:
+            return {'value': {
+                        'image': value,
+                        'image_medium': value,
+                        'image_small': value,
+                        }}
+        return {'value': {
+                    'image': tools.resize_image_big(value),
+                    'image_medium': tools.resize_image_medium(value),
+                    'image_small': tools.resize_image_small(value),
+                    }}
+
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
@@ -525,7 +552,26 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
-        'product_image': fields.binary('Image'),
+        'image': fields.binary("Image",
+            help="This field holds the image used for the "\
+                 "product. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 12024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the product. It is automatically "\
+                 "resized as a 180x180px image, with aspect ratio kept. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized image", type="binary", multi="_get_image",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the product. It is automatically "\
+                 "resized as a 50x50px image, with aspect ratio keps. "\
+                 "Use this field anywhere a small image is required."),
     }
 
     def create(self, cr, uid, vals, context=None):
