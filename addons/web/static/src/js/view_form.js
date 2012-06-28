@@ -584,7 +584,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_invalidclick: function() {
        this.$element.find(".oe_form_field").click(function () {              
-        $(".oe_form_button_edit").effect("bounce", { times:3,distance:100 }, 500);                 
+        $(".oe_form_button_edit").effect("bounce", { times:3}, 500);                 
         });
     },
     on_button_cancel: function(event) {
