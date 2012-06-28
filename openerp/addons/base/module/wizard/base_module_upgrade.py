@@ -48,7 +48,9 @@ class base_module_upgrade(osv.osv_memory):
         if not ids:
             res['arch'] = '''<form string="Apply Scheduled Upgrades" version="7.0">
                                 <header>
-                                    <button name="config" string="Start configuration" type="object" icon="gtk-ok" class="oe_highlight_on_dirty"/>
+                                    <button name="config" string="Start configuration" type="object" class="oe_highlight_on_dirty"/>
+                                    or
+                                    <button string="Cancel" class="oe_link" special="cancel"/>
                                 </header>
                                 <group>
                                     <separator string="System update completed" colspan="4"/>
