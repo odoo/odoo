@@ -245,7 +245,7 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
-        'note': fields.text('Notes'),
+        'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
             store = {
