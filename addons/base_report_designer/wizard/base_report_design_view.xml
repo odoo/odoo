@@ -13,8 +13,7 @@
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
-                <group>
-                    <separator string="Select your report" colspan="4"/>
+                <group string="Select your report">
                     <field name="report_id"/>
                 </group>
             </form>
@@ -53,7 +52,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Save RML FIle">
-                    <separator string="The RML Report" colspan="4"/>
+                    <separator string="The RML Report"/>
                     <field name="file_rml"/>
                 </form>
             </field>

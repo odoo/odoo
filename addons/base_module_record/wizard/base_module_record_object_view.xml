@@ -13,14 +13,13 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <group> 
+                    <group>
                         <field name="check_date"/>
-                        <newline/>
                         <field name="filter_cond"/>
-                        <separator string="Choose objects to record" colspan="4"/>
-                        <field name="objects" colspan="4" nolabel="1"/>
-                        <group><field name="info_yaml"/></group>
-                   </group>
+                    </group>
+                    <separator string="Choose objects to record"/>
+                    <field name="objects"/>
+                    <group><field name="info_yaml"/></group>
                 </form>
             </field>
         </record>
@@ -61,13 +60,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
-                    <separator string="Module successfully created!" colspan="4"/>
-                    <field name="module_filename"/>
-                    <newline/>
-                    <field name="module_file"/>
-                    <separator string="Information" colspan="4"/>
-                    <label string="If you think your module could interest other people, we'd like you to publish it on http://www.openerp.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
-                    <label string="Thanks in advance for your contribution." colspan="4" align="0.0"/>
+                    <group string="Module successfully created!">
+                        <field name="module_filename"/>
+                        <field name="module_file"/>
+                    </group>
+                    <separator string="Information"/>
+                    <label string="If you think your module could interest other people, we'd like you to publish it on http://www.openerp.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." align="0.0"/>
+                    <label string="Thanks in advance for your contribution." align="0.0"/>
                 </form>
             </field>
          </record>         
@@ -92,16 +91,17 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <separator string="Module Information" colspan="4"/>
-                    <field name="name"/>
-                    <field name="directory_name"/>
-                    <field name="version"/>
-                    <field name="author"/>
-                    <field name="website" colspan="4"/>
-                    <field name="category" colspan="4"/>
-                    <field name="data_kind"/>
-                    <newline/>
-                    <field name="description" colspan="4"/>
+                    <group string="Module Information">
+                        <field name="name"/>
+                        <field name="directory_name"/>
+                        <field name="version"/>
+                        <field name="author"/>
+                        <field name="website" colspan="4"/>
+                        <field name="category" colspan="4"/>
+                        <field name="data_kind"/>
+                    </group>
+                    <separator string="Description"/>
+                    <field name="description"/>
                 </form>
             </field>
          </record>
