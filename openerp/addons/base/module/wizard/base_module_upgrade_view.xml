@@ -12,14 +12,13 @@
                         <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                     </header>
-                    <separator string="Modules to Update"/>
                     <field name="module_info"/>
                 </form>
             </field>
         </record>
 
         <record id="action_view_base_module_upgrade" model="ir.actions.act_window">
-            <field name="name">Apply Shcedule Upgrade</field>
+            <field name="name">Module Upgrade</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.module.upgrade</field>
             <field name="view_type">form</field>
