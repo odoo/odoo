@@ -112,7 +112,7 @@ class payroll_advice(osv.osv):
     _columns = {
         'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
-        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
+        'date': fields.date('Date', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
         'state':fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
