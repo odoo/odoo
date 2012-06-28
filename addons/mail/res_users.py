@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+from lxml import etree
 
 class res_users(osv.osv):
     """ Update of res.users class
@@ -56,6 +57,18 @@ class res_users(osv.osv):
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
         self.SELF_WRITEABLE_FIELDS.append('notification_email_pref')
         return init_res
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(res_users,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+            if not domain:
+                doc = etree.XML(res['arch'])
+                alias_node = doc.xpath("//field[@name='alias_id']")[0]
+                parent = alias_node.getparent()
+                parent.remove(alias_node)
+                res['arch'] = etree.tostring(doc)
+        return res
     
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login

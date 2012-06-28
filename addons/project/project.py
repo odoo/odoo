@@ -217,8 +217,8 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias'),
-        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1"),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility'),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
@@ -254,6 +254,26 @@ class project(osv.osv):
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
     ]
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(project,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form' or view_type == 'kanban':
+            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+            if not domain:
+                doc = etree.XML(res['arch'])
+                alias_node = doc.xpath("//field[@name='alias_id']")[0]
+                parent = alias_node.getparent()
+                parent.remove(alias_node)
+                if view_type == "form":
+                    model_node = doc.xpath("//field[@name='alias_model']")[0]
+                    parent = model_node.getparent()
+                    parent.remove(model_node)
+                else:
+                    model_node = doc.xpath("//field[@name='alias_id']")[0]
+                    parent = model_node.getparent()
+                    parent.remove(model_node)
+                res['arch'] = etree.tostring(doc)
+        return res
+    
     def set_template(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
@@ -503,13 +523,14 @@ def Project():
     def create(self, cr, uid, vals, context=None):
         model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model'))
+        model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model','model_project_task'))
         vals.update({'alias_name':"project",
                      'alias_model_id': res_id})
         alias_pool.create_unique_alias(cr, uid, vals, context=context)
         res = super( project, self).create(cr, uid, vals, context)
         record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']], {"alias_force_thread_id":record['id'],'alias_defaults':res}, context)
+        alias_pool.write(cr, uid, [record['alias_id']], {"alias_force_thread_id":record['id'],
+                                                        'alias_defaults':{'project_id': res}}, context)
         self.create_send_note(cr, uid, [res], context=context)
         return res
 
@@ -531,7 +552,18 @@ def Project():
     def set_close_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>closed</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
-            
+
+    def write(self, cr, uid, ids, vals, context=None):
+        model_pool = self.pool.get('ir.model.data')
+        alias_pool = self.pool.get('mail.alias')
+        # if alias_model have been changed then change alias_model_id of alias also.
+        if vals.get('alias_model'):
+            model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model','model_project_task'))
+            alias_id = self.browse(cr, uid, ids[0], context).alias_id
+            alias_pool.write(cr, uid, [alias_id.id], {'alias_model_id': res_id}, context=context)
+        return super(project, self).write(cr, uid, ids, vals, context=context)
+
+
 class task(base_stage, osv.osv):
     _name = "project.task"
     _description = "Task"
