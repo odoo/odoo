@@ -605,14 +605,26 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
+                   <div class="oe_right oe_button_box" name="import_buttons">
+                       <!-- Put here related buttons -->
+                    </div>
+                    <div class="oe_title">
+                       <label for="name" class="oe_edit_only"/>
+                       <h1>
+                         <field name="name" class="oe_inline"/>-
+                         <field name="period_id" class="oe_inline"/>
+                       </h1>
+                       <label for="journal_id" class="oe_edit_only"/>
+                       <h2>
+                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>                        
+                       </h2>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="date" on_change="onchange_date(date, company_id)"/>
-                            <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
-                            <field name="period_id"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
-                        </group><group>
+                        </group>
+                        <group>
                             <field name="balance_start"/>
                             <field name="balance_end_real"/>
                             <field name="currency" invisible="1"/>
