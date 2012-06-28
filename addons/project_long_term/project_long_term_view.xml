@@ -97,6 +97,13 @@
     # ------------------------------------------------------
     # Project Phase
     # ------------------------------------------------------
+        <act_window id="act_project_phases"
+            name="Phases"
+            src_model="project.project"
+            res_model="project.phase"
+            view_type="form"
+            view_mode="tree,form"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
 
         <record id="project_phase_form" model="ir.ui.view">
             <field name="name">Inherit project form : Phase</field>
@@ -104,20 +111,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="use_phases"/>
-                </field>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr>
+                        <td><group><field name="use_phases"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
             </field>
         </record>
-
-        <act_window id="act_project_phases"
-            name="Phases"
-            src_model="project.project"
-            res_model="project.phase"
-            view_type="form"
-            view_mode="tree,form"
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-        />
 
         <record id="view_project_kanban_phase" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
@@ -375,6 +376,22 @@
         view_mode="tree,form"
         />
 
+    <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.phase.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_phases"/>
+                </xpath>
+            </field>
+        </record>
+
     # ------------------------------------------------------
     # Menu Items
     # ------------------------------------------------------
@@ -391,7 +408,7 @@
             parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_users_project1"
-            name="Resources" parent="project.menu_definitions" sequence="3"/>
+            name="Resources" parent="base.menu_definitions" sequence="3"/>
 
         <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_users_project1" sequence="2"/>

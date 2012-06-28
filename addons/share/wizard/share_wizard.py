@@ -32,6 +32,7 @@ from osv import expression
 from tools.translate import _
 from tools.safe_eval import safe_eval
 import openerp
+_logger = logging.getLogger(__name__)
 
 FULL_ACCESS = ('perm_read', 'perm_write', 'perm_create', 'perm_unlink')
 READ_WRITE_ACCESS = ('perm_read', 'perm_write')
@@ -48,7 +49,6 @@ def generate_random_pass():
     return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
 
 class share_wizard(osv.osv_memory):
-    _logger = logging.getLogger('share.wizard')
     _name = 'share.wizard'
     _description = 'Share Wizard'
 
@@ -176,7 +176,7 @@ class share_wizard(osv.osv_memory):
                                 help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'record_name': fields.char('Record name', size=128, help="Name of the shared record, if sharing a precise record"),
-        'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
+        'message': fields.text("Personal Message", help="An optional personal message, to be included in the email notification."),
 
         'embed_code': fields.function(_embed_code, type='text'),
         'embed_option_title': fields.boolean("Display title"),
@@ -200,8 +200,8 @@ class share_wizard(osv.osv_memory):
     def go_step_1(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr,uid,ids,context)[0]
         if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
-            raise osv.except_osv(_('No e-mail address configured'),
-                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
+            raise osv.except_osv(_('No email address configured'),
+                                 _('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
         action = self.pool.get(model).read(cr, uid, res_id, context=context)
         action['res_id'] = ids[0]
@@ -335,7 +335,7 @@ class share_wizard(osv.osv_memory):
             except Exception:
                 # Note: must catch all exceptions, as UnquoteEvalContext may cause many
                 #       different exceptions, as it shadows builtins.
-                self._logger.debug("Failed to cleanup action context as it does not parse server-side", exc_info=True)
+                _logger.debug("Failed to cleanup action context as it does not parse server-side", exc_info=True)
                 result = context_str
         return result
 
@@ -496,8 +496,8 @@ class share_wizard(osv.osv_memory):
             [x.id for x in current_user.groups_id], target_model_ids, context=context)
         group_access_map = self._get_access_map_for_groups_and_models(cr, uid,
             [group_id], target_model_ids, context=context)
-        self._logger.debug("Current user access matrix: %r", current_user_access_map)
-        self._logger.debug("New group current access matrix: %r", group_access_map)
+        _logger.debug("Current user access matrix: %r", current_user_access_map)
+        _logger.debug("New group current access matrix: %r", group_access_map)
 
         # Create required rights if allowed by current user rights and not
         # already granted
@@ -520,7 +520,7 @@ class share_wizard(osv.osv_memory):
                     need_creation = True
             if need_creation:
                 model_access_obj.create(cr, UID_ROOT, values)
-                self._logger.debug("Creating access right for model %s with values: %r", model.model, values)
+                _logger.debug("Creating access right for model %s with values: %r", model.model, values)
 
     def _link_or_copy_current_user_rules(self, cr, current_user, group_id, fields_relations, context=None):
         rule_obj = self.pool.get('ir.rule')
@@ -542,13 +542,13 @@ class share_wizard(osv.osv_memory):
                                 'groups': [(6,0,[group_id])],
                                 'domain_force': rule.domain, # evaluated version!
                             })
-                            self._logger.debug("Copying rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
+                            _logger.debug("Copying rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
                         else:
                             # otherwise we can simply link the rule to keep it dynamic
                             rule_obj.write(cr, 1, [rule.id], {
                                     'groups': [(4,group_id)]
                                 })
-                            self._logger.debug("Linking rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
+                            _logger.debug("Linking rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
 
     def _check_personal_rule_or_duplicate(self, cr, group_id, rule, context=None):
         """Verifies that the given rule only belongs to the given group_id, otherwise
@@ -567,7 +567,7 @@ class share_wizard(osv.osv_memory):
                                        'groups': [(6,0,[group_id])],
                                        'domain_force': rule.domain_force, # non evaluated!
                                })
-        self._logger.debug("Duplicating rule %s (%s) (domain: %s) for modified access ", rule.name, rule.id, rule.domain_force)
+        _logger.debug("Duplicating rule %s (%s) (domain: %s) for modified access ", rule.name, rule.id, rule.domain_force)
         # then disconnect from group_id:
         rule.write({'groups':[(3,group_id)]}) # disconnects, does not delete!
         return rule_obj.browse(cr, UID_ROOT, new_id, context=context)
@@ -602,7 +602,7 @@ class share_wizard(osv.osv_memory):
                     if restrict:
                         continue
                     else:
-                        self._logger.debug("Ignoring sharing rule on model %s with domain: %s the same rule exists already", model_id, domain)
+                        _logger.debug("Ignoring sharing rule on model %s with domain: %s the same rule exists already", model_id, domain)
                         return
                 if restrict:
                     # restricting existing rules is done by adding the clause
@@ -614,7 +614,7 @@ class share_wizard(osv.osv_memory):
                     new_clause = expression.normalize(eval(domain, eval_ctx))
                     combined_domain = expression.AND([new_clause, org_domain])
                     rule.write({'domain_force': combined_domain, 'name': rule.name + _('(Modified)')})
-                    self._logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)
+                    _logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)
         if not rule_ids or not restrict:
             # Adding the new rule in the group is ok for normal cases, because rules
             # in the same group and for the same model will be combined with OR
@@ -625,7 +625,7 @@ class share_wizard(osv.osv_memory):
                 'domain_force': domain,
                 'groups': [(4,group_id)]
                 })
-            self._logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
+            _logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
 
     def _create_indirect_sharing_rules(self, cr, current_user, wizard_data, group_id, fields_relations, context=None):
         rule_name = _('Indirect sharing filter created by user %s (%s) for group %s') % \
@@ -648,7 +648,7 @@ class share_wizard(osv.osv_memory):
                          group_id, model_id=model.id, domain=str(related_domain),
                          rule_name=rule_name, restrict=True, context=context)
         except Exception:
-            self._logger.exception('Failed to create share access')
+            _logger.exception('Failed to create share access')
             raise osv.except_osv(_('Sharing access could not be created'),
                                  _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 
@@ -852,7 +852,7 @@ class share_wizard(osv.osv_memory):
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
     
     def send_emails(self, cr, uid, wizard_data, context=None):
-        self._logger.info('Sending share notifications by email...')
+        _logger.info('Sending share notifications by email...')
         mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.user_email:
@@ -885,7 +885,7 @@ class share_wizard(osv.osv_memory):
             msg_ids.append(mail_message.schedule_with_attach(cr, uid, user.user_email, [email_to], subject, body, model='share.wizard', context=context))
         # force direct delivery, as users expect instant notification
         mail_message.send(cr, uid, msg_ids, context=context)
-        self._logger.info('%d share notification(s) sent.', len(msg_ids))
+        _logger.info('%d share notification(s) sent.', len(msg_ids))
 
     def onchange_embed_options(self, cr, uid, ids, opt_title, opt_search, context=None):
         wizard = self.browse(cr, uid, ids[0], context)

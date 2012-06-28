@@ -27,7 +27,7 @@ from tools.misc import email_re
 from tools.translate import _
 
 from base.res.res_users import _lang_get
-
+_logger = logging.getLogger(__name__)
 
 
 # welcome email sent to new portal users (note that calling tools.translate._
@@ -174,7 +174,7 @@ class wizard(osv.osv_memory):
                 body = _(WELCOME_EMAIL_BODY) % data
                 res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
                 if not res:
-                    logging.getLogger('res.portal.wizard').warning(
+                    _logger.warning(
                         'Failed to send email from %s to %s', email_from, email_to)
         
         return {'type': 'ir.actions.act_window_close'}
@@ -197,7 +197,7 @@ class wizard_user(osv.osv_memory):
             string='User Name',
             help="The user's real name"),
         'user_email': fields.char(size=64, required=True,
-            string='E-mail',
+            string='Email',
             help="Will be used as user login.  "  
                  "Also necessary to send the account information to new users"),
         'lang': fields.selection(_lang_get, required=True,

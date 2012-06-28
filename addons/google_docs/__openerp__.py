@@ -30,6 +30,7 @@
     'web': True,
     'js': ['static/src/js/gdocs.js'],
     'update_xml': [
+        'security/ir.model.access.csv',
         'res_config_user_view.xml'
     ],
     'depends': ['google_base_account'],
