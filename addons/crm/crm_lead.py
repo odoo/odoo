@@ -193,7 +193,7 @@ class crm_lead(base_stage, osv.osv):
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'email_from': fields.char('Email', size=128, help="E-mail address of the contact", select=1),
+        'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='When sending mails, the default email address is taken from the sales team.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),

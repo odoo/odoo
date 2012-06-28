@@ -130,7 +130,7 @@
                             <group>
                                 <group string="Administration">
                                     <field name="planned_hours" widget="float_time"/>
-                                    <field name="effective_hours" widget="float_time" />
+                                    <field name="effective_hours" widget="float_time"/>
                                     <field name="resource_calendar_id"/>
                                 </group>
                                 <group string="Miscellaneous" name="misc">
@@ -178,10 +178,10 @@
                    </group>
                    <newline />
                    <group expand="0" string="Group By...">
-                       <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
-                       <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
+                       <filter string="Manager" name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                       <filter string="Partner" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string="Parent" name="Parent"  help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
+                       <filter string="Parent" name="Parent" help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
                    </group>
                </search>
             </field>
@@ -395,26 +395,28 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                     <header>
-                        <!--
-                        <button name="do_open" string="Start Task" type="object"
-                                states="draft,pending"/>
-                        <button name="do_draft" string="Draft" type="object"
-                                states="cancel,done"/>
-                        -->
-                        <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                states="done,cancelled" context="{'button_reactivate':True}"/>
-                        <button name="action_close" string="Done" type="object"
-                                states="draft,open,pending"/>
-                        <button name="do_pending" string="Pending" type="object"
-                                states="open"/>
-                        <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
-                                states="pending,open,draft" groups="project.group_delegate_task"/>
-                        <button name="do_cancel" string="Cancel" type="object"
-                                states="draft,open,pending" />
-                        <button name="stage_previous" string="Previous Stage" type="object"
-                                states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="stage_next" string="Next Stage" type="object"
-                                states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
+                        <span groups="base.group_user">
+                            <!--
+                            <button name="do_open" string="Start Task" type="object"
+                                    states="draft,pending"/>
+                            <button name="do_draft" string="Draft" type="object"
+                                    states="cancel,done"/>
+                            -->
+                            <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
+                                    states="done,cancelled" context="{'button_reactivate':True}"/>
+                            <button name="action_close" string="Done" type="object"
+                                    states="draft,open,pending"/>
+                            <button name="do_pending" string="Pending" type="object"
+                                    states="open"/>
+                            <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
+                                    states="pending,open,draft" groups="project.group_delegate_task"/>
+                            <button name="do_cancel" string="Cancel" type="object"
+                                    states="draft,open,pending"/>
+                            <button name="stage_previous" string="Previous Stage" type="object"
+                                    states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
+                            <button name="stage_next" string="Next Stage" type="object"
+                                    states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
+                        </span>
                         <field name="stage_id" widget="statusbar"/>
                     </header>
                     <sheet string="Task">
@@ -443,7 +445,7 @@
                     </group>
                     <notebook>
                         <page string="Description">
-                            <field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Add a Description..." />
+                            <field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Add a Description..."/>
                             <field name="work_ids" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
                                     <field name="date"/>
@@ -482,9 +484,9 @@
                         </page>
                         <page string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                             <group col="4">
-                                <field name="priority"/>
+                                <field name="priority" groups="base.group_user"/>
                                 <field name="sequence"/>
-                                <field name="partner_id" />
+                                <field name="partner_id"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                         </page>
@@ -505,7 +507,7 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" >
                     <field name="color"/>
-                    <field name="priority"/>
+                    <field name="priority" groups="base.group_user"/>
                     <field name="stage_id"/>
                     <field name="user_id"/>
                     <field name="user_email"/>
