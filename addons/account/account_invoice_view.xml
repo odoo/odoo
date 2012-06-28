@@ -306,7 +306,7 @@
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer': 1}"
                                 domain="[('customer', '=', True)]"/>
-                            <field name="fiscal_position" widget="selection" options='{"quick_create": false}'/>
+                            <field name="fiscal_position" widget="selection" />
                             <field name="payment_term" widget="selection"/>
 
                         </group>
