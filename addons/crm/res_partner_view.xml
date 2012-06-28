@@ -76,10 +76,10 @@
                 </field>
                  <xpath expr="//h4[@class='oe_partner_heading']" position="after">
                         <a name="%(act_res_partner_2_opportunity)d" type="action">
-                            <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
+                            <t t-if="record.opportunity_count.value"><t t-esc="record.opportunity_count.value"/> Opportunities</t>
                         </a>
                         <a name="%(crm_meeting_partner)d" type="action">
-                            <t t-if="record.meeting_count.value">Meetings(<t t-esc="record.meeting_count.value"/>)</t>
+                            <t t-if="record.meeting_count.value"><t t-esc="record.meeting_count.value"/> Meetings</t>
                         </a>
                 </xpath>
             </field>
