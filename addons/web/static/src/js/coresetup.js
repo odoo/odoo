@@ -606,7 +606,28 @@ instance.web.qweb.preprocess_node = function() {
 
 /** Setup jQuery timeago */
 var timeago_setup = function () {
+    // provide timeago.js with our own translator method
     $.timeago.settings.translator = instance.web._t;
+    
+    /* 
+     * Strings in timeago are "composed" with prefixes, words and suffixes.
+     * This makes their detection by the translating system pretty much 
+     * imposible, so we'll declare those which will be used in a more explicit 
+     * way.
+     */
+    var timeAgoStrings = [
+        instance.web._t('less than a minute ago'),
+        instance.web._t('about a minute ago'),
+        instance.web._t('%d minutes ago'),
+        instance.web._t('about an hour ago'),
+        instance.web._t('%d hours ago'),
+        instance.web._t('a day ago'),
+        instance.web._t('%d days ago'),
+        instance.web._t('about a month ago'),
+        instance.web._t('%d months ago'),
+        instance.web._t('about a year ago'),
+        instance.web._t('%d years ago'),
+    ];
 }
 instance.connection.on('module_loaded', this, timeago_setup);
 
