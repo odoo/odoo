@@ -91,3 +91,9 @@ class sale_order_line(osv.osv):
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.log(cr, uid, registration_id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
+
+class event_registration(osv.osv):
+    # TOFIX: section_id field is not availble in event_registration table in database but In _columns (_inherited) findout section_id field which added in crm module in res.partner model. so need to fix in framework to restrive columns but right now Fixed to inherit again to update  event_registration table.
+    _name = 'event.registration'
+    _inherit = ['event.registration','ir.needaction_mixin','mail.thread', 'res.partner']
+    
