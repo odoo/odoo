@@ -1513,7 +1513,9 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         this._super.apply(this, arguments);
     },
     /**
-     * Sets up blur/focus forwarding from DOM elements to a widget (`this`)
+     * Sets up blur/focus forwarding from DOM elements to a widget (`this`).
+     *
+     * This method is an utility method that is meant to be called by child classes.
      *
      * @param {jQuery} $e jQuery object of elements to bind focus/blur on
      */
