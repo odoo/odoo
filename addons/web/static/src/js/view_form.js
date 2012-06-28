@@ -1876,7 +1876,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     is_false: function() {
         return this.get('value') === false;
     },
-    _check_css_flags: function(show_invalid) {
+    _check_css_flags: function() {
         if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!this.field_manager.is_create_mode());
         }
@@ -3178,7 +3178,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         // Otherwise validate internal form
         return _(form.fields).chain()
             .invoke(function () {
-                this._check_css_flag();
+                this._check_css_flags();
                 return this.is_valid();
             })
             .all(_.identity)
