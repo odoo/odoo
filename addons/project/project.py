@@ -1138,7 +1138,7 @@ class task(base_stage, osv.osv):
         """ Returns the user_ids that have to perform an action
             :return: dict { record_id: [user_ids], }
         """
-        result = super(project_task, self).get_needaction_user_ids(cr, uid, ids, context=context)
+        result = super(task, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id].add(obj.user_id.id)
