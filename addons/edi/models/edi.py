@@ -520,7 +520,8 @@ class EDIMixin(object):
                                                                        'datas': result,
                                                                        'datas_fname': file_name,
                                                                        'res_model': self._name,
-                                                                       'res_id': record.id},
+                                                                       'res_id': record.id,
+                                                                       'type': 'binary'},
                                                                       context=context)
 
     def _edi_import_attachments(self, cr, uid, record_id, edi_document, context=None):
