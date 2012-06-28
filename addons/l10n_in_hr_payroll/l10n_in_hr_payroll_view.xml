@@ -83,11 +83,12 @@
                         <div class="oe_clear"/>
                     </header>
                     <sheet>
-                        <label for="date" class="oe_edit_only" string="Date"/>
-                            <h1><field name="date"/></h1>
-                        <group col="4" colspan="8">
-                            <field name="name" colspan="4"/>
+                        <group col="4" colspan="4">
+                            <label for="Name" class="oe_edit_only" string="Name"/>
+                            <h2><field name="name"/></h2>
                             <field name="number"/>
+                            <label for="date" class="oe_edit_only"/>
+                            <h2><field name="date"/></h2>
                             <field name="bank_id"/>
                         </group>
                         <notebook colspan="4">
