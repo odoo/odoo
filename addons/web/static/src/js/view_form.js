@@ -322,9 +322,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
             }
-            if (self.default_focus_field) {
-                self.default_focus_field.focus();
-            }
             if (record.id) {
                 self.do_push_state({id:record.id});
             }
@@ -573,6 +570,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             _.each(this.fields,function(field){
                 field.set({"force_readonly": false});
             });
+            var fields_order = self.fields_order.slice(0);
+            if (self.default_focus_field) {
+                fields_order.unshift(self.default_focus_field);
+            }
+            for (var i = 0; i < fields_order.length; i += 1) {
+                var field = self.fields[fields_order[i]];
+                if (!field.get('effective_invisible') && !field.get('effective_readonly') && field.focus() !== false) {
+                    break;
+                }
+            }
         }
     },
     on_button_save: function() {
@@ -909,6 +916,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     register_field: function(field, name) {
         this.fields[name] = field;
         this.fields_order.push(name);
+        if (field.node.attrs.default_focus == '1') {
+            this.default_focus_field = field;
+        }
 
         field.on('focused', null, this.proxy('widgetFocused'))
              .on('blurred', null, this.proxy('widgetBlurred'));
@@ -1764,7 +1774,7 @@ instance.web.form.FieldInterface = {
      */
     is_syntax_valid: function() {},
     /**
-     * Must set the focus on the field.
+     * Must set the focus on the field. Return false if field is not focusable.
      */
     focus: function() {},
 };
@@ -4461,6 +4471,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             var elem = this.$element.find("li.oe_form_steps_active span");
             elem.css("color", color);
         }
+    },
+    focus: function() {
+        return false;
     },
 });
 
