@@ -2462,11 +2462,12 @@ instance.web.form.CompletionFieldMixin = {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
+                x[1] = x[1].split("\n")[0];
                 return {
-                    label: _.str.escapeHTML(x[1].split("\n")[0]),
-                    value:x[1],
-                    name:x[1],
-                    id:x[0]
+                    label: _.str.escapeHTML(x[1]),
+                    value: x[1],
+                    name: x[1],
+                    id: x[0],
                 };
             });
 
