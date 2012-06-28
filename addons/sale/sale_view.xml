@@ -228,8 +228,12 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
-                            <separator string="Notes" class="oe_clear"/>
-                            <field name="note" placeholder="Add a global note on the sale order..."/>
+                            <div class="oe_clear">
+                                <label for="note"/>
+                            </div>
+                            <div>
+                                <field name="note" class="oe_inline"/>
+                            </div>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
