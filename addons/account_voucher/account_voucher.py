@@ -129,6 +129,7 @@ class account_voucher(osv.osv):
         journal_id = context.get('journal_id', False)
         if journal_id:
             journal = journal_pool.browse(cr, uid, journal_id, context=context)
+            print "jpurnallll",journal
             if journal.currency:
                 return journal.currency.id
         return False
@@ -1372,6 +1373,7 @@ class account_voucher_line(osv.osv):
         'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True, digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
         'currency_id': fields.function(_currency_id, string='Currency', type='many2one', relation='res.currency', readonly=True),
+       
     }
     _defaults = {
         'name': '',
