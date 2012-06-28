@@ -341,6 +341,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                                 self._limit = (isNaN(val) ? null : val);
                                 self.page = 0;
                                 self.reload_content();
+                            }).blur(function() {
+                                $(this).trigger('change');
                             })
                             .val(self._limit || 'NaN');
                     });
