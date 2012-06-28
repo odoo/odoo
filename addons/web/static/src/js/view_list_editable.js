@@ -147,7 +147,6 @@ openerp.web.list_editable = function (instance) {
             return this.form.on_record_loaded(record.attributes).pipe(function () {
                 return self.form.do_show({reload: false});
             }).then(function () {
-                // TODO: automatic focus of ?first field
                 // TODO: [Save] button
                 // TODO: save on action button?
                 _(cells).each(function (cell, field_name) {
@@ -169,6 +168,8 @@ openerp.web.list_editable = function (instance) {
                         minHeight: $cell.outerHeight()
                     });
                 });
+                // TODO: actually focus clicked field (if editable)
+                self.form.fields[self.form.fields_order[0]].focus();
                 self.trigger('edit:after', record, self.form)
             });
 
