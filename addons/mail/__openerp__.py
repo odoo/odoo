@@ -20,9 +20,10 @@
 ##############################################################################
 
 {
-    'name': 'Emails Management',
+    'name': 'Social Network',
     'version': '1.0',
-    'category': 'Hidden/Dependency',
+    'category': 'Social Neworking',
+    "sequence": 2,
     'description': """
 A generic email subsystem with message storage and queuing
 ==========================================================
@@ -69,6 +70,7 @@ The main features are:
     ],
     'installable': True,
     'auto_install': False,
+    'application': True,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
