@@ -176,7 +176,7 @@ class share_wizard(osv.osv_memory):
                                 help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'record_name': fields.char('Record name', size=128, help="Name of the shared record, if sharing a precise record"),
-        'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
+        'message': fields.text("Personal Message", help="An optional personal message, to be included in the email notification."),
 
         'embed_code': fields.function(_embed_code, type='text'),
         'embed_option_title': fields.boolean("Display title"),
@@ -200,8 +200,8 @@ class share_wizard(osv.osv_memory):
     def go_step_1(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr,uid,ids,context)[0]
         if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
-            raise osv.except_osv(_('No e-mail address configured'),
-                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
+            raise osv.except_osv(_('No email address configured'),
+                                 _('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
         action = self.pool.get(model).read(cr, uid, res_id, context=context)
         action['res_id'] = ids[0]
@@ -668,7 +668,8 @@ class share_wizard(osv.osv_memory):
         """Creates the appropriate share group and share users, and populates
            result_line_ids of wizard_data with one line for each user.
 
-           :return: the new group id (to which the shared access should be granted)
+           :return: a tuple composed of the new group id (to which the shared access should be granted),
+                the ids of the new share users that have been created and the ids of the existing share users
         """
         group_id = self._create_share_group(cr, uid, wizard_data, context=context)
         # First create any missing user, based on the email addresses provided
@@ -739,7 +740,7 @@ class share_wizard(osv.osv_memory):
         all_relations = obj0 + obj1 + obj2
         self._link_or_copy_current_user_rules(cr, current_user, group_id, all_relations, context=context)
         # B.
-        main_domain = wizard_data.domain if wizard_data.domain != '[]' else DOMAIN_ALL
+        main_domain = wizard_data.domain if wizard_data.domain != '[]' else str(DOMAIN_ALL)
         self._create_or_combine_sharing_rule(cr, current_user, wizard_data,
                      group_id, model_id=model.id, domain=main_domain,
                      restrict=True, context=context)
