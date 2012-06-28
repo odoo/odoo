@@ -2465,7 +2465,7 @@
 			target = $(e.target)
 			;
 
-		if(target.is(CSS_DOT_SUGGESTION) || target.is(CSS_DOT_LABEL))
+		if($(CSS_DOT_SUGGESTION).has(target[0]) || $(CSS_DOT_LABEL).has(target[0]))
 			self.trigger('enterKeyPress');
 		
 		if (self.core().hasPlugin('tags'))

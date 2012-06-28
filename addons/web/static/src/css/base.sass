@@ -98,7 +98,7 @@ $colour4: #8a89ba
 
 // }}}
 
-.openerp.openerp-web-client-container
+.openerp.openerp_webclient_container
     height: 100%
     position: relative
 
@@ -612,6 +612,7 @@ $colour4: #8a89ba
         .oe_dropdown_arrow:after
             border-top: 4px solid white
         .oe_dropdown_menu
+            top: 32px
             background: #333
             background: rgba(37,37,37,0.9)
             border-color: #999
@@ -927,7 +928,7 @@ $colour4: #8a89ba
                     padding-top: 8px
     // }}}
     // Viewmanager popup {{{
-    .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager
+    .oe_popup_form > .oe_formview > .oe_form_pager
         display: none !important
     // }}}
     // SearchView {{{
@@ -1539,7 +1540,7 @@ $colour4: #8a89ba
         display: inline-block
         width: 45px
         height: 30px
-        input.oe-binary-file
+        input.oe_form_binary_file
             z-index: 0
             line-height: 0
             font-size: 12px
@@ -1577,7 +1578,7 @@ $colour4: #8a89ba
     .oe_form_field_many2one
         td:first-child
             position: relative
-        span.oe-m2o-drop-down-button
+        span.oe_m2o_drop_down_button
             position: absolute
             top: 3px
             right: 2px
@@ -1588,7 +1589,7 @@ $colour4: #8a89ba
             display: none
     .oe_form_field_one2many
         // TODO: oe_form_field_one2many_list?
-        .oe-listview .oe-edit-row-save
+        .oe_list .oe_list_edit_row_save
             background-image: url(/web/static/src/img/iconset-b-remove.png)
 
         &> .oe_view_manager
@@ -1608,12 +1609,12 @@ $colour4: #8a89ba
                             line-height: 16px
     // }}}
     // FormView.many2many {{{
-    .oe_form .oe_form_field_many2many > .oe-listview
+    .oe_form .oe_form_field_many2many > .oe_list
         .oe_list_pager_single_page
             display: none
     // }}}
     // ListView {{{
-    .oe-listview-content
+    .oe_list_content
         width: 100%
         td:first-child, th:first-child
             &:after
@@ -1652,7 +1653,7 @@ $colour4: #8a89ba
             background: white
             > tr
                 border-top: 1px solid #ddd
-                > td.oe-field-cell
+                > td.oe_list_field_cell
                     padding: 3px 6px
                 > td, > th
                     line-height: 18px
