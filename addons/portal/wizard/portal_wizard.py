@@ -197,7 +197,7 @@ class wizard_user(osv.osv_memory):
             string='User Name',
             help="The user's real name"),
         'user_email': fields.char(size=64, required=True,
-            string='E-mail',
+            string='Email',
             help="Will be used as user login.  "  
                  "Also necessary to send the account information to new users"),
         'lang': fields.selection(_lang_get, required=True,
