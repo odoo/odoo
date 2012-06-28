@@ -106,7 +106,7 @@ openerp.point_of_sale = function(db) {
                 return self.set({'categories': result});
             });
             var prod_def = fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id',
-                                                          'image_small'], [['pos_categ_id', '!=', 'false']]).then(function(result) {
+                                                          'image_medium'], [['pos_categ_id', '!=', 'false']]).then(function(result) {
                 return self.set({'product_list': result});
             });
             var bank_def = fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
