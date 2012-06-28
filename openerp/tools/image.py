@@ -23,7 +23,33 @@ import io
 from PIL import Image
 import StringIO
 
+# ----------------------------------------
+# Image resizing
+# ----------------------------------------
+
 def resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype='PNG', avoid_if_small=False):
+    """ Function to resize an image. The image will be resized to the
+        given size, while keeping the aspect ratios, and holes in the
+        image will be filled with transparent background. The image
+        will not be stretched if smaller than the expected size.
+        Steps of the resizing:
+        - create a thumbnail of the source image through using the
+          thumbnail function. Aspect ratios are preserved when using
+          it. Note that if the source image is smaller than the expected
+          size, it will not be extended, but filled to match the size.
+        - create a transparent background that will hold the final
+          image.
+        - past the thumbnail on the transparent background and center
+          it.
+        
+        :param base64_source: base64-encoded version of the source
+                              image
+        :param size: tuple(height, width)
+        :param encoding: the output encoding
+        :param filetype: the output filetype
+        :param avoid_if_small: do not resize if image height and width
+                               are smaller than the expected size.
+    """
     image_stream = io.BytesIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
     # check image size: do not create a thumbnail if avoiding smaller images
@@ -41,10 +67,58 @@ def resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype='
     return background_stream.getvalue().encode(encoding)
 
 def resize_image_big(base64_source, size=(1204, 1204), encoding='base64', filetype='PNG'):
+    """ Wrapper on resize_image, to resize to the standard 'big' image
+        size: 1024x1024.
+        :param base64_source: base64 encoded source image. If False,
+                              the function returns False.
+    """
+    if not base64_source:
+        return False
     return resize_image(base64_source, size, encoding, filetype, True)
 
 def resize_image_medium(base64_source, size=(180, 180), encoding='base64', filetype='PNG'):
+    """ Wrapper on resize_image, to resize to the standard 'medium'
+        image size: 180x180.
+        :param base64_source: base64 encoded source image. If False,
+                              the function returns False.
+    """
+    if not base64_source:
+        return False
     return resize_image(base64_source, size, encoding, filetype)
     
 def resize_image_small(base64_source, size=(50, 50), encoding='base64', filetype='PNG'):
+    """ Wrapper on resize_image, to resize to the standard 'small' image
+        size: 50x50.
+        :param base64_source: base64 encoded source image. If False,
+                              the function returns False.
+    """
+    if not base64_source:
+        return False
     return resize_image(base64_source, size, encoding, filetype)
+
+# ----------------------------------------
+# Misc image tools
+# ---------------------------------------
+
+def get_resized_images(base64_source, big_name='image', medium_name='image_medium', small_name='image_small'):
+    """ Standard tool function that returns a dictionary containing the
+        big, medium and small versions of the source image. This function
+        is meant to be used for the methods of functional fields for
+        models using images.
+        
+        :param base64_source: if set to False, other values are set to
+                              False also. The purpose is to be linked
+                              to the fields that hold images in
+                              OpenERP and that are binary fields.
+        :param big_name: name related to the big version of the image;
+                         'image' by default
+        :param medium_name: name related to the medium version of the
+                            image; 'image_medium' by default
+        :param small_name: name related to the small version of the
+                           image; 'image_small' by default
+    """
+    return {
+        big_name: resize_image_big(base64_source),
+        medium_name: resize_image_medium(base64_source),
+        small_name: resize_image_small(base64_source),
+        }
