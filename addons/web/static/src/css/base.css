@@ -2014,7 +2014,10 @@
   display: none;
 }
 .openerp .oe_form_field_one2many .oe_list .oe_list_edit_row_save {
-  background-image: url(/web/static/src/img/iconset-b-remove.png);
+  background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat;
+}
+.openerp .oe_form_field_one2many .oe_list .oe_list_edit_row_save:before {
+  visibility: hidden;
 }
 .openerp .oe_form_field_one2many > .oe_view_manager .oe_header_row_top {
   display: none;
@@ -2143,6 +2146,9 @@
 }
 .openerp .oe_list_content .numeric input {
   text-align: right;
+}
+.openerp .oe_list_content .oe_list_edit_row_save:before {
+  content: "S";
 }
 .openerp .oe_trad_field.touched {
   border: 1px solid green !important;

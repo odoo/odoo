@@ -1590,7 +1590,9 @@ $colour4: #8a89ba
     .oe_form_field_one2many
         // TODO: oe_form_field_one2many_list?
         .oe_list .oe_list_edit_row_save
-            background-image: url(/web/static/src/img/iconset-b-remove.png)
+            background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
+            &:before
+                visibility: hidden
 
         &> .oe_view_manager
             .oe_header_row_top
@@ -1685,6 +1687,8 @@ $colour4: #8a89ba
             width: 82px
             input
                 text-align: right
+        .oe_list_edit_row_save:before
+            content: "S"
     // }}}
     // Translation {{{
     .oe_trad_field.touched
