@@ -25,15 +25,14 @@ from osv import osv, fields
 from tools.translate import _
 
 class ir_needaction_users_rel(osv.Model):
-    '''
-    ir_needaction_users_rel holds data related to the needaction
-    mechanism inside OpenERP. A row in this model is characterized by:
-    - res_model: model of the record requiring an action
-    - res_id: ID of the record requiring an action
-    - user_id: foreign key to the res.users table, to the user that
-      has to perform the action
-    This model can be seen as a many2many, linking (res_model, res_id) to 
-    users (those whose attention is required on the record).'''
+    ''' ir_needaction_users_rel holds data related to the needaction 
+    mechanism inside OpenERP. A row in this model is characterized 
+    by: - res_model: model of the record requiring an action - 
+    res_id: ID of the record requiring an action - user_id: foreign 
+    key to the res.users table, to the user that has to perform the 
+    action This model can be seen as a many2many, linking 
+    (res_model, res_id) to users (those whose attention is required 
+    on the record). '''
     
     _name = 'ir.needaction_users_rel'
     _description = 'Needaction relationship table'
@@ -78,47 +77,47 @@ class ir_needaction_users_rel(osv.Model):
         return True
 
 
-class ir_needaction_mixin(osv.Model):
+class ir_needaction_mixin(osv.AbstractModel):
     '''Mixin class for objects using the need action feature.
     
-    Need action feature can be used by objects willing to be able to
-    signal that an action is required on a particular record. If in the
-    business logic an action must be performed by somebody, for instance
-    validation by a manager, this mechanism allows to set a list of
-    users asked to perform an action.
+    Need action feature can be used by objects having to be able to 
+    signal that an action is required on a particular record. If in 
+    the business logic an action must be performed by somebody, for 
+    instance validation by a manager, this mechanism allows to set a 
+    list of users asked to perform an action.
     
-    This class wraps a class (ir.ir_needaction_users_rel) that behaves
-    like a many2many field. However, no field is added to the model
-    inheriting from this mixin class. This class handles the low-level
-    considerations of updating relationships. Every change made on the
-    record calls a method that updates the relationships.
+    This class wraps a class (ir.ir_needaction_users_rel) that 
+    behaves like a many2many field. This class handles the low-level 
+    considerations of updating relationships. Every change made on 
+    the record calls a method that updates the relationships.
     
-    Objects using the 'need_action' feature should override the
-    ``get_needaction_user_ids`` method. This methods returns a dictionary
-    whose keys are record ids, and values a list of user ids, like
-    in a many2many relationship. Therefore by defining only one method,
-    you can specify if an action is required by defining the users
-    that have to do it, in every possible situation.
+    Objects using the 'need_action' feature should override the 
+    ``get_needaction_user_ids`` method. This methods returns a 
+    dictionary whose keys are record ids, and values a list of user 
+    ids, like in a many2many relationship. Therefore by defining 
+    only one method, you can specify if an action is required by 
+    defining the users that have to do it, in every possible 
+    situation.
     
-    This class also offers several global services,:
+    This class also offers several global services: 
     - ``needaction_get_record_ids``: for the current model and uid, get
-      all record ids that ask this user to perform an action. This
-      mechanism is used for instance to display the number of pending
-      actions in menus, such as Leads (12)
+    all record ids that ask this user to perform an action. This 
+    mechanism is used for instance to display the number of pending 
+    actions in menus, such as Leads (12)
     - ``needaction_get_action_count``: as ``needaction_get_record_ids``
-      but returns only the number of action, not the ids (performs a
-      search with count=True)
-    - ``needaction_get_user_record_references``: for a given uid, get all
-      the records that ask this user to perform an action. Records
-      are given as references, a list of tuples (model_name, record_id)
+    but returns only the number of action, not the ids (performs a 
+    search with count=True)
+    - ``needaction_get_user_record_references``: for a given uid, get 
+    all the records that ask this user to perform an action. Records 
+    are given as references, a list of tuples (model_name, record_id)
 
-    The ``ir_needaction_mixin`` class adds a function field on models inheriting 
-    from the class. This field allows to state whether a given record has 
-    a needaction for the current user. This is usefull if you want to customize 
-    views according to the needaction feature. For example, you may want to 
-    set records in bold in a list view if the current user has an action to 
-    perform on the record. This makes the class not a pure abstract class, 
-    but allows to easily use the action information.'''
+    The ``ir_needaction_mixin`` class adds a calculated field 
+    ``needaction_pending``. This function field allows to state 
+    whether a given record has a needaction for the current user. 
+    This is usefull if you want to customize views according to the 
+    needaction feature. For example, you may want to set records in 
+    bold in a list view if the current user has an action to perform 
+    on the record. '''
     
     _name = 'ir.needaction_mixin'
     _description = '"Need action" mixin'
@@ -132,7 +131,7 @@ class ir_needaction_mixin(osv.Model):
 
     def search_needaction_pending(self, cr, uid, self_again, field_name, criterion, context=None):
         ids = self.needaction_get_record_ids(
-            cr, uid, uid, limit=False, context=context)
+            cr, uid, uid, limit=1024, context=context)
         return [('id', 'in', ids)]
     
     _columns = {
@@ -140,9 +139,8 @@ class ir_needaction_mixin(osv.Model):
             get_needaction_pending, type='boolean',
             fnct_search=search_needaction_pending,
             string='Need action pending',
-            help="If True, this field states that users have to perform an action." \
-                 " This field comes from the needaction mechanism." \
-                 " Please refer to the ir.needaction_mixin class."),
+            help="If True, this field states that users have to perform an " \
+                 "action This field comes from the ir.needaction_mixin class."),
     }
     
     #------------------------------------------------------
