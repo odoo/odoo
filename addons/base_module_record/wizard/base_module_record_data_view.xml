@@ -8,6 +8,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Data Recording">
+                    <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
+                    <newline/>
                     <field name="check_date"/>
                     <newline/>
                     <field name="filter_cond"/>
@@ -17,7 +19,6 @@
                     <separator colspan="4"/>
                     <group colspan="4" col="2">
                         <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
                     </group>
                 </form>
             </field>
