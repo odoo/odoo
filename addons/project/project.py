@@ -256,16 +256,21 @@ class project(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
+        if view_type == 'form' or view_type == 'kanban':
             domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
             if not domain:
                 doc = etree.XML(res['arch'])
                 alias_node = doc.xpath("//field[@name='alias_id']")[0]
                 parent = alias_node.getparent()
                 parent.remove(alias_node)
-                model_node = doc.xpath("//field[@name='alias_model']")[0]
-                parent = model_node.getparent()
-                parent.remove(model_node)
+                if view_type == "form":
+                    model_node = doc.xpath("//field[@name='alias_model']")[0]
+                    parent = model_node.getparent()
+                    parent.remove(model_node)
+                else:
+                    model_node = doc.xpath("//field[@name='alias_id']")[0]
+                    parent = model_node.getparent()
+                    parent.remove(model_node)
                 res['arch'] = etree.tostring(doc)
         return res
     
@@ -518,7 +523,7 @@ def Project():
     def create(self, cr, uid, vals, context=None):
         model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model'))
+        model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model','model_project_task'))
         vals.update({'alias_name':"project",
                      'alias_model_id': res_id})
         alias_pool.create_unique_alias(cr, uid, vals, context=context)
