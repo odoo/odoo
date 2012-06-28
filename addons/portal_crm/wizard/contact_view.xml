@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- wizard form view -->
+        <record id="wizard_contact_form_view" model="ir.ui.view">
+            <field name="name">Wizard form view</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contact Us wizard view">
+                    <group col="2">
+                        <field name="contact_name" string="Name"/>
+                        <field name="name" string="Company"/>
+                        <field name="email_from"/>
+                        <field name="phone"/>
+                        <field name="description" string="Your question"/>
+                        <label string=""/>
+                        <button string="Submit" name="submit" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- wizard thanks message (shows after submitting the form) -->
+        <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
+            <field name="name">Wizard thanks message</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="type">form</field>
+            <!-- give it a low priority to ensure this won't be the default view -->
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <form string="Thank you">
+                    <!-- 
+                        make sure there is at least one field in the view, 
+                        otherwise the orm will try to select all the model's 
+                        records and this will result in a permission denied error
+                    -->
+                    <field name="name" invisible="1"/>
+                    <label string="Thank you for your interest, we'll respond to your request shortly."/>
+                </form>
+            </field>
+        </record>
+
+        <!-- wizard action -->
+        <record id="action_wizard_contact_us" model="ir.actions.act_window">
+            <field name="name">Contact Us</field>
+            <field name="res_model">portal_crm.crm_contact_us</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <!-- attach it to the portal menu -->
+        <menuitem name="Contact" id="portal_company_contact"
+            parent="portal.portal_company" action="action_wizard_contact_us" sequence="30"/>
+
+    </data>
+</openerp>
