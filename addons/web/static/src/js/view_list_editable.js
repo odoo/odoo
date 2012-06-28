@@ -15,6 +15,7 @@ openerp.web.list_editable = function (instance) {
         init: function () {
             var self = this;
             this._super.apply(this, arguments);
+
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
                     self.do_edit(dataset.index, id, dataset);
@@ -82,19 +83,14 @@ openerp.web.list_editable = function (instance) {
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
             if (this.options.editable || true) {
-                // TODO: [Return], [Esc] events
-                this.form = new instance.web.FormView(this, this.dataset, false, {
-                    initial_mode: 'edit',
-                    $buttons: $(),
-                    $pager: $()
-                });
-                this.form.embedded_view = this.view_to_form_view();
-                form_ready = this.form.prependTo(this.$element).then(function () {
-                    self.form.do_hide();
-                });
+                this.editor = new instance.web.list.Editor(this);
+
+                return $.when(
+                    result,
+                    this.editor.prependTo(this.$element));
             }
 
-            return $.when(result, form_ready);
+            return result;
         },
         /**
          * Ensures the editable list is saved (saves any pending edition if
@@ -105,9 +101,120 @@ openerp.web.list_editable = function (instance) {
          * @returns {$.Deferred}
          */
         ensure_saved: function () {
-            return this.groups.ensure_saved();
+            if (!this.editor.isEditing()) {
+                return $.when();
+            }
+            return this.save_edition();
         },
-        view_to_form_view: function () {
+        /**
+         * Set up the edition of a record of the list view "inline"
+         *
+         * @param {instance.web.list.Record} record record to edit
+         * @param {Object} cells map of field names to the DOM elements used to display these fields for the record being edited
+         * @return {jQuery.Deferred}
+         */
+        start_edition: function (record, cells) {
+            var self = this;
+            return this.ensure_saved().pipe(function () {
+                return self.withEvent('edit', {
+                    record: record.attributes,
+                    cancel: false
+                }, self.editor.edit,
+                [record.attributes, function (field_name, field) {
+                    var cell = cells[field_name];
+                    if (!cell) { return; }
+                    var $cell = $(cell);
+                    var position = $cell.position();
+
+                    // FIXME: this is shit. Is it possible to prefilter?
+                    if (field.get('effective_readonly')) {
+                        // Readonly fields can just remain the list's, form's
+                        // usually don't have backgrounds &al
+                        field.$element.hide();
+                        return;
+                    }
+                    field.$element.show().css({
+                        top: position.top,
+                        left: position.left,
+                        width: $cell.outerWidth(),
+                        minHeight: $cell.outerHeight()
+                    });
+                }],
+                [record.attributes]);
+            });
+        },
+        /**
+         * @return {jQuery.Deferred}
+         */
+        save_edition: function () {
+            var self = this;
+            return this.withEvent('save', {
+                editor: this.editor,
+                form: this.editor.form,
+                cancel: false
+            }, this.editor.save).then(function (attrs) {
+                var record = self.records.get(attrs.id);
+                if (!record) {
+                    // new record
+                    record = self.records.find(function (r) {
+                        return !r.get('id');
+                    });
+                    record.set('id', attrs.id, {silent: true});
+                }
+                self.reload_record(record);
+            });
+        },
+        /**
+         * @return {jQuery.Deferred}
+         */
+        cancel_edition: function () {
+            var self = this;
+            return this.withEvent('cancel', {
+                editor: this.editor,
+                form: this.editor.form,
+                cancel: false
+            }, this.editor.cancel).then(function (attrs) {
+                if (!attrs.id) {
+                    var to_delete = self.records.find(function (r) {
+                        return !r.get('id');
+                    });
+                    if (to_delete) {
+                        self.records.remove(to_delete);
+                    }
+                }
+            });
+        },
+        /**
+         * Executes an action on the view's editor bracketed by a cancellable
+         * event of the name provided.
+         *
+         * The event name provided will be post-fixed with ``:before`` and
+         * ``:after``, the ``event`` parameter will be passed alongside the
+         * ``:before`` variant and if the parameter's ``cancel`` key is set to
+         * ``true`` the action *will not be called* and the method will return
+         * a rejection
+         *
+         * @param {String} event_name name of the event
+         * @param {Object} event event object, provided to ``:before`` sub-event
+         * @param {Function} action callable, called with the view's editor as its context
+         * @param {Array} [args] supplementary arguments provided to the action
+         * @param {Array} [trigger_params] supplementary arguments provided to the ``:after`` sub-event, before anything fetched by the ``action`` function
+         * @return {jQuery.Deferred}
+         */
+        withEvent: function (event_name, event, action, args, trigger_params) {
+            var self = this;
+            event = event || {};
+            this.trigger(event_name + ':before', event);
+            if (event.cancel) {
+                return $.Deferred().reject();
+            }
+            return $.when(action.apply(this.editor, args || [])).then(function () {
+                self.trigger.apply(self, [event_name + ':after']
+                        .concat(trigger_params || [])
+                        .concat(_.toArray(arguments)));
+            });
+        },
+        editionView: function (editor) {
             var view = $.extend(true, {}, this.fields_view);
             view.arch.tag = 'form';
             _.extend(view.arch.attrs, {
@@ -123,56 +230,104 @@ openerp.web.list_editable = function (instance) {
                 widget.attrs.modifiers = JSON.stringify(modifiers);
             });
             return view;
-        },
-        /**
-         * Set up the edition of a record of the list view "inline"
-         *
-         * @param {Number} id id of the record to edit, null for new record
-         * @param {Number} index index of the record to edit in the dataset, null for new record
-         * @param {Object} cells map of field names to the DOM elements used to display these fields for the record being edited
-         */
-        edit_record: function (id, index, cells) {
-            // TODO: save previous edition if any
-            var self = this;
-            var record = this.records.get(id);
-            var e = {
-                id: id,
-                record: record,
-                cancel: false
-            };
-            this.trigger('edit:before', e);
-            if (e.cancel) {
-                return;
-            }
-            return this.form.on_record_loaded(record.attributes).pipe(function () {
-                return self.form.do_show({reload: false});
-            }).then(function () {
-                // TODO: [Save] button
-                // TODO: save on action button?
-                _(cells).each(function (cell, field_name) {
-                    var $cell = $(cell);
-                    var position = $cell.position();
-                    var field = self.form.fields[field_name];
+        }
+    });
 
-                    // FIXME: this is shit. Is it possible to prefilter?
-                    if (field.get('effective_readonly')) {
-                        // Readonly fields can just remain the list's, form's
-                        // usually don't have backgrounds &al
-                        field.$element.hide();
-                        return;
-                    }
-                    field.$element.show().css({
-                        top: position.top,
-                        left: position.left,
-                        width: $cell.outerWidth(),
-                        minHeight: $cell.outerHeight()
-                    });
-                });
-                // TODO: actually focus clicked field (if editable)
-                self.form.fields[self.form.fields_order[0]].focus();
-                self.trigger('edit:after', record, self.form)
+    instance.web.list.Editor = instance.web.Widget.extend({
+        /**
+         * @constructs instance.web.list.Editor
+         * @extends instance.web.Widget
+         *
+         * Adapter between listview and formview for editable-listview purposes
+         *
+         * @param {instance.web.Widget} parent
+         * @param {Object} options
+         * @param {instance.web.FormView} [options.formView=instance.web.FormView]
+         */
+        init: function (parent, options) {
+            this._super(parent);
+            this.options = options || {};
+            _.defaults(this.options, {
+                formView: instance.web.FormView
             });
 
+            this.record = null;
+
+            this.form = new (this.options.formView)(
+                this, this.getParent().dataset, false, {
+                    initial_mode: 'edit',
+                    $buttons: $(),
+                    $pager: $()
+            });
+        },
+        start: function () {
+            var self = this;
+            var _super = this._super();
+            this.form.embedded_view = this.getParent().editionView(this);
+            var form_ready = this.form.appendTo(this.$element).then(function () {
+                self.form.do_hide();
+                self.form.$element.on('keyup', function (e) {
+                    switch (e.which) {
+                    case KEY_RETURN:
+                        self.save();
+                        break;
+                    case KEY_ESCAPE:
+                        self.cancel();
+                        break;
+                    }
+                });
+            });
+            return $.when(_super, form_ready);
+        },
+
+        isEditing: function () {
+            return !!this.record;
+        },
+        edit: function (record, configureField) {
+            var self = this;
+            var form = self.form;
+            form.on_record_loaded(record).pipe(function () {
+                return form.do_show({reload: false});
+            }).then(function () {
+                self.record = record;
+                // TODO: [Save] button
+                // TODO: save on action button?
+                _(form.fields).each(function (field, name) {
+                    configureField(name, field);
+                });
+                // TODO: actually focus clicked field (if editable)
+                _(form.fields_order).detect(function (name) {
+                    // look for first visible field in fields_order, focus it
+                    var field = form.fields[name];
+                    if (!field.$element.is(':visible')) {
+                        return false;
+                    }
+                    field.focus();
+                    return true;
+                });
+                return form;
+            });
+        },
+        save: function () {
+            var self = this;
+            return this.form
+                .do_save(null, this.getParent().options.editable === 'top')
+                .pipe(function (result) {
+                    var created = result.created && !self.record.id;
+                    if (created) {
+                        self.record.id = result.result;
+                    }
+                    return self.cancel();
+                });
+        },
+        cancel: function () {
+            var record = this.record;
+            this.record = null;
+            if (!this.form.can_be_discarded()) {
+                return $.Deferred.reject();
+            }
+            this.form.do_hide();
+            return $.when(record);
         }
     });
 
@@ -263,20 +418,24 @@ openerp.web.list_editable = function (instance) {
                 break;
             }
         },
-        render_row_as_form: function (row) {
-            var record_id = $(row).data('id');
-            var index = _(this.dataset.ids).indexOf(record_id);
+        render_row_as_form: function ($row) {
+            var record;
+            if (!$row || $row.length === 0) {
+                record = new instance.web.list.Record();
+                this.records.add(
+                    record, {at: this.options.editable === 'top' ? 0 : null});
+                $row = this.$current.find(':not([data-id])');
+            } else {
+                record = this.records.get($row.data('id'));
+            }
 
             var cells = {};
-            row.children('td').each(function (index, el) {
+            $row.children('td').each(function (index, el) {
                 cells[el.getAttribute('data-field')] = el
             });
 
             // TODO: creation (record_id === null?)
-            return this.view.edit_record(
-                record_id,
-                index !== -1 ? index : null,
-                cells);
+            return this.view.start_edition(record, cells);
         },
         handle_onwrite: function (source_record_id) {
             var self = this;

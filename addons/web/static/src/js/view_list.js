@@ -1133,6 +1133,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
      * @returns {String} QWeb rendering of the selected record
      */
     render_record: function (record) {
+        var self = this;
         var index = this.records.indexOf(record);
         return QWeb.render('ListView.row', {
             columns: this.columns,
@@ -1141,7 +1142,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
             view: this.view,
             render_cell: function () {
-                return this.render_cell.apply(this, arguments); }
+                return self.render_cell.apply(self, arguments); }
         });
     },
     /**
@@ -1843,6 +1844,19 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
     },
 
     // underscore-type methods
+    find: function (callback) {
+        var record = null;
+        for(var section in this._proxies) {
+            if (this._proxies.hasOwnProperty(section)) {
+                record = this._proxies[section].find(callback);
+            }
+            if (record) { return record; }
+        }
+        for(var i=0; i<this.length; ++i) {
+            record = callback(this.records[i]);
+            if (record) { return record; }
+        }
+    },
     each: function (callback) {
         for(var section in this._proxies) {
             if (this._proxies.hasOwnProperty(section)) {
