@@ -42,8 +42,10 @@ from osv import fields,osv
 import pooler
 from tools.translate import _
 from service import security
+import logging
 
 magic_md5 = '$1$'
+_logger = logging.getLogger(__name__)
 
 def gen_salt( length=8, symbols=ascii_letters + digits ):
     seed()
@@ -179,8 +181,7 @@ class users(osv.osv):
             cr = pooler.get_db(db).cursor()
             return self._login(cr, db, login, password)
         except Exception:
-            import logging
-            logging.getLogger('netsvc').exception('Could not authenticate')
+            _logger.exception('Could not authenticate')
             return Exception('Access Denied')
         finally:
             if cr is not None:
