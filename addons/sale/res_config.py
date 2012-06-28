@@ -75,9 +75,6 @@ class sale_configuration(osv.osv_memory):
         'group_multiple_shops': fields.boolean("Manage Multiple Shops",
             implied_group='stock.group_locations',
             help="This allows to configure and use multiple shops."),
-        'module_sale_layout': fields.boolean("Notes & Subtotals per Line",
-            help="""Allows to format sale order lines using notes, separators, titles and subtotals.
-                This installs the module sale_layout."""),
         'module_warning': fields.boolean("Alerts by Products or Customers",
             help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
@@ -95,9 +92,6 @@ class sale_configuration(osv.osv_memory):
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
-        'module_analytic_journal_billing_rate': fields.boolean("Billing Rates by Contract",
-            help="""Allows you to define the default invoicing rate for a specific journal on a given account.
-                This installs the module analytic_journal_billing_rate."""),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),

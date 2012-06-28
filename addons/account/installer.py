@@ -30,11 +30,11 @@ from tools.translate import _
 from osv import fields, osv
 import netsvc
 import tools
+_logger = logging.getLogger(__name__)
 
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
-    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -149,7 +149,7 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.__logger.debug('Installing chart of accounts %s', chart)
+        _logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()

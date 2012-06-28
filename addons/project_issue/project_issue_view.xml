@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Issues" parent="project.menu_definitions" sequence="2"/>
+        <menuitem  id="menu_project_confi" name="Issues" parent="base.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -55,24 +55,26 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="case_open" string="Open" type="object"
-                            states="draft,pending"/>
-                    <button name="case_close" string="Done" type="object"
-                            states="draft,open,pending"/>
-                    <button name="case_pending" string="Pending" type="object"
-                            states="draft,open"/>
-                    <button name="case_escalate" string="Escalate" type="object"
-                            states="draft,open,pending"/>
-                    <button name="case_reset" string="Reset to New" type="object"
-                            states="cancelled,done"/>
-                    <button name="stage_previous" string="Previous Stage" type="object"
-                            states="open,pending" icon="gtk-go-back"
-                            attrs="{'invisible': [('stage_id','=', False)]}"/>
-                    <button name="stage_next" string="Next Stage" type="object"
-                            states="open,pending" icon="gtk-go-forward"
-                            attrs="{'invisible': [('stage_id','=', False)]}"/>
-                    <button name="case_cancel" string="Cancel" type="object"
-                            states="draft,open,pending"/>
+                    <span groups="base.group_user">
+                        <button name="case_open" string="Open" type="object"
+                                states="draft,pending"/>
+                        <button name="case_close" string="Done" type="object"
+                                states="draft,open,pending"/>
+                        <button name="case_pending" string="Pending" type="object"
+                                states="draft,open"/>
+                        <button name="case_escalate" string="Escalate" type="object"
+                                states="draft,open,pending"/>
+                        <button name="case_reset" string="Reset to New" type="object"
+                                states="cancelled,done"/>
+                        <button name="stage_previous" string="Previous Stage" type="object"
+                                states="open,pending" icon="gtk-go-back"
+                                attrs="{'invisible': [('stage_id','=', False)]}"/>
+                        <button name="stage_next" string="Next Stage" type="object"
+                                states="open,pending" icon="gtk-go-forward"
+                                attrs="{'invisible': [('stage_id','=', False)]}"/>
+                        <button name="case_cancel" string="Cancel" type="object"
+                                states="draft,open,pending"/>
+                    </span>
                     <field name="stage_id" widget="statusbar"/>
                 </header>
                 <sheet string="Issue">
@@ -86,7 +88,7 @@
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
                         </group><group>
-                            <field name="task_id" on_change="onchange_task_id(task_id)" />
+                            <field name="task_id" on_change="onchange_task_id(task_id)"/>
                             <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                             <field name="version_id" widget="selection"/>
                             <field name="priority"/>
@@ -94,7 +96,7 @@
                             <field name="state" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <field name="description" placeholder="Add a description..." />
+                    <field name="description" placeholder="Add a description..."/>
 
                     <notebook groups="base.group_no_one">
                         <page string="Extra Info">
@@ -133,8 +135,8 @@
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="project_id" />
-                    <field name="priority" string="Priority"/>
+                    <field name="project_id"/>
+                    <field name="priority" string="Priority" groups="base.group_user"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
@@ -168,24 +170,24 @@
                     <newline/>
                     <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
+                            domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]"
-                            context="{'group_by':'partner_id'}" />
+                            context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project"  icon="terp-folder-violet" domain="[]"
-                            context="{'group_by':'project_id'}" />
+                            context="{'group_by':'project_id'}"/>
                         <filter string="Version" icon="terp-gtk-jump-to-rtl"
-                            domain="[]" context="{'group_by':'version_id'}" />
+                            domain="[]" context="{'group_by':'version_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"
-                            context="{'group_by':'categ_id'}" />
+                            context="{'group_by':'categ_id'}"/>
                         <filter string="Priority" icon="terp-rating-rated" domain="[]"
-                            context="{'group_by':'priority'}" />
+                            context="{'group_by':'priority'}"/>
                         <filter string="Stage" icon="terp-stage" domain="[]"
-                            context="{'group_by':'stage_id'}" />
+                            context="{'group_by':'stage_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
-                            context="{'group_by':'state'}" />
-                        <separator orientation="vertical" />
+                            context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month"
                             domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
                     </group>
@@ -217,7 +219,7 @@
             <kanban default_group_by="stage_id">
                 <field name="color"/>
                 <field name="state" groups="base.group_no_one"/>
-                <field name="priority"/>
+                <field name="priority" groups="base.group_user"/>
                 <field name="user_email"/>
                 <field name="user_id"/>
                 <templates>
@@ -340,9 +342,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="use_issues"/>
-                </field>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr>
+                        <td><group><field name="use_issues"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
@@ -364,6 +369,21 @@
                     <a t-if="record.use_issues.raw_value"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
                         Issues(<field name="issue_count"/>)</a>
+                </xpath>
+            </field>
+        </record>
+      <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.issue.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_issues" />
                 </xpath>
             </field>
         </record>
