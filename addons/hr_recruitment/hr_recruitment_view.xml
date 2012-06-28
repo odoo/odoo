@@ -98,7 +98,7 @@
                 <field name="stage_id" widget="statusbar"/>
             </header>
             <sheet>
-                <div class="oe_right oe_form_button_box">
+                <div class="oe_right oe_button_box">
                     <button name="action_makeMeeting" type="object"
                         string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
                     <button name="%(survey.action_view_survey_question_message)d" type="action"
@@ -109,10 +109,10 @@
                         string="Print Interview" icon="gtk-print" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
                 </div>
-                <div class="oe_form_title">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="partner_name" class="oe_form_readonly_hidden"/>
+                    <label for="partner_name" class="oe_edit_only"/>
                     <h2><field name="partner_name"/></h2>
                     <field name="type_id" placeholder="Degree"/>
                 </div>
@@ -138,9 +138,9 @@
                             <group string="Contact">
                                 <label for="partner_id"/>
                                 <div>
-                                    <field name="partner_id" class="oe_form_inline"
+                                    <field name="partner_id" class="oe_inline"
                                         on_change="onchange_partner_id(partner_id, email_from)"/>
-                                    <button class="oe_form_inline"
+                                    <button class="oe_inline"
                                         string="Create" help="Create a new contact for this applicant" icon="gtk-index"
                                         name="%(action_hr_recruitment_partner_create)d" type="action"
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
@@ -192,29 +192,25 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-document-new" string="New" name="filter_new" 
+               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
+               <separator orientation="vertical"/>
+               <filter icon="terp-document-new" string="New" 
                    domain="[('state','=','draft')]"
-                   help="All Initial Jobs"
-               />
-               <filter icon="terp-camera_test" string="In Progress" name="filter_inprogress"
+                   help="All Initial Jobs"/>
+               <filter icon="terp-camera_test" string="In Progress" 
                    domain="[('state','=','open')]"
-                   help="Open Jobs"
-               />
+                   help="Open Jobs"/>
                <filter icon="terp-gtk-media-pause" string="Pending"
                    domain="[('state','=','pending')]"
-                   help="Pending Jobs"
-               />
-               <separator orientation="vertical"/>
+                   help="Pending Jobs"/>
+               <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-"/>
                <filter icon="terp-gtk-jump-to-ltr" string="Next Actions"
                     context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]"
                     help="Filter and view on next actions and date"/>
                <separator orientation="vertical"/>
-               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
-               <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
-               </field>
+               <field name="user_id"/>
                <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
@@ -274,12 +270,14 @@
                         <t t-name="kanban-box">
                             <t t-if="record.priority.raw_value == '1'" t-set="border">oe_kanban_color_green</t>
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
-                                <a class="oe_kanban_menuaction oe_i">B</a>
-                                <ul class="oe_kanban_menu">
-                                    <li><a type="edit">Edit...</a></li>
-                                    <li><a type="delete">Delete</a></li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li><a type="edit">Edit...</a></li>
+                                        <li><a type="delete">Delete</a></li>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
                                 <div class="oe_kanban_content" >
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/>
                                     </h3> 
@@ -343,8 +341,8 @@
             <field name="expected_employees" version="7.0" position="after">
                 <label for="survey_id" />
                 <div>
-                    <field name="survey_id" class="oe_form_inline"/>
-                    <button class="oe_form_inline"
+                    <field name="survey_id" class="oe_inline"/>
+                    <button class="oe_inline"
                         string="Interview" icon="gtk-print"
                         name="action_print_survey" type="object"
                         attrs="{'invisible':[('survey_id','=',False)]}"/>

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:53+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-06-22 04:42+0000\n"
+"X-Generator: Launchpad (build 15461)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -179,11 +179,6 @@ msgstr "Hesap Kaynağı"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Bütün Analitik hareketler"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Son 15 Günde Oluşturulmuş Faturalar"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -692,18 +687,6 @@ msgstr "Yevmiye Dönemi"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr "Girişin uzlaştırılması için bütün girişler için firma aynı olmalı"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Alıcılar Hesabı"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1684,11 +1667,6 @@ msgstr "Ayrılmış Yevmiye Sıraları"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Sorumlu"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Hesap Türüne göre Satışlar"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2786,13 +2764,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Hesaba Göre Satışlar"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Bu sihirbaz yinelenen muhasebe girişleri oluşturu"
@@ -3190,8 +3161,8 @@ msgstr "Hesap Planı Kartları Şablonu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Generate Chart of Accounts from a Chart Template"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6410,11 +6381,6 @@ msgid "Supplier Refund"
 msgstr "Supplier Refund"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Dashboard"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Kayıt Kalemleri"
@@ -6995,11 +6961,6 @@ msgstr ""
 "e.g. My model on %(date)s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Gelir Hesapları"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "Reference of the document that generated this invoice report."
@@ -7229,7 +7190,7 @@ msgstr "Ana Hesap Şablonu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -11364,6 +11325,10 @@ msgstr ""
 #~ msgid "A/c No."
 #~ msgstr "A/c No."
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Alıcılar Hesabı"
+
 #~ msgid "Control Invoice"
 #~ msgstr "Fatura Kontrol Et"
 
@@ -11468,6 +11433,9 @@ msgstr ""
 
 #~ msgid "Compute Entry Dates"
 #~ msgstr "Giriş Tarihlerini Hesapla"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Gelir Hesapları"
 
 #~ msgid "Error! You can not create recursive analytic accounts."
 #~ msgstr "Hata! Yinelenen çözümleme hesabı oluşturamazsınız."
@@ -11627,6 +11595,9 @@ msgstr ""
 #~ "You cannot modify company of this journal as its related record exist in "
 #~ "Entry Lines"
 
+#~ msgid "Sales by Account"
+#~ msgstr "Hesaba Göre Satışlar"
+
 #, python-format
 #~ msgid ""
 #~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
@@ -11638,6 +11609,9 @@ msgstr ""
 
 #~ msgid "All periods if empty"
 #~ msgstr "All periods if empty"
+
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Generate Chart of Accounts from a Chart Template"
 
 #, python-format
 #~ msgid "Cannot delete invoice(s) that are already opened or paid !"
@@ -11906,6 +11880,9 @@ msgstr ""
 #, python-format
 #~ msgid "Can not find account chart for this company, Please Create account."
 #~ msgstr "Can not find account chart for this company, Please Create account."
+
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
 
 #~ msgid "Account Profit And Loss Report"
 #~ msgstr "Account Profit And Loss Report"
@@ -12300,6 +12277,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Sıra alanı, kaynakları küçükten büyüğe doğru sıralamak için kullanılır."
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Son 15 Günde Oluşturulmuş Faturalar"
+
 #, python-format
 #~ msgid " Journal"
 #~ msgstr " Yevmiye"
@@ -12459,6 +12439,9 @@ msgstr ""
 
 #~ msgid "Go to next partner"
 #~ msgstr "Sonraki paydaşa geç"
+
+#~ msgid "Sales by Account Type"
+#~ msgstr "Hesap Türüne göre Satışlar"
 
 #~ msgid "Include initial balances"
 #~ msgstr "Başlangıç bakiyelerini içer"

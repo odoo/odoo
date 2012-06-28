@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:55+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-06-22 04:44+0000\n"
+"X-Generator: Launchpad (build 15461)\n"
 "Language: \n"
 
 #. module: account
@@ -186,11 +186,6 @@ msgstr "Origen cuenta"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Todos los asientos analíticos"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Facturas creadas en los últimos 15 días"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -712,18 +707,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Para conciliar los asientos, la compañía debería ser la misma para todos los "
 "asientos"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Cuentas por Cobrar"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1726,11 +1709,6 @@ msgstr "Secuencias de diarios separadas"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Responsable"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Ventas por tipo de cuenta"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2856,13 +2834,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr "Configure su plan de cuentas"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Ventas por cuenta"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Este asistente creará asientos contables recurrentes"
@@ -3268,8 +3239,8 @@ msgstr "Plantillas para el plan contable"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Generar plan contable a partir de una plantilla de plan contable"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6555,11 +6526,6 @@ msgid "Supplier Refund"
 msgstr "Factura rectificativa de proveedor"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Tablero"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Apuntes"
@@ -7148,11 +7114,6 @@ msgstr ""
 "Ejemplo: Mi modelo del %(date)s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Cuentas de ingresos"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "Referencia del documento que ha generado este informe de factura."
@@ -7391,8 +7352,8 @@ msgstr "Plantilla cuenta padre"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
-msgstr "Instalar su árbol de cuentas"
+msgid "Configure your Chart of Accounts"
+msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
@@ -11186,14 +11147,26 @@ msgstr ""
 "El monto residual de una línea de asiento por cobrar o por pagar expresado "
 "en su moneda (puede ser diferente de la moneda de la compañía)."
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Facturas creadas en los últimos 15 días"
+
 #~ msgid "Open For Unreconciliation"
 #~ msgstr "Abrir para romper conciliación"
 
 #~ msgid "Go to next partner"
 #~ msgstr "Ir a la siguiente empresa"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Ventas por tipo de cuenta"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Ventas por cuenta"
+
 #~ msgid "Tax codes"
 #~ msgstr "Códigos de impuestos"
+
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Generar plan contable a partir de una plantilla de plan contable"
 
 #~ msgid "Accounts by type"
 #~ msgstr "Cuentas por tipo"
@@ -11212,6 +11185,12 @@ msgstr ""
 
 #~ msgid "Create an Account based on this template"
 #~ msgstr "Crear una cuenta basada en esta plantilla"
+
+#~ msgid "Dashboard"
+#~ msgstr "Tablero"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Cuentas de ingresos"
 
 #~ msgid "Open for bank reconciliation"
 #~ msgstr "Abrir para la conciliación bancaria"
@@ -13391,5 +13370,12 @@ msgstr ""
 #~ msgid "Balance:"
 #~ msgstr "Balance:"
 
+#~ msgid "Install your Chart of Accounts"
+#~ msgstr "Instalar su árbol de cuentas"
+
 #~ msgid "Description On Invoices"
 #~ msgstr "Descripción en facturas"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Cuentas por Cobrar"

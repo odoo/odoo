@@ -54,9 +54,11 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="user_id"/>
-                    <field name="model"/>
+                    <field name="model" string="Message"/>
+                    <separator orientation="vertical"/>
                     <field name="date"/>
+                    <separator orientation="vertical"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>
@@ -82,10 +84,10 @@
             <field name="arch" type="xml">
                 <form string="Email message" version="7.0">
                     <sheet>
-                        <label for="subject" class="oe_form_readonly_hidden"/>
+                        <label for="subject" class="oe_edit_only"/>
                         <h1><field name="subject"/></h1>
                         <label for="user_id"/>
-                        <h2><field name="user_id" class="oe_form_inline" string="User"/> on <field name="date" class="oe_form_inline"/></h2>
+                        <h2><field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/></h2>
                         <group col="4">
                             <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
                             <field name="type"/>
@@ -168,20 +170,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
+                    <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
                     <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
                     <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="email_from"/>
-                    <field name="email_to"/>
-                    <field name="subject"/>
-                    <field name="date"/>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
                         <field name="user_id" string="User"/>

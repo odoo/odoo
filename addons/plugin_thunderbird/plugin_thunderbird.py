@@ -27,28 +27,22 @@ class plugin_thunderbird_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'name':fields.char('File name', size=34),
-        'pdf_name':fields.char('File name', size=64),
-        'thunderbird':fields.boolean('Thunderbird Plug-in', help="Allows you to select an object that you would like to add to your email and its attachments."),
-        'plugin_file':fields.char('Thunderbird Plug-in', size=256, readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
-        'pdf_file':fields.char('Installation Manual', size=264, help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
-        'description':fields.text('Description', readonly=True)
+        'thunderbird': fields.boolean('Thunderbird Plug-in', help="Allows you to select an object that you would like to add to your email and its attachments."),
+        'plugin_name': fields.char('File name', size=64),
+        'plugin_file': fields.char('Thunderbird Plug-in', size=256, readonly=True, help="Thunderbird plug-in file. Save this file and install it in Thunderbird."),
+        'pdf_file': fields.char('Installation Manual', size=256, help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
     }
 
     _defaults = {
-        'thunderbird' : True,
-        'name' : 'openerp_plugin.xpi',
-        'pdf_file' : 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
-        'plugin_file' : '/plugin_thunderbird/static/openerp_plugin.xpi',
-        'description' : """
-Thunderbird plugin installation:
-    1.  Save the Thunderbird plug-in.
-    2.  From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...
-    4.  Select the plug-in (the file named openerp_plugin.xpi).
-    5.  Click "Install Now".
-    6.  Restart Thunderbird.
-    7.  From the Thunderbird menubar: OpenERP -> Configuration.
-    8.  Configure your openerp server.
-"""
+        'thunderbird': True,
+        'plugin_name': 'openerp_plugin.xpi',
+        'pdf_file': 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(plugin_thunderbird_installer, self).default_get(cr, uid, fields, context)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        res['plugin_file'] = base_url + '/plugin_thunderbird/static/openerp_plugin.xpi'
+        return res
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
