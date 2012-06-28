@@ -147,34 +147,21 @@ class hr_employee(osv.osv):
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
 
-    def _get_image_resized(self, cr, uid, ids, name, args, context=None):
+    def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        for hr_employee in self.browse(cr, uid, ids, context=context):
-            result[hr_employee.id] = {'image_medium': False, 'image_small': False}
-            if hr_employee.image:
-                result[hr_employee.id]['image_medium'] = tools.resize_image_medium(hr_employee.image)
-                result[hr_employee.id]['image_small'] = tools.resize_image_small(hr_employee.image)
+        for obj in self.browse(cr, uid, ids, context=context):
+            resized_image_dict = tools.get_resized_images(obj.image)
+            result[obj.id] = {
+                'image_medium': resized_image_dict['image_medium'],
+                'image_small': resized_image_dict['image_small'],
+                }
         return result
     
-    def _set_image_resized(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'image': value}
-        else:
-            vals = {'image': tools.resize_image_big(value)}
-        return self.write(cr, uid, [id], vals, context=context)
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
     
     def onchange_image(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {
-                    'image': value,
-                    'image_medium': value,
-                    'image_small': value,
-                    }}
-        return {'value': {
-                    'image': tools.resize_image_big(value),
-                    'image_medium': tools.resize_image_medium(value),
-                    'image_small': tools.resize_image_small(value),
-                    }}
+        return {'value': tools.get_resized_images(value)}
     
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
@@ -201,27 +188,25 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'image': fields.binary("Photo",
-            help="This field holds the photo used as image for the "\
-                 "user. The avatar field is used as an interface to "\
-                 "access this field. The image is base64 encoded, "\
-                 "and PIL-supported. It is stored as a 540x450 px "\
-                 "image, in case a bigger image must be used."),
-        'image_medium': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
-            string="Medium-sized photo", type="binary", multi="_get_image_resized",
+            help="This field holds the image used as a photo for the "\
+                 "employee. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 12024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized photo of the user. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio keps. "\
+            help="Medium-sized photo of the employee. It is automatically "\
+                 "resized as a 180x180px image, with aspect ratio kept. "\
                  "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
-            string="Smal-sized photo", type="binary", multi="_get_image_resized",
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized photo of the user. It is automatically "\
+            help="Small-sized photo of the employee. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio keps. "\
-                 "Use this field in form views or some kanban views."),
+                 "Use this field anywhere a small image is required."),
         'active': fields.boolean('Active'),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
@@ -274,7 +259,7 @@ class hr_employee(osv.osv):
 
     _defaults = {
         'active': 1,
-        'image_medium': _get_photo,
+        'image': _get_photo,
         'marital': 'single',
         'color': 0,
     }

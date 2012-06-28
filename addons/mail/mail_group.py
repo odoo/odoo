@@ -20,14 +20,11 @@
 ##############################################################################
 
 import datetime as DT
-import io
 import openerp
 import openerp.tools as tools
 from operator import itemgetter
 from osv import osv
 from osv import fields
-from PIL import Image
-import StringIO
 import tools
 from tools.translate import _
 
@@ -55,34 +52,21 @@ class mail_group(osv.osv):
     def action_group_leave(self, cr, uid, ids, context={}):
         return self.message_unsubscribe(cr, uid, ids, context=context);
 
-    def _get_image_resized(self, cr, uid, ids, name, args, context=None):
+    def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        for mail_group in self.browse(cr, uid, ids, context=context):
-            result[mail_group.id] = {'image_medium': False, 'image_small': False}
-            if mail_group.image:
-                result[mail_group.id]['image_medium'] = tools.resize_image_medium(mail_group.image)
-                result[mail_group.id]['image_small'] = tools.resize_image_small(mail_group.image)
+        for obj in self.browse(cr, uid, ids, context=context):
+            resized_image_dict = tools.get_resized_images(obj.image)
+            result[obj.id] = {
+                'image_medium': resized_image_dict['image_medium'],
+                'image_small': resized_image_dict['image_small'],
+                }
         return result
     
-    def _set_image_resized(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'image': value}
-        else:
-            vals = {'image': tools.resize_image_big(value)}
-        return self.write(cr, uid, [id], vals, context=context)
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
     
     def onchange_image(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {
-                    'image': value,
-                    'image_medium': value,
-                    'image_small': value,
-                    }}
-        return {'value': {
-                    'image': tools.resize_image_big(value),
-                    'image_medium': tools.resize_image_medium(value),
-                    'image_small': tools.resize_image_small(value),
-                    }}
+        return {'value': tools.get_resized_images(value)}
     
     def get_member_ids(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
@@ -123,27 +107,25 @@ class mail_group(osv.osv):
                             help="Responsible of the group that has all rights on the record."),
         'public': fields.boolean('Public', help='This group is visible by non members. Invisible groups can add members through the invite button.'),
         'image': fields.binary("Photo",
-            help="This field holds the photo used as image for the "\
-                 "group. The avatar field is used as an interface to "\
-                 "access this field. The image is base64 encoded, "\
-                 "and PIL-supported. It is stored as a 540x450 px "\
-                 "image, in case a bigger image must be used."),
-        'image_medium': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
-            string="Medium-sized photo", type="binary", multi="_get_image_resized",
+            help="This field holds the image used as photo for the "\
+                 "user. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 12024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the group. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio keps. "\
+                 "resized as a 180x180px image, with aspect ratio kept. "\
                  "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image_resized, fnct_inv=_set_image_resized,
-            string="Smal-sized photo", type="binary", multi="_get_image_resized",
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized photo", type="binary", multi="_get_image",
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio keps. "\
-                 "Use this field in form views or some kanban views."),
+                 "Use this field anywhere a small image is required."),
         'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids, type='many2many',
                         relation='res.users', string='Group members', multi='get_member_ids'),
         'member_count': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
@@ -154,5 +136,5 @@ class mail_group(osv.osv):
     _defaults = {
         'public': True,
         'responsible_id': (lambda s, cr, uid, ctx: uid),
-        'image_medium': _get_photo,
+        'image': _get_photo,
     }

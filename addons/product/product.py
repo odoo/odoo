@@ -25,6 +25,7 @@ import decimal_precision as dp
 import math
 from _common import rounding
 import re
+import tools
 from tools.translate import _
 
 def is_pair(x):
@@ -495,29 +496,18 @@ class product_product(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = {'image_medium': False, 'image_small': False}
-            if obj.image:
-                result[obj.id]['image_medium'] = tools.resize_image_medium(obj.image)
-                result[obj.id]['image_small'] = tools.resize_image_small(obj.image)
+            resized_image_dict = tools.get_resized_images(obj.image)
+            result[obj.id] = {
+                'image_medium': resized_image_dict['image_medium'],
+                'image_small': resized_image_dict['image_small'],
+                }
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
-        if value:
-            value = tools.resize_image_big(value)
-        return self.write(cr, uid, [id], {'image': value}, context=context)
+        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
     
     def onchange_image(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {
-                        'image': value,
-                        'image_medium': value,
-                        'image_small': value,
-                        }}
-        return {'value': {
-                    'image': tools.resize_image_big(value),
-                    'image_medium': tools.resize_image_medium(value),
-                    'image_small': tools.resize_image_small(value),
-                    }}
+        return {'value': tools.get_resized_images(value)}
 
     _defaults = {
         'active': lambda *a: 1,
@@ -553,8 +543,8 @@ class product_product(osv.osv):
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
         'image': fields.binary("Image",
-            help="This field holds the image used for the "\
-                 "product. The image is base64 encoded, and PIL-supported. "\
+            help="This field holds the image used for the product. "\
+                 "The image is base64 encoded, and PIL-supported. "\
                  "It is limited to a 12024x1024 px image."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
