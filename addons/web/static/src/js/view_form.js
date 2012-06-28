@@ -2722,9 +2722,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str);
         } else {
+            str = _.escape(str).replace("\n", "<br />");
             this.$element.find('a')
                  .unbind('click')
-                 .text(str)
+                 .html(str)
                  .click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
