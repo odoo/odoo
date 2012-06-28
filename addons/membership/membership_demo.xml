@@ -9,7 +9,7 @@
         <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
         <field name="name">Golden Membership</field>
         <field name="list_price">180</field>
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="type">service</field>
     </record>
     <record id="membership_1" model="product.product">
@@ -17,7 +17,7 @@
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
         <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
         <field name="name">Silver Membership</field>
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="list_price">80</field>
         <field name="type">service</field>
     </record>
@@ -26,7 +26,7 @@
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
         <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
         <field name="name">Basic Membership</field>
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="list_price">40</field>
         <field name="type">service</field>
     </record>

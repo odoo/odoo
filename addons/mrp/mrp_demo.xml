@@ -18,8 +18,8 @@
             <field name="name">Costing Account For Cycle of Assembly.</field>
         </record>
 
-        <record id="product.product_category_assembly" model="product.category">
-            <field name="parent_id" ref="product.product_category_services"/>
+        <record id="product.product_category_18" model="product.category">
+            <field name="parent_id" ref="product.product_category_6"/>
             <field name="name">Assembly Service</field>
         </record>
 
@@ -29,7 +29,7 @@
             <field name="uom_po_id" ref="product.uom_hour"/>
             <field name="type">service</field>
             <field name="name">Assembly Service Cost</field>
-            <field name="categ_id" ref="product.product_category_assembly"/>
+            <field name="categ_id" ref="product.product_category_18"/>
         </record>
 
 
@@ -912,7 +912,7 @@
         <field name="factor">1.0</field>
    </record>
     <record id="product_orangejuice" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Orange Juice</field>
         <field name="procure_method">make_to_order</field>
         <field name="supply_method">produce</field>
@@ -921,7 +921,7 @@
         <field name="uom_po_id" ref="product_uom_litre"/>
     </record>
     <record id="product_orange" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Orange</field>
         <field name="procure_method">make_to_stock</field>
         <field name="supply_method">buy</field>
@@ -936,7 +936,7 @@
         <field name="product_uom" ref="product.product_uom_kgm"/>
     </record>
     <record id="product_sugar" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Sugar</field>
         <field name="procure_method">make_to_stock</field>
         <field name="supply_method">buy</field>
@@ -951,7 +951,7 @@
         <field name="min_qty">2.0</field>
     </record>
     <record id="product_water" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Water</field>
         <field name="procure_method">make_to_order</field>
         <field name="supply_method">buy</field>
@@ -1032,7 +1032,7 @@
     </record>
 
     <record id="product_shirt" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Shirt</field>
         <field name="procure_method">make_to_stock</field>
         <field name="supply_method">produce</field>
@@ -1041,7 +1041,7 @@
         <field name="uom_po_id" ref="product.product_uom_unit"/>
     </record>
     <record id="product_cloth" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Cloth</field>
         <field name="procure_method">make_to_order</field>
         <field name="supply_method">buy</field>
@@ -1056,7 +1056,7 @@
         <field name="min_qty">300.0</field>
     </record>
     <record id="product_buttons" model="product.product">
-        <field name="categ_id" ref="product.cat1"/>
+        <field name="categ_id" ref="product.product_category_1"/>
         <field name="name">Shirt Buttons</field>
         <field name="procure_method">make_to_stock</field>
         <field name="supply_method">buy</field>

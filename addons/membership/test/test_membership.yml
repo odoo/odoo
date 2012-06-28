@@ -4,7 +4,7 @@
   I'm creating "Gold Membership" which has Membership fee 80 EURO and It's started from 1st June to 31st Dec.
 -
   !record {model: product.product, id: product_product_membershipproduct0}:
-    categ_id: product.cat1
+    categ_id: product.product_category_1
     membership: 1
     membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
     membership_date_to: !eval "(datetime.now() + timedelta(6*31)).strftime('%Y-%m-%d')" 
@@ -85,7 +85,7 @@
   I'm creating new "Regular Membership" which has Membership fee 50 EURO and It's started from 1st June to 31st Dec.
 -
   !record {model: product.product, id: product_product_membershipproduct1}:
-    categ_id: product.cat1
+    categ_id: product.product_category_1
     membership: 1
     membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
     membership_date_to: !eval "(datetime.now() + timedelta(6*31)).strftime('%Y-%m-%d')" 
