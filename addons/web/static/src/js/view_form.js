@@ -2448,7 +2448,7 @@ instance.web.form.CompletionFieldMixin = {
 
         return this.orderer.add(dataset.name_search(
                 search_val, new instance.web.CompoundDomain(self.build_domain(), [["id", "not in", blacklist]]),
-                'ilike', this.limit + 1)).pipe(function(data) {
+                'ilike', this.limit + 1, self.build_context())).pipe(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
@@ -2710,7 +2710,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             return;
         }
         if (! no_recurse) {
-            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_get([self.get("value")], function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
@@ -2743,7 +2743,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
-            this.display_value["" + value_[0]] = value_[1];
+            if (! this.get_definition_options().always_reload) {
+                this.display_value["" + value_[0]] = value_[1];
+            }
             value_ = value_[0];
         }
         value_ = value_ || false;
