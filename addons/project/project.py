@@ -529,8 +529,7 @@ def Project():
         alias_pool.create_unique_alias(cr, uid, vals, context=context)
         res = super( project, self).create(cr, uid, vals, context)
         record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']], {"alias_force_thread_id":record['id'],
-                                                        'alias_defaults':{'project_id': res}}, context)
+        alias_pool.write(cr, uid, [record['alias_id']], {'alias_defaults':{'project_id': record['id']}}, context)
         self.create_send_note(cr, uid, [res], context=context)
         return res
 
