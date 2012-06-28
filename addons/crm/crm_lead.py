@@ -253,7 +253,6 @@ class crm_lead(base_stage, osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
-        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
