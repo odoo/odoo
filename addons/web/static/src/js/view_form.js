@@ -2453,7 +2453,7 @@ instance.web.form.CompletionFieldMixin = {
             // possible selections for the m2o
             var values = _.map(data, function(x) {
                 return {
-                    label: _.str.escapeHTML(x[1]),
+                    label: _.str.escapeHTML(x[1].split("\n")[0]),
                     value:x[1],
                     name:x[1],
                     id:x[0]
@@ -2720,9 +2720,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     display_string: function(str) {
         var self = this;
         if (!this.get("effective_readonly")) {
-            this.$input.val(str);
+            this.$input.val(str.split("\n")[0]);
         } else {
-            str = _.escape(str).replace("\n", "<br />");
+            str = _.escape(str).split("\n").join("<br />");
             this.$element.find('a')
                  .unbind('click')
                  .html(str)
