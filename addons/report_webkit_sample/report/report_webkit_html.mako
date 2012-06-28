@@ -22,7 +22,7 @@
         <tr><td>${_("Fax")}: ${inv.address_invoice_id.fax|entity}</td></tr>
         %endif
         %if inv.address_invoice_id.email :
-        <tr><td>${_("E-mail")}: ${inv.address_invoice_id.email|entity}</td></tr>
+        <tr><td>${_("Email")}: ${inv.address_invoice_id.email|entity}</td></tr>
         %endif
         %if inv.partner_id.vat :
         <tr><td>${_("VAT")}: ${inv.partner_id.vat|entity}</td></tr>

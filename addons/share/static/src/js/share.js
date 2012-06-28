@@ -58,7 +58,7 @@ openerp.share = function(session) {
                 self.add_items('other', [{
                     label: 'Share',
                     callback: self.on_sidebar_click_share,
-                    classname: 'oe-share',
+                    classname: 'oe_share',
                 }]);
             });
         },
@@ -72,7 +72,7 @@ openerp.share = function(session) {
         start: function() {
             start_res = this._super.apply(this, arguments);
             if (has_action_id) {
-                this.$element.find('button.oe-share-mail').show();
+                this.$element.find('button.oe_share_mail').show();
             }
             return start_res;
         }
@@ -83,12 +83,12 @@ openerp.share = function(session) {
             var self = this;
             this.check_if_action_is_defined();
             has_share(function() {
-                self.$element.find('a.oe-share_link').click(self.on_click_share_link);
-                self.$element.find('a.oe-share').click(self.on_click_share);
-                self.$element.delegate('button.oe-share-mail', 'click', self.on_click_share_mail);
+                self.$element.find('a.oe_share_link').click(self.on_click_share_link);
+                self.$element.find('a.oe_share').click(self.on_click_share);
+                self.$element.delegate('button.oe_share_mail', 'click', self.on_click_share_mail);
             }, function() {
-                self.$element.find('a.oe-share_link').remove();
-                self.$element.find('a.oe-share').remove();
+                self.$element.find('a.oe_share_link').remove();
+                self.$element.find('a.oe_share').remove();
             });
             return this._super.apply(this, arguments);
         },
@@ -96,8 +96,8 @@ openerp.share = function(session) {
         check_if_action_is_defined: function() {
             if (this.action && this.action.id) {
                 has_action_id = true;
-                this.$element.find('a.oe-share_link').show();
-                this.$element.find('a.oe-share').show();            
+                this.$element.find('a.oe_share_link').show();
+                this.$element.find('a.oe_share').show();
             }
             else {
                 has_action_id = false;
