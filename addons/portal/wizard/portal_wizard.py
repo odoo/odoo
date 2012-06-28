@@ -72,7 +72,7 @@ def extract_email(user_email):
 class wizard(osv.osv_memory):
     """
         A wizard to create portal users from instances of either 'res.partner'
-        or 'res.partner.address'.  The purpose is to provide an OpenERP database
+        or 'res.partner'.  The purpose is to provide an OpenERP database
         access to customers or suppliers.
     """
     _name = 'res.portal.wizard'

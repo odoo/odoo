@@ -26,8 +26,8 @@ class plugin_handler(osv.osv_memory):
         return True
 
     def partner_get(self, cr, uid, address_email):
-        ids = self.pool.get('res.partner.address').search(cr, uid, [('partner_id', '!=', False), ('email', 'like', address_email)])
-        res_id = ids and self.pool.get('res.partner.address').browse(cr, uid, ids[0]).partner_id.id or 0
+        partner_obj = self.pool.get('res.partner')
+        res_id = partner_obj.search(cr, uid, [('email', 'like', address_email)]) or 0
         url = self._make_url(cr, uid, res_id, 'res.partner')
         return ('res.partner', res_id , url)
 
@@ -116,7 +116,7 @@ class plugin_handler(osv.osv_memory):
 
     def contact_create(self, cr, uid, data, partner_id):
         """
-            @param data : the data use to create the res.partner.address
+            @param data : the data use to create the res.partner
                 [('field_name', value)], field name is required
             @param partner_id : On which partner the address is attached 
              if partner_id = 0 then create a new partner with the same name that the address
@@ -127,7 +127,7 @@ class plugin_handler(osv.osv_memory):
         if partner_id == 0:
             partner_id =  partner_obj.create(cr, uid, {'name':dictcreate.get('name')})
         dictcreate['partner_id'] = partner_id
-        self.pool.get('res.partner.address').create(cr, uid, dictcreate)
+        self.pool.get('res.partner').create(cr, uid, dictcreate)
         url = self._make_url(cr, uid, partner_id, 'res.partner')
         return ('res.partner', partner_id, url)
 
