@@ -1737,6 +1737,15 @@ class BaseModel(object):
 
         # translate view
         if 'lang' in context:
+            if node.text and node.text.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
+                if trans:
+                    node.text = trans
+            if node.tail and node.tail.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
+                if trans:
+                    node.tail = trans
+
             if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
