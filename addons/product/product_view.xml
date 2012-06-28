@@ -149,7 +149,7 @@
                                 <field name="seller_ids" context="{'uom_id': uom_id}"/>
                             </page>
                             <page string="Descriptions">
-                                <separator string="Description"/>
+                                <separator string="Internal Description"/>
                                 <field name="description"/>
                                 <separator string="Sale Description"/>
                                 <field name="description_sale" placeholder="This note will be displayed on quotations..."/>
@@ -548,7 +548,7 @@
                         <field name="product_name"/>
                         <field name="product_code"/>
                         <field name="min_qty"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="product.group_uom"/>
                         <field name="delay"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
@@ -702,7 +702,7 @@
                             <field name="seller_ids"/>
                         </page>
                         <page string="Descriptions">
-                            <separator string="Description"/>
+                            <separator string="Internal Description"/>
                             <field name="description"/>
                             <separator string="Sale Description"/>
                             <field name="description_sale"/>
