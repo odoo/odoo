@@ -52,7 +52,7 @@
                         <h2>
                             <field name="date" string="Start Date" required="1"
                             class="oe_edit_only oe_inline"/>
-                            At <field name="location" class="oe_inline" />
+                            at <field name="location" class="oe_inline" />
                         </h2>
                     </group>
                     <group>
@@ -60,7 +60,7 @@
                             <label for="duration" string="Duration" />
                             <field name="duration" widget="float_time"
                                 on_change="onchange_dates(date,duration,False,allday)"
-                                class="oe_inline"/> to
+                                class="oe_inline"/>
                             <field name="date_deadline" 
                                 string="End Date" required="1"
                                 on_change="onchange_dates(date,False,date_deadline)"                            
@@ -103,7 +103,7 @@
                             attrs="{'readonly': [('state', '=', 'done')]}"
                             context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" colspan="4"
-                            nolabel="1" widget="one2many" mode="tree,form">
+                            nolabel="1" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
                                 <field name="sent_by_uid" string="From"/>
                                 <field name="user_id" string="To"/>

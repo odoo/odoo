@@ -63,39 +63,58 @@ class account_analytic_account(osv.osv):
 
     _inherit = "account.analytic.account"
     _columns = {
-        'pricelist_id': fields.many2one('product.pricelist', 'Customer Pricelist',
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist',
             help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price',
             help="Keep empty if this contract is not limited to a total fixed price."),
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoice on Timesheet & Costs',
-            help="Fill this field if you plan to automatically generate invoices based " \
-            "on the costs in this analytic account: timesheets, expenses, ..." \
-            "You can configure an automatic invoice rate on analytic accounts."),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
+            help="This field allows you to define the rate in case you plan to reinvoice " \
+            "the costs in this analytic account: timesheets, expenses, ..."),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
-    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
-        res={}
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+
+    def on_change_use_timesheets(self, cr, uid, ids, use_timesheets, context=None):
+        res = {'value': {}}
+        if use_timesheets:
+            ir_model_obj = self.pool.get('ir.model.data')
+            res['value']['to_invoice'] = ir_model_obj.get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
+        return res
+
+    def on_change_partner_id(self, cr, uid, ids,partner_id, name, context=None):
+        res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, name, context=context)
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         if pricelist:
-            res['pricelist_id'] = pricelist
-        return {'value': res}
+            res['value']['pricelist_id'] = pricelist
+        return res
 
     def set_close(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'close'}, context=context)
+        self.write(cr, uid, ids, {'state':'close'}, context=context)
+        message = _("Contract has been <b>closed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        message = _("Contract has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_open(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        message = _("Contract has been <b>opened</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_pending(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        message = _("Contract has been set as <b>pending</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
 account_analytic_account()
 
@@ -106,10 +125,6 @@ class account_analytic_line(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
-
-    def unlink(self, cursor, user, ids, context=None):
-        return super(account_analytic_line,self).unlink(cursor, user, ids,
-                context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         self._check_inv(cr, uid, ids, vals)
