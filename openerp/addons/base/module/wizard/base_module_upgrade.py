@@ -55,7 +55,7 @@ class base_module_upgrade(osv.osv_memory):
                                 <group>
                                     <separator string="System update completed" colspan="4"/>
                                     <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
-                                    <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
+                                    <label align="0.0" string="We suggest to reload the page to see the new menus." colspan="4"/>
                                 </group>
                              </form>'''
 

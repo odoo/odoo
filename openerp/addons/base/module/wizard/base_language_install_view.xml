@@ -7,11 +7,11 @@
             <field name="model">base.language.install</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Load Official Translation" version="7.0">
+                <form string="Load a Translation" version="7.0">
                     <header>
-                        <button name="lang_install" string="Load" type="object" states="init" class="oe_highlight_on_dirty" />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="lang_install" string="Load" type="object" states="init" class="oe_highlight_on_dirty"/>
+                        <label string="or" states="init"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group colspan="4" col="8">
                         <group colspan="1">
