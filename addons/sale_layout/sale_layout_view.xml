@@ -25,7 +25,7 @@
                                         name="product_id"
                                         attrs="{'invisible':[('layout_type','!=','article')]}"
                                         on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"
-                                        select="1"/>
+                                        />
                                     <field
                                         name="name" required="0"
                                         attrs="{'invisible':[('layout_type','in',('line','break','subtotal'))], 'required':[('layout_type','not in',['line','break'])]}"/>
@@ -82,8 +82,8 @@
                                 </page>
                                 <page string="Extra Info" attrs="{'invisible':[('layout_type','!=','article')]}">
                                     <field name="type" attrs="{'invisible':[('layout_type','!=','article')]}"/>
-                                    <field name="delay" select="2" attrs="{'invisible':[('layout_type','!=','article')]}"/>
-                                    <field name="address_allotment_id" select="2"/>
+                                    <field name="delay"  attrs="{'invisible':[('layout_type','!=','article')]}"/>
+                                    <field name="address_allotment_id" />
                                     <separator colspan="4" string="Properties"/>
                                     <field colspan="4" name="property_ids" nolabel="1"/>
                                 </page>
