@@ -124,7 +124,9 @@
                                 </group>
                             </page>
                             <page string="Allowed Companies" groups="base.group_multi_company">
-                                <field name="company_ids" widget="many2many_tags"/>
+                                <group>
+                                    <field name="company_ids" widget="many2many_tags" string="Default Company"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
