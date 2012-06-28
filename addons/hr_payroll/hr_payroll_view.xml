@@ -422,10 +422,12 @@
                     <xpath expr="//field[@name='parent_id']" position="before">
                         <field name="manager"/>
                     </xpath>
-                    <field name="coach_id" position="after">
-                        <field name="vehicle"/>
-                        <field name="vehicle_distance"/>
-                    </field>
+                    <xpath expr="//group[@name='active_group']" position="before">
+                        <group>
+							<field name="vehicle"/>
+							<field name="vehicle_distance"/>
+						</group>
+                    </xpath>
                     <field name="active" position="before">
                         <field name="medic_exam" string="Medical Examination"/>
                     </field>

@@ -489,11 +489,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action"/>
-                </xpath>
                 <field name="active" position="before">
-                    <field name="remaining_leaves"/>
+                    <label for="remaining_leaves"/>
+                    <div>
+                        <field name="remaining_leaves" class="oe_inline"/>
+                        <label/>
+                        <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" class="oe_inline"/>
+                    </div>
                 </field>
             </field>
         </record>

@@ -114,9 +114,14 @@
             <field name="arch" type="xml">
                 <page string="Personal Information" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
+                        <div class="oe_right oe_button_box" name="button_timesheet">
+                            <!-- Put here related buttons -->
+                        </div>
                         <group col="4">
-                            <field name="product_id" domain="[('type','=','service')]"/>
-                            <field name="journal_id"/>
+                            <group col="2">
+                                <field name="product_id" domain="[('type','=','service')]"/>
+                                <field name="journal_id"/>
+                            </group>
                         </group>
                     </page>
                 </page>
