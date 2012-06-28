@@ -38,7 +38,7 @@ class res_users(osv.osv):
                         ('comments', 'Only comments'),
                         ('to_me', 'Only when sent directly to me'),
                         ('none', 'Never')
-                        ], 'Receive Feeds by E-mail', required=True,
+                        ], 'Receive Feeds by Email', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
         'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
     }
@@ -79,7 +79,7 @@ class res_users(osv.osv):
                      'alias_model_id': res_id.id})
         name = alias_pool.create_unique_alias(cr, uid, data, sequence=False ,context=context)
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        user = self.browse(cr, uid, [user_id], context=context)[0]
+        user = self.browse(cr, uid, user_id, context=context)
         alias_pool.write(cr, uid, [user.alias_id.id], {"alias_force_thread_id": user.id}, context)
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)

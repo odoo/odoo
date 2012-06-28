@@ -21,7 +21,7 @@
 ##############################################################################
 
 {
-    "name" : "E-Mail Templates",
+    "name" : "Email Templates",
     "version" : "1.1",
     "author" : "OpenERP,OpenLabs",
     "website" : "http://openerp.com",
