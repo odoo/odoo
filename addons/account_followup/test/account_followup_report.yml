@@ -1,10 +1,10 @@
 -
-  In order to test the report I print followup report.
+  In order to test the report I print follow-up report.
 -
   !python {model: account.followup.print.all}: |
     import time
     ctx = {'form_view_ref':'account_followup.view_account_followup_print_all', 'followup_id': ref('account_followup.demo_followup1'),'date': time.strftime('%Y-%m-%d'),'model': 'account_followup.followup','active_ids':[ref('account_followup_print_all_0')], 'company_id':ref('base.main_company')}
     data_dict = {'email_conf': 1}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_followup_print_all', context=ctx, wiz_data=data_dict,wiz_buttons=["Print Follow Ups"], our_module='account_followup')
+    test_reports.try_report_action(cr, uid, 'action_account_followup_print_all', context=ctx, wiz_data=data_dict,wiz_buttons=["Print Follow-ups"], our_module='account_followup')
 
