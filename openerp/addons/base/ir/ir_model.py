@@ -97,9 +97,9 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
-        'osv_memory': fields.function(_is_osv_memory, string='In-Memory Model', type='boolean',
+        'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
-            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)"),
+            help="This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"),
         'modules': fields.function(_in_modules, type='char', size=128, string='In Modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }

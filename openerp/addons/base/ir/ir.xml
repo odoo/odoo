@@ -858,12 +858,16 @@
             <field name="arch" type="xml">
                 <form string="Model Description" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="osv_memory"/>
-                        <field name="state"/>
-                        <field name="modules" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="osv_memory"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="modules"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Fields">
