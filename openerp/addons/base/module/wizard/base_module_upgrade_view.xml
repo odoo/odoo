@@ -19,7 +19,7 @@
         </record>
 
         <record id="action_view_base_module_upgrade" model="ir.actions.act_window">
-            <field name="name">Apply Scheduled Upgrade</field>
+            <field name="name">Apply Shcedule Upgrade</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.module.upgrade</field>
             <field name="view_type">form</field>
@@ -41,13 +41,11 @@
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Apply Scheduled Upgrades" version="7.0">
+                <form string="Apply Shcedule Upgrade" version="7.0">
                     <header>
                         <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                     </header>
-                    <label string="The selected modules have been updated / installed !"/>
-                    <label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/>
                 </form>
             </field>
         </record>
