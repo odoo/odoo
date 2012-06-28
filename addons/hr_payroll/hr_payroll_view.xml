@@ -763,18 +763,18 @@
             groups="base.group_hr_manager"/>
 
         <act_window name="Payslip Computation Details"
-        	domain="[('slip_id', '=', active_id)]"
-        	context="{'default_slip_id': active_id}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.payslip"
-        	id="act_payslip_lines"/>
+            domain="[('slip_id', '=', active_id)]"
+            context="{'default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
-        	domain="[('register_id', '=', active_id)]"
-        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.contribution.register"
-        	id="act_contribution_reg_payslip_lines"/>
+            domain="[('register_id', '=', active_id)]"
+            context="{'default_register_id': active_id, 'search_default_register_id': 1}"
+            res_model="hr.payslip.line"
+            src_model="hr.contribution.register"
+            id="act_contribution_reg_payslip_lines"/>
 
     </data>
 </openerp>
