@@ -648,6 +648,9 @@
                         <field name="parent_id"/>
                         <field name="sequence"/>
                     </group>
+                    <group colspan="2" col="1">
+                      <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -765,6 +768,7 @@
                         <field name="shop_id" widget="selection" />
                         <field name="journal_id" widget="selection" />
                         <field name="sequence_id" readonly="1"/>
+                        <field name="group_by" />
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">
                             <tree string="Journals">

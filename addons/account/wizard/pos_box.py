@@ -28,6 +28,10 @@ class CashBox(osv.osv_memory):
     def _run(self, cr, uid, ids, records, context=None):
         for box in self.browse(cr, uid, ids, context=context):
             for record in records:
+                if not record.journal_id:
+                    raise osv.except_osv(_('Error !'),
+                                         _("Please check that the field 'Journal' is set on the Bank Statement"))
+                    
                 if not record.journal_id.internal_account_id:
                     raise osv.except_osv(_('Error !'),
                                          _("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
