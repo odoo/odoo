@@ -635,7 +635,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         (new instance.web.search.CustomFilters(this));
         // add Advanced to this.inputs
         (new instance.web.search.Advanced(this));
-        (new instance.web.search.AddToDashboard(this));
 
         // build drawer
         var drawer_started = $.when.apply(
