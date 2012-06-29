@@ -7,18 +7,21 @@
             <field name="model">base.module.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Data Recording">
-                    <field name="check_date"/>
-                    <newline/>
-                    <field name="filter_cond"/>
-                    <separator string="Choose objects to record" colspan="4"/>
-                    <field name="objects" colspan="4" nolabel="1"/>
-                    <group><field name="info_yaml"/></group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
+                <form string="Data Recording" version="7.0">
+                    <header>
                         <button icon="gtk-cancel" string="Cancel" special="cancel"/>
                         <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
-                    </group>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="check_date"/>
+                            <field name="filter_cond"/>
+                        </group>
+                        <group string="Choose objects to record">
+                            <field name="objects" nolabel="1"/>
+                        </group>
+                        <group><field name="info_yaml"/></group>
+                    </sheet>
                 </form>
             </field>
         </record>
