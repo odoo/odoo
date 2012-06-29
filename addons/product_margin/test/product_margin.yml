@@ -11,7 +11,7 @@
   !python {model: product.margin}: |
     self.action_open_window(cr, uid, [ref("product_margin_wiz0")], {"lang": 'en_US',
       "search_default_filter_to_sell": "1", "tz": False, "active_model": "product.product", "disable_log": True, 
-      "active_ids": [ref("product.product_product_pc3")], "active_id": ref("product.product_product_pc3")})
+      "active_ids": [ref("product.product_product_5")], "active_id": ref("product.product_product_5")})
 -
   I read the fields of the product.
 -
@@ -20,6 +20,6 @@
       'total_margin', 'sales_gap', 'purchase_num_invoiced', 'expected_margin', 'turnover']
     self.read(cr, uid, [ref("product_margin_wiz0")], fields, {"lang": 'en_US',
       "search_default_filter_to_sell": "1", "tz": False, "active_model": "product.product", 
-      "bin_size": True, "active_ids": [ref("product.product_product_pc3")], 
-      "active_id": ref("product.product_product_pc3")})
+      "bin_size": True, "active_ids": [ref("product.product_product_5")], 
+      "active_id": ref("product.product_product_5")})
 

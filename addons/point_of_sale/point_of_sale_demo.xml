@@ -60,7 +60,7 @@
             <field eval="[(6,0,[])]" name="invoice_line_tax_id"/>
             <field eval="1.0" name="quantity"/>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_id" ref="product.product_product_3"/>
         </record>
         <record id="stock_picking_out0" model="stock.picking">
             <field name="origin">POS/019</field>
@@ -130,13 +130,13 @@
             <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="name">Stock move (POS 12)</field>
             <field eval="[(6,0,[])]" name="move_history_ids2"/>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_id" ref="product.product_product_3"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="picking_id" ref="stock_picking_out0"/>
         </record>
         <record id="pos_order_line_orderline0" model="pos.order.line">
             <field name="notice">No Discount</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_id" ref="product.product_product_3"/>
             <field model="pos.order" name="order_id" search="[('name', '=', u'POS/019')]"/>
             <field eval="450.0" name="price_unit"/>
             <field name="company_id" ref="base.main_company"/>
@@ -165,7 +165,7 @@
         <record id="line1_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos1"/>
             <field name="name">[PC3] Medium PC</field>
-            <field name="product_id" ref="product.product_product_pc3"/>
+            <field name="product_id" ref="product.product_product_5"/>
             <field model="res.company" name="company_id" search="[]"/>
             <field name="price_unit">450</field>
             <field name="qty">2</field>
@@ -175,7 +175,7 @@
         <record id="line12_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos1"/>
             <field name="name">[PC2] Basic+ PC (assembly on order)</field>
-            <field name="product_id" ref="product.product_product_pc2"/>
+            <field name="product_id" ref="product.product_product_4"/>
             <field model="res.company" name="company_id" search="[]"/>
             <field name="price_unit">450</field>
             <field name="qty">2</field>
@@ -185,7 +185,7 @@
         <record id="line2_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos2"/>
             <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_id" ref="product.product_product_3"/>
             <field model="res.company" name="company_id" search="[]"/>
             <field name="price_unit">450</field>
             <field name="qty">5</field>

@@ -2,10 +2,10 @@
   I create the procurement order and run that procurement.
 -
   !python {model: make.procurement}: |
-    context.update({'active_model':'product.product', 'active_ids': [ref('product.product_product_hdd3')], 'active_id': ref('product.product_product_hdd3')})
+    context.update({'active_model':'product.product', 'active_ids': [ref('product.product_product_13')], 'active_id': ref('product.product_product_13')})
 -
   !record {model: make.procurement, id: procurement_product_hdd3}:
-    product_id: product.product_product_hdd3
+    product_id: product.product_product_13
     qty: 15
     uom_id: product.product_uom_unit
     warehouse_id: stock.stock_warehouse_shop0

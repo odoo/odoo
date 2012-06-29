@@ -1,5 +1,5 @@
 -
-  !record {model: product.product, id: product_product_pc2}:
+  !record {model: product.product, id: product_product_4}:
     uom_id: product_uom_unit
     categ_id: product_category_9
 -
@@ -15,12 +15,12 @@
               base_pricelist_id: list0 
             - name: 10% Discount on PC2
               sequence: 1
-              product_id: product_product_pc2
+              product_id: product_product_4
               base: !eval (ref('product.list_price'))
               price_discount: -0.10
             - name: 1 surchange on PC3
               sequence: 1
-              product_id: product_product_pc3
+              product_id: product_product_5
               base: !eval (ref('product.list_price'))
               price_surcharge: 1
             - name: 5% Discount on all IT components
@@ -48,7 +48,7 @@
               sequence: 1
               price_min_margin: 2
               price_max_margin: -5
-              product_id: product_product_pc2
+              product_id: product_product_4
               base: -2
 -
   !record {model: pricelist.partnerinfo, id: supplier_pricelist0_product_pc2}:

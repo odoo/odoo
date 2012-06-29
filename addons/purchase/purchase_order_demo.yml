@@ -3,10 +3,10 @@
     partner_id: base.res_partner_1
     invoice_method: order
     order_line:
-      - product_id: product.product_product_pc2
+      - product_id: product.product_product_4
         price_unit: 150.50
         product_qty: 5.0
-      - product_id: product.product_product_pc1
+      - product_id: product.product_product_3
         price_unit: 450.20
         product_qty: 2.0
 
@@ -15,14 +15,14 @@
     partner_id: base.res_partner_3
     invoice_method: picking
     order_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_5
         price_unit: 900
 
 -
   !record {model: purchase.order, id: order_purchase3}:
     partner_id: base.res_partner_12
     order_line:
-      - product_id: product.product_product_0
+      - product_id: product.product_product_2
         price_unit: 900.20
         product_qty: 10.0
       - product_id: product.product_product_1
@@ -33,13 +33,13 @@
   !record {model: purchase.order, id: order_purchase4}:
     partner_id: base.res_partner_4
     order_line:
-      - product_id: product.product_product_pc2
+      - product_id: product.product_product_4
         price_unit: 40
         product_qty: 5
-      - product_id: product.product_product_mb1
+      - product_id: product.product_product_7
         price_unit: 45
         product_qty: 15.0
-      - product_id: product.product_product_mb2
+      - product_id: product.product_product_6
         price_unit: 45
         product_qty: 15
 
@@ -47,29 +47,29 @@
   !record {model: purchase.order, id: order_purchase5}:
     partner_id: base.res_partner_19
     order_line:
-      - product_id: product.product_product_cpu1
+      - product_id: product.product_product_9
         product_qty: 3
-      - product_id: product.product_product_cpu3
+      - product_id: product.product_product_10
         product_qty: 13
-      - product_id: product.product_product_hdd1
+      - product_id: product.product_product_11
         product_qty: 10
 
 -
   !record {model: purchase.order, id: order_purchase6}:
     partner_id: base.res_partner_22
     order_line:
-      - product_id: product.product_product_hdd2
+      - product_id: product.product_product_12
         product_qty: 10
-      - product_id: product.product_product_ram
+      - product_id: product.product_product_17
         product_qty: 10
-      - product_id: product.product_product_ram512
+      - product_id: product_product_18
         product_qty: 10
 
 -
   !record {model: purchase.order, id: order_purchase7}:
     partner_id: base.res_partner_12
     order_line:
-      - product_id: product.product_product_0
+      - product_id: product.product_product_2
         product_qty: 5
       - product_id: product.product_product_1
         product_qty: 15

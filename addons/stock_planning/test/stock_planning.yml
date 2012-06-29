@@ -140,7 +140,7 @@
         product_uom_qty: 13.0
         state: draft
         delay: 2.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         product_uos_qty: 13.0
         th_weight: 0.0
         type: make_to_stock
@@ -150,7 +150,7 @@
         product_uom_qty: 5.0
         state: draft
         delay: 3.0
-        product_id: product.product_product_pc3
+        product_id: product.product_product_5
         product_uos_qty: 5.0
         th_weight: 0.0
         type: make_to_stock
@@ -165,7 +165,7 @@
   Now I want to calculate sales history for both the products PC1-Basic PC and PC3-Medium PC and forecast the quantity.
 -
   !python {model: stock.sale.forecast}: |
-    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1'))])
+    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_3'))])
     write_dict = {'product_qty': 30.0,
     'analyzed_period1_id': ref("stock_period_03"),
     'analyzed_user_id': ref("base.user_root"),
@@ -181,7 +181,7 @@
   Now I applying onchange and unlink forecast record for the product PC3
 -
   !python {model: stock.sale.forecast}: |
-    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc3'))])
+    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_5'))])
     self.unlink(cr, uid, forecast_ids, {"lang": "en_US", "tz":
       False, "search_default_create_uid": 1, "active_model": "ir.ui.menu", "department_id":
       False, "active_ids": [ref("stock_planning.menu_stock_sale_forecast_all")], "active_id":
@@ -225,10 +225,10 @@
   I calculate the planning in master procurement schedule.
 -
   !python {model: stock.planning}: |
-    planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1')),('period_id','=',ref('stock_period_03'))])
+    planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_3')),('period_id','=',ref('stock_period_03'))])
     self.write(cr, uid, planning_ids, {'to_procure': 30.0,'planned_outgoing': 40.0,'supply_warehouse_id': ref("stock_warehouse_0")})
     self.onchange_company(cr, uid, planning_ids, ref('stock.res_partner_2'))
-    self.onchange_uom(cr, uid, planning_ids, ref('product.product_uom_unit'), ref('product.product_product_pc1'),ref('product.product_uom_unit'), False, False)
+    self.onchange_uom(cr, uid, planning_ids, ref('product.product_uom_unit'), ref('product.product_product_3'),ref('product.product_uom_unit'), False, False)
     self.product_id_change(cr, uid, planning_ids, ref('product.product_product_20'))
     context = {"lang": "en_US", "tz": False, "active_model": "ir.ui.menu", 
       "active_ids": [ref("stock_planning.menu_stock_planning")],
@@ -241,7 +241,7 @@
   I create a procurement order for the incoming products left.
 -
   !python {model: stock.planning}: |
-    planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1')),('period_id','=',ref('stock_period_03'))])
+    planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_3')),('period_id','=',ref('stock_period_03'))])
     plann = self.browse(cr, uid, planning_ids)
     assert plann[0].incoming_left, 'Incoming Left must be greater than 0 !'
     self.procure_incomming_left(cr, uid, planning_ids, {"lang": 'en_US', "tz":
@@ -253,5 +253,5 @@
 -
   !python {model: procurement.order}: |
     import datetime
-    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) %s, week 29' % (datetime.datetime.now().year)),('product_id','=',ref("product.product_product_pc1"))])
+    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) %s, week 29' % (datetime.datetime.now().year)),('product_id','=',ref("product.product_product_3"))])
     assert proc_ids,'No Procurements!'

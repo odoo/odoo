@@ -17,27 +17,27 @@
     woodmm10 = False
     metalcleats = False
     for line in order.product_lines:
-        if line.product_id.id == ref('product.product_product_sidepanel0'):                         #SIDEPAN 	 2 	    Unit
+        if line.product_id.id == ref('product.product_product_41'):                         #SIDEPAN 	 2 	    Unit
             assert not sidepanel, "Production line is already generated for SIDEPAN."
             assert line.product_qty == (2.0*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
             sidepanel = True
-        elif line.product_id.id == ref('product.product_product_woodlintelm0'):                     #LIN40 	     4*0.25 Meter
+        elif line.product_id.id == ref('product.product_product_45'):                     #LIN40 	     4*0.25 Meter
             assert not woodlintelm, "Production line is already generated for LIN40."
             assert line.product_qty == (4*0.25*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
             woodlintelm = True
-        elif line.product_id.id == ref('product.product_product_woodmm0'):                          #WOOD002 	 0.25 	    m
+        elif line.product_id.id == ref('product.product_product_32'):                          #WOOD002 	 0.25 	    m
             assert not woodmm0, "Production line is already generated for WOOD002."
             assert line.product_qty == (0.25*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
             woodmm0 = True
-        elif line.product_id.id == ref('product.product_product_metalcleats0'):                     #METC000      4*3      Unit
+        elif line.product_id.id == ref('product.product_product_46'):                     #METC000      4*3      Unit
             assert not metalcleats, "Production line is already generated for METC000."
             assert line.product_qty == (4*3*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
             metalcleats = True
-        elif line.product_id.id == ref('product.product_product_woodmm10'):                         #WOOD010 	 0.083*3 	m
+        elif line.product_id.id == ref('product.product_product_34'):                         #WOOD010 	 0.083*3 	m
             assert not woodmm10, "Production line is already generated for WOOD010."
             assert line.product_qty == (0.083*3*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
@@ -223,7 +223,7 @@
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"))
     for move in order.move_lines:
         move.action_consume(move.product_qty)
-        if move.product_id.id == ref("product.product_product_metalcleats0"):
+        if move.product_id.id == ref("product.product_product_46"):
             move.action_scrap(5.0, scrap_location_id)
 -
   I produce product.
