@@ -576,7 +576,7 @@ class hr_job(osv.osv):
         alias_pool.create_unique_alias(cr, uid, vals, context=context)
         res = super( hr_job, self).create(cr, uid, vals, context)
         record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']], {"alias_defaults": {'job_id': res}}, context)
+        alias_pool.write(cr, uid, [record['alias_id']], {"alias_defaults": {'job_id': record['id']}}, context)
         return res
 
     
