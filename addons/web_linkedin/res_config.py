@@ -27,6 +27,7 @@ class base_config_settings(osv.osv_memory):
     _columns = {
         'default_linkedin_api_key': fields.char('LinkedIn API key', size=128, default_model='res.company',
                 help="""Give API key of linkedin."""),
+        'import_contact': fields.boolean('Import Your Contact from Linkedin'),
         'generate_key': fields.text('Go to URL', readonly=True,
                 help="""If you have not generate linkedin API Key yet than Go to URL to generate and enter it in above text field."""),
     }
@@ -38,7 +39,7 @@ class base_config_settings(osv.osv_memory):
                         "\n    - JavaScript API Domain is Your domain name (e.g. https://yourcompany.my.openerp.com),"\
                         "\n    - You can give multiple domain (e.g. yourcompany.my.openerp.com),"\
                         "\n    - programming tools is Javascript"\
-                        '\n* Copy the "API Key" and paste it in the field "LinkedIn API Key" here above".'
+                        '\n* Copy the "API Key" and paste it in the field "LinkedIn API Key" here above.'
     }
 
     def execute(self, cr, uid, ids, context=None):
