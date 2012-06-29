@@ -108,16 +108,14 @@
                             <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                             <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                             <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_highlight"/>
-                            <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent" class="oe_highlight"/>
                             <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_highlight"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_highlight"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent" class="oe_highlight"/>
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
-                            <button name="action_view_invoice" string="Open Invoice" type="object" 
+                            <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
-                            <button name="action_view_delivery" string="Open Delivery Order" type="object" 
+                            <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
                             <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="manual"/>
                             <button name="cancel" states="draft,sent" string="Cancel"/>
@@ -135,9 +133,10 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
+
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
@@ -227,8 +226,12 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
-                            <separator string="Notes" class="oe_clear"/>
-                            <field name="note" placeholder="Add a global note on the sale order..."/>
+                            <div class="oe_clear">
+                                <label for="note"/>
+                            </div>
+                            <div>
+                                <field name="note" class="oe_inline"/>
+                            </div>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
@@ -419,8 +422,8 @@
                     <header>
                         <span groups="base.group_user">
                             <button name="button_cancel" string="Cancel" type="object" icon="gtk-cancel" states="confirmed,exception"/>
-                            <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}"/>
-                            <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward"/>
+                            <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}" class="oe_highlight"/>
+                            <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward" class="oe_highlight"/>
                         </span>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>

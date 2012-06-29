@@ -9,17 +9,17 @@
             <field name="model">change.production.qty</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Change Product Qty">
-                    <separator string="Change Quantity" colspan="4"/>
-                    <newline/>
-                    <field name="product_qty"/>
-                    <newline/>
-                    <separator colspan="4"/>
-                    <group col="2" colspan="4">
-                        <button icon='gtk-stop' special="cancel"
-                            string="Cancel" />
+                <form string="Change Product Qty" version="7.0">
+                    <header>
                         <button name="change_prod_qty" string="Approve"
-                            colspan="1" type="object" icon="gtk-ok" />
+                            colspan="1" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />    
+                    </header>
+                    <group>
+                        <separator string="Change Quantity" colspan="4"/>
+                        <newline/>
+                        <field name="product_qty"/>
                     </group>
                 </form>
             </field>
