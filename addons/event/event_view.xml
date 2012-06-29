@@ -382,19 +382,17 @@
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
                     <field name="state" select="1" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
-               <sheet string="Registration">
-                    <group colspan="6" col="7">
-                        <group colspan="3">
-                            <h1>
-                                <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" class="oe_tital"/>
-                            </h1>
-                        </group>
-                        <group colspan="4">
-                            <h1>
-                                ( <field name="event_begin_date" class="oe_inline"/> - <field name="event_end_date" class="oe_inline"/> )
-                            </h1>
-                        </group>  
-                    </group>              
+                <sheet string="Registration">
+                   <label for="event_id" class="oe_edit_only"/>
+                   <h1>
+                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" nolabel="1" class="oe_inline"/>
+                            <label string="(" attrs="{'invisible': ['|',('event_begin_date', '=', ''),('event_id', '=', '')]}" class="oe_inline"/>
+                            <field nolabel="1" name="event_begin_date" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
+                            <label string="-" attrs="{'invisible': ['|',('event_begin_date', '=', ''), ('event_id', '=', '')]}" class="oe_inline"/>
+                            <field nolabel="1" name="event_end_date" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline" />
+                            <label string=")" attrs="{'invisible': ['|',('event_begin_date', '=', ''),('event_id', '=', '')]}" class="oe_inline"/>
+	                </h1>   
+		                   
                     <group colspan="2" col="2">
                         <h2>
                             <field name="nb_register" class="oe_inline"/>  Participants
@@ -431,12 +429,12 @@
                         <field name="create_date"/>
                         <field name="date_closed"/>
                     </group>
-                    </sheet>
-                    <footer>
-                        <div class="oe_sheet_width">
-                            <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                        </div>
-                    </footer>
+                </sheet>
+                <footer>
+                    <div class="oe_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
+                </footer>
                 </form>
             </field>
         </record>
