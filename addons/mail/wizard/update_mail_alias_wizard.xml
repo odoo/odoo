@@ -29,10 +29,22 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_action_transient_update_maildomain"
-                  parent="base.menu_email"  
-                  action="action_transient_update_maildomain_form" 
-                  sequence="100"
-                  groups="base.group_no_one"/>
+        <!-- View for general setting -->>
+
+        <record id="view_general_configuration_mail_domain" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group[@string='Others']" position='inside'>
+                    <group colspan="4" col="4">
+                        <label string="Configure Mail Domain" for="id"/>
+                        <button type="action" name="%(action_transient_update_maildomain_form)d" string="Configure" icon="gtk-execute"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
