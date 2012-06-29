@@ -101,6 +101,6 @@ class mail_alias(osv.Model):
                 name =  "%s@%s"%(vals.get('alias_name').split("@")[0], domain)
                 vals.update({'alias_name': name})
             else:
-                raise osv.except_osv(_("Warning !"), _("Invalid mail alias name.\n It should be e.g. 'alias@domain.com' or only alias name 'alias'."))
+                raise osv.except_osv(_("Warning !"), _("Invalid mail alias name.\n It should be e.g. 'alias@mail.domain.com' or only alias name 'alias'."))
         return super(mail_alias, self).write(cr, uid, ids, vals, context=context)
 
