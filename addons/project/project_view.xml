@@ -29,10 +29,10 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
-                    <button name="set_done" string="Done" type="object" states="open,pending" />
+                    <button name="set_done" string="Done" type="object" states="open,pending"/>
                     <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight"/>
-                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close" />
-                    <button name="set_pending" string="Pending" type="object" states="open" />
+                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close"/>
+                    <button name="set_pending" string="Pending" type="object" states="open"/>
                     <button name="set_template" string="Set as Template" type="object" states="open"/>
                     <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight"/>
@@ -321,20 +321,20 @@
                             <button name="do_open" string="Start Task" type="object"
                                     states="draft,pending" class="oe_highlight"/>
                             <button name="do_draft" string="Draft" type="object"
-                                    states="cancel,done" />
+                                    states="cancel,done"/>
                             -->
                             <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
                                     states="done" context="{'button_reactivate':True}" class="oe_highlight"/>
                              <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
                                     states="cancelled" context="{'button_reactivate':True}"/>
                             <button name="action_close" string="Done" type="object"
-                                    states="open,draft,pending" />
+                                    states="draft,open,pending"/>
                             <button name="do_pending" string="Pending" type="object"
-                                    states="open" />
+                                    states="open"/>
                             <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
                                     states="pending,open,draft" groups="project.group_delegate_task"/>
                             <button name="do_cancel" string="Cancel" type="object"
-                                    states="draft,open,pending" />
+                                    states="draft,open,pending"/>
                             <button name="stage_previous" string="Previous Stage" type="object"
                                     states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
                             <button name="stage_next" string="Next Stage" type="object"

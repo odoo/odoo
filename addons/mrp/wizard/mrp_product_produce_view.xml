@@ -12,13 +12,11 @@
             <field name="arch" type="xml">
                 <form string="Produce" version="7.0">
                     <header>
-                        <button name="do_produce" string="Confirm"
-                            colspan="1" type="object" class="oe_highlight"  />
-                            or
-                            <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="do_produce" type="object" string="Confirm" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <group>
-                        <separator string="Produce" colspan="4"/>
+                    <group string="Produce">
                         <field name="mode"/>
                         <field name="product_qty" colspan="2"/>
                     </group>    

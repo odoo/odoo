@@ -107,7 +107,7 @@ class account_move_journal(osv.osv_memory):
             view = """<?xml version="1.0" encoding="utf-8"?>
             <form string="Standard entries" version="7.0">
                 <header>
-                    <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight_on_dirty"/>
+                    <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>

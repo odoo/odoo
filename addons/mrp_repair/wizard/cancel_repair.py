@@ -69,17 +69,16 @@ class repair_cancel(osv.osv_memory):
         
         repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id, context=context)
         if not repair_order.invoiced:
-            res['arch'] = """ <form string="Cancel Repair" colspan="4">
-                              <header>
-                                <button name="cancel_repair" string="_Yes" type="object"  class="oe_highlight_on_dirty"/>
-                                or
-                                <button string="Cancel" class="oe_link" special="cancel" />
-                              </header>
-                            <group col="2" colspan="2">
-                                <label string="Do you want to continue?" colspan="4"/>
-                            </group>
-                        </form>                             
-                    """
+            res['arch'] = """
+                <form string="Cancel Repair" version="7.0">
+                    <header>
+                        <button name="cancel_repair" string="_Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <label string="Do you want to continue?"/>
+                </form>                             
+            """
         return res
 
 repair_cancel()

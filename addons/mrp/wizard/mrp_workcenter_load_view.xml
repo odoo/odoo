@@ -11,18 +11,16 @@
             <field name="arch" type="xml">
                 <form string="Select time unit" version="7.0">
                     <header>
-                        <button name="print_report" string="Print"
-                            colspan="1" type="object" class="oe_highlight"  />
-                            or 
-                            <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <group>
-                        <sheet layout="auto">
+                    <sheet>
+                        <group>
                             <field name="time_unit"/>
-                            <newline/>
                             <field name="measure_unit"/>
-                        </sheet>
-                    </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
