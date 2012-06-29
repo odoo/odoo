@@ -163,18 +163,21 @@ class GettextAlias(object):
         if db_name:
             return sql_db.db_connect(db_name)
 
-    def _get_cr(self, frame):
+    def _get_cr(self, frame, allow_create=True):
         is_new_cr = False
         cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
         if not cr:
             s = frame.f_locals.get('self', {})
             cr = getattr(s, 'cr', None)
-        if not cr:
+        if not cr and allow_create:
             db = self._get_db()
             if db:
                 cr = db.cursor()
                 is_new_cr = True
         return cr, is_new_cr
+
+    def _get_uid(self, frame):
+        return frame.f_locals.get('uid') or frame.f_locals.get('user')
 
     def _get_lang(self, frame):
         lang = None
@@ -190,11 +193,21 @@ class GettextAlias(object):
                 ctx = kwargs.get('context')
         if ctx:
             lang = ctx.get('lang')
+        s = frame.f_locals.get('self', {})
         if not lang:
-            s = frame.f_locals.get('self', {})
             c = getattr(s, 'localcontext', None)
             if c:
                 lang = c.get('lang')
+        if not lang:
+            # Last resort: attempt to guess the language of the user
+            # Pitfall: some operations are performed in sudo mode, and we 
+            #          don't know the originial uid, so the language may
+            #          be wrong when the admin language differs.
+            pool = getattr(s, 'pool', None)
+            (cr, dummy) = self._get_cr(frame, allow_create=False)
+            uid = self._get_uid(frame)
+            if pool and cr and uid:
+                lang = pool.get('res.users').context_get(cr, uid)['lang']
         return lang
 
     def __call__(self, source):
