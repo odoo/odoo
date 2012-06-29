@@ -2752,12 +2752,16 @@ openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
                     self.cancel_pending_edition();
                 });
 
-            // Overload execute_action on the edition form to perform a simple
-            // reload_record after the action is done, rather than fully
-            // reload the parent view (or something)
-            var _execute_action = self.edition_form.do_execute_action;
+            // Replace form's do_execute_action by a call to listview's:
+            // because the form view is actually destroyed at one point, the
+            // RPC request to load&execute the action may get dropped on the
+            // floor in some cases (core.js:1173) leading to the flow not
+            // terminating for complex cases (a button of type action, which
+            // needs 2 or 3 RPC roundtrip to execute the action fully).
+            // => because do_execute_action really is on View, use the
+            // listview's
             self.edition_form.do_execute_action = function (action, dataset, record_id, _callback) {
-                return _execute_action.call(this, action, dataset, record_id, function () {
+                return self.view.do_execute_action(action, dataset, record_id, function () {
                     self.view.reload_record(
                         self.view.records.get(record_id));
                 });

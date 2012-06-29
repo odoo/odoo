@@ -1166,7 +1166,11 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             args.push(context);
             return dataset.call_button(action_data.name, args, handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
+            return this.rpc('/web/action/load', {
+                action_id: parseInt(action_data.name, 10),
+                context: context,
+                do_not_eval: true
+            }).then(handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
         }
