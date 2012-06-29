@@ -59,18 +59,23 @@ openerp.share = function(session) {
             has_share(function() {
                 self.add_items('other', [
                     {   label: 'Share',
-                        callback: self.on_sidebar_click_share,
+                        callback: self.on_click_share,
                         classname: 'oe_share' },
                     {   label: 'Embed',
-                        callback: self.on_sidebar_click_share,
+                        callback: self.on_click_share_link,
                         classname: 'oe_share' },
                 ]);
             });
         },
 
-        on_sidebar_click_share: function(item) {
+        on_click_share: function(item) {
             var view = this.getParent()
-            launch_wizard(this, view);
+            launch_wizard(this, view, 'emails', false);
+        },
+
+        on_click_share_link: function(item) {
+            var view = this.getParent()
+            launch_wizard(this, view, 'embedded', false);
         },
     });
 
@@ -84,7 +89,7 @@ openerp.share = function(session) {
         start: function() {
             start_res = this._super.apply(this, arguments);
             if (has_action_id) {
-                this.$element.find('button.oe_share_mail').show();
+                this.$element.find('button.oe_share_invite').show();
             }
             return start_res;
         }
@@ -95,12 +100,7 @@ openerp.share = function(session) {
             var self = this;
             this.check_if_action_is_defined();
             has_share(function() {
-                self.$element.find('a.oe_share_link').click(self.on_click_share_link);
-                self.$element.find('a.oe_share').click(self.on_click_share);
-                self.$element.delegate('button.oe_share_mail', 'click', self.on_click_share_mail);
-            }, function() {
-                self.$element.find('a.oe_share_link').remove();
-                self.$element.find('a.oe_share').remove();
+                self.$element.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
             });
             return this._super.apply(this, arguments);
         },
@@ -108,23 +108,13 @@ openerp.share = function(session) {
         check_if_action_is_defined: function() {
             if (this.action && this.action.id) {
                 has_action_id = true;
-                this.$element.find('a.oe_share_link').show();
-                this.$element.find('a.oe_share').show();
             }
             else {
                 has_action_id = false;
             }
         },
-    
-        on_click_share_link: function(e) {
-            e.preventDefault();
-            launch_wizard(this, this.views[this.active_view].controller, 'embedded', false);
-        },
-        on_click_share: function(e) {
-            e.preventDefault();
-            launch_wizard(this, this.views[this.active_view].controller, 'emails', false);
-        },
-        on_click_share_mail: function(e) {
+
+        on_click_share_invite: function(e) {
             e.preventDefault();
             launch_wizard(this, this.views[this.active_view].controller, 'emails', true);
         },
