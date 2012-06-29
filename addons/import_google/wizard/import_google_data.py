@@ -137,8 +137,6 @@ class synchronize_google(osv.osv_memory):
             if obj.group_name not in ['all']:
                 context.update({ 'group_name': obj.group_name})
             tables.append('Contact')
-            else:    
-                tables.append('Address')
             context.update({'user': gmail_user,
                             'password': gmail_pwd,
                             'instance': 'contact',
