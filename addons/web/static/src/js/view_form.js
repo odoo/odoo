@@ -582,8 +582,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.set({mode: "view"});
         });
     },
-    on_invalidclick: function() {
-       this.$element.find(".oe_form_field").click(function () {              
+    on_invalidclick: function() {       
+       var div = $("<div />", {id:"bounce"});       
+       this.$element.find(".oe_form_field").click(function () {
+        $(".oe_form_button_edit").wrap(div);
+        $("#bounce").css({"float":"left","margin-right":"4px"});                    
         $(".oe_form_button_edit").effect("bounce", { times:3}, 500);                 
         });
     },
