@@ -42,12 +42,12 @@
             <sheet>
                 <div class="oe_edit_only">
                     <label for="name" class="oe_inline"/>
-                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
                     <label for="origin" class="oe_inline"/>
                 </div>
                 <h1>
                     <field name="name" class="oe_inline"/>
-                    <field name="origin" class="oe_inline"/>
+                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
+                    <field name="origin" class="oe_inline" placeholder="PO0025"/>
                 </h1>
                 <group>
                     <group>
