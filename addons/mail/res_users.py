@@ -94,9 +94,7 @@ class res_users(osv.osv):
         # if login of user have been changed then change alias of user also.
         if 'login' in vals.keys():
             for user in self.browse(cr, uid, ids, context=context):
-                domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-                name = "%s@%s"%(vals['login'], domain)
-                self.pool.get('mail.alias').write(cr, uid, [user.alias_id.id], {'alias_name': name}, context=context)
+                self.pool.get('mail.alias').write(cr, uid, [user.alias_id.id], {'alias_name': vals['login']}, context=context)
         return super(res_users, self).write(cr, uid, ids, vals, context=context)
 
     
