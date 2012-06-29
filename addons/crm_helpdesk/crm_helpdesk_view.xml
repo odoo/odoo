@@ -67,7 +67,7 @@
                                 </group>
                                 <group string="Categorization">
                                     <field name="priority"/>
-                                    <field name="categ_id" context="{'object_id':'crm.helpdesk'}"/>
+                                    <field name="categ_id" domain="[('object_id.model', '=', 'crm.helpdesk')]"/>
                                     <field name="channel_id"/>
                                 </group>
                             </group>
