@@ -77,7 +77,6 @@ class res_users(osv.osv):
         res_id = model_pool.get_object( cr, uid, "mail", "model_res_users")
         data.update({'alias_name': data.get('login'),
                      'alias_model_id': res_id.id})
-        name = alias_pool.create_unique_alias(cr, uid, data, sequence=False ,context=context)
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         user = self.browse(cr, uid, user_id, context=context)
         alias_pool.write(cr, uid, [user.alias_id.id], {"alias_force_thread_id": user.id}, context)
