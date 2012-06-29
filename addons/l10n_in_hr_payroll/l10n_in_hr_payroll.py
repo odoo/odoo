@@ -249,7 +249,7 @@ class res_company(osv.osv):
 
     _inherit = 'res.company'
     _columns = {
-        'dearness_allowance': fields.boolean('Dearness Allowance')
+        'dearness_allowance': fields.boolean('Dearness Allowance', help="Company provide dearness allowance")
     }
 
 res_company()
