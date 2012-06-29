@@ -61,9 +61,11 @@
                     <sheet>
                         <field name="module_crm" invisible="1"/>
                         <group name="config_sale"/>
-                        <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
-                            <field name="module_plugin_thunderbird"/>
-                            <field name="module_plugin_outlook"/>
+                        <group name="config_fetchmail_main">
+                            <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
+                                <field name="module_plugin_thunderbird"/>
+                                <field name="module_plugin_outlook"/>
+                            </group>
                         </group>
                         <group name="config_crm"/>
                     </sheet>

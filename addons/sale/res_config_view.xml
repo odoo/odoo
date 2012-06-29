@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <group name="config_sale" position="after">
+                <group name="config_sale" position="inside">
                     <field name="module_project_timesheet" invisible="1"/>
                     <field name="module_project_mrp" invisible="1"/>
                     <group string="Invoicing Policy">
@@ -25,7 +25,7 @@
                                 attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"/>
                         </group>
                     </group>
-
+                    <newline/>
                     <group string="Sale Order">
                         <group>
                             <field name="group_uom"/>
@@ -42,8 +42,9 @@
                             <field name="module_sale_journal"/>
                         </group>
                     </group>
-
-                    <group string="Contracts">
+                </group>
+                <group name="config_fetchmail_main" position="after">
+                    <group name="group_contacts" string="Contracts">
                         <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
                         <field name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
                     </group>
