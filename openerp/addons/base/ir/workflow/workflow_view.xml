@@ -206,14 +206,18 @@
       <field name="arch" type="xml">
         <form string="Transition" version="7.0">
           <sheet>
-            <group col="6">
-                <field name="act_from"/>
-                <field name="act_to"/>
-                <field name="signal"/>
-                <field name="condition"/>
-                <field name="trigger_model"/>
-                <field name="trigger_expr_id"/>
-                <field name="group_id"/>
+            <group>
+                <group>
+                    <field name="act_from"/>
+                    <field name="act_to"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                </group>
+                <group>
+                    <field name="group_id"/>
+                    <field name="trigger_model"/>
+                    <field name="trigger_expr_id"/>
+                </group>
             </group>
           </sheet>
         </form>

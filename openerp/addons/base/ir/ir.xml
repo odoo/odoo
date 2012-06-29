@@ -342,16 +342,18 @@
             <field name="arch" type="xml">
                 <form string="Report" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="usage"/>
-
-                        <field name="report_name"/>
-                        <field name="report_type"/>
-                        <field name="report_file"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="report_name"/>
+                            <field name="model"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="report_type"/>
+                            <field name="report_file"/>
+                        </group>
                     </group>
-
                     <notebook>
                         <page string="Other Configuration">
                             <group>
@@ -446,13 +448,17 @@
             <field name="arch" type="xml">
                 <form string="Open a Window" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="res_model"/>
-                        <field name="type" readonly="1"/>
-                        <field name="src_model"/>
-                        <field name="usage"/>
-                        <field name="target"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="res_model"/>
+                            <field name="src_model"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="type" readonly="1"/>
+                            <field name="target"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="General Settings">
@@ -858,12 +864,16 @@
             <field name="arch" type="xml">
                 <form string="Model Description" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="osv_memory"/>
-                        <field name="state"/>
-                        <field name="modules" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="osv_memory"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="modules"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Fields">
@@ -980,38 +990,37 @@
             <field name="arch" type="xml">
                 <form string="Fields" version="7.0">
                   <sheet>
-                    <group colspan="4" col="6">
-                        <field name="name" />
-                        <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
-                        <field name="field_description"/>
-                        <field name="state"/>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="field_description"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                            <field name="modules"/>
+                        </group>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Properties">
-                            <group>
-                                <field name="ttype"/>
-                                <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                    <group>
+                        <group>
+                            <field name="ttype"/>
+                            <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
-                                <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
-                                <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
-                                <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
-                                <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
-                                <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
-                            </group>
-
-                            <group>
-                                <field name="required"/>
-                                <field name="readonly"/>
-                                <field name="select_level"/>
-                                <field name="translate"/>
-                                <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
-                                <field name="modules"/>
-                            </group>
-                        </page>
-                        <page string="Security">
-                            <field name="groups"/>
-                        </page>
-                    </notebook>
+                            <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
+                            <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
+                            <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
+                            <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
+                            <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
+                            <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
+                        </group>
+                        <group>
+                            <field name="required"/>
+                            <field name="readonly"/>
+                            <field name="select_level"/>
+                            <field name="translate"/>
+                        </group>
+                    </group>
+                    <field name="groups" invisible="1"/>
                   </sheet>  
                 </form>
             </field>
@@ -1776,6 +1785,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Config Wizard Steps" version="7.0">
+                  <header>
+                        <button name="action_launch"
+                            states="open" string="Launch"
+                            type="object" icon="gtk-execute" class="oe_highlight" 
+                            help="Launch Configuration Wizard"/>
+                        <button name="action_open" states="done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" statusbar_colors='{"open":"red","done":"blue"}'/>
+                  </header>
                   <sheet>
                     <group col="4">
                         <field name="action_id"/>
@@ -1785,16 +1804,6 @@
                     </group>
                     <group string="Groups">
                         <field name="groups_id" nolabel="1" colspan="4"/>
-                    </group>
-                    <group col="4">
-                        <field name="state" readonly="1"/>
-                        <button name="action_launch"
-                            states="open" string="Launch"
-                            type="object" icon="gtk-execute"
-                            help="Launch Configuration Wizard"/>
-                        <button name="action_open" states="done"
-                            string="Set as Todo" type="object"
-                            icon="gtk-convert"/>
                     </group>
                   </sheet>
                 </form>
