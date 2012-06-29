@@ -529,8 +529,9 @@ class mail_thread(osv.osv):
             #_logger.warning("This mailbox does not exist so mail gate will reject this mail.")
             from_email = user_pool.browse(cr, uid, uid, context).user_email
             sub = "Mail Rejection" + msg.get('subject')
-            message = "Respective mailbox does not exist so your mail have been rejected" + msg.get('body')
-            mail_compose_pool.send_mail(cr, uid, {'email_from': from_email,'email_to': msg.get('from'),'subject': sub, 'body_text': message}, context)
+            message = "Respective mailbox does not exist so your mail have been rejected"+'\n' + msg.get('body')
+            msg_id = mail_compose_pool.create(cr, uid ,{'email_from': from_email,'email_to': msg.get('from'),'subject': sub, 'body_text': message})
+            mail_compose_pool.send_mail(cr, uid, [msg_id], context)
 
         return True
 
