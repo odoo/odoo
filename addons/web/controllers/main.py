@@ -437,18 +437,21 @@ class Database(openerpweb.Controller):
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
-        db_dump = base64.b64decode(
-            req.session.proxy("db").dump(backup_pwd, backup_db))
-        filename = "%(db)s_%(timestamp)s.dump" % {
-            'db': backup_db,
-            'timestamp': datetime.datetime.utcnow().strftime(
-                "%Y-%m-%d_%H-%M-%SZ")
-        }
-        return req.make_response(db_dump,
-            [('Content-Type', 'application/octet-stream; charset=binary'),
-             ('Content-Disposition', 'attachment; filename="' + filename + '"')],
-            {'fileToken': int(token)}
-        )
+        try:
+            db_dump = base64.b64decode(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            filename = "%(db)s_%(timestamp)s.dump" % {
+                'db': backup_db,
+                'timestamp': datetime.datetime.utcnow().strftime(
+                    "%Y-%m-%d_%H-%M-%SZ")
+            }
+            return req.make_response(db_dump,
+               [('Content-Type', 'application/octet-stream; charset=binary'),
+               ('Content-Disposition', 'attachment; filename="' + filename + '"')],
+               {'fileToken': int(token)}
+            )
+        except xmlrpclib.Fault, e:
+             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):

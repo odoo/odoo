@@ -401,7 +401,14 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             success: function () {
                 self.do_notify(_t("Backed"), _t("Database backed up successfully"));
             },
-            error: instance.webclient.crashmanager.on_rpc_error,
+            error: function(error){
+               if(error){
+                  self.display_error({
+                        title: 'Backup Database',
+                        error: 'AccessDenied'
+                  });
+               }
+            },
             complete: function() {
                 self.unblockUI();
             }
