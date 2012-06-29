@@ -106,7 +106,6 @@
                             </group>
                             <group col="4">
                                 <field name="state_attendance"/>
-                                <field name="total_attendance_day" widget="float_time"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
@@ -136,8 +135,6 @@
                                     <field name="user_id" required="1"/>
                                 </form>
                             </field>
-                            <field name="total_difference_day" widget="float_time"/>
-                            <field name="total_timesheet_day" widget="float_time"/>
                         </page>
                         <page string="Summary">
                             <field colspan="4" name="period_ids" nolabel="1">
