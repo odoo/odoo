@@ -10,11 +10,11 @@
             <field name="arch" type="xml">
                 <form string="Stock Periods" version="7.0">
                     <header>
-                        <button name="create_stock_periods" string="Create Daily Periods" type="object" class="oe_highlight_on_dirty"/>
+                        <button name="create_stock_periods" string="Create Daily Periods" type="object" class="oe_highlight"/>
                         or
-                        <button name="create_stock_periods" string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}" class="oe_highlight_on_dirty"/>
+                        <button name="create_stock_periods" string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}" class="oe_highlight"/>
                         or
-                        <button name="create_stock_periods" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}" class="oe_highlight_on_dirty"/>
+                        <button name="create_stock_periods" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </header>

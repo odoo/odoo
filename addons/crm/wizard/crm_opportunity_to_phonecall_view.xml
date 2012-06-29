@@ -11,8 +11,8 @@
             <field name="arch" type="xml">
                 <form string="Schedule/Log a Call" layout="manual" version="7.0">
                     <header>
-                        <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight_on_dirty"/>
-                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight_on_dirty"  />
+                        <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
+                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"  />
                         or
                         <button name="action_cancel" string="Cancel" class="oe_link" special="cancel" />
                     </header>
