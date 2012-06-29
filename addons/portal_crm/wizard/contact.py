@@ -5,6 +5,23 @@ class crm_contact_us(osv.TransientModel):
     _name = 'portal_crm.crm_contact_us'
     _description = 'Contact form for the portal'
     _inherit = 'crm.lead'
+    _columns = {
+        'company_ids' : fields.many2many('res.company', string='Companies', readonly=True),
+        'employee_ids' : fields.many2many('hr.employee', string='Employees', readonly=True),
+    }
+
+    def _get_employee(self, cr, uid, context=None):
+        r = self.pool.get('hr.employee').search(cr, uid, [], context=context)
+        return r
+
+    def _get_companies(self, cr, uid, context=None):
+        r = self.pool.get('res.company').search(cr, uid, [], context=context)
+        return r
+
+    _defaults = {
+        'employee_ids' : _get_employee,
+        'company_ids' : _get_companies
+    }
 
     def create(self, cr, uid, values, context=None):
         """ 

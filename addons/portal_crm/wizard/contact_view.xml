@@ -8,16 +8,52 @@
             <field name="model">portal_crm.crm_contact_us</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Contact Us wizard view">
-                    <group col="2">
-                        <field name="contact_name" string="Name"/>
-                        <field name="name" string="Company"/>
-                        <field name="email_from"/>
-                        <field name="phone"/>
-                        <field name="description" string="Your question"/>
-                        <label string=""/>
-                        <button string="Submit" name="submit" type="object"/>
-                    </group>
+                <form string="Contact Us wizard view" version="7.0">
+                    <div style="width: 960px; margin: 0 auto;">
+                        <table>
+                            <tr>
+                                <td width="80%%">
+                                    <group>
+                                        <field name="contact_name" string="Name"/>
+                                        <field name="name" string="Company"/>
+                                        <field name="email_from"/>
+                                        <field name="phone"/>
+                                        <field name="description" string="Your question"/>
+                                        <label string=""/>
+                                        <button string="Submit" name="submit" type="object"/>
+                                    </group>
+                                    <field name="employee_ids"/>
+                                </td>
+                                <td>
+                                    <field name="company_ids" widget="many2many_kanban">
+                                        <kanban>
+                                            <field name="name"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
+                                            <field name="street"/>
+                                            <field name="street2"/>
+                                            <field name="zip"/>
+                                            <field name="city"/>
+                                            <field name="country_id"/>
+                                            <field name="state_id"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div style="position: relative">
+
+                                                        <!-- <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/> -->
+                                                        <h4><field name="name"/></h4>
+                                                        <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
+                                                            <field name="email"/>
+                                                        </a>
+                                                    </div>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </form>
             </field>
         </record>
