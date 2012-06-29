@@ -2,80 +2,6 @@
 <openerp>
     <data>
 
-        <record id="hr_payroll.hr_salary_rule_houserentallowance1" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-
-        <record id="hr_payroll.hr_salary_rule_convanceallowance1" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-
-        <record id="hr_payroll.hr_salary_rule_professionaltax1" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-
-        <record id="hr_payroll.hr_salary_rule_providentfund1" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-        
-         <record id="hr_payroll.hr_salary_rule_meal_voucher" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-        
-        <record id="hr_payroll.hr_salary_rule_ca_paolino" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-        
-        <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-        
-        <record id="hr_payroll.hr_rule_taxable" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-        
-        <record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
-            <field name="account_debit" ref="account.a_salary_expense"/>
-        </record>
-
-        <!-- Payslip -->
-       <!-- <record id="hr_payroll.hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
-            <field name="journal_id" ref="account.expenses_journal"/>
-            <field name="bank_journal_id" ref="account.bank_journal"/>
-        </record>-->
-
-        <!-- Assigned Default Account in Different Demo Employees -->
-
-       <!-- <record id="hr.employee" model="hr.employee">
-            <field name="property_bank_account" ref="account.bnk"/>
-            <field name="salary_account" ref="account.a_salary_expense"/>
-            <field name="employee_account" ref="account.a_expense"/>
-        </record>
-
-        <record id="hr.employee_fp" model="hr.employee">
-            <field name="property_bank_account" ref="account.bnk"/>
-            <field name="salary_account" ref="account.a_salary_expense"/>
-            <field name="employee_account" ref="account.a_expense"/>
-        </record>
-
-        <record id="hr.employee_qdp" model="hr.employee">
-            <field name="property_bank_account" ref="account.bnk"/>
-            <field name="salary_account" ref="account.a_salary_expense"/>
-            <field name="employee_account" ref="account.a_expense"/>
-        </record>
-
-        <record id="hr.employee_al" model="hr.employee">
-            <field name="property_bank_account" ref="account.bnk"/>
-            <field name="salary_account" ref="account.a_salary_expense"/>
-            <field name="employee_account" ref="account.a_expense"/>
-        </record>
-
-        <record id="hr_payroll.hr_employee_bonamy0" model="hr.employee">
-            <field name="property_bank_account" ref="account.bnk"/>
-            <field name="salary_account" ref="account.a_salary_expense"/>
-            <field name="employee_account" ref="account.a_expense"/>
-        </record>-->
-
         <record id="bnk" model="account.account">
             <field name="code">X110041</field>
             <field name="name">Bank Current Account</field>
@@ -100,6 +26,14 @@
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="account.data_account_type_payable"/>
         </record>
+
+    <record id="res_partner_bonamy" model="res.partner">
+        <field name="name">Employee: Bonamy</field>
+    </record>
+    <record id="hr_payroll.hr_employee_bonamy0" model="hr.employee">
+        <field name="address_home_id" ref="res_partner_bonamy"/>
+    </record>
+
 
 
     </data>
