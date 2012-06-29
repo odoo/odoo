@@ -28,6 +28,7 @@ import netsvc
 import pooler
 from tools.translate import _
 import decimal_precision as dp
+from product._common import rounding
 from osv.orm import browse_record, browse_null
 
 #
@@ -709,6 +710,9 @@ class purchase_order_line(osv.osv):
                         'uom': uom,
                         'date': date_order,
                         })[pricelist]
+        # at end, round price depending of 'Purchase Price' decimal precision
+        price_unit_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Purchase Price')
+        price = rounding(price, 10**-price_unit_precision)
         if price is False:
             warning = {
                 'title': 'No valid pricelist line found !',
