@@ -25,7 +25,7 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'base.config.settings'
     _name = 'base.config.settings'
     _columns = {
-        'default_linkedin_api_key': fields.char('LinkedIn API key', size=128, required=True, default_model='res.company',
+        'default_linkedin_api_key': fields.char('LinkedIn API key', size=128, default_model='res.company',
                 help="""Give API key of linkedin."""),
         'generate_key': fields.text('Go to URL', readonly=True,
                 help="""If you have not generate linkedin API Key yet than Go to URL to generate and enter it in above text field."""),
@@ -33,10 +33,10 @@ class base_config_settings(osv.osv_memory):
     _defaults = {
         'generate_key': "To find contact persons from LinkedIn "\
                         "\n====================================="\
-                        "\n* Go to this URL : www.linkedin.com/secure/developer "\
+                        "\n* Go to this URL : https://www.linkedin.com/secure/developer  "\
                         "\n* Add New Application and fill the form,"\
-                        "\n    - JavaScript API Domain is Your domain name (e.g. abc.com),"\
-                        "\n    - You can give multiple domain (e.g. abc.com, xyz.com)"\
+                        "\n    - JavaScript API Domain is Your domain name (e.g. https://yourcompany.my.openerp.com),"\
+                        "\n    - You can give multiple domain (e.g. yourcompany.my.openerp.com),"\
                         "\n    - programming tools is Javascript"\
                         '\n* Copy the "API Key" and paste it in the field "LinkedIn API Key" here above".'
     }
