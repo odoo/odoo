@@ -506,16 +506,12 @@ class mail_thread(osv.osv):
         mail_message_pool = self.pool.get('mail.message')
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
-        # Parse Message
-        # Warning: message_from_string doesn't always work correctly on unicode,
-        # we must use utf-8 strings here :-(
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
         msg = mail_message_pool.parse_message(msg_txt)
         alias_name = msg.get('to')
         alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)])
-        
         #if alias found then call message_process method.
         if alias_ids:
             alias_id = alias_pool.browse(cr, uid, alias_ids[0], context)
@@ -524,14 +520,10 @@ class mail_thread(osv.osv):
                                 custom_values = alias_id.alias_defaults or {}, 
                                 thread_id = alias_id.alias_force_thread_id or False,
                                  context=context)
-        #if mail_alias not found give Exception
         else:
-            #_logger.warning("This mailbox does not exist so mail gate will reject this mail.")
-            from_email = user_pool.browse(cr, uid, uid, context).user_email
-            sub = "Mail Rejection" + msg.get('subject')
-            message = "Respective mailbox does not exist so your mail have been rejected" + msg.get('body')
-            mail_compose_pool.send_mail(cr, uid, {'email_from': from_email,'email_to': msg.get('from'),'subject': sub, 'body_text': message}, context)
-
+            #if Mail box for the intended Mail Alias then give logger warning
+            _logger.warning("No Mail Alias Foound for the name '%s'"%(alias_name))
+            #raise
         return True
 
     #------------------------------------------------------
