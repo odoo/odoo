@@ -676,6 +676,8 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
             for id, name, action in actions]
 
 def clean_action(req, action, do_not_eval=False):
+    if action is False:
+        action = {}
     action.setdefault('flags', {})
 
     context = req.session.eval_context(req.context)
