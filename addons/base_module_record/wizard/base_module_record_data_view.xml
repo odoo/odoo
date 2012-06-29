@@ -7,9 +7,10 @@
             <field name="model">base.module.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Data Recording">
-                    <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
-                    <newline/>
+                <form string="Data Recording" version="7.0">
+                    <header>
+                        <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
+                    </header>
                     <field name="check_date"/>
                     <newline/>
                     <field name="filter_cond"/>
