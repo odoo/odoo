@@ -510,7 +510,7 @@ class mail_thread(osv.osv):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
         msg = mail_message_pool.parse_message(msg_txt)
-        alias_name = msg.get('to')
+        alias_name = msg.get('to').split("0")[0]
         alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)])
         #if alias found then call message_process method.
         if alias_ids:
@@ -522,7 +522,7 @@ class mail_thread(osv.osv):
                                  context=context)
         else:
             #if Mail box for the intended Mail Alias then give logger warning
-            _logger.warning("No Mail Alias Foound for the name '%s'"%(alias_name))
+            _logger.warning("No Mail Alias Found for the name '%s'."%(alias_name))
             #raise
         return True
 
