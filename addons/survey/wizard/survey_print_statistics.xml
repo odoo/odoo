@@ -11,8 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Survey Print Statistics" version="7.0">
                     <header>
-                        <button icon="gtk-print" name="action_next" string="Print" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button name="action_next" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <field name="survey_ids"/>
                 </form>
