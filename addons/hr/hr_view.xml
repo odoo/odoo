@@ -377,10 +377,10 @@
                         <group col="4">
                             <group>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="no_of_employee"/>
-                                <field name="expected_employees"/>
                             </group>
                             <group>
+                                <field name="no_of_employee"/>
+                                <field name="expected_employees"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                             </group>
                         </group>

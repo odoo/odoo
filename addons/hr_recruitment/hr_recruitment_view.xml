@@ -343,14 +343,14 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="no_of_recruitment" version="7.0" position="after">
-                <label for="survey_id" />
-                <div>
-                    <field name="survey_id" class="oe_inline"/>
-                    <button class="oe_inline"
-                        string="Interview" icon="gtk-print"
-                        name="action_print_survey" type="object"
-                        attrs="{'invisible':[('survey_id','=',False)]}"/>
-                </div>
+            <label for="survey_id" />
+            <div>
+                <field name="survey_id" class="oe_inline"/>
+                <button class="oe_inline"
+                    string="Interview" icon="gtk-print"
+                    name="action_print_survey" type="object"
+                    attrs="{'invisible':[('survey_id','=',False)]}"/>
+            </div>
             </field>
         </field>
     </record>
