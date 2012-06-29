@@ -13,11 +13,16 @@
                         <button string="Cancel" type="object" name="cancel"/>
                     </header>
                     <sheet>
-                        <group string="Traceability">
-                            <field name="group_stock_production_lot"/>
-                            <field name="group_stock_tracking_lot"/>
-                            <field name="module_product_expiry"
-                                attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
+                        <group>
+                            <group string="Traceability">
+                                <field name="group_stock_production_lot"/>
+                                <field name="group_stock_tracking_lot"/>
+                                <field name="module_product_expiry"
+                                    attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
+                            </group>
+                            <group string="Partners">
+                                <field name="module_claim_from_delivery"/>
+                            </group>
                         </group>
                         <group string="Logistics">
                             <group>
@@ -39,9 +44,6 @@
                                 <field name="group_stock_inventory_valuation"/>
                                 <field name="group_product_variant"/>
                             </group>
-                        </group>
-                        <group string="Partners">
-                            <field name="module_claim_from_delivery"/>
                         </group>
                     </sheet>
                 </form>
