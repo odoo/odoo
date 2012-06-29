@@ -9,8 +9,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Report" version="7.0">
-                    <button name="print_report" string="Print Report" type="object" icon="gtk-print" />
-                    <button icon='gtk-cancel' special="cancel" string="Close" />
+                    <header>
+                        <button name="print_report" string="Print Report" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                 </form>
             </field>
         </record>
