@@ -3122,7 +3122,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         var id = self.o2m.dataset.index !== null ? self.o2m.dataset.ids[self.o2m.dataset.index] : null;
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
-            title: _t("Open: ") + self.name,
+            title: _t("Open: ") + self.o2m.string,
             create_function: function(data) {
                 return self.o2m.dataset.create(data).then(function(r) {
                     self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
@@ -3207,7 +3207,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             pop.select_element(
                 self.o2m.field.relation,
                 {
-                    title: _t("Create: ") + self.name,
+                    title: _t("Create: ") + self.o2m.string,
                     initial_view: "form",
                     alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
                     create_function: function(data, callback, error_callback) {
@@ -3235,7 +3235,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var self = this;
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
-            title: _t("Open: ") + self.name,
+            title: _t("Open: ") + self.o2m.string,
             write_function: function(id, data) {
                 return self.o2m.dataset.write(id, data, {}, function(r) {
                     self.o2m.reload_current_view();
@@ -3563,7 +3563,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         pop.select_element(
             this.model,
             {
-                title: _t("Add: ") + this.name
+                title: _t("Add: ") + this.m2m_field.string
             },
             new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context()
@@ -3583,7 +3583,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         var self = this;
         var pop = new instance.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
-            title: _t("Open: ") + this.name,
+            title: _t("Open: ") + this.m2m_field.string,
             readonly: this.getParent().get("effective_readonly")
         });
         pop.on_write_completed.add_last(function() {
@@ -3681,7 +3681,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             pop.select_element(
                 this.field.relation,
                 {
-                    title: _t("Add: ") + this.name
+                    title: _t("Add: ") + this.string
                 },
                 new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
                 this.build_context()
@@ -3699,7 +3699,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             var id = self.dataset.ids[self.dataset.index];
             var pop = new instance.web.form.FormOpenPopup(self.view);
             pop.show_element(self.field.relation, id, self.build_context(), {
-                title: _t("Open: ") + self.name,
+                title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
                     return self.dataset.write(id, data, {}).then(function() {
                         self.reload_content();
