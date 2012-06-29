@@ -9,8 +9,9 @@
             <field name="arch" type="xml">
                <form string="Retro-Planning" version="7.0">
                    <header>
-                       <button icon="gtk-ok" name="create_duplicate" string="Ok" type="object"/>
-                       <button  icon="gtk-close" special="cancel" string="Close"/>
+                       <button name="create_duplicate" string="Ok" type="object" class="oe_highlight"/>
+                       or
+                       <button string="Cancel" class="oe_link" special="cancel" />
                    </header>
                    <group col="4">
                        <field name="project_id" colspan="4"/>
