@@ -199,7 +199,7 @@ class res_partner(osv.osv):
             num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
             factor = (5,4,3,2,7,6,5,4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])
-            check = 11 - (csum % 11)
+            check = (11 - (csum % 11)) % 11
             return check == int(num[8])
         return False
 
