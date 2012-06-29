@@ -1,4 +1,4 @@
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -157,28 +157,29 @@ def main():
     """
     Receive the email via the stdin and send it to the OpenERP Server
     """
+
     parser = configure_parser()
     (options, args) = parser.parse_args()
     method = "message_process"
     email_parser = EmailParser(options.userid,
                                options.password,
-                               options.model,
-                               options.default,
-                               dbname=options.dbname,
-                               host=options.host,
-                               port=options.port)
+                               options.dbname,
+                               options.host,
+                               options.port,
+                               model=options.model,
+                               email_default= options.default)
     msg_txt = sys.stdin.read()
     custom_values = {}
     if not options.model:
         method = "message_catchall"  
     try:
-        custom_values = dict(eval(options.custom_values or {} ))
+        custom_values = dict(eval(options.custom_values or "{}" ))
     except:
         import traceback
         traceback.print_exc()
 
     try:
-        email_parser.parse(msg_txt, custom_values, options.save_original or False)
+        email_parser.parse(method, msg_txt, custom_values, options.save_original or False)
     except Exception:
         msg = '\n'.join([
             'parameters',
