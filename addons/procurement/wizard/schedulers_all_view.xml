@@ -11,7 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Scheduler Parameters" version="7.0">
                     <header>
-                        <button name="procure_calculation" string="Compute Schedulers" type="object" icon="gtk-ok" />
+                        <button name="procure_calculation" string="Compute Schedulers" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
                         <field name="automatic"/>

@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                   <form string="Schedule Phases" version="7.0">
                       <header>
-                          <button icon="gtk-ok" name="check_selection" string="C_ompute" type="object"/>
+                          <button name="check_selection" string="C_ompute" type="object" class="oe_highlight"/>
+                          or
+                         <button string="Cancel" class="oe_link" special="cancel" />
                       </header>
                       <group>
                           <field name="target_project"/>
