@@ -14,17 +14,14 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <group>
-                        <separator string="Consume Products"/>
+                    <group string="Consume Products">
+                        <field name="product_id" readonly="1"/>
+                        <label for="product_qty"/>
                         <div>
-                            <field name="product_id" readonly="1"/>
-                            <label for="product_qty"/>
-                            <div>
-                                <field name="product_qty"/>
-                                <field name="product_uom" nolabel="1" readonly="1"/>
-                            </div>
-                            <field name="location_id"/>
+                            <field name="product_qty"/>
+                            <field name="product_uom" nolabel="1" readonly="1"/>
                         </div>
+                        <field name="location_id"/>
                     </group>
                 </form>
             </field>
