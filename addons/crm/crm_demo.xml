@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <record id="mail_alias_marketing_department" model="mail.alias">
+            <field name="alias_name">info@openerp.my.openerp.com</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_defaults">{'type':'lead'}</field>
+        </record>
+    </data>
+
     <data>
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/> 
@@ -12,13 +21,6 @@
         <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
     </record>
 
-    <record id="mail_alias_marketing_department" model="mail.alias">
-        <field name="alias_name">info@openerp.my.openerp.com</field>
-        <field name="alias_model_id" ref="model_crm_lead"/>
-        <field name="alias_user_id" ref="base.user_root"/>
-        <field name="alias_defaults">{'type':'lead'}</field>
-    </record>
-    
     <record model="crm.case.section" id="section_sales_marketing_department">
             <field name="name">Sales Marketing Department</field>
             <field name="code">Sales Marketing</field>
