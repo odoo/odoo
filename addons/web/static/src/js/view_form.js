@@ -723,7 +723,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var msg = "<ul>";
         _.each(this.fields, function(f) {
             if (!f.is_valid()) {
-                msg += "<li>" + (f.node.attrs.string || f.field.string) + "</li>";
+                msg += "<li>" + f.string + "</li>";
             }
         });
         msg += "</ul>";
@@ -867,7 +867,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
                 return {
                     name: name,
-                    string: field.node.attrs.string || field.field.string,
+                    string: field.string,
                     value: value,
                     displayed: displayed,
                     // convert undefined to false
@@ -1804,6 +1804,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.name = this.node.attrs.name;
         this.field = this.field_manager.get_field(this.name);
         this.widget = this.node.attrs.widget;
+        this.string = this.node.attrs.string || this.field.string || this.name;
         this.set({'value': false});
         this.set({required: this.modifiers['required'] === true});
         
@@ -2523,7 +2524,7 @@ instance.web.form.CompletionFieldMixin = {
         pop.select_element(
             self.field.relation,
             {
-                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + (this.string || this.name),
+                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
@@ -2592,7 +2593,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.get("value"),
                 self.build_context(),
                 {
-                    title: _t("Open: ") + (self.string || self.name)
+                    title: _t("Open: ") + self.string
                 }
             );
             pop.on_write_completed.add_last(function() {
