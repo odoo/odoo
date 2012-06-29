@@ -72,7 +72,23 @@ class mail_alias(osv.Model):
     _sql_constraints = [
         ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
     ]
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        """
+        Return the mail alias display alias_name, inclusing the Implicit and dynamic
+        Email Alias Domain from config.
+        e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
+        """
+        if context is None:
+            context = {}
+        res = []
+        config_parameter_pool = self.pool.get("ir.config_parameter")
+        domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)         
+        for record in self.read(cr, uid, ids, ['alias_name'], context=context):
+            domain_alias = "%s@%s"%(record['alias_name'], domain)
+            res.append((record['id'], domain_alias))
+        return res
+
     def create_unique_alias(self, cr, uid, values, sequence=1 ,context=None):
         if sequence:
             prob_alias = "%s%s"%(values['alias_name'], sequence)
