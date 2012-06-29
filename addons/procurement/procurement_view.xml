@@ -55,19 +55,24 @@
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
                     <sheet>
+                    <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
                         <label string="-" attrs="{'invisible':[('origin','=',False)]}"/>
                         <field name="origin"  class="oe_inline"/>
                     </h1>
+                    <label for="message" class="oe_edit_only"/>
                     <h2>
                         <field name="message"/>
                     </h2>
-                    <group>
-                        <field name="date_planned"/>
-                        <field name="procure_method"/>
-                        <field name="priority"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" invisible="1"/>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2">
+                            <field name="date_planned"/>
+                            <field name="procure_method"/>
+                            <field name="priority"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection" invisible="1"/>
+                        </group>
+                        <group col="2" colspan="2"/>
                     </group>
                     <notebook>
                     <page string="Procurement Details">
