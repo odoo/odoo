@@ -332,7 +332,7 @@ class account_voucher(osv.osv):
         'amount_untaxed': fields.function(_amount_untaxed, digits_compute=dp.get_precision('Account'), string='Untaxed',
             store={
                 'account.voucher': (lambda self, cr, uid, ids, c={}: ids, ['line_ids'], 20),
-                'account.voucher.line': (_get_voucher_line, ['amount', 'untax_amount '], 20),
+                'account.voucher.line': (_get_voucher_line, ['account_id', 'voucher_id', 'amount', 'untax_amount '], 20),
             },
             multi='all'),
     }
