@@ -135,7 +135,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
 
@@ -228,8 +228,12 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
-                            <separator string="Notes" class="oe_clear"/>
-                            <field name="note" placeholder="Add a global note on the sale order..."/>
+                            <div class="oe_clear">
+                                <label for="note"/>
+                            </div>
+                            <div>
+                                <field name="note" class="oe_inline"/>
+                            </div>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>

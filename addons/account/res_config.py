@@ -99,14 +99,6 @@ class account_config_settings(osv.osv_memory):
         'module_account_followup': fields.boolean('Manage Customer Payment Follow-ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'module_account_invoice_layout': fields.boolean('Allow Notes and Subtotals',
-            help="""This provides some features to improve the layout of invoices.
-                It gives you the possibility to:
-                    * order all the lines of an invoice
-                    * add titles, comment lines, sub total lines
-                    * draw horizontal lines and put page breaks.
-                This installs the module account_invoice_layout."""),
-
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
