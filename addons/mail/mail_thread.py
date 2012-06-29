@@ -510,7 +510,7 @@ class mail_thread(osv.osv):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
         msg = mail_message_pool.parse_message(msg_txt)
-        alias_name = msg.get('to').split("0")[0]
+        alias_name = msg.get('to').split("@")[0]
         alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)])
         #if alias found then call message_process method.
         if alias_ids:
