@@ -1228,11 +1228,20 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.value = null;
     },
     start: function () {
+        var self = this;
         this.$element = $("#" + this.element_id);
         this.select_field(this.fields.length > 0 ? this.fields[0] : null);
         var _this = this;
         this.$element.find(".searchview_extended_prop_field").change(function() {
             _this.changed();
+        });
+        this.$element.find(".searchview_extended_prop_op").change(function() {
+            var text = $(".searchview_extended_prop_op option:selected").html()
+            if(text == "is not set" || text == "is set"){
+                self.$element.find('.searchview_extended_prop_value').hide();
+            }else{
+                self.$element.find('.searchview_extended_prop_value').show();
+            }
         });
         this.$element.find('.searchview_extended_delete_prop').click(function () {
             _this.stop();
@@ -1300,6 +1309,10 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         var field = this.attrs.selected.name;
         var op =  this.$element.find('.searchview_extended_prop_op').val();
         var value = this.value.get_value();
+        var text = $(".searchview_extended_prop_op option:selected").html()
+        if(text == "is not set" || text == "is set"){
+            value = false;
+        }
         return [field, op, value];
     }
 });
@@ -1319,10 +1332,12 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "!=", text: _lt("is set")},
+        {value: "=", text: _lt("is not set")}
     ],
     get_value: function() {
-        return this.$element.val() || false;
+        return this.$element.val();
     }
 });
 openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.ExtendedSearchProposition.Field.extend({
@@ -1333,7 +1348,9 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.Exten
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "!=", text: _lt("is set")},
+        {value: "=", text: _lt("is not set")}
     ],
     get_value: function() {
         return this.datewidget.get_value();
@@ -1352,7 +1369,9 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedS
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "!=", text: _lt("is set")},
+        {value: "=", text: _lt("is not set")}
     ],
     get_value: function() {
         return this.datewidget.get_value();
@@ -1371,7 +1390,9 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.Extend
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "!=", text: _lt("is set")},
+        {value: "=", text: _lt("is not set")}
     ],
     get_value: function() {
         try {
@@ -1392,7 +1413,9 @@ openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.Extended
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "!=", text: _lt("is set")},
+        {value: "=", text: _lt("is not set")}
     ],
     get_value: function() {
         try {
