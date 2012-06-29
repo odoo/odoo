@@ -154,10 +154,6 @@ class payroll_advice(osv.osv):
             if old_line_ids:
                 advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
             slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
-#            if not slip_ids:
-#                advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
-#                a_date = advice_date.strftime('%B')+'-'+advice_date.strftime('%Y')
-#                raise osv.except_osv(_('Error !'), _('No Payslips for found for %s Month') % (a_date))
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
