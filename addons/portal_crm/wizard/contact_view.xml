@@ -8,23 +8,61 @@
             <field name="model">portal_crm.crm_contact_us</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Contact Us wizard view" version="7.0">
-                    <div style="width: 960px; margin: 0 auto;">
+                <form string="Contact wizard view" version="7.0">
+                    <div class="oe_portal_crm_contact">
                         <table>
-                            <tr>
-                                <td width="80%%">
-                                    <group>
-                                        <field name="contact_name" string="Name"/>
-                                        <field name="name" string="Company"/>
-                                        <field name="email_from"/>
-                                        <field name="phone"/>
-                                        <field name="description" string="Your question"/>
-                                        <label string=""/>
-                                        <button string="Submit" name="submit" type="object"/>
-                                    </group>
-                                    <field name="employee_ids"/>
-                                </td>
-                                <td>
+                          <tr>
+                            <td width="70%%">
+                                <h1>Get in touch</h1>
+                                <group>
+                                    <field name="contact_name" string="Name"/>
+                                    <field name="name" string="Company"/>
+                                    <field name="email_from"/>
+                                    <field name="phone"/>
+                                    <field name="description" string="Your question"/>
+                                    <label string=""/>
+                                    <button string="Submit" name="submit" type="object"/>
+                                </group>
+
+                                <div class="oe_portal_crm_team">
+                                    <h1>Meet the team</h1>
+                                    <field name="employee_ids" widget="many2many_kanban">
+                                        <kanban>
+                                            <field name="last_login"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div class="oe_employee_vignette">
+                                                        <div class="oe_employee_image">
+                                                            <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                                        </div>
+                                                        <div class="oe_employee_details">
+                                                            <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                                            <ul>
+                                                                <li id="last_login">
+                                                                    <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                                                          <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                                                    </span>
+                                                                </li>
+                                                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                                                <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                                                <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                                                <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <script>
+                                                        $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                                                    </script>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="oe_portal_crm_office">
+                                    <h1>Our office</h1>
                                     <field name="company_ids" widget="many2many_kanban">
                                         <kanban>
                                             <field name="name"/>
@@ -38,20 +76,24 @@
                                             <field name="state_id"/>
                                             <templates>
                                                 <t t-name="kanban-box">
-                                                    <div style="position: relative">
-
-                                                        <!-- <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/> -->
-                                                        <h4><field name="name"/></h4>
-                                                        <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
-                                                            <field name="email"/>
-                                                        </a>
-                                                    </div>
+                                                    <!-- <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/> -->
+                                                    <h4><field name="name"/></h4>
+                                                    <field name="street"/><br/>
+                                                    <field name="street2"/><br/>
+                                                    <field name="zip"/>
+                                                    <field name="city"/><br/>
+                                                    <field name="country_id"/><br/>
+                                                    <br/>
+                                                    <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                        <field name="email"/>
+                                                    </a>
                                                 </t>
                                             </templates>
                                         </kanban>
                                     </field>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+                          </tr>
                         </table>
                     </div>
                 </form>
@@ -67,9 +109,9 @@
             <field name="priority">99</field>
             <field name="arch" type="xml">
                 <form string="Thank you">
-                    <!-- 
-                        make sure there is at least one field in the view, 
-                        otherwise the orm will try to select all the model's 
+                    <!--
+                        make sure there is at least one field in the view,
+                        otherwise the orm will try to select all the model's
                         records and this will result in a permission denied error
                     -->
                     <field name="name" invisible="1"/>
@@ -80,9 +122,10 @@
 
         <!-- wizard action -->
         <record id="action_wizard_contact_us" model="ir.actions.act_window">
-            <field name="name">Contact Us</field>
+            <field name="name">Contact</field>
             <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_mode">form</field>
+            <field name="target">inline</field>
         </record>
 
         <!-- attach it to the portal menu -->
