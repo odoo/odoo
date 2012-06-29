@@ -499,7 +499,7 @@ class mail_thread(osv.osv):
             else raise Exception so that mailgate script will reject the mail and
             send notification mail sender that this mailbox does not exist so your mail have been rejected.
         """
-
+        
         alias_pool = self.pool.get('mail.alias')
         user_pool = self.pool.get('res.users')
         mail_compose_pool = self.pool.get('mail.compose.message')
@@ -516,8 +516,9 @@ class mail_thread(osv.osv):
         if alias_ids:
             alias_id = alias_pool.browse(cr, uid, alias_ids[0], context)
             user_id = self._get_user( cr, uid, alias_id, context)
+            alias_defaults = dict(eval(alias_id.alias_defaults or {}))
             self.message_process(cr, user_id, alias_id.alias_model_id.model, message, 
-                                custom_values = alias_id.alias_defaults or {}, 
+                                custom_values = alias_defaults, 
                                 thread_id = alias_id.alias_force_thread_id or False,
                                  context=context)
         else:

@@ -67,10 +67,27 @@ class mail_alias(osv.Model):
     }
     _defaults = {
         'alias_defaults': '{}',
-        'alias_user_id': lambda s,c,u,ctx: u
+        'alias_user_id': lambda self,cr,uid, context: uid
     }
     _sql_constraints = [
         ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
+    ]
+
+    def _check_alias_defaults(self, cr, uid, ids, context=None):
+        """
+        Strick constraints checking for the alias defaults values.
+        it must follow the python dict format. So message_catachall
+        will not face any issue.
+        """
+        for record in self.browse(cr, uid, ids, context=context):
+            try:
+                dict(eval(record.alias_defaults))
+                return True
+            except:
+                return False
+
+    _constraints = [
+        (_check_alias_defaults, "Default Values are in wrong format.\nIt must be in python dictionary format e.g.{'field_name': 'value' or {}}", ['alias_defaults']),
     ]
 
     def name_get(self, cr, uid, ids, context=None):
