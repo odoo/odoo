@@ -157,6 +157,23 @@
             parent="hr_payroll.menu_hr_root_payroll"
         />
 
+        <record id="company_inherit" model="ir.ui.view">
+            <field name="name">res.company.inherit</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <page string="Configuration" position="inside">
+                    <group name="rule" string="Salary rules Configuration">
+                        <field name="dearness_allowance"/>
+                    </group>
+                 </page>
+            </data>
+            </field>
+        </record>
+
         <!--  Shortcuts -->
 
         <act_window name="Payslips"
