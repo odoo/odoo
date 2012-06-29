@@ -129,7 +129,6 @@ class account_voucher(osv.osv):
         journal_id = context.get('journal_id', False)
         if journal_id:
             journal = journal_pool.browse(cr, uid, journal_id, context=context)
-            print "jpurnallll",journal
             if journal.currency:
                 return journal.currency.id
         return False
@@ -249,6 +248,22 @@ class account_voucher(osv.osv):
             res[voucher.id] =  voucher.amount / rate
         return res
 
+    def _amount_untaxed(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            res[voucher.id] = {
+                'amount_untaxed': 0.0,
+            }
+            for line in voucher.line_ids:
+                res[voucher.id]['amount_untaxed'] += line.untax_amount or line.amount
+        return res
+
+    def _get_voucher_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.voucher.line').browse(cr, uid, ids, context=context):
+            result[line.voucher_id.id] = True
+        return result.keys()
+   
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _inherit = ['mail.thread']
@@ -286,7 +301,7 @@ class account_voucher(osv.osv):
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount': fields.float('Total', digits_compute=dp.get_precision('Account'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
+        'tax_amount':fields.float('Tax', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
         'number': fields.char('Number', size=32, readonly=True,),
         'move_id':fields.many2one('account.move', 'Account Entry'),
@@ -314,6 +329,12 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'amount_untaxed': fields.function(_amount_untaxed, digits_compute=dp.get_precision('Account'), string='Untaxed',
+            store={
+                'account.voucher': (lambda self, cr, uid, ids, c={}: ids, ['line_ids'], 20),
+                'account.voucher.line': (_get_voucher_line, ['amount', 'untax_amount '], 20),
+            },
+            multi='all'),
     }
     _defaults = {
         'period_id': _get_period,
@@ -350,28 +371,24 @@ class account_voucher(osv.osv):
         if context is None: context = {}
 
         for voucher in voucher_pool.browse(cr, uid, ids, context=context):
-            voucher_amount = 0.0
+            voucher_untax_amount = 0.0
             for line in voucher.line_ids:
-                voucher_amount += line.untax_amount or line.amount
+                voucher_untax_amount += line.untax_amount or line.amount
                 line.amount = line.untax_amount or line.amount
                 voucher_line_pool.write(cr, uid, [line.id], {'amount':line.amount, 'untax_amount':line.untax_amount})
-
             if not voucher.tax_id:
-                self.write(cr, uid, [voucher.id], {'amount':voucher_amount, 'tax_amount':0.0})
+                self.write(cr, uid, [voucher.id], {'amount': voucher_untax_amount,  'amount_untaxed': voucher_untax_amount, 'tax_amount':0.0})
                 continue
 
             tax = [tax_pool.browse(cr, uid, voucher.tax_id.id, context=context)]
             partner = partner_pool.browse(cr, uid, voucher.partner_id.id, context=context) or False
             taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
             tax = tax_pool.browse(cr, uid, taxes, context=context)
-
-            total = voucher_amount
             total_tax = 0.0
-
+            total = 0.0
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes', []):
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_untax_amount, 1).get('taxes', []):
                     total_tax += tax_line.get('amount', 0.0)
-                total += total_tax
             else:
                 for line in voucher.line_ids:
                     line_total = 0.0
@@ -383,8 +400,8 @@ class account_voucher(osv.osv):
                     total_tax += line_tax
                     untax_amount = line.untax_amount or line.amount
                     voucher_line_pool.write(cr, uid, [line.id], {'amount':line_total, 'untax_amount':untax_amount})
-
-            self.write(cr, uid, [voucher.id], {'amount':total, 'tax_amount':total_tax})
+            total = total_tax+voucher_untax_amount
+            self.write(cr, uid, [voucher.id], {'amount': total, 'amount_untaxed': voucher_untax_amount, 'tax_amount':total_tax})
         return True
 
     def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context=None):
@@ -396,17 +413,19 @@ class account_voucher(osv.osv):
         res = {
             'tax_amount': False,
             'amount': False,
+            'amount_untaxed': False,
         }
         voucher_total = 0.0
-
+        amount_untaxed = 0.0 
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
-
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
             voucher_total += line_amount
-        total = voucher_total
+       
+        amount_untaxed = voucher_total
         total_tax = 0.0
+        total = 0.0
         if tax_id:
             tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
             if partner_id:
@@ -415,13 +434,13 @@ class account_voucher(osv.osv):
                 tax = tax_pool.browse(cr, uid, taxes, context=context)
 
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes', []):
+                for tax_line in tax_pool.compute_all(cr, uid, tax,  amount_untaxed, 1).get('taxes', []):
                     total_tax += tax_line.get('amount')
-                total += total_tax
-
+        total = total_tax + amount_untaxed
         res.update({
-            'amount':total or voucher_total,
-            'tax_amount':total_tax    
+            'amount_untaxed': amount_untaxed,
+            'amount': total,
+            'tax_amount':total_tax 
         })
         return {
             'value':res

@@ -129,17 +129,19 @@
                             <button type="object"
                                    icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax"
                                     attrs="{'invisible': [('state','!=','draft')]}"/>
+                               <field name="tax_id"
+                                on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
+                                widget="selection"
+                               domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
+                                    
                             <group>
                                 <group>
-                                      <field name="narration" placeholder="Internal Notes" nolabel="1" />
+                                      <field name="narration" placeholder="Add a internal note." nolabel="1" />
                                 </group>
                                 <group class="oe_subtotal_footer">
-                                    <field name="tax_id" string="Tax"
-                                        on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
-                                        widget="selection"
-                                       domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
-                                    <field name="tax_amount"/>
-                                    <field name="amount" class="oe_subtotal_footer_separator" />
+                                   <field name="amount_untaxed"/>
+                                    <field name="tax_amount" readonly="1"/>
+                                    <field name="amount" class="oe_subtotal_footer_separator" readonly="1"/>
                                 </group>
                             </group>
                         </page>
@@ -279,10 +281,10 @@
                                         widget="selection"
                                         domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
                                         />
-                                    <field name="tax_amount" />
-                                    <field name="amount" string="Total" class="oe_subtotal_footer_separator"/>
-                                </group>                                    
-
+                                    <field name="amount_untaxed" readonly="1"/>
+                                    <field name="tax_amount" readonly="1"/>
+                                    <field name="amount" string="Total" class="oe_subtotal_footer_separator" readonly="1"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
