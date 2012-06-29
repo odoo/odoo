@@ -523,7 +523,7 @@ class mail_thread(osv.osv):
         else:
             #if Mail box for the intended Mail Alias then give logger warning
             _logger.warning("No Mail Alias Found for the name '%s'."%(alias_name))
-            #raise
+            raise
         return True
 
     #------------------------------------------------------
