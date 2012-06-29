@@ -26,6 +26,7 @@ import time
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
+from product._common import rounding
 import netsvc
 
 class sale_shop(osv.osv):
@@ -1135,6 +1136,9 @@ class sale_order_line(osv.osv):
                         'uom': uom,
                         'date': date_order,
                         })[pricelist]
+            # at end, round price depending of 'Sale Unit' decimal precision
+            price_unit_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price')
+            price = rounding(price, 10**-price_unit_precision)
             if price is False:
                 warning = {
                     'title': 'No valid pricelist line found !',
