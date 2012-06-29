@@ -27,7 +27,7 @@
                 </header>
                 <sheet>
                     <group col="6" colspan="6">
-                    <field name="title" select="1"/>
+                    <field name="title"/>
                         <field name="responsible_id"/>
                         <field name="id" invisible="1"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
@@ -42,14 +42,14 @@
                         <page string="Survey">
                             <field name="page_ids" colspan="4" nolabel="1" mode="tree">
                                 <form string="Survey Page">
-                                    <field name="title" select="1"/>
+                                    <field name="title"/>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <separator string="Description" colspan="4"/>
                                     <field name="note" colspan="4" nolabel="1"/>
                                     <field name="question_ids" height="200" width="200" colspan="4" nolabel="1">
                                         <form string="Survey Question" >
                                             <group col="6" colspan="6" height="600" width="200">
-                                            <field name="question" colspan="4" select="1"/>
+                                            <field name="question" colspan="4"/>
                                             <field name="sequence"/>
                                             <field name="tot_resp"/>
                                             <field name="type" on_change="on_change_type(type)"/>
@@ -181,7 +181,7 @@
                                         </form>
                                         <tree string="Survey Question">
                                             <field name="sequence" string="Seq"/>
-                                            <field name="question" colspan="4" select="1"/>
+                                            <field name="question" colspan="4"/>
                                             <field name="answer_choice_ids"/>
                                         </tree>
                                     </field>
@@ -204,10 +204,10 @@
                             <field name="invited_user_ids" nolabel="1" readonly="1"/>
                         </page>
                         <page string="History">
-                            <field name="date_open" select="1"/>
+                            <field name="date_open"/>
                             <field name="date_close"/>
-                            <field name="tot_start_survey" select="1"/>
-                            <field name="tot_comp_survey" select="1"/>
+                            <field name="tot_start_survey"/>
+                            <field name="tot_comp_survey"/>
                             <field name="history" colspan="4" nolabel="1">
                                 <tree string="History">
                                     <field name="date"/>
@@ -231,13 +231,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="gray:state == 'close'" string="Survey">
-                    <field name="title" select="1"/>
-                    <field name="type" select="1"/>
+                    <field name="title"/>
+                    <field name="type"/>
                     <field name="responsible_id"/>
-                    <field name="date_open" select="1" string="Open Date"/>
+                    <field name="date_open"  string="Open Date"/>
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                     <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                         string="Test Survey" type="action" icon="gtk-new"
                         context="{'active':True,'survey_id': active_id}"/>
@@ -344,14 +344,14 @@
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0">
                     <sheet>
-                        <field name="title" colspan="4" select="1"/>
-                        <field name="survey_id" select="1"/>
+                        <field name="title" colspan="4"/>
+                        <field name="survey_id"/>
                         <field name="sequence"/>
                         <separator string="Description" colspan="4"/>
                         <field name="note" colspan="4" nolabel="1"/>
                         <field name="question_ids" colspan="4" nolabel="1">
                         <form string="Survey Question">
-                            <field name="question" colspan="4" select="1"/>
+                            <field name="question" colspan="4"/>
                             <field name="sequence"/>
                             <field name="tot_resp"/>
                             <field name="type" on_change="on_change_type(type)"/>
@@ -483,7 +483,7 @@
                         </form>
                         <tree string="Survey Question">
                             <field name="sequence" string="Seq"/>
-                            <field name="question" colspan="4" select="1"/>
+                            <field name="question" colspan="4"/>
                             <field name="answer_choice_ids"/>
                         </tree>
                         </field>
@@ -543,7 +543,7 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Survey Pages">
-                    <field name="title" colspan="4" select="1"/>
+                    <field name="title" colspan="4"/>
                     <field name="sequence"/>
                     <separator string="Description" colspan="4"/>
                     <field name="note" colspan="4" nolabel="1"/>
@@ -894,7 +894,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
-                    <field name="answer" colspan="4" select="1"/>
+                    <field name="answer" colspan="4"/>
                     <field name="sequence"/>
                     <field name="in_visible_answer_type" invisible="1"/>
                        <group colspan="4" attrs="{'invisible':[('in_visible_answer_type','=',True)]}">
@@ -916,7 +916,7 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Survey Answer">
                     <field name="sequence" string="Seq"/>
-                    <field name="answer" select="1"/>
+                    <field name="answer"/>
                     <field name="type"/>
                 </tree>
             </field>
@@ -933,7 +933,7 @@
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="question_id"/>
-                    <field name="date_create" select="1"/>
+                    <field name="date_create"/>
                     <notebook colspan="4">
                         <page string="Answer">
                             <field name="response_answer_ids" colspan="4" nolabel="1"/>
@@ -975,7 +975,7 @@
                 <tree string="Survey Answer Line">
                     <field name="page_id"/>
                     <field name="question_id"/>
-                    <field name="date_create" select="1"/>
+                    <field name="date_create"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -991,12 +991,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
-                    <field name="survey_id" select="1"/>
-                    <field name="date_create" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="response_type" select="1"/>
+                    <field name="survey_id"/>
+                    <field name="date_create"/>
+                    <field name="user_id"/>
+                    <field name="response_type"/>
                     <field name="question_ids" nolabel="1" colspan="4" />
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                 </form>
             </field>
         </record>
@@ -1007,11 +1007,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Answer">
-                    <field name="survey_id" select="1"/>
-                    <field name="date_create" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="response_type" select="1"/>
-                    <field name="state" select="1"/>
+                    <field name="survey_id"/>
+                    <field name="date_create"/>
+                    <field name="user_id"/>
+                    <field name="response_type"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -1108,7 +1108,7 @@
                     <button name="survey_req_cancel" string="Cancel" states="waiting_answer" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,waiting_answer"/>
                 </header>
-                <sheet string="Survey Request" layout="auto">
+                <sheet string="Survey Request">
                     <group class="oe_header">
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
@@ -1187,8 +1187,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </form>
             </field>
         </record>
@@ -1199,8 +1199,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </tree>
             </field>
         </record>

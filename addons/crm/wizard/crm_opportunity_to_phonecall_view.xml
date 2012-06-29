@@ -9,7 +9,7 @@
             <field name="model">crm.opportunity2phonecall</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Schedule/Log a Call" layout="manual" version="7.0">
+                <form string="Schedule/Log a Call" version="7.0">
                     <header>
                         <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
                         <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"  />
