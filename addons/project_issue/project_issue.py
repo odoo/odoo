@@ -288,7 +288,7 @@ class project_issue(base_stage, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set lead priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
