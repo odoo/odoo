@@ -831,7 +831,8 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
     },
     on_create: function(data) {},
     write: function (id, data, options, callback) {
-        this.on_write(id, data);
+        options = options || {};
+        this.on_write(id, data, options);
         if (this.write_function) {
             return this.write_function(id, data, options, callback);
         } else {

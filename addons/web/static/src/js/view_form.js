@@ -2723,8 +2723,8 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             self.o2m.reload_current_view();
             return button_result;
         };
-        pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, {}, function(r) {
+        pop.on_write.add(function(id, data, options) {
+            self.o2m.dataset.write(id, data, options, function(r) {
                 self.o2m.reload_current_view();
             });
         });
@@ -3202,14 +3202,14 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.dataset.child_name = this.options.child_name;
         this.setup_form_view();
     },
-    on_write: function(id, data) {
+    on_write: function(id, data, options) {
         if (!this.options.auto_write)
             return;
         var self = this;
         var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.child_name = this.options.child_name;
-        wdataset.write(id, data, {}, function(r) {
+        wdataset.write(id, data, options, function(r) {
             self.on_write_completed();
         });
     },
