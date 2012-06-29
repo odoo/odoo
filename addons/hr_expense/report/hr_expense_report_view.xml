@@ -8,7 +8,6 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'" string="Expenses Analysis">
-                <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -97,7 +96,7 @@
     </record>
 
     <record id="action_hr_expense_report_all" model="ir.actions.act_window">
-        <field name="name">Expenses Analysis</field>
+        <field name="name">Expense Analysis</field>
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
@@ -105,7 +104,7 @@
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
-    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="2"/>
+    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="1"/>
 
 </data>
 </openerp>
