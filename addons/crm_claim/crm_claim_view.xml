@@ -257,6 +257,9 @@
                 <xpath expr="//page[@string='History']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
+                <xpath expr="//group[@string='Claim']" position="attributes">
+                   <attribute name="invisible">False</attribute>
+                </xpath>
             </field>
         </record>
         <record id="view_claim_partner_info_form1" model="ir.ui.view">
@@ -267,7 +270,7 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='History']" position="inside">
+                    <xpath expr="//group[@string='Claim']" position="inside">
                         <field name="claims_ids" colspan="4" nolabel="1">
                             <tree string="Partners Claim" editable="bottom">
                                 <field name="name"/>
