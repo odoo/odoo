@@ -26,10 +26,10 @@ import tools
 class l10n_installer(osv.osv_memory):
     _inherit = 'account.installer'
     _columns = {
-        'company_type': fields.selection([('public_company', 'Public Firm'), 
+        'company_type': fields.selection([('public_company', 'Public Firm'),
                                          ('partnership_private_company', 'Partnership/Private Firm')
-                                         ], 'Company Type', required=True, 
-                                        help='Company Type is used to install Indian chart of accounts as per need of business.'),        
+                                         ], 'Company Type', required=True,
+                                        help='Company Type is used to install Indian chart of accounts as per need of business.'),
     }
     _defaults = {
         'company_type': 'public_company',
@@ -42,7 +42,7 @@ class l10n_installer(osv.osv_memory):
         res = super(l10n_installer, self).execute_simple(cr, uid, ids, context=context)
         
         for chart in self.read(cr, uid, ids, context=context):
-            if chart['charts'] =='l10n_in' and chart['company_type']=='public_company':
+            if chart['charts'] == 'l10n_in' and chart['company_type'] == 'public_company':
                 acc_file_path = tools.file_open(opj('l10n_in', 'l10n_in_public_firm_chart.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', acc_file_path, {}, 'init', True, None)
                 acc_file_path.close() 
@@ -51,7 +51,7 @@ class l10n_installer(osv.osv_memory):
                 tools.convert_xml_import(cr, 'l10n_in', tax_file_path, {}, 'init', True, None)
                 tax_file_path.close()  
                                
-            elif chart['charts'] =='l10n_in' and chart['company_type']=='partnership_private_company':
+            elif chart['charts'] == 'l10n_in' and chart['company_type'] == 'partnership_private_company':
                 acc_file_path = tools.file_open(opj('l10n_in', 'l10n_in_partnership_private_chart.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', acc_file_path, {}, 'init', True, None)
                 acc_file_path.close()  
