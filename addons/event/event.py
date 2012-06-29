@@ -312,7 +312,7 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['ir.needaction_mixin','mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin','mail.thread']
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
@@ -333,11 +333,17 @@ class event_registration(osv.osv):
                                     ('open', 'Confirmed'),
                                     ('done', 'Attended')], 'Status',
                                     size=16, readonly=True),
+        # Fields for address, due to separation from event.registration and res.partner
+        'email': fields.char('Email', size=240),
+        'phone': fields.char('Phone', size=64),
+        'name': fields.char('Name', size=128, required=True, select=True),
+        'active': fields.boolean('Active'),
     }
 
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
+        'active': True,
     }
     _order = 'name, create_date desc'
 
