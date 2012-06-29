@@ -1781,17 +1781,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Config Wizard Steps" version="7.0">
-                  <sheet>
-                    <group col="4">
-                        <field name="state" readonly="1"/>
+                  <header>
                         <button name="action_launch"
                             states="open" string="Launch"
-                            type="object" icon="gtk-execute"
+                            type="object" icon="gtk-execute" class="oe_highlight" 
                             help="Launch Configuration Wizard"/>
                         <button name="action_open" states="done"
                             string="Set as Todo" type="object"
-                            icon="gtk-convert"/>
-                    </group>
+                            icon="gtk-convert" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" statusbar_colors='{"open":"red","done":"blue"}'/>
+                  </header>
+                  <sheet>
                     <group col="4">
                         <field name="action_id"/>
                         <field name="type"/>
