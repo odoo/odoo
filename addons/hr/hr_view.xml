@@ -10,11 +10,7 @@
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
 
-        <!--
-        ==========
-        Employee
-        ==========
-        -->
+        <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
@@ -100,7 +96,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
-                    <field name="coach_id" invisible="1" />
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -248,7 +244,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="coach_id" invisible="1" />
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -285,8 +281,8 @@
             <field name="arch" type="xml">
                 <form string="Employee Category" version="7.0">
                     <group>
-                        <field name="name" />
-                        <field name="parent_id" />
+                        <field name="name"/>
+                        <field name="parent_id"/>
                     </group>
                 </form>
             </field>
@@ -360,8 +356,10 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
-                        <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
+                        <span groups="base.group_user">
+                            <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
+                            <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
+                        </span>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
@@ -405,8 +403,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
-                    <field name="name" />
-                    <field name="department_id" />
+                    <field name="name"/>
+                    <field name="department_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
@@ -450,8 +448,8 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <group col="4">
-                        <field name="name" />
-                        <field name="department_id" />
+                        <field name="name"/>
+                        <field name="department_id"/>
                     </group>
                     <label for="description"/>
                     <field name="description"/>

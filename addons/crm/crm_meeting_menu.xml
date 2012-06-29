@@ -6,15 +6,8 @@
         name="Schedule a Meeting"
         res_model="crm.meeting"
         view_mode="calendar,tree,form,gantt"
-        context="{'search_default_partner_id': active_id, 'default_duration': 4.0}"
-        domain="[('partner_id', '=', active_id)]"
+        context="{'default_partner_id': active_id, 'default_duration': 4.0}"
     />
-
-    <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
-        <field name="name">Schedule a Meeting</field>
-        <field name="context">{'default_partner_id': active_id}</field>
-    </record>
-
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet_partner">
         <field name="sequence" eval="1"/>
