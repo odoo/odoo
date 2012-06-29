@@ -28,11 +28,15 @@
             <field name="arch" type="xml">
                 <form string="Appraisal Plan" version="7.0">
                     <group col="4">
-                        <field name="name"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="month_first"/>
-                        <field name="month_next"/>
-                        <field name="active"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="active"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="month_first"/>
+                            <field name="month_next"/>
+                        </group>
                     </group>
                      <notebook>
                          <page string="Appraisal Phases">
