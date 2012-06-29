@@ -50,18 +50,24 @@ openerp.share = function(session) {
         session.connection.share_flag.done(yes).fail(no);
     }
 
+    /* Extend the Sidebar to add Share and Embed links in the 'More' menu */
     session.web.Sidebar = session.web.Sidebar.extend({
-        add_default_sections: function() {
-            this._super();
+
+        start: function() {
             var self = this;
+            this._super(this);
             has_share(function() {
-                self.add_items('other', [{
-                    label: 'Share',
-                    callback: self.on_sidebar_click_share,
-                    classname: 'oe_share',
-                }]);
+                self.add_items('other', [
+                    {   label: 'Share',
+                        callback: self.on_sidebar_click_share,
+                        classname: 'oe_chare' },
+                    {   label: 'Embed',
+                        callback: self.on_sidebar_click_share,
+                        classname: 'oe_chare' },
+                ]);
             });
         },
+
         on_sidebar_click_share: function(item) {
             var view = this.getParent()
             launch_wizard(this, view);
