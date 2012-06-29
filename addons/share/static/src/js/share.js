@@ -68,6 +68,12 @@ openerp.share = function(session) {
         },
     });
 
+    /**
+     * Extends mail (Chatter widget)
+     * - show the 'invite' button' only we came on the form view through
+     *   an action. We do this because 'invite' is based on the share
+     *   mechanism, and it tries to share an action.
+     */
     session.mail.RecordThread.include( {
         start: function() {
             start_res = this._super.apply(this, arguments);
