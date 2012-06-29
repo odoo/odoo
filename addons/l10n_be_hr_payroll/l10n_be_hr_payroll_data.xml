@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_onss" model="res.partner">
+        <field name="name">ONSS</field>
+    </record>
+    <record id="contrib_register_onss" model="hr.contribution.register">
+        <field name="name">ONSS</field>
+        <field name="note">National Office of Social Security</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+    </record>
+    <record id="res_partner_pp" model="res.partner">
+        <field name="name">Fiscal Administration</field>
+    </record>
+    <record id="contrib_register_pp" model="hr.contribution.register">
+        <field name="name">Fiscal Administration</field>
+        <field name="partner_id" ref="res_partner_pp"/>
+    </record>
+    <record id="res_partner_meal_vouchers" model="res.partner">
+        <field name="name">Restaurant Tickets Organism</field>
+    </record>
+    <record id="contrib_register_meal_vouchers" model="hr.contribution.register">
+        <field name="name">Restaurant Tickets Organism</field>
+        <field name="partner_id" ref="res_partner_meal_vouchers"/>
+    </record>
+
+<!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_head_salary" model="hr.salary.rule.category">
         <field name="name">Gross</field>
         <field name="code">BRUT</field>
@@ -62,6 +87,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">SALARY</field>
         <field name="amount_percentage">-13.07</field>
+        <field name="register_id" ref="contrib_register_onss"/>
    </record>
    <record id="hr_payroll_rules_p_p_b1" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/> 
@@ -223,6 +249,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
         <field name="appears_on_payslip" eval="False"/>
+        <field name="register_id" ref="contrib_register_meal_vouchers"/>
     </record>
     <record id="hr_payroll_rules_ch_worker" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -237,6 +264,7 @@
         <field name="amount_percentage_base">contract.meal_voucher_employee_deduction</field>
         <field name="quantity">worked_days.WORK100.number_of_days</field>
         <field name="appears_on_payslip" eval="True"/>
+        <field name="register_id" ref="contrib_register_meal_vouchers"/>
     </record>
     <record id="hr_payroll_rules_reim_travel" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.DED"/>
