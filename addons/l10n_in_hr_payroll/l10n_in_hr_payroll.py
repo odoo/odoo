@@ -241,4 +241,13 @@ class hr_payslip(osv.osv):
 
 hr_payslip()
 
+class res_company(osv.osv):
+
+    _inherit = 'res.company'
+    _columns = {
+        'dearness_allowance': fields.boolean('Dearness Allowance', help="Check this box if your company provide Dearness Allowance to employee")
+    }
+
+res_company()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

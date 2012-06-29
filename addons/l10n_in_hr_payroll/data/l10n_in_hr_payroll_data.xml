@@ -11,13 +11,12 @@
             <field name="amount_percentage_base">contract.wage</field>
             <field name="amount_percentage" eval="50"/>
             <field name="sequence" eval="13"/>
-             <field name="note">DA is calculated in %</field>
         </record>
 
         <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
             <field name="code">HRAM</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.50</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50)</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for metro city</field>
             <field name="sequence" eval="51"/>
@@ -31,7 +30,7 @@ Income tax exemption for HRA will be least of following:
 
         <record id="hr_salary_rule_houserentallowancenonmetro" model="hr.salary.rule">
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.40</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40)</field>
             <field name="code">HRANM</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for non metro city</field>
@@ -92,7 +91,7 @@ Income tax exemption for HRA will be least of following:
             <field name="condition_select">none</field>
             <field name="sequence" eval="21"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.10</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.10) or (contract.wage * 0.10)</field>
         </record>
 
         <record id="hr_payroll_rule_metrocity" model="hr.salary.rule">
@@ -133,7 +132,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-             <field name="amount_python_compute">result = (contract.wage + DA) * 15 * employee.number_of_year / worked_days.WORK100.number_of_days</field>
+             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 15 * employee.number_of_year / worked_days.WORK100.number_of_days) or (contract.wage * 15 * employee.number_of_year / worked_days.WORK100.number_of_days)</field>
             <field name="sequence" eval="57"/>
             <field name="note">Covered under the Payment of Gratuity Act, 1971: 
 (Last drawn monthly basic salary + dearness allowance)/26 x 15 days x 
@@ -387,7 +386,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="name">Employee's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 8.33 / 100</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 8.33 / 100) or - (contract.wage * 8.33 / 100)</field>
             <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
             <field name="sequence" eval="150"/>
         </record>
@@ -397,7 +396,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="name">Employee's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
             <field name="sequence" eval="155"/>
             <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
         </record>
@@ -409,7 +408,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.voluntary_provident_fund)</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.wage + DA) * contract.voluntary_provident_fund / 100 </field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * contract.voluntary_provident_fund / 100) or - (contract.wage * contract.voluntary_provident_fund / 100)</field>
             <field name="sequence" eval="160"/>
             <field name="note">VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.This additional amount enjoys all the benefits of PF except that the employer is not liable to contribute any extra amount apart from 12%.An added advantage is that the interest rate is equal to the interest rate of PF and he withdrawal is tax free. Please note that the maximum contribution towards VPF is 100% of your Basic.The highest rate of interest (close to 9%) makes it a very attractive saving scheme. Because of these advantages many employees chose not to close their PF account even after getting employment else where other than India.Employees also get a major tax break on their entire contribution to the fund up to a ceiling of Rs. 70,000/-</field>
         </record>
@@ -491,7 +490,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="name">Employer's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
             <field name="sequence" eval="190"/>
             <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
@@ -501,7 +500,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="name">Employer's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.12</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
             <field name="sequence" eval="195"/>
             <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
