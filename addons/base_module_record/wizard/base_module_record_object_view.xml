@@ -9,18 +9,19 @@
             <field name="arch" type="xml">
                 <form string="Objects Recording" version="7.0">
                     <header>
+                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
                         <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
                     </header>
-                    <field name="check_date"/>
-                    <newline/>
-                    <field name="filter_cond"/>
-                    <separator string="Choose objects to record" colspan="4"/>
-                    <field name="objects" colspan="4" nolabel="1"/>
-                    <group><field name="info_yaml"/></group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="check_date" colspan="4"/>
+                            <field name="filter_cond" colspan="4"/>
+                        </group>
+                        <group string="Choose objects to record">
+                            <field name="objects" nolabel="1" colspan="4"/>
+                        </group>
+                        <group><field name="info_yaml"/></group>
+                    </sheet>
                 </form>
             </field>
         </record>
