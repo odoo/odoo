@@ -60,10 +60,10 @@ openerp.share = function(session) {
                 self.add_items('other', [
                     {   label: 'Share',
                         callback: self.on_sidebar_click_share,
-                        classname: 'oe_chare' },
+                        classname: 'oe_share' },
                     {   label: 'Embed',
                         callback: self.on_sidebar_click_share,
-                        classname: 'oe_chare' },
+                        classname: 'oe_share' },
                 ]);
             });
         },
