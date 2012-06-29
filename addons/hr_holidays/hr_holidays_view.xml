@@ -79,9 +79,11 @@
                             <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
                             <label for="number_of_days_temp" string="Duration"/>
                             <div>
-                                <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/> - 
-                                <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
-                                <field name="number_of_days_temp"/> days
+                                <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/> - 
+                                <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/>
+                                <div>
+                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                </div>
                             </div>
                         </group>
                     </group>
