@@ -36,9 +36,9 @@ Indian accounting chart and localization.
     ],
     "demo_xml": [],
     "update_xml": [
-        "account_tax_code_template.xml",
+        "l10n_in_tax_code_template.xml",
         "l10n_in_wizard.xml",
-        "installer_view.xml",
+        "l10n_in_installer_view.xml",
     ],
     "auto_install": False,
     "installable": True,
