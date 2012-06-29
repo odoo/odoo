@@ -130,7 +130,7 @@ class synchronize_google(osv.osv_memory):
             raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
         
         if context.get('contact'):
-            msg = "  You're Contact are import in background, a email will be send when the process is finished to %s"%(user_obj.gmail_user)
+            msg = "  Your contacts are being imported in background, an email to %s will be sent when the process is over" % (user_obj.gmail_user)
             gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
             if not gd_client:
                 raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
