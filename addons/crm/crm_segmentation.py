@@ -61,7 +61,7 @@ added to partners that match the segmentation criterions after computation.'),
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel \
+                    cr.execute('delete from res_partner_res_partner_category_rel \
                             where category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']
@@ -81,7 +81,7 @@ added to partners that match the segmentation criterions after computation.'),
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) \
+                cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) \
                         values (%s,%s)', (categ['categ_id'][0], partner_id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
