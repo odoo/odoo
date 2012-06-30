@@ -534,6 +534,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     // Special case 'id' field, do not save this field
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
+                    if(f.$element.is('.invalid')){
+                        f.update_dom(true);
+                    }
                     values[f.name] = f.get_value();
                 }
             }
