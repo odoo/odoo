@@ -26,16 +26,20 @@
                     <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box oe_right">
+                        <button name="122" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
+                        <button name="106" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                    </div>
                     <h1>
                         <field name="title" select="1" class="oe_inline"/>
+                        <label string="(" attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
                         <field name="type" class="oe_inline"/>
-                        <button name="122" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}" class="oe_right"/>
+                        <label string=")" attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
                     </h1>
                     
                     <div>
                         <label for="responsible_id"/>
                         <field name="responsible_id" class="oe_inline"/>
-                        <button name="106" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}" class="oe_right"/>
                         <button name="106" states="open,draft,close,cancel" string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}" invisible="1"/>
                     </div>
                     <group>
