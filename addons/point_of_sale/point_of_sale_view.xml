@@ -18,10 +18,10 @@
             <field name="arch" type="xml">
                 <form string="PoS Orders" version="7.0">
                 <header>
-                    <button name="%(action_pos_payment)d" string="Payment" type="action" states="draft"/>
+                    <button name="%(action_pos_payment)d" string="Payment" type="action" states="draft" class="oe_highlight"/>
                     <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
-                    <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
-                    <button name="done" string="Post Entries" icon="gtk-apply" type="workflow" states="paid"/>
+                    <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}" class="oe_highlight"/>
+                    <button name="done" string="Post Entries" icon="gtk-apply" type="workflow" states="paid" class="oe_highlight"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
@@ -649,7 +649,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="PoS Categories" version="7.0">
-                	<sheet>
+                    <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
