@@ -376,6 +376,7 @@ class account_bank_statement(osv.osv):
             ids = []
             for line in st.line_ids:
                 ids += [x.id for x in line.move_ids]
+            account_move_obj.button_cancel(cr, uid, ids, context=context)
             account_move_obj.unlink(cr, uid, ids, context)
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
