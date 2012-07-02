@@ -10,53 +10,23 @@
             <field name="arch" type="xml">
                 <form string="Contact wizard view" version="7.0">
                     <div class="oe_portal_crm_contact">
+                        <div class="oe_portal_crm_callout">
+                            <h1>Contact OpenERP</h1>
+                            <div class="oe_portal_crm_background_wrapper">
+                                <div class="oe_portal_crm_background" style="background:url(https://lh5.googleusercontent.com/-FFcbJe8Ee1U/T6Aep2ug7hI/AAAAAAAAAD8/0lDMTMwUZTU/s1136/IMG_1170.JPG) center center"/>
+                            </div>
+                        </div>
                         <table>
                           <tr>
                             <td width="70%%">
-                                <h1>Get in touch</h1>
                                 <div class="oe_portal_crm_contact_form">
+                                    <h1>Get in touch</h1>
                                     <field name="contact_name" placeholder="Name"/>
                                     <field name="name" placeholder="Company"/>
                                     <field name="email_from" placeholder="Email"/>
                                     <field name="phone" placeholder="Phone"/>
                                     <field name="description" placeholder="Your question"/>
                                     <button string="Submit" name="submit" type="object"/>
-                                </div>
-
-                                <div class="oe_portal_crm_team">
-                                    <h1>Meet the team</h1>
-                                    <field name="employee_ids" widget="many2many_kanban">
-                                        <kanban>
-                                            <field name="last_login"/>
-                                            <templates>
-                                                <t t-name="kanban-box">
-                                                    <div class="oe_employee_vignette">
-                                                        <div class="oe_employee_image">
-                                                            <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
-                                                        </div>
-                                                        <div class="oe_employee_details">
-                                                            <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
-                                                            <ul>
-                                                                <li id="last_login">
-                                                                    <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
-                                                                          <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
-                                                                    </span>
-                                                                </li>
-                                                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
-                                                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                                                                <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
-                                                                <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
-                                                                <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <script>
-                                                        $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                                                    </script>
-                                                </t>
-                                            </templates>
-                                        </kanban>
-                                    </field>
                                 </div>
                             </td>
                             <td>
@@ -86,6 +56,42 @@
                                                     <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
                                                         <field name="email"/>
                                                     </a>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                                <div class="oe_portal_crm_team">
+                                    <h1>Meet the team</h1>
+                                    <field name="employee_ids" widget="many2many_kanban">
+                                        <kanban>
+                                            <field name="last_login"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div class="oe_employee_vignette">
+                                                        <div class="oe_employee_image">
+                                                            <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                                        </div>
+                                                        <div class="oe_employee_details">
+                                                            <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                                            <ul>
+                                                                <li id="last_login">
+                                                                    <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                                                          <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                                                    </span>
+                                                                </li>
+                                                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                                                <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                                                <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                                                <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </t>
                                             </templates>
                                         </kanban>
