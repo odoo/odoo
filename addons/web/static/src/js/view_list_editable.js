@@ -78,16 +78,27 @@ openerp.web.list_editable = function (instance) {
             }
         },
         on_loaded: function (data, grouped) {
-            var self = this, form_ready = $.when();
+            var self = this;
             // tree/@editable takes priority on everything else if present.
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
             if (this.options.editable || true) {
                 this.editor = new instance.web.list.Editor(this);
 
-                return $.when(
-                    result,
-                    this.editor.prependTo(this.$element));
+                var editor_ready = this.editor.prependTo(this.$element).then(function () {
+                    self.editor.$element.on('keyup', function (e) {
+                        switch (e.which) {
+                        case KEY_RETURN:
+                            self.save_edition();
+                            break;
+                        case KEY_ESCAPE:
+                            self.cancel_edition();
+                            break;
+                        }
+                    });
+                });
+
+                return $.when(result, editor_ready);
             }
 
             return result;
@@ -264,19 +275,8 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             var _super = this._super();
             this.form.embedded_view = this.getParent().editionView(this);
-            var form_ready = this.form.appendTo(this.$element).then(function () {
-                self.form.do_hide();
-                self.form.$element.on('keyup', function (e) {
-                    switch (e.which) {
-                    case KEY_RETURN:
-                        self.save();
-                        break;
-                    case KEY_ESCAPE:
-                        self.cancel();
-                        break;
-                    }
-                });
-            });
+            var form_ready = this.form.appendTo(this.$element).then(
+                self.form.proxy('do_hide'));
             return $.when(_super, form_ready);
         },
 
