@@ -919,6 +919,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw new Error("Setting 'id' attribute on existing record "
                             + JSON.stringify(record.attributes));
                     }
+                    // add record to dataset
+                    self.dataset.ids.splice(
+                        self.records.indexOf(record), 0, value);
                     // Set id on new record
                     $row = self.$current.children('tr:not([data-id])');
                 } else {
@@ -1846,9 +1849,21 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         return this;
     },
 
-    _onRecordEvent: function (event, record, options) {
+    _onRecordEvent: function (event) {
+        switch(event) {
         // don't propagate reset events
-        if (event === 'reset') { return; }
+        case 'reset': return;
+        case 'change:id':
+            var record = arguments[1];
+            var new_value = arguments[2];
+            var old_value = arguments[3];
+            // [change:id, record, new_value, old_value]
+            if (this._byId[old_value] === record) {
+                delete this._byId[old_value];
+                this._byId[new_value] = record;
+            }
+            break;
+        }
         this.trigger.apply(this, arguments);
     },
 

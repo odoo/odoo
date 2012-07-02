@@ -338,4 +338,33 @@ $(document).ready(function () {
             ids, [1, 2, 3, 10, 20, 30],
             'tree collections should be deeply iterated');
     });
+
+    module("list-weirds", {
+        setup: function () {
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
+            window.openerp.web.chrome(openerp);
+            // views loader stuff
+            window.openerp.web.data(openerp);
+            window.openerp.web.views(openerp);
+            window.openerp.web.list(openerp);
+        }
+    });
+    test('set-from-noid', function () {
+        var root = new openerp.web.list.Collection();
+        root.add({v: 3});
+        root.at(0).set('id', 42);
+        var record = root.get(42);
+        equal(root.length, 1);
+        equal(record.get('v'), 3, "should have fetched the original record");
+    });
+    test('set-from-previd', function () {
+        var root = new openerp.web.list.Collection();
+        root.add({id: 1, v: 2});
+        root.get(1).set('id', 42);
+        var record = root.get(42);
+        equal(root.length, 1);
+        equal(record.get('v'), 2, "should have fetched the original record");
+    });
 });
