@@ -4359,10 +4359,13 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 });
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
-    tagName: "span",
+    template: "FieldStatus",
     start: function() {
         this._super();
         this.selected_value = null;
+        if (this.$element.parent().is('header')) {
+            this.$element.after('<div class="oe_clear"/>');
+        }
         // preview in start only for selection fields, because of the dynamic behavior of many2one fields.
         if (this.field.type in ['selection']) {
             this.render_list();
