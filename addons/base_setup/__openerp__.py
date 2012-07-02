@@ -38,7 +38,7 @@ Shows you a list of applications features to install from.
     'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml', 'res_config_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'certificate': '0086711085869',
     'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
 }

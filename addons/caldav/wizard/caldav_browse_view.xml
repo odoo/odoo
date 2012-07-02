@@ -48,7 +48,9 @@
             <field name="arch" type="xml">
                <form string="Caldav's host name configuration" version="7.0">
                     <header>
-                       <button name="next_window" string="Next" type="object" icon="gtk-go-forward"/>
+                        <button name="next_window" string="Next" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <sheet>
                         <group>
@@ -66,7 +68,9 @@
             <field name="arch" type="xml">
                 <form string="User Preference" version="7.0">
                     <header>
-                        <button name="open_window" string="_Open" type="object" icon="gtk-ok"/>
+                        <button name="open_window" string="_Open" type="object" icon="gtk-ok" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <sheet>
                         <group>
