@@ -11,8 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Print Answer" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-print" name="action_next" string="Print" type="object"/>
+                        <button name="action_next" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
                         <separator string="Answer" colspan="4"/>
