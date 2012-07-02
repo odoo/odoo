@@ -1,95 +1,95 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">
-	<!-- 
-		((((((((((( Demo Cases ))))))))))) 
-	-->
-		<record id="crm_case_phone01" model="crm.phonecall">
-			<field eval="time.strftime('%Y-%m-04 10:45:36')" name="date"/>
-			<field name="partner_id" ref="base.res_partner_11"/>
-			<field eval="&quot;3&quot;" name="priority"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;Left the message&quot;" name="name"/>
-			<field eval="&quot;open&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="&quot;(726) 782-0636&quot;" name="partner_mobile"/>
-			<field eval="1" name="active"/>
-			<field name="categ_id" ref="crm.categ_phone1"/>
-			<field eval="&quot;(769) 703-274&quot;" name="partner_phone"/>
-			<field eval="2.3" name="duration"/>
-			<field eval="&quot;done&quot;" name="state"/>
-		</record>
-		<record id="crm_case_phone02" model="crm.phonecall">
-			<field eval="time.strftime('%Y-%m-11 11:19:25')" name="date"/>
-			<field name="partner_id" ref="base.res_partner_6"/>
-			<field eval="&quot;4&quot;" name="priority"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;Get More information on the proposed deal&quot;" name="name"/>
-			<field eval="&quot;open&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="&quot;(392) 895-7917&quot;" name="partner_mobile"/>
-			<field eval="1" name="active"/>
-			<field name="categ_id" ref="crm.categ_phone1"/>
-			<field eval="&quot;(956) 293-2595&quot;" name="partner_phone"/>
-			<field eval="1.5" name="duration"/>
-			<field eval="&quot;done&quot;" name="state"/>
-		</record>
-		<record id="crm_case_phone03" model="crm.phonecall">
-			<field eval="time.strftime('%Y-%m-15 17:44:12')" name="date"/>
-			<field name="partner_id" ref="base.res_partner_10"/>
-			<field eval="&quot;2&quot;" name="priority"/>
-			<field name="user_id" ref="base.user_demo"/>
-			<field eval="&quot;Bad time, will call back&quot;" name="name"/>
-			<field eval="&quot;open&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="&quot;(820) 167-3208&quot;" name="partner_mobile"/>
-			<field eval="1" name="active"/>
-			<field name="categ_id" ref="crm.categ_phone1"/>
-			<field eval="&quot;(079) 681-2139&quot;" name="partner_phone"/>
-			<field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
-			<field eval="5.0" name="duration"/>
-			<field eval="&quot;done&quot;" name="state"/>
-		</record>
-		<record id="crm_case_phone04" model="crm.phonecall">
-			<field eval="time.strftime('%Y-%m-21 14:10:23')" name="date"/>
-			<field name="partner_id" ref="base.res_partner_tinyatwork"/>
-			<field eval="&quot;3&quot;" name="priority"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;Discuss Review Process&quot;" name="name"/>
-			<field eval="&quot;open&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="&quot;(077) 582-4035&quot;" name="partner_mobile"/>
-			<field eval="1" name="active"/>
-			<field name="categ_id" ref="crm.categ_phone2"/>
-			<field eval="&quot;(514) 698-4118&quot;" name="partner_phone"/>
-			<field eval="3.45" name="duration"/>
-		</record>
-		<record id="crm_case_phone05" model="crm.phonecall">
-			<field eval="time.strftime('%Y-%m-28 16:20:43')" name="date"/>
-			<field name="partner_id" ref="base.res_partner_5"/>
-			<field eval="&quot;3&quot;" name="priority"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;More information on the proposed deal&quot;" name="name"/>
-			<field eval="&quot;pending&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="&quot;(333) 715-1450&quot;" name="partner_mobile"/>
-			<field eval="1" name="active"/>
-			<field name="categ_id" ref="crm.categ_phone2"/>
-			<field eval="&quot;(855) 924-4364&quot;" name="partner_phone"/>
-			<field eval="2.08" name="duration"/>
-		</record>
-		<record id="crm_case_phone06" model="crm.phonecall">
-			<field eval="&quot;3&quot;" name="priority"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;Bad time&quot;" name="name"/>
-			<field eval="&quot;open&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="&quot;(468) 017-2684&quot;" name="partner_mobile"/>
-			<field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
-			<field name="categ_id" ref="crm.categ_phone2"/>
-			<field eval="&quot;(373) 907-1009&quot;" name="partner_phone"/>
-			<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
-			<field eval="8.56" name="duration"/>
-		</record>	
-	</data>
+    <data noupdate="1">
+    <!-- 
+        ((((((((((( Demo Cases ))))))))))) 
+    -->
+        <record id="crm_case_phone01" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-04 10:45:36')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Left the message&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="&quot;(726) 782-0636&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="&quot;(769) 703-274&quot;" name="partner_phone"/>
+            <field eval="2.3" name="duration"/>
+            <field eval="&quot;done&quot;" name="state"/>
+        </record>
+        <record id="crm_case_phone02" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-11 11:19:25')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_6"/>
+            <field eval="&quot;4&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Get More information on the proposed deal&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="&quot;(392) 895-7917&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="&quot;(956) 293-2595&quot;" name="partner_phone"/>
+            <field eval="1.5" name="duration"/>
+            <field eval="&quot;done&quot;" name="state"/>
+        </record>
+        <record id="crm_case_phone03" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-15 17:44:12')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_10"/>
+            <field eval="&quot;2&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field eval="&quot;Bad time, will call back&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="&quot;(820) 167-3208&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="&quot;(079) 681-2139&quot;" name="partner_phone"/>
+            <field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
+            <field eval="5.0" name="duration"/>
+            <field eval="&quot;done&quot;" name="state"/>
+        </record>
+        <record id="crm_case_phone04" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-21 14:10:23')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_tinyatwork"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Discuss Review Process&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="&quot;(077) 582-4035&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone2"/>
+            <field eval="&quot;(514) 698-4118&quot;" name="partner_phone"/>
+            <field eval="3.45" name="duration"/>
+        </record>
+        <record id="crm_case_phone05" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-28 16:20:43')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_5"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;More information on the proposed deal&quot;" name="name"/>
+            <field eval="&quot;pending&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="&quot;(333) 715-1450&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone2"/>
+            <field eval="&quot;(855) 924-4364&quot;" name="partner_phone"/>
+            <field eval="2.08" name="duration"/>
+        </record>
+        <record id="crm_case_phone06" model="crm.phonecall">
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Bad time&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="&quot;(468) 017-2684&quot;" name="partner_mobile"/>
+            <field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
+            <field name="categ_id" ref="crm.categ_phone2"/>
+            <field eval="&quot;(373) 907-1009&quot;" name="partner_phone"/>
+            <field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+            <field eval="8.56" name="duration"/>
+        </record>    
+    </data>
 </openerp>

@@ -9,10 +9,13 @@
             <field name="arch" type="xml">
                 <form string="Bilan Report" version="7.0">
                    <header>
-                        <button name="print_bilan_report" string="Print" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="print_bilan_report" string="Print" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                    </header>
-                   <field name="fiscalyear_id"/>
+                   <group>
+                        <field name="fiscalyear_id"/>
+                   </group>
                  </form>
             </field>
         </record>

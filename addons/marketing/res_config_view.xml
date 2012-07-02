@@ -8,8 +8,10 @@
             <field name="arch" type="xml">
                 <form string="Configure Marketing" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight_on_dirty"/>
-                        <button string="Cancel" type="object" name="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+
                     </header>
                     <group string="Campaigns">
                         <field name="module_marketing_campaign"/>
