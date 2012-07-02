@@ -415,6 +415,11 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.appendTo($(".oe_kanban_group_list_header", self.$records));
             self.quick.focus();
         });
+             var click_column = this.$element.find('.oe_kanban_add');
+            this.$records.click(function() {
+            click_column.effect("bounce", { times:3 }, 300);
+                });
+
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
@@ -479,6 +484,12 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     do_toggle_fold: function(compute_width) {
         this.$element.add(this.$records).toggleClass('oe_kanban_group_folded');
         this.state.folded = this.$element.is('.oe_kanban_group_folded');
+        if(this.state.folded) {
+            this.$element.find('.oe_kanban_add').css({"visibility": "hidden"});
+            }
+        if(!this.state.folded) {
+           this.$element.find('.oe_kanban_add').css({"visibility": "visible"});
+            }
     },
     do_save_sequences: function() {
         var self = this;
