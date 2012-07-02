@@ -139,7 +139,7 @@
                     <page string="General Informations">
                         <field name="inventory_line_id">
                             <tree string="Products" editable="bottom">
-                                <field domain="[('usage','=','internal')]" name="location_id"/>
+                                <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                                 <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
@@ -1258,7 +1258,7 @@
 
                         </group>
                         <group>
-                            <label for="tracking_id"/>
+                            <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div>
                                 <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
@@ -1266,7 +1266,7 @@
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed"/>
                             </div>
-                            <label for="prodlot_id"/>
+                            <label for="prodlot_id" groups="stock.group_production_lot"/>
                             <div>
                                 <field name="prodlot_id" groups="stock.group_production_lot"
                                     context="{'location_id':location_id, 'product_id':product_id}"
@@ -1425,7 +1425,7 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned"/>
                         </div>
-                        <label for="product_uos_qty"/>
+                        <label for="product_uos_qty" groups="product.group_uos"/>
                         <div>
                             <field name="product_uos_qty" groups="product.group_uos" class="oe_inline"
                                 on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
