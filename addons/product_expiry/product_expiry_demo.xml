@@ -1,129 +1,129 @@
 <openerp>
-	<data noupdate="1">
+    <data noupdate="1">
 
-	<record id="product_uom_categ_vol" model="product.uom.categ">
-		<field name="name">LTR</field>
-	</record>
-	<record id="product_uom_ltr" model="product.uom">
-		<field name="category_id" ref="product_uom_categ_vol"/>
-		<field name="name">LTR</field>
-		<field name="factor">1.0</field>
-	</record>
-	
-		<record id="product_product_jambon" model="product.product">
-			<field name="supply_method">buy</field>
-			<field name="list_price">7.0</field>
-			<field name="standard_price">5.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-			<field name="uos_id" ref="product.product_uom_kgm" />
-			<field name="uos_coeff">3</field>
-			<field name="name">French cheese Camenbert</field>
-			<field name="life_time">15</field>
-			<field name="use_time">10</field>
-			<field name="removal_time">6</field>
-			<field name="alert_time">5</field>
-			<field name="default_code">JKB</field>
-			<field name="ean13">3307630302014</field>
-			<field name="categ_id" search="[]" model="product.category"/>
-		</record>
-		<record id="product_package_jambon" model="product.packaging">
-			<field name="name">box of 10</field>
-			<field name="qty">12</field>
-			<field name="ul" ref="product.product_ul_box" />
-			<field name="ul_qty">6</field>
-			<field name="rows">4</field>
-			<field name="product_id" ref="product_product_jambon" />
-			<field name="ean"></field>
-			<field name="weight">10</field>
-			<field name="weight_ul">240</field>
-		</record>
+    <record id="product_uom_categ_vol" model="product.uom.categ">
+        <field name="name">LTR</field>
+    </record>
+    <record id="product_uom_ltr" model="product.uom">
+        <field name="category_id" ref="product_uom_categ_vol"/>
+        <field name="name">LTR</field>
+        <field name="factor">1.0</field>
+    </record>
+    
+        <record id="product_product_jambon" model="product.product">
+            <field name="supply_method">buy</field>
+            <field name="list_price">7.0</field>
+            <field name="standard_price">5.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uos_id" ref="product.product_uom_kgm" />
+            <field name="uos_coeff">3</field>
+            <field name="name">French cheese Camenbert</field>
+            <field name="life_time">15</field>
+            <field name="use_time">10</field>
+            <field name="removal_time">6</field>
+            <field name="alert_time">5</field>
+            <field name="default_code">JKB</field>
+            <field name="ean13">3307630302014</field>
+            <field name="categ_id" search="[]" model="product.category"/>
+        </record>
+        <record id="product_package_jambon" model="product.packaging">
+            <field name="name">box of 10</field>
+            <field name="qty">12</field>
+            <field name="ul" ref="product.product_ul_box" />
+            <field name="ul_qty">6</field>
+            <field name="rows">4</field>
+            <field name="product_id" ref="product_product_jambon" />
+            <field name="ean"></field>
+            <field name="weight">10</field>
+            <field name="weight_ul">240</field>
+        </record>
 
-		<record id="product_product_from" model="product.product">
-			<field name="supply_method">buy</field>
-			<field name="list_price">8.0</field>
-			<field name="standard_price">6.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-			<field name="uos_id" ref="product.product_uom_kgm" />
-			<field name="uos_coeff">0.5</field>
-			<field name="name">Ham</field>
-			<field name="life_time">30</field>
-			<field name="use_time">25</field>
-			<field name="removal_time">20</field>
-			<field name="alert_time">19</field>
-			<field name="default_code">FKS</field>
-			<field name="ean13">3307631101876</field>
-			<field name="categ_id" search="[]" model="product.category"/>
-		</record>
-		<record id="product_package_from" model="product.packaging">
-			<field name="name">Box of 5</field>
-			<field name="qty">12</field>
-			<field name="ul" ref="product.product_ul_box" />
-			<field name="ul_qty">6</field>
-			<field name="rows">4</field>
-			<field name="product_id" ref="product_product_from" />
-			<field name="ean"></field>
-			<field name="weight">10</field>
-			<field name="weight_ul">240</field>
-		</record>
+        <record id="product_product_from" model="product.product">
+            <field name="supply_method">buy</field>
+            <field name="list_price">8.0</field>
+            <field name="standard_price">6.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uos_id" ref="product.product_uom_kgm" />
+            <field name="uos_coeff">0.5</field>
+            <field name="name">Ham</field>
+            <field name="life_time">30</field>
+            <field name="use_time">25</field>
+            <field name="removal_time">20</field>
+            <field name="alert_time">19</field>
+            <field name="default_code">FKS</field>
+            <field name="ean13">3307631101876</field>
+            <field name="categ_id" search="[]" model="product.category"/>
+        </record>
+        <record id="product_package_from" model="product.packaging">
+            <field name="name">Box of 5</field>
+            <field name="qty">12</field>
+            <field name="ul" ref="product.product_ul_box" />
+            <field name="ul_qty">6</field>
+            <field name="rows">4</field>
+            <field name="product_id" ref="product_product_from" />
+            <field name="ean"></field>
+            <field name="weight">10</field>
+            <field name="weight_ul">240</field>
+        </record>
 
-		<record id="product_product_pain" model="product.product">
-			<field name="supply_method">buy</field>
-			<field name="list_price">8.0</field>
-			<field name="standard_price">6.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-			<field name="uos_id" ref="product.product_uom_kgm" />
-			<field name="uos_coeff">0.5</field>
-			<field name="name">Bread</field>
-			<field name="life_time">30</field>
-			<field name="use_time">25</field>
-			<field name="removal_time">20</field>
-			<field name="alert_time">19</field>
-			<field name="default_code">PKB</field>
-			<field name="ean13">3307631102323</field>
-			<field name="categ_id" search="[]" model="product.category"/>
-		</record>
-		<record id="product_package_pain" model="product.packaging">
-			<field name="name">Bag of 2</field>
-			<field name="qty">6</field>
-			<field name="ul" ref="product.product_ul_box" />
-			<field name="ul_qty">6</field>
-			<field name="rows">4</field>
-			<field name="product_id" ref="product_product_pain" />
-			<field name="ean"></field>
-			<field name="weight">10</field>
-			<field name="weight_ul">240</field>
-		</record>
+        <record id="product_product_pain" model="product.product">
+            <field name="supply_method">buy</field>
+            <field name="list_price">8.0</field>
+            <field name="standard_price">6.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uos_id" ref="product.product_uom_kgm" />
+            <field name="uos_coeff">0.5</field>
+            <field name="name">Bread</field>
+            <field name="life_time">30</field>
+            <field name="use_time">25</field>
+            <field name="removal_time">20</field>
+            <field name="alert_time">19</field>
+            <field name="default_code">PKB</field>
+            <field name="ean13">3307631102323</field>
+            <field name="categ_id" search="[]" model="product.category"/>
+        </record>
+        <record id="product_package_pain" model="product.packaging">
+            <field name="name">Bag of 2</field>
+            <field name="qty">6</field>
+            <field name="ul" ref="product.product_ul_box" />
+            <field name="ul_qty">6</field>
+            <field name="rows">4</field>
+            <field name="product_id" ref="product_product_pain" />
+            <field name="ean"></field>
+            <field name="weight">10</field>
+            <field name="weight_ul">240</field>
+        </record>
 
-		<record id="product_product_lait" model="product.product">
-			<field name="supply_method">buy</field>
-			<field name="list_price">8.0</field>
-			<field name="standard_price">6.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-			<field name="uos_id" ref="product_uom_ltr" />
-			<field name="uos_coeff">0.5</field>
-			<field name="name">Cow milk</field>
-			<field name="life_time">30</field>
-			<field name="use_time">25</field>
-			<field name="removal_time">20</field>
-			<field name="alert_time">19</field>
-			<field name="default_code">LEX</field>
-			<field name="ean13">3307630302045</field>
-			<field name="categ_id" search="[]" model="product.category"/>
-		</record>
-		<record id="product_package_lait" model="product.packaging">
-			<field name="name">Boxes of 1 liter</field>
-			<field name="qty">4</field>
-			<field name="ul" ref="product.product_ul_box" />
-			<field name="ul_qty">6</field>
-			<field name="rows">4</field>
-			<field name="product_id" ref="product_product_lait" />
-			<field name="ean"></field>
-			<field name="weight">10</field>
-			<field name="weight_ul">240</field>
-		</record>
-	</data>
+        <record id="product_product_lait" model="product.product">
+            <field name="supply_method">buy</field>
+            <field name="list_price">8.0</field>
+            <field name="standard_price">6.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uos_id" ref="product_uom_ltr" />
+            <field name="uos_coeff">0.5</field>
+            <field name="name">Cow milk</field>
+            <field name="life_time">30</field>
+            <field name="use_time">25</field>
+            <field name="removal_time">20</field>
+            <field name="alert_time">19</field>
+            <field name="default_code">LEX</field>
+            <field name="ean13">3307630302045</field>
+            <field name="categ_id" search="[]" model="product.category"/>
+        </record>
+        <record id="product_package_lait" model="product.packaging">
+            <field name="name">Boxes of 1 liter</field>
+            <field name="qty">4</field>
+            <field name="ul" ref="product.product_ul_box" />
+            <field name="ul_qty">6</field>
+            <field name="rows">4</field>
+            <field name="product_id" ref="product_product_lait" />
+            <field name="ean"></field>
+            <field name="weight">10</field>
+            <field name="weight_ul">240</field>
+        </record>
+    </data>
 </openerp>
