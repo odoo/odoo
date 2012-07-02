@@ -942,8 +942,8 @@ class calendar_event(osv.osv):
             value['duration'] = duration
 
         if allday: # For all day event
-            value = {'duration': 24.0}
-            duration = 24.0
+            value = {'duration': 8.0}
+            duration = 8.0
             if start_date:
                 start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
                 start_date = datetime.strftime(datetime(start.year, start.month, start.day, 0,0,0), "%Y-%m-%d %H:%M:%S")
