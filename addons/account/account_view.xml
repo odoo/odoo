@@ -108,11 +108,6 @@
                         <group>
                             <field name="name"/>
                             <field name="fiscalyear_id" widget="selection"/>
-                            <label for="date_start" string="Duration"/>
-                            <div>
-                                <field name="date_start"/> - 
-                                <field name="date_stop" nolabel="1"/>
-                            </div>
                         </group>
                         <group>
                             <field name="code"/>
@@ -120,6 +115,16 @@
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                     </group>
+					<group>
+                          <group>
+                            <label for="date_start" string="Duration" />
+                            <div>
+                               <field name="date_start" class="oe_inline" nolabel="1"/> 
+                                <span attr="{'invisible': [('date_stop','=',False)]}"> - </span> 
+                                <field name="date_stop" nolabel="1" class="oe_inline"/>
+                             </div>
+                            </group>
+					</group>
                 </sheet>
                 </form>
             </field>

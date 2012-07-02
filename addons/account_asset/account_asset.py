@@ -345,7 +345,7 @@ class account_asset_depreciation_line(osv.osv):
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
         'amount': fields.float('Depreciation Amount', required=True),
-        'remaining_value': fields.float('Amount To Depreciate', required=True),
+        'remaining_value': fields.float('Amount to Depreciate', required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
