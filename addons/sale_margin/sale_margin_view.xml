@@ -6,7 +6,7 @@
         <field name="name">sale.order.margin.view.form</field>
         <field name="type">form</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_total']" position="inside">
                 <field name="margin"/>
@@ -18,10 +18,10 @@
         <field name="name">sale.order.line.margin.view.form</field>
         <field name="type">form</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="after">
-                <field name="purchase_price"/>
+                <field name="purchase_price" groups="base.group_user"/>
             </xpath>
         </field>
     </record>
@@ -30,10 +30,10 @@
         <field name="name">sale.order.line.tree.margin.view.form</field>
         <field name="type">form</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
-                <field name="purchase_price"/>
+                <field name="purchase_price" groups="base.group_user"/>
             </xpath>
         </field>
     </record>
@@ -42,10 +42,10 @@
         <field name="name">sale.order.margin.view.tree</field>
         <field name="type">tree</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_tree" />
+        <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <field name="margin"/>
+                <field name="margin" groups="base.group_user"/>
             </field>
         </field>
     </record>
@@ -54,10 +54,10 @@
         <field name="name">sale.order.margin.line.view.tree</field>
         <field name="type">tree</field>
         <field name="model">sale.order.line</field>
-        <field name="inherit_id" ref="sale.view_order_line_tree" />
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
         <field name="arch" type="xml">
             <field name="price_subtotal" position="after">
-                <field name="margin"/>
+                <field name="margin" groups="base.group_user"/>
             </field>
         </field>
     </record>

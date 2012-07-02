@@ -41,7 +41,7 @@
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                 </group>
                                 <group string="Accounting">
-                                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1"/>
+                                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
                                     <field name="journal_id"/>
