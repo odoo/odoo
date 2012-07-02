@@ -905,27 +905,36 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.find(
+                var $row = self.$current.children(
                         '[data-id=' + record.get('id') + ']');
                 var index = $row.data('index');
                 $row.remove();
                 self.refresh_zebra(index);
             },
             'reset': function () { return self.on_records_reset(); },
-            'change': function (event, record) {
-                var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+            'change': function (event, record, attribute, value, old_value) {
+                var $row;
+                if (attribute === 'id') {
+                    if (old_value) {
+                        throw new Error("Setting 'id' attribute on existing record "
+                            + JSON.stringify(record.attributes));
+                    }
+                    // Set id on new record
+                    $row = self.$current.children('tr:not([data-id])');
+                } else {
+                    $row = self.$current.children(
+                        '[data-id=' + record.get('id') + ']');
+                }
                 $row.replaceWith(self.render_record(record));
             },
             'add': function (ev, records, record, index) {
-                var $new_row = $('<tr>').attr({
-                    'data-id': record.get('id')
-                });
+                var $new_row = $(self.render_record(record));
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);
                 } else {
                     var previous_record = records.at(index-1),
-                        $previous_sibling = self.$current.find(
+                        $previous_sibling = self.$current.children(
                                 '[data-id=' + previous_record.get('id') + ']');
                     $new_row.insertAfter($previous_sibling);
                 }

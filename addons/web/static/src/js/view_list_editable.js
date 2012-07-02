@@ -170,8 +170,9 @@ openerp.web.list_editable = function (instance) {
                     record = self.records.find(function (r) {
                         return !r.get('id');
                     });
-                    record.set('id', attrs.id, {silent: true});
+                    record.set('id', attrs.id);
                 }
+
                 self.reload_record(record);
             });
         },
