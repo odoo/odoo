@@ -778,13 +778,8 @@ class mail_thread(osv.Model):
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
 
     def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
-        if subject is None:
-            if type == 'notification':
-                subject = _('System notification')
-            elif type == 'comment' and not parent_id:
-                subject = _('Comment')
-            elif type == 'comment' and parent_id:
-                subject = _('Reply')
+        if type in ['notification', 'reply']:
+            subject = None
         if subtype == 'html':
             body_html = body
             body_text = body
