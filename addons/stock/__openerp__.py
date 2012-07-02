@@ -29,7 +29,6 @@ OpenERP Inventory Management module can manage multi-warehouses, multi and struc
 
 Thanks to the double entry management, the inventory controlling is powerful and flexible:
     * Moves history and planning,
-    * Different inventory methods (FIFO, LIFO, ...)
     * Stock valuation (standard or average price, ...)
     * Robustness faced with Inventory differences
     * Automatic reordering rules (stock level, JIT, ...)

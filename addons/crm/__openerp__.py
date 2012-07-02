@@ -48,9 +48,11 @@ The CRM module has a email gateway for the synchronisation interface
 between mails and OpenERP.
 
 Creates a dashboard for CRM that includes:
-    * Opportunities by Categories (graph)
-    * Opportunities by Stage (graph)
+    * List of New Leads
+    * List of My Opportunities
+    * List of My Next Meetings
     * Planned Revenue by Stage and User (graph)
+    * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

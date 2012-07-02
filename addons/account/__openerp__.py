@@ -42,7 +42,6 @@ Creates a dashboard for accountants that includes:
 --------------------------------------------------
 * List of Customer Invoice to Approve
 * Company Analysis
-* Graph of Aged Receivables
 * Graph of Treasury
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or

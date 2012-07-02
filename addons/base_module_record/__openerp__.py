@@ -40,7 +40,7 @@ This should help you to easily create reusable and publishable modules
 for custom configurations and demo/testing data.
 
 How to use it:
-Run Administration/Customization/Module Creation/Export Customizations As a Module wizard.
+Run Settings/Technical/Module Creation/Export Customizations As a Module wizard. 
 Select datetime criteria of recording and objects to be recorded and Record module.
     """,
     'author': 'OpenERP SA',
