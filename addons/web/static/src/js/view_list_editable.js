@@ -120,12 +120,17 @@ openerp.web.list_editable = function (instance) {
         /**
          * Set up the edition of a record of the list view "inline"
          *
-         * @param {instance.web.list.Record} record record to edit
-         * @param {Object} cells map of field names to the DOM elements used to display these fields for the record being edited
+         * @param {instance.web.list.Record} [record] record to edit, leave empty to create a new record
          * @return {jQuery.Deferred}
          */
-        start_edition: function (record, cells) {
+        start_edition: function (record) {
             var self = this;
+            if (!record) {
+                record = new instance.web.list.Record();
+                this.records.add(record, {
+                    at: this.options.editable === 'top' ? 0 : null});
+            }
+            var cells = this.getCellsFor(this.groups.getRowFor(record));
             return this.ensure_saved().pipe(function () {
                 return self.withEvent('edit', {
                     record: record.attributes,
@@ -154,6 +159,13 @@ openerp.web.list_editable = function (instance) {
                 [record.attributes]);
             });
         },
+        getCellsFor: function ($row) {
+            var cells = {};
+            $row.children('td').each(function (index, el) {
+                cells[el.getAttribute('data-field')] = el
+            });
+            return cells;
+        },
         /**
          * @return {jQuery.Deferred}
          */
@@ -169,8 +181,22 @@ openerp.web.list_editable = function (instance) {
                     // new record
                     record = self.records.find(function (r) {
                         return !r.get('id');
-                    });
-                    record.set('id', attrs.id);
+                    }).set('id', attrs.id);
+
+                    setTimeout(function () {
+                        self.start_edition();
+                    }, 0);
+
+                } else {
+                    var next_index = self.records.indexOf(record) + 1;
+                    if (next_index === self.records.length) {
+                        next_index = 0;
+                    }
+
+                    setTimeout(function () {
+                        self.start_edition(self.records.at(next_index));
+                    }, 0);
+
                 }
 
                 self.reload_record(record);
@@ -351,6 +377,13 @@ openerp.web.list_editable = function (instance) {
                 _.invoke(
                     _.values(this.children),
                     'ensure_saved'));
+        },
+        getRowFor: function (record) {
+            return _(this.children).chain()
+                .invoke('getRowFor', record)
+                .compact()
+                .first()
+                .value();
         }
     });
 
@@ -421,24 +454,9 @@ openerp.web.list_editable = function (instance) {
                 break;
             }
         },
-        render_row_as_form: function ($row) {
-            var record;
-            if (!$row || $row.length === 0) {
-                record = new instance.web.list.Record();
-                this.records.add(
-                    record, {at: this.options.editable === 'top' ? 0 : null});
-                $row = this.$current.children('tr:not([data-id])');
-            } else {
-                record = this.records.get($row.data('id'));
-            }
-
-            var cells = {};
-            $row.children('td').each(function (index, el) {
-                cells[el.getAttribute('data-field')] = el
-            });
-
-            // TODO: creation (record_id === null?)
-            return this.view.start_edition(record, cells);
+        render_row_as_form: function (id) {
+            return this.view.start_edition(
+                    id ? this.records.get(id) : null);
         },
         handle_onwrite: function (source_record_id) {
             var self = this;
@@ -524,14 +542,30 @@ openerp.web.list_editable = function (instance) {
          * Edits record currently selected via dataset
          */
         edit_record: function (record_id) {
-            this.render_row_as_form(
-                this.$current.find('[data-id=' + record_id + ']'));
-            $(this).trigger(
-                'edit',
-                [record_id, this.dataset]);
+            this.render_row_as_form(record_id);
         },
         new_record: function () {
             this.render_row_as_form();
+        },
+        /**
+         * If a row mapping to the record (@data-id matching the record's id or
+         * no @data-id if the record has no id), returns it. Otherwise returns
+         * ``null``.
+         *
+         * @param {Record} record the record to get a row for
+         * @return {jQuery|null}
+         */
+        getRowFor: function (record) {
+            var id, $row;
+            if (id = record.get('id')) {
+                $row = this.$current.children('[data-id=' + id + ']');
+            } else {
+                $row = this.$current.children(':not([data-id])');
+            }
+            if ($row.length) {
+                return $row;
+            }
+            return null;
         }
     });
 };
