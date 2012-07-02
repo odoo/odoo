@@ -9,18 +9,16 @@
             <field name="arch" type="xml">
                 <form string="Import Translation" version="7.0">
                     <header>
-                        <button name="import_lang" string="_Import" type="object" icon="gtk-ok"/>
+                        <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="code" string="Code" placeholder="en_US"/>
-                            <field name="data"/>
-                            <field name="overwrite"/>
-                        </group>
-                    </sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code" string="Code" placeholder="en_US"/>
+                        <field name="data"/>
+                        <field name="overwrite"/>
+                    </group>
                 </form>
             </field>
         </record>
