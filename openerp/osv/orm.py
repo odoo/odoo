@@ -1754,22 +1754,14 @@ class BaseModel(object):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
-            if node.get('confirm'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('confirm'))
-                if trans:
-                    node.set('confirm', trans)
-            if node.get('sum'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
-                if trans:
-                    node.set('sum', trans)
-            if node.get('help'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
-                if trans:
-                    node.set('help', trans)
-            if node.get('placeholder'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('placeholder'))
-                if trans:
-                    node.set('placeholder', trans)
+
+            for translatable in ('confirm', 'sum', 'help', 'placeholder'):
+                attr = node.get(translatable)
+                if attr:
+                    translation = self.pool['ir.translation']._get_source(
+                        cr, user, self._name, view, context['lang'], attr)
+                    if translation:
+                        node.set(translatable, attr)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
