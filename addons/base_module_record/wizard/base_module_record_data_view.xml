@@ -10,6 +10,7 @@
                 <form string="Data Recording" version="7.0">
                     <header>
                         <button icon="gtk-cancel" string="Cancel" special="cancel"/>
+                        or
                         <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
                     </header>
                     <sheet>
@@ -60,11 +61,6 @@
                 <form string="Data Recording">
                     <separator string="Result, paste this to your module's xml" colspan="4" />
                     <field name="res_text" nolabel="1"  colspan="4"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-close" string="Close" special="cancel"/>
-                    </group>
                 </form>
             </field>
          </record>

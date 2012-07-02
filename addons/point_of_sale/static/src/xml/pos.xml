@@ -120,7 +120,7 @@
                             </table>
                         </div>
                         <div class="pos-payment-buttons">
-                            <button class="oe-back-to-products">
+                            <button class="oe_back_to_products">
                                 <img src="/web/static/src/img/icons/gtk-go-back.png"></img>
                                 Back to Products</button>
                             <button id="validate-order">
@@ -147,13 +147,13 @@
     <t t-name="pos-category-template">
         <header>
             <ol class="breadcrumb">
-                <li class="oe-pos-categories-list">
+                <li class="oe_pos_categories_list">
                     <a href="javascript:void(0)">
                         <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
                     </a>
                 </li>
                 <t t-foreach="breadcrumb" t-as="category">
-                    <li class="oe-pos-categories-list">
+                    <li class="oe_pos_categories_list">
                         <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
                         <a href="javascript:void(0)" t-att-data-category-id="category.id">
                             <t t-esc="category.name"/>
@@ -169,7 +169,7 @@
         <div id="categories">
             <ol>
                 <t t-foreach="categories" t-as="category">
-                    <li class="oe-pos-categories-list">
+                    <li class="oe_pos_categories_list">
                         <a href="javascript:void(0)" t-att-data-category-id="category.id" class="button">
                             <t t-esc="category.name"/>
                         </a>
@@ -233,9 +233,9 @@
                 <div class="pos-receipt-container">
                 </div>
                 <div class='receipt-buttons'>
-	                <button id="print-the-ticket">
-	                    Print</button>
-	                <button id="pos-finish-order">Next Order</button>
+                    <button id="print-the-ticket">
+                        Print</button>
+                    <button id="pos-finish-order">Next Order</button>
                 </div>
             </div>
         </div>
