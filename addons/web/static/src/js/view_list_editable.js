@@ -274,6 +274,7 @@ openerp.web.list_editable = function (instance) {
         start: function () {
             var self = this;
             var _super = this._super();
+            // TODO: getParent() should be delegate defaulting to getParent()
             this.form.embedded_view = this.getParent().editionView(this);
             var form_ready = this.form.appendTo(this.$element).then(
                 self.form.proxy('do_hide'));
