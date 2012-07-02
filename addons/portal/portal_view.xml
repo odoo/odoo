@@ -87,10 +87,13 @@ the portal's users.
 
             <!-- root menu for portal members (chrooted in this menu) -->
             <menuitem name="Portal Members Root Menu" id="portal_members_root_menu" parent="portal_menu_settings"/>
-                <menuitem name="News" id="portal_company_news"
-                    parent="portal_members_root_menu" sequence="10" action="action_news"/>
 
                 <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu"/>
+                    <menuitem name="Our company" id="portal_company"
+                        parent="menu_portal" sequence="10"/>
+                        <menuitem name="News" id="portal_company_news"
+                            parent="portal_company" sequence="10" action="action_news"/>
+
                     <menuitem name="Orders" id="portal_orders"
                         parent="menu_portal" sequence="20"/>
                     <menuitem name="Invoices and Payments" id="portal_invoices_payements"

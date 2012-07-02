@@ -22,7 +22,7 @@
                                 <div class="oe_portal_crm_contact_form">
                                     <h1>Get in touch</h1>
                                     <field name="contact_name" placeholder="Name"/>
-                                    <field name="name" placeholder="Company"/>
+                                    <field name="partner_name" placeholder="Company"/>
                                     <field name="email_from" placeholder="Email"/>
                                     <field name="phone" placeholder="Phone"/>
                                     <field name="description" placeholder="Your question"/>
@@ -135,7 +135,7 @@
 
         <!-- attach it to the portal menu -->
         <menuitem name="Contact" id="portal_company_contact"
-            parent="portal.portal_members_root_menu" action="action_wizard_contact_us" sequence="30"/>
+            parent="portal.portal_company" action="action_wizard_contact_us" sequence="30"/>
 
     </data>
 </openerp>
