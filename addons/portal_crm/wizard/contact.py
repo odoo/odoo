@@ -24,27 +24,32 @@ class crm_contact_us(osv.TransientModel):
     }
 
     def create(self, cr, uid, values, context=None):
-        """ 
-        Since they potentially sensitive, we don't want any user to be able to 
-        read datas generated through this module.  That's why we'll write those 
-        information in the crm.lead table and leave blank entries in the 
-        portal_crm.crm_contact_us table.  This is why the create() method is 
+        """
+        Since they potentially sensitive, we don't want any user to be able to
+        read datas generated through this module.  That's why we'll write those
+        information in the crm.lead table and leave blank entries in the
+        portal_crm.crm_contact_us table.  This is why the create() method is
         overridden.
         """
         crm_lead = self.pool.get('crm.lead')
-        
-        """ 
-        Because of the complex inheritance of the crm.lead model and the other 
-        models implied (like mail.thread, among others, that performs a read 
-        when its create() method is called (in method message_get_subscribers()), 
-        it is quite complicated to set proper rights for this object.  
-        Therefore, user #1 will perform the creation until a better workaround 
+
+        """
+        Because of the complex inheritance of the crm.lead model and the other
+        models implied (like mail.thread, among others, that performs a read
+        when its create() method is called (in method message_get_subscribers()),
+        it is quite complicated to set proper rights for this object.
+        Therefore, user #1 will perform the creation until a better workaround
         is figured out.
         """
+        values['name'] = values['contact_name']
+        print values
         crm_lead.create(cr, 1, dict(values,user_id=False), context)
 
-        """ Create an empty record in the portal_crm.crm_contact_us table """
-        return super(crm_contact_us, self).create(cr, uid, {})
+        """
+        Create an empty record in the portal_crm.crm_contact_us table.
+        Since the 'name' field is mandatory, give an empty string to avoid an integrity error.
+        """
+        return super(crm_contact_us, self).create(cr, uid, {'name': ' '})
 
     def submit(self, cr, uid, ids, context=None):
         """ When the form is submitted, redirect the user to a "Thanks" message """
