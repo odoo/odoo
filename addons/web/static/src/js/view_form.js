@@ -1986,7 +1986,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         });
 
         // Autocomplete close on drag dialog
-        this.$input.closest(".ui-dialog").find(".ui-dialog-titlebar:first").mousedown(function(e){
+        this.$input.closest(".ui-dialog").bind( "dialogdrag", function() {
             self.$input.autocomplete("close");
         });
 
