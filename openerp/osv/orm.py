@@ -1740,11 +1740,11 @@ class BaseModel(object):
             if node.text and node.text.strip():
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
                 if trans:
-                    node.text = trans
+                    node.text = node.text.replace(node.text.strip(), trans)
             if node.tail and node.tail.strip():
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
                 if trans:
-                    node.tail = trans
+                    node.tail =  node.tail.replace(node.tail.strip(), trans)
 
             if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
