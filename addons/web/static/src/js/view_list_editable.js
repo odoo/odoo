@@ -210,7 +210,7 @@ openerp.web.list_editable = function (instance) {
                         click: function (e) {e.stopPropagation();}
                     })
                     .addClass('oe_form oe_form_container')
-                    .delegate('button.oe-edit-row-save', 'click', function () {
+                    .delegate('button.oe_list_edit_row_save', 'click', function () {
                         self.save_row();
                     })
                     .delegate('button', 'keyup', function (e) {
@@ -258,7 +258,7 @@ openerp.web.list_editable = function (instance) {
                 return $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     $new_row.find('> td')
                       .end()
-                      .find('td:last').removeClass('oe-field-cell').end();
+                      .find('td:last').removeClass('oe_list_field_cell').end();
                     // pad in case of groupby
                     _(self.columns).each(function (column) {
                         if (column.meta) {
