@@ -29,22 +29,19 @@
                     <div class="oe_button_box oe_right">
                         <button name="122" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="106" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                        <button name="106" states="open,draft,close,cancel" string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}" invisible="1"/>
                     </div>
+                    <label for="title" class="oe_edit_only"/>
                     <h1>
                         <field name="title" select="1" class="oe_inline"/>
                         <label string="(" attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
                         <field name="type" class="oe_inline"/>
                         <label string=")" attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
                     </h1>
-                    
-                    <div>
-                        <label for="responsible_id"/>
-                        <field name="responsible_id" class="oe_inline"/>
-                        <button name="106" states="open,draft,close,cancel" string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}" invisible="1"/>
-                    </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
+                            <field name="responsible_id" class="oe_inline"/>
                             <field name="send_response"/>
                         </group>
                         <group>
@@ -55,11 +52,12 @@
                      <notebook>
                         <page string="Survey">
                             <field name="page_ids" colspan="4" nolabel="1" mode="tree">
-                                <form string="Survey Page">
+                                <form string="Survey Page" version="7.0">
+                                    <sheet>
+                                    <label for="title" class="oe_edit_only"/>
+                                    <label for="sequence" class="oe_edit_only" groups="base.group_no_one"/>
                                     <h2>
-                                        <label for="title" class="oe_edit_only"/>
                                         <field name="title" select="1" class="oe_inline"/>
-                                        <label for="sequence" class="oe_edit_only"/>
                                         (<field name="sequence" groups="base.group_no_one" class="oe_inline"/>)
                                     </h2>
                                     <newline/>
@@ -214,6 +212,7 @@
                                             </tree>
                                         </field>
                                     </group>
+                                    </sheet>
                                     </form>
                                 </field>
 
