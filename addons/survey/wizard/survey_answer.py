@@ -147,6 +147,45 @@ class survey_question_wiz(osv.osv_memory):
                 if flag:
                     pag_rec = page_obj.browse(cr, uid, p_id, context=context)
                     xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title)})
+                    xml_header = etree.SubElement(xml_form, 'header', {'col': '5', 'colspan': '4'})
+                    xml_header_group = etree.SubElement(xml_header, 'group', {'col': '6', 'colspan': '6'})
+                    xml_group = etree.SubElement(xml_form, 'group', {'col': '8', 'colspan': '4'})
+
+                    #############  PAGE HEADER : START ###################
+
+                    #etree.SubElement(xml_group, 'field', {'name': 'progress_bar_' + tools.ustr(page_number) , 'widget':'progressbar'})
+                    #fields['progress_bar_' + tools.ustr(page_number)] = {'type':'float', 'string':"Progress", 'views':{}}
+                  #  etree.SubElement(xml_group, 'label', {'string': tools.ustr(tools.ustr(pag_rec.note)), 'align':"0.0"})
+                    
+                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' })
+                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right"})
+                    etree.SubElement(xml_header_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel", 'class':"oe_right"})
+                    if pre_button:
+                        etree.SubElement(xml_header_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object", 'class':"oe_right"})
+                    but_string = "Next"
+                    if int(page_number) + 1 == total_pages:
+                        but_string = "Done"
+
+                    if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_right"})
+                    elif context.has_key('active') and context.get('active', False) and int(page_number) + 1 == total_pages and context.has_key('response_id'):
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
+                    elif context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages:
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right"})
+                    else:
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
+                    
+                    #############  PAGE HEADER : END ###################
+
+                    if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
+                        etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
+                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
+                        xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Delete Page','icon': "gtk-delete", 'type' :'object','name':"action_delete_page", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Add Question','icon': "gtk-new", 'type' :'object','name':"action_new_question", 'context' : tools.ustr(context)})
+
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                     if context.has_key('response_id') and context.get('response_id', False) \
                          and int(context.get('response_id',0)[0]) > 0:
@@ -353,36 +392,7 @@ class survey_question_wiz(osv.osv_memory):
                                     fields[tools.ustr(que.id) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
 
                     etree.SubElement(xml_form, 'separator', {'colspan': '4'})
-                    xml_group = etree.SubElement(xml_form, 'group', {'col': '6', 'colspan': '4'})
-                    etree.SubElement(xml_group, 'field', {'name': 'progress_bar_' + tools.ustr(page_number) , 'widget':'progressbar'})
-                    fields['progress_bar_' + tools.ustr(page_number)] = {'type':'float', 'string':"Progress", 'views':{}}
-                    etree.SubElement(xml_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages)})
-                    etree.SubElement(xml_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel"})
-                    
-                    if pre_button:
-                        etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object"})
-                    but_string = "Next"
-                    if int(page_number) + 1 == total_pages:
-                        but_string = "Done"
-
-                    if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
-                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context)})
-                    elif context.has_key('active') and context.get('active', False) and int(page_number) + 1 == total_pages and context.has_key('response_id'):
-                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context)})
-                    elif context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages:
-                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context)})
-                    else:
-                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context)})
-
-                    if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
-                        etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
-                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
-                        xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Delete Page','icon': "gtk-delete", 'type' :'object','name':"action_delete_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Add Question','icon': "gtk-new", 'type' :'object','name':"action_new_question", 'context' : tools.ustr(context)})
-
+ 
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = fields
