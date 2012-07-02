@@ -69,16 +69,16 @@
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
                     <filter string="Purchase Date" icon="terp-go-month"
-	                        domain="[]" context="{'group_by':'purchase_date'}" help="Date of asset purchase"/>
+                            domain="[]" context="{'group_by':'purchase_date'}" help="Date of asset purchase"/>
                     <separator orientation="vertical" />
                     <filter string="Depreciation Date" icon="terp-go-today"
-	                        domain="[]" context="{'group_by':'depreciation_date'}" help="Date of depreciation"/>
+                            domain="[]" context="{'group_by':'depreciation_date'}" help="Date of depreciation"/>
                 </group>
-            </search>	
+            </search>    
         </field>
     </record>
-	
-    <record model="ir.actions.act_window" id="action_asset_asset_report">	
+    
+    <record model="ir.actions.act_window" id="action_asset_asset_report">    
         <field name="name">Assets Analysis</field>
         <field name="res_model">asset.asset.report</field>
         <field name="view_type">form</field>
@@ -89,7 +89,7 @@
     </record>
     
     <menuitem action="action_asset_asset_report"
-	          id="menu_action_asset_asset_report"
-	          parent="account.menu_finance_statistic_report_statement"/>
+              id="menu_action_asset_asset_report"
+              parent="account.menu_finance_reporting"/>
 </data>
 </openerp>

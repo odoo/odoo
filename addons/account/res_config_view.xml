@@ -17,8 +17,9 @@
             <field name="arch" type="xml">
                 <form string="Configure Accounting" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight_on_dirty"/>
-                        <button string="Cancel" type="object" name="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <sheet>
                     <field name="has_default_company" invisible="1" />
@@ -98,7 +99,6 @@
                                     help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
                                 <field name="sale_refund_sequence_next" class="oe_inline" nolabel="1" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
                             </group>
-                            <field name="module_account_invoice_layout"/>
                             <field name="module_account_voucher"/>
                             <field name="module_account_followup"/>
                             <field name="group_proforma_invoices"/>

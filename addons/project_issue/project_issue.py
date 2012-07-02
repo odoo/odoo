@@ -241,7 +241,7 @@ class project_issue(base_stage, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'stage_id': fields.many2one ('project.task.type', 'Stages',
+        'stage_id': fields.many2one ('project.task.type', 'Stage',
                         domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
@@ -288,7 +288,7 @@ class project_issue(base_stage, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set lead priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
