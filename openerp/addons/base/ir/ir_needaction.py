@@ -27,12 +27,13 @@ from tools.translate import _
 class ir_needaction_users_rel(osv.Model):
     ''' ir_needaction_users_rel holds data related to the needaction 
     mechanism inside OpenERP. A row in this model is characterized 
-    by: - res_model: model of the record requiring an action - 
-    res_id: ID of the record requiring an action - user_id: foreign 
-    key to the res.users table, to the user that has to perform the 
-    action This model can be seen as a many2many, linking 
-    (res_model, res_id) to users (those whose attention is required 
-    on the record). '''
+    by:
+    - res_model: model of the record requiring an action
+    - res_id: ID of the record requiring an action
+    - user_id: foreign key to the res.users table, to the user that has to
+      perform the action
+    This model can be seen as a many2many, linking (res_model, res_id) to users
+    (those whose attention is required on the record). '''
     
     _name = 'ir.needaction_users_rel'
     _description = 'Needaction relationship table'
@@ -107,9 +108,6 @@ class ir_needaction_mixin(osv.AbstractModel):
     - ``needaction_get_action_count``: as ``needaction_get_record_ids``
     but returns only the number of action, not the ids (performs a 
     search with count=True)
-    - ``needaction_get_user_record_references``: for a given uid, get 
-    all the records that ask this user to perform an action. Records 
-    are given as references, a list of tuples (model_name, record_id)
 
     The ``ir_needaction_mixin`` class adds a calculated field 
     ``needaction_pending``. This function field allows to state 
