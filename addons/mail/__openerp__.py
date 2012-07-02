@@ -20,40 +20,24 @@
 ##############################################################################
 
 {
-    'name': 'Social Networking',
+    'name': 'Social Network',
     'version': '1.0',
     'category':'Social Network',
     "sequence": 2,
     'description': """
-A bussiness oriented Social Networking stands with message storage,
-queuing and  feeds.     
+A business oriented Social Network stands with message storage, queuing 
+and feeds.                    
 ===================================================================
+This Social Network service enables users to send, share and read posts via 
+feeds and provides an unified social network you can use in a global feed or
+in all application. 
 
-This Social Networking service that enables its users to send and read 
-text-based posts via feeds,and its provide a unified social network 
-abstraction that all other applications can use,also it used as a email
-subsystem.
-
-The main features are:
-    
-    * Trouble free application.
-    * Hassle free user communication via feeds menu.
-    * And also it relies on the global Outgoing Mail Servers configured
-      in the , Administration menu for delivering outgoing mail.
-    * Includes queuing mechanism with automated configurable
-      scheduler-based processing
-    * Provides an API for sending messages and archiving them,
-      grouped by conversation,
-    * Any OpenERP document can act as a conversation topic, provided
-      it includes the necessary support for handling incoming emails
-      (see the ``mail.thread`` class for more details). 
-    * Includes a generic email composition assistant, that can turn
-      into a mass-mailing assistant, and is capable of interpreting
-      simple *placeholder expressions* that will be replaced with
-      dynamic data when each email is actually sent.
-      This generic assistant is easily extensible to provide advanced
-      features (see ``email_template`` for example, which adds email
-      templating features to this assistant)
+With this feature: 
+    * Track all the notification of the system.
+    * Send emails to your colleagues and/or your customers.
+    * Share your ideas by adding message.
+    * Add comments on your colleague's post.
+    * Add and follow discussion group.
 
     """,
     'author': 'OpenERP SA',
