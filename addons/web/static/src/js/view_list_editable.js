@@ -89,10 +89,10 @@ openerp.web.list_editable = function (instance) {
                     self.editor.$element.on('keyup', function (e) {
                         switch (e.which) {
                         case KEY_RETURN:
-                            self.save_edition();
+                            self.saveEdition();
                             break;
                         case KEY_ESCAPE:
-                            self.cancel_edition();
+                            self.cancelEdition();
                             break;
                         }
                     });
@@ -111,11 +111,11 @@ openerp.web.list_editable = function (instance) {
          *
          * @returns {$.Deferred}
          */
-        ensure_saved: function () {
+        ensureSaved: function () {
             if (!this.editor.isEditing()) {
                 return $.when();
             }
-            return this.save_edition();
+            return this.saveEdition();
         },
         /**
          * Set up the edition of a record of the list view "inline"
@@ -123,7 +123,7 @@ openerp.web.list_editable = function (instance) {
          * @param {instance.web.list.Record} [record] record to edit, leave empty to create a new record
          * @return {jQuery.Deferred}
          */
-        start_edition: function (record) {
+        startEdition: function (record) {
             var self = this;
             if (!record) {
                 record = new instance.web.list.Record();
@@ -131,7 +131,7 @@ openerp.web.list_editable = function (instance) {
                     at: this.options.editable === 'top' ? 0 : null});
             }
             var cells = this.getCellsFor(this.groups.getRowFor(record));
-            return this.ensure_saved().pipe(function () {
+            return this.ensureSaved().pipe(function () {
                 return self.withEvent('edit', {
                     record: record.attributes,
                     cancel: false
@@ -169,7 +169,7 @@ openerp.web.list_editable = function (instance) {
         /**
          * @return {jQuery.Deferred}
          */
-        save_edition: function () {
+        saveEdition: function () {
             var self = this;
             return this.withEvent('save', {
                 editor: this.editor,
@@ -184,7 +184,7 @@ openerp.web.list_editable = function (instance) {
                     }).set('id', attrs.id);
 
                     setTimeout(function () {
-                        self.start_edition();
+                        self.startEdition();
                     }, 0);
 
                 } else {
@@ -194,7 +194,7 @@ openerp.web.list_editable = function (instance) {
                     }
 
                     setTimeout(function () {
-                        self.start_edition(self.records.at(next_index));
+                        self.startEdition(self.records.at(next_index));
                     }, 0);
 
                 }
@@ -205,7 +205,7 @@ openerp.web.list_editable = function (instance) {
         /**
          * @return {jQuery.Deferred}
          */
-        cancel_edition: function () {
+        cancelEdition: function () {
             var self = this;
             return this.withEvent('cancel', {
                 editor: this.editor,
@@ -372,11 +372,11 @@ openerp.web.list_editable = function (instance) {
          *
          * @returns {$.Deferred}
          */
-        ensure_saved: function () {
+        ensureSaved: function () {
             return $.when.apply(null,
                 _.invoke(
                     _.values(this.children),
-                    'ensure_saved'));
+                    'ensureSaved'));
         },
         getRowFor: function (record) {
             return _(this.children).chain()
@@ -450,12 +450,12 @@ openerp.web.list_editable = function (instance) {
                 });
                 break;
             case KEY_ESCAPE:
-                this.cancel_edition();
+                this.cancelEdition();
                 break;
             }
         },
         render_row_as_form: function (id) {
-            return this.view.start_edition(
+            return this.view.startEdition(
                     id ? this.records.get(id) : null);
         },
         handle_onwrite: function (source_record_id) {
@@ -519,7 +519,7 @@ openerp.web.list_editable = function (instance) {
         /**
          * If the current list is being edited, ensures it's saved
          */
-        ensure_saved: function () {
+        ensureSaved: function () {
             if (this.edition) {
                 // kinda-hack-ish: if the user has entered data in a field,
                 // oe_form_dirty will be set on the form so save, otherwise
@@ -535,7 +535,7 @@ openerp.web.list_editable = function (instance) {
         /**
          * Cancels the edition of the row for the current dataset index
          */
-        cancel_edition: function () {
+        cancelEdition: function () {
             this.cancel_pending_edition();
         },
         /**

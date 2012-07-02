@@ -3067,7 +3067,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 	                }
 	                return res;
 	            } else if (this.viewmanager.active_view === "list") {
-	                var res = $.when(view.ensure_saved());
+	                var res = $.when(view.ensureSaved());
 	                if (!res.isResolved() && !res.isRejected()) {
 	                    console.warn("Asynchronous get_value() is not supported in list view.");
 	                }
@@ -3282,7 +3282,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
                     return;
                 }
                 if (!self.edition_form.widget_is_stopped) {
-                    self.view.ensure_saved();
+                    self.view.ensureSaved();
                 }
             });
         });
