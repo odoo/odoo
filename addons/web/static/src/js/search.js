@@ -352,6 +352,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             e.stopImmediatePropagation();
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
+        instance.web.bus.on('click', this, function(ev) {
+            if ($(ev.target).parents('.oe_searchview').length === 0) {
+                self.$element.removeClass('oe_searchview_open_drawer');
+            }
+        });
         // Focus last input if the view itself is clicked (empty section of
         // facets element)
         this.$element.on('click', function (e) {
