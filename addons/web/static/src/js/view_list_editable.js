@@ -175,7 +175,7 @@ openerp.web.list_editable = function (instance) {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
-            }, this.editor.save).then(function (attrs) {
+            }, this.editor.save).pipe(function (attrs) {
                 var record = self.records.get(attrs.id);
                 if (!record) {
                     // new record
@@ -186,7 +186,6 @@ openerp.web.list_editable = function (instance) {
                     setTimeout(function () {
                         self.startEdition();
                     }, 0);
-
                 } else {
                     var next_index = self.records.indexOf(record) + 1;
                     if (next_index === self.records.length) {
@@ -196,10 +195,10 @@ openerp.web.list_editable = function (instance) {
                     setTimeout(function () {
                         self.startEdition(self.records.at(next_index));
                     }, 0);
-
                 }
-
-                self.reload_record(record);
+                return $.when(
+                    self.handleOnWrite(record),
+                    self.reload_record(record));
             });
         },
         /**
@@ -268,7 +267,26 @@ openerp.web.list_editable = function (instance) {
                 widget.attrs.modifiers = JSON.stringify(modifiers);
             });
             return view;
-        }
+        },
+        handleOnWrite: function (source_record) {
+            var self = this;
+            var on_write_callback = self.fields_view.arch.attrs.on_write;
+            if (!on_write_callback) { return $.when(); }
+            return this.dataset.call(on_write_callback, [source_record.get('id')])
+                .pipe(function (ids) {
+                    return $.when.apply(null, _(ids).map(function (id) {
+                        var record = self.records.get(id);
+                        if (!record) {
+                            // insert after the source record
+                            var index = self.records.indexOf(source_record) + 1;
+                            record = new instance.web.list.Record({id: id});
+                            self.records.add(record, {at: index});
+                            self.dataset.ids.splice(index, 0, id);
+                        }
+                        return self.reload_record(record);
+                    }));
+                });
+        },
     });
 
     instance.web.list.Editor = instance.web.Widget.extend({
@@ -457,64 +475,6 @@ openerp.web.list_editable = function (instance) {
         render_row_as_form: function (id) {
             return this.view.startEdition(
                     id ? this.records.get(id) : null);
-        },
-        handle_onwrite: function (source_record_id) {
-            var self = this;
-            var on_write_callback = self.view.fields_view.arch.attrs.on_write;
-            if (!on_write_callback) { return; }
-            this.dataset.call(on_write_callback, [source_record_id], function (ids) {
-                _(ids).each(function (id) {
-                    var record = self.records.get(id);
-                    if (!record) {
-                        // insert after the source record
-                        var index = self.records.indexOf(
-                            self.records.get(source_record_id)) + 1;
-                        record = new instance.web.list.Record({id: id});
-                        self.records.add(record, {at: index});
-                        self.dataset.ids.splice(index, 0, id);
-                    }
-                    self.reload_record(record);
-                });
-            });
-        },
-        /**
-         * Saves the current row, and returns a Deferred resolving to an object
-         * with the following properties:
-         *
-         * ``created``
-         *   Boolean flag indicating whether the record saved was being created
-         *   (``true`` or edited (``false``)
-         * ``edited_record``
-         *   The result of saving the record (either the newly created record,
-         *   or the post-edition record), after insertion in the Collection if
-         *   needs be.
-         *
-         * @returns {$.Deferred<{created: Boolean, edited_record: Record}>}
-         */
-        save_row: function () {
-            //noinspection JSPotentiallyInvalidConstructorUsage
-            var self = this;
-            return this.edition_form
-                .do_save(null, this.options.editable === 'top')
-                .pipe(function (result) {
-                    if (result.created && !self.edition_id) {
-                        self.records.add({id: result.result},
-                            {at: self.options.editable === 'top' ? 0 : null});
-                        self.edition_id = result.result;
-                    }
-                    var edited_record = self.records.get(self.edition_id);
-
-                    return $.when(
-                        self.handle_onwrite(self.edition_id),
-                        self.cancel_pending_edition().then(function () {
-                            $(self).trigger('saved', [self.dataset]);
-                        })).pipe(function () {
-                            return {
-                                created: result.created || false,
-                                edited_record: edited_record
-                            };
-                        });
-                });
         },
         /**
          * If the current list is being edited, ensures it's saved
