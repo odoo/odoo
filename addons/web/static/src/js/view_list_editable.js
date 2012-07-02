@@ -287,6 +287,7 @@ openerp.web.list_editable = function (instance) {
         edit: function (record, configureField) {
             var self = this;
             var form = self.form;
+            record = _.extend({}, record);
             form.on_record_loaded(record).pipe(function () {
                 return form.do_show({reload: false});
             }).then(function () {
