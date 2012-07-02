@@ -21,6 +21,7 @@
 
 import ast
 import base64
+import datetime
 import dateutil.parser
 import email
 import logging
@@ -398,15 +399,22 @@ class mail_message(osv.osv):
             msg['reply'] = decode(msg_txt.get('Reply-To'))
 
         if 'Date' in fields:
-            date_hdr = decode(msg_txt.get('Date'))
-            parsed_date = dateutil.parser.parse(date_hdr)
-            if parsed_date.utcoffset() is None:
-                # naive datetime, so we arbitrarily decide to make it
-                # UTC, there's no better choice. Should not happen,
-                # as RFC2822 requires timezone offset in Date headers.
-                stored_date = parsed_date.replace(tzinfo=pytz.utc)
-            else:
-                stored_date = parsed_date.astimezone(pytz.utc)
+            try:
+                date_hdr = decode(msg_txt.get('Date'))
+                parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
+                if parsed_date.utcoffset() is None:
+                    # naive datetime, so we arbitrarily decide to make it
+                    # UTC, there's no better choice. Should not happen,
+                    # as RFC2822 requires timezone offset in Date headers.
+                    stored_date = parsed_date.replace(tzinfo=pytz.utc)
+                else:
+                    stored_date = parsed_date.astimezone(pytz.utc)
+            except Exception:
+                _logger.warning('Failed to parse Date header %r in incoming mail '
+                                'with message-id %r, assuming current date/time.',
+                                msg_txt.get('Date'), message_id)
+                stored_date = datetime.datetime.now()
+                
             msg['date'] = stored_date.strftime("%Y-%m-%d %H:%M:%S")
 
         if 'Content-Transfer-Encoding' in fields:
