@@ -425,7 +425,7 @@ openerp.web.list_editable = function (instance) {
                 record = new instance.web.list.Record();
                 this.records.add(
                     record, {at: this.options.editable === 'top' ? 0 : null});
-                $row = this.$current.find(':not([data-id])');
+                $row = this.$current.children('tr:not([data-id])');
             } else {
                 record = this.records.get($row.data('id'));
             }
