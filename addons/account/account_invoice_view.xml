@@ -145,7 +145,7 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-               <form string="Draft Invoice" version="7.0">
+                <form version="7.0">
                 <header>
                     <span groups="base.group_user">
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight"/>
@@ -159,11 +159,15 @@
                 <sheet string="Supplier Invoice">
                     <div class="oe_title">
                         <h1>
-                            <field name="number" class="oe_inline"/>
+                            <label string="Draft Invoice" attrs="{'invisible': [('state', '&lt;&gt;', 'draft')]}"/>
+                            <label for="number" class="oe_edit_only"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         </h1>
                         <h2>
-                            <field name="origin" placeholder="PO0025"/>from
-                            <field string="Supplier" name="partner_id"
+                            <label for="origin" string="Concerns" class="oe_inline"/>
+                            <field name="origin" placeholder="PO0025" class="oe_inline"/>
+                            <label string=" from " attrs="{'invisible': [('origin', '=', False)]}" class='oe_inline'/>
+                            <field string="Supplier" name="partner_id" class="oe_inline"
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
@@ -235,7 +239,7 @@
                             <field name="comment"/>
                         </page>
                         <page string="Other Info">
-                            <group col="4">
+                            <group>
                             <group>
                                 <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                 <field name="payment_term" widget="selection"/>
@@ -243,7 +247,7 @@
                             <group>
                                 <field name="user_id"/>
                                 <field name="name" invisible="1"/>
-                                <field name="move_id" groups="account.group_account_user" invisible="1"/>
+                                <field name="move_id" groups="account.group_account_user"/>
                                 <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             </group>
                             </group>
@@ -252,14 +256,14 @@
                             <field name="payment_ids">
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
+                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name"/>
-                                    <field name="amount_currency" string="Amount"/>
+                                    <field name="journal_id"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="amount_currency"/>
                                     <field name="currency_id"/>
-                                    <field name="move_id" invisible="1"/>
-                                    <field name="journal_id" invisible="1"/>
-                                    <field name="debit" invisible="1"/>
-                                    <field name="credit" invisible="1"/>
                                 </tree>
                             </field>
                         </page>

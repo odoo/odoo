@@ -133,7 +133,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="purchase_confirm" states="draft,sent" string="Confirm Order" class="oe_highlight"/>
+                    <button name="purchase_confirm" states="draft,sent" string="Confirm Quotation" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
@@ -150,7 +150,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <label string="Draft Purchase Order " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
                             <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                             <field name="name" class="oe_inline" readonly="1"/>
                         </h1>
@@ -187,15 +187,14 @@
                                     <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline oe_left"/>
                                     <field name="amount_total"/>
                                 </div>
-                            </group>
-                            
+                            </group>                         
                             <div class="oe_clear"/>
                             <label for="notes"/>
                             <field name="notes"/>
                         </page>
                         <page string="Delivery &amp; Invoicing">
                             <group>
-                                <group>
+                                <group string="Delivery">
                                     <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
@@ -357,8 +356,8 @@
                                 <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
                                 <label for="product_qty"/>
                                 <div>
-                                <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
-                                <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
                                 </div>
                                 <field name="price_unit"/>
                                 <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/> 
