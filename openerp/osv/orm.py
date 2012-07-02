@@ -1759,7 +1759,7 @@ class BaseModel(object):
                 attr = node.get(translatable)
                 if attr:
                     translation = self.pool['ir.translation']._get_source(
-                        cr, user, self._name, view, context['lang'], attr)
+                        cr, user, self._name, 'view', context['lang'], attr)
                     if translation:
                         node.set(translatable, attr)
 
