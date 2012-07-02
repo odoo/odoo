@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Choose Fiscal Year " version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="Open" name="remove_entries" type="object"/>
+                        <button string="Open" name="remove_entries" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group>
                         <field name="fyear_id" domain="[('state','=','draft')]"/>
