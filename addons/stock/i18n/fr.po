@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-13 14:28+0000\n"
+"PO-Revision-Date: 2012-06-25 09:28+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-14 04:57+0000\n"
-"X-Generator: Launchpad (build 15405)\n"
+"X-Launchpad-Export-Date: 2012-06-26 05:47+0000\n"
+"X-Generator: Launchpad (build 15482)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -67,7 +67,7 @@ msgstr "Gestion des stocks"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr "Derniers inventaires du produit"
+msgstr "Derniers inventaires des produits"
 
 #. module: stock
 #: view:stock.move:0
@@ -1209,11 +1209,13 @@ msgid ""
 "The uom rounding does not allow you to ship \"%s %s\", only roundings of "
 "\"%s %s\" is accepted by the uom."
 msgstr ""
+"Les règles d'arrondi de l'unité de mesure ne permettent pas d'expédier \"%s "
+"%s\" : seule la valeur arrondie à \"%s %s\" est possible dans cette unité."
 
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "Les mouvements de stock qui sont disponiibles (prêts à traiter)"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1278,7 +1280,7 @@ msgstr "Emplacements partenaire"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Current year"
-msgstr ""
+msgstr "Cette année"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -1336,7 +1338,7 @@ msgstr "Liste de colisage :"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "En attente d'un autre mouvement"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1548,7 +1550,7 @@ msgstr "Vous ne pouvez supprimer que les mouvements en brouillon"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line_split_lines
 msgid "Inventory Split lines"
-msgstr ""
+msgstr "Division de ligne d'inventaire"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
@@ -1565,6 +1567,8 @@ msgstr "Informations générales"
 #: view:report.stock.inventory:0
 msgid "Analysis including future moves (similar to virtual stock)"
 msgstr ""
+"Analyse tenant compte des mouvements de stock à venir (similaire au stock "
+"virtuel)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3 view:stock.tracking:0
@@ -1669,11 +1673,11 @@ msgid ""
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
 "Quand le mouvement de stock est créé, il est dans l'état \"Brouillon\".\n"
-" Après cela, il est mis dans l'état \"Non disponible\" sur l'ordonnanceur "
-"n'a pas trouvé de produits.\n"
+" Après cela, il est mis dans l'état \"Indisponible\" si l'ordonnanceur n'a "
+"pas trouvé de produits.\n"
 " Quand les produits sont réservés, il est mis en \"Disponible\".\n"
 " Quand la préparation est terminée, l'état est \"Terminé\".              \n"
-"L'état est \"En attente\" si le mouvement en attend un autre."
+"L'état est \"En attente\" si ce mouvement en attend un autre."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1829,7 +1833,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Day Planned"
-msgstr ""
+msgstr "Jour planifié"
 
 #. module: stock
 #: view:report.stock.inventory:0 field:report.stock.inventory,date:0
@@ -1968,7 +1972,7 @@ msgstr "Valorisation de l'inventaire"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders planned for today"
-msgstr ""
+msgstr "Ordres prévus aujourd'hui"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -2806,7 +2810,7 @@ msgstr "Rendre disponible"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Contact Address :"
-msgstr "Adresse du contac :"
+msgstr "Adresse du contact :"
 
 #. module: stock
 #: field:stock.move,backorder_id:0
@@ -2958,7 +2962,7 @@ msgstr "À facturer"
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
-msgstr "Date de fin"
+msgstr "Date de réalisation"
 
 #. module: stock
 #: code:addons/stock/stock.py:1083

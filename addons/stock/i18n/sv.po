@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-18 23:34+0000\n"
+"PO-Revision-Date: 2012-06-25 21:56+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-20 05:11+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-06-26 05:47+0000\n"
+"X-Generator: Launchpad (build 15482)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr "Spåra utgående föremål"
+msgstr "Spåra utgående partier"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -35,6 +35,10 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"När du gör i realtidsinventering kommer motpartens journalobjekt för alla "
+"inkommande lagerrörelser bokföras i detta konto, såvida det inte finns ett "
+"särskilt värderingskonto på källans plats. Detta är standardvärdet för alla "
+"produkter i denna kategori. Det kan också direkt ställas in på varje produkt"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -77,7 +81,7 @@ msgstr "Revisionsnummer"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders processed Today or planned for Today"
-msgstr ""
+msgstr "Order bearbetade idag eller planerade för idag"
 
 #. module: stock
 #: view:stock.partial.move.line:0 view:stock.partial.picking:0
@@ -191,7 +195,7 @@ msgstr "Denna månad"
 #: code:addons/stock/wizard/stock_move.py:222
 #, python-format
 msgid "Unable to assign all lots to this move!"
-msgstr ""
+msgstr "Oförmögen att tilldela alla partier till denna lagerrörelse!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2516
@@ -403,7 +407,7 @@ msgstr "Verkligt lagervärde"
 #. module: stock
 #: field:report.stock.move,day_diff2:0
 msgid "Lag (Days)"
-msgstr ""
+msgstr "Eftersläpning (dagar)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
@@ -459,7 +463,7 @@ msgstr "Dela i"
 #. module: stock
 #: view:stock.location:0
 msgid "Internal Locations"
-msgstr ""
+msgstr "Interna lagerställen"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -472,6 +476,8 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"När realtidsinventering aktiveras på en produkt, kommer detta konto att "
+"hålla det aktuella värdet på produkterna."
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0 field:stock.location,usage:0
@@ -496,7 +502,7 @@ msgstr "Förflyttningsstatistik"
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots Filter"
-msgstr ""
+msgstr "Produktpartifyllning"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -510,8 +516,8 @@ msgid ""
 "Current quantity of products with this Production Lot Number available in "
 "company warehouses"
 msgstr ""
-"Aktuell antal av produkter med denna produktions Lot nummer som finns i "
-"företagets lager"
+"Aktuell antal av produkter med denna produktionspartinummer som finns i "
+"bolagets lager"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -608,7 +614,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Production Lot Revisions"
-msgstr "Production Lot Revisions"
+msgstr "Produktionspartirevision"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_journal_form
@@ -802,7 +808,7 @@ msgstr "Process Now"
 #. module: stock
 #: field:stock.location,address_id:0
 msgid "Location Address"
-msgstr "Location Address"
+msgstr "Platsadress"
 
 #. module: stock
 #: help:stock.move,prodlot_id:0
@@ -1196,7 +1202,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move.split:0
 msgid "Lot number"
-msgstr "Parti nummer"
+msgstr "Partinummer"
 
 #. module: stock
 #: field:stock.inventory.line,product_uom:0
@@ -1276,7 +1282,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Expected Stock Variations"
-msgstr ""
+msgstr "Förväntade lagervariationer"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1363,7 +1369,7 @@ msgstr "Fakturakontroll"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Production lot revisions"
-msgstr "Production lot revisions"
+msgstr "Produktionspartirevision"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1554,6 +1560,8 @@ msgid ""
 "Forces to specify a Production Lot for all moves containing this product and "
 "going to a Customer Location"
 msgstr ""
+"Tvingar att ange ett produktionsparti för alla lagerrörelser som innehåller "
+"denna produkt och är på väg till kund"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
@@ -1616,7 +1624,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Spåra tillverkningsparti"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1635,7 +1643,7 @@ msgstr ""
 #: view:stock.move:0 view:stock.picking:0 view:stock.production.lot:0
 #: view:stock.tracking:0
 msgid "Stock Moves"
-msgstr "Lagertransaktioner"
+msgstr "Lagerrörelser"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -1677,7 +1685,7 @@ msgstr ""
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
-msgstr ""
+msgstr "Spårparti"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1704,12 +1712,12 @@ msgstr "Delivered Qty"
 #: model:ir.actions.act_window,name:stock.track_line
 #: view:stock.inventory.line.split:0 view:stock.move.split:0
 msgid "Split in lots"
-msgstr ""
+msgstr "Dela upp i partier"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Numbers"
-msgstr ""
+msgstr "Produktionspartinummer"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -1763,7 +1771,7 @@ msgstr "Code"
 #. module: stock
 #: view:stock.inventory.line.split:0
 msgid "Lots Number"
-msgstr ""
+msgstr "Partinummer"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
@@ -1775,7 +1783,7 @@ msgstr ""
 #: code:addons/stock/stock.py:513
 #, python-format
 msgid "You can not remove a lot line !"
-msgstr "You can not remove a lot line !"
+msgstr "Du kan inte ta bort en partirad !"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_scrap view:stock.move:0
@@ -1804,7 +1812,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
 msgid "Split in production lots"
-msgstr "Split in production lots"
+msgstr "Dela upp i produktionspartier"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -1965,7 +1973,7 @@ msgstr "Namn"
 #. module: stock
 #: view:product.product:0
 msgid "Stocks"
-msgstr "Stocks"
+msgstr "Lager"
 
 #. module: stock
 #: help:stock.partial.move,hide_tracking:0
@@ -2134,6 +2142,8 @@ msgid ""
 "Forces to specify a Production Lot for all moves containing this product and "
 "generated by a Manufacturing Order"
 msgstr ""
+"Tvingar att ange ett produktionsparti för alla lagerrörelser med denna "
+"produkt och anskaffad via tillverkningsorder"
 
 #. module: stock
 #: view:product.product:0
@@ -2176,7 +2186,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr "Spåra inkommande platser"
+msgstr "Spåra inkommande partier"
 
 #. module: stock
 #: view:board.board:0
@@ -2341,6 +2351,15 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
+"Definiera dina lagerställen att spegla ditt lagers struktur och "
+"organisation. OpenERP kan hantera fysiska platser (lager, hyllor, lådor "
+"etc.), företagsplatser (kunder, leverantörer) och virtuella lagerställen som "
+"är motsvarigheten till de lagerverksamheten t ex tillverknings, förbrukning, "
+"varulager, etc. Varje lageråtgärd i OpenERP flyttar produkterna från en "
+"ställe till ett annat. Till exempel, om du får produkter från en leverantör, "
+"kommer OpenERP att flytta produkter från leverantören plats till "
+"lagerstället. Varje rapport kan utföras på fysiska, företags eller virtuella "
+"platser."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2448,7 +2467,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr ""
+msgstr "Lagersaldoprognos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_journal
@@ -2604,12 +2623,12 @@ msgstr ""
 #: view:report.stock.inventory:0 field:report.stock.inventory,prodlot_id:0
 #: view:stock.move:0 report:stock.picking.list:0
 msgid "Lot"
-msgstr "Lot"
+msgstr "Parti"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Number"
-msgstr ""
+msgstr "Produktionspartinummer"
 
 #. module: stock
 #: code:addons/stock/stock.py:2697
@@ -2773,7 +2792,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
 msgid "Virtual Locations"
-msgstr "Virtual Locations"
+msgstr "Virtuellt lagerställe"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -3041,7 +3060,7 @@ msgstr "Virtual Stock Value"
 #: view:product.product:0 view:stock.inventory.line.split:0
 #: view:stock.move.split:0
 msgid "Lots"
-msgstr "Lots"
+msgstr "Partier"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -3101,7 +3120,7 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this production lot"
-msgstr ""
+msgstr "Lagerrörelser för detta produktionsparti"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -3111,7 +3130,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
-msgstr "Lot Inventory"
+msgstr "Partiinventering"
 
 #. module: stock
 #: view:stock.move:0
@@ -3405,7 +3424,7 @@ msgstr "Konfiguration"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
-msgstr ""
+msgstr "Befintliga partier"
 
 #. module: stock
 #: view:stock.location:0
@@ -3508,7 +3527,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Available Product Lots"
-msgstr ""
+msgstr "Tillgängliga produktionspartier"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -3685,11 +3704,13 @@ msgid ""
 "Forces to specify a Production Lot for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
+"Tvingar att ange ett produktionsparti för alla rörelser med denna produkt "
+"dom kommer från leverantör"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr "Future Stock Moves"
+msgstr "Framtida lagerrörelser"
 
 #. module: stock
 #: field:stock.move,move_history_ids2:0
@@ -3736,7 +3757,7 @@ msgstr ""
 #: field:stock.partial.picking.line,prodlot_id:0 view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 msgid "Production Lot"
-msgstr "Production Lot"
+msgstr "Produktionsparti"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_traceability view:stock.move:0
@@ -3805,7 +3826,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Du måste tilldela ett produktionsparti för denna produkt"
 
 #. module: stock
 #: view:stock.move:0
@@ -3845,7 +3866,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
 msgid "Split in Production lots"
-msgstr ""
+msgstr "Dela upp i produktionspartier"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:213
@@ -3902,7 +3923,7 @@ msgstr "Chained Location Type"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by production lots"
-msgstr "Stock report by production lots"
+msgstr "Lagerrapporter per produktionsparti"
 
 #. module: stock
 #: view:stock.location:0 selection:stock.location,chained_location_type:0
@@ -3919,7 +3940,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Production Lot Identification"
-msgstr ""
+msgstr "Produktionspartiidentifikation"
 
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator_small

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-06-21 15:28+0000\n"
+"PO-Revision-Date: 2012-06-23 11:20+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-22 05:13+0000\n"
+"X-Launchpad-Export-Date: 2012-06-24 05:54+0000\n"
 "X-Generator: Launchpad (build 15461)\n"
 
 #. module: project_planning
@@ -24,6 +24,8 @@ msgid ""
 "This value is given by the sum of work remaining to do on the task for this "
 "planning, expressed in days."
 msgstr ""
+"Detta värde ges av summan av arbetet återstår att göra på aktivietten för "
+"denna planering, uttryckt i dagar."
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
@@ -73,6 +75,9 @@ msgid ""
 "material), OpenERP allows you to encode and then automatically compute tasks "
 "and phases scheduling, track resource allocation and availability."
 msgstr ""
+"Med sitt globala systemet för företagets resursschemaläggning (personer och "
+"material), tillåter OpenERP att du kodar för att sedan automatiskt beräkna "
+"aktiviteter och schemalägga faser, spåra resursfördelning och tillgänglighet."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -130,6 +135,7 @@ msgstr "Totalt plannerat (i dagar)"
 msgid ""
 "Invalid planning ! Planning dates can't overlap for the same responsible. "
 msgstr ""
+"Felaktiv planering ! Planerade datum kan inte överlappa för samma ansvariga. "
 
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_account:0
@@ -168,6 +174,8 @@ msgid ""
 "This value is given by the sum of all work encoded in the timesheet(s) "
 "between the 'Date From' and 'Date To' of the planning."
 msgstr ""
+"Detta värde är summan av allt arbete angivit i tidrapporter mellan "
+"'Fråndatum' och 'tilldatum' i planeringen."
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -203,6 +211,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to FALSE, expressed in days."
 msgstr ""
+"Värdet är summan av allokerad tid med kryssrutan 'Tilldelad i aktivitet' "
+"satt till falskt, uttryckt i dagar."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -212,7 +222,7 @@ msgstr "Övrigt"
 #. module: project_planning
 #: help:res.company,planning_time_mode_id:0
 msgid "This will set the unit of measure used in plannings."
-msgstr ""
+msgstr "Detta sätter enheten som används vid planering."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -247,7 +257,7 @@ msgstr "Till:"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
-msgstr ""
+msgstr "Tidkodning"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,free:0
@@ -260,6 +270,8 @@ msgid ""
 "This value is given by the sum of time allocation without task(s) linked, "
 "expressed in days."
 msgstr ""
+"Detta värde ges av summan av tid utan någon relation till aktiviteter, "
+"uttryckt i dagar."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -328,6 +340,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to TRUE expressed in days."
 msgstr ""
+"Värdet är summan allokerad tid med kryssrutan 'Tilldelad i aktivitet' satt "
+"till sann i dagar."
 
 #. module: project_planning
 #: help:report_account_analytic.planning.user,free:0
@@ -335,11 +349,13 @@ msgid ""
 "Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
 "without Tasks + Holiday Leaves)"
 msgstr ""
+"Beräknas som Arbetsdagar - (Aktivitetstid + Tid ej allokerad i aktivitet + "
+"Ledighet)"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
 msgid "Qty UoM"
-msgstr ""
+msgstr "Antal enhet"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,note:0
@@ -379,6 +395,8 @@ msgid ""
 "This value is given by the total of validated leaves into the 'Date From' "
 "and 'Date To' of the planning."
 msgstr ""
+"Värdet är givet av godkänd ledighet i planeringsintervallet till och "
+"fråndatum"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,user_id:0
@@ -401,7 +419,7 @@ msgstr "Bolag"
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_in_base_uom:0
 msgid "Quantity in base uom"
-msgstr ""
+msgstr "Kvantiteten i enhet"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,plan_tasks:0
@@ -490,7 +508,7 @@ msgstr "Planeringsstatistik"
 #. module: project_planning
 #: field:report_account_analytic.planning.account,plan_tasks:0
 msgid "Time Allocation of Tasks"
-msgstr ""
+msgstr "Tidsallokering av aktiviteterna"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -500,7 +518,7 @@ msgstr "Summering per användare"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation without Tasks"
-msgstr ""
+msgstr "Total tid ej allokerad i någon aktivitet"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,holiday:0
@@ -510,7 +528,7 @@ msgstr "Frånvaro"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation of Tasks"
-msgstr ""
+msgstr "Aktiviteternas tidsallokering"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,date_to:0
@@ -562,4 +580,4 @@ msgstr "Chef"
 msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
-msgstr ""
+msgstr "Värdet i dagar givet av allokerad tid länkad till aktiviteter"
