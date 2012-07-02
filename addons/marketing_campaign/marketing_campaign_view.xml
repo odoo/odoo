@@ -17,8 +17,8 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="state_running_set" string="Run" states="draft"/>
-                <button name="state_done_set" string="Done" states="running"/>
+                <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
+                <button name="state_done_set" string="Done" states="running" class="oe_highlight"/>
                 <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
@@ -135,13 +135,13 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="state_running_set" string="Run" states="draft"/>
-                <button name="state_done_set" string="Close" states="running"/>
+                <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
+                <button name="state_done_set" string="Close" states="running" class="oe_highlight"/>
                 <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
-            <sheet string="Segments" layout="auto">
+            <sheet string="Segments" >
                 <group>
                     <group string="Segment">
                         <field name="name"/>
