@@ -20,29 +20,33 @@
 ##############################################################################
 
 {
-    'name': 'Social Network',
+    'name': 'Social Networking',
     'version': '1.0',
-    'category': 'Social Neworking',
+    'category':'Social Network',
     "sequence": 2,
     'description': """
-A generic email subsystem with message storage and queuing
-==========================================================
+A bussiness oriented Social Networking stands with message storage,
+queuing and  feeds.     
+===================================================================
 
-This email subsystem is not intended to be used as as standalone
-application, but to provide a unified email abstraction that all
-other applications can use.
+This Social Networking service that enables its users to send and read 
+text-based posts via feeds,and its provide a unified social network 
+abstraction that all other applications can use,also it used as a email
+subsystem.
 
 The main features are:
-
-    * Relies on the global Outgoing Mail Servers configured in the 
-      Administration menu for delivering outgoing mail
+    
+    * Trouble free application.
+    * Hassle free user communication via feeds menu.
+    * And also it relies on the global Outgoing Mail Servers configured
+      in the , Administration menu for delivering outgoing mail.
+    * Includes queuing mechanism with automated configurable
+      scheduler-based processing
     * Provides an API for sending messages and archiving them,
-      grouped by conversation
+      grouped by conversation,
     * Any OpenERP document can act as a conversation topic, provided
       it includes the necessary support for handling incoming emails
       (see the ``mail.thread`` class for more details). 
-    * Includes queuing mechanism with automated configurable
-      scheduler-based processing
     * Includes a generic email composition assistant, that can turn
       into a mass-mailing assistant, and is capable of interpreting
       simple *placeholder expressions* that will be replaced with
@@ -70,7 +74,7 @@ The main features are:
     ],
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application':True,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
@@ -95,6 +99,6 @@ The main features are:
     ],
     'demo': [
         'mail_demo.xml',
-    ],
+    ],   
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
