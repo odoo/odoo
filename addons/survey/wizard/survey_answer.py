@@ -147,8 +147,8 @@ class survey_question_wiz(osv.osv_memory):
                 if flag:
                     pag_rec = page_obj.browse(cr, uid, p_id, context=context)
                     xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title)})
-                    xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4'})
-                    xml_header_group = etree.SubElement(xml_header, 'group', {'col': '6', 'colspan': '4'})
+                    xml_header = etree.SubElement(xml_form, 'header', {'col': '5', 'colspan': '4'})
+                    xml_header_group = etree.SubElement(xml_header, 'group', {'col': '6', 'colspan': '6'})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '8', 'colspan': '4'})
 
                     #############  PAGE HEADER : START ###################
@@ -158,23 +158,23 @@ class survey_question_wiz(osv.osv_memory):
                   #  etree.SubElement(xml_group, 'label', {'string': tools.ustr(tools.ustr(pag_rec.note)), 'align':"0.0"})
                     
                     etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' })
-                    etree.SubElement(xml_header_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel"})
+                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right"})
+                    etree.SubElement(xml_header_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel", 'class':"oe_right"})
                     if pre_button:
-                        etree.SubElement(xml_header_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object"})
+                        etree.SubElement(xml_header_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object", 'class':"oe_right"})
                     but_string = "Next"
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
 
                     if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
-                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context)})
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_right"})
                     elif context.has_key('active') and context.get('active', False) and int(page_number) + 1 == total_pages and context.has_key('response_id'):
-                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context)})
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
                     elif context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages:
-                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right"})
                     else:
-                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context)})
-                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right"})
-
+                        etree.SubElement(xml_header_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
+                    
                     #############  PAGE HEADER : END ###################
 
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
@@ -445,7 +445,7 @@ class survey_question_wiz(osv.osv_memory):
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
         """
-        If any user give answer of survey then last create report of this answer and if 'Email Notification on Answer' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
+        If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Answer' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
         """
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
