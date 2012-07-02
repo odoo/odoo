@@ -619,7 +619,9 @@
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        <t t-if="widget.options.import_enabled">
+            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </t>
     </t>
 </div>
 <t t-name="ListView.pager">

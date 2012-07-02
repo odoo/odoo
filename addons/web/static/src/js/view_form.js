@@ -2891,25 +2891,36 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 view.embedded_view = self.field.views[mode];
             }
             if(view.view_type === "list") {
-                view.options.selectable = self.multi_selection;
-                view.options.sortable = false;
+                _.extend(view.options, {
+                    selectable: self.multi_selection,
+                    sortable: false,
+                    import_enabled: false,
+                });
                 if (self.get("effective_readonly")) {
-                    view.options.addable = null;
-                    view.options.deletable = null;
-                    view.options.reorderable = false;
+                    _.extend(view.options, {
+                        addable: null,
+                        deletable: null,
+                        reorderable: false,
+                    });
                 }
             } else if (view.view_type === "form") {
                 if (self.get("effective_readonly")) {
                     view.view_type = 'form';
                 }
-                view.options.not_interactible_on_create = true;
+                _.extend(view.options, {
+                    not_interactible_on_create: true,
+                });
             } else if (view.view_type === "kanban") {
-                view.options.confirm_on_delete = false;
+                _.extend(view.options, {
+                    confirm_on_delete: false,
+                });
                 if (self.get("effective_readonly")) {
-                    view.options.action_buttons = false;
-                    view.options.quick_creatable = false;
-                    view.options.creatable = false;
-                    view.options.read_only_mode = true;
+                    _.extend(view.options, {
+                        action_buttons: false,
+                        quick_creatable: false,
+                        creatable: false,
+                        read_only_mode: true,
+                    });
                 }
             }
             views.push(view);
@@ -3519,6 +3530,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'selectable': self.multi_selection,
                     'sortable': false,
                     'reorderable': false,
+                    'import_enabled': false,
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
@@ -3999,6 +4011,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     _.extend({'deletable': false,
                         'selectable': !self.options.disable_multiple_selection,
                         'read_only': true,
+                        'import_enabled': false,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($(".oe_popup_list", self.$element)).pipe(function() {
