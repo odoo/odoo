@@ -27,7 +27,7 @@ class res_users(osv.osv):
     _inherit = 'res.users'
     _columns = {
         'partner_id': fields.many2one('res.partner',
-            string='Related Partner'),
+            string='Related Partner', ondelete='restrict'),
     }
 
 res_users()
