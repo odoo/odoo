@@ -579,6 +579,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
+        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         return this.do_reload();
     },
     do_reload: function() {
@@ -591,7 +592,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.limit_entries();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
-        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
