@@ -3,7 +3,7 @@
     <data>
 
         <!-- Supplier write check view -->
-        
+
         <record model="ir.ui.view" id="view_vendor_payment_check_form">
             <field name="name">account.voucher.payment.check.form</field>
             <field name="model">account.voucher</field>
@@ -12,7 +12,7 @@
             	<form version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
-                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}"/>
+                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
