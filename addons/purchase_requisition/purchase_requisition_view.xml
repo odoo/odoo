@@ -33,9 +33,9 @@
         <field name="arch" type="xml">
             <form string="Purchase Requisition" version="7.0">
             <header>
-                <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" />
+                <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" class="oe_highlight"/>
                 <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
-                <button name="tender_done" states="in_progress" string=" Purchase Done" type="object" />
+                <button name="tender_done" states="in_progress" string="Purchase Done" type="object" class="oe_highlight"/>
                 <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" />
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
@@ -45,7 +45,7 @@
                     <label for="origin" class="oe_inline"/>
                 </div>
                 <h1>
-                    <field name="name" class="oe_inline"/>, 
+                    <field name="name" class="oe_inline"/>,
                     <field name="origin" class="oe_inline"/>
                 </h1>
                 <group>
@@ -93,7 +93,7 @@
                                 <field name="minimum_planned_date"/>
                                 <field name="origin"/>
                                 <field name="state"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>                                
+                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
                                 <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
                             </tree>

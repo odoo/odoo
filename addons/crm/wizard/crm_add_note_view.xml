@@ -11,11 +11,14 @@
             <field name="arch" type="xml">
                 <form string="Add Note" version="7.0">
                     <header>
-                        <button name="action_add" type="object" string="_Add" icon="gtk-ok" />
-                        <button string="_Cancel" icon="gtk-close" special="cancel" />
+                        <button name="action_add" type="object" string="_Add" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <separator string="Add Note"/>
-                    <field name="body"/>
+                    <group>
+                        <separator string="Add Note"/>
+                        <field name="body"/>
+                    </group>
                 </form>
             </field>
         </record>

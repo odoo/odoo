@@ -768,7 +768,7 @@ class task(base_stage, osv.osv):
 
     _order = "priority, sequence, date_start, name, id"
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set task priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -1050,12 +1050,15 @@ class task(base_stage, osv.osv):
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+        return False
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+        return False
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+        return False
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):

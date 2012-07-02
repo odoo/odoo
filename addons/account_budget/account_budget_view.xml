@@ -109,10 +109,10 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" />
-                    <button string="Approve" name="validate" states="confirm" type="workflow"/>
-                    <button string="Done" name="done" states="validate" type="workflow"   />
-                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow"/>
+                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
+                    <button string="Done" name="done" states="validate" type="workflow" class="oe_highlight"/>
+                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow" />
                     <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>

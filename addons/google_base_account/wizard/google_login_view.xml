@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Google login"  version="7.0">
                     <header>
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                        <button name="login" string="_Login" type="object" icon="terp-check"/>
+                        <button name="login" string="_Login" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
                         <field name="user" placeholder="user@gmail.com"/>
