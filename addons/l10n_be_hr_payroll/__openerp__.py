@@ -32,7 +32,7 @@ Belgian Payroll Rules
     * Employee Contracts
     * Passport based Contract
     * Allowances / Deductions
-    * Allow to configure Basic / Grows / Net Salary
+    * Allow to configure Basic / Gross / Net Salary
     * Employee Payslip
     * Monthly Payroll Register
     * Integrated with Holiday Management
