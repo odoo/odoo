@@ -78,7 +78,7 @@ class ir_needaction_users_rel(osv.Model):
         return True
 
 
-class ir_needaction_mixin(osv.AbstractModel):
+class ir_needaction_mixin(osv.Model):
     '''Mixin class for objects using the need action feature.
     
     Need action feature can be used by objects having to be able to 
@@ -118,7 +118,7 @@ class ir_needaction_mixin(osv.AbstractModel):
     on the record. '''
     
     _name = 'ir.needaction_mixin'
-    _description = '"Need action" mixin'
+    _description = 'Need action mixin'
     
     def get_needaction_pending(self, cr, uid, ids, name, arg, context=None):
         res = {}
