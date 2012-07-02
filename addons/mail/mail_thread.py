@@ -584,7 +584,7 @@ class mail_thread(osv.Model):
                         # referenced thread was not found, we'll have to create a new one
                         res_id = False
         if not res_id:
-            res_id = int(create_record(msg))
+            res_id = create_record(msg)
         # To forward the email to other followers
         self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
         return res_id

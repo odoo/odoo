@@ -227,7 +227,7 @@
         <field name="stage_id" ref="project.project_tt_specification"/>
     </record>
 
-    <!--        Call Function to set the leads as Unread -->
+    <!--        Call Function to set some issues as Unread -->
     <function model="project.issue" name="message_mark_as_unread"
         eval="[ ref('crm_case_improvereportsinhrms0'), ref('crm_case_createnewobject0')], {}"
     />

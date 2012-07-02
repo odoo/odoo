@@ -1138,7 +1138,9 @@ class task(base_stage, osv.osv):
         return 'Task'
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        """ Returns the user_ids that have to perform an action
+        """ Returns the user_ids that have to perform an action.
+            Add to the previous results given by super the document responsible
+            when in draft mode.
             :return: dict { record_id: [user_ids], }
         """
         result = super(task, self).get_needaction_user_ids(cr, uid, ids, context=context)
