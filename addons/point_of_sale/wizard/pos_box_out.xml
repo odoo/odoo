@@ -10,8 +10,9 @@
             <field name="arch" type="xml">
                 <form string="Output Operation" version="7.0">
                     <header>
-                        <button name="get_out" string="Take Money" type="object" icon="gtk-apply" />
-                        <button icon="gtk-stop" special="cancel" string="Cancel" />
+                        <button name="get_out" string="Take Money" type="object" class="oe_highlight"   />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4" string="Describe why you take money from the cash register:">
                         <field name="name"/>

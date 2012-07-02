@@ -39,7 +39,7 @@
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -84,13 +84,13 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="action_validate" string="Approve" states="draft" type="object" />
+                    <button name="action_validate" string="Approve" states="draft" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
-                <sheet string="Stock and Sales Forecast" layout="auto">
+                <sheet string="Stock and Sales Forecast">
                     <group colspan = "4" col = "4" class="oe_header">
                         <group colspan = "2" col="2" >
-                            <field name="company_id" select="1"
+                            <field name="company_id"
                                         groups="base.group_multi_company"
                                         widget="selection"
                                         on_change="onchange_company(company_id)"/>
@@ -246,7 +246,7 @@
                     <group colspan="4" col="7">
                         <group colspan ="3" col="2">
                             <separator colspan ="2" string = "General Info"/>
-                            <field name="company_id" select = "1" widget= "selection"
+                            <field name="company_id" widget="selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />

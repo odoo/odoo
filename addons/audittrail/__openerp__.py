@@ -39,7 +39,6 @@ delete on objects and can check logs.
         'wizard/audittrail_view_log_view.xml',
         'audittrail_view.xml',
         'security/ir.model.access.csv',
-        'security/audittrail_security.xml'
     ],
     'demo_xml': ['audittrail_demo.xml'],
     'installable': True,
