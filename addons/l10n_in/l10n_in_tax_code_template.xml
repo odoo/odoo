@@ -12,13 +12,13 @@
             <field name="parent_id" ref="vat_code_tax"/>
         </record>
 
-        <record model="account.tax.code.template" id="vat_code_due_tva">
-            <field name="name">Tax Due (Tax to pay)</field>
+        <record model="account.tax.code.template" id="vat_code_tax_rec">
+            <field name="name">Tax Received</field>
             <field name="parent_id" ref="vat_code_balance_net"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_payable">
-            <field name="name">Tax Payable</field>
+            <field name="name">Tax Paid</field>
             <field name="parent_id" ref="vat_code_balance_net"/>
         </record>
 
@@ -28,12 +28,12 @@
         </record>
 
 
-        <record model="account.tax.code.template" id="vat_code_base_due">
+        <record model="account.tax.code.template" id="vat_code_base_tax_sale">
             <field name="name">Base of Taxed Sales</field>
             <field name="parent_id" ref="vat_code_base_net"/>
         </record>
 
-        <record model="account.tax.code.template" id="vat_code_receivable_net">
+        <record model="account.tax.code.template" id="vat_code_base_tax_purchase">
             <field name="name">Base of Taxed Purchases</field>
             <field name="parent_id" ref="vat_code_base_net"/>
         </record>
