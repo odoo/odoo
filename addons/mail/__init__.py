@@ -23,6 +23,7 @@ import mail_message
 import mail_thread
 import mail_group
 import mail_subscription
+import ir_needaction
 import res_users
 import res_partner
 import report
