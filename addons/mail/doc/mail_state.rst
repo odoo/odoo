@@ -24,5 +24,5 @@ mechanism [REF].
     result = super(ir_needaction_mixin, self).get_needaction_user_ids(cr, uid, ids, context=context)
     for obj in self.browse(cr, uid, ids, context=context):
       if obj.message_state == False and obj.user_id:
-        result[obj.id].add(obj.user_id.id)
+        result[obj.id].append(obj.user_id.id)
     return result
