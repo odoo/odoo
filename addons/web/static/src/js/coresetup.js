@@ -608,15 +608,31 @@ instance.web.qweb.preprocess_node = function() {
 };
 
 /** Setup jQuery timeago */
-var timeago_setup = function () {
-    var s = $.timeago.settings.strings;
-    _.each(s, function(v,k) {
-        if(_.isString(v)) {
-            s[k] = instance.web._t(v);
-        }
-    });
+var _t = instance.web._t;
+/*
+ * Strings in timeago are "composed" with prefixes, words and suffixes. This
+ * makes their detection by our translating system impossible. Use all literal
+ * strings we're using with a translation mark here so the extractor can do its
+ * job.
+ */
+{
+    _t('less than a minute ago');
+    _t('about a minute ago');
+    _t('%d minutes ago');
+    _t('about an hour ago');
+    _t('%d hours ago');
+    _t('a day ago');
+    _t('%d days ago');
+    _t('about a month ago');
+    _t('%d months ago');
+    _t('about a year ago');
+    _t('%d years ago');
 }
-instance.connection.on('module_loaded', this, timeago_setup);
+
+instance.connection.on('module_loaded', this, function () {
+    // provide timeago.js with our own translator method
+    $.timeago.settings.translator = instance.web._t;
+});
 
 /**
  * Registry for all the client actions key: tag value: widget
