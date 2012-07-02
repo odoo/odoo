@@ -1761,7 +1761,7 @@ class BaseModel(object):
                     translation = self.pool['ir.translation']._get_source(
                         cr, user, self._name, 'view', context['lang'], attr)
                     if translation:
-                        node.set(translatable, attr)
+                        node.set(translatable, translation)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
