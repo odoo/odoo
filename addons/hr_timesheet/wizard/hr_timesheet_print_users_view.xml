@@ -10,8 +10,8 @@
             <field name="arch" type="xml">
 				<form string="Monthly Employees Timesheet" version="7.0">
                     <header>
-                    	<button icon="gtk-print" string="Print" name="print_report" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button string="Print" name="print_report" type="object" class="oe_highlight"/> or
+                        <button string="Cancel" class="oe_link" special="cancel" />
 	                </header>
                     <sheet>
                         <group><label for="month" string="Period" />
