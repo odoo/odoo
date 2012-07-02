@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <form string="General Settings" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight_on_dirty"/>
-                        <button string="Cancel" type="object" name="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <sheet>
                         <group string="Company Settings">
@@ -55,15 +56,18 @@
             <field name="arch" type="xml">
                 <form string="Configure Sales" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight_on_dirty"/>
-                        <button string="Cancel" type="object" name="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <sheet>
                         <field name="module_crm" invisible="1"/>
                         <group name="config_sale"/>
-                        <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
-                            <field name="module_plugin_thunderbird"/>
-                            <field name="module_plugin_outlook"/>
+                        <group name="config_fetchmail_main">
+                            <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
+                                <field name="module_plugin_thunderbird"/>
+                                <field name="module_plugin_outlook"/>
+                            </group>
                         </group>
                         <group name="config_crm"/>
                     </sheet>
