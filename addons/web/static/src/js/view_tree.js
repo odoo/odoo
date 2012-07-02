@@ -112,7 +112,12 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 $select.change();
             }
         });
-
+        this.$element.find("#tree_view_expand").click(function(){
+                self.expand_all();
+        });
+        this.$element.find("#tree_view_collapse").click(function(){
+            self.collpase_all();
+        });
         // TODO store open nodes in url ?...
         this.do_push_state({});
 
@@ -127,6 +132,17 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                     expr = pair[1];
                 return [color, py.parse(py.tokenize(expr)), expr];
             }).value();
+    },
+    expand_all: function(){
+    },
+    collpase_all: function(){
+        var self = this;
+        var root_tr = this.$element.find(".oe-treeview-table tbody tr[data-level='"+1+"']");
+        _.each(root_tr,function(rec){
+            if($(rec).hasClass('oe_open')){
+                self.showcontent($(rec).attr('data-id'),false);
+            }
+        });
     },
     /**
      * Returns the color for the provided record in the current view (from the
@@ -259,13 +275,5 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }, this);
     },
 
-    do_show: function () {
-        this.$element.show();
-    },
-
-    do_hide: function () {
-        this.$element.hide();
-        this.hidden = true;
-    }
 });
 };
