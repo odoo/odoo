@@ -36,7 +36,7 @@ This module allows you
 
 Note that:
     - You can define new types of events in
-        Association / Configuration / Types of Events
+        Events / Configuration / Types of Events
 """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'board', 'email_template', 'google_map'],

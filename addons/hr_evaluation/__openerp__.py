@@ -36,7 +36,7 @@ juniors as well as his manager.The evaluation is done under a plan
 in which various surveys can be created and it can be defined which
 level of employee hierarchy fills what and final review and evaluation
 is done by the manager.Every evaluation filled by the employees can be viewed
-in the form of pdf file. Implements a dashboard for My Current Evaluations
+in the form of pdf file.
          """,
     "demo": ["hr_evaluation_demo.xml"],
     "data": [

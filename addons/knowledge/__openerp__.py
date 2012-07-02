@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Document Management System",
+    "name" : "Knowledge Management System",
     "version" : "1.0",
     "depends" : ["base","base_setup"],
     "author" : "OpenERP SA",

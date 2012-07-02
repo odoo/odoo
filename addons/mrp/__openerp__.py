@@ -58,12 +58,12 @@ Reports provided by this module:
     * Load forecast on Work Centers
     * Print a production order
     * Stock forecasts
+    * Cost Structure
 
 Dashboard provided by this module:
 ----------------------------------
-    * List of next production orders
     * List of procurements in exception
-    * Graph of work center load
+    * List of next production orders
     * Graph of stock value variation
     """,
     'init_xml': [],

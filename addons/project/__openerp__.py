@@ -38,8 +38,6 @@ It is able to render planning, order tasks, eso.
 Dashboard for project members that includes:
 --------------------------------------------
     * List of my open tasks
-    * List of my delegated tasks
-    * Graph of My Projects: Planned vs Total Hours
     * Graph of My Remaining Hours by Project
     """,
     "init_xml": [],
