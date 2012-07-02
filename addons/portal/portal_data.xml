@@ -2,11 +2,30 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="company_news_feed" model="mail.group">
+            <field name="name">Company's news feed</field>
+        </record>
+
+        <record id="action_news" model="ir.actions.act_window">
+            <field name="name">News</field>
+            <field name="res_model">mail.group</field>
+            <field name="res_id" ref="company_news_feed"/>
+            <field name="view_mode">form</field>
+        </record>
+
+        <!-- default portal menu structure -->
+        <menuitem name="Our company" id="portal_company" parent="mail.mail_feeds_main" sequence="20"/>
+            <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
+
+        <menuitem name="Orders" id="portal_orders" parent="mail.mail_feeds_main" sequence="30"/>
+        <menuitem name="Invoices and Payments" id="portal_invoices_payements" parent="mail.mail_feeds_main" sequence="40"/>
+        <menuitem name="Projects" id="portal_projects" parent="mail.mail_feeds_main" sequence="50"/>
+        <menuitem name="After Sale Services" id="portal_after_sales" parent="mail.mail_feeds_main" sequence="60"/>
+
         <record id="portal" model="res.portal">
             <field name="name">Portal</field>
             <field name="group_id" ref="group_portal_member"/>
-            <field name="override_menu" eval="True"/>
-            <field name="parent_menu_id" ref="portal_members_root_menu"/>
+            <field name="override_menu" eval="False"/>
         </record>
 
     </data>
