@@ -187,7 +187,7 @@ class mail_thread(osv.Model):
         msg_id = message_obj.create(cr, uid, vals, context=context)
         
         # Set as unread if writer is not the document responsible
-        self.message_create_and_set_unread(cr, uid, [thread_id], context=context)
+        self.message_create_set_unread(cr, uid, [thread_id], context=context)
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
@@ -881,25 +881,32 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    def message_create_and_set_unread(self, cr, uid, ids, context=None):
+    def message_create_set_unread(self, cr, uid, ids, context=None):
+        """ When creating a new message, set as unread if uid is not the
+            object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id != uid):
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_check_and_set_unread(self, cr, uid, ids, context=None):
+        """ Set unread if uid is the object responsible or if the object has
+            no responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id == uid):
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
+        """ Set as unread. """
         return self.write(cr, uid, ids, {'message_state': False}, context=context)
 
     def message_check_and_set_read(self, cr, uid, ids, context=None):
+        """ Set read if uid is the object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
             if not obj.message_state and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.id == uid:
                 self.message_mark_as_read(cr, uid, [obj.id], context=context)
     
     def message_mark_as_read(self, cr, uid, ids, context=None):
+        """ Set as read. """
         return self.write(cr, uid, ids, {'message_state': True}, context=context)
 
 
