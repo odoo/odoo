@@ -450,20 +450,6 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
         
-        /**
-         * @param {String} string to truncate
-         * @param {Number} max number of chars to display 
-         * @returns {String} truncated string
-         */
-        do_truncate_string: function(string, max_length) {
-            // multiply by 1.2: prevent truncating an just too little long string
-            if (string.length <= (max_length * 1.2)) {
-                return [string, ""];
-            } else {
-                return [string.slice(0, max_length), string.slice(max_length)];
-            }
-        },
-        
         /** Removes html tags, except b, em, br */
         do_clean_text: function (string) {
             var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /)\\s*&gt;', 'gi'), '<$1$2>');
