@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
 
     <!-- Confirm selected statement lines -->
 
@@ -11,8 +11,9 @@
       <field name="arch" type="xml">
         <form string="Confirm selected statement lines" version="7.0">
             <header>
-                <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                <button icon="gtk-execute" string="Confirm Lines" name="confirm_lines" type="object"/>
+                <button string="Confirm Lines" name="confirm_lines" type="object" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel"/>
             </header>
             <label string="Are you sure you want to confirm the selected Bank Statement lines ?"/>
             <label string="Confirmed lines cannot be changed anymore."/>

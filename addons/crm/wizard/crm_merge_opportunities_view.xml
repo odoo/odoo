@@ -11,8 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Merge Opportunities" version="7.0">
                     <header>
-                        <button name="action_merge" type="object" string="_Merge" icon="gtk-ok" />
-                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
+                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <separator string="Select Opportunities"/>
                     <field name="opportunity_ids">

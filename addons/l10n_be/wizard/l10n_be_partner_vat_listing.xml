@@ -6,17 +6,19 @@
       <field name="model">partner.vat</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Partner VAT Listing">
-          <label string="This wizard will create an XML file for VAT details and total invoiced amounts per partner." colspan="4"/>
+        <form string="Partner VAT Listing" version="7.0">
+          <header>
+            <button name="get_partner" string="View Customers" type="object"  class="oe_highlight"  />
+            or 
+            <button string="Cancel" class="oe_link" special="cancel" />
+          </header>
+          <group>
+            <label string="This wizard will create an XML file for VAT details and total invoiced amounts per partner." colspan="4"/>
+          </group>
           <newline/>
           <field name="year"/>
           <newline/>
           <field name="limit_amount"/>
-          <separator colspan="4"/>
-          <group colspan="4">
-            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            <button colspan="1" name="get_partner" string="View Customers" type="object" icon="terp-partner"/>
-          </group>
         </form>
       </field>
     </record>
@@ -64,16 +66,16 @@
       <field name="type">form</field>
       <field name="priority" eval="1"/>
       <field name="arch" type="xml">
-        <form string="XML File has been Created.">
+        <form string="XML File has been Created." version="7.0">
+            <header>
+                <button name="print_vatlist" string="Print" type="object" class="oe_highlight"  />
+                or 
+                <button string="Cancel" class="oe_link" special="cancel" />
+            </header>
             <separator string="XML File has been Created." colspan="4"/>
             <label string="Save the File with '.xml' extension." colspan="4" nolabel="1"/>
             <field name="name"/><newline/>
             <field name="file_save"/>
-            <separator colspan="4"/>
-          <group colspan="4">
-            <button colspan="2" special="cancel" string="Close" icon="gtk-cancel"/>
-            <button colspan="2" name="print_vatlist" string="Print" type="object"  icon="gtk-print"/>
-          </group>
         </form>
       </field>
     </record>

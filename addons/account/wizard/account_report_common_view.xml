@@ -9,8 +9,9 @@
             <field name="arch" type="xml">
             <form string="Report Options" version="7.0">
                 <header>
-                    <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2" default_focus="1" />
-                    <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
+                    <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    or 
+                    <button string="Cancel" class="oe_link" special="cancel" />
                 </header>
                 <label string=""/>  <!-- binding for inherited views -->
                 <group col="4">
