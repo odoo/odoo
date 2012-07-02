@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-19 04:51+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-06-27 05:25+0000\n"
+"X-Generator: Launchpad (build 15482)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -1197,6 +1197,21 @@ msgid ""
 "At the end of the month, the planning manager can also check if the encoded "
 "timesheets are respecting the planned time on each analytic account.\n"
 msgstr ""
+"Håll koll på din planering\n"
+"Denna modul hjälper dig att hantera dina projektplaner.\n"
+"============================================\n"
+"\n"
+"Den här modulen är baserad på objektbokföringen och är helt integrerad med\n"
+"* Tidrapporteringen\n"
+"* Semesterplaneringen\n"
+"* Projektledningen\n"
+"\n"
+"Varje avdelningschef har full kontroll över all allokerad tid för all "
+"personer inom ansvarsområdet, inklusive godkänd ledighet eller om det "
+"fortfarande finns lediga resurser för aktiviteter.\n"
+"\n"
+"Vid månadsslut kan planeringen jämföras med inrapporterad tid och "
+"planeringen gjord för varje objektkonto.\n"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -2292,6 +2307,21 @@ msgid ""
 "re-invoice your customer's expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"Denna moduls uppgift är att hantera anställdas utlägg\n"
+"==========================================\n"
+"\n"
+"Hela arbetsflödet genomförs:\n"
+"* Preliminära kostnader\n"
+"* Bekräftelse av tidrapporten genom den anställde\n"
+"* Validering av sin chef\n"
+"* Validering av bokförare och faktureringen\n"
+"* Betalning av fakturan till den anställde\n"
+"\n"
+"Denna modul använder också objektredovisning och är kompatibel med\n"
+"tidrapport-modulen så att du kommer att automatiskt kunna\n"
+"återfaktura kundens kostnader om du använder projektmodulen.\n"
+"    "
 
 #. module: base
 #: field:ir.values,action_id:0
@@ -2929,6 +2959,10 @@ msgid ""
 "==================================================\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul ger en PAD i alla projekt-kanbanvyer\n"
+"=======================================\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -2975,7 +3009,7 @@ msgstr "Bangladesh"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_retro_planning
 msgid "Project Retro-planning"
-msgstr "Projekt retro-plannering"
+msgstr "Projekt-retroplannering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_planning
@@ -4130,7 +4164,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr ""
+msgstr "Tidrapporter på ärenden"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_ltd
@@ -5394,7 +5428,7 @@ msgstr "Fält"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_long_term
 msgid "Long Term Projects"
-msgstr "Långsiktiga projekt"
+msgstr "Långtidsprojekt"
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -5619,6 +5653,31 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"\n"
+"Denna modul gör det möjligt för bokförare att hantera objekt- och "
+"tvärbudgetar.\n"
+"================================================================\n"
+"\n"
+"När huvudbudget och budgetarna definieras (i bokföring/budgetar/),\n"
+"kan projektledarna sätta planerade belopp på varje objektkonto.\n"
+"\n"
+"Bokförare har möjlighet att se den totala planerade beloppet för varje\n"
+"budget och huvudbudget för att säkerställa att totalen  inte\n"
+"över-/understiger än vad han planen. Kontoplanen kan också kopplas till\n"
+"till en grafisk vy.\n"
+"\n"
+"Tre rapporter finns tillgängliga:\n"
+"1. Den första är tillgänglig från en lista med budgetutskottet. Det ger "
+"spridning för dessa budgetutskottet av den analytiska konton per master "
+"budgetutskottet.\n"
+"\n"
+"2. Den andra är en sammanfattning av den tidigare, ger endast "
+"spridningskoden, för de valda budgetutskottet av den analytiska konton.\n"
+"\n"
+"3. Den sista är tillgänglig från den analytiska kontoplanen. Det ger att "
+"sprida, för de valda analytiska konton, de master budgetutskottet per "
+"budgetutskottet.\n"
+"\n"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -7035,7 +7094,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_long_term
 msgid "Long Term Planning"
-msgstr "Långsiktig planering"
+msgstr "Långtidsplanering"
 
 #. module: base
 #: field:ir.actions.server,message:0
@@ -7616,6 +7675,13 @@ msgid ""
 "all the tasks will change accordingly.\n"
 "    "
 msgstr ""
+"\n"
+"Ändringsdatum i enlighet med projektets slutdatum.\n"
+"=========================================\n"
+"\n"
+"Om slutdatum för projektet ändras så korrigeras tidsfrister och startdatum "
+"för alla aktiviteter i enlighet med detta.\n"
+"    "
 
 #. module: base
 #: help:res.users,view:0
@@ -11258,7 +11324,7 @@ msgstr "Åtgärd"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_project
 msgid "Retro-Planning on Events"
-msgstr ""
+msgstr "Retroplannering av evenemang"
 
 #. module: base
 #: code:addons/custom.py:555
@@ -11480,6 +11546,13 @@ msgid ""
 "handle an issue.\n"
 "                "
 msgstr ""
+"\n"
+"Denna modul tillför tidrapporter på ärenden/bugghantering i projekt\n"
+"======================================================\n"
+"\n"
+"Arbetsloggar kan administreras för att ge underlag till de timmar ägnade åt "
+"ett visst ärende.\n"
+"                "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -13804,6 +13877,25 @@ msgid ""
 "state are scheduled with taking the phase's start date\n"
 "    "
 msgstr ""
+"\n"
+"Longtidsplanerings-modul som spårar planering, schemaläggning och "
+"resursfördelning.\n"
+"====================================================================\n"
+"\n"
+"egenskaper\n"
+"--------\n"
+"* Hantera stora projekt.\n"
+"* Definiera olika faser av projekt.\n"
+"* Beräkna Fasschemaläggning: Beräkna startdatum och slutdatum för de faser "
+"som är i preliminär, öppen och i vilande tillstånd för givna projekt.\n"
+"      Om ingen projekt anges så alla i anspråktas utkastet, öppen och "
+"pågående faserna.\n"
+"* Beräkna schemaläggning: Det här fungerar samma som schemaläggaren knappen "
+"på project.phase. Det tar projektet som argument och beräknar alla öppna, "
+"preliminära och pågående aktiviteter.\n"
+"* Schemalägg aktivieteter: Alla preliminära, vilande och öppna planeras med "
+"fasens startdatum\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_activity_form
@@ -14788,6 +14880,18 @@ msgid ""
 "and decide on their status as they evolve.\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul tillför ärendehantering och buggadministration till Projekt.\n"
+"=========================================================\n"
+"\n"
+"OpenERP tillåter dig hantera ärenden och problem som kan uppstå i ett "
+"projekt\n"
+"såsom buggar i ett system, klagomål eller materialproblem, En listvy ger en "
+"snabb \n"
+"överblick över ärendestocken, tilldela enskilda ärenden till handläggare och "
+"ge \n"
+"dem status i den takt de utvecklas.\n"
+"    "
 
 #. module: base
 #: field:res.groups,full_name:0
@@ -15218,7 +15322,7 @@ msgstr "Land"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_messages
 msgid "In-Project Messaging System"
-msgstr ""
+msgstr "Projektinternt meddelandesystem"
 
 #. module: base
 #: model:res.country,name:base.pn
@@ -15550,7 +15654,7 @@ msgstr "Turks and Caicos Islands"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_project_issue
 msgid "eMail Gateway for Project Issues"
-msgstr "E-postbrygga för projektproblem"
+msgstr "E-postbrygga för projektärenden"
 
 #. module: base
 #: field:res.partner.bank,partner_id:0
@@ -15603,6 +15707,8 @@ msgid ""
 "Manage relations with prospects and customers using leads, opportunities, "
 "requests or issues."
 msgstr ""
+"Administrera relationen mellan prospektiva kunder och kunder med kundämnen, "
+"affärsmöjligheter,  önskemål eller ärenden."
 
 #. module: base
 #: selection:res.partner.address,type:0

@@ -9,8 +9,9 @@
             <field name="arch" type="xml">
                 <form string="System Update" version="7.0">
                     <header>
-                        <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="upgrade_module" string="Update" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <field name="module_info"/>
                 </form>
@@ -42,8 +43,9 @@
             <field name="arch" type="xml">
                 <form string="Apply Shcedule Upgrade" version="7.0">
                     <header>
-                        <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="config" string="Start configuration" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                 </form>
             </field>

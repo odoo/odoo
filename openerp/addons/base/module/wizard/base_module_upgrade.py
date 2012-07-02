@@ -78,14 +78,14 @@ class base_module_upgrade(osv.osv_memory):
                                         JOIN ir_module_module_dependency d ON (m.id = d.module_id)
                                         LEFT JOIN ir_module_module m2 ON (d.name = m2.name)
                           WHERE m.id in %s and (m2.state IS NULL or m2.state IN %s)""",
-                      (tuple(ids), ('uninstalled',))) 
+                      (tuple(ids), ('uninstalled',)))
             unmet_packages = [x[0] for x in cr.fetchall()]
             if unmet_packages:
                 raise osv.except_osv(_('Unmet dependency !'),
                                      _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
             ir_module.download(cr, uid, ids, context=context)
-            cr.commit() # save before re-creating cursor below 
+            cr.commit() # save before re-creating cursor below
 
         pooler.restart_pool(cr.dbname, update_module=True)
 

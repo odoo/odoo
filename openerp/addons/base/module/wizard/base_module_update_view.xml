@@ -11,6 +11,7 @@
                     <field name="state" invisible="1"/>
                     <header states="init">
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        or
                         <button name="update_module" string="Update" type="object" icon="gtk-ok"/>
                     </header>
                     <group>
@@ -29,7 +30,7 @@
                     </group>
                 </form>
             </field>
-        </record>
+        </record>        
 
         <record id="action_view_base_module_update" model="ir.actions.act_window">
             <field name="name">Module Update</field>

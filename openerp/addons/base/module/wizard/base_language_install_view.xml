@@ -11,22 +11,24 @@
                     <field name="state" invisible="1"/>
                     <header states="init">
                         <button special="cancel" string="Cancel" icon="gtk-cancel" colspan="1"/>
+                        <label string="or" states="init"/>
                         <button name="lang_install" string="Load" type="object" icon="gtk-ok" colspan="1"/>
                     </header>
-                    <group>
-                        <group states="init">
-                            <field name="lang"/>
-                            <field name="overwrite" groups="base.group_no_one"/>
+                    <sheet>
+                        <group>
+                            <group states="init">
+                                <field name="lang"/>
+                                <field name="overwrite" groups="base.group_no_one"/>
+                            </group>
+                            <group states="done">
+                                <label string="The selected language has been successfully installed.
+        You must change the preferences of the user and open a new menu to view the changes."/>
+                            </group>
                         </group>
                         <group states="done">
-                            <label string="The selected language has been successfully installed.
-    You must change the preferences of the user and open a new menu to view the changes."/>
+                            <button special="cancel" string="Close" icon="gtk-ok"/>
                         </group>
-                    </group>
-
-                    <group states="done">
-                        <button special="cancel" string="Close" icon="gtk-ok"/>
-                    </group>
+                    </sheet>
                 </form>
            </field>
         </record>
