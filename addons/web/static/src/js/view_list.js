@@ -1853,8 +1853,10 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
             if (record) { return record; }
         }
         for(var i=0; i<this.length; ++i) {
-            record = callback(this.records[i]);
-            if (record) { return record; }
+            record = this.records[i];
+            if (callback(record)) {
+                return record;
+            }
         }
     },
     each: function (callback) {
