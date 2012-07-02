@@ -22,7 +22,8 @@
 {
     'name': 'Social Networking',
     'version': '1.0',
-    'category': 'Dependency',
+    'category':'Social Network',
+    "sequence": 2,
     'description': """
 A bussiness oriented Social Networking stands with message storage,
 queuing and  feeds.     
@@ -73,6 +74,7 @@ The main features are:
     ],
     'installable': True,
     'auto_install': False,
+    'application':True,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
@@ -98,6 +100,6 @@ The main features are:
     'demo': [
         'mail_demo.xml',
     ],
-    'application':True,
+    
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
