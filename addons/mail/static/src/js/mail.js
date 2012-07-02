@@ -302,17 +302,17 @@ openerp.mail = function(session) {
             record.body = this.do_clean_text(record.body);
             record.body = this.do_replace_internal_links(record.body);
 
-            // split for see more
-            var split = this.do_truncate_string(record.body, this.params.msg_more_limit);
-            record.body_head = split[0];
-            record.body_tail = split[1];
-
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
 
-
             var rendered = session.web.qweb.render('mail.Thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
-            $( rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+            $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+            // expand feature
+            this.$element.find('div.oe_mail_msg_body:last').expander({
+                slicePoint: this.params.msg_more_limit,
+                moreClass: 'oe_mail_expand',
+                lesClass: 'oe_mail_reduce',
+                });
         },
        
         /**
