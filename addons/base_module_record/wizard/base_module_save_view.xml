@@ -7,16 +7,17 @@
             <field name="model">base.module.save</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Module Recording">
-                    <separator string="Recording Information" colspan="4"/>
-                    <field name="info_status"/>
-                    <field name="info_text" colspan="4" nolabel="1"/>
-                    <field name="info_yaml" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button name="record_save" icon="gtk-ok" string="Continue" type="object"/>
-                    </group>
+                <form string="Module Recording" version="7.0">
+                    <header>
+                        <button name="record_save" string="Continue" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group string="Recording Information">
+                        <field name="info_status"/>
+                        <field name="info_text"/>
+                        <field name="info_yaml"/>
+                   </group>
                 </form>
             </field>
         </record>
