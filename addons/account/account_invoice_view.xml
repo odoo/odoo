@@ -379,9 +379,8 @@
                               <field name="move_id" groups="account.group_account_user"/>
                              </group>
                              <group>
-                            	<field name="origin" placeholder="SO0032"/>
+                                <field name="origin" placeholder="SO0032"/>
                                 <field name="date_due"/>
-                                <field name="user_id" groups="base.group_user"/>
                                 <newline/>
                                 <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                              </group>
