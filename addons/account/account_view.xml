@@ -609,17 +609,15 @@
                    <div class="oe_right oe_button_box" name="import_buttons">
                        <!-- Put here related buttons -->
                     </div>
-                    <div class="oe_title">
-                       <label for="name" class="oe_edit_only"/>
-                       <h1>
-                         <field name="name" class="oe_inline"/>-
-                         <field name="period_id" class="oe_inline"/>
-                       </h1>
-                       <label for="journal_id" class="oe_edit_only"/>
-                       <h2>
-                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>                        
-                       </h2>
-                    </div>
+                     <label for="name" class="oe_edit_only"/>
+                     <h1>
+                       <field name="name" class="oe_inline"/>-
+                       <field name="period_id" class="oe_inline"/>
+                     </h1>
+                     <label for="journal_id" class="oe_edit_only"/>
+                     <h2>
+                       <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>                        
+                     </h2>
                     <group>
                         <group>
                             <field name="date" on_change="onchange_date(date, company_id)"/>
