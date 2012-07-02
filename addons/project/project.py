@@ -1144,9 +1144,7 @@ class task(base_stage, osv.osv):
         result = super(task, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft' and obj.user_id:
-                result[obj.id].add(obj.user_id.id)
-            elif obj.state == 'draft':
-                result[obj.id].add(uid)
+                result[obj.id].append(obj.user_id.id)
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
