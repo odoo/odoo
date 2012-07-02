@@ -595,7 +595,8 @@ class project(osv.osv):
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
         'issue_count': fields.function(_issue_count, type='integer'),
-        'alias_model': fields.selection(_get_alias_model, "Alias Model"),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True, 
+                                        help="Allows to select Model for the Mail alias .Based on selected model Task/issue will created for fetched mails or it will maintain communication for related Task/Issue."),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
