@@ -1755,13 +1755,12 @@ class BaseModel(object):
                 if trans:
                     node.set('string', trans)
 
-            for translatable in ('confirm', 'sum', 'help', 'placeholder'):
-                attr = node.get(translatable)
-                if attr:
-                    translation = self.pool['ir.translation']._get_source(
-                        cr, user, self._name, 'view', context['lang'], attr)
-                    if translation:
-                        node.set(translatable, translation)
+            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+                attr_value = node.get(attr_name)
+                if attr_value:
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
+                    if trans:
+                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
