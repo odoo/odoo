@@ -47,26 +47,14 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group>
-                      <filter icon="terp-go-year" string="This Year"
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                            help="Timesheet lines in this year"/>
-                      <filter icon="terp-go-month" string="This Month"
-                          name="month"
-                          domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                          help="Timesheet lines in this month"/>
-                    <filter icon="terp-go-week"
-                              string="    7 Days    "
-                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                              help="Timesheet lines during last 7 days"/>
-                      <separator orientation="vertical"/>
-                      <field name="user_id" widget="selection">
-                          <filter icon="terp-personal"
+                      <filter icon="terp-personal"
                               string="Non Assigned timesheets to users"
                               help="Non Assigned timesheets to users"
                               domain="[('user_id','=',False)]"/>
-                      </field>
+                      <separator orientation="vertical"/>
+                      <field name="user_id" widget="selection"/>
                       <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                        <field name="product_id"/>
+                      <field name="product_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
@@ -120,9 +108,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by user">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -162,13 +150,10 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group>
+                        <field name="name" string="Timesheet by users"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
-                        <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="month"/>
                         <field name="user_id"/>
+                        <field name="month"/>
                     </group>
                 </search>
             </field>
@@ -203,9 +188,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by invoice">
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="manager_id" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="manager_id"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -257,7 +242,7 @@
             <field name="arch" type="xml">
                 <tree string="Daily timesheet per account">
                     <field name="name"/>
-                    <field name="month" select="1"/>
+                    <field name="month"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id"/>
                     <field name="quantity"/>
@@ -282,10 +267,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Daily timesheet by account">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
                     <field name="quantity"/>
                 </form>
             </field>
@@ -298,14 +283,11 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                     <group>
+                        <field name="name" string="Timesheet by account"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
-                        <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="month"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id"/>
+                        <field name="month"/>
                     </group>
                 </search>
             </field>
@@ -354,10 +336,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
                     <field name="quantity"/>
                 </form>
             </field>
@@ -370,14 +352,11 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by account">
                     <group>
+                        <field name="name" string="Timesheet by account"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
-                        <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="month"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="user_id"/>
+                        <field name="month"/>
                     </group>
                 </search>
             </field>
@@ -408,7 +387,7 @@
         src_model="res.users"/>
 
         <act_window
-            context="{'search_default_account_id': [active_id]}"
+            context="{'search_default_account_id': [active_id],'default_account_id': [active_id]}"
             id="act_account_analytic_account_2_report_timehsheet_account"
             name="Timesheets"
             res_model="hr.analytic.timesheet"

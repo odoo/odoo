@@ -54,9 +54,9 @@
             <field name="arch" type="xml">
             <form string="Events" version="7.0">
                 <header>
-                    <button string="Confirm Event" name="button_confirm" states="draft" type="object"/>
-                    <button string="Event Ended" name="button_done" states="confirm" type="object"/>
-                    <button string="Set To Draft" name="button_draft" states="cancel,done" type="object"/>
+                    <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
                     <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
@@ -120,7 +120,7 @@
                                     <group col="8" colspan="4">
                                         <separator string="" colspan="4"/>
                                         <newline/>
-                                        <field name="state" select="1" colspan="2"/>
+                                        <field name="state" colspan="2"/>
                                         <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                                         <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
@@ -265,21 +265,21 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group>
+                        <field name="name" string="Events"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Upcoming"
-                                name="upcoming"
-                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                                help="Upcoming events from today" />
-                        <field name="name"/>
-                        <field name="type" widget="selection"/>
-                        <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                               string="My Events"
                                 help="My Events"
                               domain="[('user_id','=',uid)]"/>
-                        </field>
+                        <filter icon="terp-go-today" string="Upcoming"
+                                name="upcoming"
+                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                                help="Upcoming events from today" />
+                        <separator orientation="vertical"/>
+                        <field name="type" widget="selection"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -337,6 +337,7 @@
             <field name="arch" type="xml">
                 <tree string="Registration" >
                     <field name="create_date"/>
+                    <field name="partner_id"/>
                     <field name="name"/>
                     <field name="email"/>
                     <field name="event_id" />
@@ -355,13 +356,13 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="registration_open" string="Confirm" states="draft" type="object"/>
-                    <button name="button_reg_close" string="Attended" states="open" type="object"/>
-                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object"/>
+                    <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
+                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
-                    <field name="state" select="1" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
+                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
-                <sheet string="Registration" layout="auto">
+                <sheet string="Registration">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
@@ -448,19 +449,18 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group>
+                        <field name="name" string="Participant"
+                            filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
-                        <separator orientation="vertical"/>
-                        <field name="event_id" widget="selection"/>
-                        <field name="name" string="Participant"
-                            filter_domain="['|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
-                        <field name="user_id">
                         <filter icon="terp-personal"
                               string="My Registrations"
                                 help="My Registrations"
                               domain="[('user_id','=',uid)]"/>
-                        </field>
-                        <field name="origin"/>
+                        <separator orientation="vertical"/>
+                        <field name="event_id" widget="selection"/>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

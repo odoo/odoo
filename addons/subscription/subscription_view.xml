@@ -15,9 +15,9 @@
             <field name="arch" type="xml">
                 <form string="Subscriptions" version="7.0">
                 <header>
-                    <button name="set_process" states="draft" string="Process" type="object"/>
-                    <button name="set_done" states="running" string="Stop" type="object"/>
-                    <button name="set_draft" states="done" string="Set to Draft" type="object"/>
+                    <button name="set_process" states="draft" string="Process" type="object" class="oe_highlight"/>
+                    <button name="set_done" states="running" string="Stop" type="object" class="oe_highlight"/>
+                    <button name="set_draft" states="done" string="Set to Draft" type="object" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,running"/>
                 </header>
                 <sheet>
@@ -74,15 +74,14 @@
             <field name="arch" type="xml">
                 <search string="Search Subscription">
                     <group>
+                        <field name="name" string="Subscription"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_init"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check"
-                        string="Running"
-                        domain="[('state','=','running')]"/>
+                            string="Running"
+                            domain="[('state','=','running')]"/>
                         <separator orientation="vertical"/>
-                        <filter string="This Week" icon="terp-go-week" domain="[('date_init','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_init','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-today" string="Today"
-                    domain="[('date_init','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date_init','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="user_id"/>
                         <field name="partner_id"/>
                     </group>
@@ -169,7 +168,8 @@
             <field name="arch" type="xml">
                 <search string="Subscription Document">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Subscription Document"/>
+                        <separator orientation="vertical"/>
                         <field name="model"/>
                     </group>
                 </search>

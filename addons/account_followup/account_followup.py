@@ -24,11 +24,11 @@ import tools
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
-    _description = 'Account Follow Up'
+    _description = 'Account Follow-up'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
-        'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-Up'),
+        'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
@@ -39,7 +39,7 @@ followup()
 
 class followup_line(osv.osv):
     _name = 'account_followup.followup.line'
-    _description = 'Follow-Up Criteria'
+    _description = 'Follow-up Criteria'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of follow-up lines."),

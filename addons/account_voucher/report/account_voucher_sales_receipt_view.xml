@@ -49,18 +49,8 @@
         <field name="arch" type="xml">
             <search string="Sales Receipt Analysis">
               <group>
-                    <filter icon="terp-go-year" string="Year" 
-                            name="year"
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="year"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Month"
-                            name="month"
-                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="current month"/>
-                    <filter icon="terp-go-month" string="Month-1"
-                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="last month"/>
+                    <field name="date"/>
+                    <field name="date_due"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-document-new"
@@ -81,10 +71,8 @@
                 <newline/>
                 <group expand="0" string="Extended Filters...">
                     <field name="journal_id" widget="selection"/>
-                    <field name="pay_now"/>
                     <field name="account_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_due"/>
+                    <field name="pay_now"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
@@ -115,13 +103,13 @@
         <field name="res_model">sale.receipt.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_sale_receipt_report_search"/>
         <field name="help">From this report, you can have an overview of the amount invoiced to your customer as well as payment delays. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
 
     </record>
 
-    <menuitem action="action_sale_receipt_report_all" id="menu_action_sale_receipt_report_all" parent="account.menu_finance_statistic_report_statement" sequence="3"/>
+    <menuitem action="action_sale_receipt_report_all" id="menu_action_sale_receipt_report_all" parent="account.menu_finance_reporting" sequence="3"/>
        
    </data>
 </openerp>

@@ -39,6 +39,9 @@
                     <field name="category_id" position="after">
                         <field name="section_id" completion="1" widget="selection"/>
                     </field>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="country_id"/>
+                    </xpath>
                 </field>
         </record>
 
@@ -73,10 +76,10 @@
                 </field>
                  <xpath expr="//h4[@class='oe_partner_heading']" position="after">
                         <a name="%(act_res_partner_2_opportunity)d" type="action">
-                            <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
+                            <t t-if="record.opportunity_count.value"><t t-esc="record.opportunity_count.value"/> Opportunities</t>
                         </a>
                         <a name="%(crm_meeting_partner)d" type="action">
-                            <t t-if="record.meeting_count.value">Meetings(<t t-esc="record.meeting_count.value"/>)</t>
+                            <t t-if="record.meeting_count.value"><t t-esc="record.meeting_count.value"/> Meetings</t>
                         </a>
                 </xpath>
             </field>
@@ -93,11 +96,12 @@
                     <button type="action"
                         string="Schedule a Meeting"
                         name="%(crm.crm_case_categ_meet_create_partner)d"
-                        context="{'search_default_partner_id': [active_id], 'default_duration': 4.0}"/>
+                        context="{'default_partner_id': [active_id], 'default_duration': 4.0}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
-                        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}" />
-                    <button type="action" string="Create an Opportunity"
+                        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0}" />
+                    <button type="action" string="Opportunities"
+                        context="{'search_default_partner_id': [active_id]}"
                         name="%(crm.action_view_crm_partner2opportunity)d" />
                 </xpath>
             </field>

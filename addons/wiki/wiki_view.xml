@@ -32,12 +32,12 @@
             <field name="arch" type="xml">
                 <form string="Wiki Groups" version="7.0">
                     <group col="4" colspan="3" >
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="create_date" readonly="2"/>
                     </group>
                     <group col="2" colspan="1">
-                        <field name="method" select="1"/>
-                        <field name="home" select="1" domain="[('group_id','=',active_id)]"
+                        <field name="method"/>
+                        <field name="home" domain="[('group_id','=',active_id)]"
                             attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
                     </group>
                     <notebook colspan="4">
@@ -130,26 +130,26 @@
                 <form string="Wiki" version="7.0">
                     <sheet>
                         <group col="6" colspan="4">
-                            <field name="name" select="1" colspan="6"/>
-                            <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
+                            <field name="name" colspan="6"/>
+                            <field name="group_id" string="Topic" on_change="onchange_group_id(group_id, text_area)"/>
                             <field name="parent_id" domain="[('group_id','=',group_id)]"/>
                             <field name="section"/>                        
                         </group>
                         <notebook colspan="4">
                             <page string="Content">
                             <separator colspan="4" string="Page Content"/>
-                            <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
+                            <field name="text_area" nolabel="1" colspan="4" widget="text_wiki"/>
                             </page>
                         </notebook>
                         <group col="2" colspan="2" groups="base.group_no_one">
                             <separator colspan="4" string="Modification Information"/>
                             <field name="write_date" readonly="1"/>
                             <field name="minor_edit"/>
-                            <field name="review" select="1"/>
+                            <field name="review"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="4" string="Meta Information"/>
-                            <field name="tags" select="1"/>
+                            <field name="tags"/>
                             <field name="toc" groups="base.group_no_one"/>
                         </group>
                     </sheet>
@@ -164,14 +164,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('section','ilike',self), ('tags','ilike',self)]"
+                        string="Wiki"/>
+                    <separator orientation="vertical"/>
+                    <field name="write_date" groups="base.group_no_one"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="group_id"/>
-                    <field name="tags"/>
-                    <field name="section"/>
                     <field name="write_uid"/>
-                    <field name="write_date" groups="base.group_no_one"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
@@ -232,11 +234,11 @@
             <field name="arch" type="xml">
                 <form string="Wiki History" version="7.0">
                     <sheet>
-                        <field name="wiki_id" select="1" colspan="4"/>
-                        <field name="summary" select="1" colspan="4"/>
-                        <field name="text_area" select="1" colspan="4" nolabel="1" widget="text_wiki"/>
-                        <field name="create_date" select="1" readonly="1"/>
-                        <field name="minor_edit" select="1" groups="base.group_no_one"/>
+                        <field name="wiki_id" colspan="4"/>
+                        <field name="summary" colspan="4"/>
+                        <field name="text_area" colspan="4" nolabel="1" widget="text_wiki"/>
+                        <field name="create_date" readonly="1"/>
+                        <field name="minor_edit" groups="base.group_no_one"/>
                     </sheet>
                 </form>
             </field>

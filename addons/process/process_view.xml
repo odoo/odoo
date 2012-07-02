@@ -110,7 +110,8 @@
             <field name="arch" type="xml">
                 <search string="Search Process">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Process"/>
+                        <separator orientation="vertical"/>
                         <field name="model_id"/>
                     </group>
                     <newline/>
@@ -155,7 +156,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Node" version="7.0">
-                <sheet layout="auto">
+                <sheet >
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="process_id"/>
@@ -209,7 +210,8 @@
         <field name="arch" type="xml">
             <search string="Search ProcessNode">
                 <group>
-                    <field name="name"/>
+                    <field name="name" string="Process Node"/>
+                    <separator orientation="vertical"/>
                     <field name="model_id"/>
                     <field name="kind" />
                 </group>
@@ -256,7 +258,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition" version="7.0">
-                <sheet layout="auto">
+                <sheet >
                     <group col="4">
                         <field name="name"/>
                         <field name="source_node_id"/>
@@ -301,9 +303,10 @@
         <field name="arch" type="xml">
             <search string="Search Process Transition">
                 <group>
-                    <field name="name"/>
+                    <field name="name" string="Process Transition"/>
+                    <separator orientation="vertical"/>
                     <field name="source_node_id"/>
-                    <field name="target_node_id" />
+                    <field name="target_node_id"/>
                 </group>
 <!--
                 <newline/>

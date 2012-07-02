@@ -69,9 +69,9 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="button_start_working" string="Start" states="draft"/>
-                <button name="button_resume" string="Resume" states="pause"/>
-                <button name="button_done" string="Finished" states="startworking"/>
+                <button name="button_start_working" string="Start" states="draft" class="oe_highlight"/>
+                <button name="button_resume" string="Resume" states="pause" class="oe_highlight"/>
+                <button name="button_done" string="Finished" states="startworking" class="oe_highlight"/>
                 <button name="button_pause" string="Pending" states="startworking"/>
                 <button name="button_draft" string="Set Draft" states="cancel"/>
                 <button name="button_cancel" string="Cancel" states="draft,startworking"/>
@@ -123,25 +123,26 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-            <search string="Search Work Orders">
-                        <group>
-                           <filter icon="terp-document-new" string="Draft"
-                               domain="[('state','=','draft')]"/>
-                           <filter icon="terp-check" string="In Progress" name="Current"
-                               domain="[('state','=','startworking')]"/>
-                           <filter icon="terp-gtk-media-pause" string="Pending"
-                               domain="[('state','=','pause')]"/>
-                           <separator orientation="vertical"/>
-                           <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                               domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                               help="Production started late" />
-                           <separator orientation="vertical"/>
-                            <field name="name"/>
-                            <field name="workcenter_id" widget="selection"/>
-                            <field name="production_id" />
-                            <field name="state" />
-                            <field name="date_planned"/>
-                        </group>
+                <search string="Search Work Orders">
+                    <group>
+                        <field name="name" string="Work Orders"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_planned"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-document-new" string="Draft"
+                            domain="[('state','=','draft')]"/>
+                        <filter icon="terp-check" string="In Progress" name="Current"
+                            domain="[('state','=','startworking')]"/>
+                        <filter icon="terp-gtk-media-pause" string="Pending"
+                            domain="[('state','=','pause')]"/>
+                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
+                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                            help="Production started late"/>
+                        <separator orientation="vertical"/>
+                        <field name="workcenter_id" widget="selection"/>
+                        <field name="production_id"/>
+                        <field name="state"/>
+                    </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>

@@ -68,6 +68,10 @@
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <group>
+                    <field name="date"/>
+                    <field name="date_created"/>
+                    <field name="date_maturity"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-go-year" string="This F.Year"
                             name="thisyear"
                             context="{'year':'current_year'}"
@@ -95,10 +99,6 @@
                     <field name="partner_id"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="date_created"/>
-                    <field name="date"/>
-                    <field name="date_maturity"/>
                  </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -133,7 +133,7 @@
         <field name="help">From this view, have an analysis of your different financial accounts. The document shows your debit and credit taking in consideration some criteria you can choose by using the search tool.</field>
     </record>
     <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all"
-        parent="account.menu_finance_statistic_report_statement"
+        parent="account.menu_finance_reporting"
         groups="group_account_manager"
         sequence="2"/>
 </data>

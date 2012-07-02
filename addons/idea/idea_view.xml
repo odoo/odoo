@@ -8,7 +8,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas Categories">
-                <field name="name"/>
+                <field name="name" string="Category"/>
             </search>
         </field>
     </record>
@@ -67,9 +67,9 @@
         <field name="arch" type="xml">
             <form string="Idea" version="7.0">
                 <header>
-                    <button name="idea_open" string="Open" states="draft"/>
-                    <button name="idea_close" string="Accept" states="open"/>
-                    <button name="idea_cancel" string="Refuse" states="open" />
+                    <button name="idea_open" string="Open" states="draft" class="oe_highlight"/>
+                    <button name="idea_close" string="Accept" states="open" class="oe_highlight"/>
+                    <button name="idea_cancel" string="Refuse" states="open"  class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 </header>
                     <label for="name" class="oe_edit_only"/>
@@ -108,12 +108,13 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group>
+                    <field name="name" string="Idea"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
                     <filter icon="terp-check" string="Accepted"
                         domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="category_ids"/>
                 </group>
                 <newline/>
