@@ -35,10 +35,8 @@
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/sheet//group[@name='basic']" position="before">
-                        <group string="Accounting Property">
-                            <field name="property_account_creditor_price_difference_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        </group>
+                    <xpath expr="/form/sheet//group[@name='account_property']" position="inside">
+                        <field name="property_account_creditor_price_difference_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                     </xpath>
                 </data>
             </field>
