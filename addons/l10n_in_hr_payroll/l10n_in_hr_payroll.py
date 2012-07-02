@@ -247,6 +247,9 @@ class res_company(osv.osv):
     _columns = {
         'dearness_allowance': fields.boolean('Dearness Allowance', help="Check this box if your company provide Dearness Allowance to employee")
     }
+    _defaults = {
+        'dearness_allowance': True,
+    }    
 
 res_company()
 
