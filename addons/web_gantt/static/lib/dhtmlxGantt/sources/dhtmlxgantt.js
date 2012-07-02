@@ -3139,9 +3139,10 @@ GanttTask.prototype.getPopUpInfo = function(object, event)
     //data of task
     var tblInfo = this.Chart.divInfo.lastChild;
     tblInfo.rows[0].cells[0].innerHTML = "<div style='font-family: Arial, Helvetica, Sans-serif; font-size: 12px; font-weight: bold; color: #688060; margin: 0 0 4px 0;'>" + this.TaskInfo.Name + "</div>";
-    tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>EST:&nbsp;</span><span class='ut'>" + this.TaskInfo.EST.getDate() + "." + (this.TaskInfo.EST.getMonth() + 1) + "." + this.TaskInfo.EST.getFullYear() + "</span><br/>";
-    tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Duration:&nbsp;</span><span class='ut'>" + this.TaskInfo.Duration + " hours </span><br/>";
-    // tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Percent Complete:&nbsp;</span><span class='ut'>" + this.TaskInfo.PercentCompleted + "% </span><br/>";
+    tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Start Date:&nbsp;</span><span class='ut'>" + this.TaskInfo.EST.getDate() + "." + (this.TaskInfo.EST.getMonth() + 1) + "." + this.TaskInfo.EST.getFullYear() + "</span><br/>";
+    // Hidden because currently misleading or unavailable:
+    //  tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Duration:&nbsp;</span><span class='ut'>" + this.TaskInfo.Duration + " hours </span><br/>";
+    //  tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Percent Complete:&nbsp;</span><span class='ut'>" + this.TaskInfo.PercentCompleted + "% </span><br/>";
 
     //show predecessor task
     if (this.predTask)
@@ -3804,8 +3805,9 @@ GanttProject.prototype.getPopUpInfo = function(object, event)
     var tblInfo = this.Chart.divInfo.lastChild;
     tblInfo.rows[0].cells[0].innerHTML = "<div style='font-family: Arial, Helvetica, Sans-serif; font-size: 12px; font-weight: bold; color: #688060; margin:0 0 4px 0;'>" + this.Project.Name + "</div>";
     tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Start Date:&nbsp;</span><span class='ut'>" + this.Project.StartDate.getDate() + "." + (this.Project.StartDate.getMonth() + 1) + "." + this.Project.StartDate.getFullYear() + "</span><br/>";
-    tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Duration:&nbsp;</span><span class='ut'>" + this.Duration + " hours</span><br/>";
-    // tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Percent Complete:&nbsp;</span><span class='ut'>" + this.percentCompleted + "%</span><br/>";
+    // Hidden because currently misleading or unavailable:
+    //  tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Duration:&nbsp;</span><span class='ut'>" + this.Duration + " hours</span><br/>";
+    //  tblInfo.rows[0].cells[0].innerHTML += "<span class='st'>Percent Complete:&nbsp;</span><span class='ut'>" + this.percentCompleted + "%</span><br/>";
 
     this.Chart.divInfo.style.cssText = "z-index:2;position: absolute;display: inline;";
 
@@ -4081,7 +4083,8 @@ GanttTask.prototype.resizeTaskItem = function(width)
     taskItem.childNodes[1].firstChild.width = width + "px";
 
     //resize info
-    this.cTaskItem[0].childNodes[1].firstChild.rows[0].cells[0].innerHTML = countHours;
+    // Hidden because currently misleading:
+    //  this.cTaskItem[0].childNodes[1].firstChild.rows[0].cells[0].innerHTML = countHours;
     taskItem.childNodes[2].childNodes[0].style.width = width + "px";
     taskItem.childNodes[2].childNodes[1].style.left = width - 10 + "px";
 };
