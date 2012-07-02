@@ -1481,8 +1481,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
+            <field eval="False" name="auto_search"/>
             <field name="extended_form_view_id" ref="view_move_line_extended_form_view"/>
-            <field name="context">{'search_default_next_partner':1,'view_mode':True}</field>
+            <field name="context">{'view_mode':True}</field>
         </record>
 
 
