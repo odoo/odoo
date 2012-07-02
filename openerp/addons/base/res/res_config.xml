@@ -7,10 +7,9 @@
       <field name="arch" type="xml">
           <form version="7.0">
              <header>
-               <button name="action_next" type="object"
-                       string="Apply" icon="gtk-go-forward" class="oe_highlight"/>
-               <button name="action_skip" type="object" special="cancel"
-                       string="Cancel" icon="gtk-jump-to"/>
+               <button name="action_next" type="object" string="Apply" class="oe_highlight"/>
+               or
+               <button name="action_skip" type="object" special="cancel" string="Cancel" class="oe_link"/>
              </header>
              <group string="res_config_contents"/>
           </form>
@@ -24,10 +23,13 @@
       <field name="arch" type="xml">
         <form string="Next Configuration Step" version="7.0">
             <header>
-                <button name="action_next" type="object"
-                        string="Continue" icon="gtk-go-forward" class="oe_highlight"/>
+                <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel" />
             </header>
-            <field name="note"/>
+            <group>
+                <field name="note"/>
+            </group>
         </form>
       </field>
     </record>
@@ -39,10 +41,9 @@
       <field name="arch" type="xml">
         <form version="7.0">
             <header>
-                <button name="action_next" type="object"
-                    string="Install Modules" icon="gtk-go-forward" class="oe_highlight"/>
-                <button name="action_skip" type="object" special="cancel"
-                    string="Cancel" icon="gtk-jump-to"/>
+                <button name="action_next" type="object" string="Install Modules"  class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel" />
             </header>
             <separator string="title" colspan="4"/>
         </form>
