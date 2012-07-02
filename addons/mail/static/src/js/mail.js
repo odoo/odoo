@@ -310,6 +310,9 @@ openerp.mail = function(session) {
             // expand feature
             this.$element.find('div.oe_mail_msg_body:last').expander({
                 slicePoint: this.params.msg_more_limit,
+                expandText: 'see more',
+                userCollapseText: 'see less',
+                detailClass: 'oe_mail_msg_tail',
                 moreClass: 'oe_mail_expand',
                 lesClass: 'oe_mail_reduce',
                 });
