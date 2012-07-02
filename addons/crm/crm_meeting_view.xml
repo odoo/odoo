@@ -50,9 +50,9 @@
                     </div>
                     <group>
                         <h2>
-                            <field name="date" string="Start Date" required="1"
-                            class="oe_edit_only oe_inline"/>
-                            <label string="at" class="oe_edit_only oe_inline"/> <field name="location" class="oe_edit_only oe_inline" />
+                            <label for="date" string="Starting at"/>
+                            <field name="date" required="1" class="oe_inline"/>
+                            <label string="in" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/> <field name="location" placeholder="Specify the location here" class="oe_inline"/>
                         </h2>
                     </group>
                     <group>
@@ -60,11 +60,11 @@
                             <label for="duration" string="Duration" />
                             <field name="duration" widget="float_time"
                                 on_change="onchange_dates(date,duration,False,allday)"
-                                class="oe_inline"/>
+                                class="oe_inline"/> ( 
                             <field name="date_deadline" 
                                 string="End Date" required="1"
                                 on_change="onchange_dates(date,False,date_deadline)"                            
-                                class="oe_inline"/> 
+                                class="oe_inline"/> )
                         </h2>
                     </group>
                 <group colspan="4" col="4">
