@@ -480,21 +480,14 @@ def Project():
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = []
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        """ Override to add responsible user. """
+        user_ids = super(project, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+        return user_ids
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project, self).create(cr, uid, vals, context=context)
@@ -768,7 +761,7 @@ class task(base_stage, osv.osv):
 
     _order = "priority, sequence, date_start, name, id"
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set task priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -1050,12 +1043,15 @@ class task(base_stage, osv.osv):
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+        return False
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+        return False
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+        return False
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1142,20 +1138,26 @@ class task(base_stage, osv.osv):
         return 'Task'
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        """ Returns the user_ids that have to perform an action.
+            Add to the previous results given by super the document responsible
+            when in draft mode.
+            :return: dict { record_id: [user_ids], }
+        """
+        result = super(task, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
+                result[obj.id].append(obj.user_id.id)
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        """ Override to add responsible user and project manager. """
+        user_ids = super(task, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-            if obj.manager_id:
-                sub_ids.append(obj.manager_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+            if obj.manager_id and not obj.manager_id.id in user_ids:
+                user_ids.append(obj.manager_id.id)
+        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

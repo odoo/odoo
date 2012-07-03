@@ -9,8 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Credit Note" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button string='Refund' icon="gtk-execute" name="invoice_refund" type="object"/>
+                        <button string='Refund' name="invoice_refund" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <separator string="Credit Note Options"/>
                     <group col="4">
