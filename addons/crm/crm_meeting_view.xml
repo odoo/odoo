@@ -2,6 +2,43 @@
 <openerp>
     <data>
 
+    <!-- Read/Unread actions -->
+    <record id="actions_server_crm_meeting_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_meeting"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_meeting_unread" model="ir.values">
+        <field name="name">action_crm_meeting_unread</field>
+        <field name="action_id" ref="actions_server_crm_meeting_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_unread'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model">crm.meeting</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+    <record id="actions_server_crm_meeting_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_meeting"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_meeting_read" model="ir.values">
+        <field name="name">action_crm_meeting_read</field>
+        <field name="action_id" ref="actions_server_crm_meeting_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_read'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model">crm.meeting</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
     <!-- CRM Meetings Categories Form View -->
 
     <record id="crm_meeting_categ_action" model="ir.actions.act_window">
@@ -47,24 +84,26 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <h2>
-                            At <field name="location" class="oe_inline" />
-                        </h2>
                     </div>
-                    <h2>
-                        <label for="duration" string="Duration" />
-                        <field name="duration" widget="float_time"
-                            on_change="onchange_dates(date,duration,False,allday)"
-                            class="oe_inline"/> from
-                        <field name="date"
-                            string="Start Date" 
-                            required="1"
-                            class="oe_edit_only oe_inline"/> to
-                        <field name="date_deadline" 
-                            string="End Date" required="1"
-                            on_change="onchange_dates(date,False,date_deadline)"                            
-                            class="oe_inline"/> 
-                    </h2>
+                    <group>
+                        <h2>
+                            <label for="date" string="Starting at"/>
+                            <field name="date" required="1" class="oe_inline"/>
+                            <label string="in" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/> <field name="location" placeholder="Specify the location here" class="oe_inline"/>
+                        </h2>
+                    </group>
+                    <group>
+                        <h2>
+                            <label for="duration" string="Duration" />
+                            <field name="duration" widget="float_time"
+                                on_change="onchange_dates(date,duration,False,allday)"
+                                class="oe_inline"/> ( 
+                            <field name="date_deadline" 
+                                string="End Date" required="1"
+                                on_change="onchange_dates(date,False,date_deadline)"                            
+                                class="oe_inline"/> )
+                        </h2>
+                    </group>
                 <group colspan="4" col="4">
                     <group colspan="2">
                         <field name="user_id" />
@@ -234,7 +273,6 @@
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:needaction_pending==True"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="needaction_pending" invisible="1"/>
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>
@@ -243,6 +281,7 @@
                 <field name="partner_id" string="Partner" />
                 <field name="location" />
                 <field name="categ_id"/>
+                <field name="needaction_pending" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -284,6 +323,11 @@
         <field name="arch" type="xml">
                 <search string="Search Meetings">
                        <group>
+                            <filter icon="terp-mail-message-new"
+			                   string="Inbox" help="Unread messages"
+			                   name="needaction_pending"
+			                   domain="[('needaction_pending','=',True)]"/>
+                           <separator orientation="vertical"/>
                            <field name="name" string="Meeting / Partner"
                                filter_domain="['|',('name','ilike',self),('partner_id','ilike', self)]"/>
                            <separator orientation="vertical"/>
