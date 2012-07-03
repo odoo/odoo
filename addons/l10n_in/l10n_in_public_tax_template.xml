@@ -6,7 +6,7 @@
 	<!-- Sales Tax -->		
 	
 	<record id="sales_tax_public_main" model="account.tax.template">
-        <field name="name">Sale Tax - 15%</field>
+        <field name="name">Sale Tax-15%</field>
         <field name="account_collected_id" ref="p24600"/>
         <field name="account_paid_id" ref="p24600"/> 
         <field name="price_include" eval="0"/>
@@ -21,7 +21,7 @@
     </record>
 	
 	<record id="sales_tax_public" model="account.tax.template">
-        <field name="name">Sale Tax - 12%</field>
+        <field name="name">Sale Tax-12%</field>
         <field name="account_collected_id" ref="p24600"/>
         <field name="account_paid_id" ref="p24600"/> 
         <field name="price_include" eval="0"/>
@@ -36,7 +36,7 @@
     </record>
     
     <record id="sales_tax_public_4" model="account.tax.template">
-        <field name="name">Sale Tax - 4%</field>
+        <field name="name">Sale Tax-4%</field>
         <field name="account_collected_id" ref="p24600"/>
         <field name="account_paid_id" ref="p24600"/> 
         <field name="price_include" eval="0"/>
@@ -53,7 +53,7 @@
     <!-- Purchase tax -->
     
     	<record id="purchase_tax_public" model="account.tax.template">
-        <field name="name">Purchase Tax - 15%</field>
+        <field name="name">Purchase Tax-15%</field>
         <field name="account_collected_id" ref="p24600"/>
         <field name="account_paid_id" ref="p24600"/> 
         <field name="price_include" eval="0"/>
@@ -72,7 +72,7 @@
 	<!-- VAT -->	
 
 	<record id="vat_public_main" model="account.tax.template">
-        <field name="name">VAT - 5% (4% VAT + 1% Add. Tax.)</field>
+        <field name="name">VAT-5%(4% VAT+1% Add. Tax.)</field>
         <field name="account_collected_id" ref="p24800"/>
         <field name="account_paid_id" ref="p24800"/> 
         <field name="price_include" eval="0"/>
@@ -92,7 +92,7 @@
     </record>
 
 	<record id="vat_public_main_tax" model="account.tax.template">
-        <field name="name">VAT - 15% (12.5% VAT + 2.5% Add. Tax.)</field>
+        <field name="name">VAT-15% (12.5% VAT + 2.5% Add. Tax.)</field>
         <field name="account_collected_id" ref="p24800"/>
         <field name="account_paid_id" ref="p24800"/> 
         <field name="price_include" eval="0"/>
@@ -112,7 +112,7 @@
     </record>	
 
 	<record id="vat_public_tax" model="account.tax.template">
-        <field name="name">VAT - 8%</field>
+        <field name="name">VAT-8%</field>
         <field name="account_collected_id" ref="p24800"/>
         <field name="account_paid_id" ref="p24800"/> 
         <field name="price_include" eval="0"/>
@@ -132,7 +132,7 @@
     </record>
     
         <record id="vat_public_tax_10" model="account.tax.template">
-        <field name="name">VAT - 10%</field>
+        <field name="name">VAT-10%</field>
         <field name="account_collected_id" ref="p24800"/>
         <field name="account_paid_id" ref="p24800"/> 
         <field name="price_include" eval="0"/>
@@ -152,7 +152,7 @@
     </record>
 
         <record id="vat_public_tax_12" model="account.tax.template">
-        <field name="name">VAT - 12.5%</field>
+        <field name="name">VAT-12.5%</field>
         <field name="account_collected_id" ref="p24800"/>
         <field name="account_paid_id" ref="p24800"/> 
         <field name="price_include" eval="0"/>
@@ -174,7 +174,7 @@
 	<!-- Service Tax -->	
 	
 	<record id="service_public_main" model="account.tax.template">
-        <field name="name">Service Tax - 12.30%</field>
+        <field name="name">Service Tax-12.30%</field>
         <field name="account_collected_id" ref="p24700"/>
         <field name="account_paid_id" ref="p24700"/> 
         <field name="include_base_amount" eval="True"/>
@@ -194,7 +194,7 @@
     </record>	
 	
 	<record id="service_tax_parent" model="account.tax.template">
-        <field name="name">Service Tax - %2</field>
+        <field name="name">Service Tax-%2</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
@@ -203,7 +203,7 @@
     </record>	
 	
 	<record id="service_tax" model="account.tax.template">
-        <field name="name">Service Tax - %1</field>
+        <field name="name">Service Tax-%1</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
@@ -214,7 +214,7 @@
 	<!-- Excise duty -->
 
 	<record id="exice_public_main" model="account.tax.template">
-        <field name="name">Excise Duty - 10.30%</field>
+        <field name="name">Excise Duty-10.30%</field>
         <field name="account_collected_id" ref="p24900"/>
         <field name="account_paid_id" ref="p24900"/>
         <field name="include_base_amount" eval="True"/>
@@ -234,7 +234,7 @@
     </record>	
 	
 	<record id="exice_duty_parent" model="account.tax.template">
-        <field name="name">Excise Duty - %2</field>
+        <field name="name">Excise Duty-%2</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -243,7 +243,7 @@
     </record>	
 	
 	<record id="exice_duty" model="account.tax.template">
-        <field name="name">Excise Duty - 1%</field>
+        <field name="name">Excise Duty-1%</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
