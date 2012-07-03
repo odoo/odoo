@@ -3,7 +3,7 @@
     <data>
         <!-- wizard action on res.partner -->
         <act_window id="partner_wizard_action"
-            name="Add Portal Access"
+            name="Portal Access Management"
             src_model="res.partner"
             res_model="res.portal.wizard"
             view_type="form" view_mode="form"
@@ -12,7 +12,7 @@
 
         <!-- wizard view -->
         <record id="wizard_view" model="ir.ui.view">
-            <field name="name">Add Portal Access</field>
+            <field name="name">Portal Access Management</field>
             <field name="model">res.portal.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -24,7 +24,7 @@
                         <button string="Cancel" class="oe_link" special="cancel" />    
                     </header>
                     <group col="4">
-                        <field name="portal_id" widget="selection"/>
+                        <field name="portal_id" on_change="onchange_portal_id(portal_id,context)"/>
                     </group>
                     <field name="user_ids"/>
                     <label string="The following text will be included in the welcome email sent to users."/>
@@ -45,6 +45,7 @@
                     <field name="name"/>
                     <field name="user_email"/>
                     <field name="partner_id"/>
+                    <field name="has_portal_user"/>
                 </tree>
             </field>
         </record>
