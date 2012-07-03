@@ -1728,10 +1728,8 @@ class stock_move(osv.osv):
         return location_id
     
     def _default_destination_address(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users')
-        company_obj = self.pool.get('res.company')
-        company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
-        partner_id = company_obj.browse(cr, uid, company_id, context=context).partner_id.id
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
         return partner_id
 
     _defaults = {
