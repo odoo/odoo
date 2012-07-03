@@ -144,7 +144,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_viewmanager.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this, action);
+            this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog_viewmanager.$element.addClass("oe_view_manager_" + action.target);
             this.dialog.open();

@@ -24,6 +24,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // if true, the view can't be editable, ignoring the view's and the context's
         // instructions
         'read_only': false,
+        // if true, the 'Import', 'Export', etc... buttons will be shown
+        'import_enabled': true,
     },
     /**
      * Core class for list-type displays.

@@ -621,7 +621,9 @@
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        <t t-if="widget.options.import_enabled">
+            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </t>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -1008,17 +1010,17 @@
         <span></span>
     </span>
 </t>
+<t t-name="FieldStatus">
+    <ul class="oe_form_steps"/>
+</t>
 <t t-name="FieldStatus.content">
-    <ul class="oe_form_steps">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-                <span><t t-esc="widget.to_show[i][1]"/></span>
-                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
-            </li>
-        </t>
-    </ul>
-    <div class="oe_clear"/>
+    <t t-set="size" t-value="widget.to_show.length"/>
+    <t t-foreach="_.range(size)" t-as="i">
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
+            <span><t t-esc="widget.to_show[i][1]"/></span>
+            <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+        </li>
+    </t>
 </t>
 <t t-name="FieldBinaryImage">
     <span class="oe_form_field oe_form_field_image">

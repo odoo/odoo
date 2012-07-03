@@ -200,6 +200,14 @@ $colour4: #8a89ba
             width: auto
             a.ui-state-active
                 background: #f0f0fa
+    &.ui-dialog
+        border: 13px solid rgba(0, 0, 0, 0.3)
+        @include radius(16px)
+        -moz-background-clip: padding-box
+        -webkit-background-clip: padding
+        background-clip: padding-box
+        box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.6)
+        -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2)
     // }}}
     // Generic classes {{{
     .oe_i
@@ -252,7 +260,7 @@ $colour4: #8a89ba
             &:hover
                 background: #ED6F6A
     .oe_title
-        width: 55%
+        width: 60%
     .oe_title:after
         content: "."
         display: block
@@ -913,7 +921,7 @@ $colour4: #8a89ba
                 content: "f"
         // }}}
     // ViewManager application {{{
-    .oe_view_manager_current, .oe_view_manager_inline
+    .oe_view_manager_current
         height: 100%
         > .oe_view_manager_header
             border-top: 1px solid #cacaca
@@ -926,6 +934,12 @@ $colour4: #8a89ba
             .oe_header_row:first-child
                 td
                     padding-top: 8px
+    // }}}
+    // ViewManager inline {{{
+    .oe_view_manager_inline
+        height: 100%
+        > .oe_view_manager_header
+            display: none
     // }}}
     // Viewmanager popup {{{
     .oe_popup_form > .oe_formview > .oe_form_pager
@@ -1259,9 +1273,12 @@ $colour4: #8a89ba
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
-    .oe_form_nosheet > *:not(header)
-        margin-left: 10px !important
-        margin-right: 10px !important
+    .oe_form_nosheet 
+        margin-left: 10px
+        margin-right: 10px
+    .oe_form_nosheet > header
+        margin-left: -10px
+        margin-right: -10px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form 

@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp a {
   text-decoration: none;
@@ -186,6 +186,17 @@
 .openerp .ui-menu .ui-menu-item a.ui-state-active {
   background: #f0f0fa;
 }
+.openerp.ui-dialog {
+  border: 13px solid rgba(0, 0, 0, 0.3);
+  -moz-border-radius: 16px;
+  -webkit-border-radius: 16px;
+  border-radius: 16px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2);
+}
 .openerp .oe_i {
   font-family: "mnmliconsRegular" !important;
   font-size: 21px;
@@ -283,7 +294,7 @@
   background: #ed6f6a;
 }
 .openerp .oe_title {
-  width: 55%;
+  width: 60%;
 }
 .openerp .oe_title:after {
   content: ".";
@@ -1162,10 +1173,10 @@
 .openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_diagram:after {
   content: "f";
 }
-.openerp .oe_view_manager_current, .openerp .oe_view_manager_inline {
+.openerp .oe_view_manager_current {
   height: 100%;
 }
-.openerp .oe_view_manager_current > .oe_view_manager_header, .openerp .oe_view_manager_inline > .oe_view_manager_header {
+.openerp .oe_view_manager_current > .oe_view_manager_header {
   border-top: 1px solid #cacaca;
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
@@ -1179,11 +1190,17 @@
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
 }
-.openerp .oe_view_manager_current > .oe_view_manager_header .oe_header_row td, .openerp .oe_view_manager_inline > .oe_view_manager_header .oe_header_row td {
+.openerp .oe_view_manager_current > .oe_view_manager_header .oe_header_row td {
   padding: 8px;
 }
-.openerp .oe_view_manager_current > .oe_view_manager_header .oe_header_row:first-child td, .openerp .oe_view_manager_inline > .oe_view_manager_header .oe_header_row:first-child td {
+.openerp .oe_view_manager_current > .oe_view_manager_header .oe_header_row:first-child td {
   padding-top: 8px;
+}
+.openerp .oe_view_manager_inline {
+  height: 100%;
+}
+.openerp .oe_view_manager_inline > .oe_view_manager_header {
+  display: none;
 }
 .openerp .oe_popup_form > .oe_formview > .oe_form_pager {
   display: none !important;
@@ -1612,9 +1629,13 @@
 .openerp .oe_form_readonly .oe_edit_only, .openerp .oe_form_readonly .oe_form_field:empty {
   display: none !important;
 }
-.openerp .oe_form_nosheet > *:not(header) {
-  margin-left: 10px !important;
-  margin-right: 10px !important;
+.openerp .oe_form_nosheet {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.openerp .oe_form_nosheet > header {
+  margin-left: -10px;
+  margin-right: -10px;
 }
 .openerp .oe_form header {
   position: relative;
