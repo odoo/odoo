@@ -42,7 +42,7 @@
                             <td>${company.partner_id and company.partner_id.street2 or ''|entity}</td><td>${_('Fax')}:</td><td>${company.partner_id and company.partner_id.fax or ''|entity} </td><td></td>
                         </tr>
                         <tr>
-                            <td>${company.partner_id and company.partner_id.zip or ''|entity} ${company.partner_id and company.partner_id.city or ''|entity}</td><td>${_('e-mail')}:</td><td><a href="mailto:${company.partner_id and company.partner_id.email or ''|entity}">${company.partner_id and company.partner_id.email or ''|entity}</a></td><td></td>
+                            <td>${company.partner_id and company.partner_id.zip or ''|entity} ${company.partner_id and company.partner_id.city or ''|entity}</td><td>${_('email')}:</td><td><a href="mailto:${company.partner_id and company.partner_id.email or ''|entity}">${company.partner_id and company.partner_id.email or ''|entity}</a></td><td></td>
                         </tr>
                         <tr>
                             <td>${company.partner_id and company.partner_id.country_id.name or ''|entity}</td><td></td><td style="text-align:right;font-size:12" ><span class="page"/></td><td style="text-align:left;font-size:12;"> / <span class="topage"/></td>

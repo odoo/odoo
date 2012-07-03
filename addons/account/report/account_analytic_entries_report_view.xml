@@ -34,37 +34,16 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
-              <group>
-                    <filter icon="terp-go-year" string="Year" 
-                            name="year"
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="year"/>
+                <group>
+                    <field name="day" string="Day"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Month"
-                            name="month"
-                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="current month"/>
-                    <filter icon="terp-go-month" string="Month-1"
-                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="last month"/>
+                    <field name="date"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-year" string="  365 Days  "
-                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                            help="Analytic Entries of last 365 days"/>
-                    <filter icon="terp-go-month" string="   30 Days   "
-                            name="month"
-                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                            help="Analytic Entries of last 30 days"/>
-                    <filter icon="terp-go-week"
-                            string="    7 Days    "
-                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                            help="Analytic Entries during last 7 days"/>
+                    <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
                     <separator orientation="vertical"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id" />
-                    <field name="user_id">
-                    <filter icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
-                    </field>
+                    <field name="user_id"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">
@@ -112,7 +91,7 @@
     <menuitem action="action_analytic_entries_report"
         id="menu_action_analytic_entries_report"
         groups="analytic.group_analytic_accounting"
-        parent="account.menu_finance_statistic_report_statement" sequence="4"/>
+        parent="account.menu_finance_reporting" sequence="4"/>
 
 </data>
 </openerp>

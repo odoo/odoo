@@ -57,9 +57,11 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="user_id"/>
-                    <field name="model"/>
+                    <field name="model" string="Message"/>
+                    <separator orientation="vertical"/>
                     <field name="date"/>
+                    <separator orientation="vertical"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>
@@ -204,20 +206,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
+                    <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
                     <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
                     <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="email_from"/>
-                    <field name="email_to"/>
-                    <field name="subject"/>
-                    <field name="date"/>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
                         <field name="user_id" string="User"/>

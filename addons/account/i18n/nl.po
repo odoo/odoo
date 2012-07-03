@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-06-20 16:17+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-06-28 12:47+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-21 05:18+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-06-29 04:38+0000\n"
+"X-Generator: Launchpad (build 15505)\n"
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -191,11 +191,6 @@ msgstr "Bron grootboekrekening"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Alle kostenplaatsboekingen"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Facturen gemaakt binnen de laatste 15 dagen"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -715,18 +710,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Om de boekingen af te kunnen letteren moeten alle boekingen onder hetzelfde "
 "bedrijf vallen."
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Debiteuren"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1736,11 +1719,6 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Verkopen per rekeningtype"
-
-#. module: account
 #: view:account.invoice.refund:0
 msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
@@ -2396,7 +2374,7 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
-"Er is geen default krediet rekening beschikbaar \n"
+"Er is geen standaard credit rekening beschikbaar \n"
 "voor journaal \"%s\""
 
 #. module: account
@@ -2863,13 +2841,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr "Grootboekschema instellen"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Verkopen per grootboekrekening"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Deze assistent genereert herhalende boekingen"
@@ -2998,8 +2969,8 @@ msgid ""
 "You can not delete an invoice which is open or paid. We suggest you to "
 "refund it instead."
 msgstr ""
-"Een factuur die open of betaald is kan u niet verwijderen. In plaats daarvan "
-"stellen we voor dat u ze terugbetaald."
+"Een factuur die open of betaald is kunt u niet verwijderen. In plaats "
+"daarvan kunt u een creditfactuur maken.."
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -4515,6 +4486,10 @@ msgid ""
 "you want to generate accounts of this template only when loading its child "
 "template."
 msgstr ""
+"Vink deze optie uit indien u niet wilt dat dit sjabloon actief wordt "
+"gebruikt in de wizard, welke het grootboekrekeningschema genereerd van "
+"sjablonen. Gebruik dit alleen indien u rekeningen wilt genereren van dit "
+"sjabloon bij het laden van het onderliggende sjaboon."
 
 #. module: account
 #: view:account.use.model:0
@@ -4607,7 +4582,7 @@ msgstr "Journaalposten boeken"
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
-msgstr "Afgebroken"
+msgstr "Geannuleerd"
 
 #. module: account
 #: help:account.bank.statement,balance_end_cash:0
@@ -4740,7 +4715,7 @@ msgstr "Opbrengsten rekening op product sjabloon"
 #: code:addons/account/account.py:3120
 #, python-format
 msgid "MISC"
-msgstr "DIV"
+msgstr "MEM"
 
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
@@ -5341,7 +5316,7 @@ msgstr "Sjabloon belasting fiscale positie"
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr "Maak verwijderen boekingen mogelijk"
+msgstr "Maak het annuleren boekingen mogelijk"
 
 #. module: account
 #: field:account.tax.code,sign:0
@@ -5777,7 +5752,7 @@ msgstr "Aanmaakdatum"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Kostenplaatsen"
+msgstr "Kostenplaats dagboeken"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -6551,11 +6526,6 @@ msgid "Supplier Refund"
 msgstr "Credit inkoopfactuur"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Dashboard"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Boekingsregels"
@@ -6930,7 +6900,7 @@ msgstr ""
 #: view:account.move:0
 #: field:account.move,to_check:0
 msgid "To Review"
-msgstr "Na te kijken"
+msgstr "Ter controle"
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -7147,11 +7117,6 @@ msgstr ""
 "%(date)s: Voor de huidige datum\n"
 "\n"
 "e.g. My model on %(date)s"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Opbrengsten rekeningen"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -12082,6 +12047,10 @@ msgstr ""
 #~ msgid "Account cost and revenue by journal (This Month)"
 #~ msgstr "Kosten en opbrengsten per dagboek (Deze maand)"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Debiteuren"
+
 #~ msgid "Open for unreconciliation"
 #~ msgstr "Open voor verrekening"
 
@@ -12674,6 +12643,9 @@ msgstr ""
 #~ msgid "Year :"
 #~ msgstr "Jaar :"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Facturen gemaakt binnen de laatste 15 dagen"
+
 #~ msgid "Accounts by type"
 #~ msgstr "Rekeningen per soort"
 
@@ -12886,6 +12858,9 @@ msgstr ""
 #~ msgid "Customer Invoices to Approve"
 #~ msgstr "Klantfacturen goed te keuren"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Verkopen per rekeningtype"
+
 #~ msgid "Fill this if the journal is to be used for refunds of invoices."
 #~ msgstr ""
 #~ "A.u.b. invullen indien het dagboek gebruikt wordt voor het crediteren van "
@@ -12896,6 +12871,9 @@ msgstr ""
 
 #~ msgid "Your Reference"
 #~ msgstr "Uw referentie"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Verkopen per grootboekrekening"
 
 #~ msgid "A/c Code"
 #~ msgstr "Rek. code"
@@ -13030,6 +13008,9 @@ msgstr ""
 #~ msgid "Create an Account based on this template"
 #~ msgstr "Maak een rekening gebaseerd op dit sjabloon"
 
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
 #~ msgid "Description On Invoices"
 #~ msgstr "Omschrijving op facturen"
 
@@ -13041,6 +13022,9 @@ msgstr ""
 
 #~ msgid "Cost Ledger for period"
 #~ msgstr "Kosten grootboek voor periode"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Opbrengsten rekeningen"
 
 #~ msgid "Consider reconciled entries"
 #~ msgstr "Afgeletterde boekingen meenemen"

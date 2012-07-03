@@ -22,21 +22,24 @@
 from osv import osv
 
 class ir_needaction_mixin(osv.Model):
-    """ Update of res.users class
-        - add a preference about sending emails about notificatoins
-        - make a new user follow itself
+    """ Update of ir.needaction_mixin class
+        - override the get_needaction_user_ids method to define the default
+          mail gateway need_action: when the object is unread, the object
+          responsible has an action to perform.
     """
     _name = 'ir.needaction_mixin'
     _inherit = ['ir.needaction_mixin']
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        """ Returns the user_ids that have to perform an action
+        """ Returns the user_ids that have to perform an action. It the
+            document mail state is unread (False), return object.user_id.id
+            as need_action uid.
             :return: dict { record_id: [user_ids], }
         """
         result = super(ir_needaction_mixin, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.message_state == False and obj.user_id:
-                result[obj.id].add(obj.user_id.id)
+                result[obj.id].append(obj.user_id.id)
         return result
 
 

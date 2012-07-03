@@ -18,8 +18,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Budgetary Position">
-                    <field name="code"/>
-                    <field name="name"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budgetary Position"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -110,10 +109,10 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" />
-                    <button string="Approve" name="validate" states="confirm" type="workflow"/>
-                    <button string="Done" name="done" states="validate" type="workflow"   />
-                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow"/>
+                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
+                    <button string="Done" name="done" states="validate" type="workflow" class="oe_highlight"/>
+                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow" />
                     <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
@@ -180,17 +179,18 @@
            <field name="arch" type="xml">
                <search string="Budget">
                    <group>
-                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                       <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
-                       <separator orientation="vertical"/>
-                       <field name="name"/>
-                       <field name="code" />
-                       <field name="state"/>
-                       <field name="date_from"/>
-                       <field name="date_to"/>
-                   </group>
-               </search>
-           </field>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budget"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
+                        <separator orientation="vertical"/>
+                        <field name="state"/>
+                    </group>
+                </search>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="act_crossovered_budget_view">
@@ -274,7 +274,7 @@
             <field name="name">account.analytic.account.form.inherot.budget</field>
             <field name="type">form</field>
             <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Budget Lines">

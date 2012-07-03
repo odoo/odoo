@@ -9,8 +9,9 @@
             <field name="arch" type="xml">
                 <form string="DTA file creation - Results" version="7.0">
                     <header>
-                        <button name="create_dta" string="Create DTA" type="object" icon="gtk-execute" colspan="2"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"  colspan="2"/>
+                        <button name="create_dta" string="Create DTA" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
                         <field name="dta_file"/>

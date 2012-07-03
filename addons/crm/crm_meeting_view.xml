@@ -2,6 +2,43 @@
 <openerp>
     <data>
 
+    <!-- Read/Unread actions -->
+    <record id="actions_server_crm_meeting_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_meeting"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_meeting_unread" model="ir.values">
+        <field name="name">action_crm_meeting_unread</field>
+        <field name="action_id" ref="actions_server_crm_meeting_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_unread'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model">crm.meeting</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+    <record id="actions_server_crm_meeting_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_meeting"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_meeting_read" model="ir.values">
+        <field name="name">action_crm_meeting_read</field>
+        <field name="action_id" ref="actions_server_crm_meeting_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_read'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model">crm.meeting</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
     <!-- CRM Meetings Categories Form View -->
 
     <record id="crm_meeting_categ_action" model="ir.actions.act_window">
@@ -27,11 +64,11 @@
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <button name="case_open" string="Confirm" type="object"
+                    <button name="case_open" string="Confirm" type="object" class="oe_highlight"
                             states="draft"/>
-                    <button name="case_close" string="Done" type="object"
+                    <button name="case_close" string="Done" type="object" class="oe_highlight"
                             states="open"/>
-                    <button name="case_reset" string="Reset to Unconfirmed" type="object"
+                    <button name="case_reset" string="Reset to Unconfirmed" type="object" 
                             states="cancel,done"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open"/>
@@ -101,7 +138,7 @@
                             attrs="{'readonly': [('state', '=', 'done')]}"
                             context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" colspan="4"
-                            nolabel="1" widget="one2many" mode="tree,form">
+                            nolabel="1" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
                                 <field name="sent_by_uid" string="From"/>
                                 <field name="user_id" string="To"/>
@@ -282,24 +319,27 @@
         <field name="model">crm.meeting</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Search Meetings">
-                <filter icon="terp-mail-message-new"
-                    string="Inbox" help="Unread messages"
-                    name="needaction_pending"
-                    domain="[('needaction_pending','=',True)]"/>
-                <group>
-                    <field name="name" string="Meeting / Partner"
-                        filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
-                    <field name="user_id">
-                        <filter icon="terp-personal"
-                            domain="[('user_id','=',uid)]"
-                            help="My Meetings" />
-                    </field>
-                    <field name="partner_id"/>
-                </group>
-            </search>
-        </field>
-    </record>
+                <search string="Search Meetings">
+                       <group>
+                            <filter icon="terp-mail-message-new"
+			                   string="Inbox" help="Unread messages"
+			                   name="needaction_pending"
+			                   domain="[('needaction_pending','=',True)]"/>
+                           <separator orientation="vertical"/>
+                           <field name="name" string="Meeting / Partner"
+                               filter_domain="['|',('name','ilike',self),('partner_id','ilike', self)]"/>
+                           <separator orientation="vertical"/>
+                           <filter string="My Meetings"
+                                   icon="terp-personal"
+                                   domain="[('user_id','=',uid)]"
+                                   help="My Meetings" />
+                           <separator orientation="vertical"/>   
+                           <field name="user_id"/>
+                           <field name="partner_id"/>
+                       </group>
+                </search>
+            </field>
+        </record>
 
         <!-- Calendar Attendee Form View -->
 

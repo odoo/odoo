@@ -359,7 +359,7 @@ class hr_holidays(osv.osv):
     # -----------------------------
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        result = super(hr_holidays, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'confirm' and obj.employee_id.parent_id:
                 result[obj.id] = [obj.employee_id.parent_id.user_id.id]

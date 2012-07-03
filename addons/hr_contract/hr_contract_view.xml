@@ -39,23 +39,22 @@
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <group>
-                   <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/>
-                   <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>
-                   <separator orientation="vertical"/>
-                   <field name="name"/>
-                   <field name="employee_id"/>
-                   <field name="working_hours"/>
-                   <field name="date_start"/>
-                   <field name="date_end"/>
+                       <field name="name" string="Contracts"/>
+                       <separator orientation="vertical"/>
+                       <field name="date_start"/>
+                       <field name="date_end"/>
+                       <separator orientation="vertical"/>
+                       <field name="employee_id"/>
+                       <field name="working_hours"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By...">
-                   <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                   <separator orientation="vertical"/>
-                   <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
-                   <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
+                       <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
+                       <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                    </group>
                </search>
             </field>
@@ -67,7 +66,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contract" version="7.0">
-                	<sheet>
+                    <sheet>
                     <group col="4">
                         <field name="name" />
                         <field name="employee_id" />
@@ -164,7 +163,7 @@
             <field name="arch" type="xml">
                 <search string="Search Contract Type">
                    <group>
-                    <field name="name"/>
+                       <field name="name" string="Contract Type"/>
                    </group>
                </search>
             </field>

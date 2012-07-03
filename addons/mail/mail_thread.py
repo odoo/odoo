@@ -65,7 +65,7 @@ class mail_thread(osv.Model):
     def _get_message_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
-            message_ids = self.message_load_ids(cr, uid, [id], context=context)
+            message_ids = self.message_search(cr, uid, [id], context=context)
             subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
             res[id] = {
                 'message_ids': message_ids,
@@ -73,8 +73,14 @@ class mail_thread(osv.Model):
             }
         return res
 
+    def _search_message_ids(self, cr, uid, obj, name, args, context=None):
+        msg_obj = self.pool.get('mail.message')
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', args[0][2]), ('model', '=', self._name)], context=context)
+        return [('id', 'in', msg_ids)]
+
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
+			fnct_search=_search_message_ids,
             type='one2many', obj='mail.message', _fields_id = 'res_id',
             string='Temp messages', multi="_get_message_ids",
             help="Functional field holding messages related to the current document."),
@@ -155,7 +161,7 @@ class mail_thread(osv.Model):
         msg_id = message_obj.create(cr, uid, vals, context=context)
         
         # Set as unread if writer is not the document responsible
-        self.message_create_check_state(cr, uid, [thread_id], context=context)
+        self.message_create_set_unread(cr, uid, [thread_id], context=context)
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
@@ -314,7 +320,7 @@ class mail_thread(osv.Model):
                 }
                 to_attach.append(ir_attachment.create(cr, uid, data_attach, context=context))
 
-            partner_id = hasattr(thread, 'partner_id') and (thread.partner_id and thread.partner_id.id or False) or False
+            partner_id = ('partner_id' in thread._columns.keys()) and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
                 partner_id = thread.id
             data = {
@@ -393,35 +399,63 @@ class mail_thread(osv.Model):
                             original = msg_dict.get('original'),
                             context = context)
 
+    #------------------------------------------------------
     # Message loading
-    def _message_load_add_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context=None):
+    #------------------------------------------------------
+
+    def _message_search_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context=None):
         """ Given message child_ids ids, find their ancestors until ancestor_ids
-            using their parent_id relationship."""
-        msg_obj = self.pool.get('mail.message')
-        tmp_msgs = msg_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
-        parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in ancestor_ids and msg['parent_id'][0] not in child_ids]
+            using their parent_id relationship.
+
+            :param child_ids: the first nodes of the search
+            :param ancestor_ids: list of ancestors. When the search reach an
+                                 ancestor, it stops.
+        """
+        def _get_parent_ids(message_list, ancestor_ids, child_ids):
+            """ Tool function: return the list of parent_ids of messages
+                contained in message_list. Parents that are in ancestor_ids
+                or in child_ids are not returned. """
+            return [message['parent_id'][0] for message in message_list
+                        if message['parent_id']
+                        and message['parent_id'][0] not in ancestor_ids
+                        and message['parent_id'][0] not in child_ids
+                    ]
+
+        message_obj = self.pool.get('mail.message')
+        messages_temp = message_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
+        parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
         child_ids += parent_ids
         cur_iter = 0; max_iter = 100; # avoid infinite loop
         while (parent_ids and (cur_iter < max_iter)):
             cur_iter += 1
-            tmp_msgs = msg_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
-            parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in ancestor_ids and msg['parent_id'][0] not in child_ids]
+            messages_temp = message_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
+            parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
             child_ids += parent_ids
         if (cur_iter > max_iter):
-            _logger.warning("Possible infinite loop in _message_add_ancestor_ids. \
-                            Note that this algorithm is intended to check for cycle \
-                            in message graph, leading to a curious error. Have fun.")
+            _logger.warning("Possible infinite loop in _message_search_ancestor_ids. "\
+                "Note that this algorithm is intended to check for cycle in "\
+                "message graph, leading to a curious error. Have fun.")
         return child_ids
-    
-    def _message_load_ids(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                            limit=100, offset=0, domain=None, count=False, context=None):
-        """ OpenChatter feature: returns thread messages ids. It searches in
-            mail.messages where ``res_id = ids, (res_)model = current model``.
+
+    def message_search_get_domain(self, cr, uid, ids, context=None):
+        """ OpenChatter feature: get the domain to search the messages related
+            to a document. mail.thread defines the default behavior as
+            being messages with model = self._name, id in ids.
+            This method should be overridden if a model has to implement a
+            particular behavior.
+        """
+        return ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
+
+    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False,
+                        get_ids=False, context=None):
+        """ OpenChatter feature: return thread messages ids according to the
+            search domain given by ``message_search_get_domain``.
             
             It is possible to add in the search the parent of messages by
             setting the fetch_ancestors flag to True. In that case, using
             the parent_id relationship, the method returns the id list according
-            to the search domain, but then calls ``_message_load_add_ancestor_ids``
+            to the search domain, but then calls ``_message_search_ancestor_ids``
             that will add to the list the ancestors ids. The search is limited
             to parent messages having an id in ancestor_ids or having
             parent_id set to False.
@@ -441,44 +475,60 @@ class mail_thread(osv.Model):
                            default domain.
             :param limit, offset, count, context: as usual
         """
-        msg_obj = self.pool.get('mail.message')
-        search_domain = ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
+        search_domain = self.message_search_get_domain(cr, uid, ids, context=context)
         if domain:
             search_domain += domain
-        msg_ids = msg_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
-        if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
-        if count:
-            return len(msg_ids)
-        else:
-            return msg_ids
-        
-    def message_load(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, count=False,
-                        get_ids=False, context=None):
-        """ OpenChatter feature: return thread messages. This method calls
-            ``_message_load_ids`` to separate the search from the read.
-            
-            :param fetch_ancestors: performs an ascended search; will add
-                                    to fetched msgs all their parents until
-                                    ancestor_ids
-            :param ancestor_ids: used when fetching ancestors
-            :param domain: domain to add to the search; especially child_of
-                           is interesting when dealing with threaded display
-            :param root_ids: root_ids when performing an ascended search
-            :param limit, offset, count, context: as usual
-            :param get_ids: return ids instead of a read
+        message_obj = self.pool.get('mail.message')
+        message_res = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, count=count, context=context)
+        if not count and fetch_ancestors:
+            message_res += self._message_search_ancestor_ids(cr, uid, ids, message_res, ancestor_ids, context=context) 
+        return message_res
+
+    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, context=None):
+        """ OpenChatter feature: read the messages related to some threads.
+            This method is used mainly the Chatter widget, to directly have
+            read result instead of searching then reading.
+
+            Please see message_search for more information about the parameters.
         """
-        load_res = self._message_load_ids(cr, uid, ids, fetch_ancestors, ancestor_ids, limit, offset, domain, count, context=context)
-        if count or get_ids:
-            return load_res
-        else:
-			messages = self.pool.get('mail.message').read(cr, uid, load_res, context=context)
-			messages = sorted(messages, key=lambda d: (-d['id']))
-			return messages
-    
-    def get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
+        message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
+            limit, offset, context=context)
+        messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
+        
+        """ Retrieve all attachments names """
+        map_id_to_name = dict((attachment_id, '') for message in messages for attachment_id in message['attachment_ids'])
+        print map_id_to_name
+        map_id_to_name = {}
+        for msg in messages:
+            for attach_id in msg["attachment_ids"]:
+                map_id_to_name[attach_id] = '' # use empty string as a placeholder
+        print map_id_to_name
+
+        ids = map_id_to_name.keys()
+        names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
+        
+        # convert the list of tuples into a dictionnary
+        for name in names: 
+            map_id_to_name[name[0]] = name[1]
+        
+        # give corresponding ids and names to each message
+        for msg in messages:
+            msg["attachments"] = []
+            
+            for attach_id in msg["attachment_ids"]:
+                msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
+        
+        # Set the threads as read
+        self.message_check_and_set_read(cr, uid, ids, context=context)
+        # Sort and return the messages
+        messages = sorted(messages, key=lambda d: (-d['id']))
+        return messages
+
+    def message_get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
                             limit=100, offset=0, msg_search_domain=[], context=None):
-        """ OpenChatter: wall: get messages to display (=pushed notifications).
+        """ OpenChatter: wall: get the pushed notifications and used them
+            to fetch messages to display on the wall.
             
             :param fetch_ancestors: performs an ascended search; will add
                                     to fetched msgs all their parents until
@@ -489,7 +539,7 @@ class mail_thread(osv.Model):
             :param ascent: performs an ascended search; will add to fetched msgs
                            all their parents until root_ids
             :param root_ids: for ascent search
-            :return list of mail.messages sorted by date
+            :return: list of mail.messages sorted by date
         """
         notification_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
@@ -505,7 +555,7 @@ class mail_thread(osv.Model):
         msg_ids = [notification.message_id.id for notification in notifications]
         # get messages
         msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
-        if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
+        if (fetch_ancestors): msg_ids = self._message_search_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
@@ -533,9 +583,9 @@ class mail_thread(osv.Model):
                                     record needs to be created. Ignored
                                     if the thread record already exists.
            :param bool save_original: whether to keep a copy of the original
-               email source attached to the message after it is imported.
+                email source attached to the message after it is imported.
            :param bool strip_attachments: whether to strip all attachments
-               before processing the message, in order to save some space.
+                before processing the message, in order to save some space.
         """
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -793,16 +843,11 @@ class mail_thread(osv.Model):
                         use the mail.thread OpenChatter API instead of the \
                         now deprecated res.log.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
-    
+
     def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False,
                             type='notification', content_subtype='html', subtype=None, context=None):
-        if subject is None:
-            if type == 'notification':
-                subject = _('System notification')
-            elif type == 'comment' and not parent_id:
-                subject = _('Comment')
-            elif type == 'comment' and parent_id:
-                subject = _('Reply')
+        if type in ['notification', 'reply']:
+            subject = None
         if content_subtype == 'html':
             body_html = body
             body_text = body
@@ -996,17 +1041,33 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    def message_create_check_state(self, cr, uid, ids, context=None):
+    def message_create_set_unread(self, cr, uid, ids, context=None):
+        """ When creating a new message, set as unread if uid is not the
+            object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
-            if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
-                print 'poinpoinponi'
+            if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id != uid):
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
-    def message_mark_as_read(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'message_state': True}, context=context)
+    def message_check_and_set_unread(self, cr, uid, ids, context=None):
+        """ Set unread if uid is the object responsible or if the object has
+            no responsible. """
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id == uid):
+                self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
+        """ Set as unread. """
         return self.write(cr, uid, ids, {'message_state': False}, context=context)
+
+    def message_check_and_set_read(self, cr, uid, ids, context=None):
+        """ Set read if uid is the object responsible. """
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.message_state and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.id == uid:
+                self.message_mark_as_read(cr, uid, [obj.id], context=context)
+    
+    def message_mark_as_read(self, cr, uid, ids, context=None):
+        """ Set as read. """
+        return self.write(cr, uid, ids, {'message_state': True}, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

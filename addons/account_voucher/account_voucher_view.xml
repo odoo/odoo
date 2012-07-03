@@ -11,7 +11,7 @@
                     <field name="number"/>
                     <field name="reference"/>
                     <field name="partner_id"/>
-                    <field name="journal_id"/>
+                    <field name="journal_id" groups="account.group_account_user"/>
                     <field name="period_id" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
@@ -43,7 +43,7 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                   <header>
-                      <button name="proforma_voucher" string="Post" states="draft"/>
+                      <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
                       <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                       <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -110,7 +110,10 @@
                             </field>
                         </page>
                     </notebook>
-                   </sheet>
+                  </sheet>
+                    <footer>
+                        <field name="message_ids" widget="ThreadView"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -123,17 +126,16 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
                         <field name="period_id"/>
                     </group>

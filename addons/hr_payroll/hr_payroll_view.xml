@@ -25,10 +25,10 @@
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Job Info" colspan="2"/>
-                            <field name="manager" select="1"/>
-                            <field name="vehicle" select="1"/>
-                            <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1" string="Medical Examination"/>
+                            <field name="manager" />
+                            <field name="vehicle" />
+                            <field name="vehicle_distance" />
+                            <field name="medic_exam"  string="Medical Examination"/>
                         </group>
                     </page>
                 </xpath>
@@ -93,8 +93,7 @@
             <field name="arch" type="xml">
                 <search string="Payroll Structures">
                     <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     </group>
                     <newline/>
                 </search>
@@ -212,8 +211,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
                     <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="slip_id"/>
                         <field name="amount_select"/>
                     </group>
@@ -258,10 +257,10 @@
             <field name="arch" type="xml">
                 <form string="Payslip" version="7.0">
                 <header>
-                    <button string="Confirm" name="hr_verify_sheet" states="draft"/>
-                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object'/>
+                    <button string="Confirm" name="hr_verify_sheet" states="draft" class="oe_highlight"/>
+                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object' />
                     <button string="Set to Draft" name="draft" states="cancel"/>
-                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft"/>
+                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_highlight"/>
                     <button string="Cancel" name="cancel_sheet" states="draft,hr_check,confirm,verify"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
@@ -383,13 +382,14 @@
             <field name="arch" type="xml">
                 <search string="Search Payslips">
                     <group>
+                        <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_from"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
                         <separator orientation="vertical"/>
-                        <field name="number"/>
                         <field name="employee_id"/>
-                        <field name="name"/>
-                        <field name="date_from"/>
                         <field name="payslip_run_id"/>
                     </group>
                     <newline/>
@@ -464,8 +464,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Rule Categories">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" string="Salary Rule Categories" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                </search>
             </field>
         </record>
@@ -509,8 +508,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                    <field name="name" />
+                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -520,7 +519,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Contribution Registers">
-                    <field name="name"/>
+                    <field name="name" string="Contribution Registers"/>
+                    <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </search>
             </field>
@@ -596,7 +596,7 @@
                     <h2><field name="category_id"/></h2>
 
                     <group col="4">
-                       <field name="code" select="1"/>
+                       <field name="code"/>
                        <field name="sequence" />
                        <field name="active"/>
                        <field name="appears_on_payslip"/>
@@ -650,8 +650,8 @@
             <field name="arch" type="xml">
                 <search string="Search Salary Rule">
                     <group col="8">
-                        <field name="name"/>
-                        <field name="code"/>
+                        <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                        <separator orientation="vertical"/>
                         <field name="category_id"/>
                         <field name="condition_range_min"/>
                     </group>
@@ -691,12 +691,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslip Batches">
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
+                    <field name="name" string="Payslip Batches"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
+                    <filter name="done_filter" icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
                 </search>
             </field>
         </record>
@@ -723,9 +724,9 @@
             <field name="arch" type="xml">
                 <form string="Payslips Batches" version="7.0">
                 <header>
-                    <button name="close_payslip_run" type="object" string="Close" states="draft"/>
-                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" />
-                    <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
+                    <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_highlight"/>
+                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_highlight"/>
+                    <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -762,18 +763,18 @@
             groups="base.group_hr_manager"/>
 
         <act_window name="Payslip Computation Details"
-        	domain="[('slip_id', '=', active_id)]"
-        	context="{'default_slip_id': active_id}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.payslip"
-        	id="act_payslip_lines"/>
+            domain="[('slip_id', '=', active_id)]"
+            context="{'default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
-        	domain="[('register_id', '=', active_id)]"
-        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.contribution.register"
-        	id="act_contribution_reg_payslip_lines"/>
+            domain="[('register_id', '=', active_id)]"
+            context="{'default_register_id': active_id, 'search_default_register_id': 1}"
+            res_model="hr.payslip.line"
+            src_model="hr.contribution.register"
+            id="act_contribution_reg_payslip_lines"/>
 
     </data>
 </openerp>

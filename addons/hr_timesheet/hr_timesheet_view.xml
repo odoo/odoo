@@ -12,7 +12,7 @@
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="name"/>
-                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1}"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
@@ -41,7 +41,7 @@
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                 </group>
                                 <group string="Accounting">
-                                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1"/>
+                                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
                                     <field name="journal_id"/>
@@ -60,11 +60,10 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group>
-                        <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
+                        <field name="date"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
                         <field name="account_id"/>
-                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -78,6 +77,21 @@
                 </search>
             </field>
 
+        </record>
+        
+        <record id="account_analytic_account_timesheet_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.invoice.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_timesheets"/>
+                </xpath>
+            </field>
         </record>
 
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">

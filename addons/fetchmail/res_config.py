@@ -32,7 +32,7 @@ class fetchmail_config_settings(osv.osv_memory):
                 _inherit = ['res.config.settings', 'fetchmail.config.settings']
 
                 _columns = {
-                    'fetchmail_stuff': fields.boolean(..., readonly=True,
+                    'fetchmail_stuff': fields.boolean(...,
                         fetchmail_model='my.stuff', fetchmail_name='Incoming Stuff'),
                 }
 
@@ -67,12 +67,25 @@ class fetchmail_config_settings(osv.osv_memory):
             res[f] = bool(server_ids)
         return res
 
+    def set_fetchmail(self, cr, uid, ids, context=None):
+        """ deactivate fetchmail servers for all fields like 'fetchmail_XXX' that are False """
+        config = self.browse(cr, uid, ids[0], context)
+        fetchmail_fields = [f for f in self._columns if f.startswith('fetchmail_')]
+        # determine which models should not have active fetchmail servers, and
+        # deactivate all active servers for those models
+        models = [self._columns[f].fetchmail_model for f in fetchmail_fields if not config[f]]
+        if models:
+            fetchmail_server = self.pool.get('fetchmail.server')
+            server_ids = fetchmail_server.search(cr, uid, [('object_id.model', 'in', models), ('state', '=', 'done')])
+            fetchmail_server.set_draft(cr, uid, server_ids, context)
+
     def configure_fetchmail(self, cr, uid, field, context=None):
         """ open the form view of the fetchmail.server to configure """
         action = {
             'type': 'ir.actions.act_window',
             'res_model': 'fetchmail.server',
             'view_mode': 'form',
+            'target': 'current',
         }
         model_name = self._columns[field].fetchmail_model
         model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)])[0]

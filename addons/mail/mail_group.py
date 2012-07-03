@@ -99,7 +99,7 @@ class mail_group(osv.osv):
         message_obj = self.pool.get('mail.message')
         for id in ids:
             lower_date = (DT.datetime.now() - DT.timedelta(days=30)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            result[id] = self.message_load(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
+            result[id] = self.message_search(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
         return result
     
     def _get_default_photo(self, cr, uid, context=None):

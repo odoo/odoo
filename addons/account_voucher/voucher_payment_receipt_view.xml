@@ -9,17 +9,16 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id" string="Customer"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id"/>
                     </group>
@@ -42,17 +41,16 @@
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group>
+                        <field name="number" string="Voucher"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
                         <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
-                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id"/>
                     </group>
@@ -145,7 +143,7 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
@@ -185,8 +183,8 @@
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="account.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="account.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
@@ -201,8 +199,8 @@
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="account.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="account.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
@@ -259,6 +257,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <footer>
+                        <field name="message_ids" widget="ThreadView"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -272,7 +273,9 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_vendor_pay"/>
             <field name="target">current</field>
-            <field name="help">The supplier payment form allows you to track the payment you do to your suppliers. When you select a supplier, the payment method and an amount for the payment, OpenERP will propose to reconcile your payment with the open supplier invoices or bills.</field>
+            <field name="help">Click on "Create" to register a supplier payment. 
+                    &lt;p&gt;
+                    Track payments you do to your supplier and amounts you pay.</field>
         </record>
         <record id="action_vendor_payment_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -297,7 +300,7 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
@@ -427,6 +430,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <footer>
+                        <field name="message_ids" widget="ThreadView"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -440,7 +446,11 @@
             <field name="search_view_id" ref="view_voucher_filter_customer_pay"/>
             <field name="view_id" eval="False"/>
             <field name="target">current</field>
-            <field name="help">Sales payment allows you to register the payments you receive from your customers. In order to record a payment, you must enter the customer, the payment method (=the journal) and the payment amount. OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts.</field>
+            <field name="help">
+                Click on create to register a payment.
+                &lt;p&gt;
+                Enter the customer and the payment method and then, either create manually a payment record or OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts.
+            </field>
         </record>
         <record id="action_vendor_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

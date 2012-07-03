@@ -38,7 +38,7 @@ from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from tools.translate import _
 import tools
 
-_logger = logging.getLogger('mail')
+_logger = logging.getLogger(__name__)
 
 def format_date_tz(date, tz=None):
     if not date:
@@ -115,7 +115,20 @@ class mail_message_common(osv.TransientModel):
                 continue
             result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
         return result
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for message in self.browse(cr, uid, ids, context=context):
+            name = ''
+            if message.subject:
+                name = '%s: ' % (message.subject)
+            if message.body_text:
+                name = '%s%s ' % (name, message.body_text[0:20])
+            if message.date:
+                name = '%s(%s)' % (name, message.date)
+            res.append((message.id, name))
+        return res
+
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
@@ -206,10 +219,10 @@ class mail_message(osv.Model):
     
     _columns = {
         'type': fields.selection([
-                        ('email', 'e-mail'),
+                        ('email', 'email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+                        ], 'Type', help="Message type: email for email message, notification for system message, comment for other messages such as user replies"),
         'subtype': fields.char('Subtype', size=64,
                         help="Message subtype, such as 'create' or 'cancel'. The purpose \
                         is to be able to distinguish message of the same type.\
@@ -237,7 +250,7 @@ class mail_message(osv.Model):
     }
     
     #------------------------------------------------------
-    # E-Mail api
+    # Email api
     #------------------------------------------------------
     
     def init(self, cr):

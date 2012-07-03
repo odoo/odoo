@@ -1,6 +1,43 @@
 <openerp>
     <data>
 
+        <!-- Hr holidays Read/Unread actions -->
+        <record id="actions_server_holidays_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_hr_holidays"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_holidays_unread" model="ir.values">
+            <field name="name">action_holidays_unread</field>
+            <field name="action_id" ref="actions_server_holidays_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_hr_holidays" />
+            <field name="model">hr.holidays</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_holidays_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_hr_holidays"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_holidays_read" model="ir.values">
+            <field name="name">action_holidays_read</field>
+            <field name="action_id" ref="actions_server_holidays_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_hr_holidays" />
+            <field name="model">hr.holidays</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <record id="view_hr_holidays_filter" model="ir.ui.view">
             <field name="name">hr.holidays.filter</field>
             <field name="model">hr.holidays</field>
@@ -8,22 +45,22 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
+                        <field name="date_from"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
+                        <separator orientation="vertical"/>
+                        <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                        <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
-                        <filter icon="terp-go-month" name="This Month" string="Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-month" name="This Month-1" string=" Month-1"
-                         domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                         help="Leaves during last month"/>
                         <separator orientation="vertical"/>
-                        <field name="employee_id">
-                            <filter icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
-                        </field>
-                        <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
-                        </field>
+                        <field name="employee_id"/>
+                        <field name="department_id" widget="selection"/>
                         <field name="holiday_status_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -65,14 +102,14 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user"/>
+                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
-                <sheet string="Leave Request" layout="auto">
+                <sheet string="Leave Request">
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                     <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
@@ -114,11 +151,11 @@
             <field name="arch" type="xml">
                 <form string="Allocation Request" version="7.0">
                 <header>
-                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user"/>
+                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
@@ -249,7 +286,6 @@
             </field>
         </record>
 
-        <!-- My leave dashboard -->
         <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">
@@ -358,7 +394,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave Type">
-                    <field name="name"/>
+                    <field name="name" string="Leave Types"/>
+                    <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
             </field>
@@ -424,7 +461,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leave Type">
-                    <field name="name"/>
+                    <field name="name" string="Leave Types"/>
+                    <separator orientation="vertical"/>
                     <field name="categ_id" widget="selection"/>
                 </search>
             </field>

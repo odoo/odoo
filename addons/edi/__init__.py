@@ -23,12 +23,13 @@ import logging
 import models
 import edi_service
 from models.edi import EDIMixin, edi_document
+_logger = logging.getLogger(__name__)
 
 # web
 try:
     import controllers
 except ImportError:
-    logging.getLogger('init.load').warn(
+    _logger.warn(
         """Could not load openerp-web section of EDI, EDI will not behave correctly
 
 To fix, launch openerp-web in embedded mode""")

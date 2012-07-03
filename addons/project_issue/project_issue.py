@@ -241,7 +241,7 @@ class project_issue(base_stage, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'stage_id': fields.many2one ('project.task.type', 'Stages',
+        'stage_id': fields.many2one ('project.task.type', 'Stage',
                         domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
@@ -288,7 +288,7 @@ class project_issue(base_stage, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set lead priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -572,12 +572,7 @@ class project(osv.osv):
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
-        'use_issues' : fields.boolean('Use Issues', help="Check this field if this project manages issues"),
         'issue_count': fields.function(_issue_count, type='integer'),
-    }
-
-    _defaults = {
-        'use_issues': True,
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -591,5 +586,19 @@ class project(osv.osv):
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
 project()
+
+class account_analytic_account(osv.osv):
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    
+    _columns = {
+        'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
+    }
+    
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
+        return res or vals.get('use_issues')
+
+account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

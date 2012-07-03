@@ -64,7 +64,6 @@ The main features are:
         'res_users_view.xml',
         'data/mail_data.xml',
         'data/mail_group_data.xml',
-        'report/mail_message_report_view.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
     ],
@@ -88,11 +87,14 @@ The main features are:
         'static/src/css/mail_compose_message.css',
     ],
     'js': [
-        'static/src/js/jquery.expander.min.js',
+        'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
+    ],
+    'demo': [
+        'mail_demo.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
