@@ -8,15 +8,14 @@
             <div id="topheader">
                 <div id="branding">
                     <img src="/point_of_sale/static/src/img/logo.png" />
-                </div>
-                <div id="loggedas">
-                    <span class="placeholder-SynchNotificationWidget"></span>
+                    <span class="placeholder-UsernameWidget"></span>
                 </div>
                 <div id="rightheader">
                     <div id="order-selector">
-                        <button id="neworder-button">+</button>
+                        <button class="neworder-button">+</button>
                         <ol id="orders"></ol>
                     </div>
+                    <span class="placeholder-SynchNotificationWidget"></span>
                 </div>
             </div>
             <div id="content">
@@ -39,11 +38,11 @@
 
 
     <t t-name="SynchNotificationWidget">
-        <span>
-        <a t-if="widget.nbr_pending &gt; 0" href="javascript:void(0)" class="oe_pos_synch-notification-button">
-            <t t-esc="widget.nbr_pending"/> pending orders
-        </a>
-        </span>
+        <div class="oe_pos_synch-notification">
+            <t   t-if="widget.get_nbr_pending() > 0" t-esc="widget.get_nbr_pending()"/>
+            <div t-if="widget.get_nbr_pending() > 0" class="oe_status_red"></div>
+            <div t-if="widget.get_nbr_pending() === 0" class="oe_status_green"></div>
+        </div>
     </t>
 
     <t t-name="PosCloseWarning">
@@ -144,6 +143,16 @@
                 </tr>
 
             </table>
+        </div>
+    </t>
+    <t t-name="ScaleScreenWidget">
+        <div class="scale-screen screen">
+            <header><h2>Product Weighting</h2></header>
+            <div class="display">
+                <span class="weight">0.000Kg</span>
+                <span class="product-name"></span>
+
+            </div>
         </div>
     </t>
 
@@ -358,29 +367,29 @@
     <t t-name="OrderlineWidget">
         <li class="orderline">
             <span class="product-name">
-                <t t-esc="widget.model.get('name')"/>
+                <t t-esc="widget.model.get_product().get('name')"/>
             </span>
             <span class="price">
-                <t t-esc="widget.format_currency(widget.model.getPriceWithTax())"/>
+                <t t-esc="widget.format_currency(widget.model.get_price_with_tax())"/>
             </span>
             <ul class="info-list">
-                <t t-if="widget.model.get('quantity') !== 1.0">
+                <t t-if="widget.model.get_quantity() !== 1.0">
                     <li class="info">
                         <em>
-                            <t t-esc="widget.model.get('quantity')" />
+                            <t t-esc="widget.model.get_quantity()" />
                         </em>
                         <t t-esc="widget.model.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get('list_price'))" />
+                        <t t-esc="widget.format_currency(widget.model.get_list_price())" />
                         /
                         <t t-esc="widget.model.get_unit().name" />
                     </li>
                 </t>
-                <t t-if="widget.model.get('discount') > 0">
+                <t t-if="widget.model.get_discount() > 0">
                     <li class="info">
                         With a 
                         <em>
-                            <t t-esc="widget.model.get('discount')" />%
+                            <t t-esc="widget.model.get_discount()" />%
                         </em>
                         discount
                     </li>
@@ -395,14 +404,14 @@
                 <t t-esc="widget.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
-                <input type="text" t-att-value="widget.payment_line.get('amount').toFixed(2)" />
+                <input type="text" t-att-value="widget.payment_line.get_amount().toFixed(2)" />
                 <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
             </td>
         </tr>
     </t>
 
     <t t-name="PaypadButtonWidget">
-        <button class="payment-button" t-att-cash-register-id="widget.cashRegister.get('id')">
+        <button class="paypad-button" t-att-cash-register-id="widget.cashRegister.get('id')">
             <t t-esc="widget.cashRegister.get('journal').name"/>
         </button>
         <br />
@@ -412,6 +421,12 @@
         <li class="order-selector-button">
             <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
         </li>
+    </t>
+
+    <t t-name="UsernameWidget">
+        <span class="username">
+            <t t-esc="widget.get_name()" />
+        </span>
     </t>
 
     <t t-name="PosTicket">
@@ -427,13 +442,13 @@
             <table>
                 <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order">
                     <td>
-                        <t t-esc="order.get('name')"/>
+                        <t t-esc="order.get_product().get('name')"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="order.get('quantity').toFixed(0)"/>
+                        <t t-esc="order.get_quantity().toFixed(0)"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
+                        <t t-esc="widget.format_currency(order.get_list_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
                     </td>
                 </tr>
             </table>
@@ -453,7 +468,7 @@
                         <t t-esc="pline.get('journal_id')[1]"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency((pline.getAmount()).toFixed(2))"/>
+                        <t t-esc="widget.format_currency((pline.get_amount()).toFixed(2))"/>
                     </td>
                 </tr>
             </table>

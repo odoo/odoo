@@ -1,7 +1,7 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    module.NumpadWidget = instance.web.Widget.extend({
+    module.NumpadWidget = module.PosBaseWidget.extend({
         template:'NumpadWidget',
         init: function(parent, options) {
             this._super(parent);
@@ -44,7 +44,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            console.log('PaypadWidget:',this);
 
             this.pos.get('cashRegisters').each(function(cashRegister) {
                 var button = new module.PaypadButtonWidget(self,{
@@ -97,7 +96,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             this._super();
             this.$element.click(_.bind(this.click_handler, this));
-            if(this.model.get('selected')){
+            if(this.model.is_selected()){
                 this.$element.addClass('selected');
             }
         },
@@ -130,9 +129,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         set_value: function(val) {
         	var order = this.pos.get('selectedOrder');
         	if (order.get('orderLines').length !== 0) {
-                var param = {};
-                param[this.numpadState.get('mode')] = val;
-        	    order.getSelectedLine().set(param);
+                var mode = this.numpadState.get('mode');
+                if( mode === 'quantity'){
+                    order.getSelectedLine().set_quantity(val);
+                }else if( mode === 'discount'){
+                    order.getSelectedLine().set_discount(val);
+                }else if( mode === 'list_price'){
+                    order.getSelectedLine().set_list_price(val);
+                }
         	} else {
         	    this.pos.get('selectedOrder').destroy();
         	}
@@ -202,9 +206,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-// ---------- Product Screen ----------
-
-
     module.ProductWidget = module.PosBaseWidget.extend({
         template: 'ProductWidget',
         init: function(parent, options) {
@@ -250,20 +251,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
             	this.amount = parseFloat(newAmount);
-                this.payment_line.set({
-                    amount: this.amount,
-                });
+                this.payment_line.set_amount(this.amount);
             }
         },
         changedAmount: function() {
-        	if (this.amount !== this.payment_line.get('amount'))
+        	if (this.amount !== this.payment_line.get_amount())
         		this.renderElement();
         },
         renderElement: function() {
-            this.name =   this.payment_line.get('journal_id')[1];
+            this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
-            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
-            $('.delete-payment-line', this.$element).click(this.on_delete);
+            this.$('input').keyup(_.bind(this.changeAmount, this));
+            this.$('.delete-payment-line').click(this.on_delete);
         },
     });
 
@@ -385,7 +384,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }else{
                 this.category = category;
             }
-            console.log('setting categories:',this.category);
 
             this.breadcrumb = [];
             for(var i = 1; i < this.category.ancestors.length; i++){
@@ -534,24 +532,60 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.UsernameWidget = module.PosBaseWidget.extend({
+        template: 'UsernameWidget',
+        init: function(parent, options){
+            var options = options || {};
+            this._super(parent,options);
+            this.mode = options.mode || 'cashier';
+        },
+        set_user_mode: function(mode){
+            this.mode = mode;
+            this.refresh();
+        },
+        refresh: function(){
+            this.renderElement();
+        },
+        get_name: function(){
+            var user;
+            if(this.mode === 'cashier'){
+                user = this.pos.get('cashier') || this.pos.get('user');
+            }else{
+                user = this.pos.get('client')  || this.pos.get('user');
+            }
+            if(user){
+                return user.name;
+            }else{
+                return "";
+            }
+        },
+    });
+
 // ---------- Main Point of Sale Widget ----------
 
     // this is used to notify the user that data is being synchronized on the network
-    module.SynchNotificationWidget = instance.web.Widget.extend({
+    module.SynchNotificationWidget = module.PosBaseWidget.extend({
         template: "SynchNotificationWidget",
-        init: function(parent) {
-            this._super(parent);
-            this.nbr_pending = 0;
+        init: function(parent,options) {
+            options = options || {};
+            this._super(parent,options);
         },
         renderElement: function() {
+            var self = this;
             this._super();
-            $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
+            this.$('.oe_pos_synch-notification-button').click(function(){
+                self.pos.flush();
+            });
         },
-        on_change_nbr_pending: function(nbr_pending) {
-            this.nbr_pending = nbr_pending;
-            this.renderElement();
+        start: function(){
+            var self = this;
+            this.pos.bind('change:nbr_pending_operations', function(){
+                self.renderElement();
+            });
         },
-        on_synch: function() {}
+        get_nbr_pending: function(){
+            return this.pos.get('nbr_pending_operations');
+        },
     });
 
     // The PosWidget is the main widget that contains all other widgets in the PointOfSale.
@@ -567,7 +601,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     module.PosWidget = module.PosBaseWidget.extend({
         template: 'PosWidget',
         init: function() { 
-            console.log('PosArguments:',arguments);
             this._super(arguments[0],{});
             
             this.pos = new module.PosModel(this.session);
@@ -586,16 +619,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return self.pos.ready.then(function() {
                 self.build_currency_template();
                 self.renderElement();
-                self.synch_notification = new module.SynchNotificationWidget(this);
-                self.synch_notification.replace($('.placeholder-SynchNotificationWidget', self.$element));
-                self.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
-                
-                self.pos.bind('change:nbr_pending_operations', self.changed_pending_operations, self);
-                self.changed_pending_operations();
-                
-                self.$element.find("#loggedas button").click(function() {
-                    self.try_close();
-                });
                 
                 self.$('button#neworder-button').click(_.bind(self.create_new_order, self));
                 
@@ -616,21 +639,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 instance.webclient.set_content_full_screen(true);
 
                 if (!self.pos.get('pos_session')) {
-                    self.screen_selector.show_popup('error',
-                        'Sorry, we could not create a user session');
-                //}else if (!self.pos.get('bank_statements') || self.pos.get('bank_statements').length === 0){
-                //    self.screen_selector.show_popup('error',
-                //        'Sorry, we could not find any accounting journals in the configuration');
+                    self.screen_selector.show_popup('error', 'Sorry, we could not create a user session');
                 }else if(!self.pos.get('pos_config')){
-                    self.screen_selector.show_popup('error',
-                        'Sorry, we could not find any PoS Configuration for this session');
+                    self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
-                $('.loader').animate({opacity:0},3000,'swing',function(){$('.loader').hide();});
-                $('.loader img').hide();
+                self.$('.loader').animate({opacity:0},3000,'swing',function(){$('.loader').hide();});
+                self.$('.loader img').hide();
 
             },function(){   // error when loading models data from the backend
-                $('.loader img').hide();
+                self.$('.loader img').hide();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
                     .pipe( _.bind(function(res){
                         return instance.connection.rpc('/web/action/load', {'action_id': res[0]['res_id']})
@@ -688,6 +706,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_session_popup.appendTo($('.point-of-sale'));
 
             // --------  Misc ---------
+
+            this.notification = new module.SynchNotificationWidget(this,{});
+            this.notification.replace(this.$('.placeholder-SynchNotificationWidget'));
+
+            this.username   = new module.UsernameWidget(this,{});
+            this.username.replace(this.$('.placeholder-UsernameWidget'));
 
             this.action_bar = new module.ActionBarWidget(this);
             this.action_bar.appendTo($(".point-of-sale #content"));
@@ -759,15 +783,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             if (parsed_ean.type === 'price') {
                 var itemCode = parsed_ean.id;
-                console.log('price! id:',itemCode);
                 var scannedPackaging = _.detect(allPackages, function(pack) { 
                     return pack.ean && pack.ean.substring(0,7) === itemCode;
                 });
                 if (scannedPackaging) {
-                    console.log('found matching package, finding matching product...');
                     scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
                 }else{
-                    console.log('matching package not found, finding matching product...');
                     scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13  && (pc.ean13.substring(0,7) === parsed_ean.id);});   
                 }
                 if(scannedProductModel){
@@ -780,10 +801,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     return pack.ean  && pack.ean.substring(0,7) === itemCode;
                 });
                 if (scannedPackaging){
-                    console.log('found matching package, finding matching product...');
                     scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
                 }else{
-                    console.log('matching package not found, finding matching product...');
                     scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13  && (pc.ean13.substring(0,7) === parsed_ean.id);});   
                 }
                 if(scannedProductModel){
@@ -811,13 +830,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible != this.numpad_visible){
                 this.numpad_visible = visible;
                 if(visible){
-                    $('#numpad').show();
-                    $('#paypad').show();
-                    $('#current-order').css({'bottom':'271px'});
+                    this.numpad.show();
+                    this.paypad.show();
+                    $('.point-of-sale .order-container').css({'bottom':'232px'});
                 }else{
-                    $('#numpad').hide();
-                    $('#paypad').hide();
-                    $('#current-order').css({'bottom':'0px'});
+                    this.numpad.hide();
+                    this.paypad.hide();
+                    $('.point-of-sale .order-container').css({'bottom':'0px'});
                 }
             }
         },

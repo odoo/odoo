@@ -20,7 +20,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
-            console.log("ScreenSelector Initialized");
             this.pos = options.pos;
 
             this.screen_set = options.screen_set || {};
@@ -120,21 +119,117 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ScreenWidget = module.PosBaseWidget.extend({
 
+        show_numpad:     true,  
+        show_leftpane:   true,
+
         init: function(parent,options){
             this._super(parent,options);
             this.hidden = false;
         },
+
+        help_button_action: function(){
+            this.pos_widget.screen_selector.show_popup('help');
+        },
+
+        logout_button_action: function(){
+            this.pos_widget.screen_selector.set_user_mode('client');
+        },
+
+        barcode_product_screen:         'scan',     //if defined, this screen will be loaded when a product is scanned
+        barcode_product_error_popup:    'error',    //if defined, this popup will be loaded when there's an error in the popup
+
+        // what happens when a product is scanned : 
+        // it will add the product to the order and go to barcode_product_screen. Or show barcode_product_error_popup if 
+        // there's an error.
+        barcode_product_action: function(ean){
+            if(this.pos_widget.scan_product(ean)){
+                this.pos.proxy.scan_item_success();
+                if(this.barcode_product_screen){ 
+                    this.pos_widget.screen_selector.set_current_screen(this.barcode_product_screen);
+                }
+            }else{
+                if(this.barcode_product_error_popup){
+                    this.pos_widget.screen_selector.show_popup(this.barcode_product_error_popup);
+                }
+            }
+        },
+        
+        // what happens when a cashier id barcode is scanned.
+        // the default behavior is the following : 
+        // - if there's a user with a matching ean, put it as the active 'cashier', go to cashier mode, and return true
+        // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
+        barcode_cashier_action: function(ean){
+            var users = this.pos.get('user_list');
+            for(var i = 0, len = users.length; i < len; i++){
+                if(users[i].ean === ean.ean){
+                    this.pos.set('cashier',users[i]);
+                    this.pos_widget.username.refresh();
+                    this.pos.proxy.cashier_mode_activated();
+                    this.pos_widget.screen_selector.set_user_mode('cashier');
+                    return true;
+                }
+            }
+            return false;
+        },
+        
+        // what happens when a client id barcode is scanned.
+        // the default behavior is the following : 
+        // - if there's a user with a matching ean, put it as the active 'client' and return true
+        // - else : return false. 
+        barcode_client_action: function(ean){
+            var users = this.pos.get('user_list');
+            for(var i = 0, len = users.length; i < len; i++){
+                if(users[i].ean === ean.ean){
+                    this.pos.set('client',users[i]);
+                    this.pos_widget.username.refresh();
+                    return true;
+                }
+            }
+            return false;
+            //TODO start the transaction
+        },
+        
+        // what happens when a discount barcode is scanned : the default behavior
+        // is to set the discount on the last order.
+        barcode_discount_action: function(ean){
+            var last_orderline = this.pos.get('selectedOrder').getLastOrderline();
+            if(last_orderline){
+                last_orderline.set_discount(ean.value)
+            }
+        },
+
+        // this method shows the screen and sets up all the widget related to this screen. Extend this method
+        // if you want to alter the behavior of the screen.
         show: function(){
             this.hidden = false;
             if(this.$element){
                 this.$element.show();
             }
+
+            var self = this;
+            var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
+
+            this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
+            this.pos_widget.set_leftpane_visible(this.show_leftpane);
+            this.pos_widget.set_cashier_controls_visible(cashier_mode);
+            this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });
+            this.pos_widget.action_bar.set_element_visible('logout-button', cashier_mode, function(){ self.logout_button_action(); });
+            this.pos_widget.action_bar.set_element_visible('close-button', cashier_mode);
+            
+            this.pos_widget.username.set_user_mode(this.pos_widget.screen_selector.get_user_mode());
+
+            this.pos.barcode_reader.set_action_callback({
+                'cashier': self.barcode_cashier_action ? function(ean){ self.barcode_cashier_action(ean); } : undefined ,
+                'product': self.barcode_product_action ? function(ean){ self.barcode_product_action(ean); } : undefined ,
+                'client' : self.barcode_client_action ?  function(ean){ self.barcode_client_action(ean);  } : undefined ,
+                'discount': self.barcode_discount_action ? function(ean){ self.barcode_discount_action(ean); } : undefined,
+            });
         },
-        hide: function(){
-            this.hidden = true;
-            if(this.$element){
-                this.$element.hide();
-            }
+
+
+        // this method is called when the screen is closed to make place for a new screen. this is a good place
+        // to put your cleanup stuff as it is guaranteed that for each show() there is one and only one close()
+        close: function(){
             if(this.pos.barcode_reader){
                 this.pos.barcode_reader.reset_action_callbacks();
             }
@@ -142,8 +237,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.pos_widget.action_bar.destroy_buttons();
             }
         },
-        close: function(){
+
+        // this methods hides the screen. It's not a good place to put your cleanup stuff as it is called on the
+        // POS initialization.
+        hide: function(){
+            this.hidden = true;
+            if(this.$element){
+                this.$element.hide();
+            }
         },
+
         // we need this because some screens re-render themselves when they are hidden
         // (due to some events, or magic, or both...)  we must make sure they remain hidden.
         // the good solution would probably be to make them not re-render themselves when they
@@ -234,75 +337,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template:'ErrorNoSessionPopupWidget',
     });
 
-    module.BaseScreenWidget = module.ScreenWidget.extend({
-
-        show_numpad:     true,
-        show_leftpane:   true,
-
-        help_button_action: function(){
-            this.pos_widget.screen_selector.show_popup('help');
-        },
-
-        logout_button_action: function(){
-            this.pos_widget.screen_selector.set_user_mode('client');
-        },
-
-        barcode_cashier_action: function(ean){
-            this.pos.proxy.cashier_mode_activated();
-            this.pos_widget.screen_selector.set_user_mode('cashier');
-        },
-
-        barcode_product_screen:         'scan',
-        barcode_product_error_popup:    'error',
-        barcode_product_action: function(ean){
-            if(this.pos_widget.scan_product(ean)){
-                this.pos.proxy.scan_item_success();
-                if(this.barcode_product_screen){ 
-                    this.pos_widget.screen_selector.set_current_screen(this.barcode_product_screen);
-                }
-            }else{
-                if(this.barcode_product_error_popup){
-                    this.pos_widget.screen_selector.show_popup(this.barcode_product_error_popup);
-                }
-            }
-        },
-
-        barcode_client_action: function(ean){
-            this.pos.proxy.transaction_start(); 
-            //TODO 'log the client'
-            this.pos_widget.screen_selector.show_popup('receipt');
-        },
-
-        barcode_discount_action: function(ean){
-            var currentOrder = this.pos.get('selectedOrder');
-            var last_orderline = currentOrder.last_orderline;
-            if(last_orderline){
-                last_orderline.set_discount(ean.value)
-            }
-        },
-
-        show: function(){
-            this._super();
-            var self = this;
-            var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
-
-            this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
-            this.pos_widget.set_leftpane_visible(this.show_leftpane);
-            this.pos_widget.set_cashier_controls_visible(cashier_mode);
-            this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });
-            this.pos_widget.action_bar.set_element_visible('logout-button', cashier_mode, function(){ self.logout_button_action(); });
-            this.pos_widget.action_bar.set_element_visible('close-button', cashier_mode);
-
-            this.pos.barcode_reader.set_action_callback({
-                'cashier': self.barcode_cashier_action ? function(ean){ self.barcode_cashier_action(ean); } : undefined ,
-                'product': self.barcode_product_action ? function(ean){ self.barcode_product_action(ean); } : undefined ,
-                'client' : self.barcode_client_action ?  function(ean){ self.barcode_client_action(ean);  } : undefined ,
-                'discount': self.barcode_discount_action ? function(ean){ self.barcode_discount_action(ean); } : undefined,
-            });
-        },
-    });
-
-    module.ScaleInviteScreenWidget = module.BaseScreenWidget.extend({
+    module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
 
         show: function(){
@@ -341,7 +376,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ScaleProductScreenWidget = module.BaseScreenWidget.extend({
+    module.ScaleProductScreenWidget = module.ScreenWidget.extend({
         template:'ScaleProductSelectionScreenWidget',
         start: function(){
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{
@@ -401,7 +436,29 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ClientPaymentScreenWidget =  module.BaseScreenWidget.extend({
+    module.ScaleScreenWidget = module.ScreenWidget.extend({
+        template:'ScaleScreenWidget',
+        show: function(){
+            this._super();
+            var self = this;
+            
+            this.pos.proxy.weighting_start();
+            this.intervalID = setInterval(function(){
+                var weight = self.pos.proxy.weighting_read_kg();
+                if(weight != self.weight){
+                    self.weight = weight;
+                    self.renderElement();
+                }
+            },500);
+        },
+        close: function(){
+            this._super();
+            clearInterval(this.intervalID);
+            this.pos.proxy.weighting_end();
+        },
+    });
+
+    module.ClientPaymentScreenWidget =  module.ScreenWidget.extend({
         template:'ClientPaymentScreenWidget',
         show: function(){
             this._super();
@@ -457,7 +514,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.WelcomeScreenWidget = module.BaseScreenWidget.extend({
+    module.WelcomeScreenWidget = module.ScreenWidget.extend({
         template:'WelcomeScreenWidget',
 
         show_numpad:     false,
@@ -479,7 +536,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.ScanProductScreenWidget = module.BaseScreenWidget.extend({
+    module.ScanProductScreenWidget = module.ScreenWidget.extend({
         template:'ScanProductScreenWidget',
 
         show_numpad:     false,
@@ -509,7 +566,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
     
-    module.SearchProductScreenWidget = module.BaseScreenWidget.extend({
+    module.SearchProductScreenWidget = module.ScreenWidget.extend({
         template:'SearchProductScreenWidget',
 
         show_numpad:     true,
@@ -550,7 +607,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     });
 
-    module.ReceiptScreenWidget = module.BaseScreenWidget.extend({
+    module.ReceiptScreenWidget = module.ScreenWidget.extend({
         template: 'ReceiptScreenWidget',
 
         show_numpad:     true,
@@ -609,7 +666,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.PaymentScreenWidget = module.BaseScreenWidget.extend({
+    module.PaymentScreenWidget = module.ScreenWidget.extend({
         template: 'PaymentScreenWidget',
         init: function(parent, options) {
             this._super(parent,options);
@@ -682,7 +739,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         addPaymentLine: function(newPaymentLine) {
-            console.log('addPaymentLine:',newPaymentLine);
+            console.log('NEW PAYMENT LINE WIDGET',newPaymentLine);
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
                 });

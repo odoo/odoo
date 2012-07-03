@@ -34,6 +34,12 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             }
 
         },
+        show: function(){
+            this.$element.show();
+        },
+        hide: function(){
+            this.$element.hide();
+        },
     });
 
 }
