@@ -89,7 +89,18 @@ openerp.web.list_editable = function (instance) {
                     self.editor.$element.on('keyup', function (e) {
                         switch (e.which) {
                         case KEY_RETURN:
-                            self.saveEdition();
+                            self.saveEdition().then(function (saveInfo) {
+                                if (saveInfo.created) {
+                                    self.startEdition();
+                                    return;
+                                }
+                                var next_index = self.records.indexOf(saveInfo.record) + 1;
+                                if (next_index === self.records.length) {
+                                    next_index = 0;
+                                }
+
+                                self.startEdition(self.records.at(next_index));
+                            });
                             break;
                         case KEY_ESCAPE:
                             self.cancelEdition();
@@ -176,29 +187,23 @@ openerp.web.list_editable = function (instance) {
                 form: this.editor.form,
                 cancel: false
             }, this.editor.save).pipe(function (attrs) {
+                var created = false;
                 var record = self.records.get(attrs.id);
                 if (!record) {
                     // new record
+                    created = true;
                     record = self.records.find(function (r) {
                         return !r.get('id');
                     }).set('id', attrs.id);
-
-                    setTimeout(function () {
-                        self.startEdition();
-                    }, 0);
-                } else {
-                    var next_index = self.records.indexOf(record) + 1;
-                    if (next_index === self.records.length) {
-                        next_index = 0;
-                    }
-
-                    setTimeout(function () {
-                        self.startEdition(self.records.at(next_index));
-                    }, 0);
                 }
                 return $.when(
                     self.handleOnWrite(record),
-                    self.reload_record(record));
+                    self.reload_record(record)).pipe(function () {
+                        return {
+                            created: created,
+                            record: record
+                        }
+                });
             });
         },
         /**
