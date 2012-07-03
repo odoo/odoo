@@ -52,7 +52,7 @@
             res_model="crm.meeting"
             src_model="res.partner"
             view_mode="calendar,tree,form,gantt"
-            context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
+            context="{'search_default_partner_id': active_id}"
         />
 
         <!-- open opportunities related to given partner -->
@@ -61,7 +61,7 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">kanban,tree,form,graph,calendar</field>
             <field name="domain">[('type','=','opportunity')]</field>
-            <field name="context">{'search_default_partner_id': active_id, 'default_partner_id': active_id,
+            <field name="context">{'search_default_partner_id': active_id,
                 'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
@@ -107,13 +107,13 @@
                     <field name="opportunity_count"/>
                     <field name="meeting_count"/>
                 </field>
-                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                        <a name="%(relate_partner_opportunities)d" type="action">
-                            <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
-                        </a>
-                        <a name="%(crm_meeting_partner)d" type="action">
-                            <t t-if="record.meeting_count.value">Meetings(<t t-esc="record.meeting_count.value"/>)</t>
-                        </a>
+                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
+                    <a name="%(relate_partner_opportunities)d" type="action">
+                        <t t-if="record.opportunity_count.value"><t t-esc="record.opportunity_count.value"/> Opportunities</t>
+                    </a>
+                    <a name="%(crm_meeting_partner)d" type="action">
+                        <t t-if="record.meeting_count.value"><t t-esc="record.meeting_count.value"/> Meetings</t>
+                    </a>
                 </xpath>
             </field>
         </record>
@@ -129,12 +129,12 @@
                     <button type="action"
                         string="Schedule a Meeting"
                         name="%(crm.crm_case_categ_meet_create_partner)d"
-                        context="{'default_partner_id': active_id, 'default_duration': 4.0}"/>
+                        context="{'search_default_partner_id': active_id, 'default_duration': 4.0}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
                     <button type="action" string="Opportunities"
-                        name="%(crm.relate_partner_opportunities)d" />
+                        name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
                 </xpath>
             </field>
         </record>
