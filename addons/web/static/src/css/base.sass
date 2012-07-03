@@ -83,9 +83,8 @@ $colour4: #8a89ba
     letter-spacing: -1px
     color: transparent
     &:before
-        font-family: "mnmliconsRegular"
+        font: 21px "mnmliconsRegular"
         content: $icon-name
-        font-size: 20px
         color: $color
 
 // }}}
@@ -1667,6 +1666,12 @@ $colour4: #8a89ba
             width: 82px
             input
                 text-align: right
+
+        tr.oe_edition th.oe-record-selector
+            padding: 0 6px
+            @include text-to-icon("S")
+            input
+                display: none
     // }}}
     // Translation {{{
     .oe_trad_field.touched

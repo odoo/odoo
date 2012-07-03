@@ -169,6 +169,8 @@ openerp.web.list_editable = function (instance) {
                     });
                 }],
                 [record.attributes]);
+            }).then(function () {
+                $recordRow.addClass('oe_edition')
             });
         },
         getCellsFor: function ($row) {
@@ -343,7 +345,6 @@ openerp.web.list_editable = function (instance) {
                 return form.do_show({reload: false});
             }).pipe(function () {
                 self.record = record;
-                // TODO: [Save] button
                 // TODO: save on action button?
                 _(form.fields).each(function (field, name) {
                     configureField(name, field);
@@ -412,6 +413,21 @@ openerp.web.list_editable = function (instance) {
     });
 
     instance.web.ListView.List.include(/** @lends instance.web.ListView.List# */{
+        init: function () {
+            var self = this;
+            this._super.apply(this, arguments);
+            var selection_handler = _.find(this.$_element.data('events').click, function (h) {
+                return h.selector === 'th.oe-record-selector';
+            }).handler;
+            // TODO: cleaner way to do that?
+            this.$_element
+                .off('click', 'th.oe-record-selector')
+                .on('click', '.oe_edition th.oe-record-selector', function (e) {
+                    e.stopImmediatePropagation();
+                    self.view.saveEdition();
+                })
+                .on('click', 'th.oe-record-selector', selection_handler);
+        },
         row_clicked: function (event) {
             if (!this.options.editable) {
                 return this._super.apply(this, arguments);
