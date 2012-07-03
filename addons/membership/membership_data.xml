@@ -1,31 +1,31 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data noupdate="1">
+    <data noupdate="1">
 
-	<!--
-	Price type
-	-->
-		<record model="product.price.type" id="product_price_type_memberprice" >
-			<field name="name">Member Price</field>
-			<field name="field">member_price</field>
-		</record>
+    <!--
+    Price type
+    -->
+        <record model="product.price.type" id="product_price_type_memberprice" >
+            <field name="name">Member Price</field>
+            <field name="field">member_price</field>
+        </record>
 
-	<!--
-	Price list
-	-->
-	<record model="product.pricelist" id="list1m">
-		<field name="name">Member Sale Pricelist</field>
-		<field name="type">sale</field>
-	</record>
-	<record model="product.pricelist.version" id="ver1m">
-		<field name="pricelist_id" ref="list1m"/>
-		<field name="name">Member Sale Pricelist Version</field>
-	</record>
-	<record model="product.pricelist.item" id="item1m">
-		<field name="price_version_id" ref="ver1m"/>
-		<field name="base" ref="product_price_type_memberprice" />
-		<field name="name">Member Sale Pricelist Line</field>
-	</record>
+    <!--
+    Price list
+    -->
+    <record model="product.pricelist" id="list1m">
+        <field name="name">Member Sale Pricelist</field>
+        <field name="type">sale</field>
+    </record>
+    <record model="product.pricelist.version" id="ver1m">
+        <field name="pricelist_id" ref="list1m"/>
+        <field name="name">Member Sale Pricelist Version</field>
+    </record>
+    <record model="product.pricelist.item" id="item1m">
+        <field name="price_version_id" ref="ver1m"/>
+        <field name="base" ref="product_price_type_memberprice" />
+        <field name="name">Member Sale Pricelist Line</field>
+    </record>
 
-	</data>
+    </data>
 </openerp>

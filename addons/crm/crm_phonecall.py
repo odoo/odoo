@@ -288,14 +288,6 @@ class crm_phonecall(base_state, osv.osv):
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = []
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Phonecall'
