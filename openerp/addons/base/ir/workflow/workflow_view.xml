@@ -317,7 +317,7 @@
       <field name="context">{'search_default_active':1}</field>
       <field name="search_view_id" ref="view_workflow_instance_search"/>
     </record>
-    <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_low_workflow"/>
+    <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_workflow_root"/>
 
     <!--
         ================================
@@ -383,7 +383,7 @@
       <field name="context">{'search_default_active':1}</field>
       <field name="search_view_id" ref="view_workflow_workitem_search"/>
     </record>
-    <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_low_workflow"/>
+    <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_workflow_root"/>
 
   </data>
 </openerp>
