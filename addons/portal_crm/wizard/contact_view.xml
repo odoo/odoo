@@ -9,30 +9,24 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contact wizard view" version="7.0">
-                  <sheet>
                     <div class="oe_portal_crm_contact">
-                        <div class="oe_portal_crm_callout">
-                            <h1>Contact OpenERP</h1>
-                            <div class="oe_portal_crm_background_wrapper">
-                                <div class="oe_portal_crm_background" style="background:url(https://lh5.googleusercontent.com/-FFcbJe8Ee1U/T6Aep2ug7hI/AAAAAAAAAD8/0lDMTMwUZTU/s1136/IMG_1170.JPG) center center"/>
-                            </div>
-                        </div>
                         <table>
                           <tr>
                             <td width="70%%">
                                 <div class="oe_portal_crm_contact_form">
-                                    <h1>Get in touch</h1>
-                                    <field name="contact_name" placeholder="Name"/>
-                                    <field name="partner_name" placeholder="Company"/>
-                                    <field name="email_from" placeholder="Email"/>
-                                    <field name="phone" placeholder="Phone"/>
+                                    <h1>Contact us</h1>
+                                    <group>
+                                        <field name="contact_name" placeholder="Name"/>
+                                        <field name="partner_name" placeholder="Company"/>
+                                        <field name="email_from" placeholder="Email"/>
+                                        <field name="phone" placeholder="Phone"/>
+                                    </group>
                                     <field name="description" placeholder="Your question"/>
                                     <button string="Submit" name="submit" type="object"/>
                                 </div>
                             </td>
                             <td>
                                 <div class="oe_portal_crm_office">
-                                    <h1>Our office</h1>
                                     <field name="company_ids" widget="many2many_kanban">
                                         <kanban>
                                             <field name="name"/>
@@ -102,7 +96,6 @@
                           </tr>
                         </table>
                     </div>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -138,6 +131,9 @@
         <!-- attach it to the portal menu -->
         <menuitem name="Contact" id="portal_company_contact"
             parent="portal.portal_company" action="action_wizard_contact_us" sequence="30"/>
+
+        <!-- test menu item to compare with and without menu -->
+        <menuitem name="FullContact" id="portal_company_contact2" action="action_wizard_contact_us" sequence="120" groups="base.group_no_one"/>
 
     </data>
 </openerp>

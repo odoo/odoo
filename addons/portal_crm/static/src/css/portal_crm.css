@@ -4,58 +4,9 @@
 
  /* Root container */
 .openerp .oe_portal_crm_contact {
-    width: 100%;
-}
-
-/* Sections containers */
-.oe_portal_crm_callout,
-.oe_portal_crm_contact_form,
-.oe_portal_crm_office,
-.oe_portal_crm_team {
-    padding: 0 5px;
-}
-
-/* Sections titles */
-.openerp .oe_portal_crm_contact .oe_portal_crm_callout h1,
-.openerp .oe_portal_crm_contact .oe_portal_crm_contact_form h1,
-.openerp .oe_portal_crm_contact .oe_portal_crm_office h1 {
-    display: inline-block;
-    border-color: #4C4C4C;
-    border-style: solid;
-}
-.openerp .oe_portal_crm_contact .oe_portal_crm_callout h1 {
-    border-width: 0 0 5px 0;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-.openerp .oe_portal_crm_contact .oe_portal_crm_contact_form h1,
-.openerp .oe_portal_crm_contact .oe_portal_crm_office h1 {
-    border-width: 5px 0 0 0;
-    margin-top: 0;
-    padding-top: 0;
-}
-
-
-
-/*
- * Sections layout
- */
-
-/* Callout section */
-.openerp .oe_portal_crm_contact .oe_portal_crm_callout
- {
-    padding: 0 5px;
-    /* background is defined directly in the view itself */
-}
-.openerp .oe_portal_crm_contact .oe_portal_crm_callout .oe_portal_crm_background_wrapper {
-    height: 120px;
-    border-bottom: 1px solid #4C4C4C;
-    border-top: 1px solid #4C4C4C;
-    padding: 5px 0;
-}
-.openerp .oe_portal_crm_contact .oe_portal_crm_callout .oe_portal_crm_background {
-    width: 100%;
-    height: 100%;
+    width: 800px;
+    margin: auto;
+    padding: 8px 0 0 0;
 }
 
 /* Contact form section */
@@ -68,13 +19,11 @@
     float: none;
     display: block;
     width: 100%;
-    border: 1px solid #D8D8D8;
-    border-bottom-color: #B9B9B9;
     margin-bottom: 5px;
     padding: 5px;
 }
 
 /* Employees list section */
-.openerp .oe_portal_crm_contact .oe_portal_crm_team .oe_fold_column.oe_kanban_record {
-
+.openerp .oe_portal_crm_contact .oe_portal_crm_team {
+    padding: 8px 0 0 0;
 }
