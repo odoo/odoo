@@ -46,14 +46,13 @@
         </record>
 
         <!-- open meetings related to given partner -->
-        <act_window
-            id="crm_meeting_partner"
-            name="Meetings"
-            res_model="crm.meeting"
-            src_model="res.partner"
-            view_mode="calendar,tree,form,gantt"
-            context="{'search_default_partner_id': active_id}"
-        />
+        <record id="crm_meeting_partner" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="src_model">res.partner</field>
+            <field name="res_model">crm.meeting</field>
+            <field name="view_mode">calendar,tree,form,gantt</field>
+            <field name="context">{'search_default_partner_id': active_id}</field>
+        </record>
 
         <!-- open opportunities related to given partner -->
         <record model="ir.actions.act_window" id="relate_partner_opportunities">
