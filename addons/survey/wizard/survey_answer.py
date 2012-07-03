@@ -202,7 +202,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     if wiz_id:
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
-                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0)})
+                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
                     if pag_rec.note:
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
