@@ -259,21 +259,28 @@ class wizard_user(osv.osv_memory):
         res_user = self.pool.get('res.users')
         portal = portal_user.wizard_id.portal_id
         action_id = portal.home_action_id and portal.home_action_id.id or False
-        value = {
-                'name': portal_user.name,
-                'login': portal_user.user_email,
-                'password': random_password(),
-                'user_email': portal_user.user_email,
-                'context_lang': portal_user.lang,
-                'share': True,
-                'action_id': action_id,
-                'partner_id': portal_user.partner_id and portal_user.partner_id.id,
-                'groups_id': [(6, 0, [])],
-        } 
-        user_id = res_user.create(cr, ROOT_UID, value, context=context) 
-        portal.write({'users': [(4, user_id)]}, context)
-        portal_user.write({'user_id': user_id}, context)
-        self.send_email(cr, uid, portal_user, context=context)
+        partner_id = portal_user.partner_id and portal_user.partner_id.id
+        user_ids = res_user.search(cr, uid, [('partner_id','=',partner_id)])
+        user_id = False
+        if user_ids and len(user_ids):
+            user_id = user_ids[0]
+        if not user_id:
+            value = {
+                    'name': portal_user.name,
+                    'login': portal_user.user_email,
+                    'password': random_password(),
+                    'user_email': portal_user.user_email,
+                    'context_lang': portal_user.lang,
+                    'share': True,
+                    'action_id': action_id,
+                    'partner_id': partner_id,
+                    'groups_id': [(6, 0, [])],
+            } 
+            user_id = res_user.create(cr, ROOT_UID, value, context=context) 
+            portal_user.write({'user_id': user_id}, context)
+            self.send_email(cr, uid, portal_user, context=context)
+        if user_id not in [u.id for u in portal.group_id.users]:
+            portal.write({'users': [(4, user_id)]}, context=context)
         return user_id
 
     def link_portal_user(self, cr, uid, portal_user, context=None):
