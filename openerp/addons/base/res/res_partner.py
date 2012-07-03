@@ -151,7 +151,7 @@ class res_partner(osv.osv):
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
-        'function': fields.char('Function', size=128),
+        'function': fields.char('Job Position', size=128),
         'type': fields.selection( [('default','Default'),('invoice','Invoice'),
                                    ('delivery','Delivery'), ('contact','Contact'),
                                    ('other','Other')],
