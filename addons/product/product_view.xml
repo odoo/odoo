@@ -423,12 +423,12 @@
             <field name="arch" type="xml">
                 <form string="Units of Measure" version="7.0">
                     <group>
-                        <group string="Unit of Measure Properties">
+                        <group>
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="active"/>
                         </group>
-                        <group string="Ratio &amp; Precision">
+                        <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>

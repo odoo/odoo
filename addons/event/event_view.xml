@@ -167,9 +167,9 @@
                     </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_sheet_width">
+                    <footer>
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                    </div>
+                    </footer>
             </form>
             </field>
         </record>
@@ -468,19 +468,6 @@
                             </group>
                         </page>
                         <page string="Emails">
-<!--
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree">
-                                <tree string="History">
-                                    <field name="display_text" string="History Information"/>
-                                    <field name="reply_to" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('reply_to', '=', False)]}"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                        icon="terp-mail-replied" type="action" />
-                                </tree>
-                            </field>
--->
                             <button string="Send New Email"
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
@@ -488,9 +475,9 @@
 
                     </notebook>
                     </sheet>
-                    <div class="oe_sheet_width">
+                    <footer>
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                    </div>
+                    </footer>
                 </form>
             </field>
         </record>
