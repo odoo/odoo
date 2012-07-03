@@ -50,13 +50,13 @@
             <field name="factor" eval="1000"/>
             <field name="uom_type">smaller</field>
         </record>
-        <record id="uom_hour" model="product.uom">
+        <record id="product_uom_hour" model="product.uom">
             <field name="name">Hour</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="8.0"/>
             <field name="uom_type">smaller</field>
         </record>
-        <record id="uom_day" model="product.uom">
+        <record id="product_uom_day" model="product.uom">
             <field name="name">Day</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="1.0"/>
@@ -188,8 +188,8 @@ parameter) will see those record just disappear.
         <record id="product_product_0" model="product.product">
             <field name="list_price">75.0</field>
             <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="product.uom_hour"/>
-            <field name="uom_po_id" ref="product.uom_hour"/>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="name">Service on Demand</field>
             <field name="categ_id" ref="product.product_category_0"/>
             <field name="type">service</field>
