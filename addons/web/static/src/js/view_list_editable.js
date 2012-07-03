@@ -150,18 +150,16 @@ openerp.web.list_editable = function (instance) {
                 }, self.editor.edit,
                 [record.attributes, function (field_name, field) {
                     var cell = cells[field_name];
-                    if (!cell) { return; }
+                    if (!cell || field.get('effective_readonly')) {
+                        // Readonly fields can just remain the list's, form's
+                        // usually don't have backgrounds &al
+                        field.set({invisible: true});
+                        return;
+                    }
                     var $cell = $(cell);
                     var position = $cell.position();
 
-                    // FIXME: this is shit. Is it possible to prefilter?
-                    if (field.get('effective_readonly')) {
-                        // Readonly fields can just remain the list's, form's
-                        // usually don't have backgrounds &al
-                        field.$element.hide();
-                        return;
-                    }
-                    field.$element.show().css({
+                    field.$element.css({
                         top: position.top,
                         left: position.left,
                         width: $cell.outerWidth(),
