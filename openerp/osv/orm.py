@@ -70,11 +70,6 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-# Prefixes for external IDs of schema elements
-EXT_ID_PREFIX_FK = "_foreign_key_"
-EXT_ID_PREFIX_M2M_TABLE = "_m2m_rel_table_"
-EXT_ID_PREFIX_CONSTRAINT = "_constraint_"
-
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
@@ -1742,6 +1737,15 @@ class BaseModel(object):
 
         # translate view
         if 'lang' in context:
+            if node.text and node.text.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
+                if trans:
+                    node.text = node.text.replace(node.text.strip(), trans)
+            if node.tail and node.tail.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
+                if trans:
+                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+
             if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
@@ -1750,18 +1754,13 @@ class BaseModel(object):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
-            if node.get('confirm'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('confirm'))
-                if trans:
-                    node.set('confirm', trans)
-            if node.get('sum'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
-                if trans:
-                    node.set('sum', trans)
-            if node.get('help'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
-                if trans:
-                    node.set('help', trans)
+
+            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+                attr_value = node.get(attr_name)
+                if attr_value:
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
+                    if trans:
+                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
@@ -2737,13 +2736,45 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
-    # quick creation of ir.model.data entry to make uninstall of schema elements easier
-    def _make_ext_id(self, cr, ext_id):
-        cr.execute('SELECT 1 FROM ir_model_data WHERE name=%s AND module=%s', (ext_id, self._module))
+    def _save_constraint(self, cr, constraint_name, type):
+        """
+        Record the creation of a constraint for this model, to make it possible
+        to delete it later when the module is uninstalled. Type can be either
+        'f' or 'u' depending on the constraing being a foreign key or not.
+        """
+        assert type in ('f', 'u')
+        cr.execute("""
+            SELECT 1 FROM ir_model_constraint, ir_module_module
+            WHERE ir_model_constraint.module=ir_module_module.id
+                AND ir_model_constraint.name=%s
+                AND ir_module_module.name=%s
+            """, (constraint_name, self._module))
         if not cr.rowcount:
-            cr.execute("""INSERT INTO ir_model_data (name,date_init,date_update,module,model)
-                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC', %s, %s)""",
-                       (ext_id, self._module, self._name))
+            cr.execute("""
+                INSERT INTO ir_model_constraint
+                    (name, date_init, date_update, module, model, type)
+                VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s), %s)""",
+                    (constraint_name, self._module, self._name, type))
+
+    def _save_relation_table(self, cr, relation_table):
+        """
+        Record the creation of a many2many for this model, to make it possible
+        to delete it later when the module is uninstalled.
+        """
+        cr.execute("""
+            SELECT 1 FROM ir_model_relation, ir_module_module
+            WHERE ir_model_relation.module=ir_module_module.id
+                AND ir_model_relation.name=%s
+                AND ir_module_module.name=%s
+            """, (relation_table, self._module))
+        if not cr.rowcount:
+            cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
+                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s))""",
+                       (relation_table, self._module, self._name))
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -3084,7 +3115,7 @@ class BaseModel(object):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
-            self._make_ext_id(cr,  "%s%s_%s_fkey" % (EXT_ID_PREFIX_FK, t, k))
+            self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f')
         cr.commit()
         del self._foreign_keys
 
@@ -3173,7 +3204,7 @@ class BaseModel(object):
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
-        self._make_ext_id(cr,  EXT_ID_PREFIX_M2M_TABLE + m2m_tbl)
+        self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
@@ -3209,7 +3240,7 @@ class BaseModel(object):
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
-            self._make_ext_id(cr, EXT_ID_PREFIX_CONSTRAINT + conname)
+            self._save_constraint(cr, conname, 'u')
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
             sql_actions = {
