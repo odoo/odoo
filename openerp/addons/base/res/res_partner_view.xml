@@ -113,8 +113,10 @@
                         <h1>
                             <field name="name"/>
                         </h1>
+                        <div attrs="{'invisible': [('is_company','=', True)]}">
+                            <label for="parent_id" class="oe_edit_only"/>
+                        </div>
                         <h2 attrs="{'invisible': [('is_company','=', True)]}">
-                            <label for="parent_id" class="oe_edit_only oe_inline"/>
                             <field name="parent_id"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                 class="oe_inline"
@@ -218,8 +220,6 @@
                                 <group>
                                     <field name="user_id" />
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                </group>
-                                <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
                                     <field name="date"/>
