@@ -127,13 +127,15 @@
                             <field name="line_ids"/>
                         </page>
                         <page string="Destination">
-                            <field name="country_ids" widget="many2many_tags"/>
-                            <field name="state_ids" widget="many2many_tags"/>
                             <group>
-                                <label string="Zip" class="oe_inline"/>
-                                <field name="zip_from" class="oe_inline" nolabel="1"/>
-                                <label string="-" class="oe_inline"/>
-                                <field name="zip_to" class="oe_inline" nolabel="1"/>
+                                <group>
+                                    <field name="country_ids" widget="many2many_tags"/>
+                                    <field name="state_ids" widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <field name="zip_from" class="oe_inline"/>
+                                    <field name="zip_to" class="oe_inline"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -203,7 +205,7 @@
             <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="after">
+                <field name="min_date" position="after">
                     <field name="carrier_id"/>
                     <field name="carrier_tracking_ref"/>
                     <field name="number_of_packages"/>
