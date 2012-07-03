@@ -982,12 +982,12 @@
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write">
                     <field name="date"/>
-                    <field name="period_id"/>
+                    <field name="period_id"  invisible="1"/>
                     <field name="move_id"/>
                     <field name="ref"/>
-                    <field name="invoice"/>
-                    <field name="name"/>
-                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="invoice" invisible="1"/>
+                    <field name="name" invisible="1" />
+                    <field name="partner_id" invisible="1" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
                     <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]"/>
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
@@ -996,9 +996,7 @@
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="reconcile_partial_id"/>
-                    <field name="reconcile_id"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
