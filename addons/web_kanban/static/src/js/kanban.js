@@ -415,11 +415,11 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.appendTo($(".oe_kanban_group_list_header", self.$records));
             self.quick.focus();
         });
-             var click_column = this.$element.find('.oe_kanban_add');
+            var click_column = this.$element.find('.oe_kanban_add');
+            click_column.css({"float":"right"});
             this.$records.click(function() {
             click_column.effect("bounce", { times:3 }, 300);
                 });
-
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
