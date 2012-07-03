@@ -65,7 +65,7 @@
                                 <field name="rml_header1" placeholder="Global Business Solutions"/>
                                 <field name="rml_footer1" groups="base.group_no_one"/>
                                 <label for="rml_footer2"/>
-                                <div>
+                                <div name="bank_acc">
                                     <field name="rml_footer2" class="oe_inline"/>
                                     <button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward" class="oe_inline"/>
                                 </div>
@@ -85,7 +85,9 @@
                         </page>
                         <page string="Configuration">
                             <group>
-                                <field name="currency_id"/>
+                                <group name="currency" colspan="4">
+                                    <field name="currency_id"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Bank Accounts">
