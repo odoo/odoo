@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from tools.translate import _
 
 class mail_alias(osv.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
@@ -39,8 +40,8 @@ class mail_alias(osv.Model):
     _rec_name = 'alias_name'
 
     _columns = {
-        'alias_name': fields.char('Mailbox Alias', required=True,
-                            help="The name of the mailbox alias, e.g. `jobs' "
+        'alias_name': fields.char('Mailbox Alias', size=255, required=True,
+                            help="The name of the mailbox alias, e.g. 'jobs' "
                                  "if you want to catch emails for <jobs@example.my.openerp.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True,
                                           help="The model (OpenERP Document Kind) to which this alias "
@@ -48,7 +49,9 @@ class mail_alias(osv.Model):
                                                "existing record will cause the creation of a new record "
                                                "of this model (e.g. a Project Task)",
                                           # only allow selecting mail_thread models!
-                                          domain="[('field_ids', 'in', 'message_ids')]"),
+                                          #TODO kept doamin temporarily in comment, need to redefine domain
+                                          #domain="[('field_id', 'in', 'message_ids')]"
+                                          ),
         'alias_user_id': fields.many2one('res.users', 'Owner',
                                            help="The owner of records created upon receiving emails on this alias. "
                                                 "If this field is kept empty the system will attempt to find the right owner "
@@ -64,19 +67,54 @@ class mail_alias(osv.Model):
     }
     _defaults = {
         'alias_defaults': '{}',
-        'alias_user_id': lambda s,c,u,ctx: u
+        'alias_user_id': lambda self,cr,uid, context: uid
     }
-    _sql_constraint = [
-        ('mailbox_uniq', 'unique (alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
+    _sql_constraints = [
+        ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
     ]
-    
-    def create_unique_alias(self, cr, uid, values, context=None):
-        # TODO: call create() with `values` after checking that `alias_name`
-        # is unique. If not unique, append a sequential number after it until
-        # a unique one if found. 
-        # E.g if create_unique_alias is called with {'alias_name': 'abc'}
-        # and 'abc', 'abc1', 'abc2' alias exist, replace alias_name with 'abc3'. 
-        return
-        
-        
-        
+
+    def _check_alias_defaults(self, cr, uid, ids, context=None):
+        """
+        Strick constraints checking for the alias defaults values.
+        it must follow the python dict format. So message_catachall
+        will not face any issue.
+        """
+        for record in self.browse(cr, uid, ids, context=context):
+            try:
+                dict(eval(record.alias_defaults))
+                return True
+            except:
+                return False
+
+    _constraints = [
+        (_check_alias_defaults, "Default Values are in wrong format.\nIt must be in python dictionary format e.g.{'field_name': 'value' or {}}", ['alias_defaults']),
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        """
+        Return the mail alias display alias_name, inclusing the Implicit and dynamic
+        Email Alias Domain from config.
+        e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
+        """
+        if context is None:
+            context = {}
+        res = []
+        config_parameter_pool = self.pool.get("ir.config_parameter")
+        domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)         
+        for record in self.read(cr, uid, ids, ['alias_name'], context=context):
+            domain_alias = "%s@%s"%(record['alias_name'], domain)
+            res.append((record['id'], domain_alias))
+        return res
+
+    def create_unique_alias(self, cr, uid, values, sequence=1 ,context=None):
+        if sequence:
+            prob_alias = "%s%s"%(values['alias_name'], sequence)
+            search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
+            if search_alias:    
+                values = self.create_unique_alias(cr, uid, values, sequence+1, context)
+            else:
+                values.update({'alias_name': prob_alias})
+                return values
+        else:
+            return values.update({'alias_name': "%s"%(values['alias_name'])})
+

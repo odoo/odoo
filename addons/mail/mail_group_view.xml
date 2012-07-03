@@ -69,6 +69,9 @@
                                 <field name="public" class="oe_inline"/>
                             </div>
                             <field name="description" colspan="4" nolabel="1"/>
+                            <div class="oe_edit_only">
+                                <field name="alias_id" required="0" domain="[('alias_model_id','=','mail.group')]" />
+                            </div>
                         </div>
                     </div>
                     <footer>

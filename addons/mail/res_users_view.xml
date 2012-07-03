@@ -31,6 +31,9 @@
                         <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                     </div>
                 </xpath>
+                <field name="active" position="after">
+                    <field name="alias_id" readonly="1" required="0"/>
+                </field>
             </data>
             </field>
         </record>

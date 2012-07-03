@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="transient_update_maildomain_form">
+            <field name="name">transient.update.maildomain.form</field>
+            <field name="model">transient.update.maildomain</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Configure Mail Domain" version="7.0">
+                    <header>
+                        <button name="update_domain" string="Update" 
+                            type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </header>
+                    <group colspan="4">
+                        <separator string="Email Domain" colspan="4"/>
+                        <field name="name" nolabel="1" colspan="4" placeholder="openerp.my.openerp.com"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_transient_update_maildomain_form" model="ir.actions.act_window">
+            <field name="name">Configure Mail Domain</field>
+            <field name="res_model">transient.update.maildomain</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- View for general setting -->>
+
+        <record id="view_general_configuration_mail_domain" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group[@string='Others']" position='inside'>
+                    <group colspan="4" col="4">
+                        <label string="Configure Mail Domain" for="id"/>
+                        <button type="action" name="%(action_transient_update_maildomain_form)d" string="Configure" icon="gtk-execute"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

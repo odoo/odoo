@@ -94,22 +94,23 @@ class RPCProxy(object):
         return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request, **kwargs)
 
 class EmailParser(object):
-    def __init__(self, uid, password, model, email_default, dbname, host, port):
+    def __init__(self, uid, password, dbname, host, port, model=False, email_default=False):
         self.rpc = RPCProxy(uid, password, host=host, port=port, dbname=dbname)
-        try:
-            self.model_id = int(model)
-            self.model = str(model)
-        except:
-            self.model_id = self.rpc('ir.model', 'search', [('model', '=', model)])[0]
-            self.model = str(model)
-        self.email_default = email_default
+        if model:
+            try:
+                self.model_id = int(model)
+                self.model = str(model)
+            except:
+                self.model_id = self.rpc('ir.model', 'search', [('model', '=', model)])[0]
+                self.model = str(model)
+            self.email_default = email_default
 
 
-    def parse(self, message, custom_values=None, save_original=None):
+    def parse(self, method, message, custom_values=None, save_original=None):
         # pass message as bytes because we don't know its encoding until we parse its headers
         # and hence can't convert it to utf-8 for transport
         res_id = self.rpc('mail.thread',
-                          'message_process',
+                          method,
                           self.model,
                           xmlrpclib.Binary(message),
                           custom_values or {},
@@ -156,30 +157,29 @@ def main():
     """
     Receive the email via the stdin and send it to the OpenERP Server
     """
+
     parser = configure_parser()
     (options, args) = parser.parse_args()
-
-
+    method = "message_process"
     email_parser = EmailParser(options.userid,
                                options.password,
-                               options.model,
-                               options.default,
-                               dbname=options.dbname,
-                               host=options.host,
-                               port=options.port)
-
-
+                               options.dbname,
+                               options.host,
+                               options.port,
+                               model=options.model,
+                               email_default= options.default)
     msg_txt = sys.stdin.read()
-
     custom_values = {}
+    if not options.model:
+        method = "message_catchall"  
     try:
-        custom_values = dict(eval(options.custom_values or {} ))
+        custom_values = dict(eval(options.custom_values or "{}" ))
     except:
         import traceback
         traceback.print_exc()
 
     try:
-        email_parser.parse(msg_txt, custom_values, options.save_original or False)
+        email_parser.parse(method, msg_txt, custom_values, options.save_original or False)
     except Exception:
         msg = '\n'.join([
             'parameters',

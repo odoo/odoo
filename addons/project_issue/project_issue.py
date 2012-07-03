@@ -581,6 +581,9 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
 
+    def _get_alias_model(self, cr, uid, context=None):
+        return [('model_project_task', "Tasks"),("model_project_issue", "Issue")]
+        
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
@@ -592,6 +595,7 @@ class project(osv.osv):
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
         'issue_count': fields.function(_issue_count, type='integer'),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model"),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):

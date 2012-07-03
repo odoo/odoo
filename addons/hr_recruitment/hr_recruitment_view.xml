@@ -348,6 +348,9 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
+            <field name="company_id" version="7.0" position="after">
+                <field name="alias_id" required="0" domain="[('alias_model_id','=','hr.applicant')]"/>
+            </field>
         </field>
     </record>
 

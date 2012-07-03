@@ -66,6 +66,7 @@
                     ref('base.user_vad')])]" name="members"/>
             <field name="user_id" ref="base.user_al"/>
             <field name="name">Integrate a Sale and Warehouse Management.</field>
+            <field name="alias_model">model_project_task</field>
         </record>
 
         <!-- Tasks -->
@@ -290,6 +291,7 @@
             <field name="parent_id" ref="all_projects_account"/>
             <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge')])]" name="type_ids"/>
+            <field name="alias_model">model_project_task</field>
         </record>
         <record id="project_project_21" model="project.project">
             <field name="priority">10</field>
@@ -298,6 +300,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development')])]" name="type_ids"/>
             <field eval="[(6, 0, [ref('base.user_root'),ref('base.user_demo')])]" name="members"/>
+            <field name="alias_model">model_project_task</field>
         </record>
         <record id="project_project_22" model="project.project">
             <field name="priority">20</field>
@@ -306,6 +309,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'), ref('project_tt_development')])]" name="type_ids"/>
             <field eval="[(6, 0, [ref('base.user_root'),ref('base.user_demo')])]" name="members"/>
+            <field name="alias_model">model_project_task</field>
         </record>
         <record id="project_project_23" model="project.project">
             <field name="priority">30</field>
@@ -313,6 +317,7 @@
             <field name="name">Install, data import, configuration</field>
             <field eval="[(6, 0, [ref('project_tt_development')])]" name="type_ids"/>
             <field eval="[(6, 0, [ref('base.user_root'),ref('base.user_demo')])]" name="members"/>
+            <field name="alias_model">model_project_task</field>
         </record>
 
         <!-- Tasks -->
