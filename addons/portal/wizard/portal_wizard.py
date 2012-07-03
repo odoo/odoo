@@ -23,11 +23,18 @@ import logging
 import random
 
 from osv import osv, fields
-from tools.misc import email_re
 from tools.translate import _
+from tools.misc import email_re
 
 from base.res.res_users import _lang_get
 _logger = logging.getLogger(__name__)
+
+
+
+def extract_email(user_email):
+    """ extract the email address from a user-friendly email address """
+    m = email_re.search(user_email or "")
+    return m and m.group(0) or ""
 
 
 # welcome email sent to new portal users (note that calling tools.translate._
@@ -62,10 +69,6 @@ def random_password():
     random.shuffle(chars)
     return ''.join(chars)
 
-def extract_email(user_email):
-    """ extract the email address from a user-friendly email address """
-    m = email_re.search(user_email or "")
-    return m and m.group(0) or ""
 
 
 
@@ -78,6 +81,7 @@ class wizard(osv.osv_memory):
     _description = 'Portal Wizard'
 
     _columns = {
+        'partner_id': fields.many2one('res.partner', required=True, string="Partner"),
         'portal_id': fields.many2one('res.portal', required=True,
             string='Portal',
             help="The portal in which new users must be added"),
@@ -87,190 +91,91 @@ class wizard(osv.osv_memory):
             help="This text is included in the welcome email sent to the users"),
     }
 
-    def _default_user_ids(self, cr, uid, context):
-        """ determine default user_ids from the active records """
+    def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        def check_portal_user(address):
-            #TOFIX: it should be check id instead of email
-            portal_id = context.get('portal_id', False)
-            if portal_id:
-                portal_users = self.pool.get('res.portal').browse(cr, uid, portal_id, context=context).group_id.users
-                active_user = [u.login for u in portal_users]
-                if address.email in active_user:
-                    return True
-            return False
-        def create_user_from_address(address):
-            if isinstance(address, int):
-                res_partner_obj = self.pool.get('res.partner')
-                address = res_partner_obj.browse(cr, uid, address, context=context)
-                lang = address.id and address.lang or 'en_US'
-                partner_id = address.id
+        partner_id = context.get('active_id', False)
+        portal_id = context.get('portal_id', False)
+        res = {}
+        if not partner_id:
+            return res
 
-            else:
-                lang = address.parent_id and address.parent_id.lang or 'en_US'
-                partner_id = address.parent_id and address.parent_id.id
-            has_portal_user = check_portal_user(address)
-            return {
-                   'name': address.name,
-                   'user_email': extract_email(address.email),
-                   'lang': lang,
-                   'partner_id': partner_id,
-                   'has_portal_user': has_portal_user,
-            }
+        if 'partner_id' in fields:
+            res.update({'partner_id': partner_id})
 
-        user_ids = []
-        if context.get('active_model') == 'res.partner':
-            partner_obj = self.pool.get('res.partner')
-            partner_ids = context.get('active_ids', [])
-            partners = partner_obj.browse(cr, uid, partner_ids, context)
-            for p in partners:
-                # add one user per contact, or one user if no contact
-                if p.child_ids:
-                    user_ids.extend(map(create_user_from_address, p.child_ids))
-                elif p.is_company == False and p.customer == True:
-                    user_ids.extend(map(create_user_from_address, [p.id]))
-                else:
-                    user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
-        return user_ids
+        if 'user_ids' in fields and portal_id:
+            user_ids = self.get_portal_users(cr, uid, [partner_id], portal_id, context=context)
+            res.update({'user_ids': user_ids})            
+        return res
 
-    _defaults = {
-        'user_ids': _default_user_ids
-    }
-
-    def get_all_portal_user(self, cr):
-        all_portal_user_ids = []
-        portal_obj = self.pool.get('res.portal')
-        all_portals = portal_obj.browse(cr, ROOT_UID, portal_obj.search(cr, ROOT_UID, []))
-        all_portal_user = [p.group_id.users for p in all_portals]
-        for portal_user_id in all_portal_user:
-            all_portal_user_ids.extend([all_user.id for all_user in portal_user_id])
-        return all_portal_user_ids
-
-    def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
+      
+    def onchange_portal_id(self, cr, uid, ids, partner_id, portal_id, context=None):
         if not portal_id:
             return {'value': {}}
-        user_obj = self.pool.get('res.users')
-        context.update({'portal_id':portal_id})
-        user_list = self._default_user_ids(cr, uid, context=context)
-        contact_user = [u['user_email'] for u in user_list if u.get('user_email', False)]
-
-        #add active portal user to portal wizard
-        portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
-        active_user =[]
-        for u in portal_users:
-            if u.partner_id.id == context['active_id'] and u.user_email not in contact_user:
-                active_user.append({
-                    'name': u.name,
-                    'user_email': u.user_email,
-                    'lang': u.context_lang or 'en_US',
-                    'partner_id': u.partner_id.id or False,
-                    'has_portal_user':True,
-                })
-        if active_user:
-            user_list.extend(active_user)
-
+        user_list = self.get_portal_users(cr, uid, [partner_id], portal_id, context=context)
         return {'value': {'user_ids': user_list}}
 
-    def action_create(self, cr, uid, ids, context=None):
-        """ create new users in portal(s), and notify them by email """
-        # we copy the context to change the language for translating emails
-        context0 = context or {}
-        context0['noshortcut'] = True           # prevent shortcut creation
-        context = context0.copy()
 
-        user_obj = self.pool.get('res.users')
-        user = user_obj.browse(cr, ROOT_UID, uid, context0)
-        if not user.user_email:
-            raise osv.except_osv(_('Email required'),
-                _('You must have an email address in your User Preferences'
-                  ' to send emails.'))
+    def _search_portal_user(self, cr, uid, partner_id, portal_id, context=None):
+        portal_users = self.pool.get('res.portal').browse(cr, uid, portal_id, context=context).group_id.users
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        user_ids = self.pool.get('res.users').search(cr, uid, [('partner_id','=', partner.id)])
+        return [u.id for u in portal_users if u.id in user_ids]
 
-        portal_obj = self.pool.get('res.portal')
-        for wiz in self.browse(cr, uid, ids, context):
-            if not wiz.user_ids:
+    def _portal_user_dict(self, cr, uid, partner, portal_id, context=None):
+        res = []
+        for address in partner.child_ids:
+            users = self._portal_user_dict(cr, uid, address, portal_id, context=context)
+            res.extend(users)
+
+        if partner.child_ids:
+            return res
+
+        #if partner.parent_id:
+        #    lang = partner.parent_id.lang or 'en_US'
+        #    company_id = partner.parent_id.id
+        #else:
+        #    lang = partner.lang or 'en_US'
+        #    company_id = partner.id
+        user = False
+        portal_user_ids = self._search_portal_user(cr, uid, partner.id, portal_id, context=context)
+        user_id = len(portal_user_ids) and portal_user_ids[0] or False
+        if user_id:
+            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+        email = user and user.user_email or partner.email
+        users = [{
+               'name': user and user.name or partner.name,
+               'user_email': extract_email(email),
+               'lang': partner.lang or 'en_US',
+               'partner_id': partner.id,
+               'has_portal_user': user_id and True or False,
+               'user_id': user_id
+        }]
+        res.extend(users)
+        return res
+
+    def get_portal_users(self, cr, uid, partner_ids, portal_id, context=None):
+        users = []
+        res_partner = self.pool.get('res.partner')
+        for partner in res_partner.browse(cr, uid, partner_ids, context=context):
+            users.extend(self._portal_user_dict(cr, uid, partner, portal_id, context=context))
+        return users
+
+
+    def action_manage_portal_access(self, cr, uid, ids, context=None):
+        clone_context = context or {}
+        clone_context['noshortcut'] = True           # prevent shortcut creation
+        context = clone_context.copy()
+
+        
+        res_portal_user = self.pool.get('res.portal.wizard.user')
+        for data in self.browse(cr, uid, ids, context=context):
+            if not data.user_ids:
                 raise osv.except_osv(_('User required'),
                 _('Create atleast one user for portal.'))
-            # determine existing users
-            portal_users = [portal_user.id for portal_user in wiz.portal_id.group_id.users]
-            add_users = []
-            remove_users = []
-            new_users_data = []
-            for u in wiz.user_ids:
-                login_cond = [('login', 'in', [u.user_email])]
-                existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
-                existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
-                existing_logins = [u.login for u in existing_users]
-
-                # create new users in portal (skip existing logins)
-                if existing_uids and existing_uids[0] not in portal_users or existing_uids and u.has_portal_user:
-                    add_users.append(existing_uids[0])
-                if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_users:
-                    remove_users.append(existing_uids[0])
-                if u.user_email not in existing_logins:
-                    new_users_data = [ {
-                        'name': u.name,
-                        'login': u.user_email,
-                        'password': random_password(),
-                        'user_email': u.user_email,
-                        'context_lang': u.lang,
-                        'share': True,
-                        'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
-                        'partner_id': u.partner_id and u.partner_id.id,
-                        'groups_id': [(6, 0, [])],
-                    } for u in wiz.user_ids if u.user_email not in existing_logins ]
-            for new_user_data in new_users_data:
-                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(0, 0, new_user_data)]}, context0)
-
-                created_user = user_obj.search(cr, ROOT_UID, [('user_email','=', new_user_data['login']),('partner_id','=', new_user_data['partner_id'])])
-                add_users.append(created_user[0])
-
-            #add the user relationship in portal.
-            for add_user in add_users:
-                if add_user not in portal_users:
-                    portal_users.append(add_user)
-                # add the existing user and new created USER
-                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(6, 0,portal_users)]}, context0)
-
-            #delete the user relationship from portal.
-            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': [(3, user_data) for user_data in remove_users]}, context0)
-
-            #unlink res user when portal user not in any portal.
-            all_portal_user = self.get_all_portal_user(cr)
-            user_obj.unlink(cr, ROOT_UID, [remove_user for remove_user in remove_users if remove_user not in all_portal_user])
-
-            data = {
-                'portal':wiz.portal_id.name,
-                'company': user.company_id.name,
-                'message': wiz.message or "",
-                'url': wiz.portal_id.url or _("(missing url)"),
-                'db': cr.dbname,
-            }
-
-            mail_message_obj = self.pool.get('mail.message')
-            dest_users = []
-            for dest_uid in add_users:
-                if dest_uid not in portal_users:
-                    dest_users.append(user_obj.browse(cr, ROOT_UID, dest_uid))
-
-            for dest_user in dest_users:
-                context['lang'] = dest_user.context_lang
-                data['login'] = dest_user.login
-                data['password'] = dest_user.password
-                data['name'] = dest_user.name
-
-                email_from = user.user_email
-                email_to = dest_user.user_email
-                subject = _(WELCOME_EMAIL_SUBJECT) % data
-                body = _(WELCOME_EMAIL_BODY) % data
-                res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
-                if not res:
-                    _logger.warning(
-                        'Failed to send email from %s to %s', email_from, email_to)
-
+            
+            portal_user_ids = [user.id for user in data.user_ids]
+            res_portal_user.manage_portal_access(cr, uid, portal_user_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 wizard()
@@ -297,7 +202,8 @@ class wizard_user(osv.osv_memory):
             help="The language for the user's user interface"),
         'partner_id': fields.many2one('res.partner',
             string='Partner'),
-        'has_portal_user':fields.boolean('Has portal access')
+        'has_portal_user':fields.boolean('Has portal access'),
+        'user_id': fields.many2one('res.users', string="User")
     }
 
     def _check_email(self, cr, uid, ids):
@@ -312,9 +218,95 @@ class wizard_user(osv.osv_memory):
 
     _defaults = {
         'lang': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).partner_id.lang or 'en_US',
-        'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
-        }
+        'partner_id': lambda self, cr, uid, ctx: ctx.get('active_id', False),
+    }
 
+    def send_email(self, cr, uid, portal_user, context=None):
+        #TODO: use email template
+        res_users = self.pool.get('res.users')
+        mail_message = self.pool.get('mail.message')
+        user = res_users.browse(cr, ROOT_UID, uid, context)
+        if not user.user_email:
+            raise osv.except_osv(_('Email required'),
+                _('You must have an email address in your User Preferences'
+                  ' to send emails.'))
+
+        record = portal_user.wizard_id
+        subject_data = {
+                'company': user.company_id.name,
+        }
+        body_data = {
+                'portal': record.portal_id.name,
+                'message': record.message or "",
+                'url': record.portal_id.url or _("(missing url)"),
+                'db': cr.dbname,
+                'login': portal_user.user_id.login,
+                'password': portal_user.user_id.password,
+                'name': portal_user.user_id.name
+        }
+        body_data.update(subject_data)
+        email_from = user.user_email
+        email_to = portal_user.user_email
+        subject = _(WELCOME_EMAIL_SUBJECT) % subject_data
+        body = _(WELCOME_EMAIL_BODY) % body_data
+        res = mail_message.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
+        if not res:
+            _logger.warning(
+                'Failed to send email from %s to %s', email_from, email_to)
+        return True 
+
+    def create_new_user(self, cr, uid, portal_user, context=None):
+        res_user = self.pool.get('res.users')
+        portal = portal_user.wizard_id.portal_id
+        action_id = portal.home_action_id and portal.home_action_id.id or False
+        value = {
+                'name': portal_user.name,
+                'login': portal_user.user_email,
+                'password': random_password(),
+                'user_email': portal_user.user_email,
+                'context_lang': portal_user.lang,
+                'share': True,
+                'action_id': action_id,
+                'partner_id': portal_user.partner_id and portal_user.partner_id.id,
+                'groups_id': [(6, 0, [])],
+        } 
+        user_id = res_user.create(cr, ROOT_UID, value, context=context) 
+        portal.write({'users': [(4, user_id)]}, context)
+        portal_user.write({'user_id': user_id}, context)
+        self.send_email(cr, uid, portal_user, context=context)
+        return user_id
+
+    def link_portal_user(self, cr, uid, portal_user, context=None):
+        portal = portal_user.wizard_id.portal_id
+        return portal.write({'users': [(4, portal_user.user_id.id)]}, context=context)
+
+    def unlink_portal_user(self, cr, uid, portal_user, context=None):
+        portal = portal_user.wizard_id.portal_id
+        return portal.write({'users': [(3, portal_user.user_id.id)]}, context=context)
+
+    def unlink_user(self, cr, uid, user_id, context=None):
+        #TODO: search portal groups
+        res_user = self.pool.get('res.users')
+        user = res_user.browse(cr, uid, user_id, context=context)
+        if not user.groups_id:
+            user.unlink(context=context)
+        return True
+    
+
+    def manage_portal_access(self, cr, uid, ids, context=None):
+        for portal_user in self.browse(cr, uid, ids, context=None):
+            poral_id = portal_user.wizard_id.portal_id
+            #create new user into portal if has_portal_user and not user
+            if portal_user.has_portal_user and not portal_user.user_id:
+                self.create_new_user(cr, uid, portal_user, context=context)
+            #link to portal            
+            if portal_user.has_portal_user and portal_user.user_id:
+                self.link_portal_user(cr, uid, portal_user, context=context)
+            #unlink existing user into portal
+            if not portal_user.has_portal_user and portal_user.user_id:
+                self.unlink_portal_user(cr, uid, portal_user, context=context)
+                #drop user if it does not has any access in any portal.
+                self.unlink_user(cr, uid, portal_user.user_id.id, context=context)
 wizard_user()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

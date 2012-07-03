@@ -18,17 +18,20 @@
             <field name="arch" type="xml">
                 <form string="Add Portal Access" version="7.0">
                     <header>
-                        <button string="Send Invitations"
-                            name="action_create" type="object" class="oe_highlight"  />
+                        <button string="Apply"
+                            name="action_manage_portal_access" type="object" class="oe_highlight"  />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />    
                     </header>
-                    <group col="4">
-                        <field name="portal_id" on_change="onchange_portal_id(portal_id,context)"/>
+                    <group>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="portal_id" on_change="onchange_portal_id(partner_id, portal_id)"/>
                     </group>
+                    <separator string="Users"/>
                     <field name="user_ids"/>
-                    <label string="The following text will be included in the welcome email sent to users."/>
-                    <field name="message"/>
+                    <separator string="Message"/>
+                    <field name="message" placeholder="This text will be included in the welcome email sent to users."/>
+                    
                 </form>
             </field>
         </record>
