@@ -152,13 +152,8 @@ class survey_question_wiz(osv.osv_memory):
 
                     #############  PAGE HEADER : START ###################
 
-                    #etree.SubElement(xml_group, 'field', {'name': 'progress_bar_' + tools.ustr(page_number) , 'widget':'progressbar'})
-                    #fields['progress_bar_' + tools.ustr(page_number)] = {'type':'float', 'string':"Progress", 'views':{}}
-                  #  etree.SubElement(xml_group, 'label', {'string': tools.ustr(tools.ustr(pag_rec.note)), 'align':"0.0"})
-
-                    etree.SubElement(xml_header_title, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' ,'class':'oe_horizontal_separator'})
+                    etree.SubElement(xml_header_title, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' ,'class' : 'oe_survey_title'})
                     xml_header_group = etree.SubElement(xml_header_title, 'group', {'col': '4', 'colspan': '2'})
-                    #xml_header_page = etree.SubElement(xml_header_title, 'group', {'col': '1', 'colspan': '1'})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '8', 'colspan': '4'})
 
                     etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right"})
@@ -176,7 +171,7 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_header_group, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right"})
                     else:
                         etree.SubElement(xml_header_group, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
-#                    etree.SubElement(xml_header_page, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right"})
+                    #etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right oe_survey_title_page"})
 
                     #############  PAGE HEADER : END ###################
 
@@ -204,7 +199,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     if wiz_id:
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
-                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0)})
+                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0), 'modifiers':'{"invisible":true}'})
 
                     if pag_rec.note:
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
