@@ -25,14 +25,16 @@
                                 <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
                             </group>
                         </group>
-                        <group string="External Accesses">
-                            <field name="module_share"/>
-                            <field name="module_portal"/>
-                        </group>
-                        <group string="Others">
-                            <label for="id" string="Outgoing Mail Servers"/>
-                            <button type="action" name="%(base.action_ir_mail_server_list)d"
+                        <group>
+                            <group string="External Accesses">
+                                <field name="module_share"/>
+                                <field name="module_portal"/>
+                            </group>
+                            <group string="Others">
+                                <label for="id" string="Outgoing Mail Servers"/>
+                                <button type="action" name="%(base.action_ir_mail_server_list)d"
                                 string="Configure" icon="gtk-execute"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
