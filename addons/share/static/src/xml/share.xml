@@ -3,18 +3,11 @@
 -->
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="ViewManagerAction">
-        <t t-jquery=".oe_shortcuts_toggle" t-operation="after">
-            <a class="oe_share_link" href="#share_link" title="Link or embed..."><img t-att-src='_s + "/share/static/src/img/share.png"'/></a>
-            <a class="oe_share" href="#share" title="Share with..."><img t-att-src='_s + "/share/static/src/img/share.png"'/></a>
-        </t>
-    </t>
-
-    <t t-extend="RecordThread">
+    <!-- Extends Chatter widget in form view to add the invite button -->
+    <t t-extend="mail.RecordThread">
         <t t-jquery="button.oe_mail_button_unfollow" t-operation="after">
-            <button type="button" class="oe_share_mail oe_mail_button_mouseout">Invite</button>
+            <button type="button" class="oe_share_invite">Invite</button>
         </t>
     </t>
-
 
 </templates>
