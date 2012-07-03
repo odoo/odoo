@@ -598,7 +598,7 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
-    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
+    session.web.form.widgets.add( 'mail_thread', 'openerp.mail.RecordThread');
 
     /** WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
