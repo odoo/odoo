@@ -134,10 +134,13 @@
                             </div>
                         </group>
                         <group>
-                            <field name="contact_name" />
+                            <label for="contact_name" />
+                            <div>
+                                <field name="contact_name" class="oe_inline"/>,
+                                <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                            </div>
                             <field name="email_from" widget="email"/>
                             <field name="function" />
-                            <field domain="[('domain', '=', 'contact')]" name="title"/>
                             <field name="phone"/>
                             <field name="mobile"/>
                             <field name="fax"/>
@@ -491,9 +494,12 @@
                             </group>
 
                             <group>
-                                <field name="contact_name" />
+                                <label for="contact_name" />
+                                <div>
+                                    <field name="contact_name" class="oe_inline"/>,
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                                </div>
                                 <field name="function" />
-                                <field domain="[('domain', '=', 'contact')]" name="title"/>
                                 <field name="mobile"/>
                                 <field name="fax"/>
                             </group>
