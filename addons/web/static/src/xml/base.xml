@@ -396,6 +396,18 @@
     </table>
 </t>
 
+<t t-name="BreadCrumb">
+    <t t-foreach="widget.items" t-as="item">
+        <t t-if="!item_last">
+            <a href="#" class="oe_breadcrumb_item" t-att-data-index="item_index" t-att-data-action_id="item.action.id">
+                <t t-esc="item.title"/>
+            </a> /
+        </t>
+        <t t-if="item_last">
+            <t t-esc="item.title"/>
+        </t>
+    </t>
+</t>
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
@@ -405,7 +417,7 @@
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                            <span class="oe_view_title_text"><t t-raw="widget.display_title()"/></span>
                         </h2>
                 </td>
                 <td>

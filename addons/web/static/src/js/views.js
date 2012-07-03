@@ -15,6 +15,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_viewmanager = null;
         this.client_widget = null;
     },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.bread_crumb = new instance.web.BreadCrumb(this);
+    },
     dialog_stop: function () {
         if (this.dialog) {
             this.dialog_viewmanager.destroy();
@@ -150,7 +154,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            this.content_stop();
+            //this.content_stop();
+            this.bread_crumb.hide_all();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
@@ -160,6 +165,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
+            this.bread_crumb.add({
+                view_manager: this.inner_viewmanager,
+                action: action,
+                title: action.name
+            });
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -211,6 +221,43 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     ir_ui_menu: function (action) {
         this.getParent().do_action(action);
+    }
+});
+
+instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
+    init: function(parent) {
+        this._super(parent);
+        this.action_manager = parent;
+        this.items = [];
+        this.action_manager.$element.on('click', '.oe_breadcrumb_item', this.on_item_clicked);
+    },
+    add: function(item) {
+        this.items.push(item);
+    },
+    hide_all: function() {
+        _.each(this.items, function(i) {
+            i.view_manager.$element.hide();
+        });
+    },
+    get_title: function() {
+        return QWeb.render('BreadCrumb', { widget: this });
+    },
+    on_item_clicked: function(ev) {
+        var $e = $(ev.target);
+        var index = $e.data('index');
+        this.select_item(index);
+    },
+    select_item: function(index) {
+        for (var i = index + 1; i < this.items.length; i += 1) {
+            this.remove_item(i);
+        }
+        this.items[index].view_manager.$element.show();
+    },
+    remove_item: function(index) {
+        var item = this.items.splice(index, 1)[0];
+        if (item) {
+            item.view_manager.destroy();
+        }
     }
 });
 
@@ -350,7 +397,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             });
 
-            self.$element.find('.oe_view_title_text:first').text(
+            self.$element.find('.oe_view_title_text:first').html(
                     self.display_title());
         });
         return view_promise;
@@ -703,7 +750,12 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         });
     },
     display_title: function () {
-        return this.action.name;
+        var am = this.getParent();
+        if (am) {
+            return am.bread_crumb.get_title();
+        } else {
+            return _.escape(this.action.name);
+        }
     }
 });
 
