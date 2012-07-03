@@ -336,9 +336,9 @@ openerp.web.format_cell = function (row_data, column, options) {
             href: download_url,
             size: row_data[column.id].value
         });
-    case 'progressbar':
-        return _.template(
-            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
+    case 'progressbar': 
+        return _.template('<div class="oe_list_progressbar_outer">&nbsp;<div class="oe_list_progressbar_inner" style="width: <%-value%>%;"></div><div class="oe_list_progressbar_text"><%-value%>%</div></div>', 
+        	{
                 value: _.str.sprintf("%.0f", row_data[column.id].value || 0)
             });
     }
