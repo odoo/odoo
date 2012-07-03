@@ -497,7 +497,7 @@ openerp.mail = function(session) {
     });
     session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
 
-    /** ThreadView widget: thread of comments */
+    /** mail_thread widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.RecordThread',
 
