@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
-        <!-- Demo Leads -->
+    <data noupdate="1">
+        <!-- 
+            Demo Leads
+            -->
+
         <record id="crm_case_itisatelesalescampaign0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead1"/>
             <field eval="'3'" name="priority"/>
@@ -21,7 +24,6 @@
             <field eval="'Plan to Attend a Training'" name="name"/>
             <field eval="'0033 769 703-274'" name="phone"/>
         </record>
-
         <record id="crm_case_electonicgoodsdealer0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead7"/>
             <field eval="'4'" name="priority"/>
@@ -76,7 +78,6 @@
             <field eval="'(514) 698-4118'" name="phone"/>
             <field eval="'hmc@thgascompany.com'" name="email_from"/>
         </record>
-
         <record id="crm_case_itdeveloper0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead4"/>
             <field eval="'3'" name="priority"/>
@@ -96,7 +97,6 @@
             <field eval="'(855) 924-4364'" name="phone"/>
             <field eval="'helle@stonageit.be'" name="email_from"/>
         </record>
-        
         <record id="crm_case_mgroperations0" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead3"/>
@@ -209,10 +209,21 @@
 
         <!--        Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="case_cancel"
-            eval="[ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'), ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')], {'install_mode': True}"
+            eval="[ ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'),
+                    ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')],
+                  {'install_mode': True}"
+        />
+        <!--        Call Function to set the leads as Unread -->
+        <function model="crm.lead" name="message_mark_as_unread"
+            eval="[ ref('crm_case_itisatelesalescampaign0'), ref('crm_case_electonicgoodsdealer0'),
+                    ref('crm_case_itdeveloper0'), ref('crm_case_employee0')], {}"
         />
 
-        <!-- Demo Opportunities -->
+
+        <!-- 
+            Demo Opportunities
+            -->
+
         <record id="crm_case_construstazunits0" model="crm.lead">
             <field eval="60" name="probability"/>
             <field eval="1" name="active"/>
@@ -398,7 +409,7 @@
             <field name="section_id" ref="crm.section_sales_department"/>
             <field name="categ_id" ref="crm.categ_oppor5"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
-            <field eval="'Need new design for my website'" name="name"/>
+            <field eval="'Need a new design for my website'" name="name"/>
             <field eval="time.strftime('%Y-05-01')" name="date_action"/>
             <field eval="time.strftime('%Y-06-30')" name="date_deadline"/>
             <field eval="'info@opensides.be'" name="email_from"/>
@@ -469,7 +480,7 @@
             <field name="section_id" ref="crm.section_sales_department"/>
             <field name="categ_id" ref="crm.categ_oppor1"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
-            <field eval="'Need customize the solution'" name="name"/>
+            <field eval="'Need to customize the solution'" name="name"/>
             <field eval="'Conf call with technical service'" name="title_action"/>
             <field name="partner_name">Thymbra</field>
             <field name="street">Palermo, Capital Federal</field>
@@ -522,5 +533,12 @@
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need more info about your pc2'" name="name"/>
         </record>
+
+        <!--        Call Function to set the opportunities as Unread -->
+        <function model="crm.lead" name="message_mark_as_unread"
+            eval="[ ref('crm_case_rdroundfundingunits25'), ref('crm_case_unifliege'),
+                    ref('crm_case_ericdubois4'), ref('crm_case_abcfuelcounits0')], {}"
+        />
+
     </data>
 </openerp>
