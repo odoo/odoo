@@ -127,7 +127,7 @@
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
                         </group><group>
-                            <field name="task_id" on_change="onchange_task_id(task_id)"/>
+                            <field name="task_id" on_change="onchange_task_id(task_id)" context="{'default_project_id':project_id}"/>
                             <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                             <field name="version_id" widget="selection"/>
                             <field name="priority"/>
