@@ -178,7 +178,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20000"/>
         </record>
-		
+
         <record model="account.account.template" id="p24500">
             <field name="name">Unearned Revenues</field>
             <field name="code">24500</field>
@@ -259,14 +259,14 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p27000"/>
-        </record>	
-
+        </record>
+		
     <!-- Tax Account -->
     
     <record model="account.account.template" id="p24600">
         <field name="name">Sales Tax Payable</field>
         <field name="code">24600</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p20000"/>
@@ -275,7 +275,7 @@
     <record model="account.account.template" id="p24800">
         <field name="name">VAT Payable</field>
         <field name="code">24800</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p20000"/>
@@ -284,7 +284,7 @@
     <record model="account.account.template" id="p24900">
         <field name="name">Exice Duty Payable</field>
         <field name="code">24900</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p20000"/>
@@ -293,12 +293,21 @@
     <record model="account.account.template" id="p24700">
         <field name="name">Service Tax Payable</field>
         <field name="code">24700</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p20000"/>
     </record>
 
+    <record model="account.account.template" id="p24950">
+        <field name="name">Reserve and Surplus Account</field>
+        <field name="code">24950</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="reconcile" eval="False"/>
+        <field name="parent_id" ref="p20000"/>
+    </record>	
+		
 		 <!-- Profit And Loss Account -->
 		 
         <record model="account.account.template" id="p3">
@@ -572,7 +581,7 @@
             <field name="property_account_payable" ref="p21000"/>
             <field name="property_account_expense_categ" ref="p41010"/>
             <field name="property_account_income_categ" ref="p31010"/>
-            <field name="property_reserve_and_surplus_account" ref="p96000"/> 
+            <field name="property_reserve_and_surplus_account" ref="p24950"/> 
         </record> 
 
     </data>
