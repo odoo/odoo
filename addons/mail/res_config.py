@@ -19,18 +19,21 @@
 #
 ##############################################################################
 
-from osv import orm
-from osv import fields
+from openerp.osv import osv, fields
 
-class transient_update_maildomain(orm.TransientModel):
-    
-    _name = "transient.update.maildomain"
-    _description = "Update Mail Domain"
+class project_configuration(osv.TransientModel):
+    _inherit = 'base.config.settings'
+
     _columns = {
-        'name' : fields.text('Domain', required=True),
+        'alias_domain' : fields.char('Catch-all Mail Alias Domain', size=None,
+                                     help="If you have setup a catch-all mail domain redirected to "
+                                          "the OpenERP server, enter the domain name here."),
     }
-    def update_domain(self, cr, uid, ids, context=None):
-        config_parameter_pool = self.pool.get("ir.config_parameter")
-        for record in self.browse(cr, uid, ids, context):
-            config_parameter_pool.set_param(cr, uid, "mail.catchall.domain", record.name, context)
-        return {'type': 'ir.actions.act_window_close'}
+
+    def get_default_alias_domain(self, cr, uid, ids, context=None):
+        return {'alias_domain': self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)}
+
+    def set_alias_domain(self, cr, uid, ids, context=None):
+        config_parameters = self.pool.get("ir.config_parameter")
+        for record in self.browse(cr, uid, ids, context=context):
+            config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', context=context)

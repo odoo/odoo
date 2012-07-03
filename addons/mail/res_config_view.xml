@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_general_configuration_mail_alias_domain" model="ir.ui.view">
+            <field name="name">base.config.settings.mail.alias</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group[@string='Others']" position='inside'>
+                    <field name="alias_domain" placeholder="mycompany.my.openerp.com"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
