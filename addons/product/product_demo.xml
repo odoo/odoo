@@ -96,6 +96,8 @@
             <field name="type">service</field>
             <field name="uom_id" ref="product_uom_hour"/>
             <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="description">This type of service include basic monitoring of products.</field>
+            <field name="description_sale">This type of service include basic monitoring of products.</field>
         </record>
 
         <record id="product_product_2" model="product.product">
@@ -106,6 +108,7 @@
             <field name="type">service</field>
             <field name="uom_id" ref="product_uom_hour"/>
             <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="description">This type of service include assistance for security questions, system configuration requirements, implementation or special needs.</field>
         </record>
 
         <record id="product_product_3" model="product.product">
@@ -114,12 +117,17 @@
             <field name="categ_id" ref="product_category_7"/>
             <field name="list_price">450.0</field>
             <field name="standard_price">300.0</field>
-            <field name="supply_method">produce</field>
             <field name="type">product</field>
+            <field name="supply_method">produce</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">4.0</field>
+            <field name="description_sale">17" LCD Monitor
+Processor AMD 8-Core
+512MB RAM
+HDD 320GB</field>
         </record>
+
         <record id="product_product_4" model="product.product">
             <field name="name">PC Assemble + 2GB RAM</field>
             <field name="default_code">PC200</field>
@@ -131,7 +139,12 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">4.0</field>
+            <field name="description_sale">19" LCD Monitor
+Processor Core i5 2.70 Ghz
+2GB RAM
+HDD 320GB</field>
         </record>
+
         <record id="product_product_5" model="product.product">
             <field name="name">PC Assemble + Custom RAM (PC on Demand)</field>
             <field name="default_code">PC-DEM</field>
@@ -144,7 +157,9 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">7.0</field>
+            <field name="description">Custom computer assembled on order based on customer's requirement.</field>
         </record>
+
         <record id="product_product_6" model="product.product">
             <field name="name">15” LCD Monitor</field>
             <field name="default_code">LCD15</field>
@@ -285,6 +300,7 @@
             <field name="procure_method">make_to_order</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">On demand hard-disk having capacity based on requirement.</field>
         </record>
         <record id="product_product_20" model="product.product">
             <field name="name">Motherboard I9P57</field>
@@ -345,6 +361,10 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">17" Monitor
+4GB RAM
+Standard-1294P Processor
+QWERTY keyboard</field>
         </record>
         <record id="product_product_26" model="product.product">
             <field name="name">Laptop S3450</field>
@@ -355,6 +375,10 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">17" Monitor
+6GB RAM
+Hi-Speed 234Q Processor
+QWERTY keyboard</field>
         </record>
         <record id="product_product_27" model="product.product">
             <field name="name">Laptop Customized</field>
@@ -365,6 +389,7 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Custom Laptop based on customer's requirement.</field>
         </record>
         <record id="product_product_28" model="product.product">
             <field name="name">External Hard disk</field>
@@ -407,6 +432,7 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">.</field>
         </record>
         <record id="product_product_32" model="product.product">
             <field name="name">Headset standard</field>
@@ -417,6 +443,7 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Hands free headset for laptop PC with in-line microphone and headphone plug.</field>
         </record>
         <record id="product_product_33" model="product.product">
             <field name="name">Headset USB</field>
@@ -427,6 +454,7 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Headset for laptop PC with USB connector.</field>
         </record>
 
         <record id="product_product_34" model="product.product">
@@ -471,6 +499,7 @@
             <field name="type">product</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">All in one hi-speed printer with fax and scanner.</field>
         </record>
 
         <record id="product_product_38" model="product.product">
@@ -526,6 +555,7 @@
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description_sale">Office Editing Software with word processing, spreadsheets, presentations, graphics, and databases...</field>
         </record>
 
         <record id="product_product_43" model="product.product">
@@ -548,6 +578,7 @@
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description_sale">Full featured image editing software.</field>
         </record>
 
         <record id="product_product_45" model="product.product">
