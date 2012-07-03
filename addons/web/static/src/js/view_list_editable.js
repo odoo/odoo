@@ -141,7 +141,8 @@ openerp.web.list_editable = function (instance) {
                 this.records.add(record, {
                     at: this.options.editable === 'top' ? 0 : null});
             }
-            var cells = this.getCellsFor(this.groups.getRowFor(record));
+            var $recordRow = this.groups.getRowFor(record);
+            var cells = this.getCellsFor($recordRow);
             return this.ensureSaved().pipe(function () {
                 return self.withEvent('edit', {
                     record: record.attributes,
@@ -196,13 +197,12 @@ openerp.web.list_editable = function (instance) {
                         return !r.get('id');
                     }).set('id', attrs.id);
                 }
-                return $.when(
-                    self.handleOnWrite(record),
-                    self.reload_record(record)).pipe(function () {
-                        return {
-                            created: created,
-                            record: record
-                        }
+                // onwrite callback could be altering & reloading the record
+                // which has *just* been saved, so first perform all onwrites
+                // then do a final reload of the record
+                return self.handleOnWrite(record)
+                    .pipe(function () { return self.reload_record(record); })
+                    .pipe(function () { return { created: created, record: record };
                 });
             });
         },
@@ -338,9 +338,9 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             var form = self.form;
             record = _.extend({}, record);
-            form.on_record_loaded(record).pipe(function () {
+            return form.on_record_loaded(record).pipe(function () {
                 return form.do_show({reload: false});
-            }).then(function () {
+            }).pipe(function () {
                 self.record = record;
                 // TODO: [Save] button
                 // TODO: save on action button?
