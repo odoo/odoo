@@ -2357,12 +2357,11 @@
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <p>This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template.</p>
                     <div groups="base.group_multi_company">
                         <label for="company_id"/>
                         <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     </div>
-                    <group string="Set Your Accounting Options">
+                    <group>
                         <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <label for="chart_template_id"/>
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
