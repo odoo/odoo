@@ -119,7 +119,7 @@ class wizard(osv.osv_memory):
     def _search_portal_user(self, cr, uid, partner_id, portal_id, context=None):
         portal_users = self.pool.get('res.portal').browse(cr, uid, portal_id, context=context).group_id.users
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        user_ids = self.pool.get('res.users').search(cr, uid, [('partner_id','=', partner.id)])
+        user_ids = self.pool.get('res.users').search(cr, uid, [('login','=', partner.email)])
         return [u.id for u in portal_users if u.id in user_ids]
 
     def _portal_user_dict(self, cr, uid, partner, portal_id, context=None):
@@ -131,23 +131,23 @@ class wizard(osv.osv_memory):
         if partner.child_ids:
             return res
 
-        #if partner.parent_id:
-        #    lang = partner.parent_id.lang or 'en_US'
-        #    company_id = partner.parent_id.id
-        #else:
-        #    lang = partner.lang or 'en_US'
-        #    company_id = partner.id
+        if partner.parent_id:
+            lang = partner.parent_id.lang or 'en_US'
+            company_id = partner.parent_id.id
+        else:
+            lang = partner.lang or 'en_US'
+            company_id = partner.id
         user = False
         portal_user_ids = self._search_portal_user(cr, uid, partner.id, portal_id, context=context)
         user_id = len(portal_user_ids) and portal_user_ids[0] or False
         if user_id:
             user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
-        email = user and user.user_email or partner.email
+        email = partner.email
         users = [{
-               'name': user and user.name or partner.name,
+               'name': partner.name,
                'user_email': extract_email(email),
-               'lang': partner.lang or 'en_US',
-               'partner_id': partner.id,
+               'lang': lang or 'en_US',
+               'partner_id': company_id,
                'has_portal_user': user_id and True or False,
                'user_id': user_id
         }]
@@ -259,8 +259,8 @@ class wizard_user(osv.osv_memory):
         res_user = self.pool.get('res.users')
         portal = portal_user.wizard_id.portal_id
         action_id = portal.home_action_id and portal.home_action_id.id or False
-        partner_id = portal_user.partner_id and portal_user.partner_id.id
-        user_ids = res_user.search(cr, uid, [('partner_id','=',partner_id)])
+        partner = portal_user.partner_id and portal_user.partner_id
+        user_ids = res_user.search(cr, uid, [('login','=',partner.email)])
         user_id = False
         if user_ids and len(user_ids):
             user_id = user_ids[0]
@@ -273,7 +273,7 @@ class wizard_user(osv.osv_memory):
                     'context_lang': portal_user.lang,
                     'share': True,
                     'action_id': action_id,
-                    'partner_id': partner_id,
+                    'partner_id': partner.id,
                     'groups_id': [(6, 0, [])],
             } 
             user_id = res_user.create(cr, ROOT_UID, value, context=context) 
