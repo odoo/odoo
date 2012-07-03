@@ -513,7 +513,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     // An orderline contains a product, its quantity, its price, discount. etc. 
     // An Order contains zero or more Orderlines.
     module.Orderline = Backbone.Model.extend({
-        initialize: function(options){
+        initialize: function(attr,options){
             this.pos = options.pos;
             this.order = options.order;
             this.product = options.product;
@@ -589,7 +589,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         is_selected: function(){
             return this.selected;
         },
-
         // when we add an new orderline we want to merge it with the last line to see reduce the number of items
         // in the orderline. This returns true if it makes sense to merge the two
         can_be_merged_with: function(orderline){
@@ -691,11 +690,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         model: module.Orderline,
     });
 
-    // Every PaymentLine has all the attributes of the corresponding CashRegister.
+    // Every PaymentLine contains a cashregister and an amount CashRegister.
     module.Paymentline = Backbone.Model.extend({
-        initialize: function(cashRegister) {
+        initialize: function(attributes, options) {
             this.amount = 0;
-            this.cashregister = cashRegister;
+            this.cashregister = options.cashRegister;
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
@@ -714,7 +713,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         export_as_JSON: function(){
             return {
                 name: instance.web.datetime_to_str(new Date()),
-                statement_id: this.get('id'),
+                statement_id: this.cashregister.get('id'),
                 account_id: (this.cashregister.get('account_id'))[0],
                 journal_id: (this.cashregister.get('journal_id'))[0],
                 amount: this.get_amount()
@@ -746,8 +745,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 paymentLines:   new module.PaymentlineCollection(),
                 name:           "Order " + this.generateUniqueId(),
             });
-            this.pos =     attributes.pos; //TODO put that in set and remember to use 'get' to read it ... 
-            this.pos_widget = attributes.pos_widget;    //FIXME we shouldn't depend on pos_widget in the models
+            this.pos =     attributes.pos; 
             this.selected_orderline = undefined;
             return this;
         },
@@ -758,7 +756,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var attr = product.toJSON();
             attr.pos = this.pos;
             attr.order = this;
-            var line = new module.Orderline({pos: this.pos, order: this, product: product});
+            var line = new module.Orderline({}, {pos: this.pos, order: this, product: product});
             var self = this;
 
             var last_orderline = this.getLastOrderline();
@@ -777,13 +775,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.get('orderLines').at(this.get('orderLines').length -1);
         },
         addPaymentLine: function(cashRegister) {
-            var newPaymentline;
-            newPaymentline = new module.Paymentline(cashRegister);
-            /* TODO: Should be 0 for cash-like accounts */
-            //FIXME the following 'set' call calls this method once again via callback
-            // events. Are we sure that it's what we want ???
-            newPaymentline.set_amount( this.getDueLeft() );
-            this.get('paymentLines').add(newPaymentline);
+            var paymentLines = this.get('paymentLines');
+            var newPaymentline = new module.Paymentline({},{cashRegister:cashRegister});
+            if(cashRegister.get('journal').type !== 'cash'){
+                newPaymentline.set_amount( this.getDueLeft() );
+            }
+            paymentLines.add(newPaymentline);
         },
         getName: function() {
             return this.get('name');

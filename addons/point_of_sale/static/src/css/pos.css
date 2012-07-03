@@ -507,29 +507,40 @@
 .point-of-sale .pos-payment-container {
     text-align: left;
 }
-.point-of-sale .pos-payment-container .payment-due {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 3px 6px 0px 6px;
-    background-color: white;
-    border:1px solid grey;
-    border-radius: 3px;
+.point-of-sale .pos-payment-container .left-block{
+    display: inline-block;
+    width:49%;
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+.point-of-sale .pos-payment-container .header{
+    margin-top: 50px;
+    margin-bottom:20px;
+    font-weight: bold;
+}
+.point-of-sale .pos-payment-container .infoline{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.point-of-sale .pos-payment-container .right-block{
+    display: inline-block;
+    width:49%;
+    margin:0;
+    padding:0;
+    text-align:right;
 }
 .point-of-sale .pos-payment-container table {
     width: 100%;
     margin-bottom: 20px;
 }
-.point-of-sale .pos-payment-container .paymentline-type {
-    font-size: 0.8em;
-    font-weight: bold;
+.point-of-sale .pos-payment-container td {
+    vertical-align: middle;
 }
-.point-of-sale .screen button {
-    width: 50%;
-    text-align: center;
-    padding: 7px 0 7px 0;
-    font-size: 0.8em;
+.point-of-sale .pos-payment-container .paymentline-type {
+    font-size: 1em;
     font-weight: bold;
+    margin-right:10px;
 }
 
 /* c) The receipt screen */

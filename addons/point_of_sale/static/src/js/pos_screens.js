@@ -757,18 +757,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.updatePaymentSummary();
         },
         deleteLine: function(lineWidget) {
-        	this.currentPaymentLines.remove([lineWidget.model]);
+        	this.currentPaymentLines.remove([lineWidget.payment_line]);
         },
         updatePaymentSummary: function() {
-            var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
-            currentOrder = this.pos.get('selectedOrder');
-            paidTotal = currentOrder.getPaidTotal();
-            dueTotal = currentOrder.getTotal();
-            this.$element.find('#payment-due-total').html(dueTotal.toFixed(2));
-            this.$element.find('#payment-paid-total').html(paidTotal.toFixed(2));
-            remainingAmount = dueTotal - paidTotal;
-            remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
-            $('#payment-remaining').html(remaining);
+            var currentOrder = this.pos.get('selectedOrder');
+            var paidTotal = currentOrder.getPaidTotal();
+            var dueTotal = currentOrder.getTotal();
+            var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
+            var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
+
+            this.$('#payment-due-total').html(dueTotal.toFixed(2));
+            this.$('#payment-paid-total').html(paidTotal.toFixed(2));
+            this.$('#payment-remaining').html(remaining.toFixed(2));
+            this.$('#payment-change').html(change.toFixed(2));
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {
