@@ -139,7 +139,7 @@ openerp.web.list_editable = function (instance) {
             if (!record) {
                 record = new instance.web.list.Record();
                 this.records.add(record, {
-                    at: this.options.editable === 'top' ? 0 : null});
+                    at: this.isPrependOnCreate() ? 0 : null});
             }
             var $recordRow = this.groups.getRowFor(record);
             var cells = this.getCellsFor($recordRow);
@@ -293,6 +293,9 @@ openerp.web.list_editable = function (instance) {
                     }));
                 });
         },
+        isPrependOnCreate: function () {
+            return this.options.editable === 'top';
+        }
     });
 
     instance.web.list.Editor = instance.web.Widget.extend({
@@ -305,18 +308,21 @@ openerp.web.list_editable = function (instance) {
          * @param {instance.web.Widget} parent
          * @param {Object} options
          * @param {instance.web.FormView} [options.formView=instance.web.FormView]
+         * @param {Object} [options.delegate]
          */
         init: function (parent, options) {
             this._super(parent);
             this.options = options || {};
             _.defaults(this.options, {
-                formView: instance.web.FormView
+                formView: instance.web.FormView,
+                delegate: this.getParent()
             });
+            this.delegate = this.options.delegate;
 
             this.record = null;
 
             this.form = new (this.options.formView)(
-                this, this.getParent().dataset, false, {
+                this, this.delegate.dataset, false, {
                     initial_mode: 'edit',
                     $buttons: $(),
                     $pager: $()
@@ -325,8 +331,7 @@ openerp.web.list_editable = function (instance) {
         start: function () {
             var self = this;
             var _super = this._super();
-            // TODO: getParent() should be delegate defaulting to getParent()
-            this.form.embedded_view = this.getParent().editionView(this);
+            this.form.embedded_view = this.delegate.editionView(this);
             var form_ready = this.form.appendTo(this.$element).then(
                 self.form.proxy('do_hide'));
             return $.when(_super, form_ready);
@@ -363,7 +368,7 @@ openerp.web.list_editable = function (instance) {
         save: function () {
             var self = this;
             return this.form
-                .do_save(null, this.getParent().options.editable === 'top')
+                .do_save(null, this.delegate.isPrependOnCreate())
                 .pipe(function (result) {
                     var created = result.created && !self.record.id;
                     if (created) {
