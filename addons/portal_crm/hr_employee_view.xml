@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- add visibility field in employee form -->
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">res.portal.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='job_information']" position="after">
+                    <group string="Employee's visibility">
+                        <field name="visibility"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

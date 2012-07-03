@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,29 +19,24 @@
 #
 ##############################################################################
 
+from osv import osv, fields
 
-{
-    'name': 'Portal CRM',
-    'version': '0.1',
-    'category': 'Tools',
-    'complexity': "easy",
-    'description': """
-This module adds crm menu and features (contact form) to your portal if crm and
-portal are installed.
-    """,
-    'author': 'OpenERP SA',
-    'depends': ['crm','portal'],
-    'data': [
-        'hr_employee_view.xml',
-        'security/ir.model.access.csv',
-        'wizard/contact_view.xml',
-    ],
-    'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
-    'css': [
-        'static/src/css/portal_crm.css',
-    ],
 
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class hr_employee(osv.osv):
+    _description = "Portal CRM Employee"
+    _inherit = 'hr.employee'
+
+    """
+    ``visibility``: defines if the employee appears on the portal's contact page
+                    - 'public' means the employee will appear for everyone (anonymous)
+                    - 'portal' means the employee will appear for portal users only
+                    - 'private' means the employee won't appear
+    """
+    _columns = {
+        'visibility': fields.selection([('public', 'Public'),('portal', 'Portal'),('private', 'Private')],
+            string='Visibility', help='Employee\'s visibility in the portal\'s contact page'),
+    }
+    _defaults = {
+        'visibility': 'private',
+    }

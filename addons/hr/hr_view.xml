@@ -59,7 +59,7 @@
                                     <field name="work_email" widget="email"/>
                                     <field name="work_location"/>
                                 </group>
-                                <group string="Job Information">
+                                <group name="job_information" string="Job Information">
                                     <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                     <field name="coach_id"/>
                                 </group>
@@ -207,7 +207,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_employee_form"/>
             <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record> 
+        </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
@@ -410,8 +410,8 @@
                 <search string="Jobs">
                     <field name="name" string="Job"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test"  
-                            domain="[('state','=','open')]" 
+                    <filter icon="terp-camera_test"
+                            domain="[('state','=','open')]"
                             string="In Position"
                             help="In Position"/>
                     <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
@@ -427,7 +427,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_hr_job_employee_form" model="ir.ui.view">
             <field name="name">hr.job.employee.form</field>
             <field name="model">hr.job</field>
@@ -444,7 +444,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
