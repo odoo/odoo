@@ -381,7 +381,7 @@ openerp.web.list_editable = function (instance) {
             var record = this.record;
             this.record = null;
             if (!this.form.can_be_discarded()) {
-                return $.Deferred.reject();
+                return $.Deferred().reject().promise();
             }
             this.form.do_hide();
             return $.when(record);
