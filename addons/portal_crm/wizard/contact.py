@@ -11,7 +11,7 @@ class crm_contact_us(osv.TransientModel):
     }
 
     def _get_employee(self, cr, uid, context=None):
-        r = self.pool.get('hr.employee').search(cr, uid, [], context=context)
+        r = self.pool.get('hr.employee').search(cr, uid, [('visibility', '!=', 'private')], context=context)
         return r
 
     def _get_companies(self, cr, uid, context=None):
