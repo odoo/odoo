@@ -51,7 +51,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : [
         "stock_demo.xml",
-        "stock_demo.yml",
+#        "stock_demo.yml",
     ],
     "update_xml" : [
         "security/stock_security.xml",
@@ -83,9 +83,9 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "res_config_view.xml",
     ],
     'test': [
-        'test/opening_stock.yml',
-        'test/shipment.yml',
-        'test/stock_report.yml',
+#        'test/opening_stock.yml',
+#        'test/shipment.yml',
+#        'test/stock_report.yml',
     ],
     'installable': True,
     'application': True,
