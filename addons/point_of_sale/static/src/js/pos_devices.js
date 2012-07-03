@@ -160,45 +160,44 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.message('open_cashbox');
         },
 
-        // ask the printer to print a receipt
+        /* ask the printer to print a receipt
+         * receipt is a JSON object with the following specs:
+         * receipt{
+         *  - orderlines : list of orderlines :
+         *     {
+         *          quantity:           (number) the number of items, or the weight, 
+         *          unit_name:          (string) the name of the item's unit (kg, dozen, ...)
+         *          list_price:         (number) the price of one unit of the item before discount
+         *          discount:           (number) the discount on the product in % [0,100] 
+         *          product_name:       (string) the name of the product
+         *          price_with_tax:     (number) the price paid for this orderline, tax included
+         *          price_without_tax:  (number) the price paid for this orderline, without taxes
+         *          tax:                (number) the price paid in taxes on this orderline
+         *     }
+         *  - paymentlines : list of paymentlines :
+         *     {
+         *          amount:             (number) the amount paid
+         *          journal:            (string) the name of the journal on wich the payment has been made  
+         *     }
+         *  - total_with_tax:     (number) the total of the receipt tax included
+         *  - total_without_tax:  (number) the total of the receipt without taxes
+         *  - total_tax:          (number) the total amount of taxes paid
+         *  - total_paid:         (number) the total sum paid by the client
+         *  - change:             (number) the amount of change given back to the client
+         *  - name:               (string) a unique name for this order
+         *  - client:             (string) name of the client. or null if no client is logged
+         *  - cashier:            (string) the name of the cashier
+         *  - date: {             the date at wich the payment has been done
+         *      year:             (number) the year  [2012, ...]
+         *      month:            (number) the month [0,11]
+         *      date:             (number) the day of the month [1,31]
+         *      day:              (number) the day of the week  [0,6] 
+         *      hour:             (number) the hour [0,23]
+         *      minute:           (number) the minute [0,59]
+         *    }
+         */
         print_receipt: function(receipt){
-            var sample_receipt = {      
-                // TODO This is a sample receipt, 
-                // we need to discuss the exact format based on what really needs
-                // to be printed on the receipt ... 
-                // ... the same for invoices ... 
-                client_name: 'John Smith',
-                cashier_name: 'Mike Doe',
-                date: '28 january 2024, 17h32',
-                currency:{
-                    symbol: '$',
-                    position: 'before',
-                },
-                total_with_taxes: 94.1,
-                total_without_taxes: 90,
-                taxes: 4.1,
-                orderlines:[
-                    {
-                        name: 'Cola',
-                        unit_price_with_taxes: 1,
-                        unit_price_without_taxes: 0.8,
-                        total_price_with_taxes: 10,
-                        total_price_without_taxes: 8,
-                        quantity: '10 Bottles',
-                        discount: '',
-                    },
-                    {
-                        name: 'Pizza',
-                        unit_price_with_taxes: 3,
-                        unit_price_without_taxes: 2,
-                        total_price_with_taxes: 18,
-                        total_price_without_taxes: 12,
-                        quantity: '10',
-                        discount: '40 %',
-                    }
-                ],
-            };
-            this.message('print_receipt',{receipt: receipt || sample_receipt});
+            this.message('print_receipt',{receipt: receipt});
         },
     });
 

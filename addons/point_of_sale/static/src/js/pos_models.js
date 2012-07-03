@@ -325,7 +325,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         push_order: function(record) {
             var self = this;
             return this.dao.add_operation(record).pipe(function(){
-                    return self.flush();
+                return self.flush();
             });
         },
 
@@ -616,9 +616,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         export_as_JSON: function() {
             return {
                 qty: this.get_quantity(),
-                price_unit: this.get_product().get('list_price'),
+                price_unit: this.get_list_price(),
                 discount: this.get_discount(),
-                product_id: this.get_product().get('id')
+                product_id: this.get_product().get('id'),
+            };
+        },
+        export_for_printing: function(){
+            return {
+                quantity:           this.get_quantity(),
+                unit_name:          this.get_unit().name,
+                list_price:         this.get_list_price(),
+                discount:           this.get_discount(),
+                product_name:       this.get_product().get('name'),
+                price_with_tax :    this.get_price_with_tax(),
+                price_without_tax:  this.get_price_without_tax(),
+                tax:                this.get_tax(),
             };
         },
         get_price_without_tax: function(){
@@ -703,9 +715,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 name: instance.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
-                account_id: (this.get('account_id'))[0],
-                journal_id: (this.get('journal_id'))[0],
+                account_id: (this.cashregister.get('account_id'))[0],
+                journal_id: (this.cashregister.get('journal_id'))[0],
                 amount: this.get_amount()
+            };
+        },
+        export_for_printing: function(){
+            return {
+                amount: this.get_amount(),
+                journal: this.cashregister.get('journal_id')[1],
             };
         },
     });
@@ -796,6 +814,42 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
         },
+        export_for_printing: function(){
+            var orderlines = [];
+            this.get('orderLines').each(function(orderline){
+                orderlines.push(orderline.export_for_printing());
+            });
+
+            var paymentlines = [];
+            this.get('paymentLines').each(function(paymentline){
+                paymentlines.push(paymentline.export_for_printing());
+            });
+            var client = this.pos.get('client');
+            var cashier = this.pos.get('cashier') || this.pos.get('user');
+            var date = new Date();
+
+            return {
+                orderlines: orderlines,
+                paymentlines: paymentlines,
+                total_with_tax: this.getTotal(),
+                total_without_tax: this.getTotalTaxExcluded(),
+                total_tax: this.getTax(),
+                total_paid: this.getPaidTotal(),
+                change: this.getChange(),
+                name : this.getName(),
+                client: client ? client.name : null ,
+                cashier: cashier ? cashier.name : null,
+                date: { 
+                    year: date.getFullYear(), 
+                    month: date.getMonth(), 
+                    date: date.getDate(),       // day of the month 
+                    day: date.getDay(),         // day of the week 
+                    hour: date.getHours(), 
+                    minute: date.getMinutes() 
+                }, 
+                currency: this.pos.get('currency'),
+            };
+        },
         exportAsJSON: function() {
             var orderLines, paymentLines;
             orderLines = [];
@@ -835,7 +889,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.selected_orderline = undefined;
             }
         },
-            
     });
 
     module.OrderCollection = Backbone.Collection.extend({

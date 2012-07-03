@@ -709,12 +709,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             var currentOrder = this.pos.get('selectedOrder');
 
+            console.log('RECEIPT:',currentOrder.export_for_printing());
+
             this.validate_button.$element.attr('disabled','disabled');  //FIXME is the css actually using this attr ? 
 
             this.pos.push_order(currentOrder.exportAsJSON()) 
                 .then(function() {
                     self.validate_button.$element.removeAttr('disabled');
                     if(self.pos.use_proxy_printer){
+                        self.pos.proxy.print_receipt(currentOrder.export_for_printing());
                         self.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
                     }else{
                         self.pos_widget.screen_selector.set_current_screen('receipt');
@@ -739,7 +742,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         addPaymentLine: function(newPaymentLine) {
-            console.log('NEW PAYMENT LINE WIDGET',newPaymentLine);
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
                 });
