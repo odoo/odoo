@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    'name': 'Indian payroll',
+    'name': 'Indian Payroll',
     'category': 'Localization',
     'init_xml': [],
     'author': 'OpenERP SA',
@@ -34,7 +34,7 @@ Indian Payroll Salary Rules.
     -All main contributions rules for India payslip.
     * New payslip report
     * Employee Contracts
-    * Allow to configure Basic / Grows / Net Salary
+    * Allow to configure Basic / Gross / Net Salary
     * Employee PaySlip
     * Allowance / Deduction
     * Integrated with Holiday Management

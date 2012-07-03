@@ -415,7 +415,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
 
         <record id="hr_payslip_rule_cpt" model="hr.salary.rule">
             <field name="code">CPT</field>
-            <field name="name">Dedution for Company Provided Transport</field>
+            <field name="name">Deduction for Company Provided Transport</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.company_transport)</field>
@@ -436,7 +436,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
 
         <record id="hr_payslip_rule_lwf" model="hr.salary.rule">
             <field name="code">LWF</field>
-            <field name="name">Dedution Towards State Labour Welfare Fund</field>
+            <field name="name">Deduction Towards State Labour Welfare Fund</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
@@ -446,7 +446,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
 
         <record id="hr_payslip_rule_cgti" model="hr.salary.rule">
             <field name="code">CGTI</field>
-            <field name="name">Dedution Towards Company Provided Group Term Insurance</field>
+            <field name="name">Deduction Towards Company Provided Group Term Insurance</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
@@ -455,7 +455,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
 
         <record id="hr_payslip_rule_dla" model="hr.salary.rule">
             <field name="code">DLA</field>
-            <field name="name">Dedution Towards Leave Availed</field>
+            <field name="name">Deduction Towards Leave Availed</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.leave_avail_dedution)</field>
@@ -466,7 +466,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
 
         <record id="hr_payslip_rule_cmt" model="hr.salary.rule">
             <field name="code">CMT</field>
-            <field name="name">Dedution Towards Company Provided Medical Insurance</field>
+            <field name="name">Deduction Towards Company Provided Medical Insurance</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.medical_insurance)</field>
@@ -478,7 +478,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
 
         <record id="hr_payslip_rule_ode" model="hr.salary.rule">
             <field name="code">ODE</field>
-            <field name="name">Other Dedution from Employer</field>
+            <field name="name">Other Deduction from Employer</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="-200.0" name="amount_fix"/>
