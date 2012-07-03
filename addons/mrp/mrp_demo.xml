@@ -18,18 +18,13 @@
             <field name="name">Costing Account For Cycle of Assembly.</field>
         </record>
 
-        <record id="product.product_category_18" model="product.category">
-            <field name="parent_id" ref="product.product_category_6"/>
-            <field name="name">Assembly Service</field>
-        </record>
-
         <record id="product.product_assembly" model="product.product">
             <field name="standard_price">0.1</field>
             <field name="uom_id" ref="product.uom_hour"/>
             <field name="uom_po_id" ref="product.uom_hour"/>
             <field name="type">service</field>
             <field name="name">Assembly Service Cost</field>
-            <field name="categ_id" ref="product.product_category_18"/>
+            <field name="categ_id" ref="product.product_category_14"/>
         </record>
 
 
