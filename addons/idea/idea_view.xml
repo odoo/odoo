@@ -67,9 +67,9 @@
         <field name="arch" type="xml">
             <form string="Idea" version="7.0">
                 <header>
-                    <button name="idea_open" string="Open" states="draft"/>
-                    <button name="idea_close" string="Accept" states="open"/>
-                    <button name="idea_cancel" string="Refuse" states="open" />
+                    <button name="idea_open" string="Open" states="draft" class="oe_highlight"/>
+                    <button name="idea_close" string="Accept" states="open" class="oe_highlight"/>
+                    <button name="idea_cancel" string="Refuse" states="open"  class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 </header>
                     <label for="name" class="oe_edit_only"/>

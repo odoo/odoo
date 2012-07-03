@@ -134,7 +134,7 @@
   <field name="user_type" ref="l10n_syscohada.account_type_view" /> 
   <field name="note">Immobilisations incorporelles, corporelles, financières et frais d'établissement</field> 
   <field name="parent_id" ref="pcg_classes_1_a_5" /> 
-  </record>	
+  </record>    
 <record id="pcg_classe_3" model="account.account.template">
   <field name="name">Comptes de stocks et d'en-cours</field> 
   <field name="code">Classe 3</field> 
@@ -178,11 +178,11 @@
   <field name="parent_id" ref="pcg_0" /> 
   </record>
 <record id="pcg_classe_9" model="account.account.template">
-	<field name="name">Comptes des engagements hors bilan et comptabilité analytique</field>
-	<field name="code">Classes 9</field>
-	<field name="type">view</field>
-	<field name="user_type" ref="l10n_syscohada.account_type_view" />
-	<field name="parent_id" ref="pcg_0" />
+    <field name="name">Comptes des engagements hors bilan et comptabilité analytique</field>
+    <field name="code">Classes 9</field>
+    <field name="type">view</field>
+    <field name="user_type" ref="l10n_syscohada.account_type_view" />
+    <field name="parent_id" ref="pcg_0" />
 </record>   
 <record id="pcg_10" model="account.account.template"><field name="name">CAPITAL</field><field name="code">10</field><field name="type">view</field><field name="user_type" ref="l10n_syscohada.account_type_equity" /><field name="parent_id" ref="pcg_classe_1" /></record>
 <record id="pcg_101" model="account.account.template"><field name="name">CAPITAL SOCIAL</field><field name="code">101</field><field name="type">view</field><field name="user_type" ref="l10n_syscohada.account_type_equity" /><field name="parent_id" ref="pcg_10" /></record>
@@ -1392,465 +1392,465 @@
 <record id="pcg_8991" model="account.account.template"><field name="name">Dégrèvements</field><field name="code">8991</field><field name="type">other</field><field name="user_type" ref="l10n_syscohada.account_type_commitment" /><field name="parent_id" ref="pcg_899" /></record>
 <record id="pcg_8994" model="account.account.template"><field name="name">Annulations pour pertes rétroactives</field><field name="code">8994</field><field name="type">other</field><field name="user_type" ref="l10n_syscohada.account_type_commitment" /><field name="parent_id" ref="pcg_899" /></record>
 <record id="pcg_90" model="account.account.template">
-	<field name="name">ENGAGEMENTS OBTENUS ET ENGAGEMENTS ACCORDÉS</field>
-	<field name="code">9</field>
-	<field name="type">view</field>
-	<field name="user_type" ref="l10n_syscohada.account_type_special" />
-	<field name="parent_id" ref="pcg_classe_9" />
+    <field name="name">ENGAGEMENTS OBTENUS ET ENGAGEMENTS ACCORDÉS</field>
+    <field name="code">9</field>
+    <field name="type">view</field>
+    <field name="user_type" ref="l10n_syscohada.account_type_special" />
+    <field name="parent_id" ref="pcg_classe_9" />
 </record>
-	<record id="pcg_901" model="account.account.template">
-		<field name="name">ENGAGEMENTS DE FINANCEMENT OBTENUS</field>
-		<field name="code">901</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9011" model="account.account.template">
-		<field name="name">Crédits confirmés obtenus</field>
-		<field name="code">9011</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_901" />
-	</record>
-	<record id="pcg_9012" model="account.account.template">
-		<field name="name">Emprunts restant à encaisser</field>
-		<field name="code">9012</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_901" />
-	</record>
-	<record id="pcg_9013" model="account.account.template">
-		<field name="name">Facilités de financement renouvelables</field>
-		<field name="code">9013</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_901" />
-	</record>
-	<record id="pcg_9014" model="account.account.template">
-		<field name="name"> Facilités d'émission</field>
-		<field name="code">9014</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_901" />
-	</record>
-	<record id="pcg_9018" model="account.account.template">
-		<field name="name">Autres engagements de financement obtenus</field>
-		<field name="code">9018</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_901" />
-	</record>
-	<record id="pcg_902" model="account.account.template">
-		<field name="name">ENGAGEMENTS DE GARANTIE OBTENUS</field>
-		<field name="code">902</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9021" model="account.account.template">
-		<field name="name">Avals obtenus</field>
-		<field name="code">9021</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_902" />
-	</record>
-	<record id="pcg_9022" model="account.account.template">
-		<field name="name">Cautions, garanties obtenues</field>
-		<field name="code">9022</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_902" />
-	</record>
-	<record id="pcg_9023" model="account.account.template">
-		<field name="name">Hypothèques obtenues</field>
-		<field name="code">9023</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_902" />
-	</record>
-	<record id="pcg_9024" model="account.account.template">
-		<field name="name">Effets endossés par des tiers</field>
-		<field name="code">9024</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_902" />
-	</record>
-	<record id="pcg_9028" model="account.account.template">
-		<field name="name">Autres garanties obtenues</field>
-		<field name="code">9028</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_902" />
-	</record>
-	<record id="pcg_903" model="account.account.template">
-		<field name="name">ENGAGEMENTS RÉCIPROQUES</field>
-		<field name="code">903</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9031" model="account.account.template">
-		<field name="name">Achats de marchandises à terme</field>
-		<field name="code">9031</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_903" />
-	</record>
-	<record id="pcg_9032" model="account.account.template">
-		<field name="name">Achats à terme de devises</field>
-		<field name="code">9032</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_903" />
-	</record>
-	<record id="pcg_9033" model="account.account.template">
-		<field name="name">Commandes fermes des clients</field>
-		<field name="code">9033</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_903" />
-	</record>
-	<record id="pcg_9038" model="account.account.template">
-		<field name="name">Autres engagements réciproques</field>
-		<field name="code">9038</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_903" />
-	</record>
-	<record id="pcg_904" model="account.account.template">
-		<field name="name">AUTRES ENGAGEMENTS OBTENUS</field>
-		<field name="code">904</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9041" model="account.account.template">
-		<field name="name">Abandons de créances conditionnels</field>
-		<field name="code">9041</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_904" />
-	</record>
-	<record id="pcg_9043" model="account.account.template">
-		<field name="name">Ventes avec clause de réserve de propriété</field>
-		<field name="code">9043</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_904" />
-	</record>
-	<record id="pcg_9048" model="account.account.template">
-		<field name="name">Divers engagements obtenus</field>
-		<field name="code">9048</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_904" />
-	</record>
-	<record id="pcg_905" model="account.account.template">
-		<field name="name">ENGAGEMENTS DE FINANCEMENT ACCORDÉS</field>
-		<field name="code">905</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9051" model="account.account.template">
-		<field name="name">Crédits accordés non décaissés</field>
-		<field name="code">9051</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_905" />
-	</record>
-	<record id="pcg_9058" model="account.account.template">
-		<field name="name">Autres engagements de financement accordés</field>
-		<field name="code">9058</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_905" />
-	</record>
-	<record id="pcg_906" model="account.account.template">
-		<field name="name">ENGAGEMENTS DE GARANTIE ACCORDÉS</field>
-		<field name="code">906</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9061" model="account.account.template">
-		<field name="name">Avals accordés</field>
-		<field name="code">9061</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_906" />
-	</record>
-	<record id="pcg_9062" model="account.account.template">
-		<field name="name">Cautions, garanties accordées</field>
-		<field name="code">9062</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_906" />
-	</record>
-	<record id="pcg_9063" model="account.account.template">
-		<field name="name">Hypothèques accordées</field>
-		<field name="code">9063</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_906" />
-	</record>
-	<record id="pcg_9064" model="account.account.template">
-		<field name="name">Effets endossés par l'entreprise</field>
-		<field name="code">9064</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_906" />
-	</record>
-	<record id="pcg_9068" model="account.account.template">
-		<field name="name">Autres garanties accordées</field>
-		<field name="code">9068</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_906" />
-	</record>
-	<record id="pcg_907" model="account.account.template">
-		<field name="name">ENGAGEMENTS RÉCIPROQUES</field>
-		<field name="code">907</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9071" model="account.account.template">
-		<field name="name">Ventes de marchandises à terme</field>
-		<field name="code">9071</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_907" />
-	</record>
-	<record id="pcg_9072" model="account.account.template">
-		<field name="name">Ventes à terme de devises</field>
-		<field name="code">9072</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_907" />
-	</record>
-	<record id="pcg_9073" model="account.account.template">
-		<field name="name">Commandes fermes aux fournisseurs</field>
-		<field name="code">9073</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_907" />
-	</record>
-	<record id="pcg_9078" model="account.account.template">
-		<field name="name">Autres engagements réciproques</field>
-		<field name="code">9078</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_907" />
-	</record>
-	<record id="pcg_908" model="account.account.template">
-		<field name="name">AUTRES ENGAGEMENTS ACCORDÉS</field>
-		<field name="code">908</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_90" />
-	</record>
-	<record id="pcg_9081" model="account.account.template">
-		<field name="name">Annulations conditionnelles de dettes</field>
-		<field name="code">9081</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_908" />
-	</record>
-	<record id="pcg_9082" model="account.account.template">
-		<field name="name">Engagements de retraite</field>
-		<field name="code">9082</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_908" />
-	</record>
-	<record id="pcg_9083" model="account.account.template">
-		<field name="name">Achats avec clause de réserve de propriété</field>
-		<field name="code">9083</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_908" />
-	</record>
-	<record id="pcg_9088" model="account.account.template">
-		<field name="name">Divers engagements accordés</field>
-		<field name="code">9088</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_908" />
-	</record>
-	<record id="pcg_91" model="account.account.template">
-		<field name="name">CONTREPARTIES DES ENGAGEMENTS</field>
-		<field name="code">91</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_911" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
-		</field>
-		<field name="code">911</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_912" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
-		</field>
-		<field name="code">912</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_913" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
-		</field>
-		<field name="code">913</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_914" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
-		</field>
-		<field name="code">914</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_915" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
-		</field>
-		<field name="code">915</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_916" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
-		</field>
-		<field name="code">916</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_917" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
-		</field>
-		<field name="code">917</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_918" model="account.account.template">
-		<field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
-		</field>
-		<field name="code">918</field>
-		<field name="type">other</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_91" />
-	</record>
-	<record id="pcg_92" model="account.account.template">
-		<field name="name">COMPTES REFLECHIS</field>
-		<field name="code">92</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_93" model="account.account.template">
-		<field name="name">COMPTES DE RECLASSEMENTS</field>
-		<field name="code">93</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_94" model="account.account.template">
-		<field name="name">COMPTES DE COÛTS</field>
-		<field name="code">94</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_95" model="account.account.template">
-		<field name="name">COMPTES DE STOCKS</field>
-		<field name="code">95</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_96" model="account.account.template">
-		<field name="name">COMPTES D'ECARTS SUR COUTS PREETABLIS</field>
-		<field name="code">96</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_97" model="account.account.template">
-		<field name="name">COMPTES DE DIFFERENCES DE TRAITEMENT COMPTABLE
-		</field>
-		<field name="code">97</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_98" model="account.account.template">
-		<field name="name">COMPTES DE RESULTATS</field>
-		<field name="code">98</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
-	<record id="pcg_99" model="account.account.template">
-		<field name="name">COMPTES DE LIAISONS INTERNES</field>
-		<field name="code">99</field>
-		<field name="type">view</field>
-		<field name="user_type" ref="l10n_syscohada.account_type_special" />
-		<field name="parent_id" ref="pcg_classe_9" />
-	</record>
+    <record id="pcg_901" model="account.account.template">
+        <field name="name">ENGAGEMENTS DE FINANCEMENT OBTENUS</field>
+        <field name="code">901</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9011" model="account.account.template">
+        <field name="name">Crédits confirmés obtenus</field>
+        <field name="code">9011</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_901" />
+    </record>
+    <record id="pcg_9012" model="account.account.template">
+        <field name="name">Emprunts restant à encaisser</field>
+        <field name="code">9012</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_901" />
+    </record>
+    <record id="pcg_9013" model="account.account.template">
+        <field name="name">Facilités de financement renouvelables</field>
+        <field name="code">9013</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_901" />
+    </record>
+    <record id="pcg_9014" model="account.account.template">
+        <field name="name"> Facilités d'émission</field>
+        <field name="code">9014</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_901" />
+    </record>
+    <record id="pcg_9018" model="account.account.template">
+        <field name="name">Autres engagements de financement obtenus</field>
+        <field name="code">9018</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_901" />
+    </record>
+    <record id="pcg_902" model="account.account.template">
+        <field name="name">ENGAGEMENTS DE GARANTIE OBTENUS</field>
+        <field name="code">902</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9021" model="account.account.template">
+        <field name="name">Avals obtenus</field>
+        <field name="code">9021</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_902" />
+    </record>
+    <record id="pcg_9022" model="account.account.template">
+        <field name="name">Cautions, garanties obtenues</field>
+        <field name="code">9022</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_902" />
+    </record>
+    <record id="pcg_9023" model="account.account.template">
+        <field name="name">Hypothèques obtenues</field>
+        <field name="code">9023</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_902" />
+    </record>
+    <record id="pcg_9024" model="account.account.template">
+        <field name="name">Effets endossés par des tiers</field>
+        <field name="code">9024</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_902" />
+    </record>
+    <record id="pcg_9028" model="account.account.template">
+        <field name="name">Autres garanties obtenues</field>
+        <field name="code">9028</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_902" />
+    </record>
+    <record id="pcg_903" model="account.account.template">
+        <field name="name">ENGAGEMENTS RÉCIPROQUES</field>
+        <field name="code">903</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9031" model="account.account.template">
+        <field name="name">Achats de marchandises à terme</field>
+        <field name="code">9031</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_903" />
+    </record>
+    <record id="pcg_9032" model="account.account.template">
+        <field name="name">Achats à terme de devises</field>
+        <field name="code">9032</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_903" />
+    </record>
+    <record id="pcg_9033" model="account.account.template">
+        <field name="name">Commandes fermes des clients</field>
+        <field name="code">9033</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_903" />
+    </record>
+    <record id="pcg_9038" model="account.account.template">
+        <field name="name">Autres engagements réciproques</field>
+        <field name="code">9038</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_903" />
+    </record>
+    <record id="pcg_904" model="account.account.template">
+        <field name="name">AUTRES ENGAGEMENTS OBTENUS</field>
+        <field name="code">904</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9041" model="account.account.template">
+        <field name="name">Abandons de créances conditionnels</field>
+        <field name="code">9041</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_904" />
+    </record>
+    <record id="pcg_9043" model="account.account.template">
+        <field name="name">Ventes avec clause de réserve de propriété</field>
+        <field name="code">9043</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_904" />
+    </record>
+    <record id="pcg_9048" model="account.account.template">
+        <field name="name">Divers engagements obtenus</field>
+        <field name="code">9048</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_904" />
+    </record>
+    <record id="pcg_905" model="account.account.template">
+        <field name="name">ENGAGEMENTS DE FINANCEMENT ACCORDÉS</field>
+        <field name="code">905</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9051" model="account.account.template">
+        <field name="name">Crédits accordés non décaissés</field>
+        <field name="code">9051</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_905" />
+    </record>
+    <record id="pcg_9058" model="account.account.template">
+        <field name="name">Autres engagements de financement accordés</field>
+        <field name="code">9058</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_905" />
+    </record>
+    <record id="pcg_906" model="account.account.template">
+        <field name="name">ENGAGEMENTS DE GARANTIE ACCORDÉS</field>
+        <field name="code">906</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9061" model="account.account.template">
+        <field name="name">Avals accordés</field>
+        <field name="code">9061</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_906" />
+    </record>
+    <record id="pcg_9062" model="account.account.template">
+        <field name="name">Cautions, garanties accordées</field>
+        <field name="code">9062</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_906" />
+    </record>
+    <record id="pcg_9063" model="account.account.template">
+        <field name="name">Hypothèques accordées</field>
+        <field name="code">9063</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_906" />
+    </record>
+    <record id="pcg_9064" model="account.account.template">
+        <field name="name">Effets endossés par l'entreprise</field>
+        <field name="code">9064</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_906" />
+    </record>
+    <record id="pcg_9068" model="account.account.template">
+        <field name="name">Autres garanties accordées</field>
+        <field name="code">9068</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_906" />
+    </record>
+    <record id="pcg_907" model="account.account.template">
+        <field name="name">ENGAGEMENTS RÉCIPROQUES</field>
+        <field name="code">907</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9071" model="account.account.template">
+        <field name="name">Ventes de marchandises à terme</field>
+        <field name="code">9071</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_907" />
+    </record>
+    <record id="pcg_9072" model="account.account.template">
+        <field name="name">Ventes à terme de devises</field>
+        <field name="code">9072</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_907" />
+    </record>
+    <record id="pcg_9073" model="account.account.template">
+        <field name="name">Commandes fermes aux fournisseurs</field>
+        <field name="code">9073</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_907" />
+    </record>
+    <record id="pcg_9078" model="account.account.template">
+        <field name="name">Autres engagements réciproques</field>
+        <field name="code">9078</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_907" />
+    </record>
+    <record id="pcg_908" model="account.account.template">
+        <field name="name">AUTRES ENGAGEMENTS ACCORDÉS</field>
+        <field name="code">908</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_90" />
+    </record>
+    <record id="pcg_9081" model="account.account.template">
+        <field name="name">Annulations conditionnelles de dettes</field>
+        <field name="code">9081</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_908" />
+    </record>
+    <record id="pcg_9082" model="account.account.template">
+        <field name="name">Engagements de retraite</field>
+        <field name="code">9082</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_908" />
+    </record>
+    <record id="pcg_9083" model="account.account.template">
+        <field name="name">Achats avec clause de réserve de propriété</field>
+        <field name="code">9083</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_908" />
+    </record>
+    <record id="pcg_9088" model="account.account.template">
+        <field name="name">Divers engagements accordés</field>
+        <field name="code">9088</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_908" />
+    </record>
+    <record id="pcg_91" model="account.account.template">
+        <field name="name">CONTREPARTIES DES ENGAGEMENTS</field>
+        <field name="code">91</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_911" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
+        </field>
+        <field name="code">911</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_912" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
+        </field>
+        <field name="code">912</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_913" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
+        </field>
+        <field name="code">913</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_914" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS OBTENUS, 901 à 904
+        </field>
+        <field name="code">914</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_915" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
+        </field>
+        <field name="code">915</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_916" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
+        </field>
+        <field name="code">916</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_917" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
+        </field>
+        <field name="code">917</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_918" model="account.account.template">
+        <field name="name">CONTREPARTIE DES ENGAGEMENTS ACCORDÉS, 905 à 908
+        </field>
+        <field name="code">918</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_91" />
+    </record>
+    <record id="pcg_92" model="account.account.template">
+        <field name="name">COMPTES REFLECHIS</field>
+        <field name="code">92</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_93" model="account.account.template">
+        <field name="name">COMPTES DE RECLASSEMENTS</field>
+        <field name="code">93</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_94" model="account.account.template">
+        <field name="name">COMPTES DE COÛTS</field>
+        <field name="code">94</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_95" model="account.account.template">
+        <field name="name">COMPTES DE STOCKS</field>
+        <field name="code">95</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_96" model="account.account.template">
+        <field name="name">COMPTES D'ECARTS SUR COUTS PREETABLIS</field>
+        <field name="code">96</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_97" model="account.account.template">
+        <field name="name">COMPTES DE DIFFERENCES DE TRAITEMENT COMPTABLE
+        </field>
+        <field name="code">97</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_98" model="account.account.template">
+        <field name="name">COMPTES DE RESULTATS</field>
+        <field name="code">98</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
+    <record id="pcg_99" model="account.account.template">
+        <field name="name">COMPTES DE LIAISONS INTERNES</field>
+        <field name="code">99</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="l10n_syscohada.account_type_special" />
+        <field name="parent_id" ref="pcg_classe_9" />
+    </record>
         <!--
-	#
-	# SYSCOHADA : Définition de la devise de référence
-	# Auteur : BAAMTU Sénégal
-	# Version du fichier : 1.0 
-	# Date : 02/2010
-	# 
-	#
-	-->
+    #
+    # SYSCOHADA : Définition de la devise de référence
+    # Auteur : BAAMTU Sénégal
+    # Version du fichier : 1.0 
+    # Date : 02/2010
+    # 
+    #
+    -->
 
       <record id="base.CFA" model="res.currency">
-		<field name="name">XOF</field>
-		<field name="symbol">CFA</field>
-		<field name="rounding">1</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record id="base.rateCFA" model="res.currency.rate">
+        <field name="name">XOF</field>
+        <field name="symbol">CFA</field>
+        <field name="rounding">1</field>
+        <field name="accuracy">4</field>
+    </record>
+    <record id="base.rateCFA" model="res.currency.rate">
            <field name="rate">655.957</field>
            <field name="currency_id" ref="base.CFA"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
        </record>
-       	﻿<!--
-	#
-	# SYSCOHADA : Définition des taux de TVA SYSCOHADA
-	# Auteur : BAAMTU Sénégal
-	# Version du fichier : 1.0 
-	# Date : 02/2010
-	# 
-	#
-	-->
+           ﻿<!--
+    #
+    # SYSCOHADA : Définition des taux de TVA SYSCOHADA
+    # Auteur : BAAMTU Sénégal
+    # Version du fichier : 1.0 
+    # Date : 02/2010
+    # 
+    #
+    -->
        <record model="account.tax.code.template" id="vat_syscohada_tax_root">
-		<field name="parent_id" eval="False"/>
-		<field name="name">Plan de Taxes SYSCOHADA</field>
-	</record>
+        <field name="parent_id" eval="False"/>
+        <field name="name">Plan de Taxes SYSCOHADA</field>
+    </record>
 
-	<record id="syscohada_chart_template" model="account.chart.template">
-	    <field name="name">SYSCOHADA - Plan de compte</field>
-	    <field name="account_root_id" ref="pcg_0"/>
-	    <field name="tax_code_root_id" ref="vat_syscohada_tax_root"/>
-	    <field name="bank_account_view_id" ref="pcg_5211"/>
-	    <field name="property_account_receivable" ref="pcg_4111"/>
-	    <field name="property_account_payable" ref="pcg_4011"/>
-		<field name="property_account_expense_categ" ref="pcg_6011" /> 
-		<field name="property_account_income_categ" ref="pcg_7011" /> 
-	</record>	
+    <record id="syscohada_chart_template" model="account.chart.template">
+        <field name="name">SYSCOHADA - Plan de compte</field>
+        <field name="account_root_id" ref="pcg_0"/>
+        <field name="tax_code_root_id" ref="vat_syscohada_tax_root"/>
+        <field name="bank_account_view_id" ref="pcg_5211"/>
+        <field name="property_account_receivable" ref="pcg_4111"/>
+        <field name="property_account_payable" ref="pcg_4011"/>
+        <field name="property_account_expense_categ" ref="pcg_6011" /> 
+        <field name="property_account_income_categ" ref="pcg_7011" /> 
+    </record>    
         
     <record model="account.tax.code.template" id="tax_col_ht">
       <field name="name">Base H.T. TVA collectée</field>
@@ -1876,7 +1876,7 @@
       <field name="parent_id" ref="tax_col"/>
       <field name="sign">1.00</field>
     </record>
-	
+    
     <record model="account.tax.code.template" id="tax_acq_ht">
       <field name="name">Base H.T. TVA acquittée</field>
       <field name="code">Base HT TVA acquittée</field>
@@ -1888,7 +1888,7 @@
       <field name="code">TVA acquittée à 18.0% (Base H.T.)</field>
       <field name="parent_id" ref="tax_acq_ht"/>
       <field name="sign">1.00</field>
-    </record>	
+    </record>    
 
     <record model="account.tax.code.template" id="tax_acq">
       <field name="name">TVA acquittée</field>
@@ -1901,45 +1901,45 @@
       <field name="code">TVA acquittée à 18.0%</field>
       <field name="parent_id" ref="tax_acq"/>
       <field name="sign">1.00</field>
-    </record>	
-	
-	<record model="account.tax.template" id="tva_sale_18">
-		<field name="name">TVA 18% (vente)</field>
-		<field name="chart_template_id" ref="syscohada_chart_template"/>
-		<field name="amount" eval="0.18"/>
-		<field name="type">percent</field>
-		<field name="account_collected_id" ref="pcg_4441"/>
-		<field name="account_paid_id" ref="pcg_4449"/>
-		<field name="base_code_id" ref="tax_col_18_ht"/>
-		<field name="tax_code_id" ref="tax_col_18"/>
-		<field name="type_tax_use">sale</field>		
-		<field name="ref_base_code_id" ref="tax_col_18_ht"/>
-		<field name="ref_base_sign" eval="-1"/>
-		<field name="ref_tax_code_id" ref="tax_col_18"/>
-		<field name="ref_tax_sign" eval="-1"/>		
-	</record>
-	
-	
-	<record model="account.tax.template" id="tva_purchase_18">
-		<field name="name">TVA 18% (achat)</field>
-		<field name="chart_template_id" ref="syscohada_chart_template"/>
-		<field name="amount" eval="0.18"/>
-		<field name="type">percent</field>
-		<field name="type_tax_use">purchase</field>	
-		<field name="account_collected_id" ref="pcg_4441"/>
-		<field name="account_paid_id" ref="pcg_4449"/>
-		<field name="base_code_id" ref="tax_acq_18_ht"/>
-		<field name="tax_code_id" ref="tax_acq_18"/>
-		<field name="ref_base_code_id" ref="tax_acq_18_ht"/>
-		<field name="ref_base_sign" eval="-1"/>
-		<field name="ref_tax_code_id" ref="tax_acq_18"/>
-		<field name="ref_tax_sign" eval="-1"/>		
-	</record>	
+    </record>    
+    
+    <record model="account.tax.template" id="tva_sale_18">
+        <field name="name">TVA 18% (vente)</field>
+        <field name="chart_template_id" ref="syscohada_chart_template"/>
+        <field name="amount" eval="0.18"/>
+        <field name="type">percent</field>
+        <field name="account_collected_id" ref="pcg_4441"/>
+        <field name="account_paid_id" ref="pcg_4449"/>
+        <field name="base_code_id" ref="tax_col_18_ht"/>
+        <field name="tax_code_id" ref="tax_col_18"/>
+        <field name="type_tax_use">sale</field>        
+        <field name="ref_base_code_id" ref="tax_col_18_ht"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="tax_col_18"/>
+        <field name="ref_tax_sign" eval="-1"/>        
+    </record>
+    
+    
+    <record model="account.tax.template" id="tva_purchase_18">
+        <field name="name">TVA 18% (achat)</field>
+        <field name="chart_template_id" ref="syscohada_chart_template"/>
+        <field name="amount" eval="0.18"/>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>    
+        <field name="account_collected_id" ref="pcg_4441"/>
+        <field name="account_paid_id" ref="pcg_4449"/>
+        <field name="base_code_id" ref="tax_acq_18_ht"/>
+        <field name="tax_code_id" ref="tax_acq_18"/>
+        <field name="ref_base_code_id" ref="tax_acq_18_ht"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="tax_acq_18"/>
+        <field name="ref_tax_sign" eval="-1"/>        
+    </record>    
 
-	<record model="account.tax.template" id="tva_exonere">
-		<field name="name">Exonéré de TVA</field>
-		<field name="chart_template_id" ref="syscohada_chart_template"/>
-		<field name="amount" eval="0"/>
-		<field name="type">none</field>
-	</record>
+    <record model="account.tax.template" id="tva_exonere">
+        <field name="name">Exonéré de TVA</field>
+        <field name="chart_template_id" ref="syscohada_chart_template"/>
+        <field name="amount" eval="0"/>
+        <field name="type">none</field>
+    </record>
 </data></openerp>
