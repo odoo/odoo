@@ -17,7 +17,7 @@ def valid_att_in_field(arch):
     return not arch.xpath('//field[not (@name)]')
 
 def valid_att_in_label(arch):
-    """A `for` and `string` attribute must be in a `lable` node."""
+    """A `for` and `string` attribute must be in a `label` node."""
     return not arch.xpath('//label[not ((@for) or (@string))]')
     
 def valid_att_in_tree(arch):
