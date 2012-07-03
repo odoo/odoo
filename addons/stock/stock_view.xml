@@ -1265,11 +1265,12 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="location_id" groups="stock.group_locations"/>
                             <field name="location_dest_id" groups="stock.group_locations"/>
-                            <field name="partner_id" context="{'contact_display':'partner'}"/>
                             <field name="create_date" groups="base.group_no_one" />
                             <field name="date" groups="base.group_no_one" />
+                        </group>
+                        <group>
+                            <field name="partner_id" context="{'contact_display':'partner'}"/>
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-
                         </group>
                         <group>
                             <label for="tracking_id"/>
@@ -1452,9 +1453,11 @@
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         <field name="location_id" groups="stock.group_locations"/>
                         <field name="location_dest_id" groups="stock.group_locations"/>
-                        <field name="partner_id" groups="stock.group_locations"/>
                         <field name="create_date" groups="base.group_no_one" />
                         <field name="date" groups="base.group_no_one" />
+                    </group>
+                    <group>
+                        <field name="partner_id" groups="stock.group_locations"/>
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
