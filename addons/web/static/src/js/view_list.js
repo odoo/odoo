@@ -905,8 +905,13 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
+                var $row;
+                if (!record.get('id')) {
+                    $row = self.$current.children(':not([data-id])');
+                } else {
+                    $row = self.$current.children(
                         '[data-id=' + record.get('id') + ']');
+                }
                 var index = $row.data('index');
                 $row.remove();
                 self.refresh_zebra(index);
