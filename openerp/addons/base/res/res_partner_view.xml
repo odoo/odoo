@@ -121,12 +121,6 @@
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                 class="oe_inline"
                                 on_change="onchange_address(use_parent_address, parent_id)"/>, 
-                            
-                        </h2>
-                        <div attrs="{'invisible' : [('is_company', '=', True)]}">
-                            <label for="function" class="oe_edit_only" />
-                        </div>
-                        <h2 attrs="{'invisible' : [('is_company', '=', True)]}">
                             <field name="function" class="oe_inline" placeholder="Job Position"/>
                         </h2>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
