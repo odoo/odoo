@@ -66,7 +66,6 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     store_record:function(records){
         var self = this;
         _(records).each(function (record) {
-            console.log(record.id);
             self.records[record.id] = record;
         });
     },
@@ -205,7 +204,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         var self = this;
         var parent_child ={};
         id = _.isArray(id)?id:parseInt(id); 
-        var ir_model_data = new instance.web.Model(this.model,{},[['id','child_of',id]]).query();
+        var ir_model_data = new instance.web.Model(this.model,self.dataset.get_context() || {},[['id','child_of',id]]).query();
         ir_model_data._execute().then(function(records){
               self.store_record(records);
              _.each(records,function(rec){
@@ -220,7 +219,6 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     },
     render_data: function(groupby){
         var self = this;
-        console.log(groupby);
         _.each(_.keys(groupby),function(key){
             var $curr_node = self.$element.find('#treerow_' + key);
             var record = groupby[key];
@@ -265,7 +263,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             }
             return self.rpc('/web/session/eval_domain_and_context', {
                 contexts: [c], domains: []
-            }).pipe(function (res) {records
+            }).pipe(function (res) {
                 action.context = res.context;
                 return self.do_action(action);
             }, null);
