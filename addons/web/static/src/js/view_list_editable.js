@@ -216,13 +216,14 @@ openerp.web.list_editable = function (instance) {
                 form: this.editor.form,
                 cancel: false
             }, this.editor.cancel).then(function (attrs) {
-                if (!attrs.id) {
-                    var to_delete = self.records.find(function (r) {
-                        return !r.get('id');
-                    });
-                    if (to_delete) {
-                        self.records.remove(to_delete);
-                    }
+                if (attrs.id) {
+                    return self.reload_record(self.records.get(attrs.id));
+                }
+                var to_delete = self.records.find(function (r) {
+                    return !r.get('id');
+                });
+                if (to_delete) {
+                    self.records.remove(to_delete);
                 }
             });
         },
