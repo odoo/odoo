@@ -7,8 +7,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <field name="rml_footer2" position="after">
-                <newline/>
+                <xpath expr="//div[@name='bank_acc']" position="after">
                     <group string="BVR data" colspan="4">
                         <field name="bvr_delta_horz"/>
                         <field name="bvr_delta_vert"/>
@@ -20,8 +19,7 @@
                         <field name="bvr_only"/>
                         <field name="invoice_only"/>
                     </group>
-                <newline/>
-                </field>
+                </xpath>
             </field>
         </record>
     </data>

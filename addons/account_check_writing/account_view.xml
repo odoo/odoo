@@ -31,11 +31,11 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <separator string="Default Check Layout" colspan="4"/>
-                    <field name="check_layout"/>
-                    <newline/>
-                </page>
+                <xpath expr="//group[@name='currency']" position="after">
+                    <group string="Default Check Layout">
+                        <field name="check_layout"/>
+                    </group>
+                </xpath>
             </field>
        </record>
     </data>

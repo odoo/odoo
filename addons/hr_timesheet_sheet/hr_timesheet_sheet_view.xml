@@ -196,12 +196,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <separator string="Timesheets" colspan="4"/>
-                    <field name="timesheet_range"/>
-                    <field name="timesheet_max_difference"/>
-                    <newline/>
-                </page>
+                <xpath expr="//group[@name='currency']" position="after">
+                    <group string="Timesheets">
+                        <field name="timesheet_range"/>
+                        <field name="timesheet_max_difference"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
