@@ -56,7 +56,7 @@
         />
 
         <!-- open opportunities related to given partner -->
-        <record model="ir.actions.act_window" id="act_res_partner_2_opportunity">
+        <record model="ir.actions.act_window" id="relate_partner_opportunities">
             <field name="name">Opportunities</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">kanban,tree,form,graph,calendar</field>
@@ -71,29 +71,29 @@
                 You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.
             </field>
         </record>
-        <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_oppor11">
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_kanban">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="crm_case_kanban_view_leads"/>
-            <field name="act_window_id" ref="act_res_partner_2_opportunity"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
-        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm_case_tree_view_oppor"/>
-            <field name="act_window_id" ref="act_res_partner_2_opportunity"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
-        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="crm_case_form_view_oppor"/>
-            <field name="act_window_id" ref="act_res_partner_2_opportunity"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
-        <record model="ir.actions.act_window.view" id="action_crm_tag_graph_view_oppor11">
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_graph">
             <field name="sequence" eval="4"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm_case_graph_view_opportunity"/>
-            <field name="act_window_id" ref="act_res_partner_2_opportunity"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
 
         <!-- Partner kanban view inherte -->
@@ -108,7 +108,7 @@
                     <field name="meeting_count"/>
                 </field>
                  <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                        <a name="%(act_res_partner_2_opportunity)d" type="action">
+                        <a name="%(relate_partner_opportunities)d" type="action">
                             <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
                         </a>
                         <a name="%(crm_meeting_partner)d" type="action">
@@ -134,7 +134,7 @@
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
                     <button type="action" string="Opportunities"
-                        name="%(crm.act_res_partner_2_opportunity)d" />
+                        name="%(crm.relate_partner_opportunities)d" />
                 </xpath>
             </field>
         </record>
