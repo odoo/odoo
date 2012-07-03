@@ -64,6 +64,8 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var $fmts = this.$element.find('#export_format');
         _(formats).each(function (format) {
             var opt = new Option(format.label, format.tag);
+            var options = $fmts.prop('options');
+            options[options.length] = opt;
             if (format.error) {
                 opt.disabled = true;
                 opt.replaceChild(
@@ -71,7 +73,6 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
                         _.str.sprintf("%s — %s", format.label, format.error)),
                     opt.childNodes[0])
             }
-            $fmts.append(opt);
         });
     },
     show_exports_list: function() {
@@ -348,7 +349,9 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var field_list = this.$element.find('#fields_list');
         if (this.$element.find("#fields_list option[value='" + field_id + "']")
                 && !this.$element.find("#fields_list option[value='" + field_id + "']").length) {
-            field_list.append(new Option(string, field_id));
+            var opt = new Option(string, field_id);
+            var options = field_list.prop('options');
+            options[options.length] = opt;
         }
     },
     get_fields: function() {
