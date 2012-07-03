@@ -72,7 +72,7 @@ openerp.web.list_editable = function (instance) {
             if (this.options.editable) {
                 this.$element.find('table:first').show();
                 this.$element.find('.oe_view_nocontent').remove();
-                this.groups.new_record();
+                this.startEdition();
             } else {
                 this._super();
             }
@@ -85,29 +85,8 @@ openerp.web.list_editable = function (instance) {
             if (this.options.editable || true) {
                 this.editor = new instance.web.list.Editor(this);
 
-                var editor_ready = this.editor.prependTo(this.$element).then(function () {
-                    self.editor.$element.on('keyup', function (e) {
-                        switch (e.which) {
-                        case KEY_RETURN:
-                            self.saveEdition().then(function (saveInfo) {
-                                if (saveInfo.created) {
-                                    self.startEdition();
-                                    return;
-                                }
-                                var next_index = self.records.indexOf(saveInfo.record) + 1;
-                                if (next_index === self.records.length) {
-                                    next_index = 0;
-                                }
-
-                                self.startEdition(self.records.at(next_index));
-                            });
-                            break;
-                        case KEY_ESCAPE:
-                            self.cancelEdition();
-                            break;
-                        }
-                    });
-                });
+                var editor_ready = this.editor.prependTo(this.$element)
+                    .then(this.proxy('setupEvents'));
 
                 return $.when(result, editor_ready);
             }
@@ -286,21 +265,54 @@ openerp.web.list_editable = function (instance) {
             if (!on_write_callback) { return $.when(); }
             return this.dataset.call(on_write_callback, [source_record.get('id')])
                 .pipe(function (ids) {
-                    return $.when.apply(null, _(ids).map(function (id) {
-                        var record = self.records.get(id);
-                        if (!record) {
-                            // insert after the source record
-                            var index = self.records.indexOf(source_record) + 1;
-                            record = new instance.web.list.Record({id: id});
-                            self.records.add(record, {at: index});
-                            self.dataset.ids.splice(index, 0, id);
-                        }
-                        return self.reload_record(record);
-                    }));
+                    return $.when.apply(
+                        null, _(ids).map(
+                            _.bind(self.handleOnWriteRecord, self, source_record)));
                 });
+        },
+        handleOnWriteRecord: function (id, source_record) {
+            var record = this.records.get(id);
+            if (!record) {
+                // insert after the source record
+                var index = this.records.indexOf(source_record) + 1;
+                record = new instance.web.list.Record({id: id});
+                this.records.add(record, {at: index});
+                this.dataset.ids.splice(index, 0, id);
+            }
+            return this.reload_record(record);
         },
         isPrependOnCreate: function () {
             return this.options.editable === 'top';
+        },
+        setupEvents: function () {
+            var self = this;
+            this.editor.$element.on('keyup', function (e) {
+                var key = _($.ui.keyCode).chain()
+                    .map(function (v, k) { return {name: k, code: v}; })
+                    .find(function (o) { return o.code === e.which; })
+                    .value();
+                if (!key) { return; }
+                var method = 'keyup_' + key.name;
+                if (!(method in self)) { return; }
+                self[method](e);
+            });
+        },
+        keyup_RETURN: function () {
+            var self = this;
+            return this.saveEdition().pipe(function (saveInfo) {
+                if (saveInfo.created) {
+                    return self.startEdition();
+                }
+                var next_index = self.records.indexOf(saveInfo.record) + 1;
+                if (next_index === self.records.length) {
+                    next_index = 0;
+                }
+
+                return self.startEdition(self.records.at(next_index));
+            });
+        },
+        keyup_ESCAPE: function () {
+            return this.cancelEdition();
         }
     });
 
@@ -395,22 +407,6 @@ openerp.web.list_editable = function (instance) {
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
         passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
-        new_record: function () {
-            // TODO: handle multiple children
-            this.children[null].new_record();
-        },
-        /**
-         * Ensures descendant editable List instances are all saved if they have
-         * pending editions.
-         *
-         * @returns {$.Deferred}
-         */
-        ensureSaved: function () {
-            return $.when.apply(null,
-                _.invoke(
-                    _.values(this.children),
-                    'ensureSaved'));
-        },
         getRowFor: function (record) {
             return _(this.children).chain()
                 .invoke('getRowFor', record)
@@ -443,99 +439,11 @@ openerp.web.list_editable = function (instance) {
             this.edit_record($(event.currentTarget).data('id'));
         },
         /**
-         * Checks if a record is being edited, and if so cancels it
-         */
-        cancel_pending_edition: function () {
-            var self = this, cancelled;
-            if (!this.edition) {
-                return $.when();
-            }
-
-            if (this.edition_id) {
-                cancelled = this.reload_record(this.records.get(this.edition_id));
-            } else {
-                cancelled = $.when();
-            }
-            cancelled.then(function () {
-                self.view.unpad_columns();
-                self.edition_form.destroy();
-                self.edition_form.$element.remove();
-                delete self.edition_form;
-                self.dataset.index = null;
-                delete self.edition_id;
-                delete self.edition;
-            });
-            this.pad_table_to(5);
-            return cancelled;
-        },
-        on_row_keyup: function (e) {
-            var self = this;
-            switch (e.which) {
-            case KEY_RETURN:
-                $(e.target).blur();
-                e.preventDefault();
-                //e.stopImmediatePropagation();
-                setTimeout(function () {
-                    self.save_row().then(function (result) {
-                        if (result.created) {
-                            self.new_record();
-                            return;
-                        }
-
-                        var next_record_id,
-                            next_record = self.records.at(
-                                    self.records.indexOf(result.edited_record) + 1);
-                        if (next_record) {
-                            next_record_id = next_record.get('id');
-                            self.dataset.index = _(self.dataset.ids)
-                                    .indexOf(next_record_id);
-                        } else {
-                            self.dataset.index = 0;
-                            next_record_id = self.records.at(0).get('id');
-                        }
-                        self.edit_record(next_record_id);
-                    }, 0);
-                });
-                break;
-            case KEY_ESCAPE:
-                this.cancelEdition();
-                break;
-            }
-        },
-        render_row_as_form: function (id) {
-            return this.view.startEdition(
-                    id ? this.records.get(id) : null);
-        },
-        /**
-         * If the current list is being edited, ensures it's saved
-         */
-        ensureSaved: function () {
-            if (this.edition) {
-                // kinda-hack-ish: if the user has entered data in a field,
-                // oe_form_dirty will be set on the form so save, otherwise
-                // discard the current (entirely empty) line
-                if (this.edition_form.$element.is('.oe_form_dirty')) {
-                    return this.save_row();
-                }
-                return this.cancel_pending_edition();
-            }
-            //noinspection JSPotentiallyInvalidConstructorUsage
-            return $.when();
-        },
-        /**
-         * Cancels the edition of the row for the current dataset index
-         */
-        cancelEdition: function () {
-            this.cancel_pending_edition();
-        },
-        /**
          * Edits record currently selected via dataset
          */
         edit_record: function (record_id) {
-            this.render_row_as_form(record_id);
-        },
-        new_record: function () {
-            this.render_row_as_form();
+            return this.view.startEdition(
+                record_id ? this.records.get(record_id) : null);
         },
         /**
          * If a row mapping to the record (@data-id matching the record's id or

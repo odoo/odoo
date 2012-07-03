@@ -293,3 +293,19 @@ formview, delegating instead to its
         :returns: whether new records should be prepended to the
                   dataset (instead of appended)
         :rtype: Boolean
+
+Changes from 6.1
+----------------
+
+* The editable listview behavior has been rewritten pretty much from
+  scratch, any code touching on editability will have to be modified
+
+  * The overloading of :js:class:`~openerp.web.ListView.Groups` and
+    :js:class:`~openerp.web.ListView.List` for editability has been
+    drastically simplified, and most of the behavior has been moved to
+    the list view itself. Only
+    :js:function:`~openerp.web.ListView.List.edit_record` remains from
+    the methods previously added, and only
+    :js:function:`~openerp.web.ListView.List.row_clicked` and
+    :js:function:`~openerp.web.ListView.List.init` are still
+    overridden.
