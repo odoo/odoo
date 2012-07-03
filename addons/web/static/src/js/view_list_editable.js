@@ -114,6 +114,12 @@ openerp.web.list_editable = function (instance) {
 
             return result;
         },
+        do_button_action: function () {
+            var self = this, _super = this._super, args = arguments;
+            this.ensureSaved().then(function () {
+                _super.apply(self, args);
+            });
+        },
         /**
          * Ensures the editable list is saved (saves any pending edition if
          * needed, or tries to)
@@ -348,7 +354,6 @@ openerp.web.list_editable = function (instance) {
                 return form.do_show({reload: false});
             }).pipe(function () {
                 self.record = record;
-                // TODO: save on action button?
                 _(form.fields).each(function (field, name) {
                     configureField(name, field);
                 });
