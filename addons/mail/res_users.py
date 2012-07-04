@@ -73,10 +73,10 @@ class res_users(osv.osv):
             The purpose is to add messages directly sent to user using
             @user_login.
         """
-        initial_domain = super(res_partner, self).message_search_get_domain(cr, uid, ids, context=context)
+        initial_domain = super(res_users, self).message_search_get_domain(cr, uid, ids, context=context)
         custom_domain = []
         for user in self.browse(cr, uid, ids, context=context):
             if custom_domain:
                 custom_domain += ['|']
             custom_domain += ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
-        return ['|'] + search_domain + custom_domain
+        return ['|'] + initial_domain + custom_domain
