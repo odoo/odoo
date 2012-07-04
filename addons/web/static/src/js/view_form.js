@@ -717,14 +717,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });});
     },
     on_invalid: function() {
-        var msg = "<ul>";
-        _.each(this.fields, function(f) {
-            if (!f.is_valid()) {
-                msg += "<li>" + (f.node.attrs.string || f.field.string) + "</li>";
-            }
-        });
-        msg += "</ul>";
-        this.do_warn("The following fields are invalid :", msg);
+        var warnings = _(this.fields).chain()
+            .filter(function (f) { return !f.is_valid(); })
+            .map(function (f) {
+                return _.str.sprintf('<li>%s</li>',
+                    _.escape(f.node.attrs.string || f.field.string));
+            }).value();
+        warnings.unshift('<ul>');
+        warnings.push('</ul>');
+        this.do_warn("The following fields are invalid :", warnings.join(''));
     },
     on_saved: function(r, success) {
         if (!r.result) {
