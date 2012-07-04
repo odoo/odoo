@@ -45,6 +45,43 @@
     # Jobs
     # ------------------------------------------------------
 
+    <!-- Applicant Read/Unread actions -->
+    <record id="actions_server_applicant_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_applicant_unread" model="ir.values">
+        <field name="name">action_project_unread</field>
+        <field name="action_id" ref="actions_server_applicant_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_hr_applicant" />
+        <field name="model">hr.applicant</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+    <record id="actions_server_applicant_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_applicant_read" model="ir.values">
+        <field name="name">action_project_read</field>
+        <field name="action_id" ref="actions_server_applicant_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_hr_applicant" />
+        <field name="model">hr.applicant</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
@@ -167,7 +204,7 @@
                 </notebook>
             </sheet>
             <footer>
-                <field name="message_ids" widget="ThreadView"/>
+                <field name="message_ids" widget="mail_thread"/>
             </footer>
           </form>
         </field>
@@ -192,6 +229,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
+               <filter icon="terp-mail-message-new"
+                   string="Inbox" help="Unread messages"
+                   name="needaction_pending"
+                   domain="[('needaction_pending','=',True)]"/>
+               <separator orientation="vertical"/>
+               <filter icon="terp-document-new" string="New" name="filter_new"/>
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <separator orientation="vertical"/>
                <filter icon="terp-document-new" string="New" 
@@ -257,7 +300,6 @@
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="color"/>
-                <field name="state" groups="base.group_no_one"/>
                 <field name="priority"/>
                 <field name="survey"/>
                 <field name="user_id"/>
@@ -265,68 +307,59 @@
                 <field name="partner_name"/>
                 <field name="type_id"/>
                 <field name="job_id"/>
-                 <field name="title_action"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <t t-if="record.priority.raw_value == '1'" t-set="border">oe_kanban_color_green</t>
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">i</span>
-                                    <ul class="oe_dropdown_menu">
-                                        <li><a type="edit">Edit...</a></li>
-                                        <li><a type="delete">Delete</a></li>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
+                <field name="title_action"/>
+                <field name="department_id"/>
+                <templates>
+                    <t t-name="kanban-tooltip">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.type_id.raw_value"><b>Degree:</b> <field name="type_id"/></li>
+                            <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
+                            <li t-if="record.department_id.raw_value"><b>Departement:</b> <field name="department_id"/></li>
+                        </ul>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_dropdown_menu">
+                                    <li><a type="edit">Edit...</a></li>
+                                    <li><a type="delete">Delete</a></li>
+                                    <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                <div>
+                                    <b><field name="name"/></b><br/>
+                                    <field name="job_id"/><br/>
+                                    <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
+                                    <t t-if="record.title_action.raw_value"><field name="title_action"/><br/></t>
+                                    <field name="date_action"/>
                                 </div>
-                                <div class="oe_kanban_content" >
-                                    <h3 class="oe_kanban_ellipsis"><field name="name"/>
-                                    </h3> 
-                                    <div style="margin-bottom:2;padding-top:5px;white-space: nowrap;" >                               
-                                        <field name="partner_name"/>
-                                        <div class="oe_kanban_right">
-                                          <span class="oe_kanban_highlight">
-                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
-                                               <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['2']">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['1']">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                         </span>
-                                     </div>
-                                  </div>
-                                  <div style="white-space: nowrap;" >
-                                        <div t-if="record.type_id.raw_value">
-                                          (<field name="type_id"/>)
-                                        </div>
-                                  </div>
-                                   <div style="padding-top:5px;white-space: nowrap;" >
-                                      <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
-                                   </div>
-                                   <div style="padding-top:5px;white-space: nowrap;" >
-                                      <t t-if="record.title_action.raw_value">
-                                          <field name="title_action" /> on 
-                                           <field name="date_action" />
-                                       </t>
-                                    </div>
-                                    <div align="left" width="22" style="padding-top:5px;white-space: nowrap;" >
-                                      <div align="right">
-                                           <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-                                      </div>
-                                    </div>
+                                <div class="oe_kanban_right">
+                                    <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                    <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
+                                        <img src="/web/static/src/img/icons/star-off.png" width="16" height="16" title="Good"/>
+                                    </a>
+                                    <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
+                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16" title="Good"/>
+                                    </a>
+                                    <a type="object" name="set_priority" args="['2']">
+                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16" title="Very Good"/>
+                                    </a>
+                                    <a type="object" name="set_priority" args="['1']">
+                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
+                                    </a>
+                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                             </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     # ------------------------------------------------------
     # HR Job
