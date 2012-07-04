@@ -9,21 +9,6 @@ $(document).ready(function () {
             openerp.web.Foo2 = {};
         }
     });
-    test('key fetch', function () {
-        var reg = new openerp.web.Registry({
-            foo: 'openerp.web.Foo',
-            bar: 'openerp.web.Bar',
-            quux: 'openerp.web.Quux'
-        });
-
-        strictEqual(reg.get_object('foo'), openerp.web.Foo);
-        raises(function () { reg.get_object('qux'); },
-               openerp.web.KeyNotFound,
-               "Unknown keys should raise KeyNotFound");
-        raises(function () { reg.get_object('quux'); },
-               openerp.web.ObjectNotFound,
-               "Incorrect file paths should raise ObjectNotFound");
-    });
     test('key set', function () {
         var reg = new openerp.web.Registry();
 
