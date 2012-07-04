@@ -75,7 +75,7 @@
                     <field name="stage_id"/>
                     <field name="date_action_next"/>
                     <field name="action_next"/>
-                    <field name="categ_id" string="Type" select="1"/>
+                    <field name="categ_id" string="Type"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
@@ -109,7 +109,7 @@
                     <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
-                <sheet string="Claims" layout="auto">
+                <sheet string="Claims">
                     <group>
                         <field name="name"/>
                         <field name="date"/>
@@ -168,9 +168,9 @@
                         </notebook>
                     </group>
                 </sheet>
-                <div class="oe_sheet_width">
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
+                <footer>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                </footer>
                 </form>
             </field>
         </record>

@@ -357,54 +357,53 @@ class hr_applicant(base_stage, osv.Model):
         return value
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically called when new email message arrives"""
-        res_id = super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        subject = msg.get('subject') or _("No Subject")
-        body = msg.get('body_text')
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name':  msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'description': body,
             'user_id': False,
-        }
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
-        self.write(cr, uid, [res_id], vals, context)
-        return res_id
+        })
+        if msg.get('priority'):
+            custom_values['priority'] = msg.get('priority')
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
+        return super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
-    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        if vals is None:
-            vals = {}
-        msg_from = msg['from']
-        vals.update({
-            'description': msg['body_text']
+        if update_vals is None: vals = {}
+        
+        update_vals.update({
+            'description': msg.get('body'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
         })
-        if msg.get('priority', False):
-            vals['priority'] = msg.get('priority')
+        if msg.get('priority'):
+            update_vals['priority'] = msg.get('priority')
 
         maps = {
-            'cost':'planned_cost',
+            'cost': 'planned_cost',
             'revenue': 'planned_revenue',
-            'probability':'probability'
+            'probability': 'probability',
         }
-        vls = { }
-        for line in msg['body_text'].split('\n'):
+        for line in msg.get('body_text', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
+                update_vals[key] = res.group(2).lower()
 
-        vals.update(vls)
-        res = self.write(cr, uid, ids, vals, context=context)
-        self.message_append_dict(cr, uid, ids, msg, context=context)
-        return res
+        return super(hr_applicant, self).message_update(cr, uids, ids, update_vals=update_vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
@@ -493,20 +492,14 @@ class hr_applicant(base_stage, osv.Model):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-    
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        """ Override to add responsible user. """
+        user_ids = super(hr_applicant, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

@@ -6,8 +6,35 @@
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_hr_manager" sequence="45"/>
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
-        
-        
+
+        <!-- Employee View -->
+        <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[@string='Personal Information']" position="after">
+                    <page string="Miscellaneous" groups="base.group_hr_user">
+                        <group colspan="2" col="2">
+                            <separator string="Personal Info" colspan="2"/>
+                            <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
+                            <field name="place_of_birth"/>
+                            <field name="children"/>
+                            <!-- <field name="basic" invisible="0"/> -->
+                        </group>
+                        <group colspan="2" col="2">
+                            <separator string="Job Info" colspan="2"/>
+                            <field name="manager" />
+                            <field name="vehicle" />
+                            <field name="vehicle_distance" />
+                            <field name="medic_exam"  string="Medical Examination"/>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+            </field>
+        </record>
         <!-- End Employee View -->
 
         <!-- Contract View -->
@@ -537,8 +564,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                    <field name="name" />
+                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -625,7 +652,7 @@
                     <h2><field name="category_id"/></h2>
 
                     <group col="4">
-                       <field name="code" select="1"/>
+                       <field name="code"/>
                        <field name="sequence" />
                        <field name="active"/>
                        <field name="appears_on_payslip"/>
@@ -789,12 +816,28 @@
 
         <!--  Shortcuts -->
 
+        <act_window name="Payslips"
+            domain="[('employee_id', '=', active_id)]"
+            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
+            res_model="hr.payslip"
+            src_model="hr.employee"
+            view_id ="view_hr_payslip_tree"
+            id="act_hr_employee_payslip_list"
+            groups="base.group_hr_manager"/>
+
+        <act_window name="Payslip Computation Details"
+            domain="[('slip_id', '=', active_id)]"
+            context="{'default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
+
         <act_window name="Payslip Lines"
-        	domain="[('register_id', '=', active_id)]"
-        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.contribution.register"
-        	id="act_contribution_reg_payslip_lines"/>
+            domain="[('register_id', '=', active_id)]"
+            context="{'default_register_id': active_id, 'search_default_register_id': 1}"
+            res_model="hr.payslip.line"
+            src_model="hr.contribution.register"
+            id="act_contribution_reg_payslip_lines"/>
 
     </data>
 </openerp>

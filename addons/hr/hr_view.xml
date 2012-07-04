@@ -9,6 +9,8 @@
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_reporting_timesheet" name="Reports"
+            parent="menu_hr_reporting" sequence="6" />
 
         <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
