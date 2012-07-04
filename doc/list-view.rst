@@ -163,9 +163,6 @@ view provides a number of dedicated events to its lifecycle.
 
     Invoked after a save has been completed
 
-    .. todo:: currently invoked before the record has reloaded, which
-              is kinda shitty
-
 ``cancel:before`` *cancellable*
 
     Invoked before cancelling a pending edition, provided with the
@@ -192,8 +189,6 @@ formview, delegating instead to its
     consistent at this point: calling
     e.g. :js:func:`~openerp.web.list.Editor.edit` multiple times in a
     row without saving or cancelling each edit is undefined.
-
-    .. todo:: define this behavior
 
     :param parent:
     :type parent: :js:class:`~openerp.web.Widget`

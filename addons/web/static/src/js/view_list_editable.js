@@ -50,11 +50,12 @@ openerp.web.list_editable = function (instance) {
          * @param {Boolean} [force] forces the list to editability. Sets new row edition status to "bottom".
          */
         set_editable: function (force) {
+            // TODO: fix handling of editability status to be simpler & clearer & more coherent
             // If ``force``, set editability to bottom
             // otherwise rely on view default
             // view' @editable is handled separately as we have not yet
             // fetched and processed the view at this point.
-            this.options.editable = true || (
+            this.options.editable = (
                     ! this.options.read_only && ((force && "bottom") || this.defaults.editable));
         },
         /**
@@ -82,7 +83,7 @@ openerp.web.list_editable = function (instance) {
             // tree/@editable takes priority on everything else if present.
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
-            if (this.options.editable || true) {
+            if (this.options.editable) {
                 this.editor = new instance.web.list.Editor(this);
 
                 var editor_ready = this.editor.prependTo(this.$element)
@@ -168,6 +169,7 @@ openerp.web.list_editable = function (instance) {
          */
         saveEdition: function () {
             var self = this;
+            // TODO: save:after should be invoked after reload
             return this.withEvent('save', {
                 editor: this.editor,
                 form: this.editor.form,
@@ -349,16 +351,44 @@ openerp.web.list_editable = function (instance) {
         start: function () {
             var self = this;
             var _super = this._super();
-            this.form.embedded_view = this.delegate.editionView(this);
+            this.form.embedded_view = this._validateView(
+                    this.delegate.editionView(this));
             var form_ready = this.form.appendTo(this.$element).then(
                 self.form.proxy('do_hide'));
             return $.when(_super, form_ready);
+        },
+        _validateView: function (edition_view) {
+            if (!edition_view) {
+                throw new Error("editor delegate's #editionView must return "
+                              + "a view descriptor");
+            }
+            var arch = edition_view.arch;
+            if (!(arch && arch.children instanceof Array)) {
+                throw new Error("Editor delegate's #editionView must have a" +
+                                " non-empty arch")
+            }
+            if (!(arch.tag === "form")) {
+                throw new Error("Editor delegate's #editionView must have a" +
+                                " 'form' root node");
+            }
+            if (!(arch.attrs && arch.attrs.version === "7.0")) {
+                throw new Error("Editor delegate's #editionView must be a" +
+                                " version 7 view");
+            }
+            if (!/\boe_form_container\b/.test(arch.attrs['class'])) {
+                throw new Error("Editor delegate's #editionView must have the" +
+                                " class 'oe_form_container' on its root" +
+                                " element");
+            }
+
+            return edition_view;
         },
 
         isEditing: function () {
             return !!this.record;
         },
         edit: function (record, configureField) {
+            // TODO: specify sequence of edit calls
             var self = this;
             var form = self.form;
             record = _.extend({}, record);
