@@ -249,7 +249,7 @@ openerp.mail = function(session) {
             this.params = params || {};
             this.params.extended_mode = params.extended_mode || false;
             // create a context for the default_get of the compose form
-            var context = {caca: 'prout'};
+            var context = {test: 'test-first'};
             // create a form_view on the mail.compose.message wizard
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
@@ -258,20 +258,19 @@ openerp.mail = function(session) {
                 initial_mode: 'edit',
                 }
             );
-            //debugger;
         },
         
         /**
          * widget start function
-         * - builds and initializes the form view
-         */
+         * - builds and initializes the form view */
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            // get user image
-            var user_avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.session.uid);
-            this.$element.find('img.oe_mail_msg_image').attr('src', user_avatar);
-            // bind events
+            // customize display: add avatar, clean previous content
+            var user_avatar = mail.ChatterUtils.get_image(this.session.prefix,
+                this.session.session_id, 'res.users', 'avatar', this.session.uid);
+            this.$element.find('img.oe_mail_icon').attr('src', user_avatar);
+            this.$element.find('div.oe_mail_msg_content').empty();
             var msg_node = this.$element.find('div.oe_mail_msg_content');
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
                 self.bind_events();
@@ -280,7 +279,7 @@ openerp.mail = function(session) {
         },
         
         /**
-         * Bind events in the widget. Each event is slighty described
+         * Bind events in the widget. Each event is slightly described
          * in the function. */
         bind_events: function() {
             var self = this;
@@ -294,21 +293,11 @@ openerp.mail = function(session) {
                 self.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
                 self.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
                 self.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
-                
             });
         },
         
         destroy: function() {
             this._super.apply(this, arguments);
-        },
-        
-        do_action: function() {
-            //debugger;
-            var context = arguments[0].context;
-            context.caca = 'prout';
-            this._super.apply(this, arguments);
-            console.log(this);
-            console.log(arguments);
         },
     }),
 
@@ -397,7 +386,9 @@ openerp.mail = function(session) {
             
             // add message composition form view
             this.compose_message = new mail.ComposeMessage(this, {'extended_mode': false, 'uid': this.params.uid});
-            var compose_done = this.compose_message.appendTo(this.$element.find('div.oe_mail_thread_act'));
+            var composition_node = this.$element.find('div.oe_mail_thread_action');
+            composition_node.empty();
+            var compose_done = this.compose_message.appendTo(composition_node);
             
             return display_done && compose_done;
         },
@@ -434,7 +425,7 @@ openerp.mail = function(session) {
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
-                $(event.srcElement).parents('.oe_mail_thread_msg').eq(0).hide();
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
                 }
@@ -446,7 +437,7 @@ openerp.mail = function(session) {
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
-                $(event.srcElement).parents('.oe_mail_thread_msg').eq(0).hide();
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
                 }
@@ -813,7 +804,6 @@ openerp.mail = function(session) {
 
         start: function () {
             this._super.apply(this, arguments);
-            var self = this;
             // add events
             this.add_event_handlers();
             // load mail.message search view
@@ -830,8 +820,6 @@ openerp.mail = function(session) {
         /** Add events */
         add_event_handlers: function () {
             var self = this;
-            // post a comment
-            this.$element.find('.oe_mail_wall_action button').click(function () { return self.do_comment(); });
             // display more threads
             this.$element.find('button.oe_mail_wall_button_more').click(function () { return self.do_more(); });
         },
@@ -959,14 +947,6 @@ openerp.mail = function(session) {
         do_more: function () {
             var domain = this.get_fetch_domain();
             return this.fetch_comments(this.params.limit, 0, domain);
-        },
-        
-        /** Action: Posts a comment */
-        do_comment: function () {
-            var comment_node = this.$element.find('.oe_mail_wall_action textarea');
-            var body_text = comment_node.val();
-            comment_node.val('');
-            var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html', 'tweet']).then(this.proxy('init_and_fetch_comments'));
         },
     });
 };
