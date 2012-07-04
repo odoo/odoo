@@ -25,9 +25,8 @@
         </table>
         <div class="oe_mail_wall_main">
             <div class="oe_mail_wall_action">
-                <img class="oe_mail_msg_image oe_left" alt="User img"/>
-                <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="What are you working on?"/>
-                <button class="oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
+                <!-- call the composition form -->
+                <t t-call ="mail.compose_message"/>
             </div>
             <div class="oe_clear"/>
             <ul class="oe_mail_wall_threads">
@@ -51,7 +50,7 @@
 
     <!--
         record_thread main template
-        Template used to display the communciation history in documents
+        Template used to display the communication history in documents
         form view.
         -->
     <div t-name="mail.record_thread" class="oe_mail_recthread">
@@ -73,32 +72,43 @@
     </div>
 
     <!--
-        record_thread.record_thread template
-        Template used to display subscibers
+        record_thread.subscriber template
+        Template used to display a subscriber.
         -->
     <li t-name="mail.record_thread.subscriber">
-        <img class="oe_mail_oe_left oe_mail_msg_image" t-attf-src="{record.avatar_url}"/>
-        <a href="#" class="oe_mail_oe_internal_link" data-res-model="res.users" t-attf-data-res-id="{record.id}"><t t-raw="record.name"/></a>
+        <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
+        <a t-attf-href="#model=res.users&amp;id=#{record.id}"><t t-raw="record.name"/></a>
     </li>
 
     <!--
-        compose_message template
+        mail.compose_message template
         This template holds the composition form to write a note or send
-        an e-mail.
+        an e-mail. It contains by default a textarea, that will be replaced
+        by another composition form in the main wall composition form, or
+        for main thread composition form in document form view.
         -->
     <t t-name="mail.compose_message">
         <div>
-            <img class="oe_mail_msg_image oe_left" alt="User img"/>
+            <img class="oe_mail_icon oe_mail_frame oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
                 <!-- contains the composition form -->
+                <!-- default content: old basic textarea -->
+                <textarea class="oe_mail_compose_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
             </div>
             <div class="oe_clear"/>
         </div>
     </t>
 
+    <!--
+        thread template
+        This template holds a thread of comments. It begins with an actions
+        container, holding the composition form. Then come the various
+        messages. Then comes the 'more' button.
+        -->
     <ul t-name="mail.thread" class="oe_mail oe_mail_thread">
-        <div class="oe_mail_thread_act">
-            <!-- contains the composition form -->
+        <div class="oe_mail_thread_action">
+            <!-- contains the composition box (form + image) -->
+            <t t-call="mail.compose_message"/>
         </div>
         <div class="oe_mail_thread_display">
             <!-- contains the threads -->
@@ -109,10 +119,11 @@
     </ul>
 
     <!-- default layout -->
-    <div t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
+    <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
-            <img class="oe_email_icon oe_left" t-att-src="record.mini_url"/>
+            <img class="oe_mail_icon oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
+                <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
                         <t t-if="display['show_delete']">
@@ -131,8 +142,9 @@
                         <li t-if="record.type == 'email'"><a href="#" class="oe_mail_msg_details">Details</a></li>
                     </ul>
                 </span>
+                <!-- message itself -->
                 <div class="oe_mail_msg">
-                    <h1 t-if="record.subject &amp;&amp; record.subject != 'Reply'" class="oe_mail_msg_title">
+                    <h1 t-if="record.subject" class="oe_mail_msg_title">
                         <t t-raw="record.subject"/>
                     </h1>
                     <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
@@ -166,6 +178,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </li>
 
 </template>
