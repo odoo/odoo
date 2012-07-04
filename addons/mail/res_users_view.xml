@@ -32,7 +32,12 @@
                     </div>
                 </xpath>
                 <field name="active" position="after">
-                    <field name="alias_id" readonly="1" required="0"/>
+                    <group colspan="2">
+                        <div>
+                            <label for="alias_name"/>
+                            <field name="alias_name" readonly="1" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
+                        </div>
+                    </group>
                 </field>
             </data>
             </field>
