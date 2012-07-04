@@ -125,7 +125,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        console.log("Action", action);
         return this[type](action, on_close);
     },
     null_action: function() {
@@ -167,11 +166,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
-            this.breadcrumb.add({
+            this.breadcrumb.push({
                 widget: this.inner_viewmanager,
                 action: action,
                 title: action.name
             });
+            // show
+            // hide
+            // destroy
+            // title // all view get_title ??
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -195,7 +198,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.breadcrumb.hide_all();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
-        this.breadcrumb.add({
+        this.breadcrumb.push({
             widget: this.client_widget,
             action: action,
             title: action.name
@@ -239,13 +242,37 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         this.items = [];
         this.action_manager.$element.on('click', '.oe_breadcrumb_item', this.on_item_clicked);
     },
-    add: function(item) {
+    push: function(item) {
+        if (!item.show) {
+            item.show = function() {
+                item.widget.$element.show();
+            };
+        }
+        if (!item.hide) {
+            item.hide = function() {
+                return item.widget.$element.hide();
+            };
+        }
+        if (!item.destroy) {
+            item.destroy = function() {
+                return item.widget.destroy();
+            };
+        }
+        if (!item.get_title) {
+            item.get_title = function() {
+                return item.action.name;
+            };
+        }
         this.items.push(item);
         console.log("BreadCrumb: add ", item);
     },
+    pop: function() {
+        this.remove_item(this.items.length - 1);
+        this.select_item(this.items.length - 1);
+    },
     hide_all: function() {
         _.each(this.items, function(i) {
-            i.widget.$element.hide();
+            i.hide();
         });
     },
     get_title: function() {
@@ -262,7 +289,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         }
         var item = this.items[index];
         if (item) {
-            item.widget.$element.show();
+            item.show();
         } else {
             console.warn("Breadcrumb: Can't select item at index", index);
         }
@@ -270,7 +297,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
     remove_item: function(index) {
         var item = this.items.splice(index, 1)[0];
         if (item) {
-            item.widget.destroy();
+            item.destroy();
         } else {
             console.warn("Breadcrumb: Can't remove item at index", index);
         }
@@ -279,10 +306,6 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         while (this.items.length) {
             this.remove_item(0);
         }
-    },
-    back: function() {
-        this.remove_item(this.items.length - 1);
-        this.select_item(this.items.length - 1);
     },
 });
 
@@ -1140,6 +1163,12 @@ instance.web.View = instance.web.Widget.extend({
             this.translate_dialog = new instance.web.TranslateDialog(this).start();
         }
         this.translate_dialog.open(field);
+    },
+    /**
+     * Get the title of the view
+     */
+    get_title: function() {
+        return "";
     },
     /**
      * Fetches and executes the action identified by ``action_data``.
