@@ -132,7 +132,17 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Amount of equipment's cost that has been allocated to Depreciation Expense since the time the equipment was acquired.</field>
         </record>			
-		
+
+        <record model="account.account.template" id="a189">
+            <field name="name">Tax Receivable</field>
+            <field name="code">189</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="a10"/>
+        </record>
+			
+				
 		<!-- Liabilities -->
 		
         <record model="account.account.template" id="a20">
@@ -215,41 +225,52 @@
         </record>		
 		
 
+
     <!-- Tax Account -->
+
     <record model="account.account.template" id="a216">
-        <field name="name">Sales Tax Payable</field>
+        <field name="name">Tax payable</field>
         <field name="code">216</field>
-        <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
-        <field name="reconcile" eval="True"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="a20"/>
     </record>
+	
+    <record model="account.account.template" id="a2161">
+        <field name="name">Sales Tax Payable</field>
+        <field name="code">2161</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="reconcile" eval="True"/>
+        <field name="parent_id" ref="a216"/>
+    </record>
     
-    <record model="account.account.template" id="a217">
+    <record model="account.account.template" id="a2162">
         <field name="name">VAT Payable</field>
-        <field name="code">217</field>
+        <field name="code">2162</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
-        <field name="parent_id" ref="a20"/>
+        <field name="parent_id" ref="a216"/>
     </record>
     
-    <record model="account.account.template" id="a218">
+    <record model="account.account.template" id="a2163">
         <field name="name">Service Tax Payable</field>
-        <field name="code">218</field>
+        <field name="code">2163</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
-        <field name="parent_id" ref="a20"/>
+        <field name="parent_id" ref="a216"/>
     </record>
     
-    <record model="account.account.template" id="a219">
+    <record model="account.account.template" id="a2164">
         <field name="name">Exice Duty Payable</field>
-        <field name="code">219</field>
+        <field name="code">2164</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
-        <field name="parent_id" ref="a20"/>
+        <field name="parent_id" ref="a216"/>
     </record>
 
 	 <!--  Owner's Equity Accounts -->	
@@ -491,7 +512,7 @@
         <!-- Chart template -->
 		
         <record id="indian_chart_template_private" model="account.chart.template">
-            <field name="name">India - Chart of Accounts for Partnership/Private Firm</field>
+            <field name="name">India - Chart of Accounts for Private Ltd/Partnership</field>
             <field name="account_root_id" ref="a0"/>
             <field name="tax_code_root_id" ref="vat_code_tax"/>
             <field name="bank_account_view_id" ref="a101"/>

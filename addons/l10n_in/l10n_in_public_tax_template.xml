@@ -7,8 +7,8 @@
 	
 	<record id="sales_tax_public_main" model="account.tax.template">
         <field name="name">Sale Tax-15%</field>
-        <field name="account_collected_id" ref="p24600"/>
-        <field name="account_paid_id" ref="p24600"/> 
+        <field name="account_collected_id" ref="p24710"/>
+        <field name="account_paid_id" ref="p24710"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
         <field name="type">percent</field>
@@ -22,8 +22,8 @@
 	
 	<record id="sales_tax_public" model="account.tax.template">
         <field name="name">Sale Tax-12%</field>
-        <field name="account_collected_id" ref="p24600"/>
-        <field name="account_paid_id" ref="p24600"/> 
+        <field name="account_collected_id" ref="p24710"/>
+        <field name="account_paid_id" ref="p24710"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.12</field>
         <field name="type">percent</field>
@@ -37,8 +37,8 @@
     
     <record id="sales_tax_public_4" model="account.tax.template">
         <field name="name">Sale Tax-4%</field>
-        <field name="account_collected_id" ref="p24600"/>
-        <field name="account_paid_id" ref="p24600"/> 
+        <field name="account_collected_id" ref="p24710"/>
+        <field name="account_paid_id" ref="p24710"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.04</field>
         <field name="type">percent</field>
@@ -54,8 +54,8 @@
     
     	<record id="purchase_tax_public" model="account.tax.template">
         <field name="name">Purchase Tax-15%</field>
-        <field name="account_collected_id" ref="p24600"/>
-        <field name="account_paid_id" ref="p24600"/> 
+        <field name="account_collected_id" ref="p15400"/>
+        <field name="account_paid_id" ref="p15400"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
         <field name="type">percent</field>
@@ -73,8 +73,8 @@
 
 	<record id="vat_public_main" model="account.tax.template">
         <field name="name">VAT-5%(4% VAT+1% Add. Tax.)</field>
-        <field name="account_collected_id" ref="p24800"/>
-        <field name="account_paid_id" ref="p24800"/> 
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.05</field>
         <field name="type">percent</field>
@@ -93,8 +93,8 @@
 
 	<record id="vat_public_main_tax" model="account.tax.template">
         <field name="name">VAT-15% (12.5% VAT + 2.5% Add. Tax.)</field>
-        <field name="account_collected_id" ref="p24800"/>
-        <field name="account_paid_id" ref="p24800"/> 
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
         <field name="type">percent</field>
@@ -113,8 +113,8 @@
 
 	<record id="vat_public_tax" model="account.tax.template">
         <field name="name">VAT-8%</field>
-        <field name="account_collected_id" ref="p24800"/>
-        <field name="account_paid_id" ref="p24800"/> 
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.08</field>
         <field name="type">percent</field>
@@ -133,8 +133,8 @@
     
         <record id="vat_public_tax_10" model="account.tax.template">
         <field name="name">VAT-10%</field>
-        <field name="account_collected_id" ref="p24800"/>
-        <field name="account_paid_id" ref="p24800"/> 
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.10</field>
         <field name="type">percent</field>
@@ -153,8 +153,8 @@
 
         <record id="vat_public_tax_12" model="account.tax.template">
         <field name="name">VAT-12.5%</field>
-        <field name="account_collected_id" ref="p24800"/>
-        <field name="account_paid_id" ref="p24800"/> 
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">12.5</field>
         <field name="type">percent</field>
@@ -175,8 +175,8 @@
 	
 	<record id="service_public_main" model="account.tax.template">
         <field name="name">Service Tax-12.30%</field>
-        <field name="account_collected_id" ref="p24700"/>
-        <field name="account_paid_id" ref="p24700"/> 
+        <field name="account_collected_id" ref="p24740"/>
+        <field name="account_paid_id" ref="p24740"/> 
         <field name="include_base_amount" eval="True"/>
         <field name="amount">0.12</field>
         <field name="type">percent</field>
@@ -215,8 +215,8 @@
 
 	<record id="exice_public_main" model="account.tax.template">
         <field name="name">Excise Duty-10.30%</field>
-        <field name="account_collected_id" ref="p24900"/>
-        <field name="account_paid_id" ref="p24900"/>
+        <field name="account_collected_id" ref="p24730"/>
+        <field name="account_paid_id" ref="p24730"/>
         <field name="include_base_amount" eval="True"/>
         <field name="amount">0.10</field>
         <field name="type">percent</field>
