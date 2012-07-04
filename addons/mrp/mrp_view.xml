@@ -637,17 +637,20 @@
                     <label for="product_id" class="oe_edit_only"/>
                     <h1>
                         <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]" class="oe_inline"/>
-                        <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" class="oe_inline"/>
-                        <button type="action"
-                            icon="terp-accessories-archiver+" class="oe_inline"
-                            name="%(mrp.action_change_production_qty)d"
-                            string="Change Qty" states="ready,confirmed" />
                     </h1>
-                    <label for="routing_id"  groups="mrp.group_mrp_routings"  class="oe_edit_only"/>
+                    <label for="product_qty" class="oe_edit_only"/>
                     <h2>
-                        <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                        <field name="product_qty" class="oe_inline"/>
+                        <label/>
+                        <field name="product_uom" class="oe_inline"/>
+                        <label/>
+                        <button type="action"
+                            icon="terp-accessories-archiver+"
+                            name="%(mrp.action_change_production_qty)d"
+                            string="Change Qty" states="ready,confirmed" class="oe_inline"/>
                     </h2>
+                    <label for="routing_id" class="oe_edit_only" groups="mrp.group_mrp_routings"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <group>
                         <group>
                             <field name="name"/>
