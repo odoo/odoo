@@ -23,6 +23,7 @@
     "name" : "Contract On Project",
     "version": "1.1",
     "author" : "OpenERP SA",
+    'category': 'Hidden',
     "website" : "http://www.openerp.com",
     "depends" : ["project", "account_analytic_analysis"],
     "description": """
