@@ -35,7 +35,7 @@ class Bank(osv.osv):
         'state': fields.many2one("res.country.state", 'Fed. State',
             domain="[('country_id', '=', country)]"),
         'country': fields.many2one('res.country', 'Country'),
-        'email': fields.char('E-Mail', size=64),
+        'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'active': fields.boolean('Active'),

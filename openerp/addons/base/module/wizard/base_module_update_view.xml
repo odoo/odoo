@@ -7,7 +7,14 @@
             <field name="model">base.module.update</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Update Module List">
+                <form string="Update Module List" version="7.0">
+                    <header>
+                        <button name="update_module" string="Update" type="object" states="init" class="oe_highlight"/>
+                        <label string="or" states="init"/>
+                        <button name="action_module_open" string="Open Modules" type="object" states="done" class="oe_highlight"/>
+                        <label string="or" states="done"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group col="8">
                         <group colspan="3">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
@@ -27,18 +34,6 @@
                                 <field name="update" colspan="4"/>
                                 <field name="add" colspan="4"/>
                             </group>
-                        </group>
-                        <group colspan="8" col="8" states="init">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                            <button name="update_module" string="Update" type="object" icon="gtk-ok"/>
-                        </group>
-                        <group colspan="8" col="8" states="done">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Close" icon="gtk-ok"/>
-                            <button name="action_module_open" string="Open Modules" type="object" icon="gtk-go-forward"/>
                         </group>
                     </group>
                 </form>

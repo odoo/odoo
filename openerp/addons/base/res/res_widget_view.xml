@@ -45,7 +45,7 @@
             <field name="search_view_id" ref="view_res_widget_search"/>
         </record>
         <menuitem action="res_widget_act_window" id="menu_res_widget_act_window" parent="base.next_id_2" />
-            
+
         <record id="res_widget_user_tree" model="ir.ui.view">
             <field name="name">res.widget.user.tree</field>
             <field name="model">res.widget.user</field>
@@ -70,7 +70,7 @@
                         <field name="user_id"/>
                         <field name="sequence"/>
                     </group>
-                  </sheet>  
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -89,10 +89,13 @@
             <field name="arch" type="xml">
                 <form string="Widget Wizard" col="4" version="7.0">
                     <header>
-                        <button name="res_widget_add" string="Add" type="object"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel" />
+                        <button name="res_widget_add" string="Add" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <field name="widgets_list"/>
+                    <group>
+                        <field name="widgets_list"/>
+                    </group>
                 </form>
             </field>
         </record>

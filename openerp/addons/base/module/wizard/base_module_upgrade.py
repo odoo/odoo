@@ -46,16 +46,19 @@ class base_module_upgrade(osv.osv_memory):
 
         ids = self.get_module_list(cr, uid, context=context)
         if not ids:
-            res['arch'] = '''<form string="Apply Scheduled Upgrades" version="7.0">
-                                <header>
-                                    <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-                                    <button special="cancel" string="Close" icon="gtk-cancel"/>
-                                </header>
-                                <separator string="System update completed" colspan="4"/>
-                                <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
-                                <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
-                             </form>'''
-
+            res['arch'] = """
+                <form string="Apply Scheduled Upgrades" version="7.0">
+                    <header>
+                        <button name="config" string="Start configuration" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <separator string="System update completed"/>
+                    <label string="The selected modules have been updated / installed !"/>
+                    <newline/>
+                    <label string="We suggest to reload the page to see the new menus."/>
+                </form>
+            """
         return res
 
     def get_module_list(self, cr, uid, context=None):
@@ -80,14 +83,14 @@ class base_module_upgrade(osv.osv_memory):
                                         JOIN ir_module_module_dependency d ON (m.id = d.module_id)
                                         LEFT JOIN ir_module_module m2 ON (d.name = m2.name)
                           WHERE m.id in %s and (m2.state IS NULL or m2.state IN %s)""",
-                      (tuple(ids), ('uninstalled',))) 
+                      (tuple(ids), ('uninstalled',)))
             unmet_packages = [x[0] for x in cr.fetchall()]
             if unmet_packages:
                 raise osv.except_osv(_('Unmet dependency !'),
                                      _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
             ir_module.download(cr, uid, ids, context=context)
-            cr.commit() # save before re-creating cursor below 
+            cr.commit() # save before re-creating cursor below
 
         pooler.restart_pool(cr.dbname, update_module=True)
 
