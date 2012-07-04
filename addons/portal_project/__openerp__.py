@@ -21,12 +21,12 @@
 
 
 {
-    'name': 'Portal Issue',
+    'name': 'Portal Project',
     'version': '0.1',
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds project menu and features (tasks) to your portal if project 
+This module adds project menu and features (tasks) to your portal if project
 and portal are installed.
     """,
     'author': 'OpenERP SA',
