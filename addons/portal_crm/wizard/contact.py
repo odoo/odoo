@@ -11,6 +11,7 @@ class crm_contact_us(osv.TransientModel):
     }
 
     def _get_employee(self, cr, uid, context=None):
+        """ Employees flagged as 'private' won't appear on the contact page """
         r = self.pool.get('hr.employee').search(cr, uid, [('visibility', '!=', 'private')], context=context)
         return r
 
