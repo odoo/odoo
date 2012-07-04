@@ -16,16 +16,12 @@
                     <field name="meal_voucher_amount"/>
                     <field name="misc_advantage_amount"/>
                  </xpath>
-                 <xpath expr="//group[@name='trail']" position="after">
-                     <group string="Miscellaneous">
-                         <field name="additional_net_amount"/>
-                         <field name="retained_net_amount"/>
-                     </group>
-                    <group string="By Worker">
-                        <field name="insurance_employee_deduction"/>
-                        <field name="meal_voucher_employee_deduction"/>
-                        <field name="car_employee_deduction"/>
-                    </group>
+                 <xpath expr="//field[@name='advantages']" position="before">
+                    <field name="additional_net_amount"/>
+                    <field name="retained_net_amount"/>
+                    <field name="insurance_employee_deduction"/>
+                    <field name="meal_voucher_employee_deduction"/>
+                    <field name="car_employee_deduction"/>
                  </xpath>
             </data>
             </field>

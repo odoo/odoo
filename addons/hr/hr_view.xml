@@ -48,20 +48,18 @@
                             <page string="Information">
                                 <group>
                                     <group>
+                                        <field name="user_id" on_change="onchange_user(user_id)"/>
                                         <field name="parent_id" />
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
-                                        <!--<field name="identification_id" groups="base.group_hr_user"/>-->
+                                        <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group name="active_group">
                                         <field name="active"/>
                                     </group>
-                                <!-- <group string="General">
-                                    <field name="user_id" on_change="onchange_user(user_id)"/>
-                                </group> -->
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
@@ -376,14 +374,14 @@
                         <h2>
                             <field name="employee_ids" widget="many2many_tags" mode="tree,form"/>
                         </h2>
-                        <group col="4">
-                            <group>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                        <group>
                             <group>
                                 <field name="no_of_employee"/>
                                 <field name="expected_employees"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                            </group>
+                            <group>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
