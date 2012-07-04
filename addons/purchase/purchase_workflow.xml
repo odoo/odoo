@@ -199,9 +199,9 @@
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
         </record>
-	
-	<!-- Procurement -->
-		<record id="act_buy" model="workflow.activity">
+    
+    <!-- Procurement -->
+        <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
             <field name="name">buy</field>
             <field name="kind">subflow</field>
