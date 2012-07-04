@@ -10,17 +10,15 @@
             <field name="arch" type="xml">
                 <form string="Contact wizard view" version="7.0">
                     <div class="oe_portal_crm_contact">
+                        <h1>Contact us</h1>
                         <table>
                           <tr>
                             <td width="70%%">
                                 <div class="oe_portal_crm_contact_form">
-                                    <h1>Contact us</h1>
-                                    <group>
-                                        <field name="contact_name" placeholder="Name"/>
-                                        <field name="partner_name" placeholder="Company"/>
-                                        <field name="email_from" placeholder="Email"/>
-                                        <field name="phone" placeholder="Phone"/>
-                                    </group>
+                                    <field name="contact_name" placeholder="Name"/>
+                                    <field name="partner_name" placeholder="Company"/>
+                                    <field name="email_from" placeholder="Email"/>
+                                    <field name="phone" placeholder="Phone"/>
                                     <field name="description" placeholder="Your question"/>
                                     <button string="Submit" name="submit" type="object"/>
                                 </div>
@@ -42,15 +40,24 @@
                                                 <t t-name="kanban-box">
                                                     <!-- <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/> -->
                                                     <h4><field name="name"/></h4>
-                                                    <field name="street"/><br/>
-                                                    <field name="street2"/><br/>
-                                                    <field name="zip"/>
-                                                    <field name="city"/><br/>
-                                                    <field name="country_id"/><br/>
-                                                    <br/>
-                                                    <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
-                                                        <field name="email"/>
-                                                    </a>
+                                                    <ul class="oe_portal_crm_address">
+                                                        <li t-if="record.street"><field name="street"/></li>
+                                                        <li t-if="record.street2"><field name="street2"/></li>
+                                                        <li t-if="record.zip"><field name="zip"/></li>
+                                                        <li t-if="record.city"><field name="city"/></li>
+                                                        <li t-if="record.country_id"><field name="country_id"/></li>
+                                                    </ul>
+                                                    <ul class="oe_portal_crm_contact_info">
+                                                        <li t-if="record.phone"><field name="phone"/></li>
+                                                        <li t-if="record.email.raw_value">
+                                                            <a title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                            <field name="email"/>
+                                                            </a>
+                                                        </li>
+                                                        <li t-if="record.website">
+                                                            <a t-att-href="record.website"><field name="website"/></a>
+                                                        </li>
+                                                    </ul>
                                                 </t>
                                             </templates>
                                         </kanban>
@@ -75,7 +82,6 @@
                                                             <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                                             <ul>
                                                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
-                                                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                                                 <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
                                                                 <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
                                                                 <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
