@@ -201,16 +201,17 @@ class mail_message(osv.osv):
                              email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
                              res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
                              context=None):
-        purchase_order_obj = self.pool.get('purchase.order')
-        requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
         result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc,
                      email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                     res_id=res_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                     res_id=res_id, subtype=subtype, headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
                      context=context)
-        if requisition_id:
-            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
+        if model == 'purchase.order' and res_id:
+            purchase_order_obj = self.pool.get('purchase.order')
+            requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
+            if requisition_id:
+                result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
                              email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                             res_id=requisition_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                             res_id=requisition_id, subtype=subtype, headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
                              context=context)
         return result
 
