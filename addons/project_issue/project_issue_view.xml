@@ -4,6 +4,43 @@
 
         <menuitem  id="menu_project_confi" name="Issues" parent="base.menu_definitions" sequence="2"/>
 
+        <!-- Project issue Read/Unread actions -->
+        <record id="actions_server_project_issue_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_issue"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_issue_unread" model="ir.values">
+            <field name="name">action_project_issue_unread</field>
+            <field name="action_id" ref="actions_server_project_issue_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_issue" />
+            <field name="model">project.issue</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_project_issue_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_issue"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_issue_read" model="ir.values">
+            <field name="name">action_project_issue_read</field>
+            <field name="action_id" ref="actions_server_project_issue_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_issue" />
+            <field name="model">project.issue</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
@@ -120,7 +157,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" widget="ThreadView"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </footer>
                 </form>
             </field>
@@ -159,9 +196,13 @@
                     <group>
                         <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
+                        <separator orientation="vertical"/>
                         <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
-                        <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
