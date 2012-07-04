@@ -136,6 +136,7 @@ instance.account.many2one_pager = instance.web.form.FieldMany2One.extend({
 
 instance.account.list_button = instance.web.form.WidgetButton.extend({
     on_click: function() {
+        var self = this
         var list_view = this.view.getParent().list_view.controller
         ids = list_view.get_selected_ids()
         if (ids.length == 0) {
@@ -158,8 +159,10 @@ instance.account.list_button = instance.web.form.WidgetButton.extend({
             self.do_action(result.result, function () {
                 // reload view
                 list_view.reload();
+                self.getParent().reload()
             });
         });
+        
    }
 })
  

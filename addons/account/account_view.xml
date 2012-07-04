@@ -980,7 +980,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write">
+                <tree colors="red:state == 'draft';black:reconcile_id > 0" string="Journal Items" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"  invisible="1"/>
                     <field name="move_id"/>
@@ -997,6 +997,7 @@
                     <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="state" invisible="1"/>
+                    <field name="reconcile_id" invisible="1"/>
                 </tree>
             </field>
         </record>
