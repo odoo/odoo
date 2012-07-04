@@ -286,7 +286,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_record_loaded: function(record) {
         var self = this, set_values = [];
-        self.on_invalidclick();
+        var div = $("<div />", {id:"bounce"});
+        this.$element.find(".oe_form_field").click(function () {
+        $(".oe_form_button_edit").wrap(div);
+        $("#bounce").addClass('oe_bounce_button_left');
+        var val_bounce = $(".oe_form_button_edit");
+        self.do_bounce(val_bounce);
+        });
         if (!record) {
             this.do_warn("Form", "The record could not be found in the database.", true);
             return $.Deferred().reject();
@@ -581,15 +587,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.do_save().then(function(result) {
             self.set({mode: "view"});
         });
-    },
-    on_invalidclick: function() {       
-       var div = $("<div />", {id:"bounce"});       
-       this.$element.find(".oe_form_field").click(function () {
-        $(".oe_form_button_edit").wrap(div);
-        $("#bounce").css({"float":"left","margin-right":"4px"});                    
-        $(".oe_form_button_edit").effect("bounce", { times:3}, 500);                 
-        });
-    },
+    },    
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
             this.set({mode: "view"});

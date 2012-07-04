@@ -982,8 +982,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 }
                 else{
                     if (opts.options.$buttons){
-                    var a = $(opts.options.$buttons.find('.oe_list_add'));
-                    self.view.do_bounce(a);
+                    var bounce_val = $(opts.options.$buttons.find('.oe_list_add'));
+                    self.view.do_bounce(bounce_val);
                     }
                     }
             });
