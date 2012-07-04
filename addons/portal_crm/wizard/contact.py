@@ -7,20 +7,14 @@ class crm_contact_us(osv.TransientModel):
     _inherit = 'crm.lead'
     _columns = {
         'company_ids' : fields.many2many('res.company', string='Companies', readonly=True),
-        'employee_ids' : fields.many2many('hr.employee', string='Employees', readonly=True),
     }
 
-    def _get_employee(self, cr, uid, context=None):
-        """ Employees flagged as 'private' won't appear on the contact page """
-        r = self.pool.get('hr.employee').search(cr, uid, [('visibility', '!=', 'private')], context=context)
-        return r
-
+    """ Little trick to display companies in our wizard view """
     def _get_companies(self, cr, uid, context=None):
         r = self.pool.get('res.company').search(cr, uid, [], context=context)
         return r
 
     _defaults = {
-        'employee_ids' : _get_employee,
         'company_ids' : _get_companies
     }
 

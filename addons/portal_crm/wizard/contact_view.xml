@@ -54,9 +54,6 @@
                                                             <field name="email"/>
                                                             </a>
                                                         </li>
-                                                        <li t-if="record.website">
-                                                            <a t-att-href="record.website"><field name="website"/></a>
-                                                        </li>
                                                     </ul>
                                                 </t>
                                             </templates>
@@ -68,30 +65,7 @@
                           <tr>
                             <td colspan="2">
                                 <div class="oe_portal_crm_team">
-                                    <h1>Meet the team</h1>
-                                    <field name="employee_ids" widget="many2many_kanban">
-                                        <kanban>
-                                            <field name="last_login"/>
-                                            <templates>
-                                                <t t-name="kanban-box">
-                                                    <div class="oe_employee_vignette">
-                                                        <div class="oe_employee_image">
-                                                            <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
-                                                        </div>
-                                                        <div class="oe_employee_details">
-                                                            <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
-                                                            <ul>
-                                                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
-                                                                <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
-                                                                <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
-                                                                <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </t>
-                                            </templates>
-                                        </kanban>
-                                    </field>
+
                                 </div>
                             </td>
                           </tr>

@@ -19,23 +19,4 @@
 #
 ##############################################################################
 
-
-{
-    'name': 'Portal HR recruitment',
-    'version': '0.1',
-    'category': 'Tools',
-    'complexity': "easy",
-    'description': """
-This module adds a jobs page to your portal if hr and portal are installed.
-    """,
-    'author': 'OpenERP SA',
-    'depends': ['hr','portal'],
-    'data': [
-        'portal_jobs_view.xml',
-        'security/ir.model.access.csv',
-    ],
-    'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import hr_employee

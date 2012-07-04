@@ -26,15 +26,15 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds claim menu and features to your portal if claim and portal are 
+This module adds claim menu and features to your portal if claim and portal are
 installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm_claim','portal'],
     'data': [
-        'security/portal_security.xml',
         'portal_claim_view.xml',
-        "security/ir.model.access.csv",
+        'security/ir.model.access.csv',
+        'security/portal_security.xml',
     ],
     'installable': True,
     'auto_install':True,
