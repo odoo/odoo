@@ -387,11 +387,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_issues"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr='//group[@name="use_tasks_row"]' position='inside'>
+                    <label for="use_issues"/>
+                    <div>
+                        <field name="use_issues"/>
+                        <button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
+                    </div>
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>

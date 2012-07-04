@@ -103,11 +103,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_timesheets"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr='//group[@name="use_tasks_row"]' position='inside'>
+                   <label for="use_timesheets"/>
+                    <div>
+                        <field name="use_timesheets"/>
+                        <button icon="terp-gtk-go-back-rtl" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/>
+                    </div>
                 </xpath>
             </field>
         </record>

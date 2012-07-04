@@ -94,18 +94,16 @@
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <field name="privacy_visibility"/>
                         </group>
-                        <group>
-                            <table>
-                                <tr name="use_tasks_row">
-                                    <td><group><field name="use_tasks"/></group></td>
-                                    <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
-                                </tr>
-                                <tr name="use_attachment_row">
-                                    <td/>
-                                    <td><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
-                                </tr>
-                            </table>
+                        <group name="use_tasks_row">
+                            <label for="use_tasks"/>
+                            <div>
+                                <field name="use_tasks"/>
+                                <button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                            </div>
                         </group>
+                    </group>
+                    <group>
+                        <button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" />
                     </group>
                     <notebook>
                         <page string="Team" name="team">
