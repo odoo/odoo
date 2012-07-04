@@ -3,10 +3,6 @@
  * @namespace
  */
 openerp.web.list_editable = function (instance) {
-    var KEY_RETURN = 13,
-        KEY_ESCAPE = 27;
-    var QWeb = instance.web.qweb;
-
     // editability status of list rows
     instance.web.ListView.prototype.defaults.editable = null;
 
@@ -299,7 +295,7 @@ openerp.web.list_editable = function (instance) {
                 self[method](e);
             });
         },
-        keyup_RETURN: function () {
+        keyup_ENTER: function () {
             var self = this;
             return this.saveEdition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
