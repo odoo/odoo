@@ -416,7 +416,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.focus();
         });
             var click_column = this.$element.find('.oe_kanban_add');
-            click_column.addClass('oe_kanban_quick_create');
+            click_column.addClass('oe_kanban_quick_create_bounce');
             this.$records.click(function() {
             self.view.do_bounce(click_column);
                 });
