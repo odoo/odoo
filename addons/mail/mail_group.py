@@ -154,13 +154,11 @@ class mail_group(osv.osv):
         return res
     
     def create(self, cr, uid, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        model, res_id = model_pool.get_object_reference( cr, uid, "mail", "model_mail_group")
-        vals.update({'alias_name': "mailing-group",
-                     'alias_model_id': res_id})
-        alias_pool.create_unique_alias(cr, uid, vals, context=context)
-        res = super( mail_group, self).create(cr, uid, vals, context)
-        record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']], {"alias_force_thread_id":record['id']}, context)
+        if not vals.get('alias_id'):
+            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "mail_group."+vals['name'], 'alias_model_id': self._name}, context=context)
+            vals.update({'alias_id': alias_id})
+        res = super(mail_group, self).create(cr, uid, vals, context)
+        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": res}, context)
         return res
+
