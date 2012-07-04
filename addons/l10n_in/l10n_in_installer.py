@@ -26,8 +26,8 @@ import tools
 class l10n_installer(osv.osv_memory):
     _inherit = 'account.installer'
     _columns = {
-        'company_type': fields.selection([('public_company', 'Public Firm'),
-                                         ('partnership_private_company', 'Partnership/Private Firm')
+        'company_type': fields.selection([('public_company', 'Public Ltd.'),
+                                         ('partnership_private_company', 'Private/Partnership Ltd.')
                                          ], 'Company Type', required=True,
                                         help='Company Type is used to install Indian chart of accounts as per need of business.'),
     }
