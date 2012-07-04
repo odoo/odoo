@@ -1022,10 +1022,10 @@ class sale_order(osv.osv):
     # ------------------------------------------------
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if (obj.state == 'manual' or obj.state == 'progress'):
-                result[obj.id] = [obj.user_id.id]
+                result[obj.id].append(obj.user_id.id)
         return result
  
     def create_send_note(self, cr, uid, ids, context=None):
