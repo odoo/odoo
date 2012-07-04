@@ -13,6 +13,15 @@
                 <field name="supplier" position="after">
                     <field name="speaker"/>
                 </field>
+                <xpath expr="//page[@string='History']" position="attributes">
+                   <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//group[@string='Event']" position="attributes">
+                   <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//group[@string='Registration']" position="attributes">
+                   <attribute name="invisible">False</attribute>
+                </xpath>
             </field>
        </record>
        <record id="view_event_partner_info_form" model="ir.ui.view">
@@ -21,13 +30,15 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="History" position="inside">
+                <group string="Event" position="inside">
                     <field name="event_ids" colspan="4" nolabel="1">
                         <tree string="Events">
                             <field name="name" string="Event"/>
                             <field name="main_speaker_id"/>
                         </tree>
                     </field>
+                   </group>
+                   <group string="Registration" position="inside">
                     <field name="event_registration_ids" colspan="4" nolabel="1">
                         <tree string="Events Registration">
                             <field name="event_begin_date" string="Date"/>
@@ -39,7 +50,7 @@
                             <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                         </tree>
                     </field>
-                </page>
+               </group>
             </field>
        </record>
 
