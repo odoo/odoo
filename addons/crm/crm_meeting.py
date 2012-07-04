@@ -28,10 +28,6 @@ import tools
 from tools.translate import _
 _logger = logging.getLogger(__name__)
 
-class crm_lead(base_stage, osv.osv):
-        """ CRM Leads """
-        _name = 'crm.lead'
-
 class crm_meeting(base_state, osv.Model):
     """ Model for CRM meetings """
     _name = 'crm.meeting'
