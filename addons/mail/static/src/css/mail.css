@@ -274,8 +274,34 @@
 /* ------------------------------------------------------------ */
 
 /* form_view: delete white background */
-.openerp .oe_mail_msg_content .oe_formview {
+.openerp .oe_mail_msg_content div.oe_formview {
     background-color: transparent;
+}
+
+.openerp .oe_mail_msg_content div.oe_form_nosheet {
+    margin: 0px;
+}
+
+.openerp .oe_mail_msg_content table.oe_form_group {
+    margin: 0px;
+}
+
+.openerp .oe_mail_msg_content table.oe_form_field {
+    padding: 0px;
+}
+
+.openerp .oe_mail_msg_content td.oe_form_group_cell {
+    vertical-align: bottom;
+}
+
+/* subject: change width */
+.openerp .oe_mail_msg_content .oe_form .oe_form_field input {
+    width: 472px;
+}
+
+div.cleditorMain {
+    width: 468px !important;
+    height: 100px !important;
 }
 
 
