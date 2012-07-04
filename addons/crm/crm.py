@@ -172,19 +172,14 @@ class crm_case_section(osv.osv):
         return res
     
     def create(self, cr, uid, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            model, res_id = model_pool.get_object_reference( cr, uid, "crm", "model_crm_lead")
-            vals.update({'alias_name': "sales",
-                         'alias_model_id': res_id})
-            alias_pool.create_unique_alias(cr, uid, vals, context=context)
-            res = super(crm_case_section, self).create(cr, uid, vals, context)
-            record = self.read(cr, uid, res, context)
-            alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{'section_id':record['id'],'type':'lead'}},context)
-            return res
-        return super(crm_case_section, self).create(cr, uid, vals, context)
-
+            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "sales_team."+vals['name'], 'alias_model_id': self._name}, context=context)
+            vals.update({'alias_id': alias_id})
+        res = super(crm_case_section, self).create(cr, uid, vals, context)
+        record = self.read(cr, uid, res, context)
+        alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{'section_id':record['id'],'type':'lead'}},context)
+        return res
 
 class crm_case_categ(osv.osv):
     """ Category of Case """

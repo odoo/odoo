@@ -521,12 +521,10 @@ def Project():
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model','model_project_task'))
-        vals.update({'alias_name':"project",
-                     'alias_model_id': res_id})
-        alias_pool.create_unique_alias(cr, uid, vals, context=context)
+        if not vals.get('alias_id'):
+            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "project."+vals['name'], 'alias_model_id': self._name}, context=context)
+            vals.update({'alias_id': alias_id})
         res = super( project, self).create(cr, uid, vals, context)
         record = self.read(cr, uid, res, context)
         alias_pool.write(cr, uid, [record['alias_id']], {'alias_defaults':{'project_id': record['id']}}, context)

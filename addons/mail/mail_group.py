@@ -153,7 +153,7 @@ class mail_group(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         alias_pool = self.pool.get('mail.alias')
-        if not vals['alias_id']:
+        if not vals.get('alias_id'):
             alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "mail_group."+vals['name'], 'alias_model_id': self._name}, context=context)
             vals.update({'alias_id': alias_id})
         res = super(mail_group, self).create(cr, uid, vals, context)
