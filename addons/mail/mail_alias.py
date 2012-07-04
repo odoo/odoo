@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
+import re
 from openerp.osv import fields, osv
 from tools.translate import _
+
 
 class mail_alias(osv.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
@@ -121,11 +123,13 @@ class mail_alias(osv.Model):
 
     def create_unique_alias(self, cr, uid, vals, context=None):
         model_pool = self.pool.get('ir.model')
-        values = {'alias_name': vals['alias_name']}
+        values = {}
         if self.search(cr, uid, [('alias_name', '=', vals['alias_name'])]):
             values.update({'alias_name': self._generate_alias(cr, uid, vals['alias_name'], sequence=1, context=context)})
         model_sids = model_pool.search(cr, uid, [('model', '=', vals['alias_model_id'])])
         values.update({'alias_model_id': model_sids[0]})
+        alias_name = re.sub(r'[^a-zA-Z0-9:]', '_', vals['alias_name']).lower()
+        values.update({'alias_name': values['alias_name']})
         return self.create(cr, uid, values, context=context)
 
 
