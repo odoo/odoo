@@ -56,7 +56,7 @@ The main features are:
     'depends': ['base', 'base_tools'],
     'data': [
         'wizard/mail_compose_message_view.xml',
-        'wizard/update_mail_alias_wizard.xml',
+        'res_config_view.xml',
         'mail_message_view.xml',
         'mail_alias_data.xml',
         'mail_subscription_view.xml',
@@ -70,11 +70,10 @@ The main features are:
         'res_users_view.xml',
         'mail_alias_view.xml',
     ],
-    'demo_xml': [
-        'user_mail_alias_demo.xml',
+    'demo': [
+        'mail_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
@@ -96,9 +95,6 @@ The main features are:
     ],
     'qweb': [
         'static/src/xml/mail.xml',
-    ],
-    'demo': [
-        'mail_demo.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

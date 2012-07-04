@@ -20,5 +20,5 @@
 ##############################################################################
 
 import mail_compose_message
-import update_mail_alias
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
