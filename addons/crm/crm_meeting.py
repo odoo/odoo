@@ -76,13 +76,6 @@ class crm_meeting(base_state, osv.Model):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = [obj.user_id.id]
-        return result
-
     def case_open(self, cr, uid, ids, context=None):
         """ Confirms meeting """
         res = super(crm_meeting, self).case_open(cr, uid, ids, context)
