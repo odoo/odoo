@@ -49,16 +49,14 @@
                                 class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
                         <field name="body_text" colspan="4" nolabel="1" placeholder="What are you working on ?"
                                 class="oe_mail_compose_message_body_text"/>
-                        <field name="body_html" colspan="4" nolabel="1" placeholder="What are you working on ?"
+                        <field name="body_html" colspan="4" nolabel="1" placeholder="What are you working on HTML ?"
                                 class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible" widget="text_html"/>
                         <field name="destination_partner_ids" colspan="4" nolabel="1" widget="many2many_tags"
                                 class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
                         <button icon="gtk-ok" name="send_mail" string="Post" type="object"/>
-                        <p> or <a href="#" class="mail_compose_message_toggle">Send a Message</a></p>
-                        <button icon="gtk-close" string="Cancel" special="cancel" />
-                        <p>
-                            Checklist . Attach
-                        </p>
+                        <a href="#" class="mail_compose_message_toggle">Extended email</a>
+                        <span>Checklist</span>
+                        <span>Attach</span>
                     </group>
                 </form>
             </field>
