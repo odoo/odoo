@@ -25,10 +25,10 @@
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Job Info" colspan="2"/>
-                            <field name="manager" select="1"/>
-                            <field name="vehicle" select="1"/>
-                            <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1" string="Medical Examination"/>
+                            <field name="manager" />
+                            <field name="vehicle" />
+                            <field name="vehicle_distance" />
+                            <field name="medic_exam"  string="Medical Examination"/>
                         </group>
                     </page>
                 </xpath>
@@ -508,8 +508,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                    <field name="name" />
+                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -596,7 +596,7 @@
                     <h2><field name="category_id"/></h2>
 
                     <group col="4">
-                       <field name="code" select="1"/>
+                       <field name="code"/>
                        <field name="sequence" />
                        <field name="active"/>
                        <field name="appears_on_payslip"/>
@@ -763,18 +763,18 @@
             groups="base.group_hr_manager"/>
 
         <act_window name="Payslip Computation Details"
-        	domain="[('slip_id', '=', active_id)]"
-        	context="{'default_slip_id': active_id}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.payslip"
-        	id="act_payslip_lines"/>
+            domain="[('slip_id', '=', active_id)]"
+            context="{'default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
-        	domain="[('register_id', '=', active_id)]"
-        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.contribution.register"
-        	id="act_contribution_reg_payslip_lines"/>
+            domain="[('register_id', '=', active_id)]"
+            context="{'default_register_id': active_id, 'search_default_register_id': 1}"
+            res_model="hr.payslip.line"
+            src_model="hr.contribution.register"
+            id="act_contribution_reg_payslip_lines"/>
 
     </data>
 </openerp>

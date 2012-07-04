@@ -3,43 +3,43 @@
     <data noupdate="True">
        
             <record model="account.account.type" id="account.account_type_view">
-	      <field name="name">Ansicht</field>
-	      <field name="code">view</field>
-	      <field name="close_method">none</field>
-	    </record>
+          <field name="name">Ansicht</field>
+          <field name="code">view</field>
+          <field name="close_method">none</field>
+        </record>
 
-	    <record model="account.account.type" id="account.data_account_type_income" >
-	      <field name="name">Erfolgskonten - Erlöse</field>
-	      <field name="code">income</field>
+        <record model="account.account.type" id="account.data_account_type_income" >
+          <field name="name">Erfolgskonten - Erlöse</field>
+          <field name="code">income</field>
               <field name="report_type">income</field>
-	      <field name="close_method">none</field>
-	    </record>
+          <field name="close_method">none</field>
+        </record>
 
-	    <record model="account.account.type" id="account.data_account_type_expense">
-	      <field name="name">Erfolgskonten - Aufwendungen</field>
-	      <field name="code">expense</field>
+        <record model="account.account.type" id="account.data_account_type_expense">
+          <field name="name">Erfolgskonten - Aufwendungen</field>
+          <field name="code">expense</field>
               <field name="report_type">expense</field>
-	      <field name="close_method">none</field>
-	    </record>
+          <field name="close_method">none</field>
+        </record>
 
-	    <record model="account.account.type" id="account.data_account_type_asset">
-	      <field name="name">Bilanzkonten - Aktiva - Vermögenskonten</field>
-	      <field name="code">balance asset</field>
+        <record model="account.account.type" id="account.data_account_type_asset">
+          <field name="name">Bilanzkonten - Aktiva - Vermögenskonten</field>
+          <field name="code">balance asset</field>
               <field name="report_type">asset</field>
-	      <field name="close_method">balance</field>
-	    </record>
+          <field name="close_method">balance</field>
+        </record>
 
-	   <record model="account.account.type" id="account.data_account_type_liability">
-	      <field name="name">Bilanzkonten - Passiva - Kapitalkonten</field>
-	      <field name="code">balance liability</field>
+       <record model="account.account.type" id="account.data_account_type_liability">
+          <field name="name">Bilanzkonten - Passiva - Kapitalkonten</field>
+          <field name="code">balance liability</field>
               <field name="report_type">liability</field>
-	      <field name="close_method">balance</field>
-	    </record>
- 	<record model="account.account.type" id="account.account_type_other">
-	      <field name="name">Jahresabschlusskonten u. Statistik</field>
-	      <field name="code">other</field>
-	      <field name="close_method">none</field>
-	    </record>
+          <field name="close_method">balance</field>
+        </record>
+     <record model="account.account.type" id="account.account_type_other">
+          <field name="name">Jahresabschlusskonten u. Statistik</field>
+          <field name="code">other</field>
+          <field name="close_method">none</field>
+        </record>
          
     </data>
 </openerp>

@@ -254,8 +254,11 @@
                         <group>
                             <group>
                                 <field name="free_member"/>
-                                <field colspan="4" name="membership_state"/>
-                                <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
+                                <label for="membership_state"/>
+                                <div>
+                                    <field name="membership_state" class="oe_inline"/>
+                                    <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" class="oe_inline oe_right"/>
+                                </div>
                             </group>
                             <group>
                                 <field name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
@@ -267,7 +270,7 @@
                         <field name="member_lines" nolabel="1" colspan="4" readonly="1">
                             <tree string="Memberships">
                                 <field name="date"/>
-                                <field name="membership_id" string="Membership"/>
+                                <field name="membership_id"/>
                                 <field name="member_price"/>
                                 <field name="account_invoice_id"/>
                                 <field name="state"/>
