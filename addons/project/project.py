@@ -217,8 +217,11 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
-        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
+                                    help="This Unique Mail Box Alias of the Project allows to manage the Seamless email communication between Mail Box and OpenERP," 
+                                        "This Alias MailBox also create and Manage the new Email Tasks/Issues for this Project and also manage the existing Task/Issue email communication."),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True, 
+                                        help="Allows to select Model for the Mail alias .Based on selected model Task/issue will created for fetched mails or it will maintain communication for related Task/Issue."),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility'),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
