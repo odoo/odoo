@@ -46,7 +46,6 @@ class hr_contract(osv.osv):
         'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'), help="Other income of employee"),
         'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are sold before one year"),
         'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are kept for more than a year"),
-        'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll'), help="Amount of food coupon per day"),
         'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver"),
         'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll'), help="Professional tax deducted from salary"),
         'leave_avail_dedution': fields.float('Leave Availed Deduction ', digits_compute=dp.get_precision('Payroll'), help="Deduction for emergency leave of employee"),

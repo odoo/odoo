@@ -184,13 +184,13 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
 
-        <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
+         <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="20" name="amount_fix"/>
+            <field name="quantity">worked_days.WORK100.number_of_days</field>
             <field name="code">FC</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="condition_select">none</field>
             <field name="name">Food Coupons Allowance</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = worked_days.WORK100.number_of_days * contract.food_coupon_amount</field>
             <field name="sequence" eval="33"/>
          </record>
 
@@ -424,13 +424,13 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="sequence" eval="165"/>
         </record>
         
-        <record id="hr_salary_rule_food_coupon_ded" model="hr.salary.rule">
+         <record id="hr_salary_rule_food_coupon_ded" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="-20" name="amount_fix"/>
+            <field name="quantity">worked_days.WORK100.number_of_days</field>
             <field name="code">FD</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="condition_select">none</field>
             <field name="name">Deduction Towards Food Coupons</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(worked_days.WORK100.number_of_days * contract.food_coupon_amount)</field>
             <field name="sequence" eval="166"/>
          </record>
 
