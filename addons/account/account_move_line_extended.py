@@ -29,11 +29,20 @@ class account_move_partner_info(osv.osv):
     _auto = False
     
     def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
-        #ToDo
-        res = {}
+        res = 0
+        cr.execute("""SELECT partner_id, reconcile_id 
+                   FROM account_move_line WHERE state <> 'draft' 
+                   GROUP BY partner_id, reconcile_id""")
+        result = cr.fetchall()
+        partner_total = len(result)
+        partner_reconcile = len([ (x,y) for x, y in result if y == None  ])
+        if partner_total:
+            res = float(partner_total- partner_reconcile)/partner_total * 100
+        
+        res_all = {}
         for id in ids:
-            res[id] = 50
-        return res
+            res_all[id] = res
+        return res_all
     
     _columns = {
         'partner_id':fields.many2one('res.partner', 'Partner'),
