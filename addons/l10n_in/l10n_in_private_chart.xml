@@ -137,7 +137,7 @@
             <field name="name">Tax Receivable</field>
             <field name="code">189</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_receivable"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a10"/>
         </record>
@@ -241,7 +241,7 @@
         <field name="name">Sales Tax Payable</field>
         <field name="code">2161</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
         <field name="parent_id" ref="a216"/>
     </record>
@@ -250,7 +250,7 @@
         <field name="name">VAT Payable</field>
         <field name="code">2162</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
         <field name="parent_id" ref="a216"/>
     </record>
@@ -259,7 +259,7 @@
         <field name="name">Service Tax Payable</field>
         <field name="code">2163</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
         <field name="parent_id" ref="a216"/>
     </record>
@@ -268,7 +268,7 @@
         <field name="name">Exice Duty Payable</field>
         <field name="code">2164</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="True"/>
         <field name="parent_id" ref="a216"/>
     </record>

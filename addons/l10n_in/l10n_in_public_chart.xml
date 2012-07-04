@@ -118,7 +118,7 @@
             <field name="name">Tax Receivable</field>
             <field name="code">15400</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_receivable"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
         </record>		
@@ -294,7 +294,7 @@
         <field name="name">Sales Tax Payable</field>
         <field name="code">24710</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p24700"/>
     </record>
@@ -303,7 +303,7 @@
         <field name="name">VAT Payable</field>
         <field name="code">24720</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p24700"/>
     </record>
@@ -312,7 +312,7 @@
         <field name="name">Exice Duty Payable</field>
         <field name="code">24730</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p24700"/>
     </record>
@@ -321,7 +321,7 @@
         <field name="name">Service Tax Payable</field>
         <field name="code">24740</field>
         <field name="type">other</field>
-        <field name="user_type" ref="account.data_account_type_payable"/>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p24700"/>
     </record>
