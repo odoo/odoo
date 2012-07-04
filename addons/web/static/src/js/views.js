@@ -17,7 +17,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.bread_crumb = new instance.web.BreadCrumb(this);
+        this.breadcrumb = new instance.web.BreadCrumb(this);
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -28,6 +28,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
     },
     content_stop: function () {
+        // TODO: problem with bread crumb here. Check if those references are needed
         if (this.inner_viewmanager) {
             this.inner_viewmanager.destroy();
             this.inner_viewmanager = null;
@@ -124,6 +125,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
+        console.log("Action", action);
         return this[type](action, on_close);
     },
     null_action: function() {
@@ -155,7 +157,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         } else  {
             this.dialog_stop();
             //this.content_stop();
-            this.bread_crumb.hide_all();
+            this.breadcrumb.hide_all();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
@@ -165,8 +167,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
-            this.bread_crumb.add({
-                view_manager: this.inner_viewmanager,
+            this.breadcrumb.add({
+                widget: this.inner_viewmanager,
                 action: action,
                 title: action.name
             });
@@ -188,10 +190,16 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     ir_actions_client: function (action) {
-        this.content_stop();
+        //this.content_stop();
         this.dialog_stop();
+        this.breadcrumb.hide_all();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
+        this.breadcrumb.add({
+            widget: this.client_widget,
+            action: action,
+            title: action.name
+        });
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -233,10 +241,11 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
     },
     add: function(item) {
         this.items.push(item);
+        console.log("BreadCrumb: add ", item);
     },
     hide_all: function() {
         _.each(this.items, function(i) {
-            i.view_manager.$element.hide();
+            i.widget.$element.hide();
         });
     },
     get_title: function() {
@@ -251,14 +260,30 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         for (var i = index + 1; i < this.items.length; i += 1) {
             this.remove_item(i);
         }
-        this.items[index].view_manager.$element.show();
+        var item = this.items[index];
+        if (item) {
+            item.widget.$element.show();
+        } else {
+            console.warn("Breadcrumb: Can't select item at index", index);
+        }
     },
     remove_item: function(index) {
         var item = this.items.splice(index, 1)[0];
         if (item) {
-            item.view_manager.destroy();
+            item.widget.destroy();
+        } else {
+            console.warn("Breadcrumb: Can't remove item at index", index);
         }
-    }
+    },
+    clear: function() {
+        while (this.items.length) {
+            this.remove_item(0);
+        }
+    },
+    back: function() {
+        this.remove_item(this.items.length - 1);
+        this.select_item(this.items.length - 1);
+    },
 });
 
 instance.web.ViewManager =  instance.web.Widget.extend({
@@ -752,7 +777,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     display_title: function () {
         var am = this.getParent();
         if (am) {
-            return am.bread_crumb.get_title();
+            return am.breadcrumb.get_title();
         } else {
             return _.escape(this.action.name);
         }
