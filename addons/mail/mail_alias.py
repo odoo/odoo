@@ -111,15 +111,21 @@ class mail_alias(osv.Model):
             res.append((record['id'], domain_alias))
         return res
 
-    def create_unique_alias(self, cr, uid, values, sequence=1 ,context=None):
-        if sequence:
-            prob_alias = "%s%s"%(values['alias_name'], sequence)
-            search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
-            if search_alias:    
-                values = self.create_unique_alias(cr, uid, values, sequence+1, context)
-            else:
-                values.update({'alias_name': prob_alias})
-                return values
+    def _generate_alias(self, cr, uid, name, sequence=1 ,context=None):
+        new_name = "%s%s"%(name, sequence)
+        search_alias = self.search(cr, uid, [('alias_name', '=', new_name)])
+        if search_alias:    
+            self._generate_alias(cr, uid, name, sequence+1 ,context=None)
         else:
-            return values.update({'alias_name': "%s"%(values['alias_name'])})
+            return new_name
+
+    def create_unique_alias(self, cr, uid, vals, context=None):
+        model_pool = self.pool.get('ir.model')
+        values = {'alias_name': vals['alias_name']}
+        if self.search(cr, uid, [('alias_name', '=', vals['alias_name'])]):
+            values.update({'alias_name': self._generate_alias(cr, uid, vals['alias_name'], sequence=1, context=context)})
+        model_sids = model_pool.search(cr, uid, [('model', '=', vals['alias_model_id'])])
+        values.update({'alias_model_id': model_sids[0]})
+        return self.create(cr, uid, values, context=context)
+
 

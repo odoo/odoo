@@ -72,14 +72,12 @@ class res_users(osv.osv):
     
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        res_id = model_pool.get_object( cr, uid, "mail", "model_res_users")
-        data.update({'alias_name': data.get('login'),
-                     'alias_model_id': res_id.id})
+        alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': data['name'], 'alias_model_id': self._name}, context=context)
+        data.update({'alias_id': alias_id})
         user_id = super(res_users, self).create(cr, uid, data, context=context)
+        alias_pool.write(cr, uid, [alias_id], {"alias_force_thread_id": user_id}, context)
         user = self.browse(cr, uid, user_id, context=context)
-        alias_pool.write(cr, uid, [user.alias_id.id], {"alias_force_thread_id": user.id}, context)
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
         # create a welcome message to broadcast
