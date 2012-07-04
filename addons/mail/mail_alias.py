@@ -95,7 +95,7 @@ class mail_alias(osv.Model):
                 dict(eval(record.alias_defaults))
             except:
                 return False
-            return True
+        return True
 
     _constraints = [
         (_check_alias_defaults, "Default Values are in wrong format.\nIt must be in python dictionary format e.g.{'field_name': 'value' or {}}", ['alias_defaults']),
@@ -114,6 +114,10 @@ class mail_alias(osv.Model):
         return res
 
     def _generate_alias(self, cr, uid, name, sequence=1 ,context=None):
+        """
+        If alias is existing then this method will create a new unique alias name
+        by appending n sequence integer number.
+        """
         new_name = "%s%s"%(name, sequence)
         search_alias = self.search(cr, uid, [('alias_name', '=', new_name)])
         if search_alias:    
@@ -122,14 +126,21 @@ class mail_alias(osv.Model):
             return new_name
 
     def create_unique_alias(self, cr, uid, vals, context=None):
+        """
+        Methods accepts the vals param in dict format and create new alias record
+        @vals : dict accept {alias_name: '', alias_model_id: '',...}
+        @return int: New alias_id
+        """
         model_pool = self.pool.get('ir.model')
-        values = {}
+        values = {'alias_name': vals['alias_name']}
+        #Find for the mail alias exist or not if exit then get new mail address.
         if self.search(cr, uid, [('alias_name', '=', vals['alias_name'])]):
             values.update({'alias_name': self._generate_alias(cr, uid, vals['alias_name'], sequence=1, context=context)})
+        alias_name = re.sub(r'[^a-zA-Z0-9:]', '_', values['alias_name']).lower()
+        values.update({'alias_name': alias_name})
+        #Set the model fo rhte mail alias
         model_sids = model_pool.search(cr, uid, [('model', '=', vals['alias_model_id'])])
         values.update({'alias_model_id': model_sids[0]})
-        alias_name = re.sub(r'[^a-zA-Z0-9:]', '_', vals['alias_name']).lower()
-        values.update({'alias_name': values['alias_name']})
         return self.create(cr, uid, values, context=context)
 
 
