@@ -87,7 +87,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <label for="company_id" class="oe_edit_only"/>
+                            <label for="company_id" class="oe_edit_only" string="Default Company"/>
                             <h2><field name="company_id" context="{'user_preference': 0}"/></h2>
                         </div>
                         <group>
@@ -125,7 +125,7 @@
                             </page>
                             <page string="Allowed Companies" groups="base.group_multi_company">
                                 <group>
-                                    <field name="company_ids" widget="many2many_tags" string="Default Company"/>
+                                    <field name="company_ids" widget="many2many_tags" string="Allowed Company"/>
                                 </group>
                             </page>
                         </notebook>
@@ -205,7 +205,7 @@
                             <field name="name" readonly="1" class="oe_edit_only"/>
                             (<field name="login" readonly="1" class="oe_edit_only"/>)
                         </h1>
-                        <label for="company_id" class="oe_edit_only"/>
+                        <label for="company_id" class="oe_edit_only" string="Default Company"/>
                         <h2>
                             <field name="company_id" widget="selection" readonly="0"
                                 groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>

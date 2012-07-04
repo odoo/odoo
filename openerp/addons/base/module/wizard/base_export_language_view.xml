@@ -10,12 +10,12 @@
                 <form string="Export Translations" version="7.0">
                     <field invisible="1" name="state"/>
                     <header states="choose">
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="_Close" type="object"/>
-                        <button icon="gtk-ok" name="act_getfile" string="_Export" type="object"/>
+                        <button icon="gtk-ok" name="act_getfile" string="_Export" type="object" class="oe_highlight"/> or 
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="_Close" type="object" class="oe_link"/>
                     </header>
                     <sheet>
                         <group colspan="4">
-                            <group states="choose" string="Export Translation">
+                            <group states="choose">
                                 <field name="lang"/>
                                 <field name="format" required="1"/>
                                 <field height="200" name="modules" nolabel="1" colspan="4"/>
