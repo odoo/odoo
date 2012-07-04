@@ -71,5 +71,5 @@
       self.button_cancel(cr, uid, [ref("account_bank_statement_0")])
       assert False, "An exception should have been raised, the journal should not let us cancel moves!" 
     except Exception:
-      # exception was raised as expected, as the journal does notallow cancelling moves
+      # exception was raised as expected, as the journal does not allow cancelling moves
       pass
