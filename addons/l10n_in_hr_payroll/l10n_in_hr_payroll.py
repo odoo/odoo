@@ -155,7 +155,7 @@ class payroll_advice(osv.osv):
                 advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
             slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
-                if not slip.employee_id.bank_account_id:
+                if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
                 line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
