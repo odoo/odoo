@@ -1047,13 +1047,15 @@ class account_period(osv.osv):
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
             args.append(('company_id', '=', company_id))
-        ids = self.search(cr, uid, args, context=context)
-        if not ids:
+        result = []
+        if context.get('account_period_prefer_normal'):
+            # look for non-special periods first, and fallback to all if no result is found
+            result = self.search(cr, uid, args + [('special', '=', False)], context=context)
+        if not result:
+            result = self.search(cr, uid, args, context=context)
+        if not result:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
-        for period in self.browse(cr, uid, ids, context=context):
-            if period.date_start == period.date_stop:
-                ids.remove(period.id)
-        return ids
+        return result
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
@@ -1226,10 +1228,9 @@ class account_move(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
-        if periods:
-            return periods[0]
-        return False
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
+        return period_ids[0]
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
