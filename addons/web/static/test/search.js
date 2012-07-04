@@ -391,10 +391,7 @@ $(document).ready(function () {
             }
         });
         view.appendTo($('#qunit-fixture'))
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
             .done(function () {
-                stop();
                 view.complete_global_search({term: "dum"}, function (completions) {
                     start();
                     equal(completions.length, 1, "should have a single completion");
