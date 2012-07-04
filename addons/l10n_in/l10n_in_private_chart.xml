@@ -133,22 +133,13 @@
             <field name="note">Amount of equipment's cost that has been allocated to Depreciation Expense since the time the equipment was acquired.</field>
         </record>			
 
-        <record model="account.account.template" id="a190">
+        <record model="account.account.template" id="a189">
             <field name="name">Tax Receivable</field>
-            <field name="code">190</field>
-            <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
-            <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="a10"/>
-        </record>
-		
-        <record model="account.account.template" id="a191">
-            <field name="name">Purchase Tax</field>
-            <field name="code">191</field>
-            <field name="type">receivable</field>
+            <field name="code">189</field>
+            <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="a190"/>
+            <field name="parent_id" ref="a10"/>
         </record>
 			
 				
@@ -521,7 +512,7 @@
         <!-- Chart template -->
 		
         <record id="indian_chart_template_private" model="account.chart.template">
-            <field name="name">India - Chart of Accounts for Private/Partnership Ltd.</field>
+            <field name="name">India - Chart of Accounts for Private Ltd/Partnership</field>
             <field name="account_root_id" ref="a0"/>
             <field name="tax_code_root_id" ref="vat_code_tax"/>
             <field name="bank_account_view_id" ref="a101"/>
