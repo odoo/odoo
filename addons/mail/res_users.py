@@ -40,7 +40,9 @@ class res_users(osv.osv):
                         ('none', 'Never')
                         ], 'Receive Feeds by Email', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
+                                    help="This Unique Mail Box Alias of the User allows to manage the Seamless email communication between Mail Box and OpenERP," 
+                                         "This Alias MailBox manage the Users email communication."),
     }
     
     _defaults = {
@@ -73,7 +75,7 @@ class res_users(osv.osv):
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
         alias_pool = self.pool.get('mail.alias')
-        alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': data['name'], 'alias_model_id': self._name}, context=context)
+        alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': data['login'], 'alias_model_id': self._name}, context=context)
         data.update({'alias_id': alias_id})
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         alias_pool.write(cr, uid, [alias_id], {"alias_force_thread_id": user_id}, context)
@@ -89,7 +91,7 @@ class res_users(osv.osv):
     
     def write(self, cr, uid, ids, vals, context=None):
         # if login of user have been changed then change alias of user also.
-        if 'login' in vals.keys():
+        if vals.get('login'):
             for user in self.browse(cr, uid, ids, context=context):
                 self.pool.get('mail.alias').write(cr, uid, [user.alias_id.id], {'alias_name': vals['login']}, context=context)
         return super(res_users, self).write(cr, uid, ids, vals, context=context)

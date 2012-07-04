@@ -552,7 +552,9 @@ class hr_job(osv.osv):
     _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
+                                    help="This Unique Mail Box Alias of the Job allows to manage the Seamless email communication between Mail Box and OpenERP,"
+                                         "This Alias MailBox also create and Manage the new Email applicant for this job and also manage the existing applicant email communication."),
     }
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -568,17 +570,13 @@ class hr_job(osv.osv):
         return res
     
     def create(self, cr, uid, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        res_id = model_pool.get_object( cr, uid, "hr_recruitment", "model_hr_applicant")
-        vals.update({'alias_name': "job",
-                     'alias_model_id': res_id.id})
-        alias_pool.create_unique_alias(cr, uid, vals, context=context)
+        if not vals.get('alias_id'):
+            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "job."+vals['name'], 'alias_model_id': self._name}, context=context)
+            vals.update({'alias_id': alias_id})
         res = super( hr_job, self).create(cr, uid, vals, context)
-        record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']], {"alias_defaults": {'job_id': record['id']}}, context)
+        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
         return res
-
     
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:

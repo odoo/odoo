@@ -582,7 +582,7 @@ class project(osv.osv):
     _inherit = "project.project"
 
     def _get_alias_model(self, cr, uid, context=None):
-        return [('model_project_task', "Tasks"),("model_project_issue", "Issue")]
+        return [('project.task', "Tasks"),("project.issue", "Issue")]
         
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
@@ -595,7 +595,8 @@ class project(osv.osv):
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
         'issue_count': fields.function(_issue_count, type='integer'),
-        'alias_model': fields.selection(_get_alias_model, "Alias Model"),
+        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True, 
+                                        help="Allows to select Model for the Mail alias .Based on selected model Task/issue will created for fetched mails or it will maintain communication for related Task/Issue."),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -608,6 +609,7 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
+    
 project()
 
 class account_analytic_account(osv.osv):
