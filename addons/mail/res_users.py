@@ -73,7 +73,7 @@ class res_users(osv.osv):
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
         alias_pool = self.pool.get('mail.alias')
-        alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': data['name'], 'alias_model_id': self._name}, context=context)
+        alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': data['login'], 'alias_model_id': self._name}, context=context)
         data.update({'alias_id': alias_id})
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         alias_pool.write(cr, uid, [alias_id], {"alias_force_thread_id": user_id}, context)
