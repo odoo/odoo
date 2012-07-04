@@ -25,14 +25,16 @@
                                 <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
                             </group>
                         </group>
-                        <group string="External Accesses">
-                            <field name="module_share"/>
-                            <field name="module_portal"/>
-                        </group>
-                        <group string="Others">
-                            <label for="id" string="Outgoing Mail Servers"/>
-                            <button type="action" name="%(base.action_ir_mail_server_list)d"
+                        <group>
+                            <group string="External Accesses">
+                                <field name="module_share"/>
+                                <field name="module_portal"/>
+                            </group>
+                            <group string="Others">
+                                <label for="id" string="Outgoing Mail Servers"/>
+                                <button type="action" name="%(base.action_ir_mail_server_list)d"
                                 string="Configure" icon="gtk-execute"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -63,9 +65,11 @@
                     <sheet>
                         <field name="module_crm" invisible="1"/>
                         <group name="config_sale"/>
-                        <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
-                            <field name="module_plugin_thunderbird"/>
-                            <field name="module_plugin_outlook"/>
+                        <group name="config_fetchmail_main">
+                            <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
+                                <field name="module_plugin_thunderbird"/>
+                                <field name="module_plugin_outlook"/>
+                            </group>
                         </group>
                         <group name="config_crm"/>
                     </sheet>

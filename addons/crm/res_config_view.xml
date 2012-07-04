@@ -16,20 +16,21 @@
                             attrs="{'invisible': [('fetchmail_lead','=',False)]}"/>
                     </div>
                 </group>
-
-                <group name="config_crm" position="after">
+                <group name="config_fetchmail_main" version="7.0" position="inside">
                     <group string="Import and Synchronize Data from an Other Application">
                         <field name="module_import_sugarcrm"/>
                         <field name="module_crm_caldav"/>
                         <field name="module_import_google"/>
                     </group>
-
-                    <group string="Documents and Wiki">
-                        <field name="module_wiki_sale_faq"/>
-                    </group>
-
-                    <group string="Customer Form">
-                        <field name="module_google_map"/>
+                </group>
+                <group name="config_crm" position="inside">
+                    <group>
+                        <group string="Documents and Wiki">
+                            <field name="module_wiki_sale_faq"/>
+                        </group>
+                        <group string="Customer Form">
+                            <field name="module_google_map"/>
+                        </group>
                     </group>
                 </group>
             </field>
