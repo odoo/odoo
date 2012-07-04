@@ -165,7 +165,7 @@ class project(osv.osv):
             res[task.project_id.id] += 1
         return res
     def _get_alias_model(self, cr, uid, context=None):
-        return [('model_project_task', "Tasks")]
+        return [('project.task', "Tasks")]
 
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
         '''
@@ -239,7 +239,7 @@ class project(osv.osv):
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
-        'alias_model':'model_project_task',
+        'alias_model':'project.task',
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -523,7 +523,7 @@ def Project():
     def create(self, cr, uid, vals, context=None):
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "project."+vals['name'], 'alias_model_id': self._name}, context=context)
+            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "project."+vals['name'], 'alias_model_id': vals.get('alias_model','project.task')}, context=context)
             vals.update({'alias_id': alias_id})
         res = super( project, self).create(cr, uid, vals, context)
         record = self.read(cr, uid, res, context)
@@ -551,15 +551,14 @@ def Project():
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
+        model_pool = self.pool.get('ir.model')
         alias_pool = self.pool.get('mail.alias')
         # if alias_model have been changed then change alias_model_id of alias also.
         if vals.get('alias_model'):
-            model, res_id = model_pool.get_object_reference( cr, uid, "project", vals.get('alias_model','model_project_task'))
+            model_ids = model_pool.search(cr, uid, [('model', '=', vals.get('alias_model','project.task'))])
             alias_id = self.browse(cr, uid, ids[0], context).alias_id
-            alias_pool.write(cr, uid, [alias_id.id], {'alias_model_id': res_id}, context=context)
+            alias_pool.write(cr, uid, [alias_id.id], {'alias_model_id': model_ids[0]}, context=context)
         return super(project, self).write(cr, uid, ids, vals, context=context)
-
 
 class task(base_stage, osv.osv):
     _name = "project.task"

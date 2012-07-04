@@ -56,7 +56,7 @@
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <field name="privacy_visibility"/>
                             <field name="alias_id" required="0" domain="[('alias_model_id','in',('project.task','project.issue'))]"/>
-                            <field name="alias_model"/>
+                            <field name="alias_model" invisible="1"/>
                         </group>
                         <group>
                             <table>

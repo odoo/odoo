@@ -582,7 +582,7 @@ class project(osv.osv):
     _inherit = "project.project"
 
     def _get_alias_model(self, cr, uid, context=None):
-        return [('model_project_task', "Tasks"),("model_project_issue", "Issue")]
+        return [('project.task', "Tasks"),("project.issue", "Issue")]
         
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
@@ -608,6 +608,7 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
+    
 project()
 
 class account_analytic_account(osv.osv):
