@@ -815,6 +815,7 @@ openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
     },
     on_attachments_loaded: function(attachments) {
         this.attachments = attachments;
+        this.delete_help = _t("Delete the attachment")
         this.$div.html(QWeb.render('FormView.sidebar.attachments', this));
         this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
         this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
