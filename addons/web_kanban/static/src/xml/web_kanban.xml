@@ -13,7 +13,7 @@
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <t t-if="widget._is_create_enabled()">
-            <button type="button" class="oe_button oe_kanban_button_new oe_form_button_hi">
+            <button type="button" class="oe_button oe_kanban_button_new oe_highlight">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
         </t>
@@ -25,7 +25,7 @@
             <div class="oe_kanban_header">
                 <div class="oe_kanban_fold_icon"></div>
                 <t t-if="widget.view._is_quick_create_enabled()">
-                    <div class="oe_kanban_add"></div>
+                    <div class="oe_kanban_add" t-att-title="_t('Quick Create')"></div>
                 </t>
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">

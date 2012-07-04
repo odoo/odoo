@@ -352,6 +352,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             e.stopImmediatePropagation();
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
+        instance.web.bus.on('click', this, function(ev) {
+            if ($(ev.target).parents('.oe_searchview').length === 0) {
+                self.$element.removeClass('oe_searchview_open_drawer');
+            }
+        });
         // Focus last input if the view itself is clicked (empty section of
         // facets element)
         this.$element.on('click', function (e) {
@@ -635,12 +640,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         (new instance.web.search.CustomFilters(this));
         // add Advanced to this.inputs
         (new instance.web.search.Advanced(this));
-        (new instance.web.search.AddToDashboard(this));
 
         // build drawer
         var drawer_started = $.when.apply(
             null, _(this.select_for_drawer()).invoke(
                 'appendTo', this.$element.find('.oe_searchview_drawer')));
+        
+        new instance.web.search.AddToDashboard(this).appendTo($('.oe_searchview_drawer', this.$element));
 
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
@@ -1188,7 +1194,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
         var self = this;
         // A field needs a context to send when active
         var context = this.attrs.context;
-        if (!context || !facet.values.length) {
+        if (_.isEmpty(context) || !facet.values.length) {
             return;
         }
         var contexts = facet.values.map(function (facetValue) {
@@ -1484,6 +1490,15 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             return [[name, '=', facetValue.get('value')]];
         }
         return this._super(name, operator, facetValue);
+    },
+    get_context: function (facet) {
+        var values = facet.values;
+        if (_.isEmpty(this.attrs.context) && values.length === 1) {
+            var c = {};
+            c['default_' + this.attrs.name] = values.at(0).get('value');
+            return c;
+        }
+        return this._super(facet);
     }
 });
 
@@ -1638,7 +1653,7 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         }));
     }
 });
-instance.web.search.AddToDashboard = instance.web.search.Input.extend({
+instance.web.search.AddToDashboard = instance.web.Widget.extend({
     template: 'SearchView.addtodashboard',
     _in_drawer: true,
     start: function () {
@@ -1646,44 +1661,18 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         this.data_loaded = $.Deferred();
         this.dashboard_data =[];
         this.$element
-        .on('click', 'h4', this.proxy('show_option'))
-        .on('submit', 'form', function (e) {e.preventDefault(); self.add_dashboard();});
+            .on('click', 'h4', this.proxy('show_option'))
+            .on('submit', 'form', function (e) {
+                e.preventDefault();
+                self.add_dashboard();
+            });
         return $.when(this.load_data(),this.data_loaded).pipe(this.proxy("render_data"));
     },
     load_data:function(){
-        // get from database if dashboard position change than also works(from Reporting to else).
-        /*var self = this,
-        ir_actions_act_window = new instance.web.Model('ir.actions.act_window',{},[['res_model','=',"board.board"],['view_id','!=',false]])
-                                    .query(['name','id']),
-        map_data =  function(){
-            var ir_actions_values = arguments[0],ir_values = arguments[1];
-            _(ir_values).each(function(res){
-                var get_name = _.detect(ir_actions_values,function(name){ return name.id == parseInt((res.value).split(",")[1]);});
-                self.dashboard_data.push({"res_id":res.res_id,"name":get_name.name})
-            });
-            self.data_loaded.resolve();
-        },
-        make_domain = function(result){
-            var domain = [];
-            _(result).map(function(value,key){
-                domain.push(["value","=","ir.actions.act_window,"+value.id]);
-                ((result.length)- 1 !== key)?domain.unshift("|"):false;
-            })
-            return domain;
-        };
-        return ir_actions_act_window._execute().then(function(ir_actions_values){
-            if(!ir_actions_values.length) {self.data_loaded.resolve();return;}
-            var ir_value = new instance.web.Model('ir.values',{},make_domain(ir_actions_values)).query(['res_id','value']);
-            ir_value._execute().done(function(ir_values){
-                map_data(ir_actions_values,ir_values);
-            })
-        });*/
-       
-       //===============================get from instance.webclient.menu (with less rpc call)
-      var self = this,dashbaord_menu = instance.webclient.menu.data.data.children,
-        ir_model_data = new instance.web.Model('ir.model.data',{},[['name','=','menu_reporting_dashboard']]).query(['res_id']),
-        map_data = function(result){
-            _.detect(dashbaord_menu,function(dash){
+        var self = this,dashboard_menu = instance.webclient.menu.data.data.children;
+        var ir_model_data = new instance.web.Model('ir.model.data',{},[['name','=','menu_reporting_dashboard']]).query(['res_id']);
+        var map_data = function(result){
+            _.detect(dashboard_menu, function(dash){
                 var id = _.pluck(dash.children, "id"),indexof = _.indexOf(id, result.res_id);
                 if(indexof !== -1){
                     self.dashboard_data = dash.children[indexof].children
@@ -1701,8 +1690,10 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         this.$element.find("input").before(selection)
     },
     add_dashboard:function(){
-        var self = this,getParent = this.getParent(),view_parent = this.view.getParent();
-        if(!view_parent.action || !this.$element.find("select").val())
+        var self = this;
+        var getParent = this.getParent();
+        var view_parent = this.getParent().getParent();
+        if (! view_parent.action || ! this.$element.find("select").val())
             return this.do_warn("Can't find dashboard action");
         data = getParent.build_search_data(),
         context = new instance.web.CompoundContext(getParent.dataset.get_context() || []),
@@ -1732,6 +1723,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         this.$element.find("input").val(this.getParent().fields_view.name || "" );
     }
 });
+
 instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',
     _in_drawer: true,

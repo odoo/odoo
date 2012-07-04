@@ -24,6 +24,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // if true, the view can't be editable, ignoring the view's and the context's
         // instructions
         'read_only': false,
+        // if true, the 'Import', 'Export', etc... buttons will be shown
+        'import_enabled': true,
     },
     /**
      * Core class for list-type displays.
@@ -341,6 +343,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                                 self._limit = (isNaN(val) ? null : val);
                                 self.page = 0;
                                 self.reload_content();
+                            }).blur(function() {
+                                $(this).trigger('change');
                             })
                             .val(self._limit || 'NaN');
                     });
@@ -373,11 +377,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         var total = dataset.size();
-        this.$pager.toggleClass('oe_list_pager_single_page', (total <= this.limit()));
+        var limit = this.limit() || total;
+        this.$pager.toggleClass('oe_list_pager_single_page', (total <= limit));
         var spager = '-';
         if (total) {
-            var range_start = this.page * this.limit() + 1;
-            var range_stop = range_start - 1 + this.limit();
+            var range_start = this.page * limit + 1;
+            var range_stop = range_start - 1 + limit;
             if (range_stop > total) {
                 range_stop = total;
             }
@@ -1323,6 +1328,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
+                if (! group_column) {
+                    throw new Error(_.str.sprintf(
+                        _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
+                        group.grouped_on));
+                }
                 try {
                     $group_column.html(instance.web.format_cell(
                         row_data, group_column, {
