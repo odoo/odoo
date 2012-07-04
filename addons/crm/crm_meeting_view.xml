@@ -39,21 +39,29 @@
         <field name="key2">client_action_multi</field>
     </record>
 
-    <!-- CRM Meetings Categories Form View -->
+    <!-- CRM Meetings Types Form View -->
+
+    <record id="crm_meeting_type_tree" model="ir.ui.view">
+        <field name="name">Meeting Types Tree</field>
+        <field name="model">crm.meeting.type</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Meeting Types" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
 
     <record id="crm_meeting_categ_action" model="ir.actions.act_window">
-        <field name="name">Meeting Categories</field>
-        <field name="res_model">crm.case.categ</field>
+        <field name="name">Meeting Types</field>
+        <field name="res_model">crm.meeting.type</field>
         <field name="view_type">form</field>
-        <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'crm.meeting')]</field>
-        <field name="context" eval="{'object_id': ref('model_crm_meeting')}"/>
+        <field name="view_id" ref="crm_meeting_type_tree"/>
         <field name="help">Create different meeting categories to better organize and classify your meetings.</field>
     </record>
 
-     <menuitem action="crm_meeting_categ_action"
-        groups="base.group_no_one"
-        id="menu_crm_case_meeting-act" parent="base.menu_calendar_configuration" sequence="1"/>
+    <menuitem id="menu_crm_case_meeting-act" parent="base.menu_calendar_configuration" sequence="1"
+        action="crm_meeting_categ_action" groups="base.group_no_one"/>
 
     <!-- CRM Meetings Form View -->
 
@@ -122,9 +130,7 @@
                         <field name="email_from"/>
                     </group>
                     <group colspan="2">
-                        <field name="categ_id" widget="selection"
-                            string="Meeting Type"
-                            domain="[('object_id.model', '=', 'crm.meeting')]" />
+                        <field name="categ_id" widget="selection"/>
                         <field name="rrule" invisible="1" readonly="1"/>
                         <field name="recurrent_id" invisible="1"/>
                         <field name="recurrent_uid" invisible="1"/>

@@ -22,7 +22,7 @@
 {
     "name": "Calendar Layer",
     "version": "1.0",
-    "depends": ["base", "mail"],
+    "depends": ["base", "base_status", "mail"],
     'description': """
 This is a full-featured calendar system.
 ========================================
