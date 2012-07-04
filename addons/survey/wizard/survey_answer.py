@@ -147,19 +147,18 @@ class survey_question_wiz(osv.osv_memory):
                 if flag:
                     pag_rec = page_obj.browse(cr, uid, p_id, context=context)
                     xml_form = etree.Element('form', {'string': tools.ustr(sur_rec.title)})
-                    xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4'})
+                    xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
                     xml_header_title = etree.SubElement(xml_header, 'group', {'col': '6', 'colspan': '6'})
 
                     #############  PAGE HEADER : START ###################
 
                     etree.SubElement(xml_header_title, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' ,'class' : 'oe_survey_title'})
-                    xml_header_group = etree.SubElement(xml_header_title, 'group', {'col': '4', 'colspan': '2'})
+                    xml_header_group = etree.SubElement(xml_header_title, 'group', {'col': '4', 'colspan': '1'})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '8', 'colspan': '4'})
 
-                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right"})
                     etree.SubElement(xml_header_group, 'button', {'special': "cancel",'string':"Exit", 'class':"oe_right"})
                     if pre_button:
-                        etree.SubElement(xml_header_group, 'button', {'colspan':"1",'name':"action_previous",'string':"Previous",'type':"object", 'class':"oe_right"})
+                        etree.SubElement(xml_header_group, 'button', {'name':"action_previous",'string':"Previous",'type':"object", 'class':"oe_right"})
                     but_string = "Next"
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
@@ -171,7 +170,7 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_header_group, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right"})
                     else:
                         etree.SubElement(xml_header_group, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
-                    #etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right oe_survey_title_page"})
+                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right oe_survey_title_page"})
 
                     #############  PAGE HEADER : END ###################
 
