@@ -23,6 +23,7 @@ import time
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
+from datetime import datetime, timedelta
 
 class event_type(osv.osv):
     """ Event Type """
@@ -336,8 +337,9 @@ class event_registration(osv.osv):
         # Fields for address, due to separation from event.registration and res.partner
         'email': fields.char('Email', size=240),
         'phone': fields.char('Phone', size=64),
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=128, select=True),
         'active': fields.boolean('Active'),
+        'duration': fields.float('Duration'),
     }
 
     _defaults = {
@@ -346,7 +348,6 @@ class event_registration(osv.osv):
         'active': True,
     }
     _order = 'name, create_date desc'
-
 
     def do_draft(self, cr, uid, ids, context=None):
         self.do_draft_send_note(cr, uid, ids, context=context)
@@ -432,17 +433,23 @@ class event_registration(osv.osv):
     def onchange_event(self, cr, uid, ids, event_id, context=None):
         """This function returns value of Product Name, Unit Price based on Event.
         """
+        value= {}
         if context is None:
             context = {}
         if not event_id:
             return {}
         event_obj = self.pool.get('event.event')
         data_event =  event_obj.browse(cr, uid, event_id, context=context)
-        return {'value': 
-                    {'event_begin_date': data_event.date_begin,
+        start = datetime.strptime(data_event.date_begin, "%Y-%m-%d %H:%M:%S")
+        end = datetime.strptime(data_event.date_end, "%Y-%m-%d %H:%M:%S")
+        diff = end - start
+        duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
+        value['duration'] = round(duration, 2)
+        return {'value': {'event_begin_date': data_event.date_begin,
                      'event_end_date': data_event.date_end,
                      'company_id': data_event.company_id and data_event.company_id.id or False,
-                    }
+                     'duration': value['duration'],
+               }
                }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):

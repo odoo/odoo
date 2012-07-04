@@ -386,18 +386,10 @@
                    <label for="event_id" class="oe_edit_only"/>
                    <h1>
                             <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" nolabel="1" class="oe_inline"/>
-                            <label string="(" attrs="{'invisible': ['|',('event_begin_date', '=', ''),('event_id', '=', '')]}" class="oe_inline"/>
-                            <field nolabel="1" name="event_begin_date" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-                            <label string="-" attrs="{'invisible': ['|',('event_begin_date', '=', ''), ('event_id', '=', '')]}" class="oe_inline"/>
-                            <field nolabel="1" name="event_end_date" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline" />
-                            <label string=")" attrs="{'invisible': ['|',('event_begin_date', '=', ''),('event_id', '=', '')]}" class="oe_inline"/>
+                            <label string="(" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
+                            <field name="duration" widget="float_time" attrs="{'invisible': [('event_id', '=', '')]}"/>
+                            <label string=")" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
 	                </h1>   
-		                   
-                    <group colspan="2" col="2">
-                        <h2>
-                            <field name="nb_register" class="oe_inline"/>  Participants
-                        </h2>
-                    </group>
                     <group colspan="4" col="4">
                         <group colspan="2">
                             <field name="name" invisible="1"/>
