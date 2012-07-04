@@ -55,11 +55,16 @@ openerp.testing = (function () {
             var connection = instance.connection;
             connection.responses = responses || {};
             connection.rpc_function = function (url, payload) {
-                if (!(url.url in this.responses)) {
+                var fn = this.responses[url.url + ':' + payload.params.method]
+                      || this.responses[url.url];
+
+                if (!fn) {
                     return $.Deferred().reject({}, 'failed',
-                        _.str.sprintf("Url %s not found in mock responses", url.url)).promise();
+                        _.str.sprintf("Url %s not found in mock responses, with arguments %s",
+                                      url.url, JSON.stringify(payload.params))
+                    ).promise();
                 }
-                return $.when(this.responses[url.url](payload));
+                return $.when(fn(payload));
             };
         },
         /**

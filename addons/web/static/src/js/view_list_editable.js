@@ -232,7 +232,9 @@ openerp.web.list_editable = function (instance) {
             event = event || {};
             this.trigger(event_name + ':before', event);
             if (event.cancel) {
-                return $.Deferred().reject();
+                return $.Deferred().reject({
+                    message: _.str.sprintf("Event %s:before cancelled",
+                                           event_name)});
             }
             return $.when(action.apply(this.editor, args || [])).then(function () {
                 self.trigger.apply(self, [event_name + ':after']
@@ -424,7 +426,8 @@ openerp.web.list_editable = function (instance) {
             var record = this.record;
             this.record = null;
             if (!this.form.can_be_discarded()) {
-                return $.Deferred().reject().promise();
+                return $.Deferred().reject({
+                    message: "The form's data can not be discarded"}).promise();
             }
             this.form.do_hide();
             return $.when(record);
