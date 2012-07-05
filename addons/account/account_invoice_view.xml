@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
                 <form string="Invoice Line" version="7.0">
                     <group>
-                    	<group>
+                        <group>
                           <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                           <field name="name"/>
                           <label string="Quantity" for="quantity" align="1.0"/>
@@ -190,7 +190,7 @@
                           <field name="fiscal_position" widget="selection"/>
                           <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"
                                  groups="account.group_account_user"/>
-                         <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
+                          <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                  name="account_id" groups="account.group_account_user"/>
                           <field name="currency_id"/>
                           <field name="type" invisible="1"/>
@@ -227,10 +227,10 @@
                                             <field name="factor_tax" invisible="True"/>
                                         </tree>
                                     </field>
-                                    <button name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                 </div>
                                 <group class="oe_subtotal_footer">
                                     <field name="amount_untaxed"/>
+                                    <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                     <field name="residual" style="margin-top: 10px"/>
@@ -363,6 +363,7 @@
                                 </div>
                                 <group class="oe_subtotal_footer">
                                     <field name="amount_untaxed"/>
+                                     <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
 

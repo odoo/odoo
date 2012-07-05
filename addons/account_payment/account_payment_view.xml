@@ -334,9 +334,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='import_buttons']" position="inside">
+                <xpath expr="//button[@string='Import Invoices']" position="before">
                     <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import Payment Lines" type="action" icon="gtk-execute"/>
-                </xpath>      
+                </xpath>
             </field>
         </record>
 

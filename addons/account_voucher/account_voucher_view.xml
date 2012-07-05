@@ -85,23 +85,22 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                             <group>
-                             <group>
-                                <field name="narration" colspan="2" nolabel="1"  placeholder="Add an internal note"/>
-                             </group>
-                               <group attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}" class="oe_subtotal_footer oe_right">
+                            <group>
+                               <group>
+                                  <field name="narration" colspan="2" nolabel="1"  placeholder="Add an internal note"/>
+                               </group>
+                               <group class="oe_subtotal_footer oe_right" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}" >
                                    <group>
-                                     <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
+                                       <label for="tax_id"/>
+                                       <field name="tax_id" nolabel="1" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
+                                       <button type="object" colspan="2" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                    </group>
                                    <group>
-                                   <field name="amount_untaxed" readonly="1"/>
-                                     <field name="tax_amount" readonly="1"/>
-                                     <field name="amount" class="oe_subtotal_footer_separator" readonly="1"/>
+                                            <field name="amount_untaxed"/>
+                                            <field name="tax_amount" readonly="1" />
+                                            <field name="amount"  class="oe_subtotal_footer_separator" readonly="1"/>
                                    </group>
-                              </group>
-                              <group>
-                                   <button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                              </group>
+                               </group>
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
