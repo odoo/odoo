@@ -9,12 +9,10 @@
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_reporting_timesheet" name="Reports"
+            parent="menu_hr_reporting" sequence="6" />
 
-        <!--
-        ==========
-        Employee
-        ==========
-        -->
+        <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
@@ -42,7 +40,7 @@
                                 <group string="General">
                                     <field name="user_id" on_change="onchange_user(user_id)"/>
                                     <field name="active"/>
-                                    <field name="parent_id" />
+                                    <field name="parent_id"/>
                                 </group>
                                 <group groups="base.group_hr_user" string="Social IDs">
                                     <field name="identification_id"/>
@@ -57,15 +55,15 @@
                                 </group>
                                 <group string="Contact Information">
                                     <field name="address_home_id"/>
-                                    <field name="address_id" on_change="onchange_address_id(address_id)" />
+                                    <field name="address_id" on_change="onchange_address_id(address_id)"/>
                                     <field name="work_phone"/>
                                     <field name="mobile_phone"/>
-                                    <field name="work_email" widget="email" />
+                                    <field name="work_email" widget="email"/>
                                     <field name="work_location"/>
                                 </group>
                                 <group string="Job Information">
                                     <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                                    <field name="coach_id" />
+                                    <field name="coach_id"/>
                                 </group>
                             </group>
                         </page>
@@ -94,7 +92,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
-                    <field name="coach_id" invisible="1" />
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -242,7 +240,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="coach_id" invisible="1" />
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -279,8 +277,8 @@
             <field name="arch" type="xml">
                 <form string="Employee Category" version="7.0">
                     <group>
-                        <field name="name" />
-                        <field name="parent_id" />
+                        <field name="name"/>
+                        <field name="parent_id"/>
                     </group>
                 </form>
             </field>
@@ -354,15 +352,17 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
-                        <button name="job_open" string="Recruitment Done" states="recruit" type="object"/>
+                        <span groups="base.group_user">
+                            <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight"/>
+                            <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight"/>
+                        </span>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
-                                <field name="name" />
-                                <field name="department_id" />
+                                <field name="name"/>
+                                <field name="department_id"/>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
                             <group>
@@ -378,7 +378,7 @@
                                 <label for="requirements"/>
                                 <field name="requirements"/>
                             </page>
-                            <page string="Employees">
+                            <page string="Employees" groups="base.group_user">
                                 <field name="employee_ids" widget="many2many" mode="tree,form"/>
                             </page>
                         </notebook>
@@ -393,8 +393,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
-                    <field name="name" />
-                    <field name="department_id" />
+                    <field name="name"/>
+                    <field name="department_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
@@ -438,8 +438,8 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <group col="4">
-                        <field name="name" />
-                        <field name="department_id" />
+                        <field name="name"/>
+                        <field name="department_id"/>
                     </group>
                     <label for="description"/>
                     <field name="description"/>
