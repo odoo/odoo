@@ -25,20 +25,32 @@
     'category':'Social Network',
     "sequence": 2,
     'description': """
-A business oriented Social Network stands with message storage, queuing 
-and feeds.                    
-===================================================================
-This Social Network service enables users to send, share and read posts via 
-feeds and provides an unified social network you can use in a global feed or
-in all application. 
+A bussiness oriented Social Networking with a fully-integrated email 
+and message management.
+=====================================================================
+The Social Networking module provides an unified social network
+abstraction layer allowing applications to display a complete 
+communication history on documents.It gives the users the possibility
+to read and send messages and emails in an unified way.
 
-With this feature: 
-    * Track all the notification of the system.
-    * Send emails to your colleagues and/or your customers.
-    * Share your ideas by adding message.
-    * Add comments on your colleague's post.
-    * Add and follow discussion group.
+It also provides a wall combined to a subscription mechanism, that 
+allows to follow documents, and to be constantly updated about recent
+news.
+        
+The main features of the module are :
 
+    * A clean and renewed communication history for any OpenERP
+      document that can act as a discussion topic,       
+    * discussion mean on documents,
+    * A follow mechanism to be updated about new messages on 
+      interesting documents,
+    * An unified feeds page to see recent messages and activity 
+      on followed documents,
+    * User communication through the feeds page,
+    * A threaded discussion design,
+    * Relying on the global outgoing mail server, an integrated email
+      management system allowing to send emails with a configurable 
+      schedulerbased processing.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
