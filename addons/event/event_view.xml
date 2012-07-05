@@ -462,9 +462,8 @@
                     <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                 </header>
                 <sheet string="Registration">
-<<<<<<< TREE
-                   <label for="event_id" class="oe_edit_only"/>
-                   <h1>
+                    <label for="event_id" class="oe_edit_only"/>
+                    <h1>
                             <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" nolabel="1" class="oe_inline"/>
                             <label string="(" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
                             <field name="duration" widget="float_time" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
@@ -478,36 +477,8 @@
                             <group col="2">
                                 <field name="email" nolabel="1" class="oe_inline"/>
                                 <button string="Send New Email"
-=======
-                    <group col="6" colspan="4">
-                        <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                        <field name="nb_register"/>
-                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
-                        <field name="origin"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Additional Information">
-                            <group colspan="2" col="2">
-                                <separator string="Contact Information" colspan="2"/>
-                                <field name="name"/>
-                                <field name="email"/>
-                                <field name="phone"/>
-                            </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
-                                <field name="date_closed"/>
-                                <field name="event_begin_date" />
-                                <field name="event_end_date" />
-                            </group>
-                        </page>
-                        <page string="Emails">
-                            <button string="Send New Email"
->>>>>>> MERGE-SOURCE
                                 name="%(mail.action_email_compose_message_wizard)d"
-<<<<<<< TREE
-                                icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action" class="oe_inline"/>
+                                context= '{"default_email_to":email}' type="action" class="oe_inline"/>
                             </group>
                         </group>
                         <group colspan="2">
@@ -525,26 +496,14 @@
                     <group colspan="2" col="2">
                         <field name="phone"/>
                     </group>
-                   <group colspan="2" col="2" groups="base.group_no_one">
+                    <group colspan="2" col="2" groups="base.group_no_one">
                         <field name="create_date"/>
                         <field name="date_closed"/>
                     </group>
                 </sheet>
                 <footer>
-                    <div class="oe_sheet_width">
-                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                    </div>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </footer>
-=======
-                                icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
-                           </page>
-
-                    </notebook>
-                    </sheet>
-                    <footer>
-                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                    </footer>
->>>>>>> MERGE-SOURCE
                 </form>
             </field>
         </record>
