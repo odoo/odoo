@@ -39,7 +39,7 @@ Note that:
         Association / Configuration / Types of Events
 """,
     'author': 'OpenERP SA',
-    'depends': ['email_template','google_map'],
+    'depends': ['base_setup', 'board', 'email_template', 'google_map'],
     'init_xml': [],
     'update_xml': [
         'security/event_security.xml',

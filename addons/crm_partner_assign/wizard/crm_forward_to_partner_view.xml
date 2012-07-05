@@ -8,7 +8,12 @@
             <field name="model">crm.lead.forward.to.partner</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Send Mail">
+                <form string="Send Mail" version="7.0">
+                    <header>
+                        <button name="action_forward" string="Send" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <separator string="Forward to Partner" colspan="4" />
                     <group col="4" colspan="6">
                         <field name="history" colspan="2" on_change="on_change_history(history, context)"/>
@@ -41,11 +46,6 @@
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="4" colspan="4">
-                        <label string="" colspan="1"/>
-                        <button icon="gtk-close" special="cancel" string="Close"/>
-                        <button name="action_forward" string="Send" type="object" icon="gtk-go-forward"/>
-                    </group>
                 </form>
             </field>
         </record>

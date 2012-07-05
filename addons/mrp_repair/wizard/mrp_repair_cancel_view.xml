@@ -11,10 +11,13 @@
             <field name="arch" type="xml">
                 <form string="Cancel Repair Order" version="7.0">
                     <header>
-                        <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok" />
-                        <button icon="gtk-stop" special="cancel" string="No" />
+                        <button name="cancel_repair" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <label string="This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?"/>
+                    <group>
+                        <label string="This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?"/>
+                    </group>
                 </form>
             </field>
         </record>         
@@ -27,7 +30,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record> 
-         
         
     </data>
 </openerp>    

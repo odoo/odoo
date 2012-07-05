@@ -10,8 +10,9 @@
             <field name="arch" type="xml">
                 <form string="Create Forecasts Lines" version="7.0">
                     <header>
-                        <button icon="gtk-execute" name="create_forecast" string="Create" type="object" />
-                        <button icon="gtk-cancel"  special="cancel" string="Close"/>
+                        <button name="create_forecast" string="Create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
                         <field name="period_id"/>

@@ -275,13 +275,6 @@ class event_event(osv.osv):
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>created</b>.")
         self.message_append_note(cr, uid, ids, body=message, context=context)
@@ -464,13 +457,6 @@ class event_registration(osv.osv):
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Registration has been <b>created</b>.")
