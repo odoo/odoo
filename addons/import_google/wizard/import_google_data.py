@@ -102,7 +102,6 @@ class synchronize_google(osv.osv_memory):
         return res
 
     _columns = {
-        'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
         'customer': fields.boolean('Customer', help="Check this box to set newly created partner as Customer."),
         'supplier': fields.boolean('Supplier', help="Check this box to set newly created partner as Supplier."),
         'group_name': fields.selection(_get_group, "Group Name",help="Choose which group to import, By default it takes all."),
@@ -110,7 +109,6 @@ class synchronize_google(osv.osv_memory):
      }
 
     _defaults = {
-        'create_partner': 'create_all',
         'group_name': 'all',
     }
 
@@ -132,16 +130,13 @@ class synchronize_google(osv.osv_memory):
             raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
         
         if context.get('contact'):
-            msg = "  You're Contact are import in background, a email will be send when the process is finished to %s"%(user_obj.gmail_user)
+            msg = "  Your contacts are being imported in background, an email to %s will be sent when the process is over" % (user_obj.gmail_user)
             gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
             if not gd_client:
                 raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
             if obj.group_name not in ['all']:
                 context.update({ 'group_name': obj.group_name})
-            if obj.create_partner=='create_all':
-                tables.append('Contact')    
-            else:    
-                tables.append('Address')
+            tables.append('Contact')
             context.update({'user': gmail_user,
                             'password': gmail_pwd,
                             'instance': 'contact',

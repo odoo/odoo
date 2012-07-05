@@ -20,18 +20,18 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
         </record>
-
+        
         <record model="crm.case.section" id="section_sales_marketing_department">
-                <field name="name">Sales Marketing Department</field>
-                <field name="code">Sales Marketing</field>
-                <field name="parent_id" ref="crm.section_sales_department"></field>
-                <field name="alias_id" ref="mail_alias_marketing_department"/>
+            <field name="name">Sales Marketing Department</field>
+            <field name="code">Sales Marketing</field>
+            <field name="parent_id" ref="crm.section_sales_department"></field>
+            <field name="alias_id" ref="mail_alias_marketing_department"/>
         </record>
-
+        
         <record model="crm.segmentation" id="crm_segmentation0">
-		    <field name="name">OpenERP partners</field>
-		    <field name="exclusif">True</field>
-		    <field name="categ_id" ref="base.res_partner_category_2"/>
-	    </record>
+            <field name="name">OpenERP partners</field>
+            <field name="exclusif">True</field>
+            <field name="categ_id" ref="base.res_partner_category_2"/>
+        </record>
     </data>
 </openerp>
