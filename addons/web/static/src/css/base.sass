@@ -287,6 +287,18 @@ $colour4: #8a89ba
             font-weight: bold
             &:hover
                 text-decoration: underline
+    .oe_star_on, .oe_star_off
+        color: #cccccc
+        text-shadow: 0 0 2px black
+        vertical-align: top
+        position: relative
+        top: -5px
+
+    .oe_star_on:hover, .oe_star_off:hover
+        text-decoration: none
+
+    .oe_star_on
+        color: gold
 
     //.oe_edit_only 
     // }}}
@@ -363,12 +375,12 @@ $colour4: #8a89ba
     .oe_dropdown_menu
         display: none
         position: absolute
-        top: 28px
+        top: 32px
         z-index: 1
         border: 1px solid #afafb6
         background: white
-        padding: 8px
-        min-width: 120px
+        padding: 6px 0
+        min-width: 140px
         text-align: left
         @include radius(3px)
         @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
@@ -383,7 +395,7 @@ $colour4: #8a89ba
             > a
                 white-space: nowrap
                 display: block
-                padding: 3px 6px
+                padding: 4px 15px
                 color: #4c4c4c
                 text-decoration: none
                 &:hover
@@ -637,6 +649,7 @@ $colour4: #8a89ba
                     &:hover
                         @include vertical-gradient(#292929, #191919)
                         @include box-shadow(none)
+
     // }}}
     // Webclient.leftbar {{{
     .oe_leftbar
