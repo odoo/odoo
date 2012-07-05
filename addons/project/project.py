@@ -263,15 +263,12 @@ class project(osv.osv):
             domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
             if not domain:
                 doc = etree.XML(res['arch'])
-                alias_node = doc.xpath("//field[@name='alias_id']")[0]
-                parent = alias_node.getparent()
-                parent.remove(alias_node)
                 if view_type == "form":
-                    model_node = doc.xpath("//field[@name='alias_model']")[0]
+                    model_node = doc.xpath("//group[@string='Mailbox Alias']")[0]
                     parent = model_node.getparent()
                     parent.remove(model_node)
                 else:
-                    model_node = doc.xpath("//field[@name='alias_id']")[0]
+                    model_node = doc.xpath("//div[@name='alias_box']")[0]
                     parent = model_node.getparent()
                     parent.remove(model_node)
                 res['arch'] = etree.tostring(doc)

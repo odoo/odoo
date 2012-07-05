@@ -229,7 +229,7 @@
                                         <div>Progress</div>
                                         <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
                                     </div>
-                                    <div  t-if="record.alias_id.raw_value" class="oe_kanban_ellipsis">
+                                    <div name="alias_box" t-if="record.alias_id.raw_value" class="oe_kanban_ellipsis">
                                         Mailbox Alias :
                                         <a t-attf-href="mailto:#{record.alias_id.raw_value}"><field name="alias_id"/></a>
                                     </div>
