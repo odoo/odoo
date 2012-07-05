@@ -526,7 +526,7 @@ def Project():
         if not vals.get('alias_id'):
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
-                    {'alias_name': "project."+name, 
+                    {'alias_name': "project_"+name, 
                     'alias_model_id': self._name}, context=context)
             alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
             vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
