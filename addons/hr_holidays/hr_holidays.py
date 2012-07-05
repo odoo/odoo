@@ -74,7 +74,8 @@ class hr_holidays_status(osv.osv):
 
     _columns = {
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Meeting', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you set a meeting type, OpenERP will create a meeting in the calendar once a leave is validated.'),
+        'categ_id': fields.many2one('crm.meeting.type', 'Meeting Type',
+            help='Once a leave is validated, OpenERP will create a corresponding meeting of this type in the calendar.'),
         'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
         'limit': fields.boolean('Allow to Override Limit', help='If you select this checkbox, the system allows the employees to take more leaves than the available ones for this type.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
@@ -128,7 +129,7 @@ class hr_holidays(osv.osv):
         'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True),
-        'case_id': fields.many2one('crm.meeting', 'Meeting'),
+        'meeting_id': fields.many2one('crm.meeting', 'Meeting'),
         'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone", select=True),
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
@@ -217,19 +218,12 @@ class hr_holidays(osv.osv):
         }
         return result
 
-    def onchange_sec_id(self, cr, uid, ids, status, context=None):
-        warning = {}
+    def onchange_status_id(self, cr, uid, ids, status_id, context=None):
         double_validation = False
-        obj_holiday_status = self.pool.get('hr.holidays.status')
-        if status:
-            holiday_status = obj_holiday_status.browse(cr, uid, status, context=context)
+        if status_id:
+            holiday_status = self.pool.get('hr.holidays.status').browse(cr, uid, status_id, context=context)
             double_validation = holiday_status.double_validation
-            if holiday_status.categ_id and holiday_status.categ_id.section_id and not holiday_status.categ_id.section_id.allow_unlink:
-                warning = {
-                    'title': "Warning for ",
-                    'message': "You won\'t be able to cancel this leave request because the CRM Sales Team of the leave type disallows."
-                }
-        return {'warning': warning, 'value': {'double_validation': double_validation}}
+        return {'value': {'double_validation': double_validation}}
 
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
@@ -271,7 +265,7 @@ class hr_holidays(osv.osv):
                 holiday_ids.append(record.id)
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('crm.meeting')
-                vals = {
+                meeting_vals = {
                     'name': record.name,
                     'categ_id': record.holiday_status_id.categ_id.id,
                     'duration': record.number_of_days_temp * 8,
@@ -280,11 +274,11 @@ class hr_holidays(osv.osv):
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
-                    'leave_id': record.id,
+                    'state': 'done',            # to block that meeting date in the calendar
                 }
-                case_id = meeting_obj.create(cr, uid, vals)
+                meeting_id = meeting_obj.create(cr, uid, meeting_vals)
                 self._create_resource_leave(cr, uid, [record], context=context)
-                self.write(cr, uid, ids, {'case_id': case_id})
+                self.write(cr, uid, ids, {'meeting_id': meeting_id})
             elif record.holiday_type == 'category':
                 emp_ids = obj_emp.search(cr, uid, [('category_ids', 'child_of', [record.category_id.id])])
                 leave_ids = []
@@ -330,11 +324,11 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        obj_crm_meeting = self.pool.get('crm.meeting')
+        meeting_obj = self.pool.get('crm.meeting')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
-            if record.case_id:
-                obj_crm_meeting.unlink(cr, uid, [record.case_id.id])
+            if record.meeting_id:
+                meeting_obj.unlink(cr, uid, [record.meeting_id.id])
 
             # If a category that created several holidays, cancel all related
             wf_service = netsvc.LocalService("workflow")
@@ -518,11 +512,5 @@ class hr_employee(osv.osv):
     }
 
 hr_employee()
-
-class crm_meeting(osv.osv):
-    _inherit = 'crm.meeting'
-    _columns = {
-        'leave_id': fields.many2one('hr.holidays','Leave'),
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
