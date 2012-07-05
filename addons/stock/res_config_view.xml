@@ -15,24 +15,22 @@
                     </header>
                     <sheet>
                         <group>
-                            <group string="Traceability">
+                            <group>
+                                <separator string="Traceability" colspan="2"/>
                                 <field name="group_stock_production_lot"/>
                                 <field name="group_stock_tracking_lot"/>
                                 <field name="module_product_expiry"
                                     attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
+                                 <separator string="Logistics" colspan="2"/>
+                                 <field name="group_stock_multiple_locations"/>
+                                 <field name="module_stock_invoice_directly"/>
+                                 <field name="module_stock_location"/>
+                                 <field name="decimal_precision" class="oe_inline"/>
                             </group>
-                            <group string="Partners">
+                            <group>
+                                <separator string="Partners" colspan="2"/>
                                 <field name="module_claim_from_delivery"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group string="Logistics">
-                                <field name="group_stock_multiple_locations"/>
-                                <field name="module_stock_invoice_directly"/>
-                                <field name="module_stock_location"/>
-                                <field name="decimal_precision" class="oe_inline"/>
-                            </group>
-                            <group string="Products">
+                                <separator string="Products" colspan="2"/>
                                 <field name="group_stock_packaging"/>
                                 <field name="group_uom"/>
                                 <field name="group_uos"/>

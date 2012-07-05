@@ -63,15 +63,16 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <sheet>
-                        <field name="module_crm" invisible="1"/>
-                        <group name="config_sale"/>
-                        <group name="config_fetchmail_main">
-                            <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
-                                <field name="module_plugin_thunderbird"/>
-                                <field name="module_plugin_outlook"/>
+                        <group>
+                            <group name="config_sale">
+                                <field name="module_crm" invisible="1"/>
+                                <separator string="Emails" colspan="2"/>
+                                <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                                <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                            </group>
+                            <group name="config_other">
                             </group>
                         </group>
-                        <group name="config_crm"/>
                     </sheet>
                 </form>
             </field>
