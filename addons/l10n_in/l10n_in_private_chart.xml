@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+    
         <!-- Partnership/Private account chart -->
-		
+        
         <record model="account.account.template" id="a0">
             <field name="name">Partnership/Private Firm Chart of Account</field>
             <field name="code">0</field>
             <field name="type">view</field>
-			<field eval="0" name="parent_id"/>
+            <field eval="0" name="parent_id"/>
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
         </record>
-
+        
         <record model="account.account.template" id="a1">
             <field name="name">Balance Sheet</field>
             <field name="code">1</field>
@@ -20,10 +20,10 @@
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a0"/>
-        </record>  
-
-		<!-- Assets -->
-		
+        </record>
+        
+        <!-- Assets -->
+        
         <record model="account.account.template" id="a10">
             <field name="name">Assets</field>
             <field name="code">10</field>
@@ -32,7 +32,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a1"/>
         </record>
-
+        
        <record model="account.account.template" id="a101">
             <field name="name">Cash</field>
             <field name="code">101</field>
@@ -41,8 +41,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a10"/>
             <field name="note">Checking account balance (as shown in company records), currency, coins, checks received from customers but not yet deposited.</field>
-        </record> 
-
+        </record>
+        
         <record model="account.account.template" id="a120">
             <field name="name">Accounts Receivable</field>
             <field name="code">120</field>
@@ -52,7 +52,7 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Amounts owed to the company for services performed or products sold but not yet paid for.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a140">
             <field name="name">Merchandise Inventory</field>
             <field name="code">140</field>
@@ -62,7 +62,7 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Cost of merchandise purchased but has not yet been sold.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a150">
             <field name="name">Supplies</field>
             <field name="code">150</field>
@@ -71,8 +71,8 @@
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="a10"/>
             <field name="note">Cost of supplies that have not yet been used. Supplies that have been used are recorded in Supplies Expense.</field>
-        </record>		
-					
+        </record>
+        
         <record model="account.account.template" id="a160">
             <field name="name">Prepaid Insurance</field>
             <field name="code">160</field>
@@ -82,7 +82,7 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Cost of insurance that is paid in advance and includes a future accounting period.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a170">
             <field name="name">Land</field>
             <field name="code">170</field>
@@ -92,7 +92,7 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Cost to acquire and prepare land for use by the company.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a175">
             <field name="name">Buildings</field>
             <field name="code">175</field>
@@ -101,8 +101,8 @@
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="a10"/>
             <field name="note">Cost to purchase or construct buildings for use by the company.</field>
-        </record>				
-						 
+        </record>
+        
         <record model="account.account.template" id="a178">
             <field name="name">Accumulated Depreciation - Buildings</field>
             <field name="code">178</field>
@@ -112,7 +112,7 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Amount of the buildings' cost that has been allocated to Depreciation Expense since the time the building was acquired.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a180">
             <field name="name">Equipment</field>
             <field name="code">180</field>
@@ -122,7 +122,7 @@
             <field name="parent_id" ref="a10"/>
             <field name="note">Cost to acquire and prepare equipment for use by the company.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a188">
             <field name="name">Accumulated Depreciation - Equipment</field>
             <field name="code">188</field>
@@ -131,8 +131,8 @@
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="a10"/>
             <field name="note">Amount of equipment's cost that has been allocated to Depreciation Expense since the time the equipment was acquired.</field>
-        </record>			
-
+        </record>
+        
         <record model="account.account.template" id="a189">
             <field name="name">Tax Receivable</field>
             <field name="code">189</field>
@@ -141,10 +141,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a10"/>
         </record>
-			
-				
-		<!-- Liabilities -->
-		
+        <!-- Liabilities -->
+        
         <record model="account.account.template" id="a20">
             <field name="name">Liabilities</field>
             <field name="code">20</field>
@@ -153,7 +151,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a1"/>
         </record>
-		
+        
         <record model="account.account.template" id="a210">
             <field name="name">Notes Payable</field>
             <field name="code">210</field>
@@ -162,8 +160,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a20"/>
             <field name="note">The amount of principal due on a formal written promise to pay. Loans from banks are included in this account.</field>
-        </record>	 
-
+        </record>
+        
         <record model="account.account.template" id="a215">
             <field name="name">Accounts Payable</field>
             <field name="code">215</field>
@@ -173,7 +171,7 @@
             <field name="parent_id" ref="a20"/>
             <field name="note">Amount owed to suppliers who provided goods and services to the company but did not require immediate payment in cash.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a220">
             <field name="name">Wages Payable</field>
             <field name="code">220</field>
@@ -183,7 +181,7 @@
             <field name="parent_id" ref="a20"/>
             <field name="note">Amount owed to employees for hours worked but not yet paid.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a230">
             <field name="name">Interest Payable</field>
             <field name="code">230</field>
@@ -193,7 +191,7 @@
             <field name="parent_id" ref="a20"/>
             <field name="note">Amount owed for interest on Notes Payable up until the date of the balance sheet. This is computed by multiplying the amount of the note times the effective interest rate times the time period.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a240">
             <field name="name">Unearned Revenues</field>
             <field name="code">240</field>
@@ -203,7 +201,7 @@
             <field name="parent_id" ref="a20"/>
             <field name="note">Amounts received in advance of delivering goods or providing services. When the goods are delivered or services are provided, this liability amount decreases.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a250">
             <field name="name">Mortgage Loan Payable</field>
             <field name="code">250</field>
@@ -213,7 +211,7 @@
             <field name="parent_id" ref="a20"/>
             <field name="note">A formal loan that involves a lien on real estate until the loan is repaid.</field>
         </record>
-
+        
         <record model="account.account.template" id="a260">
             <field name="name">Reserve and Surplus Account</field>
             <field name="code">260</field>
@@ -222,12 +220,11 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a20"/>
             <field name="note">A Reserve and Surplus Account.</field>
-        </record>		
-		
-
-
+        </record>
+        
+        
     <!-- Tax Account -->
-
+    
     <record model="account.account.template" id="a216">
         <field name="name">Tax payable</field>
         <field name="code">216</field>
@@ -236,7 +233,7 @@
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="a20"/>
     </record>
-	
+    
     <record model="account.account.template" id="a2161">
         <field name="name">Sales Tax Payable</field>
         <field name="code">2161</field>
@@ -272,9 +269,9 @@
         <field name="reconcile" eval="True"/>
         <field name="parent_id" ref="a216"/>
     </record>
-
-	 <!--  Owner's Equity Accounts -->	
-	 
+    
+    <!--  Owner's Equity Accounts -->
+    
         <record model="account.account.template" id="29">
             <field name="name">Owner's Equity Accounts</field>
             <field name="code">29</field>
@@ -283,7 +280,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a1"/>
         </record>
-				
+        
       <!--  <record model="account.account.template" id="290">
             <field name="name">Mary Smith, Capital</field>
             <field name="code">290</field>
@@ -293,7 +290,7 @@
             <field name="parent_id" ref="29"/>
             <field name="note">Amount the owner invested in the company (through cash or other assets) plus earnings of the company not withdrawn by the owner.</field>
         </record>
-		
+        
         <record model="account.account.template" id="295">
             <field name="name">Mary Smith, Drawing</field>
             <field name="code">295</field>
@@ -303,9 +300,9 @@
             <field name="parent_id" ref="29"/>
             <field name="note">Amount that the owner of the sole proprietorship has withdrawn for personal use during the current accounting year. At the end of the year, the amount in this account will be transferred into Mary Smith, Capital (account 290). </field>
         </record>
-						-->
-		 <!-- Profit And Loss Account -->
-		 
+        -->
+        <!-- Profit And Loss Account -->
+        
         <record model="account.account.template" id="a3">
             <field name="name">Profit And Loss</field>
             <field name="code">3</field>
@@ -313,10 +310,10 @@
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a0"/>
-        </record>  
-		
-		 <!-- Income -->		
-
+        </record>
+        
+        <!-- Income -->
+        
         <record model="account.account.template" id="a30">
             <field name="name">Income</field>
             <field name="code">30</field>
@@ -325,10 +322,9 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a3"/>
         </record>
-		
-		
-		<!-- Income Operating Revenues -->
-		
+        
+        <!-- Income Operating Revenues -->
+        
         <record model="account.account.template" id="a31">
             <field name="name">Operating Revenue Accounts</field>
             <field name="code">31</field>
@@ -337,7 +333,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a30"/>
         </record>
-		
+        
         <record model="account.account.template" id="a310">
             <field name="name">Service Revenues</field>
             <field name="code">310</field>
@@ -346,8 +342,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a31"/>
             <field name="note">Amounts earned from providing services to clients, either for cash or on credit. When a service is provided on credit, both this account and Accounts Receivable will increase. When a service is provided for immediate cash, both this account and Cash will increase.</field>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="a311">
             <field name="name">Product Sales</field>
             <field name="code">311</field>
@@ -356,8 +352,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a31"/>
             <field name="note">Sales of product account</field>
-        </record>			
-		
+        </record>
+        
         <record model="account.account.template" id="a80">
             <field name="name">Non-Operating Revenue and Gains</field>
             <field name="code">80</field>
@@ -366,7 +362,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a30"/>
         </record>
-
+        
         <record model="account.account.template" id="a810">
             <field name="name">Interest Revenues</field>
             <field name="code">810</field>
@@ -376,7 +372,7 @@
             <field name="parent_id" ref="a80"/>
             <field name="note">Interest and dividends earned on bank accounts, investments or notes receivable. This account is increased when the interest is earned and either Cash or Interest Receivable is also increased.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a811">
             <field name="name">Gain on Sale of Assets</field>
             <field name="code">811</field>
@@ -385,10 +381,10 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a80"/>
             <field name="note">Occurs when the company sells one of its assets (other than inventory) for more than the asset's book value.</field>
-        </record>			
-		 								
-		 <!-- Expenses -->		
-
+        </record>
+        
+        <!-- Expenses -->
+        
         <record model="account.account.template" id="a50">
             <field name="name">Expense</field>
             <field name="code">50</field>
@@ -397,7 +393,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a3"/>
         </record>
-
+        
         <record model="account.account.template" id="a51">
             <field name="name">Operating Expense Accounts</field>
             <field name="code">51</field>
@@ -406,7 +402,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a50"/>
         </record>
-		
+        
         <record model="account.account.template" id="a500">
             <field name="name">Salaries Expense</field>
             <field name="code">500</field>
@@ -415,8 +411,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a51"/>
             <field name="note">Expenses incurred for the work performed by salaried employees during the accounting period. These employees normally receive a fixed amount on a weekly, monthly, or annual basis.</field>
-        </record>		
-		
+        </record>
+        
         <record model="account.account.template" id="a510">
             <field name="name">Wages Expense</field>
             <field name="code">510</field>
@@ -426,7 +422,7 @@
             <field name="parent_id" ref="a51"/>
             <field name="note">Expenses incurred for the work performed by non-salaried employees during the accounting period. These employees receive an hourly rate of pay.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a540">
             <field name="name">Supplies Expense</field>
             <field name="code">540</field>
@@ -436,7 +432,7 @@
             <field name="parent_id" ref="a51"/>
             <field name="note">Cost of supplies used up during the accounting period.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a560">
             <field name="name">Rent Expense</field>
             <field name="code">560</field>
@@ -445,8 +441,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a51"/>
             <field name="note">Cost of occupying rented facilities during the accounting period.</field>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="a570">
             <field name="name">Utilities Expense</field>
             <field name="code">570</field>
@@ -456,7 +452,7 @@
             <field name="parent_id" ref="a51"/>
             <field name="note">Costs for electricity, heat, water, and sewer that were used during the accounting period.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a576">
             <field name="name">Telephone Expense</field>
             <field name="code">576</field>
@@ -466,7 +462,7 @@
             <field name="parent_id" ref="a51"/>
             <field name="note">Cost of telephone used during the current accounting period.</field>
         </record>
-		
+        
         <record model="account.account.template" id="a610">
             <field name="name">Advertising Expense</field>
             <field name="code">610</field>
@@ -475,9 +471,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a51"/>
             <field name="note">Costs incurred by the company during the accounting period for ads, promotions, and other selling and expenses (other than salaries).</field>
-        </record>										
-				
-				
+        </record>
+        
         <record model="account.account.template" id="a750">
             <field name="name">Depreciation Expense</field>
             <field name="code">750</field>
@@ -487,9 +482,9 @@
             <field name="parent_id" ref="a51"/>
             <field name="note">Cost of long-term assets allocated to expense during the current accounting period.</field>
         </record>
-		
-		<!-- Other -->
-		
+        
+        <!-- Other -->
+        
         <record model="account.account.template" id="a90">
             <field name="name">Non-Operating Expenses and Losses</field>
             <field name="code">90</field>
@@ -497,8 +492,8 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a3"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="a960">
             <field name="name">Loss on Sale of Assets</field>
             <field name="code">960</field>
@@ -507,10 +502,10 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a90"/>
             <field name="note">Occurs when the company sells one of its assets (other than inventory) for less than the asset's book value.</field>
-        </record>			
-		
+        </record>
+        
         <!-- Chart template -->
-		
+        
         <record id="indian_chart_template_private" model="account.chart.template">
             <field name="name">India - Chart of Accounts for Private Ltd/Partnership</field>
             <field name="account_root_id" ref="a0"/>
@@ -521,8 +516,8 @@
             <field name="property_account_expense_categ" ref="a540"/>
             <field name="property_account_income_categ" ref="a311"/>
             <field name="property_reserve_and_surplus_account" ref="a260"/>
-        </record>  
-				
-
+        </record>
+        
+        
     </data>
 </openerp>

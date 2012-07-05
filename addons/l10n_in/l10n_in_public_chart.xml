@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+    
         <!-- public firm account chart -->
-		
-		
+        
+        
         <record model="account.account.template" id="p0">
             <field name="name">Public Firm Chart of Account</field>
             <field name="code">0</field>
@@ -13,7 +13,7 @@
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
         </record>
-
+        
        <record model="account.account.template" id="p1">
             <field name="name">Balance Sheet</field>
             <field name="code">1</field>
@@ -22,8 +22,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p0"/>
         </record>  
-		<!-- Assets -->
-		
+        <!-- Assets -->
+        
         <record model="account.account.template" id="p10">
             <field name="name">Assets</field>
             <field name="code">10</field>
@@ -32,7 +32,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p1"/>
         </record>
-		
+        
         <record model="account.account.template" id="p10000">
             <field name="name">Current Assets</field>
             <field name="code">10000</field>
@@ -41,7 +41,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10"/>
         </record>
-
+        
         <record model="account.account.template" id="p10100">
             <field name="name">Cash - Regular Checking</field>
             <field name="code">10100</field>
@@ -50,7 +50,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
         </record>   
-
+        
         <record model="account.account.template" id="p10200">
             <field name="name">Cash - Payroll Checking</field>
             <field name="code">10200</field>
@@ -59,7 +59,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
         </record>
-
+        
         <record model="account.account.template" id="p10600">
             <field name="name">Petty Cash Fund</field>
             <field name="code">10600</field>
@@ -68,7 +68,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p12100">
             <field name="name">Accounts Receivable</field>
             <field name="code">12100</field>
@@ -77,7 +77,7 @@
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="p10000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p12500">
             <field name="name">Allowance for Doubtful Accounts</field>
             <field name="code">12500</field>
@@ -85,8 +85,8 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="p13100">
             <field name="name">Inventory</field>
             <field name="code">13100</field>
@@ -94,8 +94,8 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="p14100">
             <field name="name">Supplies</field>
             <field name="code">14100</field>
@@ -103,8 +103,8 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="p15300">
             <field name="name">Prepaid Insurance</field>
             <field name="code">15300</field>
@@ -112,8 +112,8 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
-        </record>		
-
+        </record>
+        
         <record model="account.account.template" id="p15400">
             <field name="name">Tax Receivable</field>
             <field name="code">15400</field>
@@ -121,10 +121,84 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
-        </record>		
-				
-		<!-- Liabilities -->
-		
+        </record>
+        
+        <!--Land and Property -->
+        
+        <record model="account.account.template" id="p17000">
+            <field name="name">Property, Plant, and Equipment</field>
+            <field name="code">17000</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p10"/>
+        </record>
+        
+        <record model="account.account.template" id="p17200">
+            <field name="name">Land</field>
+            <field name="code">17200</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <record model="account.account.template" id="p17100">
+            <field name="name">Buildings</field>
+            <field name="code">17100</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <record model="account.account.template" id="p17300">
+            <field name="name">Equipment</field>
+            <field name="code">17300</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <record model="account.account.template" id="p17800">
+            <field name="name">Vehicles</field>
+            <field name="code">17800</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <record model="account.account.template" id="p18100">
+            <field name="name">Accumulated Depreciation - Buildings</field>
+            <field name="code">18100</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <record model="account.account.template" id="p18300">
+            <field name="name">Accumulated Depreciation - Equipment</field>
+            <field name="code">18300</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <record model="account.account.template" id="p18800">
+            <field name="name">Accumulated Depreciation - Vehicles</field>
+            <field name="code">18800</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+        
+        <!-- Liabilities -->
+        
         <record model="account.account.template" id="p20">
             <field name="name">Liabilities</field>
             <field name="code">20</field>
@@ -133,7 +207,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p1"/>
         </record>
-				
+        
         <record model="account.account.template" id="p20000">
             <field name="name">Current Liabilities</field>
             <field name="code">20000</field>
@@ -141,8 +215,8 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20"/>
-        </record>	
-
+        </record>
+        
         <record model="account.account.template" id="p20100">
             <field name="name">Notes Payable - Credit Line #1</field>
             <field name="code">20100</field>
@@ -151,7 +225,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20000"/>
         </record>
-							
+        
         <record model="account.account.template" id="p20200">
             <field name="name">Notes Payable - Credit Line #2</field>
             <field name="code">20200</field>
@@ -160,7 +234,7 @@
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="p20000"/>
         </record>
-
+        
        <record model="account.account.template" id="p21000">
             <field name="name">Accounts Payable</field>
             <field name="code">21000</field>
@@ -169,7 +243,7 @@
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="p20000"/>
         </record> 
-
+        
         <record model="account.account.template" id="p22100">
             <field name="name">Wages Payable</field>
             <field name="code">22100</field>
@@ -178,7 +252,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p23100">
             <field name="name">Interest Payable</field>
             <field name="code">23100</field>
@@ -187,7 +261,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20000"/>
         </record>
-
+        
         <record model="account.account.template" id="p24500">
             <field name="name">Unearned Revenues</field>
             <field name="code">24500</field>
@@ -195,9 +269,8 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20000"/>
-        </record>															
-		
-
+        </record>
+        
         <record model="account.account.template" id="p25000">
             <field name="name">Long-term Liabilities</field>
             <field name="code">25000</field>
@@ -206,7 +279,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20"/>
         </record>
-					
+        
         <record model="account.account.template" id="p25100">
             <field name="name">Mortgage Loan Payable</field>
             <field name="code">25100</field>
@@ -214,8 +287,8 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p25000"/>
-        </record>	
-
+        </record>
+        
         <record model="account.account.template" id="p25600">
             <field name="name">Bonds Payable</field>
             <field name="code">25600</field>
@@ -223,8 +296,8 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p25000"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="p25650">
             <field name="name">Discount on Bonds Payable</field>
             <field name="code">25650</field>
@@ -232,8 +305,8 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p25000"/>
-        </record>	
-
+        </record>
+        
         <record model="account.account.template" id="p27000">
             <field name="name">Stockholders' Equity</field>
             <field name="code">27000</field>
@@ -241,8 +314,8 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p20"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="p27100">
             <field name="name">Common Stock, No Par</field>
             <field name="code">27100</field>
@@ -251,7 +324,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p27000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p27500">
             <field name="name">Retained Earnings</field>
             <field name="code">27500</field>
@@ -260,7 +333,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p27000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p29500">
             <field name="name">Treasury Stock</field>
             <field name="code">29500</field>
@@ -269,16 +342,16 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p27000"/>
         </record>
-
-	    <record model="account.account.template" id="p24600">
-	        <field name="name">Reserve and Surplus Account</field>
-	        <field name="code">24600</field>
-	        <field name="type">other</field>
-	        <field name="user_type" ref="account.data_account_type_liability"/>
-	        <field name="reconcile" eval="False"/>
-	        <field name="parent_id" ref="p20000"/>
-	    </record>
-			
+        
+        <record model="account.account.template" id="p24600">
+            <field name="name">Reserve and Surplus Account</field>
+            <field name="code">24600</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p20000"/>
+         </record>
+         
     <!-- Tax Account -->
     
     <record model="account.account.template" id="p24700">
@@ -289,7 +362,7 @@
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p20000"/>
     </record>
-		
+    
     <record model="account.account.template" id="p24710">
         <field name="name">Sales Tax Payable</field>
         <field name="code">24710</field>
@@ -316,7 +389,7 @@
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p24700"/>
     </record>
-
+    
     <record model="account.account.template" id="p24740">
         <field name="name">Service Tax Payable</field>
         <field name="code">24740</field>
@@ -325,9 +398,9 @@
         <field name="reconcile" eval="False"/>
         <field name="parent_id" ref="p24700"/>
     </record>
-
-		 <!-- Profit And Loss Account -->
-		 
+    
+    <!-- Profit And Loss Account -->
+    
         <record model="account.account.template" id="p3">
             <field name="name">Profit And Loss</field>
             <field name="code">3</field>
@@ -335,10 +408,10 @@
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p0"/>
-        </record> 
-		
-		 <!-- Income -->		
-
+        </record>
+        
+        <!-- Income -->		
+        
         <record model="account.account.template" id="p30">
             <field name="name">Income</field>
             <field name="code">30</field>
@@ -347,9 +420,9 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p3"/>
         </record>
-		
-		<!-- Income Operating Revenues -->
-		
+        
+        <!-- Income Operating Revenues -->
+        
         <record model="account.account.template" id="p30000">
             <field name="name">Operating Revenues</field>
             <field name="code">30000</field>
@@ -358,7 +431,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p30"/>
         </record>
-		
+        
         <record model="account.account.template" id="p31010">
             <field name="name">Sales - Division #1, Product Line 010</field>
             <field name="code">31010</field>
@@ -367,7 +440,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p30000"/>
         </record>
-						 
+        
         <record model="account.account.template" id="p31022">
             <field name="name">Sales - Division #1, Product Line 022</field>
             <field name="code">31022</field>
@@ -376,7 +449,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p30000"/>
         </record>
-
+        
         <record model="account.account.template" id="p32015">
             <field name="name">Sales - Division #2, Product Line 015</field>
             <field name="code">32015</field>
@@ -385,7 +458,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p30000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p33110">
             <field name="name">Sales - Division #3, Product Line 110</field>
             <field name="code">33110</field>
@@ -393,9 +466,8 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p30000"/>
-        </record>	
-
-
+        </record>
+        
         <record model="account.account.template" id="p90000">
             <field name="name">Non-Operating Revenue and Gains</field>
             <field name="code">90000</field>
@@ -404,7 +476,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p30"/>
         </record>
-
+        
         <record model="account.account.template" id="p91800">
             <field name="name">Gain on Sale of Assets</field>
             <field name="code">91800</field>
@@ -412,10 +484,10 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p90000"/>
-        </record>		
-		 								
-		 <!-- Expenses -->		
-
+        </record>
+        
+         <!-- Expenses -->		
+         
         <record model="account.account.template" id="p40">
             <field name="name">Expense</field>
             <field name="code">40</field>
@@ -424,10 +496,10 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p3"/>
         </record>
-		
-		
-		<!-- Income Cost of Goods Sold -->
-				
+        
+        
+        <!-- Income Cost of Goods Sold -->
+        
         <record model="account.account.template" id="p40000">
             <field name="name">Cost of Goods Sold</field>
             <field name="code">40000</field>
@@ -436,8 +508,8 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40"/>
         </record>
-													 
-
+        
+        
         <record model="account.account.template" id="p41010">
             <field name="name">COGS - Division #1, Product Line 010</field>
             <field name="code">41010</field>
@@ -446,7 +518,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40000"/>
         </record>
-						
+        
         <record model="account.account.template" id="p41022">
             <field name="name">COGS - Division #1, Product Line 022</field>
             <field name="code">41022</field>
@@ -455,7 +527,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p42015">
             <field name="name">COGS - Division #2, Product Line 015</field>
             <field name="code">42015</field>
@@ -464,7 +536,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p43110">
             <field name="name">COGS - Division #3, Product Line 110</field>
             <field name="code">43110</field>
@@ -472,10 +544,10 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40000"/>
-        </record>		
-		
-		 <!-- Marketing Expenses -->		 
-		 
+        </record>
+        
+        <!-- Marketing Expenses -->
+        
         <record model="account.account.template" id="p50000">
             <field name="name">Marketing Expenses</field>
             <field name="code">50000</field>
@@ -484,7 +556,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40"/>
         </record>
-		
+        
         <record model="account.account.template" id="p50100">
             <field name="name">Marketing Dept. Salaries</field>
             <field name="code">50100</field>
@@ -493,7 +565,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p50000"/>
         </record>
-				
+        
         <record model="account.account.template" id="p50150">
             <field name="name">Marketing Dept. Payroll Taxes</field>
             <field name="code">50150</field>
@@ -502,7 +574,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p50000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p50200">
             <field name="name">Marketing Dept. Supplies</field>
             <field name="code">50200</field>
@@ -511,7 +583,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p50000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p50600">
             <field name="name">Marketing Dept. Telephone</field>
             <field name="code">50600</field>
@@ -519,10 +591,10 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p50000"/>
-        </record>								
-				
-		<!-- Payroll Dept. Expenses -->	
-		
+        </record>
+        
+        <!-- Payroll Dept. Expenses -->	
+        
         <record model="account.account.template" id="p59000">
             <field name="name">Payroll Dept. Expenses</field>
             <field name="code">59000</field>
@@ -531,7 +603,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40"/>
         </record>
-					
+        
         <record model="account.account.template" id="p59100">
             <field name="name">Payroll Dept. Salaries</field>
             <field name="code">59100</field>
@@ -540,7 +612,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p59000"/>
         </record>
-
+        
         <record model="account.account.template" id="p59150">
             <field name="name">Payroll Dept. Payroll Taxes</field>
             <field name="code">59150</field>
@@ -549,7 +621,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p59000"/>
         </record>
-		
+        
         <record model="account.account.template" id="p59200">
             <field name="name">Payroll Dept. Supplies</field>
             <field name="code">59200</field>
@@ -558,7 +630,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p59000"/>
         </record>
-
+        
         <record model="account.account.template" id="p59600">
             <field name="name">Payroll Dept. Telephone</field>
             <field name="code">59600</field>
@@ -566,10 +638,10 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p59000"/>
-        </record>		
-																	
-		<!-- Other -->
-		
+        </record>
+        
+        <!-- Other -->
+        
         <record model="account.account.template" id="p96000">
             <field name="name">Non-Operating Expenses and Losses</field>
             <field name="code">96000</field>
@@ -577,8 +649,8 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p40"/>
-        </record>	
-		
+        </record>
+        
         <record model="account.account.template" id="p96100">
             <field name="name">Loss on Sale of Assets</field>
             <field name="code">96100</field>
@@ -586,10 +658,8 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p96000"/>
-        </record>				
-
-
-		
+        </record>
+        
         <record id="indian_chart_template_public" model="account.chart.template">
             <field name="name">India - Chart of Accounts for Public Ltd</field>
             <field name="account_root_id" ref="p0"/>
@@ -600,7 +670,7 @@
             <field name="property_account_expense_categ" ref="p41010"/>
             <field name="property_account_income_categ" ref="p31010"/>
             <field name="property_reserve_and_surplus_account" ref="p24600"/> 
-        </record> 
-
+        </record>
+        
     </data>
 </openerp>
