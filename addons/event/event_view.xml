@@ -105,36 +105,36 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
-                    	<div class="oe_right oe_button_box">
-	                        <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
-	                    </div>
+                        <div class="oe_right oe_button_box">
+                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
+                        </div>
                     
                         <div class="oe_title" style="width: 650px" >
-	                    	<label for="name" class="oe_edit_only"/>
-		                    <group colspan="6" col="6">
-		                    	<group colspan="2"><h1><field name="name"/></h1></group>
-	                            <group colspan="4"><h1><label string="(" attrs="{'invisible': [('type', '=', '')]}" /><field name="type" nolabel="1" on_change="onchange_event_type(type,context)" class="oe_inline"/><label string=")" attrs="{'invisible': [('type', '=', '')]}" /></h1></group>
-		                    </group>  
-		                </div> 
+                            <label for="name" class="oe_edit_only"/>
+                            <group colspan="6" col="6">
+                                <group colspan="2"><h1><field name="name"/></h1></group>
+                                <group colspan="4"><h1><label string="(" attrs="{'invisible': [('type', '=', '')]}" /><field name="type" nolabel="1" on_change="onchange_event_type(type,context)" class="oe_inline"/><label string=")" attrs="{'invisible': [('type', '=', '')]}" /></h1></group>
+                            </group>  
+                        </div> 
                         <div>
-                        	<h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
-                        	</h2>
+                            <h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
+                            </h2>
                             <group>
                                 <group>
                                     <label for="address_id" string="Location Address"/>
                                     <div>
                                         <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
-                                    	<field name="street" placeholder="Street..."/>                            
-                                    	<div>
-                                    	     <field name="zip" class="oe_inline" placeholder="Zip"/>
+                                        <field name="street" placeholder="Street..."/>                            
+                                        <div>
+                                             <field name="zip" class="oe_inline" placeholder="Zip"/>
                                              <field name="city" class="oe_inline" placeholder="City"/>
                                         </div>
                                     </div>
                                 </group>
                                 <group>
-	                              	<field name="register_min"/>
-	                               	<field name="register_max"/>
-	                           	</group>
+                                      <field name="register_min"/>
+                                       <field name="register_max"/>
+                                   </group>
                             </group>
                         </div>
                         <!-- <div class="oe_right" style="height: 200px"></div> -->
@@ -469,7 +469,7 @@
                             <label string="(" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
                             <field name="duration" widget="float_time" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
                             <label string=")" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-	                    </h1>   
+                        </h1>   
                         <group colspan="4" col="4">
                             <group colspan="2">
                                 <field name="name" invisible="1"/>
