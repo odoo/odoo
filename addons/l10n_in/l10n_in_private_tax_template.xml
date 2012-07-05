@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <openerp>
-	<data noupdate="1">
-
-	<!-- Taxes 
-			   Sale Tax -->
-			
-	<record id="sales_private" model="account.tax.template">
+    <data noupdate="1">
+    <!-- Taxes Sale Tax -->
+    
+    <record id="sales_private" model="account.tax.template">
         <field name="name">Sale Tax-15%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
@@ -20,9 +17,9 @@
         <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
         <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
-    </record>	
-	
-	<record id="sales_private_main" model="account.tax.template">
+    </record>
+    
+    <record id="sales_private_main" model="account.tax.template">
         <field name="name">Sale Tax-12%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.12</field>
@@ -36,7 +33,7 @@
         <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
         <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
-    </record>	
+    </record>
     
     <record id="sales_private_main_4" model="account.tax.template">
         <field name="name">Sale Tax-4%</field>
@@ -70,10 +67,10 @@
         <field name="ref_tax_code_id" ref="vat_code_payable"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>
-	
-	<!-- vat -->
-	
-	<record id="vat_private_main" model="account.tax.template">
+    
+    <!-- vat -->
+    
+    <record id="vat_private_main" model="account.tax.template">
         <field name="name">VAT-5%(4% VAT+1% Add. Tax.)</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.05</field>
@@ -91,9 +88,9 @@
         <field name="ref_tax_sign">1</field>
         <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
-    </record>	
-	
-	<record id="vat_private_main_tax" model="account.tax.template">
+    </record>
+    
+    <record id="vat_private_main_tax" model="account.tax.template">
         <field name="name">VAT-15%(12.5% VAT+2.5% Add. Tax.)</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
@@ -112,8 +109,8 @@
         <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>
-		
-	<record id="vat_private_tax" model="account.tax.template">
+    
+    <record id="vat_private_tax" model="account.tax.template">
         <field name="name">VAT-8%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.08</field>
@@ -161,11 +158,11 @@
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>
 
-	<!-- Exice Duty -->
-				
-	<record id="exice_duty_private_main" model="account.tax.template">
+<!-- Exice Duty -->
+
+    <record id="exice_duty_private_main" model="account.tax.template">
         <field name="name">Excise Duty-10.30%</field>
-		<field name="include_base_amount" eval="True"/>
+        <field name="include_base_amount" eval="True"/>
         <field name="amount">0.10</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -181,9 +178,9 @@
         <field name="ref_tax_sign">1</field>
         <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
-    </record>	
-	
-	<record id="exice_private_duty_parent" model="account.tax.template">
+    </record>
+    
+    <record id="exice_private_duty_parent" model="account.tax.template">
         <field name="name">Excise Duty-2%</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
@@ -191,8 +188,8 @@
         <field name="parent_id" ref="exice_duty_private_main"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>
-		
-	<record id="exice_private_duty" model="account.tax.template">
+    
+    <record id="exice_private_duty" model="account.tax.template">
         <field name="name">Excise Duty-1%</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
@@ -200,10 +197,10 @@
         <field name="parent_id" ref="exice_duty_private_main"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>
-			
-	<!-- Service Tax -->	
-	
-	<record id="service_private_main" model="account.tax.template">
+    
+    <!-- Service Tax -->
+    
+    <record id="service_private_main" model="account.tax.template">
         <field name="type_tax_use">all</field>
         <field name="name">Service Tax-12.30%</field>
         <field name="include_base_amount" eval="True"/>
@@ -218,24 +215,24 @@
         <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>
-	
-	<record id="service_private_tax_parent" model="account.tax.template">
+    
+    <record id="service_private_tax_parent" model="account.tax.template">
         <field name="name">Service Tax-%2</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
         <field name="parent_id" ref="service_private_main"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
-    </record>	
-	
-	<record id="service_private_tax" model="account.tax.template">
+    </record>
+    
+    <record id="service_private_tax" model="account.tax.template">
         <field name="name">Service Tax-%1</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
         <field name="parent_id" ref="service_private_main"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
-    </record>			
-	
-	</data>
+    </record>
+    
+    </data>
 </openerp>
