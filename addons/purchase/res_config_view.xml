@@ -13,17 +13,17 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <sheet>
-                        <group string="Invoicing">
-                            <field name="default_invoice_method" class="oe_inline"/>
-                            <field name="decimal_precision" class="oe_inline"/>
-                        </group>
-                        <group string="Purchase Order">
+                        <group>
                             <group>
+                                <separator string="Invoicing" colspan="2"/>
+                                <field name="default_invoice_method" class="oe_inline"/>
+                                <field name="decimal_precision" class="oe_inline"/>
+                            </group>
+                            <group>
+                                <separator string="Purchase Order" colspan="2"/>
                                 <field name="group_purchase_pricelist"/>
                                 <field name="group_uom"/>
                                 <field name="group_purchase_delivery_address"/>
-                            </group>
-                            <group>
                                 <field name="module_purchase_double_validation"/>
                                 <field name="module_purchase_requisition"/>
                                 <field name="module_warning"/>
