@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp a {
   text-decoration: none;
@@ -352,6 +352,19 @@
 .openerp .oe_button.oe_link span:hover {
   text-decoration: underline;
 }
+.openerp .oe_star_on, .openerp .oe_star_off {
+  color: #cccccc;
+  text-shadow: 0 0 2px black;
+  vertical-align: top;
+  position: relative;
+  top: -5px;
+}
+.openerp .oe_star_on:hover, .openerp .oe_star_off:hover {
+  text-decoration: none;
+}
+.openerp .oe_star_on {
+  color: gold;
+}
 .openerp.oe_tooltip {
   font-size: 12px;
 }
@@ -446,12 +459,12 @@
 .openerp .oe_dropdown_menu {
   display: none;
   position: absolute;
-  top: 28px;
+  top: 32px;
   z-index: 1;
   border: 1px solid #afafb6;
   background: white;
-  padding: 8px;
-  min-width: 120px;
+  padding: 6px 0;
+  min-width: 140px;
   text-align: left;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -481,7 +494,7 @@
 .openerp .oe_dropdown_menu > li > a {
   white-space: nowrap;
   display: block;
-  padding: 3px 6px;
+  padding: 4px 15px;
   color: #4c4c4c;
   text-decoration: none;
 }
