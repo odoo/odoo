@@ -42,6 +42,9 @@ portal_crm (which creates the contact page) are installed.
     'css': [
         'static/src/css/portal_hr_employees.css',
     ],
+    'js': [
+        'static/lib/jquery.expander/portal_hr_employees.js',
+    ],
 
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
