@@ -313,32 +313,37 @@
                 <kanban>
                     <field name="title"/>
                     <field name="date_open"/>
+                    <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                          <div class="oe_module_survey">
-                            <a class="oe_module_icon">
-                               <div class="oe_survey_title"><t t-esc="record.title.raw_value.toString()"/></div><br/>
-                               <div class="oe_survey_responsible">
-                                   <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
-                               </div><br/>
-                               <div class="oe_survey_start_date">
-                                  Open From:
-                                   <t t-if="record.date_open.raw_value">
-                                       <t t-esc="record.date_open.raw_value.getDate()"/>
-                                       <t t-esc="record.date_open.raw_value.toString('MMM')"/>, 
-                                       <t t-esc="record.date_open.raw_value.getFullYear()"/>
-                                   </t>
-                               </div><br/>
-                               <div class="oe_survey_rate">
-                                   Rate:
-                                <div class="oe_survey_fill" >
-                                   <button type="object" name="fill_survey" class="">
-                                       <span>Fill</span>
-                                   </button>
-                               </div>                                   
-                               </div>
-                            </a>
-                          </div>  
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_auto_height">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li><a type="edit">Edit...</a></li>
+                                        <li><a type="delete">Delete</a></li>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"><field name="title"/></t></h3>
+                                    <div class="oe_survey_responsible">
+                                       <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
+                                   </div><br/>
+                                   <div class="oe_survey_start_date">
+                                      Open From:
+                                       <t t-if="record.date_open.raw_value">
+                                           <t t-esc="record.date_open.raw_value.getDate()"/>
+                                           <t t-esc="record.date_open.raw_value.toString('MMM')"/>,
+                                           <t t-esc="record.date_open.raw_value.getFullYear()"/>
+                                       </t>
+                                   </div><br/>
+                                   <div class="oe_survey_rate">
+                                       Rate:
+                                        <a name="fill_survey" type="object">Fill</a>
+                                   </div>
+                                </div>
+                            </div>
                         </t>
                     </templates>
                 </kanban>
