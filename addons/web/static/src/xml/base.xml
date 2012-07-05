@@ -399,7 +399,7 @@
 <t t-name="BreadCrumb">
     <t t-foreach="widget.items" t-as="item">
         <t t-if="!item_last">
-            <a href="#" class="oe_breadcrumb_item" t-att-data-index="item_index" t-att-data-action_id="item.action.id">
+            <a href="#" class="oe_breadcrumb_item" t-att-data-index="item_index">
                 <t t-esc="item.get_title()"/>
             </a> /
         </t>

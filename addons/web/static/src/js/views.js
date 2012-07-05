@@ -164,9 +164,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
             this.inner_action = action;
             var inner_viewmanager = this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
+            this.breadcrumb.push_actionmanager(inner_viewmanager);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
-            this.breadcrumb.push_actionmanager(inner_viewmanager);
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -254,36 +254,34 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 return item.title || item.widget.get('title');
             };
         }
+        console.log("breadcrumb push", item);
         this.items.push(item);
     },
-    push_actionmanager: function(am) {
+    push_actionmanager: function(am, view_type) {
         var self = this;
-        var bookmarked_view = am.active_view;
+        var bookmarked_view = view_type || am.active_view || am.views_src[0].view_type;
         this.push({
             widget: am,
             show: function() {
                 am.$element.show();
-                am.on_mode_switch(current_view);
+                if (am.active_view !== bookmarked_view) {
+                    am.on_mode_switch(bookmarked_view);
+                    am.set_title();
+                }
+            },
+            get_title: function() {
+                return am.views[bookmarked_view].controller.get('title');
             }
         });
-        am.on_mode_switch.add_first(function(mode) {
-            if (mode === 'form' && !am.views[mode].controller) {
-                self.push({
-                    widget: am,
-                    show: function() {
-                        am.$element.show();
-                        inner_viewmanager.on_mode_switch('form');
-                    },
-                    action: action,
-                    get_title: function() {
-                        var form = inner_viewmanager.views['form'].controller;
-                        if (form) {
-                            return form.get('title');
-                        }
-                    }
-                });
-            }
-        });
+        if (bookmarked_view !== 'form') {
+            am.on_mode_switch.add_first(function(mode) {
+                if (mode === 'form') {
+                    self.push_actionmanager(am, 'form');
+                } else {
+                    // select previous to form and remove form
+                }
+            });
+        }
     },
     pop: function() {
         this.remove_item(this.items.length - 1);
@@ -314,9 +312,16 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         }
     },
     remove_item: function(index) {
+        console.log("Breadcrumb remove index", index);
         var item = this.items.splice(index, 1)[0];
         if (item) {
-            item.destroy();
+            var dups = _.filter(this.items, function(it) {
+                return item.widget === it.widget;
+            });
+            if (dups.length === 0) {
+                console.log("Breadcrumb Destroy", item);
+                item.destroy();
+            }
         } else {
             console.warn("Breadcrumb: Can't remove item at index", index);
         }
@@ -380,14 +385,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_view_manager_switch').hide();
         }
-        this.on('change:title', this, function() {
-            var breadcrumb = self.getParent().breadcrumb;
-            if (breadcrumb) {
-                self.$element.find('.oe_view_title_text:first').html(breadcrumb.get_title());
-            } else {
-                self.$element.find('.oe_view_title_text:first').text(self.get('title'));
-            }
-        });
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
         return this.on_mode_switch(default_view);
@@ -412,41 +409,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.active_view = view_type;
 
         if (!view.controller) {
-            // Lazy loading of views
-            var controllerclass = this.registry.get_object(view_type);
-            var options = _.clone(view.options);
-            if (view_type === "form" && this.action) {
-                switch (this.action.target) {
-                    case 'new':
-                    case 'inline':
-                        options.initial_mode = 'edit';
-                        break;
-                }
-            }
-            var controller = new controllerclass(this, this.dataset, view.view_id, options);
-            controller.on("change:title", this, function() {
-                if (self.active_view === view_type) {
-                    self.set({ 'title' : controller.get('title') });
-                }
-            });
-            if (view.embedded_view) {
-                controller.set_embedded_view(view.embedded_view);
-            }
-            controller.do_switch_view.add_last(_.bind(this.switch_view, this));
-
-            controller.do_prev_view.add_last(this.on_prev_view);
-            var container = this.$element.find(".oe_view_manager_view_" + view_type);
-            view_promise = controller.appendTo(container);
-            this.views[view_type].controller = controller;
-            this.views[view_type].deferred.resolve(view_type);
-            $.when(view_promise).then(function() {
-                self.on_controller_inited(view_type, controller);
-                if (self.searchview
-                        && self.flags.auto_search
-                        && view.controller.searchable !== false) {
-                    self.searchview.ready.then(self.searchview.do_search);
-                }
-            });
+            view_promise = this.do_create_view(view_type);
         } else if (this.searchview
                 && self.flags.auto_search
                 && view.controller.searchable !== false) {
@@ -479,6 +442,50 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             });
         });
         return view_promise;
+    },
+    do_create_view: function(view_type) {
+        // Lazy loading of views
+        var self = this;
+        var view = this.views[view_type];
+        var controllerclass = this.registry.get_object(view_type);
+        var options = _.clone(view.options);
+        if (view_type === "form" && this.action) {
+            switch (this.action.target) {
+                case 'new':
+                case 'inline':
+                    options.initial_mode = 'edit';
+                    break;
+            }
+        }
+        var controller = new controllerclass(this, this.dataset, view.view_id, options);
+
+        controller.on("change:title", this, function() {
+            if (self.active_view === view_type) {
+                self.set_title(controller.get('title'));
+            }
+        });
+
+        if (view.embedded_view) {
+            controller.set_embedded_view(view.embedded_view);
+        }
+        controller.do_switch_view.add_last(_.bind(this.switch_view, this));
+
+        controller.do_prev_view.add_last(this.on_prev_view);
+        var container = this.$element.find(".oe_view_manager_view_" + view_type);
+        var view_promise = controller.appendTo(container);
+        this.views[view_type].controller = controller;
+        this.views[view_type].deferred.resolve(view_type);
+        return $.when(view_promise).then(function() {
+            self.on_controller_inited(view_type, controller);
+            if (self.searchview
+                    && self.flags.auto_search
+                    && view.controller.searchable !== false) {
+                self.searchview.ready.then(self.searchview.do_search);
+            }
+        });
+    },
+    set_title: function(title) {
+        this.$element.find('.oe_view_title_text:first').text(title);
     },
     /**
      * Method used internally when a view asks to switch view. This method is meant
@@ -798,6 +805,18 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         });
     },
+    do_create_view: function(view_type) {
+        var r = this._super.apply(this, arguments);
+        var view = this.views[view_type].controller;
+        view.set({ 'title': this.action.name });
+        return r;
+    },
+    set_title: function(title) {
+        var breadcrumb = this.getParent().breadcrumb;
+        if (breadcrumb) {
+            this.$element.find('.oe_breadcrumb_title:first').html(breadcrumb.get_title());
+        }
+    },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
             state["view_type"] = this.active_view;
@@ -819,9 +838,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
-    set_title: function (title) {
-        this.getParent().breadcrumb.update();
-    }
 });
 
 instance.web.Sidebar = instance.web.Widget.extend({
