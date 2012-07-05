@@ -40,7 +40,7 @@ class res_users(osv.osv):
                         ('none', 'Never')
                         ], 'Receive Feeds by Email', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
                                     help="This Unique Mail Box Alias of the User allows to manage the Seamless email communication between Mail Box and OpenERP," 
                                          "This Alias MailBox manage the Users email communication."),
     }

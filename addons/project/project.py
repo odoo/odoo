@@ -217,7 +217,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
                                     help="This Unique Mail Box Alias of the Project allows to manage the Seamless email communication between Mail Box and OpenERP," 
                                         "This Alias MailBox also create and Manage the new Email Tasks/Issues for this Project and also manage the existing Task/Issue email communication."),
         'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True, 
