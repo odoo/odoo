@@ -122,7 +122,81 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
         </record>		
-				
+
+		<!--Land and Property -->
+		
+        <record model="account.account.template" id="p17000">
+            <field name="name">Property, Plant, and Equipment</field>
+            <field name="code">17000</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p10"/>
+        </record>
+
+        <record model="account.account.template" id="p17200">
+            <field name="name">Land</field>
+            <field name="code">17200</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+			
+        <record model="account.account.template" id="p17100">
+            <field name="name">Buildings</field>
+            <field name="code">17100</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+
+        <record model="account.account.template" id="p17300">
+            <field name="name">Equipment</field>
+            <field name="code">17300</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+		
+        <record model="account.account.template" id="p17800">
+            <field name="name">Vehicles</field>
+            <field name="code">17800</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>							
+		
+        <record model="account.account.template" id="p18100">
+            <field name="name">Accumulated Depreciation - Buildings</field>
+            <field name="code">18100</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+		
+        <record model="account.account.template" id="p18300">
+            <field name="name">Accumulated Depreciation - Equipment</field>
+            <field name="code">18300</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+
+        <record model="account.account.template" id="p18800">
+            <field name="name">Accumulated Depreciation - Vehicles</field>
+            <field name="code">18800</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="p17000"/>
+        </record>
+						
 		<!-- Liabilities -->
 		
         <record model="account.account.template" id="p20">
