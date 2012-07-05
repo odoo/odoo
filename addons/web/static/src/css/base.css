@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -378,6 +378,11 @@
   padding: 0 16px;
   list-style: none;
   zoom: 1;
+}
+.openerp .oe_notebook.ui-corner-all {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
 }
 .openerp .oe_notebook:before, .openerp .oe_notebook:after {
   display: table;
@@ -1010,10 +1015,8 @@
   border-right: 4px solid transparent;
   border-top: 4px solid #4c4c4c;
 }
-.openerp .oe_application {
-  width: 100%;
-}
 .openerp .oe_application a {
+  width: 100%;
   color: #8a89ba;
 }
 .openerp .oe_application a:hover {
@@ -1224,7 +1227,7 @@
 .openerp .oe_searchview input, .openerp .oe_searchview textarea {
   padding: 3px;
   height: 14px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 18px;
 }
 .openerp .oe_searchview.oe_focused {

@@ -313,6 +313,8 @@ $colour4: #8a89ba
         padding: 0 16px
         list-style: none
         zoom: 1
+    .oe_notebook.ui-corner-all
+        @include radius(0)
     .oe_notebook:before, .oe_notebook:after
         display: table
         content: ""
@@ -399,7 +401,6 @@ $colour4: #8a89ba
         border-right: 4px solid transparent
         border-top: 4px solid#404040
         @include opacity(0.5)
-
     .oe_sidebar
         white-space: nowrap
         .oe_dropdown_menu
@@ -960,7 +961,7 @@ $colour4: #8a89ba
         input, textarea
             padding: 3px
             height: 14px
-            font-size: 11px
+            font-size: 12px
             line-height: 18px
         &.oe_focused
             border-color: $facets-border-selected
