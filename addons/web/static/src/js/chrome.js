@@ -1225,6 +1225,8 @@ openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
 
     start: function() {
         var self = this;
+        this.crashmanager = new openerp.web.CrashManager();
+        openerp.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
         this.am.appendTo(this.$element.addClass('openerp'));
         return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
             var action = result.result;
