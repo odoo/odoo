@@ -91,6 +91,7 @@ The main features are:
         'static/src/css/mail_group.css',
     ],
     'js': [
+        'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
     ],
     'qweb': [
