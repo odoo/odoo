@@ -381,8 +381,10 @@
                                         <field name="active"/>
                                     </group>
                                     <group>
-                                        <field name="date_start"/>
-                                        <field name="date_stop"/>
+                                        <label for="date_start" string="Validity"/>
+                                        <div name="validity">
+                                            <field name="date_start" class="oe_inline"/> - <field name="date_stop" class="oe_inline"/>
+                                        </div>
                                         <field name="product_rounding"/>
                                         <field name="product_efficiency"/>
                                     </group>
