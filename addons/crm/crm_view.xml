@@ -87,7 +87,7 @@
                                 <field name="change_responsible"/>
                                 <field name="member_ids"/>
                             </group>
-                            <group>
+                            <group attrs="{'invisible': [('alias_domain', '=', False)]}">
                                 <div name="alias_box">
                                     <label for="alias_name"/>
                                     <field name="alias_name" class="oe_inline" required="0"/>@<field name="alias_domain" class="oe_inline"/>

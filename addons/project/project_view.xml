@@ -102,7 +102,7 @@
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                     <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                                 </group>
-                                <group string="Mailbox Alias" colspan="4">
+                                <group string="Mailbox Alias" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                    <div>
                                         <label for="alias_name"/>
                                         <field name="alias_name" required="0" class="oe_inline"/>@
@@ -201,6 +201,7 @@
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="alias_id"/>
+                    <field name="alias_domain"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
@@ -229,7 +230,7 @@
                                         <div>Progress</div>
                                         <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
                                     </div>
-                                    <div name="alias_box" t-if="record.alias_id.raw_value" class="oe_kanban_ellipsis">
+                                    <div name="alias_box" t-if="record.alias_domain.raw_value" class="oe_kanban_ellipsis">
                                         Mailbox Alias :
                                         <a t-attf-href="mailto:#{record.alias_id.raw_value}"><field name="alias_id"/></a>
                                     </div>

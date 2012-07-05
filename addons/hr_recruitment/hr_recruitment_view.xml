@@ -349,7 +349,7 @@
                 </div>
             </field>
             <field name="company_id" version="7.0" position="after">
-                <group colspan="4">
+                <group colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <div name="alias_box">
                         <label for="alias_name"/>
                         <field name="alias_name" required="0" class="oe_inline"/>@

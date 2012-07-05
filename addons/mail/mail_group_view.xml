@@ -68,11 +68,13 @@
                                 <label for="public"/> 
                                 <field name="public" class="oe_inline"/>
                             </div>
+                            <group colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <div name="alias_box">
+                                    <label for="alias_name"/>
+                                    <field name="alias_name" required="0" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
+                                </div>
+                            </group>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <div name="alias_box">
-                                <label for="alias_name"/>
-                                <field name="alias_name" required="0" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
-                            </div>
                         </div>
                     </div>
                     <footer>

@@ -257,23 +257,6 @@ class project(osv.osv):
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
     ]
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(project,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form' or view_type == 'kanban':
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-            if not domain:
-                doc = etree.XML(res['arch'])
-                if view_type == "form":
-                    model_node = doc.xpath("//group[@string='Mailbox Alias']")[0]
-                    parent = model_node.getparent()
-                    parent.remove(model_node)
-                else:
-                    model_node = doc.xpath("//div[@name='alias_box']")[0]
-                    parent = model_node.getparent()
-                    parent.remove(model_node)
-                res['arch'] = etree.tostring(doc)
-        return res
-    
     def set_template(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
