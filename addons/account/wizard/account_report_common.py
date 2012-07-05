@@ -32,6 +32,8 @@ class account_common_report(osv.osv_memory):
     def onchange_chart_id(self, cr, uid, ids, chart_account_id=False, context=None):
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
+        else:
+            return {'value': {'company_id': False}}
         return {'value': {'company_id': company_id}}
 
     _columns = {
