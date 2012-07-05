@@ -175,6 +175,7 @@ class wizard(osv.osv_memory):
                    'lang': lang or 'en_US',
                    'partner_id': company_id,
                    'has_portal_user': has_portal_user,
+                   'user_id': user.id,
                 })
         return users
 
@@ -226,6 +227,7 @@ class wizard_user(osv.osv_memory):
             help="The language for the user's user interface"),
         'partner_id': fields.related('wizard_id','partner_id',type='many2one',relation='res.partner',string='Partner',readonly=True),
         'has_portal_user':fields.boolean('Has portal access'),
+        'user_id': fields.many2one('res.users', string="Related User")
     }
 
     def _check_email(self, cr, uid, ids):
@@ -324,9 +326,12 @@ class wizard_user(osv.osv_memory):
     def manage_portal_access(self, cr, uid, ids, context=None):
         res_user = self.pool.get('res.users')
         for portal_user in self.browse(cr, uid, ids, context=None):
-            user_ids = res_user.search(cr, uid, [('login','=',portal_user.user_email)])
-            user_id = user_ids and user_ids[0] or False
             portal = portal_user.wizard_id.portal_id
+            user_id = portal_user.user_id and portal_user.user_id.id
+            if not user_id:
+                user_ids = res_user.search(cr, uid, [('login','=',portal_user.user_email)])
+                user_id = user_ids and user_ids[0] or False
+            
             if not user_id:
                 user_id = self.create_new_user(cr, uid, portal_user, context=context)
             linked = self.link_portal_user(cr, uid, portal.id, user_id, context=context)
