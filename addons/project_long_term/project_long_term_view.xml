@@ -164,10 +164,12 @@
                     <label for="date_start" string="Duration"/>
                     <div>
                         <div>
-                            <field name="duration" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline"/>
+                            <field name="date_start" class="oe_inline"/>
+                            <label string=" - " class="oe_inline oe_edit_only"/>
+                            <field name="date_end" class="oe_inline"/>
                         </div>
-                        <field name="date_start" class="oe_inline"/><label string=" - " class="oe_inline"/><field name="date_end" class="oe_inline"/>
+                        <field name="duration" class="oe_inline"/>
+                        <field name="product_uom" class="oe_inline"/>
                     </div>
                     </group>
                     <notebook>
