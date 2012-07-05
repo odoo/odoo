@@ -66,42 +66,12 @@ class crm_meeting(base_state, osv.Model):
         'state': 'draft',
     }
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Meeting'
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        # update context: if come from phonecall, default state values can make the message_append_note crash
-        context.pop('default_state', False)
-        for meeting in self.browse(cr, uid, ids, context=context):
-            # convert datetime field to a datetime, using server format, then
-            # convert it to the user TZ and re-render it with %Z to add the timezone
-            meeting_datetime = fields.DT.datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            meeting_date_str = fields.datetime.context_timestamp(cr, uid, meeting_datetime, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-            message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting_date_str)
-            if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
-                lead = meeting.opportunity_id
-                parent_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (lead.name, meeting.date)
-                lead.message_append_note(_('System Notification'), message)
-            elif meeting.phonecall_id:
-                phonecall = meeting.phonecall_id
-                parent_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (phonecall.name, meeting.date)
-                phonecall.message_append_note(body=message)
-            else:
-                parent_message = message
-            if parent_message:
-                meeting.message_append_note(body=parent_message)
-        return True
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>confirmed</b>."), context=context)
