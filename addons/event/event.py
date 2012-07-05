@@ -424,7 +424,6 @@ class event_registration(osv.osv):
         contact_id =  addr_obj.browse(cr, uid, contact, context=context)
         data = {
             'email':contact_id.email,
-            'contact_id':contact_id.id,
             'name':contact_id.name,
             'phone':contact_id.phone,
             }
@@ -444,13 +443,12 @@ class event_registration(osv.osv):
         end = datetime.strptime(data_event.date_end, "%Y-%m-%d %H:%M:%S")
         diff = end - start
         duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
-        value['duration'] = round(duration, 2)
-        return {'value': {'event_begin_date': data_event.date_begin,
+        value ['value']= {'event_begin_date': data_event.date_begin,
                      'event_end_date': data_event.date_end,
                      'company_id': data_event.company_id and data_event.company_id.id or False,
-                     'duration': value['duration'],
+                     'duration': round(duration, 2),
                }
-               }
+        return value
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res_obj = self.pool.get('res.partner')

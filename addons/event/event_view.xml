@@ -387,7 +387,7 @@
                    <h1>
                             <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" nolabel="1" class="oe_inline"/>
                             <label string="(" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-                            <field name="duration" widget="float_time" attrs="{'invisible': [('event_id', '=', '')]}"/>
+                            <field name="duration" widget="float_time" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
                             <label string=")" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
 	                </h1>   
                     <group colspan="4" col="4">
