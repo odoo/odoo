@@ -382,8 +382,10 @@
                                     </group>
                                     <group>
                                         <label for="date_start" string="Validity"/>
-                                        <div name="validity">
-                                            <field name="date_start" class="oe_inline"/> - <field name="date_stop" class="oe_inline"/>
+                                        <div>
+                                            <field name="date_start" class="oe_online" nolabel="1"/>
+                                            <label string="-"/>
+                                            <field name="date_stop" class="oe_online" nolabel="1"/>
                                         </div>
                                         <field name="product_rounding"/>
                                         <field name="product_efficiency"/>
