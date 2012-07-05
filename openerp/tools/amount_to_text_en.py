@@ -116,7 +116,7 @@ def amount_to_text(nbr, lang='en', currency='euro'):
         _logger.warning(_("no translation function found for lang: '%s'"), lang)
         #TODO: (default should be en) same as above
         lang = 'en'
-    return _translate_funcs[lang](abs(nbr), currency='euro')
+    return _translate_funcs[lang](abs(nbr), currency)
 
 if __name__=='__main__':
     from sys import argv
