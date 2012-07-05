@@ -185,4 +185,54 @@ $(document).ready(function () {
                 ok(e.isEditing(), "should have kept editing");
             })
     });
+
+    module('list-edition-events', {
+        setup: function () {
+            baseSetup();
+            _.extend(instance.connection.responses, {
+                '/web/listview/load': function () {
+                    return {result: {
+                        type: 'tree',
+                        fields: {
+                            a: {type: 'char', string: "A"},
+                            b: {type: 'char', string: "B"},
+                            c: {type: 'char', string: "C"}
+                        },
+                        arch: {
+                            tag: 'tree',
+                            attrs: {},
+                            children: [
+                                {tag: 'field', attrs: {name: 'a'}},
+                                {tag: 'field', attrs: {name: 'b'}},
+                                {tag: 'field', attrs: {name: 'c'}}
+                            ]
+                        }
+                    }};
+                }
+            });
+        }
+    });
+    asyncTest('edition events', function () {
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
+        var o = {
+            counter: 0,
+            onEvent: function (e) { this.counter++; }
+        };
+        var l = new instance.web.ListView(null, ds);
+        l.set_editable(true);
+        l.on('edit:before edit:after', o, o.onEvent);
+        l.appendTo($fix)
+            .always(start)
+            .pipe(function () {
+                ok(l.options.editable, "should be editable");
+                equal(o.counter, 0, "should have seen no event yet");
+                return l.startEdition();
+            })
+            .pipe(function () {
+                ok(l.editor.isEditing(), "should be editing");
+                equal(o.counter, 2, "should have seen two edition events");
+            })
+            .fail(function (e) { ok(false, e && e.message); });
+    });
+    // TODO: test cancelling edition events
 });

@@ -125,32 +125,34 @@ openerp.web.list_editable = function (instance) {
             }
             var $recordRow = this.groups.getRowFor(record);
             var cells = this.getCellsFor($recordRow);
+
             return this.ensureSaved().pipe(function () {
                 return self.withEvent('edit', {
                     record: record.attributes,
                     cancel: false
-                }, self.editor.edit,
-                [record.attributes, function (field_name, field) {
-                    var cell = cells[field_name];
-                    if (!cell || field.get('effective_readonly')) {
-                        // Readonly fields can just remain the list's, form's
-                        // usually don't have backgrounds &al
-                        field.set({invisible: true});
-                        return;
-                    }
-                    var $cell = $(cell);
-                    var position = $cell.position();
+                }, function () {
+                    return self.editor.edit(record.attributes, function (field_name, field) {
+                        var cell = cells[field_name];
+                        if (!cell || field.get('effective_readonly')) {
+                            // Readonly fields can just remain the list's, form's
+                            // usually don't have backgrounds &al
+                            field.set({invisible: true});
+                            return;
+                        }
+                        var $cell = $(cell);
+                        var position = $cell.position();
 
-                    field.$element.css({
-                        top: position.top,
-                        left: position.left,
-                        width: $cell.outerWidth(),
-                        minHeight: $cell.outerHeight()
+                        field.$element.css({
+                            top: position.top,
+                            left: position.left,
+                            width: $cell.outerWidth(),
+                            minHeight: $cell.outerHeight()
+                        });
+                    }).pipe(function () {
+                        $recordRow.addClass('oe_edition');
+                        return record.attributes;
                     });
-                }],
-                [record.attributes]);
-            }).then(function () {
-                $recordRow.addClass('oe_edition')
+                });
             });
         },
         getCellsFor: function ($row) {
@@ -165,27 +167,29 @@ openerp.web.list_editable = function (instance) {
          */
         saveEdition: function () {
             var self = this;
-            // TODO: save:after should be invoked after reload
             return this.withEvent('save', {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
-            }, this.editor.save).pipe(function (attrs) {
-                var created = false;
-                var record = self.records.get(attrs.id);
-                if (!record) {
-                    // new record
-                    created = true;
-                    record = self.records.find(function (r) {
-                        return !r.get('id');
-                    }).set('id', attrs.id);
-                }
-                // onwrite callback could be altering & reloading the record
-                // which has *just* been saved, so first perform all onwrites
-                // then do a final reload of the record
-                return self.handleOnWrite(record)
-                    .pipe(function () { return self.reload_record(record); })
-                    .pipe(function () { return { created: created, record: record };
+            }, function () {
+                return this.editor.save().pipe(function (attrs) {
+                    var created = false;
+                    var record = self.records.get(attrs.id);
+                    if (!record) {
+                        // new record
+                        created = true;
+                        record = self.records.find(function (r) {
+                            return !r.get('id');
+                        }).set('id', attrs.id);
+                    }
+                    // onwrite callback could be altering & reloading the
+                    // record which has *just* been saved, so first perform all
+                    // onwrites then do a final reload of the record
+                    return self.handleOnWrite(record)
+                        .pipe(function () {
+                            return self.reload_record(record); })
+                        .pipe(function () {
+                            return { created: created, record: record }; });
                 });
             });
         },
@@ -198,16 +202,18 @@ openerp.web.list_editable = function (instance) {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
-            }, this.editor.cancel).then(function (attrs) {
-                if (attrs.id) {
-                    return self.reload_record(self.records.get(attrs.id));
-                }
-                var to_delete = self.records.find(function (r) {
-                    return !r.get('id');
+            }, function () {
+                return this.editor.cancel().pipe(function (attrs) {
+                    if (attrs.id) {
+                        return self.reload_record(self.records.get(attrs.id));
+                    }
+                    var to_delete = self.records.find(function (r) {
+                        return !r.get('id');
+                    });
+                    if (to_delete) {
+                        self.records.remove(to_delete);
+                    }
                 });
-                if (to_delete) {
-                    self.records.remove(to_delete);
-                }
             });
         },
         /**
@@ -227,7 +233,7 @@ openerp.web.list_editable = function (instance) {
          * @param {Array} [trigger_params] supplementary arguments provided to the ``:after`` sub-event, before anything fetched by the ``action`` function
          * @return {jQuery.Deferred}
          */
-        withEvent: function (event_name, event, action, args, trigger_params) {
+        withEvent: function (event_name, event, action) {
             var self = this;
             event = event || {};
             this.trigger(event_name + ':before', event);
@@ -236,9 +242,8 @@ openerp.web.list_editable = function (instance) {
                     message: _.str.sprintf("Event %s:before cancelled",
                                            event_name)});
             }
-            return $.when(action.apply(this.editor, args || [])).then(function () {
+            return $.when(action.call(this)).then(function () {
                 self.trigger.apply(self, [event_name + ':after']
-                        .concat(trigger_params || [])
                         .concat(_.toArray(arguments)));
             });
         },
