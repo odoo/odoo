@@ -208,6 +208,14 @@ $(document).ready(function () {
                             ]
                         }
                     }};
+                },
+                '/web/dataset/call_kw:read': function (params) {
+                    return {result: [{
+                        id: 1,
+                        a: 'foo',
+                        b: 'bar',
+                        c: 'baz'
+                    }]};
                 }
             });
         }
@@ -218,10 +226,11 @@ $(document).ready(function () {
             counter: 0,
             onEvent: function (e) { this.counter++; }
         };
-        var l = new instance.web.ListView(null, ds);
+        var l = new instance.web.ListView({}, ds);
         l.set_editable(true);
         l.on('edit:before edit:after', o, o.onEvent);
         l.appendTo($fix)
+            .pipe(l.proxy('reload_content'))
             .always(start)
             .pipe(function () {
                 ok(l.options.editable, "should be editable");
@@ -234,5 +243,31 @@ $(document).ready(function () {
             })
             .fail(function (e) { ok(false, e && e.message); });
     });
-    // TODO: test cancelling edition events
+
+    asyncTest('edition events: cancelling', 3, function () {
+        var edit_after = false;
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
+        var l = new instance.web.ListView({}, ds);
+        l.set_editable(true);
+        l.on('edit:before', {}, function (e) {
+            e.cancel = true;
+        });
+        l.on('edit:after', {}, function () {
+            edit_after = true;
+        });
+        l.appendTo($fix)
+            .pipe(l.proxy('reload_content'))
+            .always(start)
+            .pipe(function () {
+                ok(l.options.editable, "should be editable");
+                return l.startEdition();
+            })
+            // cancelling an event rejects the deferred
+            .pipe($.Deferred().reject(), function () {
+                ok(!l.editor.isEditing(), "should not be editing");
+                ok(!edit_after, "should not have fired the edit:after event");
+                return $.when();
+            })
+            .fail(function (e) { ok(false, e && e.message || e); });
+    });
 });
