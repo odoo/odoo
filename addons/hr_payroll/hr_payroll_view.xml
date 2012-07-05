@@ -7,36 +7,6 @@
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
-        <!-- Employee View -->
-        <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form2</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-            <data>
-                <xpath expr="//page[@string='Personal Information']" position="after">
-                    <page string="Miscellaneous" groups="base.group_hr_user">
-                        <group colspan="2" col="2">
-                            <separator string="Personal Info" colspan="2"/>
-                            <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
-                            <field name="place_of_birth"/>
-                            <field name="children"/>
-                            <!-- <field name="basic" invisible="0"/> -->
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Job Info" colspan="2"/>
-                            <field name="manager" />
-                            <field name="vehicle" />
-                            <field name="vehicle_distance" />
-                            <field name="medic_exam"  string="Medical Examination"/>
-                        </group>
-                    </page>
-                </xpath>
-            </data>
-            </field>
-        </record>
-        <!-- End Employee View -->
-
         <!-- Contract View -->
         <record id="hr_contract_form_inherit" model="ir.ui.view">
             <field name="name">hr.contract.view.form.inherit</field>
@@ -291,6 +261,7 @@
                     </group>
                     <notebook>
                         <page string="Worked Days &amp; Inputs">
+                            <separator string="Worked Days"/>
                             <field name="worked_days_line_ids">
                                 <tree string="Worked Days" editable="bottom">
                                     <field name="name"/>
@@ -312,6 +283,7 @@
                                     </group>
                                 </form>
                             </field>
+                            <separator string="Other Inputs"/>
                             <field name="input_line_ids" colspan="4" nolabel="1">
                                 <tree string="Input Data" editable="bottom">
                                     <field name="name"/>
@@ -371,12 +343,13 @@
                        </page>
                        <page string="Other Information">
                             <group>
-                                <group>
+                                <group string="Miscellaneous">
                                     <field name="company_id" groups="base.group_multi_company"/>
                                     <field name="payslip_run_id" domain="[('state','=','draft')]"/>
+                                </group>
+                                <group name="accounting" string="Accounting">
                                     <field name="paid" readonly="1"/>
                                 </group>
-                                <group/>
                             </group>
                             <div colspan="4">
                                 <field name="note" Placeholder="Add an internal note..."/>
@@ -435,8 +408,8 @@
                     groups="base.group_hr_manager"/>
 
         <!-- Employee View -->
-        <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form2</field>
+        <record id="payroll_hr_employee_view_form" model="ir.ui.view">
+            <field name="name">payroll.hr.employee.view.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
@@ -444,27 +417,6 @@
                     <xpath expr="//div[@name='button_box']" position="inside">
                         <button name="%(act_hr_employee_payslip_list)d" string="Payslips" type="action"/>
                     </xpath>
-                    <xpath expr="//field[@name='parent_id']" position="before">
-                        <field name="manager"/>
-                    </xpath>
-                    <xpath expr="//group[@name='active_group']" position="before">
-                        <group>
-                            <field name="vehicle"/>
-                            <field name="vehicle_distance"/>
-                        </group>
-                    </xpath>
-                    <field name="active" position="before">
-                        <field name="medic_exam" string="Medical Examination"/>
-                    </field>
-                    <field name="birthday" position="before">
-                        <field name="children"/>
-                    </field>
-                    <field name="birthday" position="after">
-                        <field name="place_of_birth"/>
-                    </field>
-                    <field name="bank_account_id" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
-                    </field>
                 </data>
             </field>
         </record>
@@ -797,6 +749,7 @@
                     <group col="4">
                         <field name="credit_note"/>
                     </group>
+                    <separator string="Payslips"/>
                     <field name="slip_ids"/>
                 </sheet>
                 </form>

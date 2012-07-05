@@ -42,7 +42,7 @@
                         <group>
                             <group string="Product">
                                 <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
-                                <label string="Quantity" for="unit_amount" align="1.0"/>
+                                <label string="Quantity" for="unit_amount"/>
                                 <div>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
                                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
@@ -123,10 +123,7 @@
             <field name="arch" type="xml">
                 <page string="Personal Information" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
-                        <div class="oe_right oe_button_box" name="button_timesheet">
-                            <!-- Put here related buttons -->
-                        </div>
-                        <group col="4">
+                        <group>
                             <group col="2">
                                 <field name="product_id" domain="[('type','=','service')]"/>
                                 <field name="journal_id"/>

@@ -49,7 +49,6 @@
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="department_id"/>
-                    <field name="ref"/>
                     <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
@@ -74,14 +73,18 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
-                    <group col="4">
-                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
-                        <field name="name"/>
-                        <field name="ref"/>
-                        <field name="date"/>
-                        <field name="currency_id"/>
-                        <field name="department_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                    <group>
+                        <group>
+                            <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                            <field name="date"/>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_valid"/>
+                            <field name="currency_id"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Description">
@@ -106,6 +109,8 @@
                                     </group>
                                 </form>
                             </field>
+                            <separator string="Notes"/>
+                            <field name="note" placeholder="Free Notes"/>
                         </page>
                         <page string="Other Info">
                             <group>
@@ -113,17 +118,13 @@
                                     <field name="journal_id"/>
                                     <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                                 </group>
-                                <group groups="base.group_no_one" string="Validation">
-                                    <field name="date_confirm" readonly="1"/>
-                                    <field name="date_valid" readonly="1"/>
-                                    <field name="user_valid"/>
-                                </group>
                             </group>
-                            <separator string="Notes"/>
-                            <field name="note"/>
                         </page>
                     </notebook>
                 </sheet>
+                <footer>
+                    <field name="message_ids" widget="mail_thread"/>
+                </footer>
                 </form>
             </field>
         </record>
