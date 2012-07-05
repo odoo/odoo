@@ -40,7 +40,7 @@ class res_users(osv.osv):
                         ('none', 'Never')
                         ], 'Receive Feeds by Email', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
                                     help="This Unique Mail Box Alias of the User allows to manage the Seamless email communication between Mail Box and OpenERP," 
                                          "This Alias MailBox manage the Users email communication."),
     }
@@ -84,6 +84,13 @@ class res_users(osv.osv):
                 self.pool.get('mail.alias').write(cr, uid, [user.alias_id.id], {'alias_name': vals['login']}, context=context)
         return super(res_users, self).write(cr, uid, ids, vals, context=context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        #Will extract the linked Mail Alias 'alias_id' and unlink it explictly.
+        alias_pool = self.pool.get('mail.alias')
+        alias_ids =[record.alias_id.id for record in self.browse(cr, uid, ids, context=context) if record.alias_id]
+        res = super(res_users, self).unlink(cr, uid, ids, context=context)
+        alias_pool.unlink(cr, uid, alias_ids, context=context)
+        return res
     
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """ Override of message_load_ids

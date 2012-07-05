@@ -122,7 +122,7 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
                                     help="This Unique Mail Box Alias of the Sales Team allows to manage the Seamless email communication between Mail Box and OpenERP,"
                                          "This Alias MailBox also create and Manage the new Email Leads for this Sales Team and also manage the existing Lead email communication."),
     }
@@ -167,11 +167,19 @@ class crm_case_section(osv.osv):
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
                     {'alias_name': "sales_team_"+name, 
-                    'alias_model_id': self._name}, context=context)
+                    'alias_model_id': "crm.lead"}, context=context)
             alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
             vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super(crm_case_section, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']],{'alias_defaults':{'section_id': res,'type':'lead'}},context)
+        return res
+        
+    def unlink(self, cr, uid, ids, context=None):
+        #Will extract the linked Mail Alias 'alias_id' and unlink it explictly.
+        alias_pool = self.pool.get('mail.alias')
+        alias_ids =[ record.alias_id.id for record in self.browse(cr, uid, ids, context=context) if record.alias_id ]
+        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
+        alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
 class crm_case_categ(osv.osv):

@@ -545,7 +545,7 @@ class hr_job(osv.osv):
     _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
                                     help="This Unique Mail Box Alias of the Job allows to manage the Seamless email communication between Mail Box and OpenERP,"
                                          "This Alias MailBox also create and Manage the new Email applicant for this job and also manage the existing applicant email communication."),
     }
@@ -556,11 +556,19 @@ class hr_job(osv.osv):
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
                     {'alias_name': "job_"+name, 
-                    'alias_model_id': self._name}, context=context)
+                    'alias_model_id': "hr.applicant"}, context=context)
             alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
             vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super( hr_job, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        #Will extract the linked Mail Alias 'alias_id' and unlink it explictly.
+        alias_pool = self.pool.get('mail.alias')
+        alias_ids =[record.alias_id.id for record in self.browse(cr, uid, ids, context=context) if record.alias_id]
+        res = super(hr_job, self).unlink(cr, uid, ids, context=context)
+        alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
     
     def action_print_survey(self, cr, uid, ids, context=None):

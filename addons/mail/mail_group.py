@@ -130,7 +130,7 @@ class mail_group(osv.osv):
         'member_count': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
         'is_subscriber': fields.function(get_member_ids, type='boolean', string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer', string='Messages count for last month'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
                                     help="This Unique Mail Box Alias of the Group allows to manage the Seamless email communication between Mail Box and OpenERP,"
                                          "This Alias MailBox manage the Group email communication.")
     }
@@ -152,5 +152,13 @@ class mail_group(osv.osv):
             vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super(mail_group, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": res}, context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        #Will extract the linked Mail Alias 'alias_id' and unlink it explictly.
+        alias_pool = self.pool.get('mail.alias')
+        alias_ids =[record.alias_id.id for record in self.browse(cr, uid, ids, context=context) if record.alias_id]
+        res = super(mail_group, self).unlink(cr, uid, ids, context=context)
+        alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
