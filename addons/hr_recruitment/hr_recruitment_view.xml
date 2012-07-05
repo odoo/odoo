@@ -145,66 +145,65 @@
                     <button name="action_print_survey" type="object"
                         string="Print Interview" icon="gtk-print" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
-                </div>             
+                </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
                     <h2>
                         <field name="partner_name" class="oe_inline"/>
-                        <label class="oe_inline" string="(" attrs="{'invisible': [('type_id', '=', False)]}"/>
-                        <field name="type_id" placeholder="Degree" class="oe_inline"/>
-                        <label class="oe_inline" string=")" attrs="{'invisible': [('type_id', '=', False)]}"/>
-                        <label class="oe_inline" string="apply for " attrs="{'invisible': [('job_id', '=', False)]}"/>
-                        <field name="job_id" on_change="onchange_job(job_id)" class="oe_inline"/>
                     </h2>
                 </div>
                 <group>
-                    <group>
-                        <field name="user_id"/>
+                    <group string="Application Followup">
+                        <field name="priority" string="Appreciation"/>
+                        <field name="user_id" string="responsible"/>
                         <label for="title_action"/>
                         <div>
                             <field name="date_action"/> -
                             <field name="title_action" class="oe_inline" placeholder="Call for proposal"/>
                         </div>
+                        <field name="state" invisible="1"/>
                     </group>
-                    <group>
-                        <field name="priority" string="Appreciation"/>
+                    <group string="Job">
                         <field name="survey" invisible="1"/>
                         <field name="response" invisible="1"/>
+                        <field name="job_id" on_change="onchange_job(job_id)" class="oe_inline"/>
                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                        <field name="state" groups="base.group_no_one"/>
+                        <label for="availability"/>
+                        <div>
+                            <field name="availability" class="oe_inline"/> <label string="Day(s)" class="oe_inline"/>
+                        </div>
                     </group>
                 </group>
-                <notebook>
-                    <page string="Application">
-                        <group>
-                            <group string="Contact">
-                                <label for="partner_id"/>
-                                <div>
-                                    <field name="partner_id" class="oe_inline"
-                                        on_change="onchange_partner_id(partner_id, email_from)"/>
-                                </div>
-                                <field name="email_from" widget="email"/>
-                                <field name="partner_phone"/>
-                                <field name="partner_mobile"/>
-                            </group>
-                            <group string="Reference">
-                                <field name="source_id"/>
-                                <field name="reference"/>
-                            </group>
-                            <group string="Contract">
-                                <field name="salary_expected"/>
-                                <field name="salary_expected_extra"/>
-                                <field name="salary_proposed"/>
-                                <field name="salary_proposed_extra"/>
-                                <field name="availability"/>
-                            </group>
-                        </group>
-                        <separator string="Details"/>
-                        <field name="description"/>
-                   </page>
-                </notebook>
+                <group>
+                    <group string="Contact Details">
+                        <field name="partner_id"
+                                on_change="onchange_partner_id(partner_id, email_from)"/>
+                        <field name="type_id" placeholder="Degree" class="oe_inline"/>
+                        <field name="email_from" widget="email"/>
+                        <field name="partner_phone"/>
+                        <field name="partner_mobile"/>
+                    </group>
+                    <group string="Reference">
+                        <field name="source_id"/>
+                        <field name="reference"/>
+                    </group>
+                    <group string="Contract">
+                        <label for="salary_expected"/>
+                        <div>
+                            <field name="salary_expected" class="oe_inline"/>, 
+                            <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        </div>
+                        <label for="salary_proposed"/>
+                        <div>
+                            <field name="salary_proposed" class="oe_inline"/>, 
+                            <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        </div>
+                    </group>
+                </group>
+                <separator string="Application Summary"/>
+                <field name="description" placeholder="Feedback of interviews..."/>
             </sheet>
             <footer>
                 <field name="message_ids" widget="mail_thread"/>

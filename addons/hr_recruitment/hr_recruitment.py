@@ -200,7 +200,7 @@ class hr_applicant(base_stage, osv.Model):
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id': fields.many2one('res.users', 'HR Manager'),
+        'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date_open': fields.datetime('Opened', readonly=True, select=True),
@@ -213,7 +213,7 @@ class hr_applicant(base_stage, osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability (Days)'),
+        'availability': fields.integer('Availability'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
