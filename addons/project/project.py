@@ -333,10 +333,11 @@ class project(osv.osv):
         context['active_test'] = False
         default['state'] = 'open'
         default['tasks'] = []
+        default['alias_id'] = False
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
-
+        default['alias_name'] = default['name']
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr,uid,id,res,context)
         return res
