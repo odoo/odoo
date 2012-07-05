@@ -122,7 +122,9 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True),
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+                                    help="This Unique Mail Box Alias of the Sales Team allows to manage the Seamless email communication between Mail Box and OpenERP,"
+                                         "This Alias MailBox also create and Manage the new Email Leads for this Sales Team and also manage the existing Lead email communication."),
     }
     
     def _get_stage_common(self, cr, uid, context):
@@ -158,33 +160,19 @@ class crm_case_section(osv.osv):
                 name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
-        
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(crm_case_section,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-            if not domain:
-                doc = etree.XML(res['arch'])
-                alias_node = doc.xpath("//field[@name='alias_id']")[0]
-                parent = alias_node.getparent()
-                parent.remove(alias_node)
-                res['arch'] = etree.tostring(doc)
-        return res
     
     def create(self, cr, uid, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            model, res_id = model_pool.get_object_reference( cr, uid, "crm", "model_crm_lead")
-            vals.update({'alias_name': "sales",
-                         'alias_model_id': res_id})
-            alias_pool.create_unique_alias(cr, uid, vals, context=context)
-            res = super(crm_case_section, self).create(cr, uid, vals, context)
-            record = self.read(cr, uid, res, context)
-            alias_pool.write(cr, uid, [record['alias_id']],{'alias_defaults':{'section_id':record['id'],'type':'lead'}},context)
-            return res
-        return super(crm_case_section, self).create(cr, uid, vals, context)
-
+            name = vals.get('alias_name') or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                    {'alias_name': "sales_team_"+name, 
+                    'alias_model_id': self._name}, context=context)
+            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
+            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
+        res = super(crm_case_section, self).create(cr, uid, vals, context)
+        alias_pool.write(cr, uid, [vals['alias_id']],{'alias_defaults':{'section_id': res,'type':'lead'}},context)
+        return res
 
 class crm_case_categ(osv.osv):
     """ Category of Case """

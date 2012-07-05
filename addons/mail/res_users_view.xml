@@ -32,7 +32,9 @@
                     </div>
                 </xpath>
                 <field name="active" position="after">
-                    <field name="alias_id" readonly="1" required="0"/>
+                    <group colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_id" readonly="1"/><field name="alias_domain" invisible="1"/>
+                    </group>
                 </field>
             </data>
             </field>

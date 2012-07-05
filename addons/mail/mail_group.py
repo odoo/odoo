@@ -130,7 +130,9 @@ class mail_group(osv.osv):
         'member_count': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
         'is_subscriber': fields.function(get_member_ids, type='boolean', string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer', string='Messages count for last month'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True)
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+                                    help="This Unique Mail Box Alias of the Group allows to manage the Seamless email communication between Mail Box and OpenERP,"
+                                         "This Alias MailBox manage the Group email communication.")
     }
 
     _defaults = {
@@ -139,26 +141,16 @@ class mail_group(osv.osv):
         'photo': _get_default_photo,
     }
     
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(mail_group,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-            if not domain:
-                doc = etree.XML(res['arch'])
-                alias_node = doc.xpath("//field[@name='alias_id']")[0]
-                parent = alias_node.getparent()
-                parent.remove(alias_node)
-                res['arch'] = etree.tostring(doc)
-        return res
-    
     def create(self, cr, uid, vals, context=None):
-        model_pool = self.pool.get('ir.model.data')
         alias_pool = self.pool.get('mail.alias')
-        model, res_id = model_pool.get_object_reference( cr, uid, "mail", "model_mail_group")
-        vals.update({'alias_name': "mailing-group",
-                     'alias_model_id': res_id})
-        alias_pool.create_unique_alias(cr, uid, vals, context=context)
-        res = super( mail_group, self).create(cr, uid, vals, context)
-        record = self.read(cr, uid, res, context)
-        alias_pool.write(cr, uid, [record['alias_id']], {"alias_force_thread_id":record['id']}, context)
+        if not vals.get('alias_id'):
+            name = vals.get('alias_name') or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                    {'alias_name': "mail_group_"+name, 
+                    'alias_model_id': self._name}, context=context)
+            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
+            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
+        res = super(mail_group, self).create(cr, uid, vals, context)
+        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": res}, context)
         return res
+

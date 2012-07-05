@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
+import re
 from openerp.osv import fields, osv
 from tools.translate import _
+
 
 class mail_alias(osv.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
@@ -38,6 +40,14 @@ class mail_alias(osv.Model):
     _name = 'mail.alias'
     _description = "Mail Alias"
     _rec_name = 'alias_name'
+
+    def _get_alias_domain(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        config_parameter_pool = self.pool.get("ir.config_parameter")
+        domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)   
+        for alias in self.browse(cr, uid, ids, context=context):
+            res[alias.id] = domain or ""
+        return res
 
     _columns = {
         'alias_name': fields.char('Mailbox Alias', size=255, required=True,
@@ -63,7 +73,8 @@ class mail_alias(osv.Model):
         'alias_force_thread_id': fields.integer('Record Thread ID',
                                       help="Optional ID of the thread (record) to which all "
                                            "messages will be attached, even if they did not reply to it. "
-                                           "If set, this will disable the creation of new records completely.")
+                                           "If set, this will disable the creation of new records completely."),
+        'alias_domain': fields.function(_get_alias_domain, string="Alias Doamin", type='char', size=None),
     }
     _defaults = {
         'alias_defaults': '{}',
@@ -82,9 +93,9 @@ class mail_alias(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             try:
                 dict(eval(record.alias_defaults))
-                return True
             except:
                 return False
+        return True
 
     _constraints = [
         (_check_alias_defaults, "Default Values are in wrong format.\nIt must be in python dictionary format e.g.{'field_name': 'value' or {}}", ['alias_defaults']),
@@ -96,25 +107,43 @@ class mail_alias(osv.Model):
         Email Alias Domain from config.
         e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
         """
-        if context is None:
-            context = {}
         res = []
-        config_parameter_pool = self.pool.get("ir.config_parameter")
-        domain = config_parameter_pool.get_param(cr, uid, "mail.catchall.domain", context=context)         
-        for record in self.read(cr, uid, ids, ['alias_name'], context=context):
-            domain_alias = "%s@%s"%(record['alias_name'], domain)
+        for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context):
+            domain_alias = "%s@%s"%(record['alias_name'], record['alias_domain'])
             res.append((record['id'], domain_alias))
         return res
 
-    def create_unique_alias(self, cr, uid, values, sequence=1 ,context=None):
-        if sequence:
-            prob_alias = "%s%s"%(values['alias_name'], sequence)
-            search_alias = self.search(cr, uid, [('alias_name', '=', prob_alias)])
-            if search_alias:    
-                values = self.create_unique_alias(cr, uid, values, sequence+1, context)
-            else:
-                values.update({'alias_name': prob_alias})
-                return values
+    def _generate_alias(self, cr, uid, name, sequence=1 ,context=None):
+        """
+        If alias is existing then this method will create a new unique alias name
+        by appending n sequence integer number.
+        """
+        new_name = "%s%s"%(name, sequence)
+        search_alias = self.search(cr, uid, [('alias_name', '=', new_name)])
+        if search_alias:    
+            new_name = self._generate_alias(cr, uid, name, sequence+1 ,context=None)
+            if not self.search(cr, uid, [('alias_name', '=', new_name)]):
+                return new_name
         else:
-            return values.update({'alias_name': "%s"%(values['alias_name'])})
+            return new_name
+
+    def create_unique_alias(self, cr, uid, vals, context=None):
+        """
+        Methods accepts the vals param in dict format and create new alias record
+        @vals : dict accept {alias_name: '', alias_model_id: '',...}
+        @return int: New alias_id
+        """
+        model_pool = self.pool.get('ir.model')
+        alias_name = re.sub(r'\W+', '_', vals['alias_name']).lower()
+        values = {'alias_name': alias_name}
+        #Find for the mail alias exist or not if exit then get new mail address.
+        saids = self.search(cr, uid, [('alias_name', '=',alias_name)])
+        if saids:
+            alias_name = self._generate_alias(cr, uid, alias_name, sequence=1, context=context)
+        values.update({'alias_name': alias_name})
+        #Set the model fo rhte mail alias
+        model_sids = model_pool.search(cr, uid, [('model', '=', vals['alias_model_id'])])
+        values.update({'alias_model_id': model_sids[0]})
+        return self.create(cr, uid, values, context=context)
+
 

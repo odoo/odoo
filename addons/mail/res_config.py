@@ -25,7 +25,7 @@ class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'alias_domain' : fields.char('Catch-all Mail Alias Domain', size=None,
+        'alias_domain' : fields.char('Alias Domain', size=None,
                                      help="If you have setup a catch-all mail domain redirected to "
                                           "the OpenERP server, enter the domain name here."),
     }

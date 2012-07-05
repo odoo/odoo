@@ -382,7 +382,9 @@
                 </div>
             </field>
             <field name="company_id" version="7.0" position="after">
-                <field name="alias_id" required="0" domain="[('alias_model_id','=','hr.applicant')]"/>
+                <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <field name="alias_name" nolabel="1" class="oe_inline"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                </div>
             </field>
         </field>
     </record>

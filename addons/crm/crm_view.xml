@@ -71,8 +71,8 @@
                             <field name="name" colspan="2"/>
                             <field name="parent_id"/>
                             <field name="code"/>
-                            <field name="alias_id" required="0" domain="[('alias_model_id', '=','crm.lead')]"/>
                         </group>
+                        
                         <group>
                             <field name="user_id"/>
                             <field name="resource_calendar_id"/>
@@ -89,6 +89,12 @@
                                     <field name="change_responsible"/>
                                     <field name="allow_unlink"/>
                                 </group>
+                            </group>
+                            <group attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <div name="alias_box">
+                                    <label for="alias_name"/>
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
+                                </div>
                             </group>
                             <separator string="Team Members"/>
                             <field name="member_ids"/>
