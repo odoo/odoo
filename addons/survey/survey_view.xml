@@ -331,8 +331,8 @@
                                        <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
                                    </div><br/>
                                    <div class="oe_survey_start_date">
-                                      Open From:
                                        <t t-if="record.date_open.raw_value">
+                                           Opened at
                                            <t t-esc="record.date_open.raw_value.getDate()"/>
                                            <t t-esc="record.date_open.raw_value.toString('MMM')"/>,
                                            <t t-esc="record.date_open.raw_value.getFullYear()"/>
