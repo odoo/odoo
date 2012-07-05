@@ -8,7 +8,7 @@ instance.web.views.add('kanban', 'instance.web_kanban.KanbanView');
 instance.web_kanban.KanbanView = instance.web.View.extend({
     template: "KanbanView",
     display_name: _lt('Kanban'),
-    default_nr_columns: 3,
+    default_nr_columns: 1,
     view_type: "kanban",
     quick_create_class: "instance.web_kanban.QuickCreate",
     number_of_color_schemes: 10,
@@ -48,6 +48,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
@@ -311,9 +312,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         return this._super();
     },
-    open_record: function(id) {
+    open_record: function(id, editable) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form', null, { editable: true });
+            this.do_switch_view('form', null);
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }
@@ -611,7 +612,40 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         if (this.$element.find('.oe_kanban_global_click').length) {
             this.$element.on('click', function(ev) {
                 if (!ev.isTrigger && !$(ev.target).data('events')) {
-                    //self.on_card_clicked(ev);
+                    var trigger = true;
+                    var elem = ev.target;
+                    var ischild = true;
+                    var children = [];
+                    while (elem) {
+                        var events = $(elem).data('events');
+                        if (elem == ev.currentTarget) {
+                            ischild = false;
+                        }
+                        if (ischild) {
+                            children.push(elem);
+                            if (events && events.click) {
+                                // do not trigger global click if one child has a click event registered
+                                trigger = false;
+                            }
+                        }
+                        if (trigger && events && events.click) {
+                            _.each(events.click, function(click_event) {
+                                if (click_event.selector) {
+                                    // For each parent of original target, check if a
+                                    // delegated click is bound to any previously found children
+                                    _.each(children, function(child) {
+                                        if ($(child).is(click_event.selector)) {
+                                            trigger = false;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        elem = elem.parentElement;
+                    }
+                    if (trigger) {
+                        self.on_card_clicked(ev);
+                    }
                 }
             });
         }
@@ -660,7 +694,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 self.view.form_dialog.open();
             });
         } else {
-            this.view.open_record(this.id);
+            this.view.open_record(this.id, true);
         }
     },
     do_action_object: function ($action) {
@@ -765,10 +799,10 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
                 self.quick_add();
             }
         });
-        $(".oe-kanban-quick_create_add", this.$element).click(function () {
+        $(".oe_kanban_quick_create_add", this.$element).click(function () {
             self.quick_add();
         });
-        $(".oe-kanban-quick_create_close", this.$element).click(function () {
+        $(".oe_kanban_quick_create_close", this.$element).click(function () {
             self.trigger('close');
         });
         self.$input.keyup(function(e) {

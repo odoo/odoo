@@ -27,6 +27,14 @@ $colour4: #8a89ba
     font-weight: normal
     font-style: normal
 
+@mixin reset()
+    border: none
+    padding: 0
+    margin: 0
+    background: none
+    @include radius(none)
+    @include box-shadow(none)
+
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -90,7 +98,7 @@ $colour4: #8a89ba
 
 // }}}
 
-.openerp.openerp-web-client-container
+.openerp.openerp_webclient_container
     height: 100%
     position: relative
 
@@ -135,9 +143,10 @@ $colour4: #8a89ba
     li
         list-style-type: none
     input, textarea, select
-        padding: 4px
+        padding: 1px 4px
         border: 1px solid #ccc
         @include radius(3px)
+        background: white
     img
         vertical-align: middle
     h4
@@ -191,6 +200,14 @@ $colour4: #8a89ba
             width: auto
             a.ui-state-active
                 background: #f0f0fa
+    &.ui-dialog
+        border: 13px solid rgba(0, 0, 0, 0.3)
+        @include radius(16px)
+        -moz-background-clip: padding-box
+        -webkit-background-clip: padding
+        background-clip: padding-box
+        box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.6)
+        -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2)
     // }}}
     // Generic classes {{{
     .oe_i
@@ -232,8 +249,18 @@ $colour4: #8a89ba
         @include vertical-gradient(#DF6B66, #BF3A33)
         //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    .oe_form_dirty
+        .oe_highlight_on_dirty
+            color: white
+            background: #dc5f59
+            font-weight: bold
+        button.oe_highlight_on_dirty
+            @include vertical-gradient(#dc5f59, #b33630)
+            @include box-shadow(none)
+            &:hover
+                background: #ED6F6A
     .oe_title
-        width: 55%
+        width: 60%
     .oe_title:after
         content: "."
         display: block
@@ -250,6 +277,17 @@ $colour4: #8a89ba
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
             border: none
+    .oe_button.oe_link
+        @include reset()
+        img
+            display: none
+        span
+            @include reset()
+            color: #8A89BA
+            font-weight: bold
+            &:hover
+                text-decoration: underline
+
     //.oe_edit_only 
     // }}}
     // Tooltips {{{
@@ -583,6 +621,7 @@ $colour4: #8a89ba
         .oe_dropdown_arrow:after
             border-top: 4px solid white
         .oe_dropdown_menu
+            top: 32px
             background: #333
             background: rgba(37,37,37,0.9)
             border-color: #999
@@ -883,7 +922,7 @@ $colour4: #8a89ba
                 content: "f"
         // }}}
     // ViewManager application {{{
-    .oe_view_manager_global
+    .oe_view_manager_current
         height: 100%
         > .oe_view_manager_header
             border-top: 1px solid #cacaca
@@ -897,8 +936,14 @@ $colour4: #8a89ba
                 td
                     padding-top: 8px
     // }}}
+    // ViewManager inline {{{
+    .oe_view_manager_inline
+        height: 100%
+        > .oe_view_manager_header
+            display: none
+    // }}}
     // Viewmanager popup {{{
-    .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager
+    .oe_popup_form > .oe_formview > .oe_form_pager
         display: none !important
     // }}}
     // SearchView {{{
@@ -1121,6 +1166,11 @@ $colour4: #8a89ba
                         position: absolute
                         top: 0
                         right: 5px
+            .oe_searchview_dashboard
+                form
+                    display: none
+                    margin-top: 2px
+
             .oe_searchview_advanced
                 form
                     display: none
@@ -1206,15 +1256,7 @@ $colour4: #8a89ba
         input, select, textarea
             background-color: #F66 !important
             border: 1px solid #D00 !important
-    .oe_form_button_save_dirty
-        color: white
-        background: #dc5f59
-        @include vertical-gradient(#dc5f59, #b33630)
-        @include box-shadow(none)
-        font-weight: bold
-        &:hover
-            background: #ED6F6A
-    .oe_form_editable
+    .oe_view_manager_current .oe_form_editable
         .oe_highlight
             color: #404040
             background: none
@@ -1232,9 +1274,12 @@ $colour4: #8a89ba
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
-    .oe_form_nosheet > *:not(header)
-        margin-left: 10px !important
-        margin-right: 10px !important
+    .oe_form_nosheet 
+        margin-left: 10px
+        margin-right: 10px
+    .oe_form_nosheet > header
+        margin-left: -10px
+        margin-right: -10px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form 
@@ -1513,7 +1558,7 @@ $colour4: #8a89ba
         display: inline-block
         width: 45px
         height: 30px
-        input.oe-binary-file
+        input.oe_form_binary_file
             z-index: 0
             line-height: 0
             font-size: 12px
@@ -1551,7 +1596,7 @@ $colour4: #8a89ba
     .oe_form_field_many2one
         td:first-child
             position: relative
-        span.oe-m2o-drop-down-button
+        span.oe_m2o_drop_down_button
             position: absolute
             top: 3px
             right: 2px
@@ -1560,29 +1605,36 @@ $colour4: #8a89ba
     .oe_form .oe_form_field_one2many > .oe_view_manager
         .oe_list_pager_single_page
             display: none
-    .oe_form_field_one2many > .oe_view_manager
-        .oe_header_row_top
-            display: none
-        .oe_view_manager_header2
-            td
-                padding: 0px 8px
-                line-height: 16px
-                .oe_i
-                    font-size: 13px
-                .oe_pager_group
-                    height: auto
+    .oe_form_field_one2many
+        // TODO: oe_form_field_one2many_list?
+        .oe_list .oe_list_edit_row_save
+            background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
+            &:before
+                visibility: hidden
+
+        &> .oe_view_manager
+            .oe_header_row_top
+                display: none
+            .oe_view_manager_header2
+                td
+                    padding: 0px 8px
                     line-height: 16px
-                    li
+                    .oe_i
+                        font-size: 13px
+                    .oe_pager_group
                         height: auto
                         line-height: 16px
+                        li
+                            height: auto
+                            line-height: 16px
     // }}}
     // FormView.many2many {{{
-    .oe_form .oe_form_field_many2many > .oe-listview
+    .oe_form .oe_form_field_many2many > .oe_list
         .oe_list_pager_single_page
             display: none
     // }}}
     // ListView {{{
-    .oe-listview-content
+    .oe_list_content
         width: 100%
         td:first-child, th:first-child
             &:after
@@ -1621,7 +1673,7 @@ $colour4: #8a89ba
             background: white
             > tr
                 border-top: 1px solid #ddd
-                > td.oe-field-cell
+                > td.oe_list_field_cell
                     padding: 3px 6px
                 > td, > th
                     line-height: 18px
@@ -1653,6 +1705,8 @@ $colour4: #8a89ba
             width: 82px
             input
                 text-align: right
+        .oe_list_edit_row_save:before
+            content: "S"
     // }}}
     // Translation {{{
     .oe_trad_field.touched

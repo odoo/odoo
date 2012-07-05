@@ -19,6 +19,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_loaded: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).pipe(function(fields_get) {
             self.fields = fields_get.fields;
             self.has_been_loaded.resolve();
@@ -68,7 +69,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
     on_data_loaded_2: function(tasks, group_bys) {
         var self = this;
-        $(".oe-gantt-view-view", this.$element).html("");
+        $(".oe_gantt", this.$element).html("");
         
         //prevent more that 1 group by
         if (group_bys.length > 0) {
@@ -187,7 +188,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var td = $($("table td", self.$element)[0]);
         var rendered = QWeb.render("GanttView-create-button");
         $(rendered).prependTo(td);
-        $(".oe-gantt-view-create", this.$element).click(this.on_task_create);
+        $(".oe_gantt_button_create", this.$element).click(this.on_task_create);
     },
     on_task_changed: function(task_obj) {
         var self = this;

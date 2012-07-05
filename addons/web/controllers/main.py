@@ -437,18 +437,21 @@ class Database(openerpweb.Controller):
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
-        db_dump = base64.b64decode(
-            req.session.proxy("db").dump(backup_pwd, backup_db))
-        filename = "%(db)s_%(timestamp)s.dump" % {
-            'db': backup_db,
-            'timestamp': datetime.datetime.utcnow().strftime(
-                "%Y-%m-%d_%H-%M-%SZ")
-        }
-        return req.make_response(db_dump,
-            [('Content-Type', 'application/octet-stream; charset=binary'),
-             ('Content-Disposition', 'attachment; filename="' + filename + '"')],
-            {'fileToken': int(token)}
-        )
+        try:
+            db_dump = base64.b64decode(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            filename = "%(db)s_%(timestamp)s.dump" % {
+                'db': backup_db,
+                'timestamp': datetime.datetime.utcnow().strftime(
+                    "%Y-%m-%d_%H-%M-%SZ")
+            }
+            return req.make_response(db_dump,
+               [('Content-Type', 'application/octet-stream; charset=binary'),
+               ('Content-Disposition', 'attachment; filename="' + filename + '"')],
+               {'fileToken': int(token)}
+            )
+        except xmlrpclib.Fault, e:
+             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -735,10 +738,10 @@ def clean_action(req, action, do_not_eval=False):
 
     if not do_not_eval:
         # values come from the server, we can just eval them
-        if isinstance(action.get('context'), basestring):
+        if action.get('context') and isinstance(action.get('context'), basestring):
             action['context'] = eval( action['context'], eval_ctx ) or {}
 
-        if isinstance(action.get('domain'), basestring):
+        if action.get('domain') and isinstance(action.get('domain'), basestring):
             action['domain'] = eval( action['domain'], eval_ctx ) or []
     else:
         if 'context' in action:
@@ -771,7 +774,7 @@ def generate_views(action):
 
     :param dict action: action descriptor dictionary to generate a views key for
     """
-    view_id = action.get('view_id', False)
+    view_id = action.get('view_id') or False
     if isinstance(view_id, (list, tuple)):
         view_id = view_id[0]
 
@@ -1286,12 +1289,14 @@ class SearchView(View):
                 del filter['context']
                 del filter['domain']
         return filters
-
+    
+     
     @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
-        ctx = common.nonliterals.CompoundContext(context_to_save)
-        ctx.session = req.session
-        ctx = ctx.evaluate()
+        to_eval = common.nonliterals.CompoundContext(context_to_save)
+        to_eval.session = req.session
+        ctx = dict((k, v) for k, v in to_eval.evaluate().iteritems()
+                   if not k.startswith('search_default_'))
         ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
@@ -1367,6 +1372,17 @@ class Binary(openerpweb.Controller):
     def placeholder(self, req):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+    def content_disposition(self, filename, req):
+        filename = filename.encode('utf8')
+        escaped = urllib2.quote(filename)
+        browser = req.httprequest.user_agent.browser
+        version = int((req.httprequest.user_agent.version or '0').split('.')[0])
+        if browser == 'msie' and version < 9:
+            return "attachment; filename=%s" % escaped
+        elif browser == 'safari':
+            return "attachment; filename=%s" % filename
+        else:
+            return "attachment; filename*=UTF-8''%s" % escaped
 
     @openerpweb.httprequest
     def saveas(self, req, model, field, id=None, filename_field=None, **kw):
@@ -1402,7 +1418,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', 'attachment; filename="%s"' % filename)])
+                 ('Content-Disposition', self.content_disposition(filename, req))])
 
     @openerpweb.httprequest
     def saveas_ajax(self, req, data, token):
@@ -1432,7 +1448,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', 'attachment; filename="%s"' % filename)],
+                        ('Content-Disposition', self.content_disposition(filename, req))],
                 cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
@@ -1481,19 +1497,26 @@ class Action(openerpweb.Controller):
         "ir.actions.act_url": "ir.actions.url",
     }
 
+    # For most actions, the type attribute and the model name are the same, but
+    # there are exceptions. This dict is used to remap action type attributes
+    # to the "real" model name when they differ.
+    action_mapping = {
+        "ir.actions.act_url": "ir.actions.url",
+    }
+
     @openerpweb.jsonrequest
     def load(self, req, action_id, do_not_eval=False):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
-        action_type = Actions.read([action_id], ['type'], context)
-        if action_type:
+        base_action = Actions.read([action_id], ['type'], context)
+        if base_action:
             ctx = {}
-            if action_type[0]['type'] == 'ir.actions.report.xml':
+            action_type = base_action[0]['type']
+            if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
             ctx.update(context)
-            action_model = action_type[0]['type']
-            action_model = Action.action_mapping.get(action_model, action_model)
+            action_model = self.action_mapping.get(action_type, action_type)
             action = req.session.model(action_model).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0], do_not_eval)
@@ -1501,8 +1524,12 @@ class Action(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
-        return clean_action(req, req.session.model('ir.actions.server').run(
-            [action_id], req.session.eval_context(req.context)))
+        return_action = req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context))
+        if return_action:
+            return clean_action(req, return_action)
+        else:
+            return False
 
 class Export(View):
     _cp_path = "/web/export"
@@ -1886,10 +1913,14 @@ class Import(View):
             return '<script>window.top.%s(%s);</script>' % (
                 jsonp, simplejson.dumps({'error': {'message': error}}))
 
-        # skip ignored records
-        data_record = itertools.islice(
-            csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
-            skip, None)
+        # skip ignored records (@skip parameter)
+        # then skip empty lines (not valid csv)
+        # nb: should these operations be reverted?
+        rows_to_import = itertools.ifilter(
+            None,
+            itertools.islice(
+                csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
+                skip, None))
 
         # if only one index, itemgetter will return an atom rather than a tuple
         if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
@@ -1901,7 +1932,7 @@ class Import(View):
             # decode each data row
             data = [
                 [record.decode(csvcode) for record in row]
-                for row in itertools.imap(mapper, data_record)
+                for row in itertools.imap(mapper, rows_to_import)
                 # don't insert completely empty rows (can happen due to fields
                 # filtering in case of e.g. o2m content rows)
                 if any(row)

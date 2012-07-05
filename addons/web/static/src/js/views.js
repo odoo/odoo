@@ -36,6 +36,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
+                state['title'] = this.inner_action.name;
                 state['model'] = this.inner_action.res_model;
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
@@ -135,7 +136,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             };
         }
         if (action.target === 'new') {
-            if (this.dialog == null) {
+            if (this.dialog === null) {
                 this.dialog = new instance.web.Dialog(this, { width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -143,8 +144,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_viewmanager.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this, action);
+            this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog_viewmanager.$element.addClass("oe_view_manager_" + action.target);
             this.dialog.open();
         } else  {
             this.dialog_stop();
@@ -157,7 +159,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
-            this.inner_viewmanager.$element.addClass("oe_view_manager_global");
+            this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -861,13 +863,13 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
         self.items['files'] = attachments;
         self.redraw();
-        this.$('.oe_sidebar_add_attachment .oe-binary-file').change(this.on_attachment_changed);
+        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
         this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$element.find('form.oe-binary-form').submit();
+            this.$element.find('form.oe_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
@@ -894,8 +896,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         // TODO fme: should add the language to fields_view_get because between the fields view get
         // and the moment the user opens the translation dialog, the user language could have been changed
         this.view_language = view.session.user_context.lang;
-        this['on_button' + _t("Save")] = this.on_button_Save;
-        this['on_button' + _t("Close")] = this.on_button_Close;
+        this['on_button_' + _t("Save")] = this.on_btn_save;
+        this['on_button_' + _t("Close")] = this.on_btn_close;
         this._super(view, {
             width: '80%',
             height: '80%'
@@ -976,7 +978,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             }
         });
     },
-    on_button_Save: function() {
+    on_btn_save: function() {
         var trads = {},
             self = this,
             trads_mutex = new $.Mutex();
@@ -999,7 +1001,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         });
         this.close();
     },
-    on_button_Close: function() {
+    on_btn_close: function() {
         this.close();
     }
 });
