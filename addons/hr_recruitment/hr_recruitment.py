@@ -563,7 +563,7 @@ class hr_job(osv.osv):
             domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
             if not domain:
                 doc = etree.XML(res['arch'])
-                alias_node = doc.xpath("//field[@name='alias_id']")[0]
+                alias_node = doc.xpath("//div[@name='alias_box']")[0]
                 parent = alias_node.getparent()
                 parent.remove(alias_node)
                 res['arch'] = etree.tostring(doc)
