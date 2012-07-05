@@ -50,13 +50,14 @@
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <group name="analytic_accounting" position="attributes">
+                <separator name="analytic_accounting" position="attributes">
                     <attribute name="invisible">0</attribute>
-                </group>
-                <group name="analytic_accounting" position="inside">
+                    <attribute name="colspan">2</attribute>
+                </separator>
+                <separator name="analytic_accounting" position="after">
                     <field name="group_analytic_account_for_sales"/>
                     <field name="module_sale_analytic_plans" on_change="onchange_sale_analytic_plans(module_sale_analytic_plans)"/>
-                </group>
+                </separator>
             </field>
         </record>
 
