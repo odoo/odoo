@@ -357,13 +357,13 @@
                                             <field name="factor_tax" invisible="True"/>
                                         </tree>
                                     </field>
-                                    <button name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes"
-                                        type="object" groups="account.group_account_user" icon="terp-stock_format-scientific"
-                                        help="This action will erase taxes"/>
+
                                 </div>
                                 <group class="oe_subtotal_footer">
                                     <field name="amount_untaxed"/>
-                                     <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                                    <button  colspan="2" name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes"
+                                        type="object" groups="account.group_account_user" icon="terp-stock_format-scientific"
+                                        help="This action will erase taxes"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
 
