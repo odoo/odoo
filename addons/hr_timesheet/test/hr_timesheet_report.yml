@@ -7,7 +7,7 @@
     ctx.update({'model': 'hr.employee','active_ids': []})
     data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_id' : ref('hr.employee_fp')}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_my',wiz_data=data_dict, context=ctx, our_module='hr_timesheet')
+    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_employee',wiz_data=data_dict, context=ctx, our_module='hr_timesheet')
 
 -
  Print the HR Timesheet By Employee report through the wizard
