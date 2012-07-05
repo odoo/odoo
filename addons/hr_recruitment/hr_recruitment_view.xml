@@ -17,18 +17,6 @@
             view_type="form"/>
 
     # ------------------------------------------------------
-    # Job Categories
-    # ------------------------------------------------------
-
-    <record id="hr_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Applicant Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context" eval="{'object_id': ref('model_hr_applicant')}"/>
-    </record>
-    # ------------------------------------------------------
     # Stage
     # ------------------------------------------------------
     <record id="hr_job_stage_act" model="ir.actions.act_window">
