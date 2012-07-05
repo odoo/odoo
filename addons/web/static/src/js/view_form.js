@@ -287,10 +287,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_record_loaded: function(record) {
         var self = this, set_values = [];
         if (!record) {
+            this.set({ 'title' : undefined });
             this.do_warn("Form", "The record could not be found in the database.", true);
             return $.Deferred().reject();
         }
         this.datarecord = record;
+        this.set({ 'title' : record.id ? record.name : "New record" });
 
         if (this.qweb) {
             this.kill_current_form();

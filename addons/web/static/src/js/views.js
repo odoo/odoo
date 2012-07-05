@@ -156,25 +156,44 @@ instance.web.ActionManager = instance.web.Widget.extend({
         } else  {
             this.dialog_stop();
             //this.content_stop();
-            this.breadcrumb.hide_all();
+            this.breadcrumb.hide_items();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
                 });
             }
             this.inner_action = action;
-            this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
+            var inner_viewmanager = this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
+
             this.breadcrumb.push({
-                widget: this.inner_viewmanager,
+                widget: inner_viewmanager,
+                show: function() {
+                    inner_viewmanager.$element.show();
+                    inner_viewmanager.on_mode_switch(action.view_mode.split(',')[0]);
+                },
                 action: action,
                 title: action.name
             });
-            // show
-            // hide
-            // destroy
-            // title // all view get_title ??
+            inner_viewmanager.on_mode_switch.add_first(function(mode) {
+                if (mode === 'form' && !inner_viewmanager.views[mode].controller) {
+                    self.breadcrumb.push({
+                        widget: inner_viewmanager,
+                        show: function() {
+                            inner_viewmanager.$element.show();
+                            inner_viewmanager.on_mode_switch('form');
+                        },
+                        action: action,
+                        get_title: function() {
+                            var form = inner_viewmanager.views['form'].controller;
+                            if (form) {
+                                return form.get('title');
+                            }
+                        }
+                    });
+                }
+            });
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -195,7 +214,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_client: function (action) {
         //this.content_stop();
         this.dialog_stop();
-        this.breadcrumb.hide_all();
+        this.breadcrumb.hide_items();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
         this.breadcrumb.push({
@@ -260,7 +279,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         }
         if (!item.get_title) {
             item.get_title = function() {
-                return item.action.name;
+                return item.title || item.action.name;
             };
         }
         this.items.push(item);
@@ -270,7 +289,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         this.remove_item(this.items.length - 1);
         this.select_item(this.items.length - 1);
     },
-    hide_all: function() {
+    hide_items: function() {
         _.each(this.items, function(i) {
             i.hide();
         });
@@ -1163,12 +1182,6 @@ instance.web.View = instance.web.Widget.extend({
             this.translate_dialog = new instance.web.TranslateDialog(this).start();
         }
         this.translate_dialog.open(field);
-    },
-    /**
-     * Get the title of the view
-     */
-    get_title: function() {
-        return "";
     },
     /**
      * Fetches and executes the action identified by ``action_data``.
