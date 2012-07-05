@@ -40,7 +40,7 @@ class res_users(osv.osv):
                         ('none', 'Never')
                         ], 'Receive Feeds by Email', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
                                     help="This Unique Mail Box Alias of the User allows to manage the Seamless email communication between Mail Box and OpenERP," 
                                          "This Alias MailBox manage the Users email communication."),
     }
@@ -62,11 +62,11 @@ class res_users(osv.osv):
     
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
-        alias_pool = self.pool.get('mail.alias')
-        alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': data['login'], 'alias_model_id': self._name}, context=context)
+        mail_alias = self.pool.get('mail.alias')
+        alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login'], 'alias_model_id': self._name}, context=context)
         data.update({'alias_id': alias_id})
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        alias_pool.write(cr, uid, [alias_id], {"alias_force_thread_id": user_id}, context)
+        mail_alias.write(cr, uid, [alias_id], {"alias_force_thread_id": user_id}, context)
         user = self.browse(cr, uid, user_id, context=context)
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
@@ -80,10 +80,16 @@ class res_users(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         # if login of user have been changed then change alias of user also.
         if vals.get('login'):
-            for user in self.browse(cr, uid, ids, context=context):
-                self.pool.get('mail.alias').write(cr, uid, [user.alias_id.id], {'alias_name': vals['login']}, context=context)
+            vals['alias_name'] = vals['login']
         return super(res_users, self).write(cr, uid, ids, vals, context=context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the user.
+        alias_pool = self.pool.get('mail.alias')
+        alias_ids = [user.alias_id.id for user in self.browse(cr, uid, ids, context=context) if user.alias_id]
+        res = super(res_users, self).unlink(cr, uid, ids, context=context)
+        alias_pool.unlink(cr, uid, alias_ids, context=context)
+        return res
     
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """ Override of message_load_ids

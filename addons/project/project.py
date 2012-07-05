@@ -153,10 +153,17 @@ class project(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        alias_ids = []
+        mail_alias = self.pool.get('mail.alias')
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
-        return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
+                raise osv.except_osv(_('Operation Not Permitted !'),
+                                     _('You cannot delete a project containing tasks. You may disable it instead by unticking the Active checkbox.'))
+            elif proj.alias_id:
+                alias_ids.append(proj.alias_id.id)
+        res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
+        mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
+        return res
 
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
@@ -217,7 +224,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="restrict", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
                                     help="This Unique Mail Box Alias of the Project allows to manage the Seamless email communication between Mail Box and OpenERP," 
                                         "This Alias MailBox also create and Manage the new Email Tasks/Issues for this Project and also manage the existing Task/Issue email communication."),
         'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True, 
@@ -503,7 +510,7 @@ def Project():
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
                     {'alias_name': "project_"+name, 
-                    'alias_model_id': self._name}, context=context)
+                    'alias_model_id': vals.get('alias_model', 'project.task')}, context=context)
             alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
             vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super( project, self).create(cr, uid, vals, context)
