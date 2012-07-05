@@ -189,11 +189,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_stop();
         this.breadcrumb.hide_items();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
-        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
+        this.client_widget = new ClientWidget(this, action.params);
         this.breadcrumb.push({
             widget: this.client_widget,
             title: action.name
         });
+        this.client_widget.appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -234,26 +235,18 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         this.action_manager.$element.on('click', '.oe_breadcrumb_item', this.on_item_clicked);
     },
     push: function(item) {
-        if (!item.show) {
-            item.show = function() {
-                item.widget.$element.show();
-            };
-        }
-        if (!item.hide) {
-            item.hide = function() {
-                item.widget.$element.hide();
-            };
-        }
-        if (!item.destroy) {
-            item.destroy = function() {
-                item.widget.destroy();
-            };
-        }
-        if (!item.get_title) {
-            item.get_title = function() {
-                return item.title || item.widget.get('title');
-            };
-        }
+        item.show = item.show || function() {
+            item.widget.$element.show();
+        };
+        item.hide = item.hide || function() {
+            item.widget.$element.hide();
+        };
+        item.destroy = item.destroy || function() {
+            item.widget.destroy();
+        };
+        item.get_title = item.get_title || function() {
+            return item.title || item.widget.get('title');
+        };
         console.log("breadcrumb push", item);
         this.items.push(item);
     },
