@@ -33,39 +33,35 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="state_running_set" string="Run" states="draft"/>
-                <button name="state_done_set" string="Done" states="running"/>
+                <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
+                <button name="state_done_set" string="Done" states="running" class="oe_highlight"/>
                 <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Campaign">
-                <group col="5">
-                    
-                    <group colspan="2">
-                        <field name="name"/>
-                        <field name="mode"/>
-                        <field name="fixed_cost"/>
-                        
-                        
-                    
-                    </group>
-                    <group colspan="2">
-                        <field name="object_id"/>
-                        <field name="partner_field_id"/>
-                        <field name="unique_field_id"/>
-                    </group>
-                    <group col="1">
-                    <div class="oe_right">
+                <div class="oe_right oe_button_box" name="button_box">
                         <button type="action"
                         name="%(act_marketing_campaing_followup)d"
                         string="Follow-Up" />
                         <button type="action"
                         name="%(act_marketing_campaing_segment_opened)d"
                         string="Segments" />
-                    </div>
+                </div>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name" class="oe_inline"/></h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="mode"/>
+                        <field name="fixed_cost"/>
                     </group>
-                    
+                    <group>
+                        <field name="object_id"/>
+                        <field name="partner_field_id"/>
+                        <field name="unique_field_id"/>
+                    </group>     
                 </group>
                 <separator string="Activities"/>
                 <field name="activity_ids" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
@@ -165,13 +161,13 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="state_running_set" string="Run" states="draft"/>
-                <button name="state_done_set" string="Close" states="running"/>
+                <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
+                <button name="state_done_set" string="Close" states="running" class="oe_highlight"/>
                 <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
-            <sheet string="Segments" layout="auto">
+            <sheet string="Segments" >
                 <group>
                     <group>
                         <field name="name"/>
@@ -313,7 +309,7 @@
                     </form>
                 </field>
                 <separator string="Next Activities"/>
-                <field name="to_ids" nolabel="1" mode="tree" context="{'default_activity_from_id': active_id}" colspan="2">
+                <field name="to_ids" mode="tree" context="{'default_activity_from_id': active_id}">
                     <tree string="Outgoing Transitions" editable="bottom">
                         <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
                         <field name='trigger'/>
