@@ -146,7 +146,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             }
         });
         msg += "</ul>";
-        this.do_warn("The following fields are invalid :", msg);
+        this.do_warn(_t("The following fields are invalid :"), msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -245,7 +245,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                         "arch": view_arch_list});
                 });
             } else {
-                self.do_warn("Please select view in list :");
+                self.do_warn(_t("Please select view in list :"));
             }
         });
     },
@@ -372,10 +372,10 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                                 self.inherited_view(selected_row);
                             }
                         }else{
-                            alert("Can't Update View");
+                            alert(_t("Can't Update View"));
                         }
                     }else{
-                        alert("Select an element");
+                        alert(_t("Select an element"));
                     }
                 }},
                 {text: _t("Preview"), click: function() {
