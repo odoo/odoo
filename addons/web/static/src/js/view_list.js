@@ -1328,6 +1328,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
+                if (! group_column) {
+                    throw new Error(_.str.sprintf(
+                        _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
+                        group.grouped_on));
+                }
                 try {
                     $group_column.html(instance.web.format_cell(
                         row_data, group_column, {

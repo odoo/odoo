@@ -136,14 +136,18 @@ instance.web.Dialog = instance.web.Widget.extend({
     },
     on_close: function() {
         if (this.dialog_options.destroy_on_close) {
-            this.$element.dialog('destroy');
+            this.destroy();
         }
     },
     on_resized: function() {
     },
     destroy: function () {
-        this.close();
-        this.$element.dialog('destroy');
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
+        });
+	if (! this.isDestroyed()) {
+	    this.$element.dialog('destroy');
+	}
         this._super();
     }
 });

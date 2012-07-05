@@ -260,7 +260,7 @@ $colour4: #8a89ba
             &:hover
                 background: #ED6F6A
     .oe_title
-        width: 55%
+        width: 60%
     .oe_title:after
         content: "."
         display: block
@@ -921,7 +921,7 @@ $colour4: #8a89ba
                 content: "f"
         // }}}
     // ViewManager application {{{
-    .oe_view_manager_current, .oe_view_manager_inline
+    .oe_view_manager_current
         height: 100%
         > .oe_view_manager_header
             border-top: 1px solid #cacaca
@@ -934,6 +934,12 @@ $colour4: #8a89ba
             .oe_header_row:first-child
                 td
                     padding-top: 8px
+    // }}}
+    // ViewManager inline {{{
+    .oe_view_manager_inline
+        height: 100%
+        > .oe_view_manager_header
+            display: none
     // }}}
     // Viewmanager popup {{{
     .oe_popup_form > .oe_formview > .oe_form_pager
@@ -1267,9 +1273,12 @@ $colour4: #8a89ba
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
-    .oe_form_nosheet > *:not(header)
-        margin-left: 10px !important
-        margin-right: 10px !important
+    .oe_form_nosheet 
+        margin-left: 10px
+        margin-right: 10px
+    .oe_form_nosheet > header
+        margin-left: -10px
+        margin-right: -10px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form 
