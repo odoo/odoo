@@ -146,7 +146,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             }
         });
         msg += "</ul>";
-        this.do_warn("The following fields are invalid :", msg);
+        this.do_warn(_t("The following fields are invalid :"), msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -245,7 +245,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                         "arch": view_arch_list});
                 });
             } else {
-                self.do_warn("Please select view in list :");
+                self.do_warn(_t("Please select view in list :"));
             }
         });
     },
@@ -372,10 +372,10 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                                 self.inherited_view(selected_row);
                             }
                         }else{
-                            alert("Can't Update View");
+                            alert(_t("Can't Update View"));
                         }
                     }else{
-                        alert("Select an element");
+                        alert(_t("Select an element"));
                     }
                 }},
                 {text: _t("Preview"), click: function() {
@@ -931,9 +931,9 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     },
     on_add_node: function(properties, fields){
         var self = this;
-        var  render_list = [{'name': 'node_type','selection': _.keys(_CHILDREN).sort(), 'value': 'field', 'string': 'Node Type','type': 'selection'},
+        var  render_list = [{'name': 'node_type','selection': _.keys(_CHILDREN).sort(), 'value': 'field', 'string': _t('Node Type'),'type': 'selection'},
                             {'name': 'field_value','selection': fields, 'value': false, 'string': '','type': 'selection'},
-                            {'name': 'position','selection': ['After','Before','Inside'], 'value': false, 'string': 'Position','type': 'selection'}];
+                            {'name': 'position','selection': ['After','Before','Inside'], 'value': false, 'string': _t('Position'),'type': 'selection'}];
         this.add_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
             title: _t("Properties"),
@@ -956,7 +956,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                         _.str.sprintf("<%s> </%s>",values.node_type,values.node_type);
                         self.do_save_update_arch("add_node", [tag, values.position]);
                     } else {
-                        alert("Can't Update View");
+                        alert(_t("Can't Update View"));
                     }
                 }},
                 {text: _t("Cancel"), click: function() { self.add_node_dialog.close(); }}
@@ -971,7 +971,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             } else {
                 table_selector.append('<td align="right">' + node.string + '</td>' + type_widget.render() );
                 if (node.name == "field_value") {
-                    table_selector.append('<td id="new_field" align="right"  width="100px"> <button>New Field</button></td>');
+                    table_selector.append('<td id="new_field" align="right"  width="100px"> <button>' + _t("New Field") + '</button></td>');
                 }
             }
             type_widget.start();
