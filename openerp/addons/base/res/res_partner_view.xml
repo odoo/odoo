@@ -117,11 +117,13 @@
                             <label for="parent_id" class="oe_edit_only"/>
                         </div>
                         <h2 attrs="{'invisible': [('is_company','=', True)]}">
-                            <field name="parent_id"
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                class="oe_inline"
-                                on_change="onchange_address(use_parent_address, parent_id)"/>, 
-                            <field name="function" class="oe_inline" placeholder="Job Position"/>
+                            <group colspan="4">
+                                <field name="parent_id"
+                                    domain="[('is_company', '=', True)]" nolabel="1" context="{'default_is_company': True}"
+                                    class="oe_inline"
+                                    on_change="onchange_address(use_parent_address, parent_id)"/>, 
+                                <field name="function" nolabel="1" class="oe_inline" placeholder="Job Position"/>
+                            </group>
                         </h2>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                     </div>
@@ -220,13 +222,17 @@
                                 <group>
                                     <field name="user_id" />
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="supplier"/>
+                                </group>
+                                <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
                                     <field name="date"/>
                                 </group>
                                 <group>
-                                    <field name="customer"/>
-                                    <field name="supplier"/>
                                     <field name="active"/>
                                 </group>
                             </group>
