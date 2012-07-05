@@ -105,10 +105,10 @@ class wizard(osv.osv_memory):
 
         if 'user_ids' in fields and portal_id:
             user_ids = self.get_portal_users(cr, uid, [partner_id], portal_id, context=context)
-            res.update({'user_ids': user_ids})            
+            res.update({'user_ids': user_ids})
         return res
 
-      
+
     def onchange_portal_id(self, cr, uid, ids, partner_id, portal_id, context=None):
         if not portal_id:
             return {'value': {}}
@@ -155,7 +155,7 @@ class wizard(osv.osv_memory):
                     'partner_id': company_id,
                     'has_portal_user': False,
                  })
-                    
+
         if not partner.child_ids:
             _portal_user(partner)
         for address in partner.child_ids:
@@ -191,14 +191,12 @@ class wizard(osv.osv_memory):
         clone_context = context or {}
         clone_context['noshortcut'] = True           # prevent shortcut creation
         context = clone_context.copy()
-
-        
         res_portal_user = self.pool.get('res.portal.wizard.user')
         for data in self.browse(cr, uid, ids, context=context):
             if not data.user_ids:
                 raise osv.except_osv(_('User required'),
                 _('Create atleast one user for portal.'))
-            
+
             portal_user_ids = [user.id for user in data.user_ids]
             res_portal_user.manage_portal_access(cr, uid, portal_user_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
@@ -278,7 +276,7 @@ class wizard_user(osv.osv_memory):
         if not res:
             _logger.warning(
                 'Failed to send email from %s to %s', email_from, email_to)
-        return True 
+        return True
 
     def create_new_user(self, cr, uid, portal_user, context=None):
         res_user = self.pool.get('res.users')
@@ -295,8 +293,8 @@ class wizard_user(osv.osv_memory):
                 'action_id': action_id,
                 'partner_id': partner.id,
                 'groups_id': [(6, 0, [])],
-        } 
-        user_id = res_user.create(cr, ROOT_UID, value, context=context) 
+        }
+        user_id = res_user.create(cr, ROOT_UID, value, context=context)
         portal_user.write({'user_id': user_id}, context)
         self.send_email(cr, uid, portal_user, user_id, context=context)
         return user_id
@@ -309,7 +307,7 @@ class wizard_user(osv.osv_memory):
             return portal.write({'users': [(4, user_id)]}, context=context)
         if user_id in portal_user_ids:
             return False
-    
+
     def unlink_portal_user(self, cr, uid, portal_id, user_id, context=None):
         res_portal = self.pool.get('res.portal')
         return res_portal.write(cr, uid, [portal_id], {'users': [(3, user_id)]}, context=context)
@@ -321,7 +319,7 @@ class wizard_user(osv.osv_memory):
         if not user.groups_id:
             user.unlink(context=context)
         return True
-    
+
 
     def manage_portal_access(self, cr, uid, ids, context=None):
         res_user = self.pool.get('res.users')
@@ -331,7 +329,7 @@ class wizard_user(osv.osv_memory):
             if not user_id:
                 user_ids = res_user.search(cr, uid, [('login','=',portal_user.user_email)])
                 user_id = user_ids and user_ids[0] or False
-            
+
             if not user_id:
                 user_id = self.create_new_user(cr, uid, portal_user, context=context)
             linked = self.link_portal_user(cr, uid, portal.id, user_id, context=context)
@@ -340,6 +338,7 @@ class wizard_user(osv.osv_memory):
                 self.unlink_portal_user(cr, uid, portal.id, user_id, context=context)
                 #drop user if it does not has any access in any portal.
                 self.unlink_user(cr, uid, user_id, context=context)
+        return True
 wizard_user()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
