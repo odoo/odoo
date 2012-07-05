@@ -121,7 +121,9 @@ class mail_alias(osv.Model):
         new_name = "%s%s"%(name, sequence)
         search_alias = self.search(cr, uid, [('alias_name', '=', new_name)])
         if search_alias:    
-            self._generate_alias(cr, uid, name, sequence+1 ,context=None)
+            new_name = self._generate_alias(cr, uid, name, sequence+1 ,context=None)
+            if not self.search(cr, uid, [('alias_name', '=', new_name)]):
+                return new_name
         else:
             return new_name
 
@@ -132,13 +134,13 @@ class mail_alias(osv.Model):
         @return int: New alias_id
         """
         model_pool = self.pool.get('ir.model')
-        alias_name = vals['alias_name']
+        alias_name = re.sub(r'\W+', '_', vals['alias_name']).lower()
         values = {'alias_name': alias_name}
         #Find for the mail alias exist or not if exit then get new mail address.
-        if self.search(cr, uid, [('alias_name', '=', vals['alias_name'])]):
-            alias_name = self._generate_alias(cr, uid, vals['alias_name'], sequence=1, context=context)
-        alias_name = re.sub(r'\W+', '_', alias_name)
-        values.update({'alias_name': alias_name.lower()})
+        saids = self.search(cr, uid, [('alias_name', '=',alias_name)])
+        if saids:
+            alias_name = self._generate_alias(cr, uid, alias_name, sequence=1, context=context)
+        values.update({'alias_name': alias_name})
         #Set the model fo rhte mail alias
         model_sids = model_pool.search(cr, uid, [('model', '=', vals['alias_model_id'])])
         values.update({'alias_model_id': model_sids[0]})

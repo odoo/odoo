@@ -526,8 +526,12 @@ def Project():
     def create(self, cr, uid, vals, context=None):
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "project."+vals['name'], 'alias_model_id': vals.get('alias_model','project.task')}, context=context)
-            vals.update({'alias_id': alias_id})
+            name = vals.get('alias_name') or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                    {'alias_name': "project."+name, 
+                    'alias_model_id': self._name}, context=context)
+            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
+            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super( project, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']], {'alias_defaults':{'project_id': res}}, context)
         self.create_send_note(cr, uid, [res], context=context)

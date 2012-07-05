@@ -55,8 +55,6 @@
                             <field name="analytic_account_id" invisible="1" required="0"/>
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <field name="privacy_visibility"/>
-                            <field name="alias_id" required="0" domain="[('alias_model_id','in',('project.task','project.issue'))]"/>
-                            <field name="alias_model" invisible="1"/>
                         </group>
                         <group>
                             <table>
@@ -103,6 +101,14 @@
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                     <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
+                                </group>
+                                <group string="Mailbox Alias" colspan="4">
+                                   <div>
+                                        <label for="alias_name"/>
+                                        <field name="alias_name" required="0" class="oe_inline"/>@
+                                        <field name="alias_domain" class="oe_inline"/>
+                                    </div>
+                                    <field name="alias_model" invisible="1"/>
                                 </group>
                             </group>
                         </page>
