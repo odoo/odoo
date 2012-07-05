@@ -166,34 +166,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var inner_viewmanager = this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
-
-            this.breadcrumb.push({
-                widget: inner_viewmanager,
-                show: function() {
-                    inner_viewmanager.$element.show();
-                    inner_viewmanager.on_mode_switch(action.view_mode.split(',')[0]);
-                },
-                action: action,
-                title: action.name
-            });
-            inner_viewmanager.on_mode_switch.add_first(function(mode) {
-                if (mode === 'form' && !inner_viewmanager.views[mode].controller) {
-                    self.breadcrumb.push({
-                        widget: inner_viewmanager,
-                        show: function() {
-                            inner_viewmanager.$element.show();
-                            inner_viewmanager.on_mode_switch('form');
-                        },
-                        action: action,
-                        get_title: function() {
-                            var form = inner_viewmanager.views['form'].controller;
-                            if (form) {
-                                return form.get('title');
-                            }
-                        }
-                    });
-                }
-            });
+            this.breadcrumb.push_actionmanager(inner_viewmanager);
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -219,7 +192,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
         this.breadcrumb.push({
             widget: this.client_widget,
-            action: action,
             title: action.name
         });
     },
@@ -269,33 +241,61 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         }
         if (!item.hide) {
             item.hide = function() {
-                return item.widget.$element.hide();
+                item.widget.$element.hide();
             };
         }
         if (!item.destroy) {
             item.destroy = function() {
-                return item.widget.destroy();
+                item.widget.destroy();
             };
         }
         if (!item.get_title) {
             item.get_title = function() {
-                return item.title || item.action.name;
+                return item.title || item.widget.get('title');
             };
         }
         this.items.push(item);
-        console.log("BreadCrumb: add ", item);
+    },
+    push_actionmanager: function(am) {
+        var self = this;
+        var bookmarked_view = am.active_view;
+        this.push({
+            widget: am,
+            show: function() {
+                am.$element.show();
+                am.on_mode_switch(current_view);
+            }
+        });
+        am.on_mode_switch.add_first(function(mode) {
+            if (mode === 'form' && !am.views[mode].controller) {
+                self.push({
+                    widget: am,
+                    show: function() {
+                        am.$element.show();
+                        inner_viewmanager.on_mode_switch('form');
+                    },
+                    action: action,
+                    get_title: function() {
+                        var form = inner_viewmanager.views['form'].controller;
+                        if (form) {
+                            return form.get('title');
+                        }
+                    }
+                });
+            }
+        });
     },
     pop: function() {
         this.remove_item(this.items.length - 1);
         this.select_item(this.items.length - 1);
     },
+    get_title: function() {
+        return QWeb.render('BreadCrumb', { widget: this });
+    },
     hide_items: function() {
         _.each(this.items, function(i) {
             i.hide();
         });
-    },
-    get_title: function() {
-        return QWeb.render('BreadCrumb', { widget: this });
     },
     on_item_clicked: function(ev) {
         var $e = $(ev.target);
@@ -380,6 +380,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_view_manager_switch').hide();
         }
+        this.on('change:title', this, function() {
+            var breadcrumb = self.getParent().breadcrumb;
+            if (breadcrumb) {
+                self.$element.find('.oe_view_title_text:first').html(breadcrumb.get_title());
+            } else {
+                self.$element.find('.oe_view_title_text:first').text(self.get('title'));
+            }
+        });
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
         return this.on_mode_switch(default_view);
@@ -416,10 +424,16 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             }
             var controller = new controllerclass(this, this.dataset, view.view_id, options);
+            controller.on("change:title", this, function() {
+                if (self.active_view === view_type) {
+                    self.set({ 'title' : controller.get('title') });
+                }
+            });
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(_.bind(this.switch_view, this));
+
             controller.do_prev_view.add_last(this.on_prev_view);
             var container = this.$element.find(".oe_view_manager_view_" + view_type);
             view_promise = controller.appendTo(container);
@@ -463,9 +477,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     }
                 }
             });
-
-            self.$element.find('.oe_view_title_text:first').html(
-                    self.display_title());
         });
         return view_promise;
     },
@@ -561,14 +572,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      */
     on_action_executed: function () {
     },
-    display_title: function () {
-        var view = this.views[this.active_view];
-        if (view) {
-            // ick
-            return view.controller.fields_view.arch.attrs.string;
-        }
-        return '';
-    }
 });
 
 instance.web.ViewManagerAction = instance.web.ViewManager.extend({
@@ -613,7 +616,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         if (this.session.hidden_menutips) {
             return;
         }
-        this.session.hidden_menutips = {}
+        this.session.hidden_menutips = {};
     },
     /**
      * Initializes the ViewManagerAction: sets up the searchview (if the
@@ -816,13 +819,8 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
-    display_title: function () {
-        var am = this.getParent();
-        if (am) {
-            return am.breadcrumb.get_title();
-        } else {
-            return _.escape(this.action.name);
-        }
+    set_title: function (title) {
+        this.getParent().breadcrumb.update();
     }
 });
 
