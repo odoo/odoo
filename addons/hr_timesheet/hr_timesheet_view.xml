@@ -26,29 +26,38 @@
             <field name="model">hr.analytic.timesheet</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet Lines">
-                    <group col="4">
-                        <field name="name" colspan="4"/>
-                        <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
-                        <field name="date" on_change="on_change_date(date)"/>
+                <form string="Timesheet Lines" version="7.0">
+                    <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
+                        </group>
+                        <group>
+                            <field name="date" on_change="on_change_date(date)"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Information">
-                            <group>
-                                <group string="Product">
-                                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
-                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                                </group>
-                                <group string="Accounting">
-                                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1"/>
-                                    <field name="amount"/>
-                                    <field name="general_account_id"/>
-                                    <field name="journal_id"/>
-                                </group>
+                        <group>
+                            <group string="Product">
+                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
+                                <label string="Quantity" for="unit_amount"/>
+                                <div>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
+                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
+                                </div>
                             </group>
+                            <group string="Accounting">
+                                <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1"/>
+                                <field name="amount"/>
+                                <field name="general_account_id"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </group>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -112,10 +121,14 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Categories" position="after">
+                <page string="Personal Information" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
-                        <field name="product_id" domain="[('type','=','service')]"/>
-                        <field name="journal_id" widget="selection"/>
+                        <group>
+                            <group col="2">
+                                <field name="product_id" domain="[('type','=','service')]"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </group>
                     </page>
                 </page>
             </field>
