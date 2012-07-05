@@ -48,9 +48,9 @@
             <field name="arch" type="xml">
                 <form string="Procurement" version="7.0">
                     <header>
-                        <button name="button_confirm" states="draft" string="Confirm"/>
-                        <button name="button_check" states="confirmed" string="Run Procurement"/>
-                        <button name="button_restart" states="exception" string="Retry"/>
+                        <button name="button_confirm" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="button_check" states="confirmed" string="Run Procurement" class="oe_highlight"/>
+                        <button name="button_restart" states="exception" string="Retry" class="oe_highlight"/>
                         <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
@@ -94,7 +94,7 @@
                     </notebook>
                     </sheet>
                     <footer>
-                        <field name="message_ids" widget="ThreadView"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </footer>
                 </form>
             </field>
@@ -280,12 +280,17 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="misc" position="after">
-                    <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
-                        <separator string="Minimum Stock Rules" colspan="4"/>
-                        <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
-                    </group>
-                </group>
+                <page string="Procurement &amp; Locations" position="inside">
+                    <separator string="Minimum Stock Rules"/>
+                        <field name="orderpoint_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
+                            <tree string="Reordering Rules">
+                                <field name="name"/>
+                                <field name="warehouse_id"/>
+                                <field name="product_min_qty"/>
+                                <field name="product_max_qty"/>
+                            </tree>
+                        </field>
+                </page>
             </field>
         </record>
 

@@ -80,14 +80,14 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft"/>
-                    <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
+                    <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
-                <sheet string="Sales Receipt" layout="auto">
+                <sheet string="Sales Receipt" >
                     <div class="oe_title">
                         <label for="number" class="oe_edit_only"/>
                         <h1><field name="number" readonly="0" /></h1>
@@ -119,7 +119,7 @@
                         <page string="Sales Information">
                             <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection" groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -167,6 +167,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <footer>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -181,7 +184,11 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
-            <field name="help">When you sell products to a customer, you can give him a sales receipt or an invoice. When the sales receipt is confirmed, it creates journal items automatically and you can record the customer payment related to this sales receipt.</field>
+            <field name="help">
+                Click here to create a sale receipt.
+                &lt;p&gt;
+                When the sales receipt is confirmed, you can record the customer payment related to this sales receipt.
+            </field>
         </record>
         <record id="action_sale_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -217,8 +224,8 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft"/>
-                    <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
+                    <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -259,7 +266,7 @@
                         <page string="Bill Information">
                             <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}">
                                 <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
+                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"  groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -313,6 +320,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <footer>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -325,6 +335,11 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
+            <field name="help">
+                Click here to create a purchase receipt.
+                &lt;p&gt;
+                When the purchase receipt is confirmed, you can record the supplier payment related to this purchase receipt.
+            </field>
         </record>
         <record id="action_purchase_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

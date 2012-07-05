@@ -87,7 +87,7 @@ class mail_group(osv.osv):
         result = dict.fromkeys(ids)
         for id in ids:
             result[id] = {}
-            result[id]['member_ids'] = self.message_get_subscribers_ids(cr, uid, [id], context=context)
+            result[id]['member_ids'] = self.message_get_subscribers(cr, uid, [id], context=context)
             result[id]['member_count'] = len(result[id]['member_ids'])
             result[id]['is_subscriber'] = uid in result[id]['member_ids']
         return result

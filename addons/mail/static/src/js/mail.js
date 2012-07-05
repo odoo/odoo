@@ -302,15 +302,19 @@ openerp.mail = function(session) {
             record.body = this.do_clean_text(record.body);
             record.body = this.do_replace_internal_links(record.body);
 
-            // split for see more
-            var split = this.do_truncate_string(record.body, this.params.msg_more_limit);
-            record.body_head = split[0];
-            record.body_tail = split[1];
-
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
             var rendered = session.web.qweb.render('mail.Thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
-            $( rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+            $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+            // expand feature
+            this.$element.find('div.oe_mail_msg_body:last').expander({
+                slicePoint: this.params.msg_more_limit,
+                expandText: 'see more',
+                userCollapseText: 'see less',
+                detailClass: 'oe_mail_msg_tail',
+                moreClass: 'oe_mail_expand',
+                lesClass: 'oe_mail_reduce',
+                });
         },
        
         /**
@@ -445,20 +449,6 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
         
-        /**
-         * @param {String} string to truncate
-         * @param {Number} max number of chars to display 
-         * @returns {String} truncated string
-         */
-        do_truncate_string: function(string, max_length) {
-            // multiply by 1.2: prevent truncating an just too little long string
-            if (string.length <= (max_length * 1.2)) {
-                return [string, ""];
-            } else {
-                return [string.slice(0, max_length), string.slice(max_length)];
-            }
-        },
-        
         /** Removes html tags, except b, em, br */
         do_clean_text: function (string) {
             var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /)\\s*&gt;', 'gi'), '<$1$2>');
@@ -506,7 +496,7 @@ openerp.mail = function(session) {
     });
     session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
 
-    /** ThreadView widget: thread of comments */
+    /** mail_thread widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.RecordThread',
 
@@ -563,7 +553,7 @@ openerp.mail = function(session) {
         },
         
         fetch_subscribers: function () {
-            return this.ds.call('message_get_subscribers', [[this.view.datarecord.id]]).then(this.proxy('display_subscribers'));
+            return this.ds.call('message_read_subscribers', [[this.view.datarecord.id]]).then(this.proxy('display_subscribers'));
         },
         
         display_subscribers: function (records) {
@@ -607,7 +597,7 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
-    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
+    session.web.form.widgets.add( 'mail_thread', 'openerp.mail.RecordThread');
 
     /** WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
