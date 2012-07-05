@@ -134,12 +134,12 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="active" position="before">
-					<label for="state"/>
-					<div>
-						<field name="state" class="oe_inline"/>
-						<button class="oe_inline oe_right" name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-						<button class="oe_inline oe_right" name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
-					</div>
+                    <label for="state"/>
+                    <div>
+                        <field name="state" class="oe_inline"/>
+                        <button class="oe_inline oe_right" name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                        <button class="oe_inline oe_right" name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
+                    </div>
                 </field>
             </field>
         </record>
