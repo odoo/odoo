@@ -12,6 +12,8 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
 
+            this.editor = new instance.web.list.Editor(this);
+
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
                     self.do_edit(dataset.index, id, dataset);
@@ -80,8 +82,6 @@ openerp.web.list_editable = function (instance) {
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
             if (this.options.editable) {
-                this.editor = new instance.web.list.Editor(this);
-
                 var editor_ready = this.editor.prependTo(this.$element)
                     .then(this.proxy('setupEvents'));
 
@@ -119,7 +119,12 @@ openerp.web.list_editable = function (instance) {
         startEdition: function (record) {
             var self = this;
             if (!record) {
-                record = new instance.web.list.Record();
+                var attrs = {};
+                _(this.columns).chain()
+                    .filter(function (x) { return x.tag === 'field'})
+                    .pluck('name')
+                    .each(function (field) { attrs[field] = false; });
+                record = new instance.web.list.Record(attrs);
                 this.records.add(record, {
                     at: this.isPrependOnCreate() ? 0 : null});
             }
