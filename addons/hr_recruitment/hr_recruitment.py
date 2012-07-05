@@ -572,8 +572,12 @@ class hr_job(osv.osv):
     def create(self, cr, uid, vals, context=None):
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            alias_id = alias_pool.create_unique_alias(cr, uid, {'alias_name': "job."+vals['name'], 'alias_model_id': self._name}, context=context)
-            vals.update({'alias_id': alias_id})
+            name = vals.get('alias_name') or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                    {'alias_name': "job_"+name, 
+                    'alias_model_id': self._name}, context=context)
+            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
+            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super( hr_job, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
         return res

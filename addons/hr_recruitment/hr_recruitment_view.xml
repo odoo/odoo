@@ -349,7 +349,13 @@
                 </div>
             </field>
             <field name="company_id" version="7.0" position="after">
-                <field name="alias_id" required="0" domain="[('alias_model_id','=','hr.applicant')]"/>
+                <group colspan="4">
+                    <div>
+                        <label for="alias_name"/>
+                        <field name="alias_name" required="0" class="oe_inline"/>@
+                        <field name="alias_domain" class="oe_inline"/>
+                    </div>
+                </group>
             </field>
         </field>
     </record>
