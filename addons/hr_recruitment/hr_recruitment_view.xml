@@ -145,27 +145,34 @@
                     <button name="action_print_survey" type="object"
                         string="Print Interview" icon="gtk-print" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
-                </div>
+                </div>             
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
-                    <h2><field name="partner_name"/></h2>
-                    <field name="type_id" placeholder="Degree"/>
+                    <h2>
+                        <field name="partner_name" class="oe_inline"/>
+                        <label class="oe_inline" string="(" attrs="{'invisible': [('type_id', '=', False)]}"/>
+                        <field name="type_id" placeholder="Degree" class="oe_inline"/>
+                        <label class="oe_inline" string=")" attrs="{'invisible': [('type_id', '=', False)]}"/>
+                        <label class="oe_inline" string="apply for " attrs="{'invisible': [('job_id', '=', False)]}"/>
+                        <field name="job_id" on_change="onchange_job(job_id)" class="oe_inline"/>
+                    </h2>
                 </div>
-
                 <group>
                     <group>
                         <field name="user_id"/>
-                        <field name="title_action"/>
-                        <field name="date_action"/>
+                        <label for="title_action"/>
+                        <div>
+                            <field name="date_action"/> -
+                            <field name="title_action" class="oe_inline" placeholder="Call for proposal"/>
+                        </div>
                     </group>
                     <group>
-                        <field name="job_id" on_change="onchange_job(job_id)"/>
                         <field name="priority" string="Appreciation"/>
                         <field name="survey" invisible="1"/>
                         <field name="response" invisible="1"/>
-                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
+                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
                         <field name="state" groups="base.group_no_one"/>
                     </group>
                 </group>
@@ -177,10 +184,6 @@
                                 <div>
                                     <field name="partner_id" class="oe_inline"
                                         on_change="onchange_partner_id(partner_id, email_from)"/>
-                                    <button class="oe_inline"
-                                        string="Create" help="Create a new contact for this applicant" icon="gtk-index"
-                                        name="%(action_hr_recruitment_partner_create)d" type="action"
-                                        attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 </div>
                                 <field name="email_from" widget="email"/>
                                 <field name="partner_phone"/>
@@ -371,15 +374,15 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="expected_employees" version="7.0" position="after">
-                <label for="survey_id" />
-                <div>
-                    <field name="survey_id" class="oe_inline"/>
-                    <button class="oe_inline"
-                        string="Interview" icon="gtk-print"
-                        name="action_print_survey" type="object"
-                        attrs="{'invisible':[('survey_id','=',False)]}"/>
-                </div>
+            <field name="no_of_recruitment" version="7.0" position="after">
+            <label for="survey_id" />
+            <div>
+                <field name="survey_id" class="oe_inline"/>
+                <button class="oe_inline"
+                    string="Interview" icon="gtk-print"
+                    name="action_print_survey" type="object"
+                    attrs="{'invisible':[('survey_id','=',False)]}"/>
+            </div>
             </field>
         </field>
     </record>

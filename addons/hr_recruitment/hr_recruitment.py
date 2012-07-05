@@ -181,7 +181,7 @@ class hr_applicant(base_stage, osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Subject', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -200,7 +200,7 @@ class hr_applicant(base_stage, osv.Model):
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'HR Manager'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date_open': fields.datetime('Opened', readonly=True, select=True),
