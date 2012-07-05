@@ -155,39 +155,33 @@
                     </h2>
                 </div>
                 <group>
+                    <group string="Contact Details">
+                        <field name="partner_id"
+                                on_change="onchange_partner_id(partner_id, email_from)"/>
+                        <field name="email_from" widget="email"/>
+                        <field name="partner_phone"/>
+                        <field name="partner_mobile"/>
+                        <field name="type_id" placeholder="Degree"/>
+                    </group>
                     <group string="Application Followup">
-                        <field name="priority" string="Appreciation"/>
-                        <field name="user_id" string="responsible"/>
+                        <field name="user_id"/>
                         <label for="title_action"/>
                         <div>
                             <field name="date_action"/> -
                             <field name="title_action" class="oe_inline" placeholder="Call for proposal"/>
                         </div>
+                        <field name="priority"/>
                         <field name="state" invisible="1"/>
                     </group>
                     <group string="Job">
                         <field name="survey" invisible="1"/>
                         <field name="response" invisible="1"/>
-                        <field name="job_id" on_change="onchange_job(job_id)" class="oe_inline"/>
+                        <field name="job_id" on_change="onchange_job(job_id)"/>
                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
                         <label for="availability"/>
                         <div>
                             <field name="availability" class="oe_inline"/> <label string="Day(s)" class="oe_inline"/>
                         </div>
-                    </group>
-                </group>
-                <group>
-                    <group string="Contact Details">
-                        <field name="partner_id"
-                                on_change="onchange_partner_id(partner_id, email_from)"/>
-                        <field name="type_id" placeholder="Degree" class="oe_inline"/>
-                        <field name="email_from" widget="email"/>
-                        <field name="partner_phone"/>
-                        <field name="partner_mobile"/>
-                    </group>
-                    <group string="Reference">
-                        <field name="source_id"/>
-                        <field name="reference"/>
                     </group>
                     <group string="Contract">
                         <label for="salary_expected"/>
@@ -200,6 +194,10 @@
                             <field name="salary_proposed" class="oe_inline"/>, 
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
+                    </group>
+                    <group string="Reference">
+                        <field name="source_id"/>
+                        <field name="reference"/>
                     </group>
                 </group>
                 <separator string="Application Summary"/>
