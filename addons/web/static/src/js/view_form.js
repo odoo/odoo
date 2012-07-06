@@ -2298,10 +2298,10 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
  */
 instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
 
-    set_value: function(value_) {
-        this._super.apply(this, arguments);
-        var textarea_node = this.$element.find('textarea.field_text');
-        textarea_node.cleditor({
+    initialize_content: function() {
+        console.log('initialize_content');
+        this.$textarea = this.$element.find('textarea');
+        this.$textarea.cleditor({
           //width:        500, // width not including margins, borders or padding
           //height:       250, // height not including margins, borders or padding
           controls:     // controls to add to the toolbar
@@ -2315,11 +2315,58 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
           bodyStyle:    // style to assign to document body contained within the editor
                         "margin:4px; font:13px monospace; cursor:text"
         });
+        // cleditor.bind('change', function(event) {
+        //     console.log(event)
+        // });
+        // call super now, because cleditor seems to reset the disable attr
+        this._super.apply(this, arguments);
+        if (this.$textarea.attr('disabled') == 'disabled') {
+            this.$textarea.cleditor()[0].disable(true);
+        }
+        else {
+            this.$textarea.cleditor()[0].disable(false);
+        }
     },
+
+    set_value: function(value_) {
+        console.log('set_value');
+        console.log(value_);
+        this._super.apply(this, arguments);
+        // debugger
+        this._dirty_flag = true;
+        // this.render_value();
+    },
+    render_value: function() {
+        console.log('render_value');
+        var show_value = instance.web.format_value(this.get('value'), this, '');
+        console.log(show_value);
+        this.$textarea.val(show_value);
+        if (show_value && this.view.options.resize_textareas) {
+            this.do_resize(this.view.options.resize_textareas);
+        }
+        this.$textarea.cleditor()[0].updateFrame();
+    },
+
+    // render_value: function() {
+    //     console.log('render_value');
+    //     this._super.apply(this, arguments);
+    //     console.log(instance.web.format_value(this.get('value'), this, ''));
+    //     this.$textarea.cleditor()[0].updateFrame();
+
+    // },
+
+    // set_value: function(value_) {
+    //     console.log('set_value');
+    //     console.log(value_);
+    //     this._super.apply(this, arguments);
+    // },
+
     get_value: function() {
+        console.log('get_value');
         // retrive cleditor and get its html content
-        var textarea_node = this.$element.find('textarea.field_text');
-        var cleditor = textarea_node.cleditor()[0];
+        var cleditor = this.$textarea.cleditor()[0];
+        console.log(this.$textarea.val());
+        // cleditor.updateTextArea();
         var value = cleditor.$area.val();
         return value;
     },
