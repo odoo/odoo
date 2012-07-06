@@ -311,7 +311,7 @@ class res_partner(osv.osv):
             query_args = [name2]
             if limit:
                 limit_str = ' limit %s'
-                query_args += [limit] 
+                query_args += [limit]
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
                           WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
