@@ -235,9 +235,8 @@
                                             <field name="delay"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
+                                            <field name="property_ids" widget="many2many_tags"/>
                                         </group>
-                                        <separator string="Properties" colspan="2"/>
-                                        <field name="property_ids" colspan="4" nolabel="1"/>
                                         <field name="notes" groups="base.group_sale_notes_subtotal" placeholder="Add a note on order line..."/>
                                         <div groups="base.group_no_one">
                                             <separator colspan="4" string="Invoice Lines"/>

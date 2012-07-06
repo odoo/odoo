@@ -24,21 +24,6 @@ button.oe_edi_action_print img {
     height: 32px;
 }
 
-.openerp input.invalid {
-    background-color: #F66 !important;
-    border: 1px solid #D00 !important;
-    color: #000;
-}
-/* following browse-specific hacks need to be separate rules, as browsers are
-   required to ignore rules with unknown selectors. At time of writing, there
-   is no standard way to style HTML5 placeholders */
-.openerp input.invalid:-moz-placeholder {
-    color: #FFF;
-}
-.openerp input.invalid::-webkit-input-placeholder {
-    color: #FFF;
-}
-
 /** EDI Sidebar **/
 .oe_edi_sidebar_title {
     border-bottom: 1px solid #D2CFCF;
@@ -81,9 +66,6 @@ button.oe_edi_action_print img {
 
 
 /** Paperbox, from http://www.sitepoint.com/pure-css3-paper-curl/ **/
-body {
-    background: #EEE; /* contrast with paper */
-}
 .oe_edi_paperbox {
     position: relative;
     width: 700px;
