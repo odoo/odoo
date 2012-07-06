@@ -219,15 +219,17 @@ class res_partner(osv.osv):
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
 
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    def get_parent_address(self, cr, uid, parent_id, address_fields=POSTAL_ADDRESS_FIELDS, context=None):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-
-        if use_parent_address and parent_id:
-            parent = self.browse(cr, uid, parent_id, context=context)
-            return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
-        return {}
+        parent = self.browse(cr, uid, parent_id, context=context)
+        return dict((key, value_or_id(parent[key])) for key in address_fields)
+ 
+    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+         if use_parent_address and parent_id:
+            return {'value': self.get_parent_address(cr, uid, parent_id, address_fields=ADDRESS_FIELDS, context=context)}
+         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
@@ -273,9 +275,13 @@ class res_partner(osv.osv):
             context={}
         # Update parent and siblings records
         if vals.get('parent_id') and vals.get('use_parent_address'):
-            domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
-            update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
-            self.update_address(cr, uid, update_ids, vals, context)
+            # [RPA] why we need to change the siblings? 
+            # we are creating a child of parent and it should not affect parent and siblings
+            # domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
+            # update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
+            # [RPA] the vals we pass in update_address is not of parent so it will do nothing
+            # self.update_address(cr, uid, update_ids, vals, context)
+            vals.update(self.get_parent_address(cr, uid, vals['parent_id'], address_fields=ADDRESS_FIELDS, context=context))
         if 'photo' not in vals  :
             vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
         return super(res_partner,self).create(cr, uid, vals, context=context)
