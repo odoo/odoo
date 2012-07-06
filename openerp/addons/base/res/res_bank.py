@@ -190,7 +190,7 @@ class res_partner_bank(osv.osv):
                         result = t.format_layout % val._data[val.id]
                     except:
                         result += ' [Formatting Error]'
-                        raise
+                        raise osv.except_osv(_("Warning"), _("You cannot avoid default format_layout to result in True"))
             res.append((val.id, result))
         return res
 
