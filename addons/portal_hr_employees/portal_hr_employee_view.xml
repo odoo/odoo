@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">
                     <h1>Meet the team</h1>
-                    <field name="employee_ids" widget="many2many_kanban">
+                    <field name="employee_ids" widget="many2many_kanban_custom">
                         <kanban>
                             <field name="visibility"/>
 
@@ -35,9 +35,9 @@
                                     <div class="oe_employee_vignette">
                                         <span class="oe_dropdown_toggle oe_dropdown_arrow">
                                             <ul class="oe_dropdown_menu">
-                                                <li t-if="record.visibility.raw_value != 'private'"><a href="#" t-attf-data-id='{record.id}' class="oe_employee_make_private">Hide this employee</a></li>
-                                                <li t-if="record.visibility.raw_value != 'public'"><a href="#" t-attf-data-id='{record.id}' class="oe_employee_make_public">Make this employee visible for everyone</a></li>
-                                                <li t-if="record.visibility.raw_value != 'portal'"><a href="#" t-attf-data-id='{record.id}' class="oe_employee_make_portal">Make this employee visible for portal users</a></li>
+                                                <li t-if="record.visibility.raw_value != 'private'"><a href="#" t-attf-data-id='{record.id.raw_value}' class="oe_employee_make_private">Hide this employee</a></li>
+                                                <li t-if="record.visibility.raw_value != 'public'"><a href="#" t-attf-data-id='{record.id.raw_value}' class="oe_employee_make_public">Make this employee visible for everyone</a></li>
+                                                <li t-if="record.visibility.raw_value != 'portal'"><a href="#" t-attf-data-id='{record.id.raw_value}' class="oe_employee_make_portal">Make this employee visible for portal users</a></li>
                                             </ul>
                                         </span>
 

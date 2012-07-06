@@ -43,7 +43,7 @@ portal_crm (which creates the contact page) are installed.
         'static/src/css/portal_hr_employees.css',
     ],
     'js': [
-        'static/lib/jquery.expander/portal_hr_employees.js',
+        'static/src/js/portal_hr_employees.js',
     ],
 
 }
