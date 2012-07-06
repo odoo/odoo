@@ -39,7 +39,7 @@
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(392) 895-7917'" name="mobile"/>
             <field eval="1" name="active"/>
-            <field name="categ_id" ref="crm.categ_oppor2"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Interest in Your New Product'" name="name"/>
             <field eval="'(956) 293-2595'" name="phone"/>
@@ -56,7 +56,7 @@
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(820) 167-3208'" name="mobile"/>
             <field eval="1" name="active"/>
-            <field name="categ_id" ref="crm.categ_oppor4"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need Info about Web Design'" name="name"/>
             <field eval="'(079) 681-2139'" name="phone"/>
@@ -91,7 +91,7 @@
             <field name="section_id" ref="crm.section_sales_marketing_department"/>
             <field eval="'(333) 715-1450'" name="mobile"/>
             <field eval="1" name="active"/>
-            <field name="categ_id" ref="crm.categ_oppor1"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need a Quotation for PC1'" name="name"/>
             <field eval="'(855) 924-4364'" name="phone"/>
@@ -111,7 +111,7 @@
             <field name="country_id" ref="base.it"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(468) 017-2684'" name="mobile"/>
-            <field name="categ_id" ref="crm.categ_oppor8"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor8')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need Info about your Services'" name="name"/>
             <field eval="'(373) 907-1009'" name="phone"/>
@@ -130,7 +130,7 @@
             <field name="country_id" ref="base.ua"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(463) 014-1208'" name="mobile"/>
-            <field name="categ_id" ref="crm.categ_oppor4"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Info about Your Company ?'" name="name"/>
             <field eval="'(282) 603-7489'" name="phone"/>
@@ -143,7 +143,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field eval="'Survey'" name="name"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor6"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor6')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Survey Expert'" name="partner_name"/>
             <field eval="'John Smith'" name="contact_name"/>
@@ -161,7 +161,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="'Partnership'" name="name"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor5"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor5')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Marketing Business'" name="partner_name"/>
             <field eval="'Laure Smith'" name="contact_name"/>
@@ -189,7 +189,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field eval="'Need Info about Onsite Intervention'" name="name"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor3"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor3')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Agrolait'" name="partner_name"/>
             <field eval="'Sylvie Lelitre'" name="contact_name"/>
@@ -202,7 +202,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field eval="'Need Quotation for 100 PC and 100 Keyboards'" name="name"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor1"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Centrale d\'achats 1'" name="partner_name"/>
        </record>
@@ -234,7 +234,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="'150000'" name="planned_revenue"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor1"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="'Plan to buy 200 PC2'" name="name"/>
             <field eval="'Conf call with purchase manager'" name="title_action"/>
@@ -249,7 +249,7 @@
             <field eval="45000.0" name="planned_revenue"/>
             <field eval="35" name="probability"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor3"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor3')])]"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Pricing Information of Onsite Intervention'" name="name"/>
             <field eval="'Send price list regarding our interventions'" name="title_action"/>
@@ -271,7 +271,7 @@
             <field eval="30000.0" name="planned_revenue"/>
             <field eval="30" name="probability"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor3"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor3')])]"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Interest in your Kitchen Design Project'" name="name"/>
             <field eval="'Send Catalogue by Email'" name="title_action"/>
@@ -345,7 +345,7 @@
             <field eval="2500.0" name="planned_revenue"/>
             <field eval="25" name="probability"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor6"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor6')])]"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Plan train our students on your product'" name="name"/>
             <field eval="'Call to define real needs about training'" name="title_action"/>
@@ -368,7 +368,7 @@
             <field eval="462.0" name="planned_revenue"/>
             <field eval="40" name="probability"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor2"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Plan to buy 66 keyboards and 66 mouses'" name="name"/>
             <field eval="'Propose the kit keyboard+mouse'" name="title_action"/>
@@ -391,7 +391,7 @@
             <field eval="55000.0" name="planned_revenue"/>
             <field eval="90" name="probability"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor7"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor7')])]"/>
             <field name="stage_id" ref="crm.stage_lead6"/>
             <field eval="'Need 20 Days of Consultancy'" name="name"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date_deadline"/>
@@ -407,7 +407,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field eval="45000.0" name="planned_revenue"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor5"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor5')])]"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field eval="'Need a new design for my website'" name="name"/>
             <field eval="time.strftime('%Y-05-01')" name="date_action"/>
@@ -429,7 +429,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field eval="42000.0" name="planned_revenue"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor2"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
             <field name="stage_id" ref="crm.stage_lead8"/>
             <field eval="'Want to subscribe to your online solution'" name="name"/>
         </record>
@@ -442,7 +442,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="25000.0" name="planned_revenue"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor6"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor6')])]"/>
             <field name="stage_id" ref="crm.stage_lead8"/>
             <field eval="'Interest in your Partnership Contract'" name="name"/>
         </record>
@@ -456,7 +456,7 @@
             <field eval="5000" name="planned_revenue"/>
             <field eval="30" name="probability"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor2"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Plan to attend a training'" name="name"/>
             <field eval="time.strftime('%Y-04-10')" name="date_action"/>
@@ -478,7 +478,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="'150000'" name="planned_revenue"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor1"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="'Need to customize the solution'" name="name"/>
             <field eval="'Conf call with technical service'" name="title_action"/>
@@ -499,7 +499,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="'1200'" name="planned_revenue"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor1"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="'Interest in your customizable PC'" name="name"/>
             <field eval="time.strftime('%Y-08-05')" name="date_action"/>
@@ -518,7 +518,7 @@
             <field name="partner_id" ref="base.res_partner_fabiendupont0"/>
             <field eval="'3'" name="priority"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="categ_id" ref="crm.categ_oppor4"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need more info about the onsite intervention'" name="name"/>
         </record>
@@ -529,7 +529,7 @@
             <field name="partner_id" ref="base.res_partner_theshelvehouse0"/>
             <field eval="'3'" name="priority"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="categ_id" ref="crm.categ_oppor4"/>
+            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need more info about your pc2'" name="name"/>
         </record>
