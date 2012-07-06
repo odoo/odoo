@@ -165,7 +165,7 @@
                     <div>
                         <div>
                             <field name="date_start" class="oe_inline"/>
-                            <label string=" - " class="oe_inline oe_edit_only"/>
+                            <label string=" - " attrs="{'invisible':[('date_start','=', False),('date_end','=', False)]}"/>
                             <field name="date_end" class="oe_inline"/>
                         </div>
                         <field name="duration" class="oe_inline"/>
