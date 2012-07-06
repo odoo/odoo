@@ -9,7 +9,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Bindings" version="7.0">
-                  <sheet>
                     <group>
                         <group string="Action Binding">
                             <field name="name"/>
@@ -23,7 +22,6 @@
                             <field name="value_unpickle" colspan="4" string="Action Reference"/>
                         </group>
                     </group>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -34,7 +32,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User-defined Defaults" version="7.0">
-                   <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
@@ -51,7 +48,6 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                   </sheet> 
                 </form>
             </field>
         </record>
@@ -288,13 +284,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action" version="7.0">
-                  <sheet>
                     <group>
                         <field name="name"/>
                         <field name="type"/>
                         <field name="usage"/>
                     </group>
-                   </sheet>
                 </form>
             </field>
         </record>
@@ -341,7 +335,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report" version="7.0">
-                  <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -378,7 +371,6 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
-                   </sheet>
                 </form>
             </field>
         </record>
@@ -447,7 +439,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open a Window" version="7.0">
-                  <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -502,7 +493,6 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -1703,7 +1693,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action" version="7.0">
-                  <sheet> 
                     <group>
                         <group>
                             <field name="name"/>
@@ -1784,7 +1773,6 @@
                         </page>
                     </notebook>
                     <field name="type" readonly="1"/>
-                  </sheet>  
                 </form>
             </field>
         </record>
