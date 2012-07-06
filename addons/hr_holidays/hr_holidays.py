@@ -111,7 +111,7 @@ class hr_holidays(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Description', required=True, size=64),
+        'name': fields.text('Description'),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
             'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
             \nThe state is \'To Approve\', when holiday request is confirmed by user.\
@@ -125,7 +125,6 @@ class hr_holidays(osv.osv):
         #'manager_id': fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
         #'notes': fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'manager_id': fields.many2one('hr.employee', 'First Approval', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
-        'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True),
         'case_id': fields.many2one('crm.meeting', 'Meeting'),
