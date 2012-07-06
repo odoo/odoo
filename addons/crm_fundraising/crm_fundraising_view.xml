@@ -72,38 +72,48 @@
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet string="Funds Form">
-                    <group col="4">
-                        <field name="name" string="Name"/>
-                        <field name="section_id" colspan="1" widget="selection"/>
-                        <field name="user_id" string="Responsible"/>
-                        <field name="date"/>
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        <field name="type_id" string="Payment Mode" widget="selection"/>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <label for="categ_id" class="oe_edit_only"/>
+                    <h2>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]" class="oe_inline"/>
+                    </h2>
+                    <group>
+                        <group>
+                            <field name="user_id" string="Responsible"/>
+                            <field name="section_id" colspan="1" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="type_id" string="Payment Mode" widget="selection"/>
+                            <field name="priority" string="Priority"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Funds">
                             <group>
-                                <group string="Communication">
+                                <group>
                                     <field name="partner_id"
                                         on_change="onchange_partner_id(partner_id, email_from)"
                                         />
                                     <field name="email_from"/>
                                 </group>
-                                <group string="Estimates">
+                                <group>
                                     <field name="planned_cost"/>
                                     <field name="planned_revenue"/>
                                     <field name="probability"/>
                                 </group>
                             </group>
                             <separator colspan="4" string="Notes"/>
-                            <field name="description"/>
+                            <field name="description" placeholder="Add a note..."/>
                         </page>
                         <page string="Extra Info">
                             <group>
                                 <group string="Misc">
                                     <field name="active"/>
                                     <field name="id"/>
-                                    <field name="priority" string="Priority"/>
                                 </group>
                                 <group groups="base.group_no_one" string="Dates">
                                     <field name="create_date"/>
@@ -119,7 +129,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </footer>
                 </form>
             </field>

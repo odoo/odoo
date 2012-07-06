@@ -13,7 +13,7 @@
                 </field>
                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
                     <a name="%(sale.act_res_partner_2_sale_order)d" type="action">
-                        <t t-if="record.sale_order_count.value">Sales(<t t-esc="record.sale_order_count.value" />)</t>
+                        <t t-if="record.sale_order_count.value"><t t-esc="record.sale_order_count.value" /> Sales</t>
                     </a>
                 </xpath>
             </field>

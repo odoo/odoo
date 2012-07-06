@@ -733,10 +733,10 @@ class purchase_order(osv.osv):
     # --------------------------------------
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        result = super(purchase_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'approved':
-                result[obj.id] = [obj.validator.id]
+                result[obj.id].append(obj.validator.id)
         return result
     
     def create_send_note(self, cr, uid, ids, context=None):
