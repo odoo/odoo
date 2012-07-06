@@ -253,12 +253,9 @@
                         </group>
                         <group string="Amount">
                             <field name="amount"/>
-                            <label for="amount_currency"/>
-                            <div>
-                                <field name="amount_currency" class="oe_inline"/>
-                                <field name="currency_id" class="oe_inline"/>
-                                <field invisible="1" name="general_account_id"/>
-                            </div>
+                            <field name="amount_currency"/>
+                            <field name="currency_id"/>
+                            <field invisible="1" name="general_account_id"/>
                         </group>
                         <group string="Product Information">
                             <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
