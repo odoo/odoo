@@ -244,7 +244,7 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
-                        (<field name="type" class="oe_inline"/>)
+                        <label string=", " class="oe_inline oe_edit_only"/><field name="type" class="oe_inline oe_edit_only"/>
                     </h1>
                     <label for="datas" class="oe_edit_only" attrs="{'invisible':[('type','=','url')]}"/>
                     <label for="url" class="oe_edit_only" attrs="{'invisible':[('type','=','binary')]}"/>
@@ -254,33 +254,34 @@
                         <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}" class="oe_inline"/>
                     </h2>
                     <group>
-                        <group>
+                        <group string="Document Information">
                             <field name="user_id"/>
                             <field name="parent_id"/>
+                            <field name="partner_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="index_content" string="Tab Indexed Content"/>
+                        </group>
+                        <group groups="base.group_no_one" string="History">
+                            <label for="create_uid" string="Creation"/>
+                            <div>
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                            <label for="write_uid" string="Modification"/>
+                            <div>
+                                <field name="write_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="write_date" readonly="1" class="oe_inline"/>
+                            </div>
                         </group>
                         <group>
                             <field name="res_id" invisible="True"/>
                             <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
                             <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
-                            <field name="partner_id"/>
+                        </group>
+                        <group string="Indexed Content" colspan="4">
+                            <field name="index_content" nolabel="1"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="History">
-                            <group>
-                                <group groups="base.group_no_one" string="Created">
-                                    <field name="create_uid" readonly="1"/>
-                                    <field name="create_date" readonly="1"/>
-                                </group>
-                                <group groups="base.group_no_one" string="Modified">
-                                    <field name="write_uid" readonly="1"/>
-                                    <field name="write_date" readonly="1"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
+
                 </sheet>
             </form>
         </field>
