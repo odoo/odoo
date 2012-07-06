@@ -1,4 +1,3 @@
-@charset "utf-8";
 .openerp .oe_kanban_view {
   height: inherit;
 }
@@ -19,21 +18,24 @@
 .openerp .oe_kanban_view .oe_kanban_content div:first-child {
   margin-right: 12px;
 }
+.openerp .oe_kanban_view .oe_kanban_button_new {
+  color: white;
+  background: #dc5f59;
+}
 .openerp .oe_kanban_view .oe_kanban_groups {
   height: inherit;
   width: 100%;
 }
 .openerp .oe_kanban_view .oe_kanban_group_title {
-  margin: 1px 1px 4px;
-  padding-left: 2px;
-  font-size: 100%;
+  margin-bottom: 4px;
+  font-size: 16px;
   font-weight: bold;
   color: #333333;
   text-shadow: 0 1px 0 white;
 }
 .openerp .oe_kanban_view .oe_kanban_column, .openerp .oe_kanban_view .oe_kanban_group_header {
   vertical-align: top;
-  padding: 6px 7px 6px 6px;
+  padding: 6px 7px 0 6px;
 }
 .openerp .oe_kanban_view .oe_kanban_column.oe_kanban_grouped, .openerp .oe_kanban_view .oe_kanban_group_header {
   background: #f0eeee;
@@ -90,20 +92,19 @@
   height: 16px;
   background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat;
 }
-.openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_fold_icon {
-  background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat;
-}
-.openerp .oe_kanban_view .oe_kanban_add {
+.openerp .oe_kanban_view .oe_kanban_add, .openerp .oe_kanban_view .oe_kanban_header .oe_dropdown_toggle {
+  float: right;
+  margin-left: 4px;
   cursor: pointer;
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 16px;
-  height: 16px;
-  background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat;
+  position: relative;
+  top: -8px;
 }
 .openerp .oe_kanban_view .oe_kanban_quick_create {
   overflow: hidden;
+  margin-bottom: 4px;
+}
+.openerp .oe_kanban_view .oe_kanban_quick_create_buttons {
+  margin: 4px 0;
 }
 .openerp .oe_kanban_view .oe_kanban_no_group .oe_kanban_quick_create {
   width: 200px;
@@ -111,11 +112,9 @@
 }
 .openerp .oe_kanban_view .oe_kanban_quick_create input {
   display: block;
+  font-size: 13px;
   box-sizing: border-box;
   width: 100%;
-}
-.openerp .oe_kanban_view .oe_kanban_quick_create button {
-  float: right;
 }
 .openerp .oe_kanban_view .oe_kanban_vignette {
   padding: 8px;
@@ -333,6 +332,9 @@
 .openerp .oe_kanban_view .oe_kanban_card h3:hover {
   text-decoration: none;
 }
+.openerp .oe_kanban_view .oe_kanban_card .oe_dropdown_kanban {
+  margin-top: 4px;
+}
 .openerp .oe_kanban_view .oe_kanban_star {
   float: left;
   position: inline-block;
@@ -375,8 +377,11 @@
   background-image: radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
 }
 .openerp .oe_kanban_view .oe_kanban_text_red {
-  background: red;
-  color: black;
+  color: #a61300;
+  font-weight: bold;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 .openerp .oe_kanban_view .oe_kanban_ellipsis {
   overflow: hidden;

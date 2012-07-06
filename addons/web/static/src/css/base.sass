@@ -6,6 +6,7 @@ $facets-border: #afafb6
 $facets-border-selected: #a6a6fe
 $hover-background: #f0f0fa
 $colour4: #8a89ba
+$sheet-max-width: 860px
 // }}}
 // Mixins {{{
 @font-face
@@ -287,6 +288,18 @@ $colour4: #8a89ba
             font-weight: bold
             &:hover
                 text-decoration: underline
+    .oe_star_on, .oe_star_off
+        color: #cccccc
+        text-shadow: 0 0 2px black
+        vertical-align: top
+        position: relative
+        top: -5px
+
+    .oe_star_on:hover, .oe_star_off:hover
+        text-decoration: none
+
+    .oe_star_on
+        color: gold
 
     //.oe_edit_only 
     // }}}
@@ -313,6 +326,8 @@ $colour4: #8a89ba
         padding: 0 16px
         list-style: none
         zoom: 1
+    .oe_notebook.ui-corner-all
+        @include radius(0)
     .oe_notebook:before, .oe_notebook:after
         display: table
         content: ""
@@ -361,12 +376,12 @@ $colour4: #8a89ba
     .oe_dropdown_menu
         display: none
         position: absolute
-        top: 28px
+        top: 32px
         z-index: 1
         border: 1px solid #afafb6
         background: white
-        padding: 8px
-        min-width: 120px
+        padding: 6px 0
+        min-width: 140px
         text-align: left
         @include radius(3px)
         @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
@@ -381,7 +396,7 @@ $colour4: #8a89ba
             > a
                 white-space: nowrap
                 display: block
-                padding: 3px 6px
+                padding: 4px 15px
                 color: #4c4c4c
                 text-decoration: none
                 &:hover
@@ -399,7 +414,6 @@ $colour4: #8a89ba
         border-right: 4px solid transparent
         border-top: 4px solid#404040
         @include opacity(0.5)
-
     .oe_sidebar
         white-space: nowrap
         .oe_dropdown_menu
@@ -636,6 +650,7 @@ $colour4: #8a89ba
                     &:hover
                         @include vertical-gradient(#292929, #191919)
                         @include box-shadow(none)
+
     // }}}
     // Webclient.leftbar {{{
     .oe_leftbar
@@ -960,7 +975,7 @@ $colour4: #8a89ba
         input, textarea
             padding: 3px
             height: 14px
-            font-size: 11px
+            font-size: 12px
             line-height: 18px
         &.oe_focused
             border-color: $facets-border-selected
@@ -1293,7 +1308,7 @@ $colour4: #8a89ba
                 float: right
         footer
             min-width: 650px
-            max-width: 960px
+            max-width: $sheet-max-width
             margin: 0 auto
     ul.oe_form_steps
         height: 30px
@@ -1348,7 +1363,7 @@ $colour4: #8a89ba
             border-bottom: 1px solid #ddd 
         .oe_form_sheet_width
             min-width: 650px
-            max-width: 960px
+            max-width: $sheet-max-width
             margin: 0 auto
         .oe_form_sheet
             background: white
@@ -1669,7 +1684,6 @@ $colour4: #8a89ba
             @include opacity(0.6)
         > tbody
             cursor: pointer
-            background: white
             > tr
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
