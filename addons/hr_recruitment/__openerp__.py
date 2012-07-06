@@ -42,11 +42,10 @@ system to store and search in your CV base.
         'decimal_precision',
         'hr',
         'survey',
-        'crm',
+        'base_calendar',
         'fetchmail',
     ],
     'update_xml': [
-        'wizard/hr_recruitment_phonecall_view.xml',
         'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
