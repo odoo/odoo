@@ -381,8 +381,12 @@
                                         <field name="active"/>
                                     </group>
                                     <group>
-                                        <field name="date_start"/>
-                                        <field name="date_stop"/>
+                                        <label for="date_start" string="Validity"/>
+                                        <div>
+                                            <field name="date_start" class="oe_online"/>
+                                            <label string=" - " attrs="{'invisible':[('date_start','=', False),('date_stop','=', False)]}"/>
+                                            <field name="date_stop" class="oe_online"/>
+                                        </div>
                                         <field name="product_rounding"/>
                                         <field name="product_efficiency"/>
                                     </group>

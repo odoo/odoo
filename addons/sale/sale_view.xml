@@ -244,6 +244,9 @@
                                             <field colspan="4" name="invoice_lines" nolabel="1"/>
                                             <separator colspan="4" string="Stock Moves"/>
                                             <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
+                                            <div>
+                                                <field name="notes" nolabel="1" placeholder="Add a note on order line..."/>
+                                            </div>
                                         </div>
                                     </group>
                                 </form>
@@ -264,11 +267,10 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
-                            <div class="oe_clear">
-                                <label for="note"/>
-                            </div>
+                            <group name="sale_delivery">
+                            </group>
                             <div>
-                                <field name="note" class="oe_inline"/>
+                                <field name="note" nolabel="1" class="oe_online" placeholder="Add a global note on the sale order..."/>
                             </div>
                         </page>
                         <page string="Other Information" groups="base.group_user">
@@ -300,7 +302,7 @@
                                 <tree string="Invoices" colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'">
                                     <field name="date_invoice"/>
                                     <field name="number"/>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" string="Customer"/>
                                     <field name="user_id"/>
                                     <field name="date_due"/>
                                     <field name="amount_total"/>
