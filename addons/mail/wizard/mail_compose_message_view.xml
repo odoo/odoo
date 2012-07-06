@@ -53,10 +53,22 @@
                                 class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible" widget="text_html"/>
                         <field name="dest_partner_ids" colspan="4" nolabel="1" widget="many2many_tags"
                                 class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
-                        <button icon="gtk-ok" name="send_mail" string="Post" type="object"/>
-                        <a href="#" class="mail_compose_message_toggle">Extended email</a>
-                        <span>Checklist</span>
-                        <span>Attach</span>
+                        <button icon="gtk-ok" name="compose_message" string="Post" type="object"/>
+                        <a href="#" class="oe_mail_compose_message_email">Send an email</a>
+                        <div class='oe_mail_compose_message_icons'>
+                            <a href="#" class="oe_mail_compose_message_checklist">
+                                <img src='/mail/static/src/img/checklist.png/' alt='Checklist'
+                                    title='Add a checklist'/>
+                            </a>
+                            <a href="#" class="oe_mail_compose_message_attachment">
+                                <img src='/mail/static/src/img/attachment.png/' alt='Attachment'
+                                    title='Add an attachment'/>
+                            </a>
+                            <a href="#" class="oe_mail_compose_message_formatting">
+                                <img src='/mail/static/src/img/formatting.png/' alt='Formatting'
+                                    title='Switch to advanced formatting mode'/>
+                            </a>
+                        </div>
                     </group>
                 </form>
             </field>
