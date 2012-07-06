@@ -10,14 +10,14 @@
             <field name="arch" type="xml">
                 <form string="Action Bindings" version="7.0">
                     <group>
-                        <group string="Action Binding">
+                        <group>
                             <field name="name"/>
                             <field name="model_id" on_change="onchange_object_id(model_id)"/>
                             <field name="model"/>
                             <field name="res_id"/>
                             <field name="key2"/>
                         </group>
-                        <group string="Action">
+                        <group>
                             <field name="action_id" on_change="onchange_action_id(action_id)"/>
                             <field name="value_unpickle" colspan="4" string="Action Reference"/>
                         </group>
@@ -32,18 +32,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User-defined Defaults" version="7.0">
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
                     <group>
-                        <group string="Model">
-                            <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                        <group>
+                            <field name="name"/>
                             <field name="model"/>
-                            <field name="key2" string="Condition"/>
-                        </group>
-                        <group string="Default Value">
+                            <field name="model_id" on_change="onchange_object_id(model_id)"/>
                             <field name="value_unpickle" nolabel="1"/>
                         </group>
-                        <group string="Default Value Scope">
+                        <group>
+                            <field name="key2" string="Condition"/>
                             <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>

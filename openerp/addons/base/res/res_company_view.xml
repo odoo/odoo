@@ -28,7 +28,6 @@
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" class="oe_inline"/>
-                            <button name="%(preview_report)d" string="Preview Header/Footer" type="action" icon="gtk-print" class="oe_inline"/>
                         </h1>
                         <group col="4">
                             <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
@@ -62,7 +61,11 @@
                             </group>
                             <separator string="Header/Footer of Reports"/>
                             <group>
-                                <field name="rml_header1" placeholder="Global Business Solutions"/>
+                                <label for="rml_header1"/>
+                                <div>
+                                    <field name="rml_header1" placeholder="Global Business Solutions" class="oe_inline"/>
+                                    <button name="%(preview_report)d" string="Preview Header/Footer" type="action" icon="gtk-print" class="oe_inline"/>
+                                </div>
                                 <field name="rml_footer1" groups="base.group_no_one"/>
                                 <label for="rml_footer2"/>
                                 <div name="bank_acc">
