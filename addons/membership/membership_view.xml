@@ -239,13 +239,10 @@
                 <notebook position="inside">
                     <page string="Membership">
                         <group>
-                            <group>
+                            <group col="3">
                                 <field name="free_member"/>
-                                <label for="membership_state"/>
-                                <div>
-                                    <field name="membership_state" class="oe_inline"/>
-                                    <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" class="oe_inline oe_right"/>
-                                </div>
+                                <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" class="oe_inline oe_right"/>
+                                <field name="membership_state" class="oe_inline"/>
                             </group>
                             <group>
                                 <field name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
