@@ -41,13 +41,12 @@ class mail_compose_message(osv.TransientModel):
        parameters, among which are:
 
          * mail.compose.message.mode: if set to 'reply', the wizard is in 
-                      reply mode and pre-populated with the original quote.
-                      If set to 'mass_mail', the wizard is in mass mailing
-                      where the mail details can contain template placeholders
-                      that will be merged with actual data before being sent
-                      to each recipient. Recipients will be derived from the
-                      records determined via  ``context['active_model']`` and
-                      ``context['active_ids']``.
+            reply to a previous message mode and pre-populated with the original
+            quote. If set to 'comment', it means you are writing a new message to
+            be attached to a document. If set to 'mass_mail', the wizard is in
+            mass mailing where the mail details can contain template placeholders
+            that will be merged with actual data before being sent to each
+            recipient.
          * active_model: model name of the document to which the mail being
                         composed is related
          * active_id: id of the document to which the mail being composed is
@@ -67,50 +66,51 @@ class mail_compose_message(osv.TransientModel):
            :param dict context: several context values will modify the behavior
                                 of the wizard, cfr. the class description.
         """
-        print 'default_get'
-        print context
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
-        result = {}
 
-        reply_mode = context.get('mail.compose.message.mode') == 'reply'
-
-        """ comment mode: active_model, active_id = model and ID of a document which we are commenting """
-        """ reply mode: active_id = ID of a mail.message to which we are replying """
-        """ mass_mailing mode: active_model, active_id  = model and ID of a document which we are commenting """
-        """ default: comment mode """
-
-        mode = context.get('mail.compose.message.mode', 'comment')
-        if mode in ['comment', 'mass_mail'] and context.get('active_model') and context.get('active_id'):
-            vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
-        elif mode == ['reply'] and context.get('active_id'):
-            vals = self.get_message_data(cr, uid, int(context['active_id']), context)
-
+        """ Composition mode
+        - comment: default mode; active_model, active_id = model and ID of a
+          document we are commenting,
+        - reply: active_id = ID of a mail.message to which we are replying. From
+          this message we can find the related model and res_id,
+        - mass_mailing mode: active_model, active_id  = model and ID of a
+          document we are commenting,
+        """
+        compose_mode = context.get('mail.compose.message.mode', 'comment')
+        active_model = context.get('active_model')
+        active_id = context.get('active_id')
+        if compose_mode in ['reply']:
+            vals = self.get_message_data(cr, uid, int(context['active_id']), context=context)
+        elif compose_mode in ['comment', 'mass_mail'] and active_model and active_id:
+            vals = self.get_value(cr, uid, active_model, active_id, context)
         for field in vals:
             if field in fields:
                 result[field] = vals[field]
 
         # link to model and record if not done yet
-        if not result.get('model') and context.get('active_model'):
-            result['model'] = context.get('active_model')
-        if not result.get('res_id') and context.get('active_id'):
-            result['res_id'] = context.get('active_id')
-            if result['model'] == 'mail.message' and not result.get('parent_id'):
-                result['parent_id'] = context.get('active_id')
+        if not result.get('model') and active_model:
+            result['model'] = active_model
+        if not result.get('res_id') and active_id:
+            result['res_id'] = active_id
+            # if result['model'] == 'mail.message' and not result.get('parent_id'):
+            #     result['parent_id'] = context.get('active_id')
 
         # Try to provide default email_from if not specified yet
         if not result.get('email_from'):
-            current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result['email_from'] = current_user.user_email or False
 
         return result
 
     _columns = {
-        'tmp_partner_ids': fields.many2many('res.partner',
+        'dest_partner_ids': fields.many2many('res.partner',
             'email_message_send_partner_rel',
-            'wizard_id', 'partner_id', 'Destination partners'),
+            'wizard_id', 'partner_id', 'Destination partners',
+            help="When sending emails through the social network composition wizard"\
+                 "you may choose to send a copy of the mail to partners."),
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'filter_id': fields.many2one('ir.filters', 'Filters'),

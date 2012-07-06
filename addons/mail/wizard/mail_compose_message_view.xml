@@ -37,7 +37,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="email_compose_message_wizard_form2">
+        <record model="ir.ui.view" id="email_compose_message_wizard_form_chatter">
             <field name="name">mail.compose.message.form</field>
             <field name="model">mail.compose.message</field>
             <field name="priority">1</field>
@@ -51,7 +51,7 @@
                                 class="oe_mail_compose_message_body_text"/>
                         <field name="body_html" colspan="4" nolabel="1" placeholder="What are you working on HTML ?"
                                 class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible" widget="text_html"/>
-                        <field name="tmp_partner_ids" colspan="4" nolabel="1" widget="many2many_tags"
+                        <field name="dest_partner_ids" colspan="4" nolabel="1" widget="many2many_tags"
                                 class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
                         <button icon="gtk-ok" name="send_mail" string="Post" type="object"/>
                         <a href="#" class="mail_compose_message_toggle">Extended email</a>
