@@ -27,7 +27,7 @@
     "sequence": 12,
     "website": "http://www.openerp.com",
     "description": """
-Module for human resource management.
+Module for Human Resource Management.
 =====================================
 
 You can manage:

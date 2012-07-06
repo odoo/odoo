@@ -30,7 +30,7 @@ The generic OpenERP Customer Relationship Management.
 =====================================================
 
 This system enables a group of people to intelligently and efficiently manage
-leads, opportunities, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
