@@ -3,6 +3,7 @@ var _t = instance.web._t,
    _lt = instance.web._lt;
 instance.web.views.add('form_clone', 'instance.account.extend_form_view');
 instance.web.form.tags.add('list_button','instance.account.list_button')
+instance.web.form.tags.add('btn_extend','instance.account.btn_extend')
 instance.web.form.widgets.add('many2one_pager','instance.account.many2one_pager')
 instance.account.extend_actionmanager = instance.web.ActionManager.include({
     ir_actions_act_window: function (action, on_close) {
@@ -53,7 +54,7 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
     },
     start : function(){
         this._super()
-        this.setup_exended_list_view(this)
+        this.setup_exended_form_view(this)
     }, 
     on_mode_switch: function (view_type, no_store, options) {
         self = this
@@ -61,7 +62,7 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
             self.list_view = self.views['list']
         })
     },
-    setup_exended_list_view: function(parent){
+    setup_exended_form_view: function(parent){
         var self = this,
             from_view,
             obj_from_view;
@@ -106,8 +107,8 @@ instance.account.extend_form_view = instance.web.FormView.extend({
             viewmanager.action.domain = (viewmanager.action.domain || []).concat([["partner_id", "=", id]])
             viewmanager.searchview.do_search()
         })
-    }
-})
+    },
+  })
 instance.account.many2one_pager = instance.web.form.FieldMany2One.extend({
     template: "FieldMany2One_Pager",
     display_string: function(str) {
@@ -132,7 +133,30 @@ instance.account.many2one_pager = instance.web.form.FieldMany2One.extend({
         }
     },
 })
+instance.account.btn_extend = instance.web.form.WidgetButton.extend({
+    on_confirmed: function() {
+        var self = this;
 
+        var context = this.node.attrs.context;
+        if (context && context.__ref) {
+            context = new instance.web.CompoundContext(context);
+            context.set_eval_context(this._build_eval_context());
+        }
+
+        return this.view.do_execute_action(
+            _.extend({}, this.node.attrs, {context: context}),
+            this.view.dataset, this.view.datarecord.id, function () {
+                $.when(self.view.dataset.read_slice()).then(function() {
+                     if (!_.isEmpty(self.view.dataset.ids)){
+                        self.view.reload();
+                        //reload list view
+                        self.view.on_pager_action()
+                     }
+                })
+               
+            });
+    },
+})
 
 instance.account.list_button = instance.web.form.WidgetButton.extend({
     on_click: function() {
@@ -162,7 +186,6 @@ instance.account.list_button = instance.web.form.WidgetButton.extend({
                 self.getParent().reload()
             });
         });
-        
    }
 })
  

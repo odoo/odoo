@@ -44,34 +44,46 @@ class account_move_partner_info(osv.osv):
             res_all[id] = res
         return res_all
     
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        ids = super(account_move_partner_info, self).search(cr, uid, args, offset, limit, order, context, count)
+        res = []
+        for l in self.browse(cr, uid, ids, context=context):
+            if (not  l.partner_move_count) or (l.move_lines_count >l.partner_move_count):
+                res.append(l.id)
+        return res
+    
     _columns = {
         'partner_id':fields.many2one('res.partner', 'Partner'),
         'last_reconciliation_date':fields.datetime('Last Reconciliation'),
         'latest_date' :fields.date('Latest Entry'),
-#        'followup_date': fields.date('Latest Follow-up'),   
-        'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float')
-
+        'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float'),
+        'move_lines_count':fields.integer('Move Count'),
+        'partner_move_count':fields.integer('Partner move line count'),
     }
+    def skip_partner(self, cr, uid, ids, context):
+        res_partner = self.pool.get('res.partner')
+        for line in self.browse(cr, uid, ids, context=context):
+            res_partner.write(cr, uid, [line.id] ,{'partner_move_count':line.move_lines_count})
+            
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_move_partner_info')
         cr.execute("""
             create or replace view account_move_partner_info as (
                 SELECT  p.id, p.id as partner_id, 
                 max(p.last_reconciliation_date) as last_reconciliation_date,
-                max(l.date) as latest_date
+                max(l.date) as latest_date, 
+                count(l.id)  as move_lines_count,
+                max(p.partner_move_count) as partner_move_count    
                 FROM account_move_line as l INNER JOIN res_partner AS p ON (l.partner_id = p.id)
                 group by p.id
                 )
         """)
 account_move_partner_info()
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'partner_move_count': fields.integer('Partner move line count')
+    }
+res_partner()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
-
-#SELECT  p.id as partner_id, 
-#        max(p.last_reconciliation_date) as last_reconciliation_date,
-#        max(l.date) as latest_date,
-#        max(l.followup_date) as followup_date
-#From account_move_line as l INNER JOIN res_partner AS p ON (l.partner_id = p.id)
-#group by p.id
