@@ -181,7 +181,7 @@ class hr_applicant(base_stage, osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Subject', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -213,7 +213,7 @@ class hr_applicant(base_stage, osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability (Days)'),
+        'availability': fields.integer('Availability'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
