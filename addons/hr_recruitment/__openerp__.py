@@ -42,7 +42,7 @@ system to store and search in your CV base.
         'decimal_precision',
         'hr',
         'survey',
-        'crm',
+        'base_calendar',
         'fetchmail',
     ],
     'update_xml': [
