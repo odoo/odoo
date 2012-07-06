@@ -151,6 +151,7 @@
                                   <group class="oe_group_label_border">
                                     <field name="register_current"/>
                                     <field name="register_prospect"/>
+                                    <field name="register_attended"/>
                                   </group> 
                               </group>
                               <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
@@ -186,11 +187,6 @@
                                             </group>
                                     </form>
                                     </field>
-                                    <group class="oe_subtotal_footer oe_right" colspan="2" name="regi_total">
-                                        <field name="register_current"/>
-                                        <field name="register_prospect"/>
-                                        <field name="register_attended" class="oe_subtotal_footer_separator" />
-                                    </group>
                                 <separator string="" class="oe_clear"/>
                             </page>
                         </notebook>
