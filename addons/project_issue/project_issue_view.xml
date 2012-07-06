@@ -387,7 +387,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="use_tasks_row"]' position='inside'>
+                <xpath expr='//div[@name="Tasks"]' position='after'>
                     <label for="use_issues"/>
                     <div>
                         <field name="use_issues"/>
