@@ -135,11 +135,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Working Time" version="7.0">
-                    <field colspan="4" name="name"/>
-                    <field name="date_from"/>
-                    <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="date_from"/>
+                        <field name="dayofweek"/>
+                        <field name="hour_from" widget="float_time"/>
+                        <field name="hour_to" widget="float_time"/>
+                    </group>
                 </form>
             </field>
         </record>
