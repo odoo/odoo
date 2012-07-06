@@ -15,6 +15,19 @@
 .openerp .oe_kanban_view .oe_kanban_clear {
   clear: both;
 }
+.openerp .oe_kanban_view .oe_kanban_content .oe_star_on, .openerp .oe_kanban_view .oe_kanban_content .oe_star_off {
+  color: #cccccc;
+  text-shadow: 0 0 2px black;
+  vertical-align: top;
+  position: relative;
+  top: -5px;
+}
+.openerp .oe_kanban_view .oe_kanban_content .oe_star_on:hover, .openerp .oe_kanban_view .oe_kanban_content .oe_star_off:hover {
+  text-decoration: none;
+}
+.openerp .oe_kanban_view .oe_kanban_content .oe_star_on {
+  color: gold;
+}
 .openerp .oe_kanban_view .oe_kanban_content div:first-child {
   margin-right: 12px;
 }
@@ -26,12 +39,22 @@
   height: inherit;
   width: 100%;
 }
+.openerp .oe_kanban_view .oe_kanban_header:hover .oe_dropdown_kanban {
+  display: inline-block;
+}
+.openerp .oe_kanban_view .oe_kanban_header .oe_dropdown_menu {
+  font-weight: normal;
+  font-size: 13px;
+}
 .openerp .oe_kanban_view .oe_kanban_group_title {
-  margin-bottom: 4px;
   font-size: 16px;
   font-weight: bold;
   color: #333333;
   text-shadow: 0 1px 0 white;
+}
+.openerp .oe_kanban_view .oe_kanban_group_title > span {
+  float: left;
+  margin-right: 4px;
 }
 .openerp .oe_kanban_view .oe_kanban_column, .openerp .oe_kanban_view .oe_kanban_group_header {
   vertical-align: top;
@@ -93,11 +116,13 @@
   background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat;
 }
 .openerp .oe_kanban_view .oe_kanban_add, .openerp .oe_kanban_view .oe_kanban_header .oe_dropdown_toggle {
-  float: right;
   margin-left: 4px;
   cursor: pointer;
   position: relative;
   top: -8px;
+}
+.openerp .oe_kanban_view .oe_kanban_add {
+  float: right;
 }
 .openerp .oe_kanban_view .oe_kanban_quick_create {
   overflow: hidden;
@@ -112,6 +137,7 @@
 }
 .openerp .oe_kanban_view .oe_kanban_quick_create input {
   display: block;
+  margin: 0 0 8px 0;
   font-size: 13px;
   box-sizing: border-box;
   width: 100%;
@@ -393,14 +419,13 @@
   top: -8px;
   right: 3px;
   display: none;
-  color: #4c4c4c;
   cursor: pointer;
 }
 .openerp .oe_kanban_view .oe_dropdown_kanban:hover {
   text-decoration: none;
 }
 .openerp .oe_kanban_view .oe_dropdown_kanban .oe_dropdown_menu {
-  right: -140px;
+  left: 0;
   min-width: 160px;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker {
