@@ -804,6 +804,7 @@ openerp.mail = function(session) {
 
         start: function () {
             this._super.apply(this, arguments);
+            this.display_current_user();
             // add events
             this.add_event_handlers();
             // load mail.message search view
@@ -860,6 +861,10 @@ openerp.mail = function(session) {
                 return self.init_and_fetch_comments();
             });
         },
+
+        display_current_user: function () {
+            //return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.session.uid));
+        }, 
 
         /**
          * Initializes the wall and calls fetch_comments
