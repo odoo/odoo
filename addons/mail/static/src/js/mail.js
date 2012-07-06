@@ -243,13 +243,21 @@ openerp.mail = function(session) {
     mail.ComposeMessage = session.web.Widget.extend({
         template: 'mail.compose_message',
         
+        /**
+         * @param {Object} parent parent
+         * @param {Object} [params]
+         * @param {String} [params.res_model] res_model of document [REQUIRED]
+         * @param {Number} [params.res_id] res_id of record [REQUIRED]
+         */
         init: function(parent, params) {
             this._super(parent);
+            console.log(parent);
             // options
             this.params = params || {};
-            this.params.extended_mode = params.extended_mode || false;
+            this.params.email_mode = params.email_mode || false;
+            this.params.formatting = params.formatting || false;
             // create a context for the default_get of the compose form
-            var context = {test: 'test-first'};
+            var context = {active_model: this.params.res_model, active_id: this.params.res_id};
             // create a form_view on the mail.compose.message wizard
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
@@ -283,16 +291,41 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // event: click on 'Send a Message' link that toggles the
-            // advanced options for writing a message
-            this.$element.find('a.mail_compose_message_toggle').click(function (event) {
+            // event: click on 'Send a Message' link that toggles the form for
+            // sending an email (partner_ids)
+            this.$element.find('a.oe_mail_compose_message_email').click(function (event) {
                 event.preventDefault();
-                self.params.extended_mode = ! self.params.extended_mode;
+                self.params.email_mode = ! self.params.email_mode;
+                // update context of datasetsearch
+                self.ds_compose.context.email_mode = self.params.email_mode;
+                // toggle display
+                self.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
+            });
+            // event: click on 'Formatting' icon-link that toggles the advanced
+            // formatting options for writing a message (subject, body_html)
+            this.$element.find('a.oe_mail_compose_message_formatting').click(function (event) {
+                event.preventDefault();
+                self.params.formatting = ! self.params.formatting;
+                // update context of datasetsearch
+                self.ds_compose.context.formatting = self.params.formatting;
                 // toggle display
                 self.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
                 self.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
                 self.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
-                self.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
+            });
+            // event: click on 'Attachment' icon-link that opens the dialog to
+            // add an attachment.
+            this.$element.find('a.oe_mail_compose_message_attachment').click(function (event) {
+                event.preventDefault();
+                // not yet implemented
+                console.log('attachment');
+            });
+            // event: click on 'Checklist' icon-link that toggles the options
+            // for adding checklist.
+            this.$element.find('a.oe_mail_compose_message_checklist').click(function (event) {
+                event.preventDefault();
+                // not yet implemented
+                console.log('checklist');
             });
         },
         
@@ -385,7 +418,9 @@ openerp.mail = function(session) {
             $.when(display_done).then(this.proxy('do_customize_display'));
             
             // add message composition form view
-            this.compose_message = new mail.ComposeMessage(this, {'extended_mode': false, 'uid': this.params.uid});
+            this.compose_message = new mail.ComposeMessage(this, {
+                'extended_mode': false, 'uid': this.params.uid, 'res_model': this.params.res_model,
+                'res_id': this.params.res_id });
             var composition_node = this.$element.find('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message.appendTo(composition_node);
