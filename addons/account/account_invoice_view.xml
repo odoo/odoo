@@ -161,6 +161,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Supplier Invoice">
+                  <div class="oe_title">
                   <h1>
                      <label string="Draft Invoice " attrs="{'invisible': [('state','not in',('draft',))]}"/>
                      <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
@@ -174,17 +175,18 @@
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                    </h2>
+                      </h2>
+                    </div>
                     <group>
                        <group>
-                        <field name="date_invoice"/>
-                        <field name="date_due"/>
-                        <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-                        <label for="reference"/>
-                        <div>
+                         <field name="date_invoice"/>
+                         <field name="date_due"/>
+                         <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
+                         <label for="reference"/>
+                         <div>
                           <field name="reference_type"/>
                           <field name="reference" placeholder="Payment Reference"/>
-                        </div>
+                         </div>
                        </group>
                        <group>
                           <field name="fiscal_position" widget="selection"/>
@@ -206,10 +208,11 @@
                                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
-                                     <!-- Removed if subtotal is set -->
                                     <field name="price_subtotal"/>
-                                    <field invisible="True" name="name"/>
-                                    <field invisible="True" name="uos_id"/>
+                                    <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id,parent.partner_id,parent.type,parent.fiscal_position,account_id)" invisible="1"/>
+                                    <!-- Removed if subtotal is set -->
+                                    <field name="name" invisible="1"/>
+                                    <field name="uos_id" invisible="1"/>
                                 </tree>
                             </field>
                             <group>
@@ -272,7 +275,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" widget="ThreadView"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </footer>
                 </form>
             </field>
@@ -406,7 +409,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </footer>
                 </form>
             </field>

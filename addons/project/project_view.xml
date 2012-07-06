@@ -21,6 +21,43 @@
             view_mode="kanban,tree,form,calendar,graph"
             view_type="form"/>
 
+        <!-- Project Read/Unread actions -->
+        <record id="actions_server_project_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_unread" model="ir.values">
+            <field name="name">action_project_unread</field>
+            <field name="action_id" ref="actions_server_project_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_project" />
+            <field name="model">project.project</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_project_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_read" model="ir.values">
+            <field name="name">action_project_read</field>
+            <field name="action_id" ref="actions_server_project_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_project" />
+            <field name="model">project.project</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -111,7 +148,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" widget="ThreadView"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </footer>
                 </form>
             </field>
@@ -125,6 +162,11 @@
                 <search string="Search Project">
                    <group>
                        <field name="complete_name" string="Project Name"/> 
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-mail-message-new"
+                           string="Inbox" help="Unread messages"
+                           name="needaction_pending"
+                           domain="[('needaction_pending','=',True)]"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
@@ -197,7 +239,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">i</span>
+                                    <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <li><a type="edit">Edit...</a></li>
                                         <li><a type="delete">Delete</a></li>
@@ -308,6 +350,44 @@
         </record>
 
         <!-- Task -->
+
+        <!-- Task Read/Unread actions -->
+        <record id="actions_server_project_task_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_task"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_task_unread" model="ir.values">
+            <field name="name">action_project_task_unread</field>
+            <field name="action_id" ref="actions_server_project_task_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_task" />
+            <field name="model">project.task</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_project_task_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_task"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_task_read" model="ir.values">
+            <field name="name">action_project_task_read</field>
+            <field name="action_id" ref="actions_server_project_task_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_task" />
+            <field name="model">project.task</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
             <field name="model">project.task</field>
@@ -416,7 +496,7 @@
                     </notebook>
                     </sheet>
                     <footer>
-                        <field name="message_ids" widget="ThreadView"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </footer>
                 </form>
             </field>
@@ -440,6 +520,8 @@
                     <field name="kanban_state"/>
                     <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
+                    <field name="message_summary"/>
+                    <field name="needaction_pending"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -567,6 +649,11 @@
                <search string="Tasks">
                     <group>
                         <field name="name" string="Tasks"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
                         <separator orientation="vertical"/>
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>

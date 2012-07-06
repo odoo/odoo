@@ -47,6 +47,43 @@
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
+        <!-- Event Read/Unread actions -->
+        <record id="actions_server_event_event_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_event"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_event_unread" model="ir.values">
+            <field name="name">action_event_event_unread</field>
+            <field name="action_id" ref="actions_server_event_event_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_event" />
+            <field name="model">event.event</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_event_event_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_event"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_event_read" model="ir.values">
+            <field name="name">action_event_event_read</field>
+            <field name="action_id" ref="actions_server_event_event_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_event" />
+            <field name="model">event.event</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">Events</field>
             <field name="model">event.event</field>
@@ -130,9 +167,9 @@
                     </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_sheet_width">
-                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                    </div>
+                    <footer>
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    </footer>
             </form>
             </field>
         </record>
@@ -144,7 +181,7 @@
             <field name="model">event.event</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Events" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
+                <tree string="Events" fonts="bold:needaction_pending==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
                     <field name="name" string="Name"/>
                     <field name="type"/>
                     <field name="date_begin"/>
@@ -155,6 +192,7 @@
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -264,6 +302,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
+                    <filter icon="terp-mail-message-new"
+                        string="Inbox" help="Unread messages"
+                        name="needaction_pending"
+                        domain="[('needaction_pending','=',True)]"/>
+                    <separator orientation="vertical"/>
                     <group>
                         <field name="name" string="Events"/>
                         <separator orientation="vertical"/>
@@ -330,12 +373,49 @@
 
     <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
+        <!-- Registration Read/Unread actions -->
+        <record id="actions_server_event_registration_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_registration"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_registration_unread" model="ir.values">
+            <field name="name">action_event_registration_unread</field>
+            <field name="action_id" ref="actions_server_event_registration_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_registration" />
+            <field name="model">event.registration</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_event_registration_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_registration"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_registration_read" model="ir.values">
+            <field name="name">action_event_registration_read</field>
+            <field name="action_id" ref="actions_server_event_registration_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_registration" />
+            <field name="model">event.registration</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <record model="ir.ui.view" id="view_event_registration_tree">
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Registration" >
+                <tree string="Registration" fonts="bold:needaction_pending==True">
                     <field name="create_date"/>
                     <field name="partner_id"/>
                     <field name="name"/>
@@ -345,6 +425,7 @@
                     <field name="user_id"/>
                     <field name="origin"/>
                     <field name="state"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -387,19 +468,6 @@
                             </group>
                         </page>
                         <page string="Emails">
-<!--
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree">
-                                <tree string="History">
-                                    <field name="display_text" string="History Information"/>
-                                    <field name="reply_to" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('reply_to', '=', False)]}"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                        icon="terp-mail-replied" type="action" />
-                                </tree>
-                            </field>
--->
                             <button string="Send New Email"
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
@@ -407,9 +475,9 @@
 
                     </notebook>
                     </sheet>
-                    <div class="oe_sheet_width">
-                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                    </div>
+                    <footer>
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -449,6 +517,11 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
+                        <separator orientation="vertical"/>
                         <field name="name" string="Participant"
                             filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
                         <separator orientation="vertical"/>
