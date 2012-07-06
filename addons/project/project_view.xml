@@ -99,11 +99,11 @@
                             <div>
                                 <field name="use_tasks"/>
                                 <button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                                <group>
+                                    <button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" />
+                                </group>
                             </div>
                         </group>
-                    </group>
-                    <group>
-                        <button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" />
                     </group>
                     <notebook>
                         <page string="Team" name="team">
