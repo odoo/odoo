@@ -51,27 +51,6 @@ class event_event(osv.osv):
     _order = 'date_begin'
     _inherit = ['ir.needaction_mixin','mail.thread']
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-              return []
-        res = []
-        for record in self.browse(cr, uid, ids, context=context):
-            date = record.date_begin.split(" ")
-            date = date[0]
-            registers=''
-            if record.register_max !=0:
-                register_max = str(record.register_max)
-                register_tot = record.register_current+record.register_prospect
-                register_tot = str(register_tot)
-                registers = register_tot+'/'+register_max
-            name = record.name+' ('+date+') '+registers
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids,prop,unknow, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
     def create(self, cr, uid, vals, context=None):
         obj_id = super(event_event, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
@@ -211,7 +190,6 @@ class event_event(osv.osv):
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
-        'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
