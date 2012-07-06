@@ -22,10 +22,10 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="currency_id" position="after">
-                      <field name="paypal_account"  placeholder="sales@openerp.com"/>
-                      <field name="property_reserve_and_surplus_account" colspan="2"/>
-                </field>
+                <xpath expr="//group[@name='account_grp']" position="inside">
+                    <field name="property_reserve_and_surplus_account"/>
+                    <field name="paypal_account"  placeholder="sales@openerp.com"/>
+                </xpath>
             </field>
         </record>
 

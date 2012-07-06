@@ -826,10 +826,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='currency']" position="after">
-                    <group string="Project Management">
-                        <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
-                    </group>
+                <xpath expr="//group[@name='time_grp']" position="inside">
+                    <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
                 </xpath>
             </field>
         </record>

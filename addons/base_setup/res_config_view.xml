@@ -12,26 +12,24 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group>
-                            <group string="Company Settings">
-                                <field name="module_multi_company"/>
-                                <div>
-                                    You will also find several configuration options on your company data:
-                                    address for the header and footer, overdue payments texts, etc.
-                                </div>
-                                <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
-                            </group>
-                            <group string="External Accesses">
-                                <field name="module_share"/>
-                                <field name="module_portal"/>
-                                <separator string="Others" colspan="2"/>
-                                <label for="id" string="Outgoing Mail Servers"/>
-                                <button type="action" name="%(base.action_ir_mail_server_list)d"
-                                string="Configure" icon="gtk-execute"/>
-                            </group>
+                    <group>
+                        <group string="Company Settings">
+                            <field name="module_multi_company"/>
+                            <div>
+                                You will also find several configuration options on your company data:
+                                address for the header and footer, overdue payments texts, etc.
+                            </div>
+                            <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
                         </group>
-                    </sheet>
+                        <group string="External Accesses">
+                            <field name="module_share"/>
+                            <field name="module_portal"/>
+                            <separator string="Others" colspan="2"/>
+                            <label for="id" string="Outgoing Mail Servers"/>
+                            <button type="action" name="%(base.action_ir_mail_server_list)d"
+                            string="Configure" icon="gtk-execute"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -57,7 +55,6 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
                         <group>
                             <group name="config_sale">
                                 <field name="module_crm" invisible="1"/>
@@ -68,7 +65,6 @@
                             <group name="config_other">
                             </group>
                         </group>
-                    </sheet>
                 </form>
             </field>
         </record>

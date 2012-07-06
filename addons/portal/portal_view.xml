@@ -38,11 +38,19 @@ the portal's users.
             <field name="arch" type="xml">
                 <page string="Users" position="before">
                     <page string="Portal">
-                        <group colspan="4" col="2">
-                            <separator string="Website" colspan="2"/>
-                            <field name="url" widget="url"/>
-                        </group>
-                        <group colspan="2" col="2">
+                        <group>
+                            <group>
+                                <field name="url" widget="url" string="Portal URL"/>
+                                <field name="home_action_id"/>
+                            </group>
+                            <group>
+                                <field name="override_menu"/>
+                                <field name="parent_menu_id"
+                                    context="{'ir.ui.menu.full_list': True}"/>
+                                <label colspan="1"/>
+                                <button name="do_create_menu" type="object"
+                                    string="Create Parent Menu"/>
+                            </group>
                             <separator string="Widgets Assigned to Users" colspan="2"/>
                             <field name="widget_ids" nolabel="1" colspan="2">
                                 <tree string="Widgets" editable="bottom">
@@ -50,16 +58,6 @@ the portal's users.
                                     <field name="widget_id"/>
                                 </tree>
                             </field>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Portal Menu" colspan="2"/>
-                            <field name="override_menu"/>
-                            <field name="parent_menu_id"
-                                context="{'ir.ui.menu.full_list': True}"/>
-                            <label colspan="1"/>
-                            <button name="do_create_menu" type="object"
-                                string="Create Parent Menu"/>
-                            <field name="home_action_id"/>
                         </group>
                     </page>
                 </page>
