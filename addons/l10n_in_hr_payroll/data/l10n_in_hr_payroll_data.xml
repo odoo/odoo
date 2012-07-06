@@ -287,7 +287,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &gt;= 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &gt;= 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999)) else 0</field>
+            <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt; 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt; 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt; 5999)) else -0</field>
             <field eval="145" name="sequence"/>
             <field eval="False" name="appears_on_payslip"/>
             <field name="note">Professional tax for company should be paid on or before 30th sept,The amount is Rs.2000 per year.There is no payment form to be filled.</field>
