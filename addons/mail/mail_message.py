@@ -40,30 +40,21 @@ import tools
 
 _logger = logging.getLogger(__name__)
 
-def format_date_tz(date, tz=None):
-    if not date:
-        return 'n/a'
-    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-    return tools.server_to_local_timestamp(date, format, format, tz)
-
-def truncate_text(text):
-    lines = text and text.split('\n') or []
-    if len(lines) > 3:
-        res = '\n\t'.join(lines[:3]) + '...'
-    else:
-        res = '\n\t'.join(lines)
-    return res
-
+""" Some tools for parsing / creating email fields """
 def decode(text):
     """Returns unicode() string conversion of the the given encoded smtp header text"""
     if text:
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
-def to_email(text):
+def mail_tools_to_email(text):
     """Return a list of the email addresses found in ``text``"""
     if not text: return []
     return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
+
+# TODO: remove that after cleaning
+def to_email(text):
+    return mail_tools_to_email(text)
 
 class mail_message_common(osv.TransientModel):
     """Common abstract class for holding the main attributes of a 
@@ -93,22 +84,7 @@ class mail_message_common(osv.TransientModel):
         #   - args: [('body', 'ilike', 'blah')]
         return ['|', '&', ('content_subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
     
-    def name_get(self, cr, uid, ids, context=None):
-        res = []
-        for message in self.browse(cr, uid, ids, context=context):
-            name = ''
-            if message.subject:
-                name = '%s: ' % (message.subject)
-            if message.body_text:
-                name = '%s%s ' % (name, message.body_text[0:20])
-            if message.date:
-                name = '%s(%s)' % (name, message.date)
-            res.append((message.id, name))
-        return res
-
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
         result = dict.fromkeys(ids, '')
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
@@ -135,31 +111,36 @@ class mail_message_common(osv.TransientModel):
         'subject': fields.char('Subject', size=512),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(get_record_name, type='string', string='Message Record Name',
-                        help="Name of the record, matching the result of the name_get."),
+        'record_name': fields.function(get_record_name, type='string',
+            string='Message Record Name',
+            help="Name get of the related document."),
         'date': fields.datetime('Date'),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-        'destination_partner_ids': fields.many2many('res.partner',
-            'mail_message_common_partners_destination_rel',
-            'common_id', 'partner_id', 'Destination partners'),
+        'partner_ids': fields.many2many('res.partner',
+            'mail_message_common_destination_partner_rel',
+            'common_id', 'partner_id', 'Destination partners',
+            help="When sending emails through the social network composition wizard"\
+                 "you may choose to send a copy of the mail to partners."),
         'headers': fields.text('Message Headers', readonly=1,
-                        help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
+            help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'content_subtype': fields.char('Message content subtype', size=32,
-                                            oldname="subtype", readonly=1,
-                                            help="Type of message, usually 'html' or 'plain', used to \
-                                                  select plain-text or rich-text contents accordingly"),
+            oldname="subtype", readonly=1,
+            help="Type of message, usually 'html' or 'plain', used to select "\
+                  "plain-text or rich-text contents accordingly"),
         'body_text': fields.text('Text Contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
-        'body': fields.function(get_body, fnct_search = search_body, string='Message Content', type='text',
-                        help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
-        'parent_id': fields.many2one('mail.message', 'Parent Message', help="Parent message, used for displaying as threads with hierarchy",
-                        select=True, ondelete='set null',),
+        'body': fields.function(get_body, fnct_search = search_body, type='text',
+            string='Message Content', store=True,
+            help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
+        'parent_id': fields.many2one('mail.message', 'Parent Message',
+            select=True, ondelete='set null',
+            help="Parent message, used for displaying as threads with hierarchy"),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
     }
 
@@ -186,17 +167,17 @@ class mail_message(osv.Model):
     # XXX to review - how to determine action to use?
     def open_document(self, cr, uid, ids, context=None):
         action_data = False
-        if ids:
-            msg = self.browse(cr, uid, ids[0], context=context)
-            model = msg.model
-            res_id = msg.res_id
-
-            ir_act_window = self.pool.get('ir.actions.act_window')
-            action_ids = ir_act_window.search(cr, uid, [('res_model', '=', model)])
-            if action_ids:
-                action_data = ir_act_window.read(cr, uid, action_ids[0], context=context)
-                action_data.update({
-                    'domain' : "[('id','=',%d)]"%(res_id),
+        if not ids:
+            return action_data
+        # works only on 1 item
+        id = ids[0]
+        msg = self.browse(cr, uid, id, context=context)
+        ir_act_window = self.pool.get('ir.actions.act_window')
+        action_ids = ir_act_window.search(cr, uid, [('res_model', '=', msg.model)], context=context)
+        if action_ids:
+            action_data = ir_act_window.read(cr, uid, action_ids[0], context=context)
+            action_data.update({
+                    'domain' : "[('id', '=', %d)]" % (msg.res_id),
                     'nodestroy': True,
                     'context': {}
                     })
@@ -205,14 +186,16 @@ class mail_message(osv.Model):
     # XXX to review - how to determine action to use?
     def open_attachment(self, cr, uid, ids, context=None):
         action_data = False
+        if not ids:
+            return action_data
         action_pool = self.pool.get('ir.actions.act_window')
-        message = self.browse(cr, uid, ids, context=context)[0]
-        att_ids = [x.id for x in message.attachment_ids]
-        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
+        messages = self.browse(cr, uid, ids, context=context)
+        att_ids = [x.id for x in message.attachment_ids for message in messages]
+        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')], context=context)
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)
             action_data.update({
-                'domain': [('id','in',att_ids)],
+                'domain': [('id', 'in', att_ids)],
                 'nodestroy': True
                 })
         return action_data
@@ -278,7 +261,7 @@ class mail_message(osv.Model):
         ima_obj = self.pool.get('ir.model.access')
         for model, mids in res_ids.items():
             # ignore mail messages that are not attached to a resource anymore when checking access rights
-            # (resource was deleted but attachment was not)
+            # (resource was deleted but message was not)
             mids = self.pool.get(model).exists(cr, uid, mids)
             ima_obj.check(cr, uid, model, mode)
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
@@ -634,12 +617,12 @@ class mail_message(osv.Model):
                 # without queuing
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
-                    email_to=to_email(message.email_to),
+                    email_to=mail_tools_to_email(message.email_to),
                     subject=message.subject,
                     body=body,
                     body_alternative=body_alternative,
-                    email_cc=to_email(message.email_cc),
-                    email_bcc=to_email(message.email_bcc),
+                    email_cc=mail_tools_to_email(message.email_cc),
+                    email_bcc=mail_tools_to_email(message.email_bcc),
                     reply_to=message.reply_to,
                     attachments=attachments, message_id=message.message_id,
                     references = message.references,

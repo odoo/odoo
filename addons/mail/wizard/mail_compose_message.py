@@ -105,12 +105,7 @@ class mail_compose_message(osv.TransientModel):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
             result['email_from'] = current_user.user_email or False
 
-        print result
         return result
-
-    def create(self, cr, uid, values, context):
-        print values
-        return super(mail_compose_message, self).create(cr, uid, values, context)
 
     _columns = {
         'tmp_partner_ids': fields.many2many('res.partner',
