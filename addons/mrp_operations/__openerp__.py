@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Manufacturing',
     'description': """
-This module adds state, date_start,date_stop in manufacturing order operation lines (in the "Work Orders" tab).
+This module adds state, date_start, date_stop in manufacturing order operation lines (in the "Work Orders" tab).
 =============================================================================================================
 
 Status: draft, confirm, done, cancel
