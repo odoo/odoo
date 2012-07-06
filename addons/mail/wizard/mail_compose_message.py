@@ -33,7 +33,7 @@ from ..mail_message import to_email
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
-class mail_compose_message(osv.osv_memory):
+class mail_compose_message(osv.TransientModel):
     """Generic Email composition wizard. This wizard is meant to be inherited
        at model and view level to provide specific wizard features.
 
@@ -73,46 +73,49 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
+        result = {}
+
         reply_mode = context.get('mail.compose.message.mode') == 'reply'
-        if (not reply_mode) and context.get('active_model') and context.get('active_id'):
-            # normal mode when sending an email related to any document, as specified by
-            # active_model and active_id in context
-            # if a message_id is specified in context, this means we send an e-mail related
-            # to a document, but based on a previous e-mail
-            if context.get('message_id'):
-                vals = self.get_message_data(cr, uid, int(context['message_id']), context=context)
-            vals.update(self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context))
-        elif reply_mode and context.get('active_id'):
-            # reply mode, consider active_id is the ID of a mail.message to which we're
-            # replying
-            if context.get('message_id'):
-                vals = self.get_message_data(cr, uid, int(context['message_id']), context=context)
-            else:
-                vals = self.get_message_data(cr, uid, int(context['active_id']), context)
-        else:
-            # default mode
-            result['model'] = context.get('active_model', False)
-        
+
+        """ comment mode: active_model, active_id = model and ID of a document which we are commenting """
+        """ reply mode: active_id = ID of a mail.message to which we are replying """
+        """ mass_mailing mode: active_model, active_id  = model and ID of a document which we are commenting """
+        """ default: comment mode """
+
+        mode = context.get('mail.compose.message.mode', 'comment')
+        if mode in ['comment', 'mass_mail'] and context.get('active_model') and context.get('active_id'):
+            vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
+        elif mode == ['reply'] and context.get('active_id'):
+            vals = self.get_message_data(cr, uid, int(context['active_id']), context)
+
         for field in vals:
             if field in fields:
-                result.update({field : vals[field]})
+                result[field] = vals[field]
 
         # link to model and record if not done yet
-        if not result.get('model') or not result.get('res_id'):
-            active_model = context.get('active_model')
-            res_id = context.get('active_id')
-            if active_model and active_model not in (self._name, 'mail.message'):
-                result['model'] = active_model
-                if res_id:
-                    result['res_id'] = res_id
+        if not result.get('model') and context.get('active_model'):
+            result['model'] = context.get('active_model')
+        if not result.get('res_id') and context.get('active_id'):
+            result['res_id'] = context.get('active_id')
+            if result['model'] == 'mail.message' and not result.get('parent_id'):
+                result['parent_id'] = context.get('active_id')
 
         # Try to provide default email_from if not specified yet
         if not result.get('email_from'):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
             result['email_from'] = current_user.user_email or False
+
+        print result
         return result
 
+    def create(self, cr, uid, values, context):
+        print values
+        return super(mail_compose_message, self).create(cr, uid, values, context)
+
     _columns = {
+        'tmp_partner_ids': fields.many2many('res.partner',
+            'email_message_send_partner_rel',
+            'wizard_id', 'partner_id', 'Destination partners'),
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
