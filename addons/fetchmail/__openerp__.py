@@ -43,10 +43,9 @@ email-enabled OpenERP documents, such as:
  * Project Issues
  * Project Tasks
  * Human Resource Recruitments (Applicants)
- * etc.
 
 Just install the relevant application, and you can assign any of
-these document types (Leads, Project Issues, etc.) to your incoming
+these document types (Leads, Project Issues.) to your incoming
 email accounts. New emails will automatically spawn new documents
 of the chosen type, so it's a snap to create a mailbox-to-OpenERP
 integration. Even better: these documents directly act as mini

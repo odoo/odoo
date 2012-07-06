@@ -24,11 +24,11 @@
     "version" : "1.0",
     "author" : 'OpenERP SA',
     "description": """
-Account Voucher module manage all Voucher Entries such as "Reconciliation Entries", "Adjustment Entries", "Closing or Opening Entries" for Sales, Purchase, Bank, Cash, Expense, Contra, etc.
+eInvoicing & Payments module manage all Voucher Entries such as "Reconciliation Entries", "Adjustment Entries", "Closing or Opening Entries" for Sales, Purchase, Bank, Cash, Expense, Contra.
 
     * Voucher Entry
     * Voucher Receipt [Sales & Purchase]
-    * Voucher payment [Customer & Supplier]
+    * Voucher Payment [Customer & Supplier]
     * Cheque Register
     """,
     "category": 'Accounting & Finance',

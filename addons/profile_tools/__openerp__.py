@@ -27,8 +27,8 @@
     "author" : "OpenERP SA",
     "category" : "Hidden/Dependency",
     "description": """
-Installer for extra Hidden like lunch, survey, idea, share, etc.
-================================================================
+Installer for extra Hidden like lunch, survey, idea, share.
+===========================================================
 
 Makes the Extra Hidden Configuration available from where you can install
 modules like share, lunch, pad, idea, survey and subscription.

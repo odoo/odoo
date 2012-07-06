@@ -47,7 +47,7 @@ are using a secure protocol such as XML-RPCS or HTTPS.
 It also does not protect the rest of the content of the database, which may
 contain critical data. Appropriate security measures need to be implemented
 by the system administrator in all areas, such as: protection of database
-backups, system files, remote shell access, physical server access, etc.
+backups, system files, remote shell access, physical server access.
 
 Interation with LDAP authentication
 +++++++++++++++++++++++++++++++++++

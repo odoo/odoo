@@ -23,8 +23,8 @@
  "description" :  """
 Swiss localisation :
  - DTA generation for a lot of payment types
- - BVR management (number generation, report, etc..)
- - Import account move from the bank file (like v11 etc..)
+ - BVR management (number generation, report.)
+ - Import account move from the bank file (like v11)
  - Simplify the way you handle the bank statement for reconciliation
 
 You can also add ZIP and bank completion with:

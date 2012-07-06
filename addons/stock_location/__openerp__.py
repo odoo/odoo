@@ -51,7 +51,7 @@ Locations themselves, but these cannot be refined per-product.
 A push flow specification indicates which location is chained with which location, and with
 what parameters. As soon as a given quantity of products is moved in the source location,
 a chained move is automatically foreseen according to the parameters set on the flow specification
-(destination location, delay, type of move, journal, etc.) The new move can be automatically
+(destination location, delay, type of move, journal.) The new move can be automatically
 processed, or require a manual confirmation, depending on the parameters.
 
 Pull flows

@@ -26,7 +26,7 @@
     'category': 'Purchase Management',
     "sequence": 19,
     'description': """
-Purchase module is for generating a purchase order for purchase of goods from a supplier.
+Purchase Management module is for generating a purchase order for purchase of goods from a supplier.
 =========================================================================================
 
 A supplier invoice is created for the particular purchase order.
