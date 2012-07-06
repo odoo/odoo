@@ -463,7 +463,9 @@
                         <h1>
                             <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" nolabel="1" class="oe_inline"/>
                             <label string="(" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-                            <field name="duration" widget="float_time" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
+                            <field name="event_begin_date" class="oe_inline" attrs="{'invisible': [('event_id', '=', '')]}"/>
+                            <label string="-" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
+                            <field name="event_end_date" class="oe_inline" attrs="{'invisible': [('event_id', '=', '')]}"/>
                             <label string=")" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
                         </h1>   
                         <group colspan="4" col="4">
@@ -473,9 +475,6 @@
                                 <label for="email" string="E-Mail"/>
                                 <group col="2">
                                     <field name="email" nolabel="1" class="oe_inline"/>
-                                    <button string="Send New Email"
-                                    name="%(mail.action_email_compose_message_wizard)d"
-                                    context= '{"default_email_to":email}' type="action" class="oe_inline"/>
                                 </group>
                             </group>
                             <group colspan="2">
