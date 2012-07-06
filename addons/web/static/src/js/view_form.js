@@ -2316,6 +2316,13 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
                         "margin:4px; font:13px monospace; cursor:text"
         });
     },
+    get_value: function() {
+        // retrive cleditor and get its html content
+        var textarea_node = this.$element.find('textarea.field_text');
+        var cleditor = textarea_node.cleditor()[0];
+        var value = cleditor.$area.val();
+        return value;
+    },
 });
 
 instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
