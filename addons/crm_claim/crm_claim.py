@@ -22,13 +22,10 @@
 from base_status.base_stage import base_stage
 import binascii
 from crm import crm
-from crm import wizard
 from osv import fields, osv
 import time
 import tools
 from tools.translate import _
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.claim')
 
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -75,6 +72,7 @@ class crm_claim(base_stage, osv.osv):
     _description = "Claim"
     _order = "priority,date desc"
     _inherit = ['mail.thread']
+    _mail_compose_message = True
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
