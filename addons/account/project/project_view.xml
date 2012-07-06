@@ -253,8 +253,11 @@
                         </group>
                         <group string="Amount">
                             <field name="amount"/>
-                            <field name="amount_currency"/>
-                            <field name="currency_id"/>
+                            <label for="amount_currency"/>
+                            <div>
+                                <field name="amount_currency" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
                             <field invisible="1" name="general_account_id"/>
                         </group>
                         <group string="Product Information">
