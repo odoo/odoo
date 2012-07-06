@@ -22,6 +22,12 @@
 import tools
 from osv import fields,osv
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'partner_move_count': fields.integer('Partner move line count')
+    }
+res_partner()
 
 class account_move_partner_info(osv.osv):
     _name = "account.move.partner.info"
@@ -79,11 +85,4 @@ class account_move_partner_info(osv.osv):
                 )
         """)
 account_move_partner_info()
-
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
-    _columns = {
-        'partner_move_count': fields.integer('Partner move line count')
-    }
-res_partner()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
