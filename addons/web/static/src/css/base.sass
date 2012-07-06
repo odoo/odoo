@@ -6,6 +6,7 @@ $facets-border: #afafb6
 $facets-border-selected: #a6a6fe
 $hover-background: #f0f0fa
 $colour4: #8a89ba
+$sheet-max-width: 860px
 // }}}
 // Mixins {{{
 @font-face
@@ -1307,7 +1308,7 @@ $colour4: #8a89ba
                 float: right
         footer
             min-width: 650px
-            max-width: 960px
+            max-width: $sheet-max-width
             margin: 0 auto
     ul.oe_form_steps
         height: 30px
@@ -1362,7 +1363,7 @@ $colour4: #8a89ba
             border-bottom: 1px solid #ddd 
         .oe_form_sheet_width
             min-width: 650px
-            max-width: 860px
+            max-width: $sheet-max-width
             margin: 0 auto
         .oe_form_sheet
             background: white
