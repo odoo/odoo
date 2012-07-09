@@ -559,8 +559,8 @@ class product_product(osv.osv):
         return False
 
     def _check_ean_key(self, cr, uid, ids, context=None):
-        for product in self.browse(cr, uid, ids, context=context):
-            res = check_ean(product.ean13)
+        for product in self.read(cr, uid, ids, ['ean13'], context=context):
+            res = check_ean(product['ean13'])
         return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
