@@ -919,9 +919,12 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw new Error("Setting 'id' attribute on existing record "
                             + JSON.stringify(record.attributes));
                     }
-                    // add record to dataset
-                    self.dataset.ids.splice(
-                        self.records.indexOf(record), 0, value);
+                    if (!_.contains(self.dataset.ids, value)) {
+                        // add record to dataset if not already in (added by
+                        // the form view?)
+                        self.dataset.ids.splice(
+                            self.records.indexOf(record), 0, value);
+                    }
                     // Set id on new record
                     $row = self.$current.children('[data-id=false]');
                 } else {
