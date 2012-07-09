@@ -252,73 +252,73 @@
         </record>
 
 
-    <!-- Project Issue Karban View-->
+        <!-- Project Issue Karban View-->
 
-    <record model="ir.ui.view" id="project_issue_kanban_view">
-        <field name="name">Project Issue Kanban</field>
-        <field name="model">project.issue</field>
-        <field name="type">kanban</field>
-        <field name="arch" type="xml">
-            <kanban default_group_by="stage_id">
-                <field name="color"/>
-                <field name="priority"/>
-                <field name="user_email"/>
-                <field name="user_id"/>
-                <field name="date_deadline"/>
-                <templates>
-                    <t t-name="kanban-tooltip">
-                       <ul class="oe_kanban_tooltip">
-                          <li><b>Project:</b> <field name="project_id"/></li>
-                          <li><b>Category:</b> <field name="categ_id"/></li>
-                       </ul>
-                    </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                <span class="oe_e">i</span>
-                                <ul class="oe_dropdown_menu">
-                                    <li><a type="edit" >Edit...</a></li>
-                                    <li><a type="delete">Delete</a></li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
-                            </div>
-                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div>
-                                    <b><field name="name"/></b> <br/>
-                                    <field name="partner_id"/> <br/>
-                                    <field name="version_id"/>
-                                </div> 
-                                <div class="oe_kanban_footer_left">
-                                    <div class="oe_right">
-                                        <span class="oe_kanban_highlight">
-                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
-                                               <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['2']" title="High Priority"> 
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['1']" title="Highest Priority">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                        </span>
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
-                                            <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
-                                        </t>
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+        <record model="ir.ui.view" id="project_issue_kanban_view">
+            <field name="name">Project Issue Kanban</field>
+            <field name="model">project.issue</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id">
+                    <field name="color"/>
+                    <field name="priority"/>
+                    <field name="user_email"/>
+                    <field name="user_id"/>
+                    <field name="date_deadline"/>
+                    <templates>
+                        <t t-name="kanban-tooltip">
+                           <ul class="oe_kanban_tooltip">
+                              <li><b>Project:</b> <field name="project_id"/></li>
+                              <li><b>Category:</b> <field name="categ_id"/></li>
+                           </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li><a type="edit" >Edit...</a></li>
+                                        <li><a type="delete">Delete</a></li>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <div>
+                                        <b><field name="name"/></b> <br/>
+                                        <field name="partner_id"/> <br/>
+                                        <field name="version_id"/>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <div class="oe_right">
+                                            <span class="oe_kanban_highlight">
+                                                <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                                <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
+                                                   <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['2']" title="High Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                            </span>
+                                            <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
+                                                <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
+                                            </t>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="oe_clear"></div>
                             </div>
-                            <div class="oe_clear"></div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
 
         # ------------------------------------------------------
@@ -365,7 +365,7 @@
                 </search>
             </field>
         </record>
-        
+
         <act_window id="act_project_project_2_project_issue_all"
             name="Issues"
             src_model="project.project"
@@ -374,9 +374,9 @@
             view_mode="kanban,tree,form,calendar,graph"
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
 
-    # ------------------------------------------------------
-    # Project
-    # ------------------------------------------------------
+        # ------------------------------------------------------
+        # Project
+        # ------------------------------------------------------
 
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
@@ -396,7 +396,7 @@
                 </field>
             </field>
        </record>
-        
+
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
@@ -414,7 +414,8 @@
                 </xpath>
             </field>
         </record>
-      <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
+
+        <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
             <field name="name">account.analytic.account.issue.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
