@@ -247,6 +247,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                     }
                     evt.color = filter_item.color;
                     evt.textColor = '#ffffff';
+                } else {
+                    evt.textColor = '#000000';
                 }
             }
 

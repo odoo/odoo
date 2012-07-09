@@ -136,7 +136,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             };
         }
         if (action.target === 'new') {
-            if (this.dialog == null) {
+            if (this.dialog === null) {
                 this.dialog = new instance.web.Dialog(this, { width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -144,8 +144,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_viewmanager.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this, action);
+            this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog_viewmanager.$element.addClass("oe_view_manager_" + action.target);
             this.dialog.open();
         } else  {
             this.dialog_stop();
@@ -158,7 +159,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
-            this.inner_viewmanager.$element.addClass("oe_view_manager_global");
+            this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
