@@ -130,6 +130,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     null_action: function() {
         this.dialog_stop();
         this.content_stop();
+        this.breadcrumb.clear();
     },
     ir_actions_act_window: function (action, on_close) {
         var self = this;
@@ -255,6 +256,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         var bookmarked_view = view_type || am.active_view || am.views_src[0].view_type;
         this.push({
             widget: am,
+            view: bookmarked_view,
             show: function() {
                 am.$element.show();
                 if (am.active_view !== bookmarked_view) {
@@ -271,7 +273,10 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 if (mode === 'form') {
                     self.push_actionmanager(am, 'form');
                 } else {
-                    // select previous to form and remove form
+                    var last = self.items[self.items.length - 1];
+                    if (last.widget === am && last.view === 'form') {
+                        self.pop();
+                    }
                 }
             });
         }
