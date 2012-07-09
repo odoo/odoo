@@ -35,12 +35,11 @@
                                     attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
                             </div>
                         </group>
-                        <group string="Timesheets">
+                        <group string="Timesheets" name="right_column">
                             <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)"/>
                             <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)"/>
                             <field name="module_hr_timesheet_sheet"/>
                         </group>
-                        <group name="config_recruitment"/>
                     </group>
                 </form>
             </field>
