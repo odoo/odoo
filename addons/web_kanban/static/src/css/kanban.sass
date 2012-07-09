@@ -53,12 +53,21 @@
     .oe_kanban_groups
         height: inherit
         width: 100%
+    .oe_kanban_header
+        &:hover
+            .oe_dropdown_kanban
+                display: inline-block
+        .oe_dropdown_menu
+            font-weight: normal
+            font-size: 13px
     .oe_kanban_group_title
-        margin-bottom: 4px
         font-size: 16px
         font-weight: bold
         color: #333333
         text-shadow: 0 1px 0 white
+        > span
+            float: left
+            margin-right: 4px
 
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
@@ -117,14 +126,12 @@
     // }}}
     // KanbanQuickCreate {{{
     .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
-        float: right
         margin-left: 4px
         cursor: pointer
         position: relative
         top: -8px
-        //right: 6px
-        //width: 16px
-        //height: 16px
+    .oe_kanban_add
+        float: right
 
     .oe_kanban_quick_create
         overflow: hidden
@@ -136,7 +143,7 @@
         padding: 10px
     .oe_kanban_quick_create input
         display: block
-        // margins within width
+        margin: 0 0 8px 0
         font-size: 13px
         box-sizing: border-box
         width: 100%
@@ -340,12 +347,11 @@
         top: -8px
         right: 3px
         display: none
-        color: #4c4c4c
         cursor: pointer
         &:hover
             text-decoration: none
         .oe_dropdown_menu
-            right: -140px
+            left: 0
             min-width: 160px
     // }}}
     // KanbanColorPicker {{{
