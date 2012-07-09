@@ -250,7 +250,7 @@
                     <notebook colspan="4">
                     <page string="Attachment">
                         <group>
-                            <group string="Data">
+                            <group>
                                 <field name="type"/>
                                 <newline />
                                 <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
@@ -261,14 +261,13 @@
                                 <field name="res_id" invisible="True"/>
                                 <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
                                 <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <separator string="Related to" colspan="2"/>
                                 <field name="partner_id"/>
                             </group>
-                            <group groups="base.group_no_one" string="Created">
+                            <group groups="base.group_no_one">
                                 <field name="create_uid" readonly="1"/>
                                 <field name="create_date" readonly="1"/>
                             </group>
-                            <group groups="base.group_no_one" string="Modified">
+                            <group groups="base.group_no_one">
                                 <field name="write_uid" readonly="1"/>
                                 <field name="write_date" readonly="1"/>
                             </group>

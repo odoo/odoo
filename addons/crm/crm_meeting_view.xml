@@ -88,7 +88,7 @@
                     <group>
                         <h2>
                             <field name="date" required="1" class="oe_inline"/>
-                            at <label string="in" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/> <field name="location" placeholder="Location" class="oe_inline"/>
+                            <label string="at" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/> <field name="location" placeholder="Location" class="oe_inline"/>
                         </h2>
                     </group>
                     <group>
@@ -104,15 +104,15 @@
                         <field name="partner_id" string="Partner"                            on_change="onchange_partner_id(partner_id)" />
                         <field name="email_from"/>
                     </group>
-                    <group colspan="2">
-                        <field name="duration" widget="float_time"
-                                on_change="onchange_dates(date,duration,False,allday)"/> 
+                    <group> 
                         <field name="date_deadline" 
                                 string="End Date" required="1"
                                 on_change="onchange_dates(date,False,date_deadline)"/>
+                        <field name="duration" widget="float_time"
+                                on_change="onchange_dates(date,duration,False,allday)"/>
                         <field name="alarm_id" string="Reminder" widget="selection" />
                         <field name="class" string="Privacy"/>
-                        <field name="show_as" string="Show Time as"/>
+                        <field name="show_as"/>
                         <field name="categ_id" widget="selection"
                             string="Meeting Type"
                             domain="[('object_id.model', '=', 'crm.meeting')]" />
