@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <div t-name="mail.Wall" class="oe_mail_wall">
+    <div t-name="mail.Wall" class="oe_view_manager oe_mail_wall oe_view_manager_global">
         <table class="oe_view_manager_header">
+          <colgroup>
+            <col width="33%"/>
+            <col width="33%"/>
+            <col width="34%"/>
+          </colgroup>
+          <tbody>
             <tr class="oe_header_row">
-                <td><h2 class="oe_view_title">All Feeds</h2></td>
+                <td colspan="2">
+                    <h2 class="oe_view_title">
+                        <span class="oe_view_title_text">All Feeds</span>
+                    </h2>
+                </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
+          </tbody>
         </table>
         <div class="oe_mail_wall_main">
             <div class="oe_mail_wall_action">
@@ -80,10 +91,7 @@
                     </div>
                     <div class="oe_mail_msg_body">
                         <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a>
-                        <t t-raw="record.body_head"/>
-                        <t t-if="record.body_tail"><a href="#" class="oe_mail_msg_more">... See more</a>
-                            <span class="oe_mail_msg_tail"><t t-raw="record.body_tail"/></span>
-                        </t>
+                        <t t-raw="record.body"/>
                     </div>
                     <ul class="oe_mail_msg_footer">
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>

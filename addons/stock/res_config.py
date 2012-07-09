@@ -65,15 +65,15 @@ class stock_config_settings(osv.osv_memory):
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
         'group_stock_inventory_valuation': fields.boolean("Generate Accounting Entries per Stock Movement",
             implied_group='stock.group_inventory_valuation',
-            help="""This allows to split stock inventory lines according to serial numbers."""),
+            help="""Allows to configure inventory valuations on products and product categories."""),
         'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
-        'group_product_variant': fields.boolean("Product Variant",
+        'group_product_variant': fields.boolean("Support Multiple Variants per Product",
             implied_group='product.group_product_variant',
-            help="""This allows to configure and use Product Variant."""),                
-        'decimal_precision': fields.integer('Decimal Precision on Weight'),
+            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),                
+        'decimal_precision': fields.integer('Decimal Precision on Weights', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):

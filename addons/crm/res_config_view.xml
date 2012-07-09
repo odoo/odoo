@@ -6,30 +6,37 @@
             <field name="name">crm settings</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <group name="config_fetchmail" position="after">
-                    <field name="fetchmail_lead"/>
-                    <button colspan="2" type="object" name="configure_fetchmail_lead" string="Configure" icon="gtk-execute"/>
+                <group name="config_fetchmail" version="7.0" position="inside">
+                    <label for="fetchmail_lead"/>
+                    <div>
+                        <field name="fetchmail_lead"/>
+                        <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
+                            attrs="{'invisible': [('fetchmail_lead','=',False)]}"/>
+                    </div>
                 </group>
 
                 <group name="config_crm" position="after">
-                    <separator string="Import and Synchronize Data from an Other Application" colspan="4"/>
-                    <field name="module_import_sugarcrm"/>
-                    <field name="module_crm_caldav"/>
-                    <field name="module_import_google"/>
+                    <group string="Import and Synchronize Data from an Other Application">
+                        <field name="module_import_sugarcrm"/>
+                        <field name="module_crm_caldav"/>
+                        <field name="module_import_google"/>
+                    </group>
 
-                    <separator string="Documents and Wiki" colspan="4"/>
-                    <field name="module_wiki_sale_faq" />
+                    <group string="Documents and Wiki">
+                        <field name="module_wiki_sale_faq"/>
+                    </group>
 
-                    <separator string="Customer Form" colspan="4"/>
-                    <field name="module_google_map"/>
+                    <group string="Customer Form">
+                        <field name="module_google_map"/>
+                    </group>
                 </group>
             </field>
         </record>
 
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
-            sequence="1" action="base.action_sale_config"/>
+            sequence="1" action="base_setup.action_sale_config"/>
 
     </data>
 </openerp>

@@ -1,91 +1,91 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">
-	<!-- 
-		((((((((((( Demo Cases ))))))))))) 
-	-->
+    <data noupdate="1">
+    <!-- 
+        ((((((((((( Demo Cases ))))))))))) 
+    -->
 
-	<!--For Meetings-->
-		<record id="crm_case_followuponproposal0" model="crm.meeting">
-			<field eval="1" name="active"/>
-			<field name="partner_id" ref="base.res_partner_maxtor"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;Meeting to discuss project plan and hash out the details of implementation  &quot;" name="description"/>
-			<field eval="&quot;open&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="time.strftime('%Y-%m-03 10:20:03')" name="date"/>
-			<field name="categ_id" ref="crm.categ_meet2"/>
-			<field eval="&quot;Follow-up on proposal&quot;" name="name"/>
-			<field eval="time.strftime('%Y-%m-03 16:38:03')" name="date_deadline"/>
-			<field eval="6.3" name="duration"/>
-		</record>
-	
-		<record id="crm_case_initialdiscussion0" model="crm.meeting">
-			<field eval="1" name="active"/>
-			<field eval="7.0" name="duration"/>
-			<field name="partner_id" ref="base.res_partner_10"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;draft&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="time.strftime('%Y-%m-05 12:01:01')" name="date"/>
-			<field name="categ_id" ref="crm.categ_meet3"/>
-			<field eval="&quot;Initial discussion&quot;" name="name"/>
-			<field eval="time.strftime('%Y-%m-05 19:01:01')" name="date_deadline"/>
-			<field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
-		</record>
-	
-		<record id="crm_case_discusspricing0" model="crm.meeting">
-			<field eval="1" name="active"/>
-			<field eval="3.0" name="duration"/>
-			<field name="partner_id" ref="base.res_partner_3"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;Meeting to discuss project plan and hash out the details of implementation  &quot;" name="description"/>
-			<field eval="&quot;done&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="time.strftime('%Y-%m-12 15:55:05')" name="date"/>
-			<field name="categ_id" ref="crm.categ_meet1"/>
-			<field eval="&quot;Discuss pricing&quot;" name="name"/>
-			<field eval="time.strftime('%Y-%m-12 18:55:05')" name="date_deadline"/>
-		</record>
+    <!--For Meetings-->
+        <record id="crm_case_followuponproposal0" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="partner_id" ref="base.res_partner_maxtor"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Meeting to discuss project plan and hash out the details of implementation  &quot;" name="description"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="time.strftime('%Y-%m-03 10:20:03')" name="date"/>
+            <field name="categ_id" ref="crm.categ_meet2"/>
+            <field eval="&quot;Follow-up on proposal&quot;" name="name"/>
+            <field eval="time.strftime('%Y-%m-03 16:38:03')" name="date_deadline"/>
+            <field eval="6.3" name="duration"/>
+        </record>
+    
+        <record id="crm_case_initialdiscussion0" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field eval="7.0" name="duration"/>
+            <field name="partner_id" ref="base.res_partner_10"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;draft&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="time.strftime('%Y-%m-05 12:01:01')" name="date"/>
+            <field name="categ_id" ref="crm.categ_meet3"/>
+            <field eval="&quot;Initial discussion&quot;" name="name"/>
+            <field eval="time.strftime('%Y-%m-05 19:01:01')" name="date_deadline"/>
+            <field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
+        </record>
+    
+        <record id="crm_case_discusspricing0" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field eval="3.0" name="duration"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Meeting to discuss project plan and hash out the details of implementation  &quot;" name="description"/>
+            <field eval="&quot;done&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="time.strftime('%Y-%m-12 15:55:05')" name="date"/>
+            <field name="categ_id" ref="crm.categ_meet1"/>
+            <field eval="&quot;Discuss pricing&quot;" name="name"/>
+            <field eval="time.strftime('%Y-%m-12 18:55:05')" name="date_deadline"/>
+        </record>
 
-		<record id="crm_case_reviewneeds0" model="crm.meeting">
-			<field eval="1" name="active"/>
-			<field eval="6.0" name="duration"/>
-			<field name="partner_id" ref="base.res_partner_11"/>
-			<field name="user_id" ref="base.user_demo"/>
-			<field eval="&quot;draft&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="time.strftime('%Y-%m-20 10:02:02')" name="date"/>
-			<field name="categ_id" ref="crm.categ_meet3"/>
-			<field eval="&quot;Review needs&quot;" name="name"/>
-			<field eval="time.strftime('%Y-%m-20 16:02:02')" name="date_deadline"/>
-		</record>
+        <record id="crm_case_reviewneeds0" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field eval="6.0" name="duration"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="time.strftime('%Y-%m-20 10:02:02')" name="date"/>
+            <field name="categ_id" ref="crm.categ_meet3"/>
+            <field eval="&quot;Review needs&quot;" name="name"/>
+            <field eval="time.strftime('%Y-%m-20 16:02:02')" name="date_deadline"/>
+        </record>
 
-		<record id="crm_case_changesindesigning0" model="crm.meeting">
-			<field eval="1" name="active"/>
-			<field eval="05" name="duration"/>
-			<field name="partner_id" ref="base.res_partner_9"/>
-			<field name="user_id" ref="base.user_demo"/>
-			<field eval="&quot;draft&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="time.strftime('%Y-%m-22 11:05:05')" name="date"/>
-			<field name="categ_id" ref="crm.categ_meet2"/>
-			<field eval="&quot;Changes in Designing&quot;" name="name"/>
-			<field eval="time.strftime('%Y-%m-22 16:05:05')" name="date_deadline"/>
-			<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
-		</record>
-	
-		<record id="crm_case_updatethedata0" model="crm.meeting">
-			<field eval="1" name="active"/>
-			<field name="partner_id" ref="base.res_partner_4"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field eval="&quot;done&quot;" name="state"/>
-			<field name="section_id" ref="crm.section_sales_department"/>
-			<field eval="time.strftime('%Y-%m-18 13:12:49')" name="date"/>
-			<field name="categ_id" ref="crm.categ_meet2"/>
-			<field eval="&quot;Update the data&quot;" name="name"/>
-			<field eval="13.3" name="duration"/>
-			<field eval="time.strftime('%Y-%m-19 02:30:49')" name="date_deadline"/>
-		</record>
-	</data>
+        <record id="crm_case_changesindesigning0" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field eval="05" name="duration"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field eval="&quot;draft&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="time.strftime('%Y-%m-22 11:05:05')" name="date"/>
+            <field name="categ_id" ref="crm.categ_meet2"/>
+            <field eval="&quot;Changes in Designing&quot;" name="name"/>
+            <field eval="time.strftime('%Y-%m-22 16:05:05')" name="date_deadline"/>
+            <field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+        </record>
+    
+        <record id="crm_case_updatethedata0" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;done&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="time.strftime('%Y-%m-18 13:12:49')" name="date"/>
+            <field name="categ_id" ref="crm.categ_meet2"/>
+            <field eval="&quot;Update the data&quot;" name="name"/>
+            <field eval="13.3" name="duration"/>
+            <field eval="time.strftime('%Y-%m-19 02:30:49')" name="date_deadline"/>
+        </record>
+    </data>
 </openerp>

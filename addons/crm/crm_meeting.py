@@ -26,6 +26,7 @@ import logging
 from osv import fields, osv
 import tools
 from tools.translate import _
+_logger = logging.getLogger(__name__)
 
 class crm_lead(base_stage, osv.osv):
         """ CRM Leads """
@@ -74,13 +75,6 @@ class crm_meeting(base_state, osv.Model):
         obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = [obj.user_id.id]
-        return result
 
     def case_open(self, cr, uid, ids, context=None):
         """ Confirms meeting """
@@ -180,7 +174,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
         return user_id
 
 res_users()

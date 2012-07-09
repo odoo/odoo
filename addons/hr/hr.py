@@ -25,6 +25,7 @@ import logging
 from osv import fields, osv
 from PIL import Image
 import StringIO
+_logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
 
@@ -107,7 +108,7 @@ class hr_job(osv.osv):
             },
             multi='no_of_employee'),
         'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
-        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
+        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
@@ -190,7 +191,7 @@ class hr_employee(osv.osv):
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
-        'work_email': fields.char('Work E-mail', size=240),
+        'work_email': fields.char('Work Email', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
@@ -304,7 +305,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
 
         return user_id
 

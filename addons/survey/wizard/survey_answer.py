@@ -150,8 +150,6 @@ class survey_question_wiz(osv.osv_memory):
                     xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
                     xml_header_title = etree.SubElement(xml_header, 'group', {'col': '6', 'colspan': '6'})
 
-                    #############  PAGE HEADER : START ###################
-
                     etree.SubElement(xml_header_title, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' ,'class' : 'oe_survey_title'})
                     xml_header_group = etree.SubElement(xml_header_title, 'group', {'col': '4', 'colspan': '1'})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '8', 'colspan': '4'})
@@ -171,8 +169,6 @@ class survey_question_wiz(osv.osv_memory):
                     else:
                         etree.SubElement(xml_header_group, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
                     etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right oe_survey_title_page"})
-
-                    #############  PAGE HEADER : END ###################
 
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
@@ -198,7 +194,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     if wiz_id:
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
-                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0), 'modifiers':'{"invisible":true}'})
+                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
                     if pag_rec.note:
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
