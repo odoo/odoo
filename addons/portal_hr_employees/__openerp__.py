@@ -33,7 +33,6 @@ portal_crm (which creates the contact page) are installed.
     'depends': ['hr','portal_crm'],
     'data': [
         'portal_hr_employee_view.xml',
-        'security/portal_crm_security.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
@@ -41,9 +40,6 @@ portal_crm (which creates the contact page) are installed.
     'category':'Hidden',
     'css': [
         'static/src/css/portal_hr_employees.css',
-    ],
-    'js': [
-        'static/src/js/portal_hr_employees.js',
     ],
 
 }

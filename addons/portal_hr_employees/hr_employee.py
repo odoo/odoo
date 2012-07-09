@@ -46,11 +46,10 @@ class hr_employee(osv.osv):
     """
     ``visibility``: defines if the employee appears on the portal's contact page
                     - 'public' means the employee will appear for everyone (anonymous)
-                    - 'portal' means the employee will appear for portal users only
                     - 'private' means the employee won't appear
     """
     _columns = {
-        'visibility': fields.selection([('public', 'Public'),('portal', 'Portal'),('private', 'Private')],
+        'visibility': fields.selection([('public', 'Public'),('private', 'Private')],
             string='Visibility', help='Employee\'s visibility in the portal\'s contact page'),
     }
     _defaults = {
