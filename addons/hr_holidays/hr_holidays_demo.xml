@@ -12,7 +12,7 @@
 
     <record model="hr.holidays" id="hr_holidays_employee1_cl">
       <field name="name">Trip with Family</field>
-      <field name="holiday_status_id" ref="holiday_status_sl"/>
+      <field name="holiday_status_id" ref="holiday_status_comp"/>
       <field eval="time.strftime('%Y-%m-01')" name="date_from"/>
       <field eval="time.strftime('%Y-%m-03')" name="date_to"/>
       <field name="type">remove</field>
