@@ -33,7 +33,7 @@ Example:
     If the check box is checked, we will have on the sale order line: Unit price=450, Discount=50,00, Net price=225
     If the check box is unchecked, we will have on Sale Order and Invoice lines: Unit price=225, Discount=0,00, Net price=225
     """,
-    "depends": ["sale"],
+    "depends": ["sale","purchase"],
     "demo_xml": [],
     "update_xml": ['product_visible_discount_view.xml'],
     "auto_install": False,
