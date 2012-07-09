@@ -9,7 +9,6 @@
             <field name="arch" type="xml">
                 <tree string="Tasks's Cumulative Flow">
                     <field name="date"/>
-                    <field name="project_id"/>
                     <field name="task_id"/>
                     <field name="type_id"/>
                     <field name="user_id"/>
@@ -63,9 +62,7 @@
                         <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]" icon="terp-camera_test"/>
                         <filter string="My Tasks" domain="[('user_id','=',uid)]" help="My Tasks" icon="terp-personal" />
                         <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                        <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         <separator orientation="vertical"/>
-                        <field name="project_id"/>
                         <field name="user_id"/>
                     </group>
                 </search>
