@@ -3156,11 +3156,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }));
     },
     is_valid: function () {
-        var form;
-        // A list not being edited is always valid
-        if (!(form = this.first_edition_form())) {
-            return true;
-        }
+        var form = this.editor.form;
+
         // If the form has not been modified, the view can only be valid
         // NB: is_dirty will also be set on defaults/onchanges/whatever?
         // oe_form_dirty seems to only be set on actual user actions
@@ -3171,24 +3168,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         // Otherwise validate internal form
         return _(form.fields).chain()
             .invoke(function () {
-                this._check_css_flag();
+                this._check_css_flags();
                 return this.is_valid();
             })
             .all(_.identity)
             .value();
-    },
-    first_edition_form: function () {
-        var get_form = function (group_or_list) {
-            if (group_or_list.edition) {
-                return group_or_list.edition_form;
-            }
-            return _(group_or_list.children).chain()
-                .map(get_form)
-                .compact()
-                .first()
-                .value();
-        };
-        return get_form(this.groups);
     },
     do_add_record: function () {
         if (this.options.editable) {
