@@ -108,13 +108,9 @@
                         <div class="oe_right oe_button_box">
                             <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
                         </div>
-                    
-                        <div class="oe_title" style="width: 650px" >
+                        <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <group colspan="6" col="6">
-                                <group colspan="2"><h1><field name="name"/></h1></group>
-                                <group colspan="4"><h1><label string="(" attrs="{'invisible': [('type', '=', '')]}" /><field name="type" nolabel="1" on_change="onchange_event_type(type,context)" class="oe_inline"/><label string=")" attrs="{'invisible': [('type', '=', '')]}" /></h1></group>
-                            </group>  
+                            <h1><field name="name"/></h1>
                         </div> 
                         <div>
                             <h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
@@ -124,7 +120,7 @@
                                     <label for="address_id" string="Location Address"/>
                                     <div>
                                         <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
-                                        <field name="street" placeholder="Street..."/>                            
+                                        <field name="street" placeholder="Street..."/>
                                         <div>
                                              <field name="zip" class="oe_inline" placeholder="Zip"/>
                                              <field name="city" class="oe_inline" placeholder="City"/>
@@ -132,8 +128,13 @@
                                     </div>
                                 </group>
                                 <group>
-                                      <field name="register_min"/>
+                                       <field name="type" on_change="onchange_event_type(type,context)"/>
+                                       <field name="register_min"/>
                                        <field name="register_max"/>
+                                       <label for="register_current" string="Current Registrations"/>
+                                       <div>
+                                           Confirmed: <field name="register_current" class="oe_inline"/>, Unconfirmed: <field name="register_prospect" class="oe_inline"/>
+                                       </div>
                                    </group>
                             </group>
                         </div>
@@ -143,18 +144,16 @@
                                 <field name="note" colspan="4" nolabel="1"/>
                             </page>
                             <page string="Internal Data">
-                              <group>
-                                  <group class="oe_group_label_border">
-                                    <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                                    <field name="speaker_confirmed"/>
-                                  </group>
-                                  <group class="oe_group_label_border">
-                                    <field name="register_current"/>
-                                    <field name="register_prospect"/>
-                                    <field name="register_attended"/>
-                                  </group> 
-                              </group>
-                              <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                                <group>
+                                    <group>
+                                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
+                                        <field name="speaker_confirmed"/>
+                                    </group>
+                                    <group>
+                                        <field name="register_attended"/>
+                                    </group> 
+                                </group>
+                                <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                                     <tree string="Registration" editable="top">
                                         <field name="name" />
                                         <field name="email" />
@@ -186,8 +185,7 @@
                                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                             </group>
                                     </form>
-                                    </field>
-                                <separator string="" class="oe_clear"/>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -461,33 +459,29 @@
                     <sheet string="Registration">
                         <label for="event_id" class="oe_edit_only"/>
                         <h1>
-                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]" nolabel="1" class="oe_inline"/>
-                            <label string="(" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-                            <field name="event_begin_date" class="oe_inline" attrs="{'invisible': [('event_id', '=', '')]}"/>
-                            <label string="-" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-                            <field name="event_end_date" class="oe_inline" attrs="{'invisible': [('event_id', '=', '')]}"/>
-                            <label string=")" attrs="{'invisible': [('event_id', '=', '')]}" class="oe_inline"/>
-                        </h1>   
-                        <group colspan="4" col="4">
-                            <group colspan="2">
-                                <field name="name" invisible="1"/>
+                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
+                        </h1>
+                        <group>
+                            <group>
                                 <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                                <label for="email" string="E-Mail"/>
-                                <group col="2">
-                                    <field name="email" nolabel="1" class="oe_inline"/>
-                                </group>
+                                <field name="name"/>
+                                <field name="phone"/>
+                                <label for="email"/>
+                                <div>
+                                    <field name="email" class="oe_inline"/>
+                                    <button class="oe_inline oe_right" string="Send Email"
+                                      name="%(mail.action_email_compose_message_wizard)d"
+                                      icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
+                                </div>
                             </group>
-                            <group colspan="2">
+                            <group>
                                 <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                 <field name="nb_register"/>
                             </group>
-                        </group>
-                        <group colspan="2" col="2">
-                            <field name="phone"/>
-                        </group>
-                        <group colspan="2" col="2" groups="base.group_no_one">
-                            <field name="create_date"/>
-                            <field name="date_closed"/>
+                            <group groups="base.group_no_one">
+                                <field name="create_date"/>
+                                <field name="date_closed"/>
+                            </group>
                         </group>
                     </sheet>
                     <footer>

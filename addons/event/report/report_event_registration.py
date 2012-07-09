@@ -77,12 +77,10 @@ class report_event_registration(osv.osv):
                 r.state AS  registration_state
                 FROM
                 event_event e
-                
+
                 LEFT JOIN
                     event_registration r ON (e.id=r.event_id)
 
-                WHERE r.active = 'true'
-               
                GROUP BY
                 event_id,
                 user_id_registration,

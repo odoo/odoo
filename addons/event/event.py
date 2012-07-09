@@ -23,7 +23,6 @@ import time
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
-from datetime import datetime, timedelta
 
 class event_type(osv.osv):
     """ Event Type """
@@ -50,6 +49,19 @@ class event_event(osv.osv):
     _description = __doc__
     _order = 'date_begin'
     _inherit = ['ir.needaction_mixin','mail.thread']
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+              return []
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            date = record.date_begin.split(" ")[0]
+            date_end = record.date_end.split(" ")[0]
+            if date != date_end:
+                date += ' - ' + date_end
+            display_name = record.name + ' (' + date + ')'
+            res.append((record['id'], display_name))
+        return res
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(event_event, self).create(cr, uid, vals, context)
@@ -172,8 +184,8 @@ class event_event(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
-        'register_max': fields.integer('Maximum Registration', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_min': fields.integer('Minimum Registration', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
+        'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
+        'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
         'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
@@ -305,17 +317,14 @@ class event_registration(osv.osv):
                                     ('open', 'Confirmed'),
                                     ('done', 'Attended')], 'Status',
                                     size=16, readonly=True),
-        # Fields for address, due to separation from event.registration and res.partner
-        'email': fields.char('Email', size=240),
+        'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
         'name': fields.char('Name', size=128, select=True),
-        'active': fields.boolean('Active'),
     }
 
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
-        'active': True,
     }
     _order = 'name, create_date desc'
 
@@ -387,33 +396,31 @@ class event_registration(osv.osv):
         return True
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner, context=None):
-        data ={}
         if not contact:
-            return data
+            return {}
         addr_obj = self.pool.get('res.partner')
         contact_id =  addr_obj.browse(cr, uid, contact, context=context)
-        data = {
+        return {'value': {
             'email':contact_id.email,
             'name':contact_id.name,
             'phone':contact_id.phone,
-            }
-        return {'value': data}
+            }}
 
     def onchange_event(self, cr, uid, ids, event_id, context=None):
         """This function returns value of Product Name, Unit Price based on Event.
         """
-        value= {}
         if context is None:
             context = {}
         if not event_id:
             return {}
         event_obj = self.pool.get('event.event')
         data_event =  event_obj.browse(cr, uid, event_id, context=context)
-        value ['value']= {'event_begin_date': data_event.date_begin,
+        return {'value': 
+                    {'event_begin_date': data_event.date_begin,
                      'event_end_date': data_event.date_end,
                      'company_id': data_event.company_id and data_event.company_id.id or False,
+                    }
                }
-        return value
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res_obj = self.pool.get('res.partner')

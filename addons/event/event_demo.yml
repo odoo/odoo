@@ -26,15 +26,15 @@
   !record {model: event.event, id: event_1}:
     name: 'Opera of Verdi'
     date_begin: !eval (datetime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 18:00:00')
-    date_end: !eval (datetime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 21:00:00')
+    date_end: !eval (datetime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 21:00:00')
     register_min: 50
     register_max: 350
     type: event_type_1
 -
   !record {model: event.event, id: event_2}:
     name: 'Conference on ERP Business'
-    date_begin: !eval (datetime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 14:00:00')
-    date_end: !eval (datetime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 16:30:00')
+    date_begin: !eval (datetime.today()+ timedelta(months=2)).strftime('%Y-%m-%d 14:00:00')
+    date_end: !eval (datetime.today()+ timedelta(months=2)).strftime('%Y-%m-%d 16:30:00')
     register_min: 50
     register_max: 350
     type: event_type_2
