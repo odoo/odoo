@@ -2553,6 +2553,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.last_search = [];
         this.floating = false;
         this.inhibit_on_change = false;
+        this.current_display = null;
     },
     start: function() {
         this._super();
@@ -2605,10 +2606,13 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
 
         // some behavior for input
         this.$input.keyup(function() {
-            if (self.$input.val() === "") {
-                self.set({value: false});
-            } else {
-                self.floating = true;
+            if (self.current_display !== self.$input.val()) {
+                self.current_display = self.$input.val();
+                if (self.$input.val() === "") {
+                    self.set({value: false});
+                } else {
+                    self.floating = true;
+                }
             }
         });
         this.$drop_down.click(function() {
@@ -2646,7 +2650,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used) {
+            if (used && self.get("value") === false) {
                 tip_def.reject();
                 untip_def.reject();
                 tip_def = $.Deferred();
@@ -2701,7 +2705,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$input.autocomplete("widget").addClass("openerp");
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
-            if (e.which === 13) {
+            if (e.which === 13) { // ENTER
                 if (isSelecting)
                     e.stopPropagation();
             }
@@ -2733,6 +2737,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
+            this.current_display = this.$input.val();
         } else {
             str = _.escape(str).split("\n").join("<br />");
             this.$element.find('a')
