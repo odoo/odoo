@@ -114,7 +114,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
-                <field name="product_uom_id" position="after">
+                <field name="amount" position="before">
                     <field name="to_invoice"/>
                     <field name="invoice_id"/>
                 </field>
