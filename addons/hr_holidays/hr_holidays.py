@@ -274,7 +274,7 @@ class hr_holidays(osv.osv):
                     'name': record.name,
                     'categ_id': record.holiday_status_id.categ_id.id,
                     'duration': record.number_of_days_temp * 8,
-                    'description': record.notes,
+                    'description': record.name,
                     'user_id': record.user_id.id,
                     'date': record.date_from,
                     'end_date': record.date_to,
