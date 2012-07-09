@@ -50,6 +50,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         this.calendar_fields = {};
         this.ids = this.dataset.ids;
         this.color_values = [];
@@ -246,6 +247,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                     }
                     evt.color = filter_item.color;
                     evt.textColor = '#ffffff';
+                } else {
+                    evt.textColor = '#000000';
                 }
             }
 

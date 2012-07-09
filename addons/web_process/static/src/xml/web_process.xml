@@ -3,7 +3,7 @@
 -->
     <t t-extend="ViewManager" t-name="ViewManagerAction">
         <t t-jquery=".oe-view-manager-header" t-operation="append">
-            <a t-if="self.flags.display_title !== false" class="oe-process-view" title="Process View" href="javascript: void(0)"></a>
+            <a t-if="self.flags.display_title !== false" class="oe_process" title="Process View" href="javascript: void(0)"></a>
         </t>
     </t>
     <t t-name="ProcessView">
