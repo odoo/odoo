@@ -51,13 +51,6 @@
   !python {model: hr.applicant}: |
     self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_developer')})
 -
-  I start communication with applicant, first schedule phonecall.
--
-  !python {model: hr.recruitment.job2phonecall}: |
-     context.update({'active_model': 'hr.applicant', 'active_id': ref("hr_case_programmer"), 'active_ids': [ref("hr_case_programmer")], 'survey_id': ref("survey_job_0")})
-     id = self.create(cr, uid, {}, context=context)
-     self.make_phonecall(cr, uid, [id], context=context)
--
   I schedule meeting with applicant for interview.
 -
   !python {model: hr.applicant}: |

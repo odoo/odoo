@@ -12,25 +12,23 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group string="Invoicing">
-                            <field name="default_invoice_method"/>
-                            <field name="decimal_precision"/>
+                    <group string="Invoicing">
+                        <field name="default_invoice_method"/>
+                        <field name="decimal_precision"/>
+                    </group>
+                    <group string="Purchase Order">
+                        <group>
+                            <field name="group_purchase_pricelist"/>
+                            <field name="group_uom"/>
+                            <field name="group_purchase_delivery_address"/>
                         </group>
-                        <group string="Purchase Order">
-                            <group>
-                                <field name="group_purchase_pricelist"/>
-                                <field name="group_uom"/>
-                                <field name="group_purchase_delivery_address"/>
-                            </group>
-                            <group>
-                                <field name="module_purchase_double_validation"/>
-                                <field name="module_purchase_requisition"/>
-                                <field name="module_warning"/>
-                                <field name="module_purchase_analytic_plans"/>
-                            </group>
+                        <group>
+                            <field name="module_purchase_double_validation"/>
+                            <field name="module_purchase_requisition"/>
+                            <field name="module_warning"/>
+                            <field name="module_purchase_analytic_plans"/>
                         </group>
-                    </sheet>
+                    </group>
                 </form>
             </field>
         </record>

@@ -22,8 +22,8 @@
 import crm
 import crm_action_rule
 import crm_segmentation
-import crm_meeting
 import crm_lead
+import crm_meeting
 import crm_phonecall
 import report
 import wizard
