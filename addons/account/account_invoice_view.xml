@@ -162,39 +162,37 @@
                 </header>
                 <sheet string="Supplier Invoice">
                   <div class="oe_title">
-                  <h1>
-                     <label string="Draft Invoice " attrs="{'invisible': [('state','not in',('draft',))]}"/>
-                     <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
-                     <label string="Invoice " attrs="{'invisible': [('state','in',('draft','proforma','proforma2'))]}"/>
-                     <field name="number" readonly="1" class="oe_inline"/>
-                  </h1>
-                    <label string="Concerns" for="origin" class="oe_edit_only"/>
-                    <h2>
-                        <field name="origin" placeholder="PO 002"/> From
-                        <field string="Supplier" name="partner_id"
-                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
-                              context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
-                              domain="[('supplier', '=', True)]"/>
-                      </h2>
-                    </div>
-                    <group>
+                    <h1>
+                        <label string="Draft Invoice" attrs="{'invisible': [('state','not in',('draft',))]}"/>
+                        <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
+                        <label string="Invoice " attrs="{'invisible': [('state','in',('draft','proforma','proforma2'))]}"/>
+                        <field name="number" readonly="1" class="oe_inline"/>-
+                        <field name="origin" placeholder="PO 002" class="oe_inline"/>
+                    </h1>
+                  </div> 
+                  <group>
                        <group>
-                         <field name="date_invoice"/>
-                         <field name="date_due"/>
-                         <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-                         <label for="reference"/>
+                         <field string="Supplier" name="partner_id"
+                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                              context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'show_address': 1}"
+                              domain="[('supplier', '=', True)]" options='{"always_reload": true}'/>
+                          <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
+                         
+                         <label for="reference" string="Communication"/>
                          <div>
-                          <field name="reference_type"/>
-                          <field name="reference" placeholder="Payment Reference"/>
+                           <field name="reference_type" class="oe_inline" nolabel="1"/>
+                          <field name="reference" placeholder="Payment Reference" class="oe_inline"/>
                          </div>
                        </group>
                        <group>
+                          <field name="date_invoice"/>
+                          <field name="date_due"/>
                           <field name="fiscal_position" widget="selection"/>
+                          <field name="currency_id"/>
                           <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"
                                  groups="account.group_account_user"/>
                           <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                  name="account_id" groups="account.group_account_user"/>
-                          <field name="currency_id"/>
                           <field name="type" invisible="1"/>
                         </group>
                     </group>
@@ -310,14 +308,13 @@
                         <field name="number" readonly="1" class="oe_inline"/>-
                         <field name="name" placeholder="Project XYZ" class="oe_inline"/>
                     </h1>
-                    
                     <field name="type" invisible="1"/>
                     <group>
                         <group>
                             <field string="Customer" name="partner_id"
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
-                                groups="base.group_user" context="{'search_default_customer': 1}"
-                                domain="[('customer', '=', True)]"/>
+                                groups="base.group_user" context="{'search_default_customer': 1, 'show_address': 1}"
+                                domain="[('customer', '=', True)]" options='{"always_reload": true}'/>
                             <field name="fiscal_position" widget="selection" />
                             <field name="payment_term" widget="selection"/>
                         </group>
