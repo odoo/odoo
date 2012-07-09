@@ -41,58 +41,23 @@ class crm_phonecall2meeting(osv.osv_memory):
         return {'type':'ir.actions.act_window_close'}
 
     def action_make_meeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current Phonecall
+            @return : Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Phonecall
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Meeting IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Meeting view
-        """
-        value = {}
-        record_id = context and context.get('active_id', False) or False
-
-        if record_id:
-            phonecall_obj = self.pool.get('crm.phonecall')
-            data_obj = self.pool.get('ir.model.data')
-
-            # Get meeting views
-            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'])
-            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
-            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            if id1:
-                id1 = data_obj.browse(cr, uid, id1, context=context).res_id
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            if id3:
-                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-            phonecall = phonecall_obj.browse(cr, uid, record_id, context=context)
-            context = {
-                        'default_phonecall_id': phonecall.id,
-                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
-                        'default_email': phonecall.email_from ,
-                        'default_name': phonecall.name
-                    }
-
-            value = {
-                'name': _('Meetings'),
-                'domain' : "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id']
-                }
-
-        return value
+        res = {}
+        phonecall_id = context and context.get('active_id', False) or False
+        if phonecall_id:
+            phonecall = self.pool.get('crm.phonecall').browse(cr, uid, phonecall_id, context)
+            res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+            res['context'] = {
+                'default_phonecall_id': phonecall.id,
+                'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
+                'default_user_id': uid,
+                'default_email_from': phonecall.email_from,
+                'default_state': 'open',
+                'default_name': phonecall.name,
+            }
+        return res
 
 crm_phonecall2meeting()
 
