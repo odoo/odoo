@@ -681,5 +681,29 @@ class EDIMixin(object):
         self._edi_import_attachments(cr, uid, record_id, edi_document, context=context)
 
         return record_id
+    
+class mail_compose_message(osv.osv_memory):
+    _inherit = 'mail.compose.message'
+    def send_mail(self, cr, uid, ids, context=None):
+        if context.get('mail.compose.message.mode') == 'mass_mail':
+            mail = self.browse(cr, uid, ids[0], context=context)
+            if context.get('active_ids') and context.get('active_model'):
+                active_ids = context['active_ids']
+                active_model = context['active_model']
+            else:
+                active_model = mail.model
+                active_model_pool = self.pool.get(active_model)
+                active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail.filter_id.domain), context=ast.literal_eval(mail.filter_id.context))
+
+            if active_model in ['account.invoice', 'sale.order', 'purchase.order']:
+                web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+                for active_id in active_ids:
+                    edi_record = self.pool.get(active_model).browse(cr, uid, active_id, context=context)
+                    edi_token = self.pool.get('edi.document').export_edi(cr, uid, [edi_record], context = context)[0]
+                    ctx = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+                    ctx['active_ids'] = [active_id]
+                    super(mail_compose_message, self).send_mail(cr, uid, ids, context=ctx)
+                return {'type': 'ir.actions.act_window_close'}
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
