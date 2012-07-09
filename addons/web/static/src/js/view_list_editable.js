@@ -78,10 +78,16 @@ openerp.web.list_editable = function (instance) {
         },
         on_loaded: function (data, grouped) {
             var self = this;
+            if (this.editor) {
+                this.editor.destroy();
+            }
             // tree/@editable takes priority on everything else if present.
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
             if (this.options.editable) {
+                // Editor is not restartable due to formview not being
+                // restartable
+                this.editor = new instance.web.list.Editor(this);
                 var editor_ready = this.editor.prependTo(this.$element)
                     .then(this.proxy('setupEvents'));
 
