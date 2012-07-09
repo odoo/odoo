@@ -486,7 +486,7 @@ instance.web.Login =  instance.web.Widget.extend({
         var self = this;
 
         self.$element.find("form").submit(self.on_submit);
-
+        
         self.$element.find('.oe_login_manage_db').click(function() {
             self.$element.find('.oe_login_bottom').hide();
             self.$element.find('.oe_login_pane').hide();
@@ -515,12 +515,25 @@ instance.web.Login =  instance.web.Widget.extend({
         return d;
     },
     _db_list_loaded: function () {
+        var self = this;
         var list = this._db_list,
             dbdiv = this.$element.find('div.oe_login_dbpane');
         this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
         if(list && list.length === 1) {
             dbdiv.hide();
-        } else {
+        }
+        if(list.length === 0){
+            self.$element.find('.oe_login_bottom').hide();
+            self.$element.find('.oe_login_pane').hide();
+            self.databasemanager = new instance.web.DatabaseManager(self);
+            self.databasemanager.appendTo(self.$element);
+            self.databasemanager.do_exit.add_last(function() {
+                self.databasemanager.destroy();
+                self.$element.find('.oe_login_bottom').show();
+                self.$element.find('.oe_login_pane').show();
+                });
+        }
+        else {
             dbdiv.show();
         }
     },
