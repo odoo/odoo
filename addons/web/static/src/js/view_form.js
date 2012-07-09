@@ -3243,11 +3243,17 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             readonly: self.o2m.get("effective_readonly")
         });
     },
-    do_button_action: function (name, id, callback) {
-        var _super = _.bind(this._super, this);
-
-        this.o2m.view.do_save().then(function () {
-            _super(name, id, callback);
+    /**
+     * Ensures the o2m is saved and committed to db before returning: executes
+     * the super-method (saves the current edition to the buffered dataset)
+     * then saves the parent form.
+     *
+     * @returns {jQuery.Deferred}
+     */
+    ensureSaved: function () {
+        var parent_form = this.o2m.view;
+        return this._super().pipe(function () {
+            return parent_form.do_save();
         });
     }
 });
