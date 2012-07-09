@@ -308,11 +308,10 @@
                         <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
                         <label string="Invoice " attrs="{'invisible': [('state','in',('draft','proforma','proforma2'))]}"/>
                         <field name="number" readonly="1" class="oe_inline"/>
+                        <label string="-" class="oe_inline"/>
+                        <field name="name" placeholder="Project XYZ" class="oe_inline"/>
                     </h1>
-                    <label string="Concerns" for="name" class="oe_edit_only"/>
-                    <h2>
-                        <field name="name" placeholder="Project XYZ"/>
-                    </h2>
+                    
                     <field name="type" invisible="1"/>
                     <group>
                         <group>

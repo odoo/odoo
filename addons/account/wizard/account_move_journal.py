@@ -102,7 +102,7 @@ class account_move_journal(osv.osv_memory):
                 period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
                 period_string = _("Period: %s") % tools.ustr(period)
     
-            separator_string = _("Open Journal Items !")
+            separator_string = _("")
             open_string = _("Open")
             view = """<?xml version="1.0" encoding="utf-8"?>
             <form string="Standard entries" version="7.0">
