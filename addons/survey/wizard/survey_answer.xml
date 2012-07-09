@@ -5,8 +5,7 @@
         <!--
             Survey Question Wizard
          -->
-        <record id="view_survey_question_message" model="ir.ui.view">
-            <field name="name">Answer Survey</field>
+        <record id="view_survey_question_message" model="ir.ui.view">           
             <field name="model">survey.question.wiz</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -28,7 +27,6 @@
         </record>
 
         <record id="action_view_survey_question_message" model="ir.actions.act_window">
-            <field name="name">Answer Survey</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">survey.question.wiz</field>
             <field name="view_type">form</field>
