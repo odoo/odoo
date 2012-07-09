@@ -416,13 +416,9 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.focus();
         });
             var click_column = this.$element.find('.oe_kanban_add');
-            var fold_icon = this.$element.find('.oe_kanban_fold_icon');
             click_column.addClass('oe_kanban_quick_create_bounce');
             this.$records.click(function() {
             self.view.do_bounce(click_column);
-               if(self.state.folded) {
-                    self.view.do_bounce(fold_icon);
-                        }
                 });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
@@ -488,12 +484,6 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     do_toggle_fold: function(compute_width) {
         this.$element.add(this.$records).toggleClass('oe_kanban_group_folded');
         this.state.folded = this.$element.is('.oe_kanban_group_folded');
-        if(this.state.folded) {
-            this.$element.find('.oe_kanban_add').css({"visibility": "hidden"});
-            }
-        else {
-           this.$element.find('.oe_kanban_add').css({"visibility": "visible"});
-            }
     },
     do_save_sequences: function() {
         var self = this;
