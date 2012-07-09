@@ -25,8 +25,6 @@
                             <field name="module_hr_expense"/>
                             <field name="module_hr_evaluation"/>
                             <field name="module_hr_holidays"/>
-                        </group>
-                        <group>
                             <field name="module_hr_recruitment"/>
                             <field name="module_hr_contract"/>
                             <label for="module_hr_payroll"/>
@@ -37,8 +35,6 @@
                                     attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
                             </div>
                         </group>
-                    </group>
-                    <group>
                         <group string="Timesheets">
                             <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)"/>
                             <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)"/>
