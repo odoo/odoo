@@ -92,7 +92,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this._super();
     },
     on_loaded: function(data) {
-        var self = this;        
+        var self = this; 
         if (!data) {
             throw new Error("No data provided.");
         }
@@ -287,16 +287,18 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_invalidclick : function (){
         var self = this;
         var div = $("<div />", {id:"bounce"});
-        this.$element.find(".oe_form_field").click(function () {
+        this.$element.find(".oe_form_field, .oe_form_group_cell").click(function (e) {
         $(".oe_form_button_edit").wrap(div);
         $("#bounce").addClass('oe_bounce_button_left');
-        var val_bounce = $(".oe_form_button_edit");
+        var val_bounce = $(".oe_form_button_edit");        
         self.do_bounce(val_bounce);
-        });
+        e.stopImmediatePropagation();               
+        });        
+       
     },
     on_record_loaded: function(record) {
-        var self = this, set_values = [];
-        self.on_invalidclick();        
+        var self = this, set_values = [];  
+        self.on_invalidclick();    
         if (!record) {
             this.do_warn("Form", "The record could not be found in the database.", true);
             return $.Deferred().reject();
@@ -338,6 +340,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             self.$element.add(self.$buttons).removeClass('oe_form_dirty');
         });
+          
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
@@ -596,9 +599,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.set({mode: "view"});
-            self.on_invalidclick();
+            self.set({mode: "view"});            
+            self.on_invalidclick();          
         });
+        
     },    
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
@@ -2982,7 +2986,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         return def;
     },
     reload_current_view: function() {
-        var self = this;
+        var self = this;        
         return self.is_loaded = self.is_loaded.pipe(function() {
             var active_view = self.viewmanager.active_view;
             var view = self.viewmanager.views[active_view].controller;
