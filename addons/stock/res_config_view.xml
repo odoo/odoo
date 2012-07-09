@@ -13,38 +13,36 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group string="Traceability">
-                            <field name="group_stock_production_lot"/>
-                            <field name="group_stock_tracking_lot"/>
-                            <field name="module_product_expiry"
-                                attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
+                    <group string="Traceability">
+                        <field name="group_stock_production_lot"/>
+                        <field name="group_stock_tracking_lot"/>
+                        <field name="module_product_expiry"
+                            attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
+                    </group>
+                    <group string="Logistics">
+                        <group>
+                            <field name="group_stock_multiple_locations"/>
+                            <field name="module_stock_invoice_directly"/>
                         </group>
-                        <group string="Logistics">
-                            <group>
-                                <field name="group_stock_multiple_locations"/>
-                                <field name="module_stock_invoice_directly"/>
-                            </group>
-                            <group>
-                                <field name="module_stock_location"/>
-                                <field name="decimal_precision"/>
-                            </group>
+                        <group>
+                            <field name="module_stock_location"/>
+                            <field name="decimal_precision"/>
                         </group>
-                        <group string="Products">
-                            <group>
-                                <field name="group_stock_packaging"/>
-                                <field name="group_uom"/>
-                                <field name="group_uos"/>
-                            </group>
-                            <group>
-                                <field name="group_stock_inventory_valuation"/>
-                                <field name="group_product_variant"/>
-                            </group>
+                    </group>
+                    <group string="Products">
+                        <group>
+                            <field name="group_stock_packaging"/>
+                            <field name="group_uom"/>
+                            <field name="group_uos"/>
                         </group>
-                        <group string="Partners">
-                            <field name="module_claim_from_delivery"/>
+                        <group>
+                            <field name="group_stock_inventory_valuation"/>
+                            <field name="group_product_variant"/>
                         </group>
-                    </sheet>
+                    </group>
+                    <group string="Partners">
+                        <field name="module_claim_from_delivery"/>
+                    </group>
                 </form>
             </field>
         </record>

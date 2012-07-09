@@ -29,7 +29,7 @@
         <field name="calendar_id" ref="basic_calendar_meetings0"/>
         <field name="domain">[('user_id','=', dctx_user_id)]</field>
         <field name="name">vevent</field>
-        <field name="object_id" ref="crm.model_crm_meeting"/>
+        <field name="object_id" ref="base_calendar.model_crm_meeting"/>
     </record>
 
 
@@ -103,7 +103,7 @@
     <record id="basic_calendar_fields_12" model="basic.calendar.fields">
         <field name="name" ref="caldav.field_event_organizer"/>
         <field name="type_id" ref="basic_calendar_lines_vevent0"/>
-        <field name="field_id" ref="crm.field_crm_meeting_organizer"/>
+        <field name="field_id" ref="base_calendar.field_crm_meeting_organizer"/>
         <field name="fn">field</field>
     </record>
     <record id="basic_calendar_fields_13" model="basic.calendar.fields">
@@ -127,7 +127,7 @@
     <record id="basic_calendar_fields_16" model="basic.calendar.fields">
         <field name="name" ref="caldav.field_event_attendee"/>
         <field name="type_id" ref="basic_calendar_lines_vevent0"/>
-        <field name="field_id" ref="crm.field_crm_meeting_attendee_ids"/>
+        <field name="field_id" ref="base_calendar.field_crm_meeting_attendee_ids"/>
         <field name="fn">field</field>
     </record>
     <record id="basic_calendar_fields_17" model="basic.calendar.fields">
@@ -163,7 +163,7 @@
     <record id="basic_calendar_fields_22" model="basic.calendar.fields">
         <field name="name" ref="caldav.field_event_status"/>
         <field name="type_id" ref="basic_calendar_lines_vevent0"/>
-        <field name="field_id" ref="crm.field_crm_meeting_state"/>
+        <field name="field_id" ref="base_calendar.field_crm_meeting_state"/>
         <field name="mapping">{'tentative': 'draft', 'confirmed': 'open', 'cancelled': 'cancel'}</field>
         <field name="fn">field</field>
     </record>
@@ -176,7 +176,7 @@
     <record id="basic_calendar_fields_24" model="basic.calendar.fields">
         <field name="name" ref="caldav.field_event_dtstamp"/>
         <field name="type_id" ref="basic_calendar_lines_vevent0"/>
-        <field name="field_id" ref="crm.field_crm_meeting_write_date"/>
+        <field name="field_id" ref="base_calendar.field_crm_meeting_write_date"/>
         <field name="fn">datetime_utc</field>
     </record>
     <record id="basic_calendar_fields_25" model="basic.calendar.fields">
