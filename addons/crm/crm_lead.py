@@ -41,6 +41,7 @@ class crm_lead(base_stage, osv.osv):
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -763,43 +764,21 @@ class crm_lead(base_stage, osv.osv):
         }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current Opportunity
+            @return : Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Opportunity
-        @return : Dictionary value for created Meeting view
-        """
-        if context is None:
-            context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for opp in self.browse(cr, uid, ids, context=context):
-            # Get meeting views
-            tree_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            form_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_meet')
-            calander_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            search_view = data_obj.get_object_reference(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            context.update({
-                'default_opportunity_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_user_id': uid,
-                'default_section_id': opp.section_id and opp.section_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
-                'default_name': opp.name
-            })
-            value = {
-                'name': _('Meetings'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(calander_view and calander_view[1] or False, 'calendar'), (form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
-
+        opportunity = self.browse(cr, uid, ids[0], context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_opportunity_id': opportunity.id,
+            'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+            'default_user_id': uid,
+            'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
+            'default_email_from': opportunity.email_from,
+            'default_state': 'open',
+            'default_name': opportunity.name,
+        }
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
