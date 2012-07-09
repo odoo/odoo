@@ -1354,6 +1354,7 @@ class SearchView(View):
                     xml = ElementTree.fromstring(board['arch'])
                     column = xml.find('./board/column')
                     if column is not None:
+                        ctx.pop('lang')
                         new_action = ElementTree.Element('action', {
                                 'name' : str(action_id),
                                 'string' : name,
