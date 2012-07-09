@@ -29,6 +29,7 @@ class base_state(object):
         - ``date_closed`` (datetime field)
         - ``user_id`` (many2one to res.users)
         - ``partner_id`` (many2one to res.partner)
+        - ``email_from`` (char field)
         - ``state`` (selection field)
     """
 

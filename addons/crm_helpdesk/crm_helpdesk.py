@@ -21,7 +21,6 @@
 
 from base_status.base_state import base_state
 from crm import crm
-from crm import wizard
 from osv import fields, osv
 import tools
 from tools.translate import _
@@ -32,8 +31,6 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
-
 class crm_helpdesk(base_state, osv.osv):
     """ Helpdesk Cases """
 
@@ -41,6 +38,7 @@ class crm_helpdesk(base_state, osv.osv):
     _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mail.thread']
+    _mail_compose_message = True
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
