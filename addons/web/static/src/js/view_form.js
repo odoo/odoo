@@ -2315,9 +2315,6 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
           bodyStyle:    // style to assign to document body contained within the editor
                         "margin:4px; font:13px monospace; cursor:text"
         });
-        // cleditor.bind('change', function(event) {
-        //     console.log(event)
-        // });
         // call super now, because cleditor seems to reset the disable attr
         this._super.apply(this, arguments);
         if (this.$textarea.attr('disabled') == 'disabled') {
@@ -2329,17 +2326,12 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
     },
 
     set_value: function(value_) {
-        console.log('set_value');
-        console.log(value_);
         this._super.apply(this, arguments);
-        // debugger
         this._dirty_flag = true;
-        // this.render_value();
     },
+
     render_value: function() {
-        console.log('render_value');
         var show_value = instance.web.format_value(this.get('value'), this, '');
-        console.log(show_value);
         this.$textarea.val(show_value);
         if (show_value && this.view.options.resize_textareas) {
             this.do_resize(this.view.options.resize_textareas);
@@ -2347,25 +2339,9 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
         this.$textarea.cleditor()[0].updateFrame();
     },
 
-    // render_value: function() {
-    //     console.log('render_value');
-    //     this._super.apply(this, arguments);
-    //     console.log(instance.web.format_value(this.get('value'), this, ''));
-    //     this.$textarea.cleditor()[0].updateFrame();
-
-    // },
-
-    // set_value: function(value_) {
-    //     console.log('set_value');
-    //     console.log(value_);
-    //     this._super.apply(this, arguments);
-    // },
-
     get_value: function() {
-        console.log('get_value');
         // retrive cleditor and get its html content
         var cleditor = this.$textarea.cleditor()[0];
-        console.log(this.$textarea.val());
         // cleditor.updateTextArea();
         var value = cleditor.$area.val();
         return value;
