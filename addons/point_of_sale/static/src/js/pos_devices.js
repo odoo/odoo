@@ -11,9 +11,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         deactivate: function(){
             this.active = false;
         },
-        accept_payment: function(){ this.payment_status = 'payment_accepted'; },
-        reject_payment: function(){ this.payment_status = 'payment_rejected'; },
-        delay_payment:  function(){ this.payment_status = 'waiting_for_payment'; },
+        set_weight: function(weight){ this.activate(); this.weight = weight; },
+        accept_payment: function(){ this.activate(); this.payment_status = 'payment_accepted'; },
+        reject_payment: function(){ this.activate(); this.payment_status = 'payment_rejected'; },
+        delay_payment:  function(){ this.activate(); this.payment_status = 'waiting_for_payment'; },
     }))();
 
     // this object interfaces with the local proxy to communicate to the various hardware devices

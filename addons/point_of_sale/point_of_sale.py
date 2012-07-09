@@ -1135,8 +1135,6 @@ class pos_order_line(osv.osv):
 pos_order_line()
 
 class pos_category(osv.osv):
-    PHOTO_SIZE_HEIGHT = 540
-    PHOTO_SIZE_WIDTH = 450
     _name = 'pos.category'
     _description = "Point of Sale Category"
     _order = "sequence, name"
@@ -1154,38 +1152,6 @@ class pos_category(osv.osv):
         (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
 
-    def onchange_photo(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {'photo_big': value, 'photo': value} }
-        return {
-            'value': {
-                'photo_big': self._photo_resize(cr, uid, value, self.PHOTO_SIZE_HEIGHT, self.PHOTO_SIZE_WIDTH, context=context), 
-                'photo': self._photo_resize(cr, uid, value, context=context)
-            } 
-        }
-    
-    def _set_photo(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'photo_big': value}
-        else:
-            vals = {'photo_big': self._photo_resize(cr, uid, value, self.PHOTO_SIZE_HEIGHT, self.PHOTO_SIZE_WIDTH, context=context)}
-        return self.write(cr, uid, [id], vals, context=context)
-    
-    def _photo_resize(self, cr, uid, photo, heigth=180, width=150, context=None):
-        image_stream = io.BytesIO(photo.decode('base64'))
-        img = Image.open(image_stream)
-        img.thumbnail((heigth, width), Image.ANTIALIAS)
-        img_stream = StringIO.StringIO()
-        img.save(img_stream, "JPEG")
-        return img_stream.getvalue().encode('base64')
-    
-    def _get_photo(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for category in self.browse(cr, uid, ids, context=context):
-            if category.photo_big:
-                result[category.id] = self._photo_resize(cr, uid, category.photo_big, context=context)
-        return result
-
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -1202,26 +1168,32 @@ class pos_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.category_image:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.category_image.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        'photo_big': fields.binary('Big-sized employee photo', help="This field holds the photo of the employee. The photo field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. Full-sized photo are however resized to 540x450 px."),
-        'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Employee photo', type="binary",
+        'category_image': fields.binary('Image'),
+        'category_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
             store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
-            }, help="Image used as photo for the employee. It is automatically resized as a 180x150 px image. A larger photo is stored inside the photo_big field."),
-    }
-
-    def _default_photo(self, cr, uid, context=None):
-        photo_path = addons.get_module_resource('point_of_sale','images','default_category_photo.png')
-        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
-
-
-    _defaults = {
-        'photo' : _default_photo,
+                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['category_image'], 10),
+            }),
     }
 
 pos_category()

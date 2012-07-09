@@ -47,9 +47,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     });
 
-    var fetch = function(osvModel, fields, domain){
-        var dataSetSearch = new instance.web.DataSetSearch(null, osvModel, {}, domain);
-        return dataSetSearch.read_slice(fields, 0);
+    var fetch = function(model, fields, domain){
+        return new instance.web.Model(model).query(fields).filter(domain).all()
     };
     
     // The PosModel contains the Point Of Sale's representation of the backend.
@@ -115,7 +114,36 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             // We fetch the backend data on the server asynchronously
 
-            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'to_weight'])
+            var user_def = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
+                .pipe(function(users){
+                    var user = users[0];
+                    self.set('user',user);
+                    console.log('USER_DONE');
+
+                    return fetch('res.company',
+                    [
+                        'currency_id',
+                        'email',
+                        'website',
+                        'company_registry',
+                        //TODO contact_address
+                        'vat',
+                        'name',
+                        'phone'
+                    ],
+                    [['id','=',user.company_id[0]]])
+                }).pipe(function(companies){
+                    var company = companies[0];
+                    self.set('company',company);
+                    console.log('COMPANY_DONE');
+
+                    return fetch('res.currency',['symbol','position'],[['id','=',company.currency_id[0]]]);
+                }).pipe(function (currencies){
+                    self.set('currency',currencies[0]);
+                    console.log('CURRENCY_DONE');
+                });
+
+            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'category_image_small'])
                 .pipe(function(result){
                     return self.set({'categories': result});
                 });
@@ -201,15 +229,22 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                  'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
                                  'iface_print_via_proxy','state','sequence_id','session_ids'],
                                 [['id','=', pos_session.config_id[0]]]
-                            ).then(function(result){
-                                self.set({'pos_config': result[0]});
-                                self.use_scale              = result[0].iface_electronic_scale  || false;
-                                self.use_proxy_printer      = result[0].iface_print_via_proxy   || false;
-                                self.use_virtual_keyboard   = result[0].iface_vkeyboard         || false;
-                                self.use_websql             = result[0].iface_websql            || false;
-                                self.use_barcode_scanner    = result[0].iface_barscan           || false;
-                                self.use_selfcheckout       = result[0].iface_self_checkout     || false;
+                            ).pipe(function(result){
+                                var pos_config = result[0]
+                                
+                                self.set({'pos_config': pos_config});
+                                self.use_scale              = pos_config.iface_electronic_scale  || false;
+                                self.use_proxy_printer      = pos_config.iface_print_via_proxy   || false;
+                                self.use_virtual_keyboard   = pos_config.iface_vkeyboard         || false;
+                                self.use_websql             = pos_config.iface_websql            || false;
+                                self.use_barcode_scanner    = pos_config.iface_barscan           || false;
+                                self.use_selfcheckout       = pos_config.iface_self_checkout     || false;
                                 console.log('POS_CONFIG_DONE');
+
+                                return shop_def = fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
+                            }).pipe(function(shops){
+                                self.set('shop',shops[0]);
+                                console.log('SHOP_DONE');
                             });
 
                         var bank_def = fetch(
@@ -255,7 +290,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, prod_def, user_def, uom_def, session_def, tax_def, prod_process_def, this.get_app_data(), this.flush())
+            $.when(cat_def, prod_def, user_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
                 .then(function(){ 
                     //self.build_tree();
                     self.build_categories(); 
@@ -300,26 +335,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             if( this.get('selectedOrder') === removed_order){
                 this.set({ selectedOrder: this.get('orders').last() });
             }
-        },
-
-        // load some data from the server, used in initialize
-        get_app_data: function() {
-            var self = this;
-            return $.when(new instance.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
-                self.set({'shop': result[0]});
-                var company_id = result[0]['company_id'][0];
-                return new instance.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
-                    self.set({'company': result});
-                    var currency_id = result['currency_id'][0]
-                    return new instance.web.Model("res.currency").get_func("read")([currency_id],
-                            ['symbol', 'position']).pipe(function(result) {
-                        self.set({'currency': result[0]});
-                        
-                    });
-                });
-            }), new instance.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
-                self.set({'user': result});
-            }));
         },
 
         push_order: function(record) {
@@ -690,7 +705,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         model: module.Orderline,
     });
 
-    // Every PaymentLine contains a cashregister and an amount CashRegister.
+    // Every PaymentLine contains a cashregister and an amount of money.
     module.Paymentline = Backbone.Model.extend({
         initialize: function(attributes, options) {
             this.amount = 0;
@@ -747,17 +762,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             });
             this.pos =     attributes.pos; 
             this.selected_orderline = undefined;
+            this.screen_data = {};  // see ScreenSelector
             return this;
         },
         generateUniqueId: function() {
             return new Date().getTime();
         },
-        addProduct: function(product){
+        addProduct: function(product,quantity){
             var attr = product.toJSON();
             attr.pos = this.pos;
             attr.order = this;
             var line = new module.Orderline({}, {pos: this.pos, order: this, product: product});
-            var self = this;
+
+            if(quantity !== undefined){
+                line.set_quantity(quantity);
+            }
 
             var last_orderline = this.getLastOrderline();
             if( last_orderline && last_orderline.can_be_merged_with(line) ){
@@ -811,6 +830,22 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
         },
+        // the order also stores the screen status, as the PoS supports
+        // different active screens per order. This method is used to
+        // store the screen status, and is used by 
+        set_screen_data: function(key,value){
+            if(arguments.length === 2){
+                this.screen_data[key] = value;
+            }else if(arguments.length === 1){
+                for(key in arguments[0]){
+                    this.screen_data[key] = arguments[0][key];
+                }
+            }
+        },
+        //see set_screen_data
+        get_screen_data: function(key){
+            return this.screen_data[key];
+        },
         export_for_printing: function(){
             var orderlines = [];
             this.get('orderLines').each(function(orderline){
@@ -821,8 +856,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.get('paymentLines').each(function(paymentline){
                 paymentlines.push(paymentline.export_for_printing());
             });
-            var client = this.pos.get('client');
+            var client  = this.pos.get('client');
             var cashier = this.pos.get('cashier') || this.pos.get('user');
+            var company = this.pos.get('company');
+            var shop    = this.pos.get('shop');
             var date = new Date();
 
             return {
@@ -844,6 +881,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     hour: date.getHours(), 
                     minute: date.getMinutes() 
                 }, 
+                company:{
+                    email: company.email,
+                    website: company.website,
+                    company_registry: company.company_registry,
+                    contact_address: null,  //TODO
+                    vat: company.vat,
+                    name: company.name,
+                    phone: company.phone,
+                },
+                shop:{
+                    name: shop.name,
+                },
                 currency: this.pos.get('currency'),
             };
         },

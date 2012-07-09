@@ -81,6 +81,17 @@
         </div>
     </t>
 
+    <t t-name="CategoryButton">
+        <li class='category-button'>
+            <div class="category-img">
+                <img t-att-src="'data:image/gif;base64,'+ category.category_image_small" />
+            </div>
+            <div class="category-name">
+                <t t-esc="category.name"/>
+            </div>
+        </li>
+    </t>
+
     <t t-name="ProductCategoriesWidget">
         <header>
             <ol class="breadcrumb">
@@ -103,17 +114,14 @@
                 <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif" />
             </div>
         </header>
-        <div id="categories">
-            <ol>
-                <t t-foreach="widget.subcategories" t-as="category">
-                    <li class="oe-pos-categories-list">
-                        <a href="javascript:void(0)" t-att-data-category-id="category.id" class="button">
-                            <t t-esc="category.name"/>
-                        </a>
-                    </li>
-                </t>
-            </ol>
-        </div>
+        <t t-if="widget.subcategories.length > 0">
+            <div id="categories">
+                <div class="white-gradient"></div>
+                <ol class="category-list">
+                </ol>
+                <div class="shadow-top"></div>
+            </div>
+        </t>
     </t>
 
     <t t-name="ProductListWidget">
@@ -122,11 +130,12 @@
                 <ol id="products-screen-ol" class="product-list">
                 </ol>
             </div>
+            <div class="shadow-top"></div>
             <span class="placeholder-ScrollbarWidget" />
         </div>
     </t>
 
-    <t t-name="SearchProductScreenWidget">
+    <t t-name="ProductScreenWidget">
         <div id="products-screen" class="screen">
             <table class="layout-table">
 
@@ -145,13 +154,26 @@
             </table>
         </div>
     </t>
+
     <t t-name="ScaleScreenWidget">
         <div class="scale-screen screen">
             <header><h2>Product Weighting</h2></header>
             <div class="display">
-                <span class="weight">0.000Kg</span>
-                <span class="product-name"></span>
-
+                <span class="weight">
+                    <p>
+                        <t t-esc="widget.get_product_weight().toFixed(3)" />
+                        Kg
+                    </p>
+                </span>
+                <span class="product-name">
+                    <t t-esc="widget.get_product_name()" />
+                </span>
+                <div class="product-picture">
+                    <span class="product-price">
+                        <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
+                    </span> 
+                    <img t-att-src="'data:image/gif;base64,'+ widget.get_product_image()" />
+                </div>
             </div>
         </div>
     </t>
@@ -319,17 +341,14 @@
                 <div class="product-img">
                     
                     <img t-att-src="'data:image/gif;base64,'+ widget.model.get('product_image_small')" />
-                    <t t-if="!widget.model.get('weight')">
+                    <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
                         </span>
                     </t>
-                    <t t-if="widget.model.get('weight')">
+                    <t t-if="widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('list_price'))+'/Kg'"/>
-                        </span>
-                        <span class="price-subtag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price') * widget.model.get('weight'))"/>
                         </span>
                     </t>
                 </div>
@@ -374,6 +393,7 @@
                     </div>
                 </div>
             </div>
+            <div class="shadow-top"></div>
             <span class="placeholder-ScrollbarWidget"></span>
         </div>
     </t>

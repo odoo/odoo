@@ -1,3 +1,8 @@
+@font-face{
+    font-family: 'Inconsolata';
+    src: url(../fonts/Inconsolata.otf);
+}
+
 .point-of-sale {
     padding: 0;
     margin: 0;
@@ -13,6 +18,22 @@
     -webkit-user-select: none;
 }
 
+.point-of-sale .shadow-top{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:10px;
+    background: -webkit-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
+}
+.point-of-sale .darker-shadow-top{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:10px;
+    background: -webkit-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
+}
 /*  ********* The black loading screen ********* */
 
 .point-of-sale .loader{
@@ -298,6 +319,7 @@
 }
 
 .point-of-sale .product-list-scroller{
+    -webkit-box-sizing: border-box;
     width:100%;
     height:100%;
     overflow: hidden;
@@ -308,6 +330,7 @@
     bottom:0px;
     left:0px;
     right:0px;
+    background: #eeedff;
 }
 
 /*  a) the product list navigation bar */
@@ -366,26 +389,72 @@
 /*  c) the categories list */
 
 .point-of-sale #categories {
-    background:#f0f0f0;
+    /*background:#f0f0f0;*/
+    position: relative;
+    background-image: url('../img/bg.png');
     border-bottom: 1px solid #cecbcb;
+}
+.point-of-sale #categories .white-gradient{
+    position: absolute;
+    top:50%;
+    left:0;
+    right:0;
+    bottom:0;
+    background: -webkit-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
 }
 .point-of-sale #categories h4 {
     display: inline-block;
     margin: 9px 5px;
 }
-.point-of-sale #categories ol {
-    display: inline;
+
+.point-of-sale .category-list{
+    padding:10px;
 }
-.point-of-sale #categories li {
+/*  d) the category button */
+
+.point-of-sale .category-button {
+    position: relative;
+    vertical-align: top;
     display: inline-block;
-}
-.point-of-sale #categories .button {
-    padding: 6px 14px;
-    margin: 4px 0;
-    font-size: 12px;
+    font-size: 11px;
+    margin: 5px;
+    width: 120px;
+    height:120px;
+    background:#fff;
+    border: 1px solid #fff;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 3px;
+    -moz-box-shadow: 0px 1px 8px #777777;
+    -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
+    -box-shadow: 0px 1px 8px rgba(0,0,0,0.9);
+    cursor: pointer;
 }
 
-/*  d) the product */
+.point-of-sale .category-button .category-img {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.point-of-sale .category-button .category-name {
+    position: absolute;
+    -webkit-box-sizing: border-box;
+    top:auto;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background: #8a89ba; /*-webkit-linear-gradient(-90deg,rgba(138,137,186,0),rgba(138,137,186,1), rgba(138,137,186,1));*/
+    padding: 3px;
+    /*color:#8a89ba;*/
+    color: #FFF;
+    cursor: pointer;
+    -webkit-border-radius: 2px;
+}
+
+/*  e) the product */
 
 .point-of-sale .product {
     position:relative;
@@ -411,25 +480,11 @@
     height: 100px;
     background: white;
     text-align: center;
-    -webkit-filter: blur(3px);
 }
 
 .point-of-sale .product .price-tag {
     position: absolute;
     top: 2px;
-    right: 2px;
-    vertical-align: top;
-    color: white;
-    background: #7f82ac;
-    padding: 2px 5px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-.point-of-sale .product .price-subtag {
-    position: absolute;
-    top: 24px;
     right: 2px;
     vertical-align: top;
     color: white;
@@ -585,6 +640,87 @@
     .pos-sale-ticket {
         margin: 0;
     }
+}
+
+/* d) The Scale screen */
+
+.point-of-sale .scale-screen .display{
+    position:relative;
+    width:600px;
+    height:190px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.point-of-sale .scale-screen .product-picture {
+    -webkit-box-sizing: border-box;
+    display: float;
+    float: right;
+    margin: 5px;
+    width: 180px;
+    height:180px;
+    line-height:180px;
+    cursor:pointer;
+
+    background:#fff;
+    border: 1px solid #fff;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 3px;
+    -moz-box-shadow: 0px 1px 8px #777777;
+    -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
+    -box-shadow: 0px 1px 8px rgba(0,0,0,0.9);
+}
+
+.point-of-sale .scale-screen .product-picture img{
+    vertical-align: middle;
+    cursor:pointer;
+}
+
+.point-of-sale .scale-screen .product-picture .product-price{
+    position: absolute;
+    top:8px;
+    right:8px;
+    width:auto;
+    height:auto;
+    line-height:1;
+    color:white;
+    background: #7f82ac;
+    padding: 2px 5px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    cursor:pointer;
+}
+
+.point-of-sale .scale-screen .product-name {
+    position: absolute;
+    left:0;
+    top:20px;
+    height:50px;
+    font-size:40px;
+    line-height:50px;
+    text-align:right;
+    right:225px;
+}
+.point-of-sale .scale-screen .weight{
+    position: absolute;
+    left:0;
+    height:90px;
+    bottom:15px;
+    right:220px;
+    padding:5px;
+}
+.point-of-sale .scale-screen .weight p{
+    display: inline-block;
+    text-align:right;
+    line-height: 90px;
+    font-size: 80px;
+    width:100%;
+    height:100%;
+    margin:0;
+    font-family: "Inconsolata";
 }
 
 /*  ********* The OrderWidget  ********* */
