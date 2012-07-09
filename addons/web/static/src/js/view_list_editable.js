@@ -125,7 +125,7 @@ openerp.web.list_editable = function (instance) {
         startEdition: function (record) {
             var self = this;
             if (!record) {
-                var attrs = {};
+                var attrs = {id: false};
                 _(this.columns).chain()
                     .filter(function (x) { return x.tag === 'field'})
                     .pluck('name')
@@ -499,12 +499,8 @@ openerp.web.list_editable = function (instance) {
          * @return {jQuery|null}
          */
         getRowFor: function (record) {
-            var id, $row;
-            if (id = record.get('id')) {
-                $row = this.$current.children('[data-id=' + id + ']');
-            } else {
-                $row = this.$current.children(':not([data-id])');
-            }
+            var id;
+            var $row = this.$current.children('[data-id=' + record.get('id') + ']');
             if ($row.length) {
                 return $row;
             }

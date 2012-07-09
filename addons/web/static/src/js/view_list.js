@@ -905,13 +905,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row;
-                if (!record.get('id')) {
-                    $row = self.$current.children(':not([data-id])');
-                } else {
-                    $row = self.$current.children(
-                        '[data-id=' + record.get('id') + ']');
-                }
+                var $row = self.$current.children(
+                    '[data-id=' + record.get('id') + ']');
                 var index = $row.data('index');
                 $row.remove();
                 self.refresh_zebra(index);
@@ -928,7 +923,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     self.dataset.ids.splice(
                         self.records.indexOf(record), 0, value);
                     // Set id on new record
-                    $row = self.$current.children('tr:not([data-id])');
+                    $row = self.$current.children('[data-id=false]');
                 } else {
                     $row = self.$current.children(
                         '[data-id=' + record.get('id') + ']');
