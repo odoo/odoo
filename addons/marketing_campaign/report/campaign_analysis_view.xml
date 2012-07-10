@@ -31,21 +31,8 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Campaign Analysis">
-                   <group>
-                    <filter icon="terp-go-year" name="year"
-                            string="Year"
-                            domain="[('year','=',time.strftime('%%Y'))]"/>
-                    <separator orientation="vertical"/>
-
-                    <filter icon="terp-go-month"
-                            string="Month" name="This Month"
-                            domain="[('month','=',time.strftime('%%m'))]"/>
-                    <filter icon="terp-go-month" string="    Month-1    "
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"/>
-
-                    <filter icon="terp-go-today"
-                            string="Today"
-                            domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
+                <group>
+                    <field name="date"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl"
                             string="To Do"
@@ -66,10 +53,10 @@
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
-                    <filter string="Segment" name ="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
-                    <filter string="Activity" name ="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
+                    <filter string="Segment" name="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}"/>
+                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}"/>
                     <filter string="Resource" icon="terp-accessories-archiver" context="{'group_by':'res_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>

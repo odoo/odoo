@@ -29,7 +29,7 @@ from tools.translate import _
 import logging
 import decimal_precision as dp
 
-_logger = logging.getLogger('mps') 
+_logger = logging.getLogger(__name__) 
 
 
 def rounding(fl, round_value):
@@ -47,7 +47,7 @@ class stock_period(osv.osv):
         'name': fields.char('Period Name', size=64, required=True),
         'date_start': fields.datetime('Start Date', required=True),
         'date_stop': fields.datetime('End Date', required=True),
-        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State'),
+        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'Status'),
     }
     _defaults = {
         'state': 'draft'
@@ -92,7 +92,7 @@ class stock_sale_forecast(osv.osv):
         'product_uos_categ' : fields.many2one('product.uom.categ', 'Product UoS Category'), # Invisible field for product_uos domain
 # Field used in onchange_uom to check what uom was before change and recalculate quantities according to old uom (active_uom) and new uom.
         'active_uom': fields.many2one('product.uom',  string = "Active Unit of Measure"),
-        'state': fields.selection([('draft','Draft'),('validated','Validated')],'State',readonly=True),
+        'state': fields.selection([('draft','Draft'),('validated','Validated')],'Status',readonly=True),
         'analyzed_period1_id': fields.many2one('stock.period', 'Period1', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period2_id': fields.many2one('stock.period', 'Period2', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period3_id': fields.many2one('stock.period', 'Period3', readonly=True, states={'draft':[('readonly',False)]},),
@@ -447,7 +447,7 @@ class stock_planning(osv.osv):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required = True),
         'history': fields.text('Procurement History', readonly=True, help = "History of procurement or internal supply of this planning line."),
-        'state' : fields.selection([('draft','Draft'),('done','Done')],'State',readonly=True),
+        'state' : fields.selection([('draft','Draft'),('done','Done')],'Status',readonly=True),
         'period_id': fields.many2one('stock.period' , 'Period', required=True, \
                 help = 'Period for this planning. Requisition will be created for beginning of the period.', select=True),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),

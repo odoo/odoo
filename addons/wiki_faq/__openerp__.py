@@ -23,7 +23,6 @@
     'name': 'Wiki: Internal FAQ',
     'version': '1.0',
     'category': 'Knowledge Management',
-    'complexity': "easy",
     'description': """
 This module provides a Wiki FAQ Template.
 =========================================

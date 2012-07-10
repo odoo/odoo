@@ -7,18 +7,17 @@
             <field name="model">account.subscription.generate</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription Compute">
-                    <separator string="Generate Entries before:" colspan="4"/>
-                    <label string ="Automatically generate entries based on what has been entered in the  system before a specific date." colspan="4" nolabel="1"/>
-                    <newline/>
-                    <field name="date"/>
-                	<separator colspan="4" />
-                	<group colspan="4" col="6">
-                		<label string ="" colspan="2"/>
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel" />
-                    	<button icon="gtk-execute" string="Generate Entries"
-                    	name="action_generate" type="object" />
-                	</group>
+                <form string="Subscription Compute" version="7.0">
+                    <header>
+                        <button string="Generate Entries" name="action_generate" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <separator string="Generate Entries before:"/>
+                    <label string ="Automatically generate entries based on what has been entered in the  system before a specific date."/>
+                    <group>
+                        <field name="date"/>
+                    </group>
                </form>
             </field>
         </record>

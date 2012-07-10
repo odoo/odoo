@@ -6,24 +6,24 @@
             <field name="model">knowledge.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Knowledge" layout="manual">
-                    <div class="oe_form_topbar">
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
-                    </div>
-                    <sheet layout="auto">
-                        <separator string="Wiki" colspan="4"/>
-                        <field name="module_wiki_faq"/>
-                        <newline/>
-                        <field name="module_wiki_quality_manual"/>
+                <form string="Configure Knowledge" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or 
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
 
-                        <separator string="Documents" colspan="4"/>
-                        <field name="module_document"/>
-                        <newline/>
-                        <field name="module_document_ftp"/>
-                        <newline/>
-                        <field name="module_document_webdav"/>
-                    </sheet>
+                    </header>
+                    <group>
+                        <group string="Wiki">
+                            <field name="module_wiki_faq"/>
+                            <field name="module_wiki_quality_manual"/>
+                        </group>
+                        <group string="Documents">
+                            <field name="module_document"/>
+                            <field name="module_document_ftp"/>
+                            <field name="module_document_webdav"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>

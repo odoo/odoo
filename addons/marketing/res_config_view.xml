@@ -6,18 +6,18 @@
             <field name="model">marketing.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Marketing" layout="manual">
-                    <div class="oe_form_topbar">
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
-                    </div>
-                    <sheet layout="auto">
-                        <separator string="Campaigns" colspan="4"/>
+                <form string="Configure Marketing" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+
+                    </header>
+                    <group string="Campaigns">
                         <field name="module_marketing_campaign"/>
                         <field name="module_marketing_campaign_crm_demo"/>
-                        <newline/>
                         <field name="module_crm_profiling"/>
-                    </sheet>
+                    </group>
                 </form>
             </field>
         </record>

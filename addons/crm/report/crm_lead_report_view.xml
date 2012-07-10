@@ -72,17 +72,6 @@
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <group>
-                        <filter string="Year" icon="terp-go-year" name="year"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Leads/Opportunities created in current year"/>
-                        <separator orientation="vertical" />
-                        <filter string="Month" icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Leads/Opportunities created in current month"/>
-                        <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Leads/Opportunities created in last month"/>
-                        <separator orientation="vertical" />
                         <filter icon="terp-personal"
                             name="lead"
                             string="Lead"
@@ -110,18 +99,15 @@
                             string="Closed"
                             domain="[('state','=','done')]"
                             help="Leads/Opportunities which are in done state"/>
-
-                        <separator orientation="vertical" />
-                        <field name="section_id"
-                            context="{'invisible_section': False}">
-                            <filter icon="terp-personal+"
+                        <filter string="My Sales Team(s)" icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)" />
-                        </field>
-                        <field name="user_id" string="Salesman">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
+                                help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
+                        <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
+                        <separator orientation="vertical" />
+                        <field name="section_id"
+                            context="{'invisible_section': False}"/>
+                        <field name="user_id" string="Salesperson"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
@@ -140,7 +126,7 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesman" name="user" icon="terp-personal"
+                        <filter string="Salesperson" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
@@ -161,7 +147,7 @@
                         <filter string="Channel" icon="terp-call-start"
                             domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Year" icon="terp-go-year"

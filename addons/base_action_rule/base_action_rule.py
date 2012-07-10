@@ -95,7 +95,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'State', size=16),
+        'trg_state_from': fields.selection(_state_get, 'Status', size=16),
         'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
 
         'act_method': fields.char('Call Object Method', size=64),
@@ -327,7 +327,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
-                    _("No E-Mail ID Found for your Company address!"))
+                    _("No Email ID Found for your Company address!"))
         return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
 
 

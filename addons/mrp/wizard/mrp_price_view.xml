@@ -4,22 +4,20 @@
         
         <!--  Product Cost Structure Report -->
         
-		<record id="view_mrp_product_price_wizard" model="ir.ui.view">
+        <record id="view_mrp_product_price_wizard" model="ir.ui.view">
             <field name="name">Product Cost Structure</field>
             <field name="model">mrp.product_price</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Product Cost Structure">
-                    <separator colspan="4" string="Print Cost Structure of Product." />
-				    <field name="number"/>
-				    <newline/>
-                    <separator string="" colspan="4"/>
-				    <group col="2" colspan="4">
-                		<button icon='gtk-stop' special="cancel"
-                			string="Cancel" />
-                		<button name="print_report" string="Print"
-                			colspan="1" type="object" icon="gtk-print" />
-                	</group>
+                <form string="Product Cost Structure" version="7.0">
+                    <header>
+                        <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group string="Print Cost Structure of Product.">
+                        <field name="number"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -27,9 +25,9 @@
        <act_window name="Product Cost Structure"
             res_model="mrp.product_price"
             src_model="product.product"
-		    view_mode="form"
-		    target="new"        
+            view_mode="form"
+            target="new"        
             key2="client_print_multi"    
-		    id="action_view_mrp_product_price_wizard"/>
-	</data>
-</openerp>	
+            id="action_view_mrp_product_price_wizard"/>
+    </data>
+</openerp>    

@@ -36,7 +36,6 @@
         </div>
     </t>
 
-
     <t t-name="SynchNotificationWidget">
         <div class="oe_pos_synch-notification">
             <t   t-if="widget.get_nbr_pending() > 0" t-esc="widget.get_nbr_pending()"/>
@@ -95,7 +94,7 @@
     <t t-name="ProductCategoriesWidget">
         <header>
             <ol class="breadcrumb">
-                <li class="oe-pos-categories-list">
+                <li class="oe_pos_categories_list">
                     <a href="javascript:void(0)">
                         <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
                     </a>

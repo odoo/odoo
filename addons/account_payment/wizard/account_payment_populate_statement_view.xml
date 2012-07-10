@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-	<data>
+    <data>
 
         <record id="account_payment_populate_statement_view" model="ir.ui.view">
              <field name="name">Payment Populate statement</field>
              <field name="model">account.payment.populate.statement</field>
              <field name="type">form</field>
              <field name="arch" type="xml">
-                <form string="Populate Statement:">
-                    <group colspan="4" col="6">
-                        <field name="lines" colspan="4" height="300" width="800" nolabel="1" />
-                        <separator colspan="6"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="populate_statement" string="ADD" type="object" icon="gtk-ok"/>
+                <form string="Populate Statement:" version="7.0">
+                    <header>
+                        <button name="populate_statement" string="ADD" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group>
+                        <field name="lines"/>
                     </group>
                 </form>
              </field>
@@ -40,5 +42,5 @@
              <field name="target">new</field>
        </record>
 
-	</data>
+    </data>
 </openerp>

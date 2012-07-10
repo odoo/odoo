@@ -7,14 +7,16 @@
             <field name="model">account.cdr.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string='Compte de resultant'>
-	               <field name="fiscalyear_id"/>
-	               <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="print_cdr_report" string="Print" type="object" icon="gtk-ok"/>
+                <form string='Compte de resultat' version="7.0">
+                    <header>
+                        <button name="print_cdr_report" string="Print" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <field name="fiscalyear_id"/>
                     </group>
-	             </form>
+                 </form>
             </field>
         </record>
 

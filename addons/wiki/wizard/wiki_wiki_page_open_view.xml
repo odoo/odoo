@@ -4,33 +4,31 @@
 
 <!-- Open Page Form view  -->
 
-    	<record id="view_wiki_wiki_page_open" model="ir.ui.view">
+        <record id="view_wiki_wiki_page_open" model="ir.ui.view">
             <field name="name">Open Page</field>
             <field name="model">wiki.wiki.page.open</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Open Page">
-             	<separator string="" colspan="6" />
-              	<label string="Want to open a wiki page? "/>
-              	<separator string="" colspan="6" />
-    	        <label string="" colspan="2" />
-    	        <group>
-        	    <button special="cancel" string="Cancel" icon="gtk-cancel" />
-               	<button name="open_wiki_page" string="Open Wiki Page" type="object" icon="gtk-ok"/>
-               	</group>
+                <form string="Open Page" version="7.0">
+                    <header>
+                        <button name="open_wiki_page" string="Open Wiki Page" type="object"  class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <label string="Want to open a wiki page? "/>
              </form>
             </field>
-		</record>
+        </record>
 
 <!-- Open Page Action  -->
 
-		<record id="action_view_wiki_wiki_page_open" model="ir.actions.act_window">
+        <record id="action_view_wiki_wiki_page_open" model="ir.actions.act_window">
             <field name="name">Open Page</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wiki.wiki.page.open</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-    	</record>
+        </record>
     </data>
 </openerp>

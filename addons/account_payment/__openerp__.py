@@ -24,7 +24,6 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Accounting & Finance",
-    'complexity': "easy",
     "description": """
 Module to manage the payment of your supplier invoices.
 =======================================================

@@ -9,9 +9,14 @@
             <field name="model">crm.merge.opportunity</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Merge Opportunities">
-                    <separator string="Select Opportunities" colspan="4"/>
-                    <field name="opportunity_ids" nolabel="1" colspan="4" width="550" height="300" >
+                <form string="Merge Opportunities" version="7.0">
+                    <header>
+                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <separator string="Select Opportunities"/>
+                    <field name="opportunity_ids">
                         <tree>
                             <field name="name" />
                             <field name="partner_id" />
@@ -19,12 +24,6 @@
                             <field name="section_id" />
                         </tree>
                     </field>
-                    <separator colspan="4"/>
-                    <group col="4" colspan="4">
-                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_merge" type="object"
-                                string="_Merge" icon="gtk-ok" />
-                    </group>
                 </form>
             </field>
         </record>

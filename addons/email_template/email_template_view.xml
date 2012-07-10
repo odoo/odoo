@@ -7,27 +7,28 @@
             <field name="model">email.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Templates">
-                    <field name="name" required="1"/>
-                    <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
-                    <field name="model" invisible="1"/>
-                    <notebook colspan="4">
+                <form string="Templates" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="name" required="1"/>
+                        <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
+                        <field name="model" invisible="1"/>
+                    </group>
+                    <notebook>
                         <page string="Email Details">
-                            <group col="2" colspan="2">
-                                <separator string="Addresses" colspan="2"/>
+                            <group>
+                            <group string="Addresses">
                                 <field name="email_from" required="1"/>
                                 <field name="email_to" required="1"/>
                                 <field name="email_cc"/>
                                 <field name="email_bcc"/>
                                 <field name="reply_to"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <separator string="Options" colspan="2"/>
+                            <group string="Options">
                                 <field name="lang"/>
                                 <field name="user_signature"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Email Content"/>
+                            <group string="Email Content">
                                 <field name="subject" required="1"/>
                                 <notebook  colspan="2">
                                     <page string="Body (Text)">
@@ -39,26 +40,25 @@
                                     </page>
                                 </notebook>
                             </group>
-                            <group col="4" colspan="2">
-                                <notebook colspan="4">
-                                    <page string="Dynamic Values Builder">
-                                        <field name="model_object_field"
-                                            domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field)"
-                                            colspan="4"/>
-                                        <field name="sub_object" readonly="1" colspan="4"/>
-                                        <field name="sub_model_object_field"
-                                            domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            colspan="4"
-                                            attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
-                                        <field name="null_value" colspan="4"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)" />
-                                        <field name="copyvalue" colspan="4"/>
-                                    </page>
-                                </notebook>
-                                <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                                    type="action" colspan="4" target="new" icon="gtk-zoom-fit" context="{'template_id':active_id}"/>
+                            <notebook colspan="4">
+                                <page string="Dynamic Values Builder">
+                                    <field name="model_object_field"
+                                        domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                        on_change="onchange_sub_model_object_value_field(model_object_field)"
+                                        colspan="4"/>
+                                    <field name="sub_object" readonly="1" colspan="4"/>
+                                    <field name="sub_model_object_field"
+                                        domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                        colspan="4"
+                                        attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
+                                        on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
+                                    <field name="null_value" colspan="4"
+                                        on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)" />
+                                    <field name="copyvalue" colspan="4"/>
+                                </page>
+                            </notebook>
+                            <button name="%(wizard_email_template_preview)d" string="Preview Template"
+                                type="action" colspan="4" target="new" icon="gtk-zoom-fit" context="{'template_id':active_id}"/>
                             </group>
                         </page>
                         <page string="Advanced">
@@ -99,6 +99,7 @@
                             </group>
                         </page>
                     </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -116,8 +117,6 @@
                     <field name="email_from"/>
                     <field name="email_to"/>
                     <field name="report_name"/>
-                    <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                            type="action" target="new" icon="gtk-zoom-fit"/>
                 </tree>
             </field>
         </record>
@@ -129,13 +128,10 @@
            <field name="arch" type="xml">
                <search string="Templates">
                     <group>
-                        <field name="name"/>
-                        <field name="model_id"/>
-                        <field name="email_to"/>
+                        <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
                         <separator orientation="vertical"/>
+                        <field name="model_id"/>
                         <field name="lang"/>
-                        <field name="subject"/>
-                        <field name="report_name"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group by...">

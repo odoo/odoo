@@ -2,6 +2,11 @@
 <openerp>
     <data>
 
+        <!-- rename root menu "Accounting" -->
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="name">Accounting</field>
+        </record>
+
 <!--
         It's easier for new users to not activate this (ex: they misconfigure
         header and footer.)

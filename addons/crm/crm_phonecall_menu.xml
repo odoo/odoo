@@ -6,7 +6,6 @@
         id="crm_case_categ_phone_create_partner"
         name="Schedule a Call"
         res_model="crm.phonecall"
-        src_model="res.partner"
         view_mode="calendar,tree,form"
         context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}"
         groups="base.group_sale_salesman"
@@ -106,7 +105,7 @@
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain">[('state','!=','done')]</field>
         <field name="context" eval="'{\'default_state\':\'open\'}'"/>
-        <field name="search_view_id" ref="crm.view_crm_case_scheduled_phonecalls_filter"/>
+        <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
         <field name="help">Scheduled calls list all the calls to be done by your sales team. A salesman can record the information about the call in the form view. This information will be stored in the partner form to trace every contact you have with a customer. You can also import a .CSV file with a list of calls to be done by your sales team.</field>
     </record>
 

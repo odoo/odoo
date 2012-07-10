@@ -134,11 +134,11 @@ class lunch_order(osv.osv):
         'product': fields.many2one('lunch.product', 'Product', required=True, \
             readonly=True, states={'draft':[('readonly', False)]}, change_default=True),
         'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
-        'cashmove': fields.many2one('lunch.cashmove', 'CashMove' , readonly=True),
-        'descript': fields.char('Description Order', readonly=True, size=250, \
+        'cashmove': fields.many2one('lunch.cashmove', 'Cash Move' , readonly=True),
+        'descript': fields.char('Comment', readonly=True, size=250, \
             states = {'draft':[('readonly', False)]}),
         'state': fields.selection([('draft', 'New'), ('confirmed', 'Confirmed'), ], \
-            'State', readonly=True, select=True),
+            'Status', readonly=True, select=True),
         'price': fields.function(_price_get, string="Price"),
         'category': fields.many2one('lunch.category','Category'),
     }

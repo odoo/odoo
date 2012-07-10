@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-24 04:47+0000\n"
-"X-Generator: Launchpad (build 14860)\n"
+"X-Launchpad-Export-Date: 2012-06-22 04:46+0000\n"
+"X-Generator: Launchpad (build 15461)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -414,11 +414,9 @@ msgstr "Sie müssen einen Mitarbeiter oder eine Kategorie auswählen"
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
-"If its True then its Allocation/Request have to be validated by second "
-"validator"
+"When selected, the Allocation/Leave Requests for this type require a second "
+"validation to be approved."
 msgstr ""
-"Durch Aktivierung muss Urlaubszuweisung / Urlaubsantrag durch einen weitern "
-"Vorgesetzten, z.B. Projektmanager oder Personalleiter genehmigt werden."
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -558,11 +556,6 @@ msgstr "Das Startdatum muss vor dem Enddatum sein!"
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Aktiv"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
-msgid "Leaves To Validate"
-msgstr "Zu genehmigende Urlaubsanträge"
 
 #. module: hr_holidays
 #: constraint:hr.employee:0
@@ -794,11 +787,9 @@ msgstr "Krankheitsstände"
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
 msgid ""
-"If you tick this checkbox, the system will allow, for this section, the "
-"employees to take more leaves than the available ones."
+"If you select this checkbox, the system allows the employees to take more "
+"leaves than the available ones for this type."
 msgstr ""
-"Wenn Sie diese Option über die Checkbox auszuwählen, können  Ihre "
-"Mitarbeiter mehr Urlaub beantragen als Ihnen ursprünglich zugewiesen wurde."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
@@ -982,6 +973,13 @@ msgstr "Zu Genehmigen"
 #~ "Urlaubsmanagement/Reporting/Urlaubsmanagement/Urlaub nach Abteilungen\n"
 #~ "         durch Klick auf den Drucken Button.\n"
 
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr ""
+#~ "Durch Aktivierung muss Urlaubszuweisung / Urlaubsantrag durch einen weitern "
+#~ "Vorgesetzten, z.B. Projektmanager oder Personalleiter genehmigt werden."
+
 #~ msgid "Extended Filters..."
 #~ msgstr "Erweiterter Filter..."
 
@@ -991,10 +989,20 @@ msgstr "Zu Genehmigen"
 #~ msgid "This Month"
 #~ msgstr "Dieser Monat"
 
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr ""
+#~ "Wenn Sie diese Option über die Checkbox auszuwählen, können  Ihre "
+#~ "Mitarbeiter mehr Urlaub beantragen als Ihnen ursprünglich zugewiesen wurde."
+
 #~ msgid "This area is automaticly filled by the user who validate the leave"
 #~ msgstr ""
 #~ "Dieser Bereich wird autom. mit dem Benutzer ausgefüllt, der dem Benutzer "
 #~ "seinen Urlaub genehmigen muss."
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "Zu genehmigende Urlaubsanträge"
 
 #~ msgid "Sick Leave"
 #~ msgstr "Fehltage Krankheit"

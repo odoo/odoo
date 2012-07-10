@@ -8,13 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Expired analytic accounts">
-                    <field name="name" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="quantity" select="1"/>
-                    <field name="state" select="1"/>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
+                    <field name="partner_id"/>
+                    <field name="quantity"/>
+                    <field name="state"/>
                     <field name="quantity_max"/>
-                    <field name="date_deadline" select="1"/>
-                    <field name="balance" select="1"/>
+                    <field name="date_deadline"/>
+                    <field name="balance"/>
                 </form>
             </field>
         </record>
@@ -64,11 +64,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Lines to Invoice">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <newline/>
-                    <field name="product_id" select="1"/>
+                    <field name="product_id"/>
                     <field name="product_uom_id"/>
                     <newline/>
                     <field colspan="1" name="amount"/>
@@ -114,13 +114,11 @@
             <field name="arch" type="xml">
                 <search string="Analytic Lines to Invoice">
                    <group>
-                        <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
-                        <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
+                        <field name="name" string="Analytic Lines"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="month"/>
                         <field name="product_id"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="month"/>
                    </group>
                </search>
             </field>
@@ -135,10 +133,10 @@
         </record>
 
         <act_window
-        domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
-        context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"
+        domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False), ('journal_id.type', '=', 'general')]"
+        context="{'search_default_account_id': [active_id], 'default_account_id': active_id,'search_default_to_invoice': 1}"
         id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice"
-        name="Lines to Invoice"
+        name="Timesheet Lines to Invoice"
         res_model="account.analytic.line"
         src_model="account.analytic.account"/>
 

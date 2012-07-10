@@ -36,7 +36,13 @@ the Timesheet line entries for particular date and particular user  with the eff
     'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
     'depends': ['project', 'hr_timesheet_sheet', 'hr_timesheet_invoice', 'account_analytic_analysis'],
     'init_xml': ['project_timesheet_data.xml'],
-    'update_xml': ["security/ir.model.access.csv","process/project_timesheet_process.xml", "report/task_report_view.xml", "project_timesheet_view.xml"],
+    'update_xml': [
+        "security/ir.model.access.csv",
+        "security/project_timesheet_security.xml",
+        "process/project_timesheet_process.xml", 
+        "report/task_report_view.xml", 
+        "project_timesheet_view.xml",
+        ],
     'demo_xml': ["project_timesheet_demo.xml"],
     'test': [
         'test/worktask_entry_to_timesheetline_entry.yml',

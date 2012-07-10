@@ -6,18 +6,21 @@
         <field name="model">hr.timesheet.current.open</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="My Timesheet">
-               <separator string="It will open your current timesheet" colspan="4" />
-               <group colspan="4" col="6">
-                    <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button  icon="terp-camera_test" name="open_timesheet" string="Open" type="object"/>
+            <form string="My Current Timesheet" version="7.0">
+               <header>
+                    <button name="open_timesheet" string="Open" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+               </header>
+               <group>
+                    <separator string="It will open your current timesheet"/>
                </group>
            </form>
         </field>
     </record>
 
     <record id="action_hr_timesheet_current_open" model="ir.actions.act_window">
-        <field name="name">My Timesheet</field>
+        <field name="name">My Current Timesheet</field>
         <field name="res_model">hr.timesheet.current.open</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -26,7 +29,7 @@
         <field name="help">My Timesheet opens your timesheet so that you can book your activities into the system. From the same form, you can register your attendances (Sign In/Out) and describe the working hours made on the different projects. At the end of the period defined in the company, the timesheet is confirmed by the user and can be validated by his manager. If required, as defined on the project, you can generate the invoices based on the timesheet.</field>
     </record>
 
-    <menuitem action="action_hr_timesheet_current_open" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" name="My Timesheet" parent="hr_attendance.menu_hr_time_tracking" sequence="1"/>
+    <menuitem action="action_hr_timesheet_current_open" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" name="My Current Timesheet" parent="hr_attendance.menu_hr_time_tracking" sequence="1"/>
 
     </data>
 </openerp>

@@ -18,8 +18,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Budgetary Position">
-                    <field name="code"/>
-                    <field name="name"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budgetary Position"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -55,16 +54,18 @@
             <field name="model">account.budget.post</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Budgetary Position">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
-                    <notebook colspan="4">
+                <form string="Budgetary Position" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <notebook>
                         <page string="Accounts">
-                            <field name="account_ids" colspan="4" nolabel="1"/>
+                            <field name="account_ids"/>
                         </page>
                         <page string="Budget Lines">
-                            <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
+                            <field name="crossovered_budget_line" widget="one2many_list" mode="graph,tree">
                                 <graph type="bar" string="Lines">
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="planned_amount" operator="+"/>
@@ -77,20 +78,22 @@
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
                                     <field name="planned_amount" sum="Planned Amount"/>
-                                    <field name="practical_amount" select="1" sum="Practical Amount" />
+                                    <field name="practical_amount" sum="Practical Amount" />
                                     <field name="theoritical_amount" sum="Theoretical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines">
-                                    <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
-                                    <field name="date_from"/>
-                                    <field name="date_to"/>
-                                    <field name="paid_date"/>
-                                    <field name="planned_amount"/>
-                                    <field name="practical_amount" select="1"/>
-                                    <field name="theoritical_amount"/>
-                                    <field name="percentage"/>
+                                <form string="Budget Lines" version="7.0">
+                                    <group col="4">
+                                        <field name="crossovered_budget_id"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="paid_date"/>
+                                        <field name="planned_amount"/>
+                                        <field name="practical_amount"/>
+                                        <field name="theoritical_amount"/>
+                                        <field name="percentage"/>
+                                    </group>
                                 </form>
                             </field>
                         </page>
@@ -104,22 +107,19 @@
             <field name="model">crossovered.budget</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" />
-                    <button string="Approve" name="validate" states="confirm" type="workflow"/>
-                    <button string="Done" name="done" states="validate" type="workflow"   />
-                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow"/>
+                <form version="7.0">
+                <header>
+                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
+                    <button string="Done" name="done" states="validate" type="workflow" class="oe_highlight"/>
+                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow" />
                     <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Budget" layout="auto">
-                <group class="oe_form_header">
-                            <field name="name" colspan="1" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="code" colspan="1" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet string="Budget">
+                    <group col="4">
+                            <field name="name" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="code" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="date_from" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -137,17 +137,19 @@
                                     <field name="theoritical_amount" sum="Theoretical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines">
-                                    <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                                    <field name="general_budget_id" select="1"/>
-                                    <field name="date_from"/>
-                                    <field name="date_to"/>
-                                    <field name="paid_date" select="1"/>
-                                    <field name="planned_amount" select="1"/>
-                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                <form string="Budget Lines" version="7.0">
+                                    <group col="4">
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="general_budget_id"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="paid_date"/>
+                                        <field name="planned_amount"/>
+                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                    </group>
                                 </form>
                             </field>
-                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -177,17 +179,18 @@
            <field name="arch" type="xml">
                <search string="Budget">
                    <group>
-                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                       <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
-                       <separator orientation="vertical"/>
-                       <field name="name"/>
-                       <field name="code" />
-                       <field name="state"/>
-                       <field name="date_from"/>
-                       <field name="date_to"/>
-                   </group>
-               </search>
-           </field>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budget"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
+                        <separator orientation="vertical"/>
+                        <field name="state"/>
+                    </group>
+                </search>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="act_crossovered_budget_view">
@@ -227,18 +230,22 @@
             <field name="model">crossovered.budget.lines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Budget Lines">
-                    <field name="crossovered_budget_id"/>
-                    <field name="analytic_account_id"/>
-                    <field name="general_budget_id"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="paid_date"/>
-                    <field name="planned_amount"/>
-                    <field name="practical_amount"/>
-                    <field name="theoritical_amount"/>
-                    <field name="percentage"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                <form string="Budget Lines" version="7.0">
+                    <sheet>
+                        <group col="4">
+                            <field name="crossovered_budget_id"/>
+                            <field name="analytic_account_id"/>
+                            <field name="general_budget_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="paid_date"/>
+                            <field name="planned_amount"/>
+                            <field name="practical_amount"/>
+                            <field name="theoritical_amount"/>
+                            <field name="percentage"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -267,7 +274,7 @@
             <field name="name">account.analytic.account.form.inherot.budget</field>
             <field name="type">form</field>
             <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Budget Lines">

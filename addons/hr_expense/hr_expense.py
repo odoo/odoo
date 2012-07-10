@@ -56,12 +56,12 @@ class hr_expense_expense(osv.osv):
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)], context=context)[0]
 
     _name = "hr.expense.expense"
+    _inherit = ['mail.thread']
     _description = "Expense"
     _order = "id desc"
     _columns = {
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
-        'ref': fields.char('Reference', size=32),
         'date': fields.date('Date', select=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is invoiced"),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
@@ -85,8 +85,8 @@ class hr_expense_expense(osv.osv):
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed')
             ],
-            'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
+            'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If an invoice is made for the expense request, the status is \'Invoiced\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),

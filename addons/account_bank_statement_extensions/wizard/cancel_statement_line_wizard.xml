@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
 
     <!-- Cancel selected statement lines -->
 
@@ -9,16 +9,11 @@
       <field name="model">cancel.statement.line</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Cancel selected statement lines">
-          <label string="" colspan="4"/>
-          <label colspan="4" string="Are you sure you want to cancel the selected Bank Statement lines ?"/>
-          <label string="" colspan="4"/>
-          <separator colspan="4"/>
-          <group>
-            <label string="" colspan="2"/>
-            <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-            <button icon="gtk-execute" string="Cancel Lines" name="cancel_lines" type="object"/>
-          </group>
+        <form string="Cancel selected statement lines" version="7.0">
+            <header>
+                <button icon="gtk-execute" string="Cancel Lines" name="cancel_lines" type="object"/>
+            </header>
+            <label string="Are you sure you want to cancel the selected Bank Statement lines ?"/>
         </form>
       </field>
     </record>

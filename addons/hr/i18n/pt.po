@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:03+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-06-28 04:38+0000\n"
+"X-Generator: Launchpad (build 15505)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -34,7 +34,7 @@ msgstr "Erro! Não pode criar departamentos recursivos."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Ligue o colaborador à informação"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -194,8 +194,9 @@ msgstr "Feminino"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr "Número de funcionários necessário no total para esse trabalho."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -246,8 +247,8 @@ msgstr "Outra Informação"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "E-mail Trabalho"
+msgid "Work Email"
+msgstr "Email Profissional"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -287,8 +288,8 @@ msgstr "Categorias"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Funcionários previstos"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -420,12 +421,6 @@ msgid "Working Address"
 msgstr "Endereço de Trabalho"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Painel do Gestor de RH"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Departamentos Descendentes"
@@ -504,7 +499,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 msgid "Dashboard"
-msgstr "Painel de Controlo"
+msgstr "Painel"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -718,14 +713,16 @@ msgstr "Subordinados"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "Número de Funcionários"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Sunday"
 #~ msgstr "Domingo"
-
-#~ msgid "Work Email"
-#~ msgstr "Email Profissional"
 
 #~ msgid "Friday"
 #~ msgstr "Sexta-feira"
@@ -775,6 +772,9 @@ msgstr "Número de Funcionários"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de módulo inválido na definição da acção"
 
+#~ msgid "Work E-mail"
+#~ msgstr "E-mail Trabalho"
+
 #~ msgid "Holidays"
 #~ msgstr "Férias"
 
@@ -795,6 +795,9 @@ msgstr "Número de Funcionários"
 
 #~ msgid "Recruitment Process"
 #~ msgstr "Processo de Recrutamento"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Painel do Gestor de RH"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Progresso da Configuração"
@@ -934,6 +937,9 @@ msgstr "Número de Funcionários"
 #~ msgstr ""
 #~ "Regista ausências dos funcionários, requisições de colocação e planeamento"
 
+#~ msgid "Expected Employees"
+#~ msgstr "Funcionários previstos"
+
 #~ msgid "Employee Hierarchy"
 #~ msgstr "Hierarquia dos funcionários"
 
@@ -986,6 +992,9 @@ msgstr "Número de Funcionários"
 #~ "    * Cargos\n"
 #~ "    "
 
+#~ msgid "Number of Employees"
+#~ msgstr "Número de Funcionários"
+
 #~ msgid "title"
 #~ msgstr "Título"
 
@@ -1001,3 +1010,6 @@ msgstr "Número de Funcionários"
 
 #~ msgid "Subordonate Hierarchy"
 #~ msgstr "Hierarquia Subordinada"
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Número de funcionários necessário no total para esse trabalho."

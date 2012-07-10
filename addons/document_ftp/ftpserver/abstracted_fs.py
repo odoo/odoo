@@ -56,7 +56,7 @@ class abstracted_fs(object):
         self.cwd = '/'
         self.cwd_node = None
         self.rnfr = None
-        self._log = logging.getLogger('FTP.fs')
+        self._log = logging.getLogger(__name__)
 
     # Ok
     def db_list(self):

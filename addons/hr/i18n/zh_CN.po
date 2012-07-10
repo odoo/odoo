@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:04+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-06-28 04:38+0000\n"
+"X-Generator: Launchpad (build 15505)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -179,8 +179,9 @@ msgstr "女性"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr "该职位所需的总员工数"
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -231,8 +232,8 @@ msgstr "其它信息"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "工作电邮"
+msgid "Work Email"
+msgstr "工作Email"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -272,8 +273,8 @@ msgstr "分类"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "预期员工数"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -394,12 +395,6 @@ msgstr "联系信息"
 #: field:hr.employee,address_id:0
 msgid "Working Address"
 msgstr "工作地址"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "人力资源经理仪表盘"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -689,8 +684,13 @@ msgstr "下属"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "员工数"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Group name"
 #~ msgstr "组名"
@@ -810,11 +810,11 @@ msgstr "员工数"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "在动作定义中使用了无效的模快名。"
 
-#~ msgid "Work Email"
-#~ msgstr "工作Email"
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效的视图结构xml文件!"
+
+#~ msgid "Work E-mail"
+#~ msgstr "工作电邮"
 
 #~ msgid "Holidays"
 #~ msgstr "假期"
@@ -873,6 +873,9 @@ msgstr "员工数"
 #~ msgid ""
 #~ "Error ! You cannot select a department for which the employee is the manager."
 #~ msgstr "错误！您不能选择一部门因为该员工是经理。"
+
+#~ msgid "Expected Employees"
+#~ msgstr "预期员工数"
 
 #~ msgid ""
 #~ "You can enhance the base HR Application by installing few HR-related "
@@ -957,5 +960,14 @@ msgstr "员工数"
 #~ msgid "Required number of Employees in total for that job."
 #~ msgstr "该职务需要的员工数。"
 
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "该职位所需的总员工数"
+
+#~ msgid "Number of Employees"
+#~ msgstr "员工数"
+
 #~ msgid "Subordonate Hierarchy"
 #~ msgstr "隶属结构"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "人力资源经理仪表盘"

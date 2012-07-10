@@ -7,19 +7,20 @@
             <field name="model">report.webkit.actions</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Add Print Buttons" col="4">
-                    <field name="print_button"/>
-                     <field name="open_action"/>
-                    <separator string="" colspan="6"/>
-                    <group colspan="6" col="4" >
-                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="do_action" type="object" string="_Ok" icon="gtk-ok" />
+                <form string="Add Print Buttons" col="4" version="7.0">
+                    <header>
+                        <button name="do_action" type="object" string="_Ok" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <field name="print_button"/>
+                        <field name="open_action"/>
                     </group>
                 </form>
             </field>
         </record>
 
-    
         <act_window name="Add Print Buttons"
             res_model="report.webkit.actions"
             src_model="ir.actions.report.xml"

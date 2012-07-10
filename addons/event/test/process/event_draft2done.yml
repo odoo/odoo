@@ -9,6 +9,7 @@
    name: event
    date_begin: 2012-01-01 19:05:15
    date_end: 2012-01-01 20:05:15
+   register_max: 10
 -
   I create a registration for the event
 -
@@ -32,6 +33,7 @@
    I confirm the registration1
 -
    !python {model: event.registration}: |
+     event_pool = self.pool.get("event.event")
      self.registration_open(cr, uid, [ref("event_registration1")],context=context)
 -
    I check that registration is "confirmed"

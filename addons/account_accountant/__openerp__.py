@@ -24,7 +24,6 @@
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
     "sequence": 10,
-    'complexity': "normal",
     "description": """
 Accounting Access Rights.
 =========================

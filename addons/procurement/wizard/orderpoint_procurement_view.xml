@@ -4,33 +4,34 @@
 
         <!--  Compute Stock Minimum Rules Only -->
 
-		<record id="view_procurement_compute_wizard" model="ir.ui.view">
+        <record id="view_procurement_compute_wizard" model="ir.ui.view">
             <field name="name">Compute Stock Minimum Rules Only</field>
             <field name="model">procurement.orderpoint.compute</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Parameters">
-                <label string="Wizard checks all the stock minimum rules and generate procurement order." colspan="4"/>
-				    <separator colspan="4"/>
-				    <field name="automatic"/>
-				    <separator colspan="4"/>
-				    <group col="2" colspan="4">
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Cancel" />
-                		<button name="procure_calculation" string="Compute Stock"
-                			colspan="1" type="object" icon="gtk-ok" />
-                	</group>
+                <form string="Parameters" version="7.0">
+                    <header>
+                        <button name="procure_calculation" string="Compute Stock" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <label string="Wizard checks all the stock minimum rules and generate procurement order."/>
+                    </group>
+                    <group col="2">
+                        <field name="automatic"/>
+                    </group>
                 </form>
             </field>
         </record>
 
         <act_window name="Compute Stock Minimum Rules Only"
-		    res_model="procurement.orderpoint.compute"
-		    src_model="procurement.order"
-		    view_mode="form"
-		    target="new"
+            res_model="procurement.orderpoint.compute"
+            src_model="procurement.order"
+            view_mode="form"
+            target="new"
             key2="client_action_multi"
-		    id="action_procurement_compute"/>
+            id="action_procurement_compute"/>
 
-	</data>
+    </data>
 </openerp>

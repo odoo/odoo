@@ -6,19 +6,19 @@
             <field name="model">asset.depreciation.confirmation.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                    <form string="Compute Asset">
-                        <separator string="Post Depreciation Lines" colspan="4"/>
-                        <label string="This wizard will post the depreciation lines of running assets that belong to the selected period." colspan="4"/>
-                        <newline/>
+                <form string="Compute Asset" version="7.0">
+                    <header>
+                        <button string="Compute" name="asset_compute" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <separator string="Post Depreciation Lines"/>
+                    <label string="This wizard will post the depreciation lines of running assets that belong to the selected period."/>
+                    <group>
                         <field name="period_id"/>
-                        <separator colspan="4"/>
-                        <group colspan="4" col="6">
-                           <label string="" colspan="2"/>
-                           <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                           <button icon="gtk-execute" string="Compute" name="asset_compute" type="object"/>
-                        </group>
-                     </form>
-                   </field>
+                    </group>
+                </form>
+             </field>
         </record>
 
         <record id="action_asset_depreciation_confirmation_wizard" model="ir.actions.act_window">

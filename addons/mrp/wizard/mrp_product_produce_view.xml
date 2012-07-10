@@ -5,24 +5,21 @@
         
         <!--  Produce -->
         
-		<record id="view_mrp_product_produce_wizard" model="ir.ui.view">
+        <record id="view_mrp_product_produce_wizard" model="ir.ui.view">
             <field name="name">MRP Product Produce</field>
             <field name="model">mrp.product.produce</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Produce">
-                	<separator string="Produce" colspan="4"/>
-				    <field name="mode" colspan="4"/>
-				    <field name="product_qty" colspan="2"/>
-                	<newline/>
-                	<separator string="" colspan="4" />
-                	<label string="" colspan="2" />
-                	<group col="2" colspan="1">
-                		<button icon='gtk-stop' special="cancel"
-                			string="Cancel" />
-                		<button name="do_produce" string="Confirm"
-                			colspan="1" type="object" icon="gtk-ok" />
-                	</group>
+                <form string="Produce" version="7.0">
+                    <header>
+                        <button name="do_produce" type="object" string="Confirm" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group string="Produce">
+                        <field name="mode"/>
+                        <field name="product_qty" colspan="2"/>
+                    </group>    
                 </form>
             </field>
         </record>
@@ -37,5 +34,5 @@
         </record>    
         
         
-	</data>
-</openerp>	
+    </data>
+</openerp>    

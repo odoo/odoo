@@ -12,23 +12,19 @@
             <field name="model">stock.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="button_open" string="Open" states="draft" type="object"/>
-                    <button name="button_close" string="Close" states="open" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Stock Periods" layout="auto">
-                <group class="oe_form_header">
-                    <field name="name" colspan="2"/>
-                    <newline/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <separator string="State" colspan="4"/>
-                    </group>
+                <form version="7.0">
+                    <header>
+                        <button name="button_open" string="Open" states="draft" type="object"/>
+                        <button name="button_close" string="Close" states="open" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                    </header>
+                    <sheet string="Stock Periods">
+                        <group col="4">
+                            <field name="name"/>
+                            <newline/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -43,7 +39,7 @@
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -54,12 +50,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Periods">
-                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
-                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
+                    <field name="name" string="Stock Periods"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
+                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
                 </search>
             </field>
         </record>
@@ -85,18 +82,15 @@
             <field name="model">stock.sale.forecast</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="action_validate" string="Approve" states="draft" type="object" />
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Stock and Sales Forecast" layout="auto">
-                    <group colspan = "4" col = "4" class="oe_form_header">
+                <form version="7.0">
+                <header>
+                    <button name="action_validate" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Stock and Sales Forecast">
+                    <group colspan = "4" col = "4" class="oe_header">
                         <group colspan = "2" col="2" >
-                            <field name="company_id" select="1"
+                            <field name="company_id"
                                         groups="base.group_multi_company"
                                         widget="selection"
                                         on_change="onchange_company(company_id)"/>
@@ -205,6 +199,7 @@
             <field name="arch" type="xml">
                 <search string="Search  Sales Forecast">
                     <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
+                    <separator orientation="vertical"/>
                     <field name="company_id"/>
                     <field name="warehouse_id" />
                     <field name="period_id" />
@@ -251,7 +246,7 @@
                     <group colspan="4" col="7">
                         <group colspan ="3" col="2">
                             <separator colspan ="2" string = "General Info"/>
-                            <field name="company_id" select = "1" widget= "selection"
+                            <field name="company_id" widget="selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
@@ -311,6 +306,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
                     <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
+                    <separator orientation="vertical"/>
                     <field name="company_id" widget="selection"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>

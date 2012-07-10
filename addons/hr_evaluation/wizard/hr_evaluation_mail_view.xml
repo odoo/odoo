@@ -2,24 +2,23 @@
 <openerp>
     <data>
 
-	<record id="view_hr_evaluation_send_mail" model="ir.ui.view">
+    <record id="view_hr_evaluation_send_mail" model="ir.ui.view">
         <field name="name">hr.evaluation.send.mail</field>
         <field name="model">hr.evaluation.reminder</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-			<form string="Evaluation Reminders">
-				<group width="340">
-				<separator string="Send Evaluation Reminder" colspan="4"/>
-				<field name="evaluation_id"/>
-				<separator colspan="4"/>
-					<group colspan="4">
-						<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-						<button name="send_mail" string="Send Mail" type="object" icon="gtk-ok"/>
-					</group>
-				</group>
-         	</form>
+            <form string="Evaluation Reminders" version="7.0">
+                <header>
+                    <button name="send_mail" string="Send Mail" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </header>
+                <group string="Send Evaluation Reminder">
+                    <field name="evaluation_id"/>
+                </group>
+             </form>
         </field>
-	</record>
+    </record>
 
     <record id="action_hr_evaluation_send_mail" model="ir.actions.act_window">
         <field name="name">Evaluation Send Mail</field>

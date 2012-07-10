@@ -3,18 +3,17 @@
     <data>        
         <!--   pos.details -->
         
-		<record id="view_pos_payment_report" model="ir.ui.view">
+        <record id="view_pos_payment_report" model="ir.ui.view">
             <field name="name">Payment Report</field>
             <field name="model">pos.payment.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payment Report">
-				    <group col="2" colspan="4">
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Close" />
-                		<button name="print_report" string="Print Report"
-                			colspan="1" type="object" icon="gtk-print" />
-                	</group>
+                <form string="Payment Report" version="7.0">
+                    <header>
+                        <button name="print_report" string="Print Report" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                 </form>
             </field>
         </record>
@@ -29,5 +28,5 @@
         </record>
 
         
-	</data>
-</openerp>	        
+    </data>
+</openerp>            

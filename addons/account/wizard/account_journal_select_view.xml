@@ -7,14 +7,14 @@
             <field name="model">account.journal.select</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Journal Select">
-                    <label string="Are you sure you want to open Journal Entries?" colspan="4"/>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="Open Entries" name="action_open_window" type="object"/>
-                   </group>
-               </form>
+	            <form string="Journal Select" version="7.0">
+	                <header>
+	                    <button string="Open Entries" name="action_open_window" type="object" class="oe_highlight"/>
+	                    or
+	                    <button string="Cancel" class="oe_link" special="cancel"/>
+	                </header>
+                    <label string="Are you sure you want to open Journal Entries?"/>
+	            </form>
             </field>
         </record>
 

@@ -28,10 +28,12 @@
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
                     <group>
-                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                        <field name="name" string="Cash Statement"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
-                        <field name="name"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                        <separator orientation="vertical"/>
                         <field name="journal_id"/>
                     </group>
                     <newline/>
@@ -40,7 +42,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -53,11 +55,13 @@
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
                     <group>
+                        <field name="name" string="Cash Statement"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="name"/>
                         <field name="journal_id"/>
                     </group>
                     <newline/>
@@ -66,7 +70,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>

@@ -508,7 +508,7 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation'),('currency','Currency Adjustment')], 'Centralisation', size=8),
         'balance': fields.function(_balance, fnct_search=_balance_search, string='Balance'),
-        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State', readonly=True,
+        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'Status', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
@@ -997,6 +997,11 @@ class account_move_line(osv.osv):
         for journal in journals:
             all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
+                # sometimes, it's possible that a defined column is not loaded (the module containing 
+                # this field is not loaded) when we make an update.
+                if field.name not in self._columns:
+                    continue
+
                 if not field.field in fields:
                     fields[field.field] = [journal.id]
                     fld.append((field.field, field.sequence))
@@ -1020,7 +1025,7 @@ class account_move_line(osv.osv):
         }
 
         document = etree.Element('tree', string=title, editable="top",
-                                 refresh="5", on_write="on_create_write",
+                                 on_write="on_create_write",
                                  colors="red:state=='draft';black:state=='valid'")
         fields_get = self.fields_get(cr, uid, flds, context)
         for field, _seq in fld:

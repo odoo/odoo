@@ -8,18 +8,16 @@
           <field name="model">crm.make.sale</field>
           <field name="type">form</field>
           <field name="arch" type="xml">
-            <form string="Convert to Quotation" >
-                <group colspan="4">
+            <form string="Convert to Quotation"  version="7.0">
+                <header>
+                    <button name="makeOrder" string="_Create" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </header>
+                <group col="4">
                     <field name="partner_id" required="1"/>
                     <field name="shop_id" required="1" widget="selection"/>
                     <field name="close"/>
-                </group>
-                <newline/>
-                <separator colspan="4"/>
-                <group col="4" colspan="4">
-                    <label string="" colspan="2"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="makeOrder" string="_Create" type="object" icon='gtk-go-forward'/>
                 </group>
             </form>
           </field>

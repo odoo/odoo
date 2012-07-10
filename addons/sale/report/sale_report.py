@@ -44,7 +44,7 @@ class sale_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),

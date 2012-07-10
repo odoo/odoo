@@ -24,7 +24,6 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 38,
-    'complexity': "normal",
     'description': """
 Generic Payroll system.
 =======================
@@ -73,7 +72,7 @@ Generic Payroll system.
     'installable': True,
     'auto_install': False,
     'certificate' : '001046261404562128861',
-    'application': True,
+    'application': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

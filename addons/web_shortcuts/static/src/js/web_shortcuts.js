@@ -118,16 +118,16 @@ instance.web.ViewManagerAction.include({
         var shortcuts_menu = instance.webclient.user_menu.shortcuts;
         var grandparent = this.getParent() && this.getParent().getParent();
         // display shortcuts if on the first view for the action
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
+        var $shortcut_toggle = this.$element.find('.oe_shortcuts_toggle');
         if (!this.action.name ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
             return;
         }
-        $shortcut_toggle.toggleClass('oe-shortcut-remove', shortcuts_menu.has(self.session.active_id));
+        $shortcut_toggle.toggleClass('oe_shortcuts_remove', shortcuts_menu.has(self.session.active_id));
         $shortcut_toggle.unbind("click").click(function() {
-            if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
+            if ($shortcut_toggle.hasClass("oe_shortcuts_remove")) {
                 shortcuts_menu.trigger('remove', self.session.active_id);
             } else {
                 shortcuts_menu.trigger('add', {
@@ -137,7 +137,7 @@ instance.web.ViewManagerAction.include({
                     'name': self.action.name
                 });
             }
-            $shortcut_toggle.toggleClass("oe-shortcut-remove");
+            $shortcut_toggle.toggleClass("oe_shortcuts_remove");
         });
     }
 });

@@ -117,7 +117,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
-                                   'State',),
+                                   'Status',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Purchase Price')),
@@ -272,7 +272,7 @@ class marketing_campaign_segment(osv.osv):
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
                                    ('done', 'Done')],
-                                   'State',),
+                                   'Status',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -392,7 +392,7 @@ class marketing_campaign_activity(osv.osv):
     _description = "Campaign Activity"
 
     _action_types = [
-        ('email', 'E-mail'),
+        ('email', 'Email'),
         ('report', 'Report'),
         ('action', 'Custom Action'),
         # TODO implement the subcampaigns.
@@ -423,7 +423,7 @@ class marketing_campaign_activity(osv.osv):
    - Report: print an existing Report defined on the resource item and save it into a specific directory
    - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
   """),
-        'email_template_id': fields.many2one('email.template', "Email Template", help='The e-mail to send when this activity is activated'),
+        'email_template_id': fields.many2one('email.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="This folder is used to store the generated reports"),
@@ -439,7 +439,7 @@ class marketing_campaign_activity(osv.osv):
         'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Sale Price')),
         'signal': fields.char('Signal', size=128,
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
-        'keep_if_condition_not_met': fields.boolean("Don't delete workitems",
+        'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
@@ -652,8 +652,7 @@ class marketing_campaign_workitem(osv.osv):
                                     ('cancelled', 'Cancelled'),
                                     ('exception', 'Exception'),
                                     ('done', 'Done'),
-                                   ], 'State', readonly=True),
-
+                                   ], 'Status', readonly=True),
         'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {

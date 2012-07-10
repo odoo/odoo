@@ -7,14 +7,14 @@
             <field name="model">open.questionnaire</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Questionnaires">
-                    <field name="questionnaire_id" required="1"/>
-                    <newline/>
-                    <separator string="" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <group col="2" colspan="2"/>
-                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
-                        <button name="build_form" string="Open Questionnaire" icon="terp-camera_test" type="object"/>
+                <form string="Questionnaires" version="7.0">
+                    <header>
+                        <button name="build_form" string="Open Questionnaire" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <field name="questionnaire_id"/>
                     </group>
                 </form>
             </field>
@@ -34,15 +34,14 @@
             <field name="model">open.questionnaire</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
+                    <header>
+                        <button name="questionnaire_compute" string="Save Data" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <separator colspan="4" string="Questionnaire"/>
                     <field name="question_ans_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200"/>
-                    <separator string="" colspan="4" />
-                    <label string="" colspan="2"/>
-                    <group col="2" colspan="2">
-                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
-                        <button name="questionnaire_compute" string="Save Data" icon="terp-stock_format-scientific" colspan="1" type="object"/>
-                    </group>
                 </form>
             </field>
         </record>
@@ -64,7 +63,7 @@
             <field name="model">open.questionnaire.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Questionnaire">
+                <form string="Questionnaire" version="7.0">
                     <field name="question_id"/>
                     <field name="answer_id" domain="[('question_id', '=', question_id)]"/>
                 </form>

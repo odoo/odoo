@@ -4,32 +4,31 @@
         
         <!--  Make Invoice -->
         
-		<record id="view_make_invoice" model="ir.ui.view">
+        <record id="view_make_invoice" model="ir.ui.view">
             <field name="name">Make Invoice</field>
             <field name="model">mrp.repair.make_invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create invoices">
-    		        <separator colspan="4" string="Do you really want to create the invoice(s)?" />  
-			        <field name="group"/>
-                    <newline/>  
-                    <group col="2" colspan="4">                        
-                		<button icon="gtk-stop" special="cancel"
-                			string="Cancel" />
-                		<button name="make_invoices" string="Create Invoice"
-                			colspan="1" type="object" icon="terp-gtk-go-back-rtl" />
-                	</group>
+            <form string="Create invoices" version="7.0">
+                <header>
+                    <button name="make_invoices" string="Create Invoice" type="object"  class="oe_highlight"  />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </header>
+                <group string="Do you really want to create the invoice(s)?">
+                    <field name="group"/>
+                </group>
                 </form>
             </field>
         </record>
 
-        <act_window name="Make Invoice"		    
-		    res_model="mrp.repair.make_invoice"
-		    src_model="mrp.repair"
-		    view_mode="form"
-		    target="new"        
+        <act_window name="Make Invoice"            
+            res_model="mrp.repair.make_invoice"
+            src_model="mrp.repair"
+            view_mode="form"
+            target="new"        
             key2="client_action_multi"    
-		    id="act_mrp_repair_invoice"/>        
+            id="act_mrp_repair_invoice"/>        
         
-	</data>
-</openerp>	
+    </data>
+</openerp>    

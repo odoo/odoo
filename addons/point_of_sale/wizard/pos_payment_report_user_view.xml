@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<record id="pos_payment_report_user_form" model="ir.ui.view">
-		    <field name="name">pos.payment.report.user.form</field>
-		    <field name="model">pos.payment.report.user</field>
-		    <field name="type">form</field>
-		    <field name="arch" type="xml">
-				<form string="Sale by User">
-				 	<group col="2" colspan="4">
-					<field name="user_id"/>
-					<button icon='gtk-cancel' special="cancel" string="Close" />
-					<button name="print_report" string="Print Report" colspan="1" type="object" icon="gtk-print" />
- 					</group >				
-				</form>
-		    </field>
-		</record>
+    <data>
+        <record id="pos_payment_report_user_form" model="ir.ui.view">
+            <field name="name">pos.payment.report.user.form</field>
+            <field name="model">pos.payment.report.user</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sale by User" version="7.0">
+                    <header>
+                        <button name="print_report" string="Print Report" type="object" icon="gtk-print" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </header>
+                    <group>
+                        <field name="user_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
         <record id="action_report_pos_payment_report_user" model="ir.actions.act_window">
             <field name="name">Sales lines by Users</field>
             <field name="type">ir.actions.act_window</field>
@@ -23,5 +26,5 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-		</data>	        
+        </data>            
 </openerp>              

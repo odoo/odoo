@@ -36,6 +36,7 @@ class stock_change_product_qty(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None: context = {}
         fvg = super(stock_change_product_qty, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         product_id = context and context.get('active_id', False) or False
 

@@ -2,26 +2,26 @@
 <openerp>
     <data>
 
-		<record id="view_account_crossovered_analytic" model="ir.ui.view">
+        <record id="view_account_crossovered_analytic" model="ir.ui.view">
             <field name="name">account.crossovered.analytic.form</field>
             <field name="model">account.crossovered.analytic</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Crossovered Analytic">
-			    <group col="4" colspan="6">
-				    <field name="date1"/>
-				    <field name="date2"/>
-				    <field name="ref" groups="analytic.group_analytic_accounting"/>
-				    <field name="empty_line"/>
-				    <separator colspan="4" string="Analytic Journal"/>
-				    <field name="journal_ids" colspan="4" nolabel="1"/>
-				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
-				</group>
-			</form>
+            <form string="Crossovered Analytic" version="7.0">
+                <header>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </header>
+                <group col="4">
+                    <field name="date1"/>
+                    <field name="date2"/>
+                    <field name="ref" groups="analytic.group_analytic_accounting"/>
+                    <field name="empty_line"/>
+                </group><group string="Analytic Journal">
+                    <field name="journal_ids" colspan="2" nolabel="1"/>
+                </group>
+            </form>
             </field>
         </record>
 
@@ -34,7 +34,7 @@
             <field name="target">new</field>
         </record>
 
-		<record model="ir.values" id="account_crossovered_analytic_values">
+        <record model="ir.values" id="account_crossovered_analytic_values">
             <field name="model_id" ref="analytic.model_account_analytic_account" />
             <field name="name">Crossovered Analytic</field>
             <field name="key2">client_print_multi</field>
@@ -43,5 +43,5 @@
             <field name="model">account.analytic.account</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

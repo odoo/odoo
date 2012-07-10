@@ -23,7 +23,6 @@
 import time
 from osv import osv, fields
 import decimal_precision as dp
-import netsvc
 from tools.translate import _
 
 class account_bank_statement(osv.osv):
@@ -114,7 +113,7 @@ class account_bank_statement_line(osv.osv):
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
-            'State', required=True, readonly=True),    
+            'Status', required=True, readonly=True),    
         'counterparty_name': fields.char('Counterparty Name', size=35),
         'counterparty_bic': fields.char('Counterparty BIC', size=11),
         'counterparty_number': fields.char('Counterparty Number', size=34),

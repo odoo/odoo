@@ -58,11 +58,13 @@
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
-                    </field>
+                        <separator orientation="vertical"/>
+                        <field name="partner_id"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>

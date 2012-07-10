@@ -29,9 +29,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-            <xpath expr="//notebook/page[@string='Extra Info']/separator[@string='Notes']" position="before">
-                <field name="sale_line_id"/>
-            </xpath>
+                <field name="state" position="after">
+                    <field name="sale_line_id" string="Order Line"/>
+                </field>
             </field>
         </record>
     </data>

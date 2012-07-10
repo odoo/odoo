@@ -1,0 +1,132 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-06-16 21:45+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-06-17 04:35+0000\n"
+"X-Generator: Launchpad (build 15419)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "オーダー参照は、会社ごとに固有でなければなりません。"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "注記"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "請求タイプ"
+
+#. module: sale_journal
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr "この請求タイプは現在のパートナの請求のため、デフォルトで使用されます。"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "エラー。再帰的な関係となる会員を作ることはできません。"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "受注と発注"
+
+#. module: sale_journal
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr "アクティブ項目をFalseにセットした場合、請求タイプは削除することなく非表示にできます。"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "注記"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "請求方法"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "請求書タイプ"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "非グループ化"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "グループ化"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used for partners, sales orders and delivery orders. You "
+"can create a specific invoicing journal to group your invoicing according to "
+"your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr ""
+"請求書タイプはパートナ、受注オーダー、配達オーダーのために使用されます。顧客ニーズに応じて請求をグループ化するための固有の請求仕訳帳を作成できます：毎日、"
+"毎水曜日、月次など"
+
+#. module: sale_journal
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr "参照は会社ごとに固有でなければいけません。"
+
+#. module: sale_journal
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "請求書タイプ"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "アクティブ"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_res_partner
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "受注オーダー"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "集荷リスト"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "請求"

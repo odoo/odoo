@@ -36,7 +36,7 @@ from osv import fields
 from tools.translate import _
 from openerp import SUPERUSER_ID
 
-_logger = logging.getLogger('mail')
+_logger = logging.getLogger(__name__)
 
 def format_date_tz(date, tz=None):
     if not date:
@@ -96,11 +96,24 @@ class mail_message_common(osv.osv_memory):
                 continue
             result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
         return result
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for message in self.browse(cr, uid, ids, context=context):
+            name = ''
+            if message.subject:
+                name = '%s: ' % (message.subject)
+            if message.body_text:
+                name = '%s%s ' % (name, message.body_text[0:20])
+            if message.date:
+                name = '%s(%s)' % (name, message.date)
+            res.append((message.id, name))
+        return res
+
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
-        'subject': fields.char('Subject', size=512, required=True),
+        'subject': fields.char('Subject', size=512),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string', string='Message Record Name',
@@ -202,10 +215,10 @@ class mail_message(osv.osv):
     
     _columns = {
         'type': fields.selection([
-                        ('email', 'e-mail'),
+                        ('email', 'email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+                        ], 'Type', help="Message type: email for email message, notification for system message, comment for other messages such as user replies"),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related User', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -217,7 +230,7 @@ class mail_message(osv.osv):
                         ('received', 'Received'),
                         ('exception', 'Delivery Failed'),
                         ('cancel', 'Cancelled'),
-                        ], 'State', readonly=True),
+                        ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }
@@ -228,7 +241,7 @@ class mail_message(osv.osv):
     }
     
     #------------------------------------------------------
-    # E-Mail api
+    # Email api
     #------------------------------------------------------
     
     def init(self, cr):

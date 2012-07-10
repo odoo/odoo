@@ -1,70 +1,61 @@
 <openerp>
-      <data>
-
+    <data>
         <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
-          <field name="name">crm.lead2opportunity.partner.form</field>
-          <field name="model">crm.lead2opportunity.partner</field>
-          <field name="type">form</field>
-          <field name="arch" type="xml">
-               <form string="Convert to Opportunity">
-                   
-                        <field name="action"/>
-                        <group attrs="{'invisible':[('action','!=','exist')]}">
-                            <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
-                        </group>
-                        <separator string="Convert to Opportunity" colspan="4"/>
+            <field name="name">crm.lead2opportunity.partner.form</field>
+            <field name="model">crm.lead2opportunity.partner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Convert to Opportunity" version="7.0">
+                    <header>
+                        <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <field name="action"/>
+                    <group attrs="{'invisible':[('action','!=','exist')]}">
+                        <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
+                    </group>
+                    <group string="Convert to Opportunity">
                         <field name="name" colspan="4"/>
-                        <group col="4" colspan="4" attrs="{'invisible': [('name', '=', 'convert')]}" >
-                            <separator string="Select Opportunities" colspan="4" />
-                        </group>
-                            <field name="opportunity_ids" colspan="4" nolabel="1" attrs="{'invisible': [('name', '=', 'convert')]}">
-                                <tree>
-                                    <field name="name" />
-                                    <field name="partner_id" />
-                                    <field name="user_id" />
-                                    <field name="section_id" />
-                                </tree>
-                            </field>
-                        
-                        <separator string="" colspan="4" />
-                        <group col="4" colspan="4">
-                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                            <button name="action_apply" string="Create Opportunity" type="object" icon="gtk-ok"/>
-                        </group>
-                  
-              </form>
-          </field>
-       </record> 
+                    </group>
+                    <separator string="Select Opportunities" attrs="{'invisible': [('name', '=', 'convert')]}"/>
+                    <field name="opportunity_ids" attrs="{'invisible': [('name', '=', 'convert')]}">
+                        <tree>
+                            <field name="name" />
+                            <field name="partner_id" />
+                            <field name="user_id" />
+                            <field name="section_id" />
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record> 
 
-		<record id="view_crm_lead2opportunity_partner_mass" model="ir.ui.view">
-	          <field name="name">crm.lead2opportunity.partner.mass.form</field>
-	          <field name="model">crm.lead2opportunity.partner.mass</field>
-	          <field name="type">form</field>
-	          <field name="arch" type="xml">
-	               <form string="Convert to Opportunity">
-	                   
-	                        <field name="action"/>
-	                        <field name="name" colspan="4"/>
-	                        
-	                        <separator string="Assigned Opportunities to" colspan="4" />
-							<field name="section_id" />
-							<group col="4" colspan="4">
-								<separator string="Select Salesman" colspan="4" />
-							</group>
-							<field name="user_ids" nolabel="1" colspan="4">
-								<tree>
-									<field name="name" />
-								</tree>
-							</field>
-	                        <separator string="" colspan="4" />
-	                        <group col="4" colspan="4">
-	                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	                            <button name="mass_convert" string="Convert into Opportunities" type="object" icon="gtk-ok"/>
-	                        </group>
-	                  
-	              </form>
-	          </field>
-	       </record>
+        <record id="view_crm_lead2opportunity_partner_mass" model="ir.ui.view">
+            <field name="name">crm.lead2opportunity.partner.mass.form</field>
+            <field name="model">crm.lead2opportunity.partner.mass</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Convert to Opportunity" version="7.0">
+                    <header>
+                        <button name="mass_convert" string="Convert into Opportunities" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <field name="action"/>
+                    <field name="name" colspan="4"/>
+                    <group string="Assigned Opportunities to">
+                        <field name="section_id" />
+                    </group>
+                    <separator string="Select Salesman"/>
+                    <field name="user_ids">
+                        <tree>
+                            <field name="name" />
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
 
         <record id="action_crm_lead2opportunity_partner" model="ir.actions.act_window">
             <field name="name">Create a Partner</field>
@@ -74,13 +65,13 @@
             <field name="view_id" ref="view_crm_lead2opportunity_partner"/>
             <field name="target">new</field>
         </record>
-	       
-	      <act_window id="action_crm_send_mass_convert"
+           
+          <act_window id="action_crm_send_mass_convert"
             multi="True"
             key2="client_action_multi" name="Convert opportunities"
             res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"
             context="{'mass_convert' : True}"
             view_id="view_crm_lead2opportunity_partner_mass"/> 
-     </data>
+    </data>
 </openerp>

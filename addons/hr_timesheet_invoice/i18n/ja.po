@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-16 04:50+0000\n"
-"X-Generator: Launchpad (build 15247)\n"
+"X-Launchpad-Export-Date: 2012-06-22 04:45+0000\n"
+"X-Generator: Launchpad (build 15461)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -248,11 +248,6 @@ msgid "Deadline"
 msgstr "期限"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_my_account
-msgid "Accounts to invoice"
-msgstr "請求するアカウント"
-
-#. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,partner_id:0
 msgid "Partner"
 msgstr "パートナ"
@@ -289,7 +284,6 @@ msgstr "ユーザあるいはジャーナルの名称"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
 msgid "Costs to invoice"
 msgstr "請求書へ計上する経費"
@@ -314,7 +308,7 @@ msgstr "状態"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "Data Insufficient!"
-msgstr "日付の指定が足りません。"
+msgstr "データ不足です。"
 
 #. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -412,7 +406,7 @@ msgstr "印刷日"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree
 msgid "Bill Tasks Works"
-msgstr "課金が"
+msgstr "請求タスク作業"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -936,11 +930,6 @@ msgid "Product"
 msgstr "製品"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_uninvoiced_line
-msgid "Uninvoice lines with billing rate"
-msgstr "請求料率を持つ未請求の行"
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "%"
 msgstr "%"
@@ -1146,5 +1135,11 @@ msgstr "年"
 msgid "Timesheet lines during last 7 days"
 msgstr "過去7日間の勤務表の行"
 
+#~ msgid "Accounts to invoice"
+#~ msgstr "請求するアカウント"
+
 #~ msgid "Do you want to display work details on the invoice ?"
 #~ msgstr "この請求書の作業明細を表示しますか。"
+
+#~ msgid "Uninvoice lines with billing rate"
+#~ msgstr "請求料率を持つ未請求の行"

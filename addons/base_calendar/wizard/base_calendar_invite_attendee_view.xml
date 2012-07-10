@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<!--    Attendee invite wizard-->
+    <data>
+        <!--    Attendee invite wizard-->
 
-		<record id="view_calendar_invite_attendee_wizard"
-			model="ir.ui.view">
-			<field name="name">Invite Attendees</field>
-			<field name="model">base_calendar.invite.attendee</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Invite People">
+        <record id="view_calendar_invite_attendee_wizard"
+            model="ir.ui.view">
+            <field name="name">Invite Attendees</field>
+            <field name="model">base_calendar.invite.attendee</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Invite People" version="7.0">
+                    <header>
+                        <button name="do_invite" string="Invite" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
                     <separator string="Invite People" colspan="4"/>
-					<field name="type"/>
-					<field name="send_mail"/>
+                    <field name="type"/>
+                    <field name="send_mail"/>
                     <notebook colspan="4">
                         <page string="Data">
                             <group col="2" colspan="6" attrs="{'invisible': [('type', '!=', 'external')]}">
@@ -20,36 +25,32 @@
                             </group>
                             <group col="2" colspan="6" attrs="{'invisible': [('type', '!=', 'internal')]}">
                                 <separator string="Users" colspan="4"/>
-                                <field name="user_ids" select="1" colspan="4" nolabel="1"  height="180"/>
+                                <field name="user_ids"  colspan="4" nolabel="1"  height="180"/>
                                 <newline/>
                             </group>
                             <group col="2" colspan="6" attrs="{'invisible': [('type', '!=', 'partner')]}">
                                 <field name="partner_id" colspan="2" on_change="onchange_partner_id(partner_id)" attrs="{'required': [('type', '=', 'partner')]}"/>
                                 <newline/>
                                 <separator string="Partner Contacts" colspan="6"/>
-                                <field name="contact_ids" select="1" colspan="4" nolabel="1" domain="[('id', 'child_of', [partner_id])]" attrs="{'readonly': [('type', '!=', 'partner')]}"/>
+                                <field name="contact_ids"  colspan="4" nolabel="1" domain="[('id', 'child_of', [partner_id])]" attrs="{'readonly': [('type', '!=', 'partner')]}"/>
                             </group>
                         </page>
                     </notebook>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button name="do_invite" string="Invite" type="object" icon="gtk-ok"/>
-                    </group>
-				</form>
-			</field>
-		</record>
+                </form>
+            </field>
+        </record>
 
 
-		<!--    Attendee invite action-->
+        <!--    Attendee invite action-->
 
-		<record id="action_view_calendar_invite_attendee_wizard" model="ir.actions.act_window">
-			<field name="name">Invite Attendees</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">base_calendar.invite.attendee</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>
+        <record id="action_view_calendar_invite_attendee_wizard" model="ir.actions.act_window">
+            <field name="name">Invite Attendees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base_calendar.invite.attendee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-	</data>
+    </data>
 </openerp>

@@ -21,6 +21,7 @@
 
 from osv import fields, osv, orm
 from edi import EDIMixin
+from edi.models import edi
 
 INVOICE_LINE_EDI_STRUCT = {
     'name': True,
@@ -70,6 +71,16 @@ INVOICE_EDI_STRUCT = {
 
 class account_invoice(osv.osv, EDIMixin):
     _inherit = 'account.invoice'
+
+    def action_invoice_sent(self, cr, uid, ids, context=None):
+        """"Override this method to add a link to mail"""
+        if context is None:
+            context = {}
+        invoice_objs = self.browse(cr, uid, ids, context=context) 
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, invoice_objs, context = context)[0]
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+        return super(account_invoice, self).action_invoice_sent(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a supplier or customer invoice"""

@@ -24,7 +24,7 @@ import tools
 
 class account_followup_stat(osv.osv):
     _name = "account_followup.stat"
-    _description = "Followup Statistics"
+    _description = "Follow-up Statistics"
     _rec_name = 'partner_id'
     _auto = False
     _columns = {

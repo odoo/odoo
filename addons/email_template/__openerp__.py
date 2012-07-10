@@ -21,12 +21,11 @@
 ##############################################################################
 
 {
-    "name" : "E-Mail Templates",
+    "name" : "Email Templates",
     "version" : "1.1",
     "author" : "OpenERP,OpenLabs",
     "website" : "http://openerp.com",
     "category" : "Marketing",
-    'complexity': "expert",
     "depends" : ['mail'],
     "description": """
 Email Templating (simplified version of the original Power Email by Openlabs)

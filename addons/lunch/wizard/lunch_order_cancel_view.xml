@@ -4,23 +4,23 @@
 
 <!-- cancel order  -->
 
-  		<record id="view_lunch_order_cancel" model="ir.ui.view">
+        <record id="view_lunch_order_cancel" model="ir.ui.view">
             <field name="name">lunch.order.cancel.form</field>
             <field name="model">lunch.order.cancel</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Cancel Order">
-                	<group colspan="4" >
-                		 <label string="Are you sure you want to cancel this order ?"/>
-                    </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button  icon="gtk-cancel" special="cancel" string="No"/>
-                    	<button  icon="gtk-ok" name="cancel" string="Yes" type="object"/>
+                <form string="Cancel Order" version="7.0">
+                    <header>
+                        <button  name="cancel" string="Yes" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group col="4" >
+                        <label string="Are you sure you want to cancel this order ?"/>
                    </group>
                </form>
             </field>
-  		</record>
+        </record>
 
         <record id="action_lunch_order_cancel" model="ir.actions.act_window">
             <field name="name">Cancel Order</field>
@@ -32,9 +32,9 @@
         </record>
         
         <act_window id="action_lunch_order_cancel_values"
-    		key2="client_action_multi" name="Cancel Order"
-    		res_model="lunch.order.cancel" src_model="lunch.order"
-     		view_mode="form" target="new" view_type="form"/>
+            key2="client_action_multi" name="Cancel Order"
+            res_model="lunch.order.cancel" src_model="lunch.order"
+            view_mode="form" target="new" view_type="form"/>
         
     </data>
 </openerp>

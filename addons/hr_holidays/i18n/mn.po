@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-04 04:48+0000\n"
-"X-Generator: Launchpad (build 15195)\n"
+"X-Launchpad-Export-Date: 2012-06-22 04:46+0000\n"
+"X-Generator: Launchpad (build 15461)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -49,7 +49,7 @@ msgstr "Бүлэглэх..."
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Allocation Mode"
-msgstr ""
+msgstr "Хуваарилах горим"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,department_id:0
@@ -59,7 +59,7 @@ msgstr "Хэлтэс"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
 msgid "Requests Approve"
-msgstr ""
+msgstr "зөвшөөрөх хүсэлт"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -69,12 +69,12 @@ msgstr "Татгалзах"
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Ажилчдын ангилал"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid " Month-1"
-msgstr ""
+msgstr " сар-1"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -143,7 +143,7 @@ msgstr "Зөвшөөрсөн"
 #. module: hr_holidays
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Сүүлийн холболт"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -184,7 +184,7 @@ msgstr "Амралт, чөлөө"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
 msgid "Leave Requests to Approve"
-msgstr ""
+msgstr "Батлах шаардлагатай Чөлөөний хүсэлтүүд"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
@@ -223,7 +223,7 @@ msgstr "Хяналт"
 #: code:addons/hr_holidays/hr_holidays.py:377
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Анхаар !"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -382,16 +382,14 @@ msgstr "Амралтын Төрөл хайх"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr ""
+msgstr "Ажилчин эсвэл ангиллаас сонгох хэрэгтэй."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
-"If its True then its Allocation/Request have to be validated by second "
-"validator"
+"When selected, the Allocation/Leave Requests for this type require a second "
+"validation to be approved."
 msgstr ""
-"Энэ нь үнэн утгатай бол амралт, чөлөө хүсэх/ хуваарилахыг хүсэх хүсэлт нь 2 "
-"дах менежерээр батламжлагдсан байна"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -428,7 +426,7 @@ msgstr "Цайвар ягаан"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Month"
-msgstr ""
+msgstr "Сар"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -496,7 +494,7 @@ msgstr "Амралт, чөлөө"
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Уулзалт"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -523,17 +521,12 @@ msgstr "Хэрэглэгч"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The start date must be before the end date !"
-msgstr ""
+msgstr "Эхлэх өдөр нь дууах өдрөөс өмнө байх ёстой."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Идэвхтэй"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
-msgid "Leaves To Validate"
-msgstr ""
 
 #. module: hr_holidays
 #: constraint:hr.employee:0
@@ -553,7 +546,7 @@ msgstr "Эхний зөвшөөрөл"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Төлөгдөөгүй"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -764,11 +757,9 @@ msgstr ""
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
 msgid ""
-"If you tick this checkbox, the system will allow, for this section, the "
-"employees to take more leaves than the available ones."
+"If you select this checkbox, the system allows the employees to take more "
+"leaves than the available ones for this type."
 msgstr ""
-"Энэ талбарыг сонговол ажилтан өөрт хуваарилагдсан боломжит амралт, чөлөөнөөс "
-"хязгаарыг хэтрүүлэн амралт, чөлөө авах боломжтой болно."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
@@ -934,6 +925,13 @@ msgstr "Зөвшөөрөх"
 #~ msgid "This Month"
 #~ msgstr "Энэ сар"
 
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr ""
+#~ "Энэ талбарыг сонговол ажилтан өөрт хуваарилагдсан боломжит амралт, чөлөөнөөс "
+#~ "хязгаарыг хэтрүүлэн амралт, чөлөө авах боломжтой болно."
+
 #~ msgid "This area is automaticly filled by the user who validate the leave"
 #~ msgstr ""
 #~ "Энэ талбарт амралт, чөлөөг батламжилсан менежерийн нэвтэрсэн хэрэглэгчийн "
@@ -941,6 +939,13 @@ msgstr "Зөвшөөрөх"
 
 #~ msgid "Human Resources: Holidays management"
 #~ msgstr "Хүний нөөц: Амралт, чөлөөний удирдлага"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr ""
+#~ "Энэ нь үнэн утгатай бол амралт, чөлөө хүсэх/ хуваарилахыг хүсэх хүсэлт нь 2 "
+#~ "дах менежерээр батламжлагдсан байна"
 
 #~ msgid "Extended Filters..."
 #~ msgstr "Өргөтгөсөн хайлт..."

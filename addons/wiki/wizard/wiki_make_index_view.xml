@@ -4,41 +4,40 @@
 
 <!-- Create Index Form view  -->
 
-    	<record id="view_wiki_make_index" model="ir.ui.view">
+        <record id="view_wiki_make_index" model="ir.ui.view">
             <field name="name">Create Index</field>
             <field name="model">wiki.make.index</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Create Menu">
-    			<separator string="Menu Information" colspan="4"/>
-    			<label string="Want to create a Index on Selected Pages ? "/>
-    			<separator string="" colspan="6" />
-    	        <label string="" colspan="2"/>
-    	        <group>
-        	    <button special="cancel" string="Cancel" icon="gtk-cancel" />
-            	<button name="wiki_do_index" string="Create Index" type="object" icon="gtk-ok"/>
-            	</group>
-			</form>
+                <form string="Create Menu" version="7.0">
+                    <header>
+                        <button name="wiki_do_index" string="Create Index" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <separator string="Menu Information"/>
+                    <label string="Want to create a Index on Selected Pages ? "/>
+                </form>
             </field>
-		</record>
+        </record>
 
 <!-- Create Index Action  -->
 
-		<record id="action_view_wiki_make_index" model="ir.actions.act_window">
+        <record id="action_view_wiki_make_index" model="ir.actions.act_window">
             <field name="name">Create Index</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wiki.make.index</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-    	</record>
+        </record>
 
 <!-- Create Index Action Window  -->
 
-		<act_window id="action_view_wiki_make_index_values"
-    		key2="client_action_multi" name="Create Index"
-    		res_model="wiki.make.index" src_model="wiki.wiki"
-    		view_mode="form" target="new" view_type="form" />
+        <act_window id="action_view_wiki_make_index_values"
+            key2="client_action_multi" name="Create Index"
+            res_model="wiki.make.index" src_model="wiki.wiki"
+            view_mode="form" target="new" view_type="form" />
 
     </data>
 </openerp>

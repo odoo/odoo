@@ -7,17 +7,16 @@
             <field name="model">account.tax.chart</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Account tax charts">
-                    <group colspan="4" >
+                <form string="Account tax charts" version="7.0">
+                    <header>
+                        <button string="Open Charts" name="account_tax_chart_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group>
                         <field name="period_id"/>
-                        <label align="0.7" colspan="6" string="(If you do not select period it will take all open periods)"/>
+                        <label colspan="4" string="(If you do not select period it will take all open periods)"/>
                         <field name="target_move"/>
-                    </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="terp-gtk-go-back-rtl" string="Open Charts" name="account_tax_chart_open_window" type="object" />
                     </group>
                 </form>
             </field>

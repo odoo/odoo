@@ -19,8 +19,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:04+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-06-28 04:38+0000\n"
+"X-Generator: Launchpad (build 15505)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -195,7 +195,8 @@ msgstr "Nữ"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -247,8 +248,8 @@ msgstr "Thông tin khác"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Địa chỉ thư điện tử công việc"
+msgid "Work Email"
+msgstr "Email công việc"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -288,8 +289,8 @@ msgstr "Loại"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "nhân viên dự kiến"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -416,12 +417,6 @@ msgstr "Thông tin liên hệ"
 #: field:hr.employee,address_id:0
 msgid "Working Address"
 msgstr "Địa chỉ làm việc"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "bàng tổng quan nguồn nhân lực"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -713,7 +708,12 @@ msgstr "Người cấp dưới"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
 msgstr ""
 
 #~ msgid "Group name"
@@ -788,6 +788,9 @@ msgstr ""
 #~ msgid "title"
 #~ msgstr "cách xưng hô"
 
+#~ msgid "Work E-mail"
+#~ msgstr "Địa chỉ thư điện tử công việc"
+
 #~ msgid "Holidays"
 #~ msgstr "Nghỉ lễ"
 
@@ -814,9 +817,6 @@ msgstr ""
 
 #~ msgid "Contact  of employee"
 #~ msgstr "Thông tin liên hệ của nhân viên"
-
-#~ msgid "Work Email"
-#~ msgstr "Email công việc"
 
 #~ msgid "Friday"
 #~ msgstr "Thứ sáu"
@@ -913,6 +913,9 @@ msgstr ""
 #~ msgid "Number of employee with that job."
 #~ msgstr "số lượng nhân viên đang làm việc trong công viêc"
 
+#~ msgid "Expected Employees"
+#~ msgstr "nhân viên dự kiến"
+
 #~ msgid ""
 #~ "You can enhance the base HR Application by installing few HR-related "
 #~ "functionalities."
@@ -932,6 +935,9 @@ msgstr ""
 
 #~ msgid "It is linked with manager of Department"
 #~ msgstr "Liên kết giũa người quản lý và phòng ban"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "bàng tổng quan nguồn nhân lực"
 
 #~ msgid "Holidays / Leaves Management"
 #~ msgstr "ngày nghỉ / quản lý nhân viên nghỉ"

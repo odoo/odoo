@@ -141,7 +141,7 @@ class membership_line(osv.osv):
     _name = 'membership.membership_line'
     _columns = {
         'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
-        'membership_id': fields.many2one('product.product', string="Membership Product", required=True),
+        'membership_id': fields.many2one('product.product', string="Membership", required=True),
         'date_from': fields.date('From', readonly=True),
         'date_to': fields.date('To', readonly=True),
         'date_cancel': fields.date('Cancel date'),

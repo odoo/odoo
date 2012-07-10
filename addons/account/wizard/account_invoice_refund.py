@@ -60,6 +60,7 @@ class account_invoice_refund(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
         journal_obj = self.pool.get('account.journal')
         user_obj = self.pool.get('res.users')
         # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes

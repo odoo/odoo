@@ -7,37 +7,38 @@
              <field name="model">account.budget.analytic</field>
              <field name="type">form</field>
              <field name="arch" type="xml">
-	             <form string="Select Dates Period">
-                    <separator string="This wizard is used to print budget" colspan="4"/>
-				    <field name="date_from"/>
-				    <field name="date_to"/>
-				    <separator colspan="4"/>
-				    <group colspan="4" col="6">
-	 					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	           			<button name="check_report" string="Print" type="object" icon="gtk-print" default_focus="1"/>
-					</group>
-				</form>
-			</field>
-		</record>
+                 <form string="Select Dates Period" version="7.0">
+                     <header>
+                         <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                         or
+                         <button string="Cancel" class="oe_link" special="cancel"/>
+                     </header>
+                     <group string="This wizard is used to print budget" col="4">
+                         <field name="date_from"/>
+                         <field name="date_to"/>
+                     </group>
+                </form>
+            </field>
+        </record>
 
-		<record id="action_account_budget_analytic" model="ir.actions.act_window">
-			<field name="name">Print Budgets</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.budget.analytic</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="account_budget_analytic_view"/>
-			<field name="target">new</field>
-		</record>
+        <record id="action_account_budget_analytic" model="ir.actions.act_window">
+            <field name="name">Print Budgets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.budget.analytic</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_budget_analytic_view"/>
+            <field name="target">new</field>
+        </record>
 
-		<record model="ir.values" id="account_budget_analytic_values">
-			<field name="model_id" ref="analytic.model_account_analytic_account" />
-			<field name="name">Print Budgets</field>
-			<field name="key2">client_print_multi</field>
-			<field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_budget_analytic'))" />
-			<field name="key">action</field>
-			<field name="model">account.analytic.account</field>
-		</record>
+        <record model="ir.values" id="account_budget_analytic_values">
+            <field name="model_id" ref="analytic.model_account_analytic_account" />
+            <field name="name">Print Budgets</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_budget_analytic'))" />
+            <field name="key">action</field>
+            <field name="model">account.analytic.account</field>
+        </record>
 
-	</data>
+    </data>
 </openerp>

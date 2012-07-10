@@ -6,21 +6,15 @@
             <field name="model">google.login</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Google login" >
-                    <group colspan="4" col="4" width="300">
-                        <field name="user" />
-                        <newline/>
-                        <label string="ex: user@gmail.com" align="1.0" colspan="2"/>
-                        <newline/>
+                <form string="Google login"  version="7.0">
+                    <header>
+                        <button name="login" string="_Login" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <field name="user" placeholder="user@gmail.com"/>
                         <field name="password" password="True"/>
-                    </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="4">
-                        <group colspan="2"/>
-                        <group colspan="2">  
-                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="login" string="_Login" type="object" icon="terp-check"/>
-                        </group>
                     </group>
                 </form>
             </field>

@@ -26,7 +26,7 @@ class crm_claim_settings(osv.osv_memory):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_claim': fields.boolean("Create Claims from Incoming Mails", readonly=True,
+        'fetchmail_claim': fields.boolean("Create Claims from Incoming Mails",
             fetchmail_model='crm.claim', fetchmail_name='Incoming Claims',
             help="""Allows you to configure your incoming mail server, and create claims from incoming emails."""),
     }

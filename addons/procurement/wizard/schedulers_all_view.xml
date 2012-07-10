@@ -4,33 +4,31 @@
 
         <!--  Compute Schedulers -->
 
-		<record id="view_compute_schedulers_wizard" model="ir.ui.view">
+        <record id="view_compute_schedulers_wizard" model="ir.ui.view">
             <field name="name">Compute Schedulers</field>
             <field name="model">procurement.order.compute.all</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Scheduler Parameters">
-                <label string="This wizard allows you to run all procurement, production and/or purchase orders that should be processed based on their configuration. By default, the scheduler is launched automatically every night by OpenERP. You can use this menu to force it to be launched now. Note that it runs in the background, you may have to wait for a few minutes until it has finished computing." colspan="4"/>
-				    <separator colspan="4"/>
-				    <field name="automatic"/>
-				    <separator colspan="4"/>
-				    <group col="2" colspan="4">
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Cancel" />
-                		<button name="procure_calculation" string="Compute Schedulers"
-                			colspan="1" type="object" icon="gtk-ok" />
-                	</group>
+                <form string="Scheduler Parameters" version="7.0">
+                    <header>
+                        <button name="procure_calculation" string="Compute Schedulers" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group string="This wizard allows you to run all procurement, production and/or purchase orders that should be processed based on their configuration. By default, the scheduler is launched automatically every night by OpenERP. You can use this menu to force it to be launched now. Note that it runs in the background, you may have to wait for a few minutes until it has finished computing.">
+                        <field name="automatic"/>
+                    </group>
                 </form>
             </field>
         </record>
 
          <act_window name="Compute Schedulers"
-		    res_model="procurement.order.compute.all"
-		    src_model="procurement.order"
-		    view_mode="form"
-		    target="new"
+            res_model="procurement.order.compute.all"
+            src_model="procurement.order"
+            view_mode="form"
+            target="new"
             key2="client_action_multi"
-		    id="action_compute_schedulers"/>
+            id="action_compute_schedulers"/>
 
-	</data>
+    </data>
 </openerp>

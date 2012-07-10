@@ -250,6 +250,7 @@ class account_voucher(osv.osv):
 
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
+    _inherit = ['mail.thread']
     _order = "date desc, id desc"
 #    _rec_name = 'number'
     _columns = {
@@ -278,7 +279,7 @@ class account_voucher(osv.osv):
              ('cancel','Cancelled'),
              ('proforma','Pro-forma'),
              ('posted','Posted')
-            ], 'State', readonly=True, size=32,
+            ], 'Status', readonly=True, size=32,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
@@ -323,7 +324,7 @@ class account_voucher(osv.osv):
         'amount': _get_amount,
         'type':_get_type,
         'state': 'draft',
-        'pay_now': 'pay_later',
+        'pay_now': 'pay_now',
         'name': '',
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
@@ -333,6 +334,11 @@ class account_voucher(osv.osv):
         'payment_rate': 1.0,
         'payment_rate_currency_id': _get_payment_rate_currency,
     }
+
+    def create(self, cr, uid, vals, context=None):
+        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [voucher], context=context)
+        return voucher
 
     def compute_tax(self, cr, uid, ids, context=None):
         tax_pool = self.pool.get('account.tax')
@@ -556,7 +562,7 @@ class account_voucher(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         def _remove_noise_in_o2m():
-            """if the line is partially reconciled, then we must pay attention to display it only once and 
+            """if the line is partially reconciled, then we must pay attention to display it only once and
                 in the good o2m.
                 This function returns True if the line is considered as noise and should not be displayed
             """
@@ -780,7 +786,7 @@ class account_voucher(osv.osv):
 
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return True
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -1249,12 +1255,16 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
+            self.post_send_note(cr, uid, [voucher.id], context=context)
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
             # We automatically reconcile the account move lines.
+            reconcile = False
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+                    reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+            if reconcile:
+                self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
@@ -1269,6 +1279,32 @@ class account_voucher(osv.osv):
         if 'date' not in default:
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
+
+    # -----------------------------------------
+    # OpenChatter notifications and need_action
+    # -----------------------------------------
+    _document_type = {
+        'sale': 'Sales Receipt',
+        'purchase': 'Purchase Receipt',
+        'payment': 'Supplier Payment',
+        'receipt': 'Customer Payment',
+        False: 'Payment',
+    }
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = "%s <b>created</b>." % self._document_type[obj.type or False]
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+
+    def post_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+
+    def reconcile_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
 
 account_voucher()
 

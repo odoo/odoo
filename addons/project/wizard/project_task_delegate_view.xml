@@ -7,28 +7,28 @@
             <field name="model">project.task.delegate</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Project Task Delegate">
-                    <field name="project_id" on_change="onchange_project_id(project_id)"/>
-                    <field name="user_id"/>
-                    <group colspan="2" col="2">
-                        <separator string="Delegated Task" colspan="2"/>
-                        <field name="name"/>
-                        <field name="planned_hours"/>
-                        <separator string="New Task Description" colspan="2"/>
-                        <field name="new_task_description" colspan="2" nolabel="1"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Validation Task" colspan="2"/>
-                        <field name="prefix" string="Validation Task Title"/>
-                        <field name="planned_hours_me"/>
-                        <field name="state"/>
-                    </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="2" col="2">
-                    </group>
-                    <group colspan="2" col="2">
-                        <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                        <button icon="gtk-ok" name="delegate" string="_Delegate" type="object"/>
+                <form string="Project Task Delegate" version="7.0">
+                    <header>
+                        <button name="delegate" string="_Delegate" type="object" class="oe_highlight"/>
+                         or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <group>
+                            <field name="project_id" on_change="onchange_project_id(project_id)"/>
+                            <separator string="Delegated Task" colspan="2"/>
+                            <field name="name"/>
+                            <field name="planned_hours"/>
+                            <separator string="New Task Description" colspan="2"/>
+                            <field name="new_task_description" colspan="2" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <separator string="Validation Task" colspan="2"/>
+                            <field name="prefix" string="Validation Task Title"/>
+                            <field name="planned_hours_me"/>
+                            <field name="state"/>
+                        </group>
                     </group>
                 </form>
             </field>

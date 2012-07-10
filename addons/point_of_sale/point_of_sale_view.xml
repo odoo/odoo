@@ -33,7 +33,6 @@
                         <field name="date_order"/>
                         <field name="session_id" required="1" />
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
-
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
@@ -46,21 +45,22 @@
                                     <field name="price_subtotal"/>
                                     <field name="price_subtotal_incl"/>
                                 </tree>
-                                <form string="Order lines">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                    <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                    <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                    <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
-                                    <field name="price_subtotal" invisible="1"/>
-                                    <field name="price_subtotal_incl" invisible="1"/>
-                                    <field name="notice"/>
+                                <form string="Order lines" version="7.0">
+                                    <group col="4">
+                                        <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
+                                        <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                        <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                        <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                        <field name="price_subtotal" invisible="1"/>
+                                        <field name="price_subtotal_incl" invisible="1"/>
+                                        <field name="notice"/>
+                                    </group>
                                 </form>
                             </field>
-                            <group colspan="4" col="7">
+                            <group class="oe_subtotal_footer">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
-                                <button name="%(action_pos_discount)d" string="Discount" icon="gtk-remove" type="action" states="draft" />
                             </group>
                         </page>
                         <page string="Payments">
@@ -70,36 +70,35 @@
                                     <field name="statement_id" />
                                     <field name="amount"/>
                                 </tree>
-                                <form string="Statement lines">
-                                    <field name="account_id"/>
-                                    <field name="amount"/>
-                                    <field name="statement_id" domain="[('company_id','=',parent.company_id),('state','=','open')]"/>
+                                <form string="Statement lines" version="7.0">
+                                    <group col="4">
+                                        <field name="account_id"/>
+                                        <field name="amount"/>
+                                        <field name="statement_id" domain="[('company_id','=',parent.company_id),('state','=','open')]"/>
+                                    </group>
                                 </form>
                             </field>
                         </page>
                         <page string="Extra Info">
-                            <group colspan="2" col="2">
-                                <separator string="General Information" colspan="2"/>
+                            <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"/>
                                 <field name="user_id"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
                             </group>
-                            <group colspan="2" col="3">
-                                <separator string="Accounting Information" colspan="3"/>
+                            <group string="Accounting Information">
                                 <field name="sale_journal" domain="[('type','=','sale')]"/>
-                                <button name="done" string="Post Entries" icon="gtk-apply" type="workflow" states="paid"/>
-                                <field name="invoice_id" colspan="2" readonly="1"
+                                <field name="invoice_id" readonly="1"
                                     attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
                                 <button name="%(pos_invoice_report)d" string="Re-Print"
                                     icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
-                                <field name="account_move" colspan="3" readonly="1"
+                                <field name="account_move" readonly="1"
                                     attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
                             </group>
                         </page>
                         <page string="Notes" >
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <field name="note"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -138,23 +137,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
+                    <field name="name" string="Sales Order"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_order"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
                     <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
-                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="user_id"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator string="" orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator string="" orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
@@ -204,12 +201,14 @@
             <field name="model">pos.order.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS Order line">
-                    <field name="product_id" />
-                    <field name="qty" />
-                    <field name="discount" />
-                    <field name="price_unit" />
-                    <field name="create_date" />
+                <form string="POS Order line" version="7.0">
+                    <group col="4">
+                        <field name="product_id" />
+                        <field name="qty" />
+                        <field name="discount" />
+                        <field name="price_unit" />
+                        <field name="create_date" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -251,14 +250,16 @@
             <field name="model">report.transaction.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
-                    <field name="user_id"/>
-                    <field name="journal_id"/>
-                    <field name="jl_id"/>
-                    <field name="date_create" widget="date"/>
-                    <field name="no_trans"/>
-                    <field name="amount"/>
-                    <field name="invoice_id"/>
+                <form string="POS " version="7.0">
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="journal_id"/>
+                        <field name="jl_id"/>
+                        <field name="date_create" widget="date"/>
+                        <field name="no_trans"/>
+                        <field name="amount"/>
+                        <field name="invoice_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -342,11 +343,13 @@
             <field name="model">report.sales.by.user.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
-                    <field name="date_order" widget="date"/>
-                    <field name="qty"/>
-                    <field name="amount"/>
-                    <field name="user_id"/>
+                <form string="POS " version="7.0">
+                    <group col="4">
+                        <field name="date_order" widget="date"/>
+                        <field name="qty"/>
+                        <field name="amount"/>
+                        <field name="user_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -408,11 +411,13 @@
             <field name="model">report.sales.by.user.pos.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
-                    <field name="date_order" widget="date"/>
-                    <field name="qty"/>
-                    <field name="amount"/>
-                    <field name="user_id"/>
+                <form string="POS " version="7.0">
+                    <group col="4">
+                        <field name="date_order" widget="date"/>
+                        <field name="qty"/>
+                        <field name="amount"/>
+                        <field name="user_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -474,13 +479,15 @@
             <field name="model">report.sales.by.margin.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
-                    <field name="user_id"/>
-                    <field name="product_name"/>
-                    <field name="date_order" widget="date"/>
-                    <field name="qty"/>
-                    <field name="net_margin_per_qty"/>
-                    <field name="total"/>
+                <form string="POS " version="7.0">
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="product_name"/>
+                        <field name="date_order" widget="date"/>
+                        <field name="qty"/>
+                        <field name="net_margin_per_qty"/>
+                        <field name="total"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -541,13 +548,15 @@
             <field name="model">report.sales.by.margin.pos.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS ">
-                    <field name="user_id"/>
-                    <field name="product_name"/>
-                    <field name="date_order" widget="date"/>
-                    <field name="qty"/>
-                    <field name="net_margin_per_qty"/>
-                    <field name="total"/>
+                <form string="POS " version="7.0">
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="product_name"/>
+                        <field name="date_order" widget="date"/>
+                        <field name="qty"/>
+                        <field name="net_margin_per_qty"/>
+                        <field name="total"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -610,8 +619,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                   <group name="status" position="after">
-                      <group colspan="2" col="2" name="pos">
-                          <separator string="Point of Sale" colspan="2"/>
+                      <group name="pos" string="Point of Sale">
                           <field name="pos_categ_id"/>
                           <field name="to_weight" />
                       </group>

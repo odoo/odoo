@@ -4,23 +4,23 @@
 
 <!-- Lunch cashbox  -->
 
-  		<record id="view_lunch_cashbox_clean" model="ir.ui.view">
+          <record id="view_lunch_cashbox_clean" model="ir.ui.view">
             <field name="name">lunch.cashbox.clean.form</field>
             <field name="model">lunch.cashbox.clean</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reset cashbox">
-                	<group colspan="4" >
-                		 <label string="Are you sure you want to reset this cashbox ?"/>
+                <form string="Reset cashbox" version="7.0">
+                    <header>
+                        <button name="set_to_zero" string="Set to Zero" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <label string="Are you sure you want to reset this cashbox ?"/>
                     </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button  icon="gtk-cancel" special="cancel" string="No"/>
-                    	<button  icon="gtk-ok" name="set_to_zero" string="Set to Zero" type="object"/>
-                   </group>
                </form>
             </field>
-  		</record>
+          </record>
 
         <record id="action_lunch_cashbox_clean" model="ir.actions.act_window">
             <field name="name">Set CashBox to Zero</field>
@@ -32,9 +32,9 @@
         </record>
 
         <act_window id="action_lunch_cashbox_clean_values"
-    		key2="client_action_multi" name="Set CashBox to Zero"
-    		res_model="lunch.cashbox.clean" src_model="lunch.cashbox"
-    		view_mode="form" target="new" view_type="form" />
+            key2="client_action_multi" name="Set CashBox to Zero"
+            res_model="lunch.cashbox.clean" src_model="lunch.cashbox"
+            view_mode="form" target="new" view_type="form" />
 
     </data>
 </openerp>

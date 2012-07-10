@@ -8,11 +8,10 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                   <field name="pricelist_id" position="before">
-                       <field name="location_id" widget="selection" context="{'location': self}"/>
-                       <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
-                       <separator orientation="vertical"/>
-                   </field>
+                <field name="pricelist_id" position="before">
+                    <field name="location_id" widget="selection" context="{'location': self}"/>
+                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                </field>
             </field>
         </record>
 
@@ -22,15 +21,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <form position="inside">
-                    <group col="2" colspan="2">
-                        <separator string="Accounting Stock Properties" colspan="2"/>
+                <data>
+                    <xpath expr="/form/sheet//group[@name='account_stock_property']" position="inside">
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_journal"/>
-                    </group>
-                </form>
+                    </xpath>
+                </data>
             </field>
         </record>
 
@@ -42,13 +40,15 @@
             <field name="arch" type="xml">
                 <page position="after" string="Information">
                     <page string="Properties">
-                        <separator string="Counter-Part Locations Properties" groups="stock.group_locations" colspan="4"/>
-                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
-                        <separator string="Accounting Entries" colspan="4"/>
-                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <group string="Counter-Part Locations Properties" groups="stock.group_locations">
+                            <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                        </group>
+                        <group string="Accounting Entries">
+                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
                     </page>
                 </page>
             </field>
@@ -60,13 +60,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="standard_price" position="replace">
-                    <label string="Cost Price" for="standard_price" align="1.0"/>
-                    <group col="2" colspan="1">
+                <field name="standard_price" position="replace" version="7.0">
+                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                    <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="Update"
                             type="action" icon="gtk-execute" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"/>
-                    </group>
+                    </div>
                 </field>
             </field>
         </record>
@@ -78,7 +78,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="priority">26</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/group[@name='properties']" position="before">
+                <xpath expr="//group[@name='properties']" position="before">
                     <group groups="stock.group_inventory_valuation">
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
@@ -102,28 +102,52 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="status" position="after">
-                    <group colspan="2" col="3">
-                        <separator string="Stocks" colspan="4"/>
+                <group name="status" position="before" version="7.0">
+                    <group string="Stock and Expected Variations">
                         <field name="qty_available"/>
-                        <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
-                            type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user"/>
-                        <newline/>
-                        <field name="virtual_available"/>
-                    </group>
-                    <group colspan="2" col="2" name="stock_variations">
-                        <separator string="Expected Stock Variations" colspan="2"/>
                         <field name="incoming_qty"/>
+                        <label for="virtual_available"/>
+                        <div>
+                            <field name="virtual_available" class="oe_inline"/>
+
+                            <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
+                                type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user" class="oe_inline"/>
+                        </div>
                         <field name="outgoing_qty"/>
                     </group>
-                    <group colspan="2" col="2" name="lot" groups="stock.group_tracking_lot,stock.group_production_lot">
-                        <separator string="Lots" colspan="4"/>
+                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
                         <field name="track_incoming" groups="stock.group_tracking_lot"/>
                         <field name="track_outgoing" groups="stock.group_tracking_lot"/>
                     </group>
                 </group>
             </field>
+        </record>
+        
+        <record id="action_receive_move" model="ir.actions.act_window">
+            <field name="name">Receive Products</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_id','=',active_id),('picking_id.type','=','in')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
+            <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
+        </record>
+       
+        <record id="action_deliver_move" model="ir.actions.act_window">
+            <field name="name">Receive Products</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_id','=',active_id),('picking_id.type','=','out')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
+            <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
         </record>
 
         <record model="ir.ui.view" id="product.product_kanban_view">
@@ -136,6 +160,8 @@
                     <field name="type"/>
                     <field name="product_image"/>
                     <field name="list_price"/>
+                    <field name="reception_count"/>
+                    <field name="delivery_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
@@ -149,8 +175,17 @@
                                         <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock available: <field name="virtual_available"/> <field name="uom_id"/></li>
                                         <li>Price: <field name="lst_price"></field></li>
-                                        <li>Cost: <field name="standard_price"></field></li>
+                                        <!-- TODO the 'groups' attribute doesn't work in kanban views -->
+                                        <li groups="base.group_user">Cost: <field name="standard_price"></field></li>
                                     </ul>
+                                    <div groups="base.group_user">
+                                        <a name="%(action_receive_move)d" type="action">
+                                            <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
+                                        </a>
+                                        <a name="%(action_deliver_move)d" type="action">
+                                            <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <script>
@@ -170,7 +205,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="store" position="after">
-                    <group col="2" colspan="2" name="store" groups="stock.group_locations">
+                    <group name="store" groups="stock.group_locations">
                         <separator string="Counter-Part Locations Properties" colspan="2"/>
                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>

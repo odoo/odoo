@@ -24,7 +24,6 @@
     'name': 'Sales and MRP Management',
     'version': '1.0',
     'category': 'Hidden',
-    'complexity': "easy",
     'description': """
 This module provides facility to the user to install mrp and sales modulesat a time.
 ====================================================================================

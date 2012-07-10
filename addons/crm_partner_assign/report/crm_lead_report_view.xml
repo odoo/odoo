@@ -10,11 +10,6 @@
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <group>
-                        <filter string="Last 30 Days" icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-week" string="7 Days"
-                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                        <separator orientation="vertical" />
                         <filter icon="terp-check"
                             string="Current"
                             domain="[('state','in',('draft','open'))]"/>
@@ -44,7 +39,7 @@
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By...">
-                       <filter string="Salesman" name="user" icon="terp-personal"
+                       <filter string="Salesperson" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
@@ -62,7 +57,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Company" icon="terp-go-home"

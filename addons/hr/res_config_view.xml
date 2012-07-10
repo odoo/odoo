@@ -14,30 +14,38 @@
             <field name="model">hr.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string ="Configure Human Resources" layout="manual">
-                    <div class="oe_form_topbar">
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
-                    </div>
-                    <sheet layout="auto">
-                        <separator string="Additional Features" colspan="4"/>
-                        <field name="module_hr_expense"/>
-                        <field name="module_hr_recruitment"/>
-                        <field name="module_hr_evaluation"/>
-                        <field name="module_hr_contract"/>
-                        <field name="module_hr_holidays"/>
-                        <newline/>
-                        <field name="module_hr_payroll"/>
-                        <button colspan="2" name="%(open_payroll_modules)d" type="action"
-                            string="Install Country-Specific Payroll" icon="gtk-go-forward"/>
-
-                        <separator string="Timesheets" colspan="4"/>
-                        <field name="module_hr_attendance"/>
-                        <field name="module_hr_timesheet"/>
-                        <field name="module_hr_timesheet_sheet"/>
-
-                        <group name="config_recruitment" colspan="4"/>
-                    </sheet>
+                <form string="Configure Human Resources" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Additional Features">
+                        <group>
+                            <field name="module_hr_expense"/>
+                            <field name="module_hr_evaluation"/>
+                            <field name="module_hr_holidays"/>
+                        </group>
+                        <group>
+                            <field name="module_hr_recruitment"/>
+                            <field name="module_hr_contract"/>
+                            <label for="module_hr_payroll"/>
+                            <div>
+                                <field name="module_hr_payroll"/>
+                                <button name="%(open_payroll_modules)d" type="action"
+                                    string="Install Country-Specific Payroll" icon="gtk-go-forward"
+                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Timesheets">
+                            <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)"/>
+                            <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)"/>
+                            <field name="module_hr_timesheet_sheet"/>
+                        </group>
+                        <group name="config_recruitment"/>
+                    </group>
                 </form>
             </field>
         </record>

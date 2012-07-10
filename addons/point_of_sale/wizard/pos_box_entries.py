@@ -34,7 +34,7 @@ def get_journal(self, cr, uid, context=None):
          @param context: A standard dictionary
          @return :Return the list of journal
     """
-
+    
     journal_obj = self.pool.get('account.journal')
     statement_obj = self.pool.get('account.bank.statement')
 
@@ -42,7 +42,7 @@ def get_journal(self, cr, uid, context=None):
     obj_ids = statement_obj.search(cr, uid, [('state', '=', 'open'), ('user_id', '=', uid), ('journal_id', 'in', j_ids)], context=context)
     res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context=context)
     res = [(r['journal_id']) for r in res]
-    if not len(res):
+    if not len(res) and context:
         raise osv.except_osv(_('Error !'), _('You do not have any open cash register. You must create a payment method or open a cash register.'))
     return res
 

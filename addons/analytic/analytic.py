@@ -27,6 +27,7 @@ import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
+    _inherit = ['mail.thread']
     _description = 'Analytic Account'
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
@@ -155,7 +156,11 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
         'code': fields.char('Code/Reference', size=24, select=True),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
+                                 help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
+                                  "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
+                                  "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
+                                  "The special type 'Template of Project' allows you to define a template with default data that you can reuse easily."),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
@@ -166,23 +171,28 @@ class account_analytic_account(osv.osv):
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'user_id': fields.many2one('res.users', 'Account Manager'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
+        'user_id': fields.many2one('res.users', 'Project Manager'),
+        'manager_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'State', required=True,
-                                  help='* When an account is created its in \'Draft\' state.\
-                                  \n* If any associated partner is there, it can be in \'Open\' state.\
-                                  \n* If any pending balance is there it can be in \'Pending\'. \
-                                  \n* And finally when all the transactions are over, it can be in \'Close\' state. \
-                                  \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
-                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
+    
+    def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
+        res={}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            if partner.user_id:
+                res['manager_id'] = partner.user_id.id
+            if not name:
+                res['name'] = _('Contract: ') + partner.name
+        return {'value': res}
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -197,6 +207,7 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'type': 'normal',
         'company_id': _default_company,
+        'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account'),
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
@@ -266,6 +277,17 @@ class account_analytic_account(osv.osv):
             account = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        if contract:
+            self.create_send_note(cr, uid, [contract], context=context)
+        return contract
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+
 account_analytic_account()
 
 
@@ -290,17 +312,17 @@ class account_analytic_line(osv.osv):
     }
 
     _order = 'date desc'
-    
+
     def _check_no_view(self, cr, uid, ids, context=None):
         analytic_lines = self.browse(cr, uid, ids, context=context)
         for line in analytic_lines:
             if line.account_id.type == 'view':
                 return False
         return True
-    
+
     _constraints = [
         (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
-    ]    
+    ]
 
 account_analytic_line()
 

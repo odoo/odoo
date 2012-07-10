@@ -1,0 +1,587 @@
+# Mongolian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-06-24 14:54+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Mongolian <mn@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-06-25 05:15+0000\n"
+"X-Generator: Launchpad (build 15482)\n"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,tasks:0
+#: help:report_account_analytic.planning.user,tasks:0
+msgid ""
+"This value is given by the sum of work remaining to do on the task for this "
+"planning, expressed in days."
+msgstr ""
+"Энэ утга нь төлөвлөлт дээрх энэ даалгаврыг хийхэд үлдэж байгаа нийлбэр "
+"хугацаа өдрөөр илэрхийлж байна."
+
+#. module: project_planning
+#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
+#: model:ir.ui.menu,name:project_planning.menu_board_planning
+#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_stat
+msgid "Planning Statistics"
+msgstr "Төлөвлөлтийн Статистик"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_line
+#: view:report_account_analytic.planning.line:0
+msgid "Planning Line"
+msgstr "Төлөвлөлтийн Мөр"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Unallocated Time"
+msgstr "Хуваарилагдаагүй Нийт Хугацаа"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,name:0
+msgid "Planning Name"
+msgstr "Төлөвлөлтийн Нэр"
+
+#. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Алдаа ! Та рекурсив цэс үүсгэж болохгүй!"
+
+#. module: project_planning
+#: view:board.board:0
+msgid "My Project's planning"
+msgstr "Миний Төслийн Төлөвлөлт"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,timesheet:0
+#: report:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,sum_amount_real:0
+#: field:report_account_analytic.planning.user,timesheet:0
+msgid "Timesheet"
+msgstr "Цагийн хуудас"
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid ""
+"With its global system to schedule all resources of a company (people and "
+"material), OpenERP allows you to encode and then automatically compute tasks "
+"and phases scheduling, track resource allocation and availability."
+msgstr ""
+"Үүний глобаль системээр компаний бүх нөөц (хүн, материал)-г товлодог. "
+"OpenERP даалгавруудтыг автомат тооцоолох, шатуудыг товлох, нөөцийн "
+"хуваарилалтыг хянах, хүрэлцэх эсэхийг шалгах зэрэг боломжийг олгодог."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total planned tasks"
+msgstr "Нийт төлөвлөсөн даалгаварууд"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,account_id:0
+msgid "Account"
+msgstr "Данс"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_project_task
+msgid "Task"
+msgstr "Даалгавар"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+#: view:report_account_analytic.planning.line:0
+msgid "Notes"
+msgstr "Тэмдэглэгээ"
+
+#. module: project_planning
+#: field:account.analytic.account,planning_ids:0
+#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form
+#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning
+msgid "Plannings"
+msgstr "Төлөвлөлт"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Project"
+msgstr "Төсөл"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Start Task"
+msgstr "Даалгаврыг эхлэх"
+
+#. module: project_planning
+#: selection:report_account_analytic.planning,state:0
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+#: view:report_account_analytic.planning.line:0
+msgid "Total Planned (in Days)"
+msgstr "Нийт төлөвлөсөн (Өдрөөр)"
+
+#. module: project_planning
+#: constraint:report_account_analytic.planning:0
+msgid ""
+"Invalid planning ! Planning dates can't overlap for the same responsible. "
+msgstr ""
+"Зөв биш төлөвлөлт ! Нэг хариуцагчийн хувьд төлөвлөлтийн хугацаа давхцаж "
+"болохгүй. "
+
+#. module: project_planning
+#: field:report_account_analytic.planning,planning_account:0
+msgid "Planning By Account"
+msgstr "Төлөвлөлт Дансаар"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Current Plannings"
+msgstr "Идэвхтэй Төлөвлөлтууд"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Шинжилгээний Данс"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Reset to Draft"
+msgstr "Ноороглох"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Extra Info"
+msgstr "Нэмэлт мэдээлэл"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Нийт Төлөвлөгдсөн"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,timesheet:0
+#: help:report_account_analytic.planning.user,timesheet:0
+msgid ""
+"This value is given by the sum of all work encoded in the timesheet(s) "
+"between the 'Date From' and 'Date To' of the planning."
+msgstr ""
+"Энэ утга нь төлөвлөлтөд орсон цагийн хуудсын бүх ажлын 'Эхлэх огноо' болон "
+"'Дуусах огноо'-нуудыг нийлбэр."
+
+#. module: project_planning
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,plan_open:0
+#: field:report_account_analytic.planning.user,plan_open:0
+msgid "Time Allocation without Tasks"
+msgstr "Даалгавар үгүй хуваарилагдсан хугацаанууд"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
+msgstr "Төлөвлөлтийн мөрүүд"
+
+#. module: project_planning
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Алдаа! Рекурсив компани үүсгэж болохгүй."
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,account_id:0
+#: field:report_account_analytic.planning.line,account_id:0
+msgid "Analytic account"
+msgstr "Шинжилгээний Санхүү"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,plan_open:0
+msgid ""
+"This value is given by the sum of time allocation with the checkbox "
+"'Assigned in Taks' set to FALSE, expressed in days."
+msgstr ""
+"Энэ утга нь 'Даалгаварт оноогдсон' нь тэмдэглэгдээгүй хуваарилагдсан "
+"хугацаануудын нийлбэр өдрөөр."
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Miscellaneous"
+msgstr ""
+
+#. module: project_planning
+#: help:res.company,planning_time_mode_id:0
+msgid "This will set the unit of measure used in plannings."
+msgstr "Энэ нь төлөвлөлтөнд хэмжих нэгж болж тохируулагдана."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "HR Planning"
+msgstr "Хүний Нөөцийн Төлөвлөлт"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,tasks:0
+#: field:report_account_analytic.planning.user,tasks:0
+msgid "Remaining Tasks"
+msgstr "Үлдсэн Даалгаврууд"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: model:ir.actions.report.xml,name:project_planning.report_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning
+#: model:ir.ui.menu,name:project_planning.next_id_85
+#: field:project.task,planning_line_id:0
+#: view:report_account_analytic.planning:0
+#: field:report_account_analytic.planning.account,planning_id:0
+#: field:report_account_analytic.planning.line,planning_id:0
+#: field:report_account_analytic.planning.stat,planning_id:0
+#: field:report_account_analytic.planning.user,planning_id:0
+msgid "Planning"
+msgstr "Төлөвлөлт"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "Хэнд :"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Time Encoding"
+msgstr "Хугацааны Кодлол"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,free:0
+msgid "Unallocated Time"
+msgstr "Хуваарилагдаагүй Хугацаа"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,plan_open:0
+msgid ""
+"This value is given by the sum of time allocation without task(s) linked, "
+"expressed in days."
+msgstr ""
+"Хуваарилагдсан боловч даалгавар холбогдоогүй хугацаануудын нийлбэр өдөрөөр."
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Delegate"
+msgstr "Ацаглах"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Төлөвлөлтийн шинжилгээ"
+
+#. module: project_planning
+#: help:report_account_analytic.planning,business_days:0
+msgid ""
+"Set here the number of working days within this planning for one person full "
+"time"
+msgstr ""
+"Энэ төлөвлөлтөнд нэг хүн бүтэн цагаар ажиллахад хэдэн цаг ажиллах ажлын "
+"өдөрийг энд тааруулна."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "["
+msgstr "["
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From :"
+msgstr "Хаанаас :"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,planning_user_ids:0
+msgid "Planning By User"
+msgstr "Төлөвлөлт Хэрэглэгчээр"
+
+#. module: project_planning
+#: model:ir.actions.act_window,name:project_planning.act_task_of_lines
+#: view:report_account_analytic.planning:0
+#: field:report_account_analytic.planning.stat,sum_amount_tasks:0
+msgid "Tasks"
+msgstr "Даалгаврууд"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning By Account (in Days)"
+msgstr "Төлөвлөлт Дансаар (өдрөөр)"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Time without tasks"
+msgstr "Даалгаваргүй хугацаа"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,date_from:0
+msgid "Start Date"
+msgstr "Эхлэх огноо"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,total_free:0
+msgid "Total Free"
+msgstr "Нийт Чөлөөтэй хугацаа"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,plan_tasks:0
+msgid ""
+"This value is given by the sum of time allocation with the checkbox "
+"'Assigned in Taks' set to TRUE expressed in days."
+msgstr ""
+"Хуваарилагдсан хугацааны 'Даалгавар оноогдоогүй' гэдэг нь тэмдэглэгдсэн "
+"хугацаануудын нийлбэр өдөрөөр."
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Ажлын өдөрөөр тооцоологдоно - (Даалгаварт хуваарилагдаагүй хугацаа + "
+"Даалгаварт хуваарилагдаагүй хугацаа + Амралт, Чөлөө)"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount_unit:0
+msgid "Qty UoM"
+msgstr "Тоо хэмжээ Хэмжих Нэгж"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,note:0
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
+#: view:report_account_analytic.planning:0
+msgid "Planning by Account"
+msgstr "Төлөвлөлт Дансаар"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Pending"
+msgstr "Хүлээгдэж буй"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,sum_amount:0
+msgid "Planned Days"
+msgstr "Төлөвлөгдсөн Өдөр"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,state:0
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,holiday:0
+msgid ""
+"This value is given by the total of validated leaves into the 'Date From' "
+"and 'Date To' of the planning."
+msgstr ""
+"Өгөгдсөн төлөвлөлтийн эхлэх, дуусах хугацааны хоорон дахь батлагдсан амралт "
+"чөлөөний хугацааны нийлбэрийн утга."
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,user_id:0
+#: report:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,user_id:0
+#: field:report_account_analytic.planning.user,user_id:0
+msgid "User"
+msgstr "Хэрэглэгч"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Remaining Tasks"
+msgstr "Бүх үлдсэн даалгаврууд"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount_in_base_uom:0
+msgid "Quantity in base uom"
+msgstr "UOM дээр суурилсан тоо хэмжээ"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,plan_tasks:0
+msgid "Time Planned on Tasks"
+msgstr "Даалгаврууд дээрх төлөвлөгдсөн хугацаа"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount:0
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,code:0
+msgid "Code"
+msgstr "Код"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: field:report_account_analytic.planning,line_ids:0
+msgid "Planning lines"
+msgstr "Төлөвлөлтийн мөрүүд"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Done"
+msgstr "Хийгдсэн"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning By User (in Days)"
+msgstr "Төлөвлөлт хэрэглэгчээр (өдөрөөр)"
+
+#. module: project_planning
+#: view:report_account_analytic.planning.stat:0
+msgid "Planning statistics"
+msgstr "Төлөвлөлтийн статистик"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Open"
+msgstr "Нээх"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_user
+#: view:report_account_analytic.planning:0
+msgid "Planning by User"
+msgstr "Төлөвлөлт хэрэглэгчээр"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Information"
+msgstr "Мэдээлэл"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,business_days:0
+msgid "Business Days"
+msgstr "Ажлын өдөрууд"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Reactivate"
+msgstr "Дахин идэвхжүүлэх"
+
+#. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+"Алдаа ! Даалгаврын дуусах хугацаа нь эхлэх хугацаанаасаа хойно байх ёстой"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,user_id:0
+msgid "Responsible"
+msgstr "Хариуцагч"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
+msgid "Planning stat"
+msgstr "Төлөвлөлтийн статистик"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,plan_tasks:0
+msgid "Time Allocation of Tasks"
+msgstr "Даалгавруудын хуваарилагдсан хугацаа"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Summary by user"
+msgstr "Товчоо хэрэглэгчээр"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Time Allocation without Tasks"
+msgstr "Даалгаваргүй Хугацааны Хуваарилалтын Дүн"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,holiday:0
+msgid "Leaves"
+msgstr "Амралт, чөлөө"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Time Allocation of Tasks"
+msgstr "Даалгавруудад Хуваарилагдсан Нийт Хугацаа"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,date_to:0
+msgid "End Date"
+msgstr "Дуусах огноо"
+
+#. module: project_planning
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "Компаний нэр үл давхцах байх ёстой !"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Remaining tasks"
+msgstr "Үлдсэн даалгаврууд"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Summary by project"
+msgstr "Төслөөрх товчоо"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible :"
+msgstr "Хариуцагч :"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "]"
+msgstr "]"
+
+#. module: project_planning
+#: field:res.company,planning_time_mode_id:0
+msgid "Planning Time Unit"
+msgstr "Төлөвлөлтийн Хугацааны Нэгж"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,task_ids:0
+msgid "Planning Tasks"
+msgstr "Төлөвлөлтийн Даалгаврууд"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,manager_id:0
+msgid "Manager"
+msgstr "Менежер"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,plan_tasks:0
+msgid ""
+"This value is given by the sum of time allocation with task(s) linked, "
+"expressed in days."
+msgstr "Даалгаварт хуваарилагдсан хугаануудын нийлбэр өдөрөөр."
+
+#~ msgid "Miscelleanous"
+#~ msgstr "Бусад"

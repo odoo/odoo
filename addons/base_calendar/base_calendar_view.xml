@@ -8,63 +8,50 @@
             <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                    <div class="oe_form_topbar">
-                        <button name="do_tentative"
-                            states="needs-action,declined,accepted"
-                            string="Uncertain" type="object"
-                            />
-                        <button name="do_accept" string="Accept"
-                            states="needs-action,tentative,declined"
-                            type="object" />
-                        <button
-                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            string="Delegate" type="action"
-                           
-                            states="needs-action,tentative,declined,accepted"
-                            context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                        <button name="do_decline" string="Decline"
-                            states="needs-action,tentative,accepted"
-                            type="object" />
-                        <div class="oe_right">
-                            <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
+                <form string="Invitation details" version="7.0">
+                    <header>
+                        <button name="do_tentative" states="needs-action,declined,accepted" string="Uncertain" type="object" class="oe_highlight"/>
+                        <button name="do_accept" string="Accept" states="needs-action,tentative,declined" type="object" class="oe_highlight"/>
+                        <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" string="Delegate" type="action" states="needs-action,tentative,declined,accepted" context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                        <button name="do_decline" string="Decline" states="needs-action,tentative,accepted" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
+                    </header>
+                    <sheet>
+
+                        <div class="oe_title">
+                            <label for="email" string="Invitation To" class="oe_edit_only" /> 
+                            <h1>
+                                <field name="email" class="oe_inline" />
+                                (<field name="language" class="oe_inline" />)
+                            </h1>
+                            
+                            <h2>
+                                From <field name="event_date" class="oe_inline" />
+                                to <field name="event_end_date" class="oe_inline"/>
+                            </h2>
                         </div>
-                        <div class="oe_clear"/>
-                    </div>
-                    <sheet string="Invitation details" layout="auto">
-                        <group col="6" colspan="4">
-                            <field name="email" string="Invitation To"/>
-                            <field name="cutype" string="Invitation Type" />
-                            <field name="rsvp" />
-                            <field name="role" string="Role" />
-                            <field name="sent_by_uid" string="Invitation From" />
+                        <group>
+                            <group>
+                                <field name="sent_by_uid" string="Invitation From" />
+                                <field name="user_id" string="Invited User"/>
+                                <field name="partner_id" string="Contact" />
+                            </group>
+                            <group>
+                                <field name="cutype" string="Invitation Type" />
+                                <field name="role" string="Role" />
+                                <field name="rsvp" />
+                                <field name="ref" readonly="1"/>
+                            </group>
                         </group>
-                        <notebook colspan="4">
-                            <page string="Invitation">
-                                <separator string="Invitation Detail" colspan="4" />
-                                <group colspan="4" col="4">
-                                    <field name="user_id" string="Invited User"/>
-                                    <newline/>
-                                    <field name="partner_id"
-                                        string="Contact" />
-                                </group>
-                                <separator string="Event Detail" colspan="4" />
-                                <group colspan="4" col="4">
-                                    <field name="event_date" />
-                                    <field name="event_end_date" />
-                                    <field name="language"/>
-                                    <field name="ref" colspan="4" readonly="1"/>
-                                </group>
-                            </page>
-                            <page string="Delegation Info">
-                                <separator string="Delegated From" colspan="4" />
-                                <field name="parent_ids" nolabel="1"
-                                    colspan="4" readonly="1" />
-                                <separator string="Delegated To" colspan="4" />
-                                <field name="child_ids" nolabel="1"
-                                    colspan="4" readonly="1" />
-                            </page>
-                        </notebook>
+                        <group>
+                            <group string="Delegated From">
+                                <field name="parent_ids" readonly="1" nolabel="1" />
+                            </group>
+                            <group string="Delegated To" >
+                                <field name="child_ids" readonly="1" nolabel="1" />
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -85,21 +72,6 @@
                     <field name="cutype" string="Invitation Type"/>
                     <field name="state" />
                     <field name="rsvp" string="Required to Join"/>
-                    <button name="do_tentative" states="needs-action,declined,accepted"
-                                string="Uncertain" type="object"
-                                icon="terp-crm" />
-                    <button name="do_accept" string="Accept"
-                        states="needs-action,tentative,declined"
-                        type="object" icon="gtk-apply" />
-                    <button name="do_decline" string="Decline"
-                        states="needs-action,tentative,accepted"
-                        type="object" icon="gtk-cancel" />
-                    <button
-                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                        string="Delegate" type="action"
-                        icon="gtk-sort-descending"
-                        states="needs-action,tentative,declined,accepted"
-                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                 </tree>
             </field>
         </record>
@@ -112,6 +84,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
+                   <field name="email" string="Email"/>
+                   <separator orientation="vertical"/>
+                   <field name="event_date"/>
+                   <separator orientation="vertical"/>
                    <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
                        domain="[('state','=', 'needs-action')]"
                        help="Invitations To Review" />
@@ -125,11 +101,9 @@
                        domain="[('state','=', 'delegated')]"
                        help="Delegated Invitations" />
                    <separator orientation="vertical"/>
-                   <field name="email"/>
                    <field name="user_id" string="Responsible"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type"/>
-                   <field name="event_date"/>
                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]"
@@ -144,7 +118,7 @@
                         <filter string="Required Reply" icon="terp-mail-replied"
                             domain="[]" context="{'group_by':'rsvp'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize" help="Invitation Type"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" help="Invitation Type"
                             domain="[]" context="{'group_by':'state'}" />
                     </group>
                </search>
@@ -177,14 +151,16 @@
             <field name="model">res.alarm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reminder details">
-                    <field name="name" />
-                    <field name="active" />
-                    <separator string="Reminder Details" colspan="4" />
-                    <field name="trigger_duration" select="1" />
-                    <field name="trigger_interval" select="1" />
-                    <field name="trigger_occurs" select="1" />
-                    <field name="trigger_related" select="1" />
+                <form string="Reminder details" version="7.0">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="active" />
+                        <separator string="Reminder Details" colspan="4" />
+                        <field name="trigger_duration" />
+                        <field name="trigger_interval" />
+                        <field name="trigger_occurs" />
+                        <field name="trigger_related" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -197,11 +173,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Reminder details">
-                <field name="name" select="1"/>
-                <field name="trigger_interval" select="1"/>
-                <field name="trigger_duration" select="1"/>
-                <field name="trigger_occurs" select="1"/>
-                <field name="trigger_related" select="1"/>
+                <field name="name"/>
+                <field name="trigger_interval"/>
+                <field name="trigger_duration"/>
+                <field name="trigger_occurs"/>
+                <field name="trigger_related"/>
                 </tree>
             </field>
         </record>
@@ -228,35 +204,21 @@
             <field name="model">calendar.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="do_confirm"
-                        string="Confirm"
-                        states="tentative,cancelled"
-                        type="object"
-                        />
-                    <button name="do_tentative"
-                        states="confirmed,cancelled"
-                        string="Uncertain"
-                        type="object"
-                        />
-                    <button name="do_cancel"
-                        string="Cancel"
-                        states="tentative,confirmed"
-                        type="object"
-                        />
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Events" layout="auto">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1" string="Summary"
+                <form string="Events" version="7.0">
+                <header>
+                    <button name="do_confirm" string="Confirm" states="tentative,cancelled" type="object" class="oe_highlight"/>
+                    <button name="do_tentative" states="confirmed,cancelled" string="Uncertain" type="object" class="oe_highlight"/>
+                    <button name="do_cancel" string="Cancel" states="tentative,confirmed" type="object" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
+                <sheet>
+                    <group col="6">
+                        <field name="name" string="Summary"
                             colspan="4" required="1" />
                         <field name="allday" colspan="2" on_change="onchange_dates(date,False,False,allday)" />
                         <newline/>
-                        <field name="date" string="Start Date" required="1" select="1"
+                        <field name="date" string="Start Date" required="1"
                             on_change="onchange_dates(date,duration,False,allday)" />
                         <field name="duration" widget="float_time"
                             on_change="onchange_dates(date,duration,False,allday)" attrs="{'invisible': [('allday', '=', True)]}"/>
@@ -269,7 +231,7 @@
                            <field name="recurrency"/>
                         </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                     <page string="Event">
                         <group col="6" colspan="4">
                              <separator colspan="6" string="Visibility"/>
@@ -279,73 +241,74 @@
                              <field name="recurrent_id" invisible="1" />
                              <field name="recurrent_uid" invisible="1" />
                         </group>
-                        <separator string="Description" colspan="4" />
-                        <field name="description" nolabel="1" colspan="4" />
-                        </page>
-                        <page string="Invitation Detail">
-                            <button string="Invite People"
-                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                icon="terp-partner" type="action"
-                                context="{'model' : 'calendar.event', 'attendee_field':'attendee_ids'}" colspan="2"/>
-                            <field name="attendee_ids" colspan="4"
-                                nolabel="1" widget="one2many" mode="tree,form">
-                                <tree string="Invitation details" editable="top">
-                                    <field name="sent_by_uid" string="From"/>
-                                    <field name="user_id" string="To"/>
-                                    <field name="email" />
-                                    <field name="role" width="200" select="1" />
-                                    <field name="state" />
-                                    <button name="do_tentative"
-                                        states="needs-action,declined,accepted"
-                                        string="Uncertain" type="object"
-                                        icon="terp-crm" />
-                                    <button name="do_accept" string="Accept"
-                                        states="needs-action,tentative,declined"
-                                        type="object" icon="gtk-apply" />
-                                    <button name="do_decline" string="Decline"
-                                        states="needs-action,tentative,accepted"
-                                        type="object" icon="gtk-cancel" />
-                                    <button
-                                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                        string="Delegate" type="action"
-                                        icon="gtk-sort-descending"
-                                        states="needs-action,tentative,declined,accepted"
-                                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                                </tree>
-                                <form string="Invitation details">
-                                    <notebook colspan="4">
-                                        <page string="Details">
+                        <separator string="Description"/>
+                        <field name="description"/>
+                    </page>
+                    <page string="Invitation Detail">
+                        <button string="Invite People"
+                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                            icon="terp-partner" type="action"
+                            context="{'model' : 'calendar.event', 'attendee_field':'attendee_ids'}" colspan="2"/>
+                        <field name="attendee_ids" colspan="4"
+                            nolabel="1" widget="one2many" mode="tree">
+                            <tree string="Invitation details" editable="top">
+                                <field name="sent_by_uid" string="From"/>
+                                <field name="user_id" string="To"/>
+                                <field name="email" />
+                                <field name="role" width="200" />
+                                <field name="state" />
+                                <button name="do_tentative"
+                                    states="needs-action,declined,accepted"
+                                    string="Uncertain" type="object"
+                                    icon="terp-crm" />
+                                <button name="do_accept" string="Accept"
+                                    states="needs-action,tentative,declined"
+                                    type="object" icon="gtk-apply" />
+                                <button name="do_decline" string="Decline"
+                                    states="needs-action,tentative,accepted"
+                                    type="object" icon="gtk-cancel" />
+                                <button
+                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                    string="Delegate" type="action"
+                                    icon="gtk-sort-descending"
+                                    states="needs-action,tentative,declined,accepted"
+                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                            </tree>
+                            <form string="Invitation details" version="7.0">
+                                <notebook colspan="4">
+                                    <page string="Details">
+                                        <group col="4">
                                             <field name="email" />
-                                            <field name="rsvp" select="1" />
-                                            <field name="cutype" select="1" />
-                                            <field name="role" select="1" />
-                                            <separator colspan="4" string="" />
-                                            <group col="6" colspan="4">
-                                                <field name="state" select="2" />
-                                                <button name="do_tentative"
-                                                    states="needs-action,declined,accepted"
-                                                    string="Uncertain"
-                                                    type="object"
-                                                    icon="terp-crm" />
-                                                <button name="do_accept"
-                                                    string="Accept"
-                                                    states="needs-action,tentative,declined"
-                                                    type="object"
-                                                    icon="gtk-apply" />
-                                                <button name="do_decline"
-                                                    string="Decline"
-                                                    states="needs-action,tentative,accepted"
-                                                    type="object"
-                                                    icon="gtk-cancel" />
-                                                <button
-                                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                                    string="Delegate"
-                                                    type="action"
-                                                    icon="gtk-sort-descending"
-                                                    states="needs-action,tentative,declined,accepted"
-                                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                                            </group>
-                                        </page>
+                                            <field name="rsvp"/>
+                                            <field name="cutype"/>
+                                            <field name="role"/>
+                                        </group>
+                                        <group col="4">
+                                            <field name="state"/>
+                                            <button name="do_tentative"
+                                                states="needs-action,declined,accepted"
+                                                string="Uncertain"
+                                                type="object"
+                                                icon="terp-crm" />
+                                            <button name="do_accept"
+                                                string="Accept"
+                                                states="needs-action,tentative,declined"
+                                                type="object"
+                                                icon="gtk-apply" />
+                                            <button name="do_decline"
+                                                string="Decline"
+                                                states="needs-action,tentative,accepted"
+                                                type="object"
+                                                icon="gtk-cancel" />
+                                            <button
+                                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                                string="Delegate"
+                                                type="action"
+                                                icon="gtk-sort-descending"
+                                                states="needs-action,tentative,declined,accepted"
+                                                context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                                        </group>
+                                    </page>
                                     </notebook>
                                 </form>
                             </field>
@@ -356,9 +319,7 @@
                                 <field name="rrule_type" string="Recurrency period"
                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" />
                                 <field name="interval" />
-
-
-                                <separator string="End of Recurrency" colspan="4"/>
+                                <separator string="End of Recurrence" colspan="4"/>
                                 <field name="end_type" />
                                 <label string=" " colspan="2" />
                                 <newline />
@@ -454,6 +415,8 @@
             <field name="arch" type="xml">
                 <search string="Search Events">
                        <group>
+                           <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>
+                           <separator orientation="vertical"/>
                            <filter icon="terp-go-today" string="My Events"
                                domain="[('user_id','=',uid)]"
                                help="My Events" />
@@ -461,9 +424,6 @@
                            <filter icon="terp-check" string="Confirmed"
                                domain="[('state','=','confirmed')]"
                                help="Confirmed Events" />
-                           <separator orientation="vertical"/>
-                           <field name="name" string="Summary"/>
-                           <field name="location" string="Location"/>
                            <separator orientation="vertical"/>
                            <field name="user_id"/>
                            <separator orientation="vertical"/>
@@ -479,12 +439,11 @@
                                 domain="[]" context="{'group_by':'show_as'}" />
                             <filter string="Privacy" icon="terp-locked"
                                 domain="[]" context="{'group_by':'class'}" />
-                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                            <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
                                 context="{'group_by':'state'}" />
                             <separator orientation="vertical" />
                             <filter string="Date" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date'}" />
-
                         </group>
                 </search>
             </field>

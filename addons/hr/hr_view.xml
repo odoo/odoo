@@ -8,74 +8,77 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25" groups="base.group_no_one"/>
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
-        <menuitem id="base.menu_hr_reports" parent="hr.menu_hr_root" sequence="40" name="Reporting"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_reporting_timesheet" name="Reports"
+            parent="menu_hr_reporting" sequence="6" />
 
-        <!--
-        ==========
-        Employee
-        ==========
-        -->
+        <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee">
-                    <group colspan="4" col="8">
-                        <group colspan="6" col="6">
-                        <field colspan="6" name="name" />
-                        <field name="user_id" on_change="onchange_user(user_id)"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                        <field name="active"/>
-                        <newline/>
-                        <field name="department_id" on_change="onchange_department_id(department_id)" />
-                        <field name="parent_id" />
+                <form string="Employee" version="7.0">
+                    <sheet>
+                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>    
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                                <label class="oe_inline" string="," attrs="{'invisible': [('job_id', '=', False)]}"/>
+                                <field class="oe_inline" name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                <label class="oe_inline" string="at" attrs="{'invisible': [('company_id', '=', False)]}" groups="base.group_multi_company"/>
+                                <field class="oe_inline" name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                            </h1>
+                            <label for="department_id" class="oe_edit_only"/>
+                            <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                            <label for="category_ids" class="oe_edit_only"/>
+                            <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                        </div>
+                        <group colspan="4" col="4">
+                            <field name="work_email" widget="email" />
+                            <field name="work_phone"/>
+                            <field name="address_id" on_change="onchange_address_id(address_id)" />
+                            <field name="mobile_phone"/>
                         </group>
-                        <group colspan="2" col="1">
-                          <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
-                        </group>
-                    </group>
-                    <notebook colspan="6">
-                        <page string="Personal Information">
-                            <group col="2" colspan="2" groups="base.group_hr_user">
-                                <separator colspan="2" string="Social IDs"/>
-                                <field name="ssnid"/>
-                                <field name="sinid"/>
-                                <field name="identification_id"/>
-                                <field name="passport_id"/>
-                                <field name="otherid"/>
-                            </group>
-                            <group col="2" colspan="2" groups="base.group_hr_user">
-                                <separator string="Status" colspan="2"/>
-                                <field name="gender"/>
-                                <field name="marital"/>
-                                <field name="country_id"/>
-                                <field name="birthday"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Contact Information" colspan="2"/>
-                                <field name="address_home_id" colspan="2"/>
-                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" />
-                                <field name="work_phone"/>
-                                <field name="mobile_phone"/>
-                                <field name="work_email" widget="email" />
-                                <field name="work_location"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Job Information" colspan="2"/>
-                                <field name="job_id" domain="[('state','!=','old')]"/>
-                                <field name="coach_id" />
-                            </group>
-                        </page>
-                        <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids" nolabel="1"/>
-                        </page>
-                        <page string="Notes" groups="base.group_hr_user">
-                            <field colspan="4" nolabel="1" name="notes"/>
-                        </page>
-                    </notebook>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <field name="user_id" on_change="onchange_user(user_id)"/>
+                                        <field name="parent_id" />
+                                        <field name="coach_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group name="active_group">
+                                        <field name="active"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group col="4">
+                                    <group>
+                                        <field name="country_id"/>
+                                        <field name="bank_account_id"/>
+                                        <field name="address_home_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                        <field name="birthday"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -93,7 +96,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
-                    <field name="coach_id" invisible="1" />
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -104,20 +107,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name"/>
-                    <field name="department_id" widget="selection">
-                    </field>
+                    <field name="name" string="Employees"/>
+                    <separator orientation="vertical"/>
+                    <field name="department_id" widget="selection"/>
                     <field name="job_id" widget="selection"/>
-                    <field name="category_ids" select="1"/>
                     <field name="parent_id"/>
-                    <newline />
+                    <field name="category_ids"/>
+                    <newline/>
                     <group expand="0" string="Group By...">
-                    <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
-                    <separator orientation="vertical" />
-                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
              </field>
@@ -130,6 +133,7 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
+                <field name="last_login"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -139,6 +143,11 @@
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
+                                    <li id="last_login">
+                                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                              <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                        </span>
+                                    </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
@@ -235,7 +244,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="coach_id" invisible="1" />
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -270,11 +279,11 @@
             <field name="model">hr.employee.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Category">
-                    <field name="name" />
-                    <field name="parent_id" />
-                    <separator string="Employees" colspan="4" />
-                    <field name="employee_ids" colspan="4" nolabel="1" />
+                <form string="Employee Category" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -311,7 +320,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="hr.menu_hr_configuration" sequence="1"/>
+            parent="hr.menu_hr_configuration" sequence="1" groups="base.group_no_one"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories Structure</field>
@@ -345,39 +354,41 @@
             <field name="model">hr.job</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
-                    <button name="job_open" string="In Position" states="old,recruit" type="object"/>
-                    <button name="job_old" string="Mark as Old" states="open,recruit" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="recruit,open"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Job" layout="auto">
-                    <group col="6" colspan="4">
-                    <field name="name" />
-                    <field name="department_id" />
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                    <field name="no_of_employee"/>
-                    <field name="expected_employees"/>
-                    </group>
-                    <newline/>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <separator colspan="4" string="Job Description"/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                            <separator colspan="4" string="Requirements"/>
-                            <field name="requirements" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Employees">
-                            <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree,form"/>
-                        </page>
-                    </notebook>
-                </sheet>
+                <form string="Job" version="7.0">
+                    <header>
+                        <span groups="base.group_user">
+                            <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight"/>
+                            <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight"/>
+                        </span>
+                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
+                    </header>
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                            <field name="department_id" class="oe_inline"/>
+                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="no_of_employee"/>
+                                <field name="expected_employees"/>
+                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                            </group>
+                            <group>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <label for="description"/>
+                                <field name="description"/>
+                                <label for="requirements"/>
+                                <field name="requirements"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -388,8 +399,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
-                    <field name="name" />
-                    <field name="department_id" />
+                    <field name="name"/>
+                    <field name="department_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
@@ -405,6 +416,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
+                    <field name="name" string="Job"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"  
                             domain="[('state','=','open')]" 
                             string="In Position"
@@ -412,19 +425,34 @@
                     <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
                         help="In Recruitment"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="department_id" widget="selection">
-                    </field>
+                    <field name="department_id" widget="selection"/>
                     <newline />
                     <group expand="0" string="Group By...">
-                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                     </group>
                 </search>
-             </field>
-         </record>
-
+            </field>
+        </record>
+        
+        <record id="view_hr_job_employee_form" model="ir.ui.view">
+            <field name="name">hr.job.employee.form</field>
+            <field name="model">hr.job</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Job" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="department_id"/>
+                    </group>
+                    <label for="description"/>
+                    <field name="description"/>
+                </form>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
@@ -436,7 +464,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_hr_management" id="menu_hr_job" action="action_hr_job" sequence="6"/>
+        <menuitem parent="hr.menu_hr_configuration" id="menu_hr_job" action="action_hr_job" sequence="6"/>
 
     </data>
 </openerp>

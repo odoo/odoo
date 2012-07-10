@@ -27,7 +27,6 @@
     "depends" : ["base", "mail"],
     "author" : "OpenERP SA",
     "category": 'Tools',
-    'complexity': "easy",
     "description": """
 This module adds generic sharing tools to your current OpenERP database.
 ========================================================================
@@ -47,7 +46,6 @@ synchronization with other companies, etc.
     'demo_xml': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
-        'share_view.xml',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml'
     ],

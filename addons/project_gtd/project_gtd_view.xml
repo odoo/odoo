@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <tree string="Context">
                 <field name="sequence" invisible="1"/>
-                <field name="name" select="1"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -18,9 +18,11 @@
         <field name="model">project.gtd.context</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Context">
-                <field name="name" select="1"/>
-                <field name="sequence"/>
+            <form string="Context" version="7.0">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                </group>
             </form>
         </field>
     </record>
@@ -52,11 +54,12 @@
         <field name="model">project.gtd.timebox</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Timeboxes">
-                <separator string="Timebox Definition" colspan="4"/>
-                <field name="name" select="1"/>
-                <field name="sequence"/>
-                <field name="icon"/>
+            <form string="Timeboxes" version="7.0">
+                <group col="4" string="Timebox Definition">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="icon"/>
+                </group>
             </form>
         </field>
     </record>
@@ -96,7 +99,7 @@
         <field name="arch" type="xml">
             <field name="progress" position="after">
                 <field name="context_id" widget="selection"/>
-                <field name="timebox_id" widget="selection" select="1"/>
+                <field name="timebox_id" widget="selection"/>
             </field>
         </field>
     </record>
@@ -108,26 +111,15 @@
         <field name="priority">50</field>
         <field name="arch" type="xml">
            <search string="My Tasks">
+                <field name="name" string="My Tasks"/>
+                <separator orientation="vertical"/>
                 <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
                 <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                <separator orientation="vertical"/>
-                <filter
-                    domain="[('timebox_id','=', False)]"
-                    help="Tasks having no timebox assigned yet" string="Inbox"/>
-                <separator orientation="vertical"/>
-                <separator name="gtdsep"/>
-                <field name="name"/>
-                <field name="context_id" widget="selection"
-                    context="{'context_show': True}">
-                    <filter string="Show Context"
-                        name="context_show"
-                        context="{'context_show': True}"
-                        domain="[]" icon="terp-camera_test"
-                        help="Show the context field"/>
-                    <filter string="Show Deadlines" context="{'deadline_visible': False}"
-                        domain="[]" help="Show only tasks having a deadline"
-                        icon="terp-gnome-cpu-frequency-applet+"/>
-                </field>
+                <filter string="Inbox" domain="[('timebox_id','=', False)]" help="Tasks having no timebox assigned yet"/>
+                <group expand="0" string="Display">
+                    <filter string="Show Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>
+                    <filter string="Show Deadlines" context="{'deadline_visible': False}" domain="[]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                </group>
             </search>
         </field>
     </record>
