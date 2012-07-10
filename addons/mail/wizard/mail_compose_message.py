@@ -60,30 +60,29 @@ class mail_compose_message(osv.TransientModel):
     _description = 'Email composition wizard'
 
     def default_get(self, cr, uid, fields, context=None):
-        """Overridden to provide specific defaults depending on the context
-           parameters.
+        """ Overridden to provide specific defaults depending on the context
+            parameters.
+
+            Composition mode
+            - comment: default mode; active_model, active_id = model and ID of a
+            document we are commenting,
+            - reply: active_id = ID of a mail.message to which we are replying.
+            From this message we can find the related model and res_id,
+            - mass_mailing mode: active_model, active_id  = model and ID of a
+            document we are commenting,
 
            :param dict context: several context values will modify the behavior
                                 of the wizard, cfr. the class description.
         """
         if context is None:
             context = {}
-        print 'default_get'
-        print context
-        result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
-        vals = {}
-
-        """ Composition mode
-        - comment: default mode; active_model, active_id = model and ID of a
-          document we are commenting,
-        - reply: active_id = ID of a mail.message to which we are replying. From
-          this message we can find the related model and res_id,
-        - mass_mailing mode: active_model, active_id  = model and ID of a
-          document we are commenting,
-        """
         compose_mode = context.get('mail.compose.message.mode', 'comment')
         active_model = context.get('active_model')
         active_id = context.get('active_id')
+        result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
+
+        # get default values according to the composition mode
+        vals = {}
         if compose_mode in ['reply']:
             vals = self.get_message_data(cr, uid, int(context['active_id']), context=context)
         elif compose_mode in ['comment', 'mass_mail'] and active_model and active_id:
@@ -170,6 +169,7 @@ class mail_compose_message(osv.TransientModel):
             result.update({
                     'content_subtype' : 'plain', # default to the text version due to quoting
                     'body_text' : body,
+                    'body_html': body,
                     'subject' : subject,
                     'attachment_ids' : [],
                     'model' : message_data.model or False,
@@ -178,7 +178,6 @@ class mail_compose_message(osv.TransientModel):
                     'email_to' : message_data.reply_to or message_data.email_from or False,
                     'email_cc' : message_data.email_cc or False,
                     'user_id' : uid,
-
                     # pass msg-id and references of mail we're replying to, to construct the
                     # new ones later when sending
                     'message_id' :  message_data.message_id or False,
@@ -410,8 +409,7 @@ class mail_compose_message(osv.TransientModel):
         return template and EXPRESSION_PATTERN.sub(merge, template)
 
 
-
-class mail_compose_message_extended(osv.osv_memory):
+class mail_compose_message_extended(osv.TransientModel):
     """ Extension of 'mail.compose.message' to support default field values related
         to CRM-like models that follow the following conventions:
 
@@ -429,6 +427,7 @@ class mail_compose_message_extended(osv.osv_memory):
         """Overrides the default implementation to provide more default field values
            related to the corresponding CRM case.
         """
+        print 'get_value'
         result = super(mail_compose_message_extended, self).get_value(cr, uid,  model, res_id, context=context)
         model_obj = self.pool.get(model)
         if getattr(model_obj, '_mail_compose_message', False) and res_id:

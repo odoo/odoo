@@ -144,6 +144,11 @@ openerp.mail = function(session) {
             return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
         },
 
+        /* Add a prefix before each new line of the original string */
+        do_text_quote: function (str, prefix) {
+            return str.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2' + prefix || '> ');
+        },
+
         /**
          * Replaces some expressions
          * - @login - shorcut to link to a res.user, given its login
@@ -248,6 +253,14 @@ openerp.mail = function(session) {
          * @param {Object} [params]
          * @param {String} [params.res_model] res_model of document [REQUIRED]
          * @param {Number} [params.res_id] res_id of record [REQUIRED]
+         * @param {Number} [params.email_mode] true/false, tells whether
+         *      we are in email sending mode
+         * @param {Number} [params.formatting] true/false, tells whether
+         *      we are in advance formatting mode
+         * @param {String} [params.model] mail.compose.message.mode (see
+         *      composition wizard)
+         * @param {Number} [params.msg_id] id of a message in case we are in
+         *      reply mode
          */
         init: function(parent, params) {
             this._super(parent);
@@ -256,20 +269,26 @@ openerp.mail = function(session) {
             this.params = params || {};
             this.params.email_mode = params.email_mode || false;
             this.params.formatting = params.formatting || false;
+            this.params.mode = params.mode || 'comment';
+            if (this.params.mode == 'reply') {
+                this.params.active_id = this.params.msg_id;
+            } else {
+                this.params.active_id = this.params.res_id;
+            }
             // create a context for the default_get of the compose form
-            var context = {active_model: this.params.res_model, active_id: this.params.res_id};
+            var context = {'active_model': this.params.res_model, 'active_id': this.params.active_id,
+                'mail.compose.message.mode': this.params.mode};
             // create a form_view on the mail.compose.message wizard
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             this.form_view = new session.web.FormView(this, this.ds_compose, false, {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
-                }
-            );
+                });
         },
-        
+
         /**
-         * widget start function
+         * Widget start function
          * - builds and initializes the form view */
         start: function() {
             var self = this;
@@ -285,7 +304,11 @@ openerp.mail = function(session) {
                 self.form_view.do_show();
             });
         },
-        
+
+        destroy: function() {
+            this._super.apply(this, arguments);
+        },
+
         /**
          * Bind events in the widget. Each event is slightly described
          * in the function. */
@@ -318,19 +341,23 @@ openerp.mail = function(session) {
             this.$element.find('a.oe_mail_compose_message_attachment').click(function (event) {
                 event.preventDefault();
                 // not yet implemented
-                console.log('attachment');
+                self.set_body_value('attachment', 'attachment');
             });
             // event: click on 'Checklist' icon-link that toggles the options
             // for adding checklist.
             this.$element.find('a.oe_mail_compose_message_checklist').click(function (event) {
                 event.preventDefault();
                 // not yet implemented
-                console.log('checklist');
+                self.set_body_value('checklist', 'checklist');
             });
         },
-        
-        destroy: function() {
-            this._super.apply(this, arguments);
+
+        /**
+         * Update the values of the composition form; with possible different
+           values for body_text and body_html. */
+        set_body_value: function(body_text, body_html) {
+            this.form_view.fields.body_text.set_value(body_text);
+            this.form_view.fields.body_html.set_value(body_html);
         },
     }),
 
@@ -372,6 +399,7 @@ openerp.mail = function(session) {
          */
         init: function(parent, params) {
             this._super(parent);
+            // options
             this.params = params;
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
@@ -398,8 +426,6 @@ openerp.mail = function(session) {
         },
         
         start: function() {
-            var self = this;
-            
             this._super.apply(this, arguments);
 
             // // customize display
@@ -409,27 +435,32 @@ openerp.mail = function(session) {
 
             // add events
             this.add_events();
-            
             // display user, fetch comments
             this.display_current_user();
             if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
             else var display_done = this.init_comments();
             // customize display
-            $.when(display_done).then(this.proxy('do_customize_display'));
-            
+            $.when(display_done).then(this.proxy('do_customize_display'));            
             // add message composition form view
-            this.compose_message = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.params.uid, 'res_model': this.params.res_model,
-                'res_id': this.params.res_id });
-            var composition_node = this.$element.find('div.oe_mail_thread_action');
-            composition_node.empty();
-            var compose_done = this.compose_message.appendTo(composition_node);
-            
+            var compose_done = this.instantiate_composition_form();
             return display_done && compose_done;
         },
-        
+
+        instantiate_composition_form: function(mode, msg_id) {
+            if (this.compose_message_widget) {
+                this.compose_message_widget.destroy();
+            }
+            this.compose_message_widget = new mail.ComposeMessage(this, {
+                'extended_mode': false, 'uid': this.params.uid, 'res_model': this.params.res_model,
+                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
+            var composition_node = this.$element.find('div.oe_mail_thread_action');
+            composition_node.empty();
+            var compose_done = this.compose_message_widget.appendTo(composition_node);
+            return compose_done;
+        },
+
         do_customize_display: function() {
-            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_act').eq(0).show(); }
+            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_action').eq(0).show(); }
             if (this.display.show_reply_by_email) { this.$element.find('a.oe_mail_compose').show(); }
             if (! this.display.show_msg_menu) { this.$element.find('img.oe_mail_msg_menu_icon').hide(); }
         },
@@ -480,19 +511,14 @@ openerp.mail = function(session) {
             });
             // event: click on "reply by email" in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
-                var msg_id = event.srcElement.dataset.id;
+                var msg_id = event.srcElement.dataset.msg_id;
+                console.log(msg_id)
                 if (! msg_id) return false;
-                self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: 'mail.compose.message',
-                        views: [[false, 'form']],
-                        view_type: 'form',
-                        view_mode: 'form',
-                        target: 'new',
-                        context: {'active_model': self.params.res_model, 'active_id': self.params.res_id, 'message_id': msg_id, 'mail.compose.message.mode': 'reply'},
-                        key2: 'client_action_multi',
-                });
-                return false;
+                // var parent_node = $(event.srcElement).parents('div.oe_mail_msg_content').eq(0);
+                // var text_content = $(parent_node).find('div.oe_mail_msg_record_body').eq(0).html();
+                // self.compose_message.set_body_value(text_content, text_content);
+                event.preventDefault();
+                self.instantiate_composition_form('reply', msg_id);
             });
             // event: click on 'hide this type' in wheel_menu
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_type', 'click', function (event) {
