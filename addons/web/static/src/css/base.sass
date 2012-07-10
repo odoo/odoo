@@ -1351,6 +1351,8 @@ $sheet-max-width: 860px
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
+        .oe_form .oe_form_field_date
+            width: auto
     .oe_form_nosheet 
         margin-left: 10px
         margin-right: 10px
@@ -1454,7 +1456,7 @@ $sheet-max-width: 860px
             width: 100%
             margin: 4px 0 4px 0
             .oe_group_right
-                > tbody > tr > td
+                > tbody > tr > td:first-child
                     padding-left: 12px
     // }}}
     // FormView.label {{{
@@ -1538,7 +1540,7 @@ $sheet-max-width: 860px
         .oe_form_field_float
             width: 180px
         .oe_form_field_date
-            width: 7em
+            width: 7.5em
         .oe_form_field_datetime
             width: 11em
         input[type="text"], input[type="password"], input[type="file"], select
