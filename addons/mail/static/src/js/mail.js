@@ -768,7 +768,11 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             var self = this;
             this.reinit();
-            if (! this.view.datarecord.id) { this.$element.find('.oe_mail_thread').hide(); return; }
+            if (! this.view.datarecord.id ||
+                instance.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
+                this.$element.find('.oe_mail_thread').hide();
+                return;
+            }
             // fetch followers
             var fetch_sub_done = this.fetch_subscribers();
             // create and render Thread widget
