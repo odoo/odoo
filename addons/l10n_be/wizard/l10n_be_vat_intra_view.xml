@@ -8,12 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner VAT intra" version="7.0">
-                    <header>
-                        <button name="create_xml" string="Create _XML" type="object" class="oe_highlight"/>
-                        <button name="preview" string="_Preview" type="object" class="oe_highlight" />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <separator string="Intracom VAT Declaration"/>
                     </group>   
@@ -33,6 +27,12 @@
                             <field name="country_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
+                    <footer>
+                        <button name="create_xml" string="Create _XML" type="object" class="oe_highlight"/>
+                        <button name="preview" string="_Preview" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
