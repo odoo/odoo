@@ -1205,7 +1205,7 @@ class sale_order_line(osv.osv):
             pu = 0.0
             if uosqty:
                 pu = round(line.price_unit * line.product_uom_qty / uosqty,
-                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
+                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Price Unit'))
             fpos = line.order_id.fiscal_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
