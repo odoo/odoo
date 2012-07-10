@@ -1931,7 +1931,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         var result;
         for(var section in this._proxies) {
             if (!this._proxies.hasOwnProperty(section)) {
-                continue
+                continue;
             }
             if ((result = this._proxies[section].succ(record, options))) {
                 return result;
@@ -1942,6 +1942,27 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         var next_index = index + 1;
         if (options.wraparound && (next_index === this.length)) {
             return this.at(0);
+        }
+        return this.at(next_index);
+    },
+    pred: function (record, options) {
+        options = options || {wraparound: false};
+
+        var result;
+        for (var section in this._proxies) {
+            if (!this._proxies.hasOwnProperty(section)) {
+                continue;
+            }
+            if ((result = this._proxies[section].pred(record, options))) {
+                return result;
+            }
+        }
+
+        var index = this.indexOf(record);
+        if (index === -1) { return null; }
+        var next_index = index - 1;
+        if (options.wraparound && (next_index === -1)) {
+            return this.at(this.length - 1);
         }
         return this.at(next_index);
     }
