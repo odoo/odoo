@@ -92,7 +92,7 @@
                             <page string="Payment Lines">
                                 <field name="line_ids" colspan="4" nolabel="1">
                                     <tree string="Payment Lines" editable="bottom">
-                                        <field name="employee_id"/>
+                                        <field name="employee_id" on_change="get_account_number(employee_id)"/>
                                         <field name="name"/>
                                         <field name="bysal"/>
                                         <field name="debit_credit"/>

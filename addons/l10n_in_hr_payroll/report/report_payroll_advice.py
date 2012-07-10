@@ -70,7 +70,6 @@ class payroll_advice_report(report_sxw.rml_parse):
                     'name': l.employee_id.name,
                     'acc_no': l.name,
                     'bysal': l.bysal,
-                    'debit_credit': l.debit_credit,
                     })
             self.total_bysal += l.bysal
             result.append(res) 

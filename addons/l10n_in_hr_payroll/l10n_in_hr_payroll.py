@@ -105,7 +105,7 @@ class payroll_advice(osv.osv):
     '''
     Bank Advice
     '''
-
+        
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
@@ -208,13 +208,21 @@ class payroll_advice(osv.osv):
         return {
             'value':res
         }
-
+        
 payroll_advice()
 
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
-    '''
+    '''    
+    def get_account_number(self, cr, uid, ids, employee_id=False, context=None):
+        res = {}
+        if employee_id:
+            hr_obj = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+            acc_number = hr_obj.bank_account_id.acc_number
+            res.update({'name': acc_number})
+        return {'value': res}  
+    
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
@@ -226,7 +234,7 @@ class payroll_advice_line(osv.osv):
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
     }
     _defaults = {
-        'debit_credit': 'c',
+        'debit_credit': 'C',
     }    
     
 
