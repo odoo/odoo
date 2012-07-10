@@ -619,7 +619,9 @@
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        <span class="oe_alternative">
+            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </span>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -663,10 +665,11 @@
     </td>
 </tr>
 
-<t t-name="ListView.row.save">
-    <td>
-        <button class='oe_i oe-edit-row-save' type='button' name='save'>S</button>
-    </td>
+<t t-extend="ListView.buttons">
+    <t t-jquery="button.oe_list_add" t-operation="after">
+        <button class="oe_button oe_list_save oe_highlight"
+                type="button">Save Row</button>
+    </t>
 </t>
 
 <t t-name="FormView">

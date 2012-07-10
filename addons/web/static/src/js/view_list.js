@@ -285,7 +285,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped && this.options.editable);
+                    .prop('disabled', grouped);
             this.$buttons.on('click', '.oe_list_button_import', function() {
                 self.on_sidebar_import();
                 return false;

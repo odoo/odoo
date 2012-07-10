@@ -1999,6 +1999,15 @@
 .openerp .oe_form .oe_form_field_many2many > .oe-listview .oe_list_pager_single_page {
   display: none;
 }
+.openerp .oe_list_buttons .oe_list_save {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_add, .openerp .oe_list_buttons.oe_editing .oe_alternative {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_save {
+  display: inline-block;
+}
 .openerp .oe-listview {
   position: relative;
 }
@@ -2114,20 +2123,6 @@
 }
 .openerp .oe-listview-content .numeric input {
   text-align: right;
-}
-.openerp .oe-listview-content tr.oe_edition th.oe-record-selector {
-  padding: 0 6px;
-  font-size: 1px;
-  letter-spacing: -1px;
-  color: transparent;
-}
-.openerp .oe-listview-content tr.oe_edition th.oe-record-selector:before {
-  font: 21px "mnmliconsRegular";
-  content: "S";
-  color: #404040;
-}
-.openerp .oe-listview-content tr.oe_edition th.oe-record-selector input {
-  display: none;
 }
 .openerp .oe_trad_field.touched {
   border: 1px solid green !important;

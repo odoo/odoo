@@ -1587,6 +1587,15 @@ $colour4: #8a89ba
             display: none
     // }}}
     // ListView {{{
+    .oe_list_buttons
+        .oe_list_save
+            display: none
+        &.oe_editing
+            .oe_list_add, .oe_alternative
+                display: none
+            .oe_list_save
+                display: inline-block
+
     .oe-listview
         position: relative
         .oe_form .oe_form_field
@@ -1666,12 +1675,6 @@ $colour4: #8a89ba
             width: 82px
             input
                 text-align: right
-
-        tr.oe_edition th.oe-record-selector
-            padding: 0 6px
-            @include text-to-icon("S")
-            input
-                display: none
     // }}}
     // Translation {{{
     .oe_trad_field.touched

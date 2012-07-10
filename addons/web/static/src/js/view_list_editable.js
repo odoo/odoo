@@ -29,7 +29,14 @@ openerp.web.list_editable = function (instance) {
                     self.configure_pager(self.dataset);
                     self.compute_aggregates();
                 }
-            })
+            });
+
+            this.on('edit:after', this, function () {
+                self.$element.add(self.$buttons).addClass('oe_editing');
+            });
+            this.on('save:after cancel:after', this, function () {
+                self.$element.add(self.$buttons).removeClass('oe_editing');
+            });
         },
         destroy: function () {
             instance.web.bus.off('resize', this, this.resizeFields);
@@ -93,6 +100,10 @@ openerp.web.list_editable = function (instance) {
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
             if (this.options.editable) {
+                // FIXME: any hook available to ensure this is only done once?
+                this.$buttons
+                    .off('click', 'button.oe_list_save')
+                    .on('click', 'button.oe_list_save', this.proxy('saveEdition'));
                 // Editor is not restartable due to formview not being
                 // restartable
                 this.editor = this.makeEditor();
@@ -498,33 +509,12 @@ openerp.web.list_editable = function (instance) {
     });
 
     instance.web.ListView.List.include(/** @lends instance.web.ListView.List# */{
-        init: function () {
-            var self = this;
-            this._super.apply(this, arguments);
-            var selection_handler = _.find(this.$_element.data('events').click, function (h) {
-                return h.selector === 'th.oe-record-selector';
-            }).handler;
-            // TODO: cleaner way to do that?
-            this.$_element
-                .off('click', 'th.oe-record-selector')
-                .on('click', '.oe_edition th.oe-record-selector', function (e) {
-                    e.stopImmediatePropagation();
-                    self.view.saveEdition();
-                })
-                .on('click', 'th.oe-record-selector', selection_handler);
-        },
         row_clicked: function (event) {
             if (!this.options.editable) {
                 return this._super.apply(this, arguments);
             }
-            this.edit_record($(event.currentTarget).data('id'));
-        },
-        /**
-         * Edits record currently selected via dataset
-         */
-        edit_record: function (record_id) {
-            return this.view.startEdition(
-                record_id ? this.records.get(record_id) : null);
+            var record_id = $(event.currentTarget).data('id');
+            this.view.startEdition(record_id ? this.records.get(record_id) : null);
         },
         /**
          * If a row mapping to the record (@data-id matching the record's id or
