@@ -681,5 +681,17 @@ class EDIMixin(object):
         self._edi_import_attachments(cr, uid, record_id, edi_document, context=context)
 
         return record_id
+    
+class mail_compose_message(osv.osv_memory):
+    _inherit = 'mail.compose.message'
+    
+    def _pre_render_template(self, cr, uid, active_model, active_id, context):
+        if active_model in ['account.invoice', 'sale.order', 'purchase.order']:
+            web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+            edi_record = self.pool.get(active_model).browse(cr, uid, active_id, context)
+            edi_token = self.pool.get('edi.document').export_edi(cr, uid, [edi_record])[0]
+            ctx = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+            context.update(ctx)
+        return super(mail_compose_message,self)._pre_render_template(cr, uid, active_model, active_id, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
