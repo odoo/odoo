@@ -2609,7 +2609,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         });
 
         // some behavior for input
-        this.$input.keyup(function() {
+        this.$input.keydown(function() {
             if (self.current_display !== self.$input.val()) {
                 self.current_display = self.$input.val();
                 if (self.$input.val() === "") {
