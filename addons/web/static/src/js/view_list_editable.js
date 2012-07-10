@@ -365,6 +365,7 @@ openerp.web.list_editable = function (instance) {
             });
         },
         keyup_ENTER: function () {
+            if (!this.editor.isEditing()) { return; }
             var self = this;
             return this.saveEdition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
@@ -375,6 +376,7 @@ openerp.web.list_editable = function (instance) {
             });
         },
         keyup_ESCAPE: function () {
+            if (!this.editor.isEditing()) { return; }
             return this.cancelEdition();
         }
     });
