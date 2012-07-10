@@ -60,5 +60,19 @@
 
        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration" sequence="5"/>
 
-        </data>
+       <record id="res_users_form_add_employees" model="ir.ui.view">
+            <field name="name">res.users.form.add.employees</field>
+            <field name="type">form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <page string="Access Rights" position="after">
+                    <page string="Employees">
+                        <field name="employee_ids" nolabel="1" colspan="4" />
+                    </page>
+                </page>
+            </field>
+        </record>
+
+    </data>
 </openerp>
