@@ -386,8 +386,11 @@
   visibility: hidden;
 }
 .openerp .oe_button_box {
-  width: 200px;
-  text-align: center;
+  width: 38%;
+  text-align: right;
+}
+.openerp .oe_button_box button {
+  margin: 4px;
 }
 .openerp .oe_avatar {
   margin: 0 16px 0 0;
@@ -536,7 +539,7 @@
   cursor: pointer;
 }
 .openerp .oe_dropdown_toggle {
-  color: #888888;
+  color: #404040;
   font-weight: normal;
 }
 .openerp .oe_dropdown_hover:hover .oe_dropdown_menu, .openerp .oe_dropdown_menu.oe_opened {
@@ -545,7 +548,8 @@
 .openerp .oe_dropdown_menu {
   display: none;
   position: absolute;
-  top: 32px;
+  top: 26px;
+  left: 0;
   z-index: 1;
   border: 1px solid #afafb6;
   background: white;
@@ -2356,4 +2360,10 @@
 }
 .kitten-mode-activated > * {
   opacity: 0.7;
+}
+
+div.ui-widget-overlay {
+  background: black;
+  filter: alpha(opacity=30);
+  opacity: 0.3;
 }
