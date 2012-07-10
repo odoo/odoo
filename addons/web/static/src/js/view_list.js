@@ -661,6 +661,19 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Function} callback should be called after the action is executed, if non-null
      */
     do_button_action: function (name, id, callback) {
+        this.handleButton(name, id, callback);
+    },
+    /**
+     * Base handling of buttons, can be called when overriding do_button_action
+     * in order to bypass parent overrides.
+     *
+     * This method should not be overridden.
+     *
+     * @param {String} name action name
+     * @param {Object} id id of the record the action should be called on
+     * @param {Function} callback should be called after the action is executed, if non-null
+     */
+    handleButton: function (name, id, callback) {
         var action = _.detect(this.columns, function (field) {
             return field.name === name;
         });

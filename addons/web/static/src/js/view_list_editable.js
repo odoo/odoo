@@ -12,7 +12,7 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
 
-            this.editor = new instance.web.list.Editor(this);
+            this.editor = this.makeEditor();
 
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
@@ -87,7 +87,7 @@ openerp.web.list_editable = function (instance) {
             if (this.options.editable) {
                 // Editor is not restartable due to formview not being
                 // restartable
-                this.editor = new instance.web.list.Editor(this);
+                this.editor = this.makeEditor();
                 var editor_ready = this.editor.prependTo(this.$element)
                     .then(this.proxy('setupEvents'));
 
@@ -96,10 +96,18 @@ openerp.web.list_editable = function (instance) {
 
             return result;
         },
+        /**
+         * Builds a new editor object
+         *
+         * @return {instance.web.list.Editor}
+         */
+        makeEditor: function () {
+            return new instance.web.list.Editor(this);
+        },
         do_button_action: function () {
-            var self = this, _super = this._super, args = arguments;
+            var self = this, args = arguments;
             this.ensureSaved().then(function () {
-                _super.apply(self, args);
+                self.handleButton.apply(self, args);
             });
         },
         /**

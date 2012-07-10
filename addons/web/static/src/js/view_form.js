@@ -3105,6 +3105,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             form: 'instance.web.form.One2ManyFormView',
             kanban: 'instance.web.form.One2ManyKanbanView',
         });
+        this.__ignore_blur = false;
     },
     switch_view: function(mode, unused) {
         if (mode !== 'form') {
@@ -3154,6 +3155,15 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this._super(parent, dataset, view_id, _.extend(options || {}, {
             ListType: instance.web.form.One2ManyList
         }));
+        this.on('edit:before', this, this.proxy('_beforeEdit'));
+        this.on('save:before cancel:before', this, this.proxy('_beforeUnEdit'));
+    },
+    start: function () {
+        var ret = this._super();
+        this.$element
+            .off('mousedown.handleButtons')
+            .on('mousedown.handleButtons', 'table button', this.proxy('_buttonDown'));
+        return ret;
     },
     is_valid: function () {
         var form = this.editor.form;
@@ -3227,62 +3237,46 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             readonly: self.o2m.get("effective_readonly")
         });
     },
-    /**
-     * Ensures the o2m is saved and committed to db before returning: executes
-     * the super-method (saves the current edition to the buffered dataset)
-     * then saves the parent form.
-     *
-     * @returns {jQuery.Deferred}
-     */
-    ensureSaved: function () {
+    do_button_action: function () {
         var parent_form = this.o2m.view;
-        return this._super().pipe(function () {
+        var self = this, args = arguments;
+        return this.ensureSaved().pipe(function () {
             return parent_form.do_save();
-        });
-    }
-});
-instance.web.form.One2ManyList = instance.web.ListView.List.extend({
-    KEY_RETURN: 13,
-    // blurring caused by hitting the [Return] key, should skip the
-    // autosave-on-blur and let the handler for [Return] do its thing
-    __return_blur: false,
-    render_row_as_form: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            // Replace the "Save Row" button with "Cancel Edition"
-            self.edition_form.$element
-                .undelegate('button.oe-edit-row-save', 'click')
-                .delegate('button.oe-edit-row-save', 'click', function () {
-                    self.cancel_pending_edition();
-                });
-
-            // Overload execute_action on the edition form to perform a simple
-            // reload_record after the action is done, rather than fully
-            // reload the parent view (or something)
-            var _execute_action = self.edition_form.do_execute_action;
-            self.edition_form.do_execute_action = function (action, dataset, record_id, _callback) {
-                return _execute_action.call(this, action, dataset, record_id, function () {
-                    self.view.reload_record(
-                        self.view.records.get(record_id));
-                });
-            };
-
-            self.edition_form.on('blurred', null, function () {
-                if (self.__return_blur) {
-                    delete self.__return_blur;
-                    return;
-                }
-                if (!self.edition_form.widget_is_stopped) {
-                    self.view.ensureSaved();
-                }
-            });
+        }).then(function () {
+            self.handleButton.apply(self, args);
         });
     },
-    on_row_keyup: function (e) {
-        if (e.which === this.KEY_RETURN) {
-            this.__return_blur = true;
+
+    _beforeEdit: function () {
+        this.__ignore_blur = false;
+        this.editor.form.on('blurred', this, this._onFormBlur);
+    },
+    _beforeUnEdit: function () {
+        this.editor.form.off('blurred', this, this._onFormBlur);
+    },
+    _buttonDown: function () {
+        // If a button is clicked (usually some sort of action button), it's
+        // the button's responsibility to ensure the editable list is in the
+        // correct state -> ignore form blurring
+        this.__ignore_blur = true;
+    },
+    /**
+     * Handles blurring of the nested form (saves the currently edited row),
+     * unless the flag to ignore the event is set to ``true``
+     */
+    _onFormBlur: function () {
+        if (this.__ignore_blur) {
+            this.__ignore_blur = false;
+            return;
         }
-        this._super(e);
+        this.saveEdition();
+    },
+    keyup_ENTER: function () {
+        // blurring caused by hitting the [Return] key, should skip the
+        // autosave-on-blur and let the handler for [Return] do its thing (save
+        // the current row *anyway*, then create a new one/edit the next one)
+        this.__ignore_blur = true;
+        this._super.apply(this, arguments);
     }
 });
 
