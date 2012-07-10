@@ -50,7 +50,7 @@ Note that:
                 for example, you maybe will do it for the user 'admin'.
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
-    'depends': ['hr', 'crm', 'process', 'resource'],
+    'depends': ['hr', 'base_calendar', 'process', 'resource'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
@@ -58,7 +58,6 @@ Note that:
         'hr_holidays_workflow.xml',
         'hr_holidays_view.xml',
         'hr_holidays_data.xml',
-        'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
         'report/hr_holidays_report_view.xml',
         'report/available_holidays_view.xml',

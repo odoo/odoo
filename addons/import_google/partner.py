@@ -21,11 +21,11 @@
 
 from osv import fields,osv
 
-class crm_case_categ(osv.osv):
-    """ Category of Case """
-    _inherit = "crm.case.categ"
+class crm_meeting_type(osv.osv):
+    """ Meeting Types """
+    _inherit = "crm.meeting.type"
     _columns = {
         'user_id': fields.many2one('res.users', 'User')
     }
-crm_case_categ()
+
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
