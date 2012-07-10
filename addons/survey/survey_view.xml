@@ -27,16 +27,14 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="122" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
-                        <button name="106" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
-                        <button name="106" states="open,draft,close,cancel" string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}" invisible="1"/>
+                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
+                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                     </div>
                     <label for="title" class="oe_edit_only"/>
                     <h1>
                         <field name="title" select="1" class="oe_inline"/>
-                        <label string="(" attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
+                        <label string=", " attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
                         <field name="type" class="oe_inline"/>
-                        <label string=")" attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
                     </h1>
                     <group>
                         <group>
@@ -50,31 +48,29 @@
                         </group>
                      </group>
                      <notebook>
-                        <page string="Survey">
-                            <field name="page_ids" colspan="4" nolabel="1" mode="tree">
+                        <page string="Survey Details">
+                            <field name="note" colspan="4" placeholder="Survey description..."/>
+                            <label for="page_ids"/>
+                            <field name="page_ids" colspan="4" mode="tree">
                                 <form string="Survey Page" version="7.0">
                                     <sheet>
                                     <label for="title" class="oe_edit_only"/>
-                                    <h2>
-                                        <field name="title" select="1" class="oe_inline"/>
-                                        (<field name="sequence" groups="base.group_no_one" class="oe_inline"/>)
-                                    </h2>
-                                    <newline/>
+                                    <h1>
+                                        <field name="title"/>
+                                    </h1>
                                     <group>
-                                        <field name="note" placeholder="Add a description on the survey page" nolabel="1"/>
+                                        <field name="note" placeholder="Description on the survey page..." nolabel="1"/>
                                     </group>
                                     <newline/>
-                                    <group string="Survey Questions">
+                                    <group>
+                                        <label for="question_ids"/>
+                                        <newline/>
                                         <field name="question_ids" nolabel="1">
-                                            <form string="Survey Question" >
+                                            <form string="Survey Question">
                                                 <group>
                                                     <group>
-                                                    <field name="question" select="1"/>
-                                                    <field name="type" on_change="on_change_type(type)"/>
-                                                    </group>
-                                                    <group>
-                                                    <field name="sequence"/>
-                                                    <field name="tot_resp"/>
+                                                        <field name="question"/>
+                                                        <field name="type" on_change="on_change_type(type)"/>
                                                     </group>
                                                 </group>
                                                 <newline/>
@@ -206,7 +202,7 @@
                                             </form>
                                             <tree string="Survey Question">
                                                 <field name="sequence" string="Seq"/>
-                                                <field name="question" colspan="4" select="1"/>
+                                                <field name="question"/>
                                                 <field name="answer_choice_ids"/>
                                             </tree>
                                         </field>
@@ -215,26 +211,21 @@
                                     </form>
                                 </field>
                         </page>
-                        <page string="Other">
-
-                            <separator colspan="4" string="Survey Details"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
                         <page string="Invited User">
-                            <field name="invited_user_ids" nolabel="1" readonly="1"/>
+                            <field name="invited_user_ids" readonly="1"/>
                         </page>
                         <page string="History">
                             <group>
                                 <group>
-                                    <field name="date_open" select="1"/>
+                                    <field name="date_open"/>
                                     <field name="date_close"/>
                                 </group>
                                 <group>
-                                    <field name="tot_start_survey" select="1"/>
-                                    <field name="tot_comp_survey" select="1"/>
+                                    <field name="tot_start_survey"/>
+                                    <field name="tot_comp_survey"/>
                                 </group>
                             </group>
-                            <field name="history" colspan="4" nolabel="1">
+                            <field name="history" colspan="4">
                                 <tree string="History">
                                     <field name="date"/>
                                     <field name="user_id"/>
@@ -244,7 +235,6 @@
                                     <field name="user_id"/>
                                 </form>
                            </field>
-
                         </page>
                     </notebook>
                 </sheet>
@@ -316,7 +306,7 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
@@ -376,15 +366,20 @@
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0">
                     <sheet>
-                        <group col="4">
-                            <field name="title" select="1"/>
-                            <field name="survey_id" select="1"/>
+                        <label for="title" class="oe_edit_only"/>
+                        <h1>
+                            <field name="title"/>
+                        </h1>
+                        <group colspan="4">
+                            <field name="survey_id"/>
                             <field name="sequence"/>
                         </group>
-                        <group col="4">
-                            <field name="note" nolabel="1" placeholder="Add a description on the survey page"/>
+                        <group colspan="4">
+                            <field name="note" nolabel="1" placeholder="Description on the survey page..."/>
                         </group>
                         <group col="4">
+                            <label for="question_ids"/>
+                            <newline/>
                             <field name="question_ids" nolabel="1">
                             <form string="Survey Question">
                                 <group>
@@ -393,8 +388,8 @@
                                         <field name="type" on_change="on_change_type(type)"/>
                                     </group>
                                     <group>
-                                        <field name="sequence"/>
-                                        <field name="tot_resp"/>
+                                        <field name="sequence" invisible="1"/>
+                                        <field name="tot_resp" invisible="1"/>
                                         <field name="in_visible_rating_weight" invisible="1"/>
                                         <field name="in_visible_menu_choice" invisible="1"/>
                                         <field name="in_visible_answer_type" invisible="1"/>
@@ -500,7 +495,7 @@
                                                         <field name="req_error_msg" colspan="4" nolabel="1"/>
                                                     </group>
                                                     <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
-                                                        <group colspan="2" >
+                                                        <group colspan="2">
                                                             <field name="numeric_required_sum"/>
                                                         </group>
                                                         <newline/>
@@ -523,7 +518,7 @@
                             </form>
                             <tree string="Survey Question">
                                 <field name="sequence" string="Seq"/>
-                                <field name="question" colspan="4" select="1"/>
+                                <field name="question"/>
                                 <field name="answer_choice_ids"/>
                             </tree>
                             </field>

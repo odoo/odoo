@@ -178,7 +178,7 @@ class survey_page(osv.osv):
     _columns = {
         'title': fields.char('Page Title', size=128, required=1),
         'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
-        'question_ids': fields.one2many('survey.question', 'page_id', 'Question'),
+        'question_ids': fields.one2many('survey.question', 'page_id', 'Questions'),
         'sequence': fields.integer('Page Nr'),
         'note': fields.text('Description'),
     }
