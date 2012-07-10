@@ -55,21 +55,13 @@ class event_event(osv.osv):
               return []
         res = []
         for record in self.browse(cr, uid, ids, context=context):
-            date = record.date_begin.split(" ")
-            date = date[0]
-            registers=''
-            if record.register_max !=0:
-                register_max = str(record.register_max)
-                register_tot = record.register_current+record.register_prospect
-                register_tot = str(register_tot)
-                registers = register_tot+'/'+register_max
-            name = record.name+' ('+date+') '+registers
-            res.append((record['id'], name))
+            date = record.date_begin.split(" ")[0]
+            date_end = record.date_end.split(" ")[0]
+            if date != date_end:
+                date += ' - ' + date_end
+            display_name = record.name + ' (' + date + ')'
+            res.append((record['id'], display_name))
         return res
-
-    def _name_get_fnc(self, cr, uid, ids,prop,unknow, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(event_event, self).create(cr, uid, vals, context)
@@ -210,10 +202,12 @@ class event_event(osv.osv):
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
-        'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
+        'street': fields.related('address_id','street',type='char',string='Street'),
+        'zip': fields.related('address_id','zip',type='char',string='zip'),
+        'city': fields.related('address_id','city',type='char',string='city'),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
@@ -302,7 +296,7 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['ir.needaction_mixin','mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin','mail.thread']
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
@@ -316,13 +310,16 @@ class event_registration(osv.osv):
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
-        'user_id': fields.many2one('res.users', 'Attendee', states={'done': [('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'User', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),
                                     ('open', 'Confirmed'),
                                     ('done', 'Attended')], 'Status',
                                     size=16, readonly=True),
+        'email': fields.char('Email', size=64),
+        'phone': fields.char('Phone', size=64),
+        'name': fields.char('Name', size=128, select=True),
     }
 
     _defaults = {
@@ -330,7 +327,6 @@ class event_registration(osv.osv):
         'state': 'draft',
     }
     _order = 'name, create_date desc'
-
 
     def do_draft(self, cr, uid, ids, context=None):
         self.do_draft_send_note(cr, uid, ids, context=context)
@@ -400,18 +396,15 @@ class event_registration(osv.osv):
         return True
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner, context=None):
-        data ={}
         if not contact:
-            return data
+            return {}
         addr_obj = self.pool.get('res.partner')
         contact_id =  addr_obj.browse(cr, uid, contact, context=context)
-        data = {
+        return {'value': {
             'email':contact_id.email,
-            'contact_id':contact_id.id,
             'name':contact_id.name,
             'phone':contact_id.phone,
-            }
-        return {'value': data}
+            }}
 
     def onchange_event(self, cr, uid, ids, event_id, context=None):
         """This function returns value of Product Name, Unit Price based on Event.

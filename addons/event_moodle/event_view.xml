@@ -7,14 +7,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Emails']" position="after">
-                    <page string="Moodle">
-                        <field name="moodle_user_password" readonly='1' colspan="2"/>
-                        <field name="moodle_uid" readonly="1"/>
-                    </page>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="moodle_user_password" readonly='1'/>
+                    <field name="moodle_uid" readonly="1"/>
                 </xpath>
                 <field name="email" position="replace">
-                     <field name="email" required="1" />
+                     <!-- set the email as required -->
+                     <field name="email" nolabel="1" required="1" />
                 </field>
                 <field name="name" position="replace">
                      <field name="moodle_username" colspan="2" on_change="onchange_moodle_name(moodle_user_password)"/>
@@ -29,12 +28,12 @@
             <field name="inherit_id" ref="event.view_event_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='registration_ids']/tree/field[@name='name']" position="replace">
-                     <field name="moodle_username" on_change="onchange_moodle_name(moodle_user_password)"/>
-                     <field name="name" required="1" />
+                   <field name="moodle_username" on_change="onchange_moodle_name(moodle_user_password)"/>
+                   <field name="name" required="1" />
                 </xpath>
-                      <field name="email" position="replace">
-                          <field name="email" required="1" />
-                      </field>
+                <field name="email" position="replace">
+                    <field name="email" required="1" />
+                </field>
            </field>
         </record>
     </data>

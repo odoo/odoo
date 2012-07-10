@@ -215,7 +215,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility'),
+        'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
                         type='many2many', relation='res.users', string='Followers'),
@@ -236,6 +236,7 @@ class project(osv.osv):
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
+        'privacy_visibility': 'public',
     }
 
     # TODO: Why not using a SQL contraints ?
