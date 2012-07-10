@@ -29,7 +29,7 @@ class membership_invoice(osv.osv_memory):
     _description = "Membership Invoice"
     _columns = {
         'product_id': fields.many2one('product.product','Membership', required=True),
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
+        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Price Unit'), required=True),
     }
     def onchange_product(self, cr, uid, ids, product_id=False):
         """This function returns value of  product's member price based on product id.
