@@ -13,6 +13,10 @@ openerp.web.list_editable = function (instance) {
             this._super.apply(this, arguments);
 
             this.editor = this.makeEditor();
+            // Stores records of {field, cell}, allows for re-rendering fields
+            // depending on cell state during and after resize events
+            this.fields_for_resize = [];
+            instance.web.bus.on('resize', this, this.resizeFields);
 
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
@@ -26,6 +30,10 @@ openerp.web.list_editable = function (instance) {
                     self.compute_aggregates();
                 }
             })
+        },
+        destroy: function () {
+            instance.web.bus.off('resize', this, this.resizeFields);
+            this._super();
         },
         /**
          * Handles the activation of a record in editable mode (making a record
@@ -146,6 +154,7 @@ openerp.web.list_editable = function (instance) {
             var cells = this.getCellsFor($recordRow);
 
             return this.ensureSaved().pipe(function () {
+                self.fields_for_resize.splice(0, self.fields_for_resize.length);
                 return self.withEvent('edit', {
                     record: record.attributes,
                     cancel: false
@@ -158,17 +167,11 @@ openerp.web.list_editable = function (instance) {
                             field.set({invisible: true});
                             return;
                         }
-                        var $cell = $(cell);
-                        var position = $cell.position();
 
-                        field.$element.css({
-                            top: position.top,
-                            left: position.left,
-                            width: $cell.outerWidth(),
-                            minHeight: $cell.outerHeight()
-                        });
+                        self.fields_for_resize.push({field: field, cell: cell});
                     }).pipe(function () {
                         $recordRow.addClass('oe_edition');
+                        self.resizeFields();
                         return record.attributes;
                     });
                 });
@@ -180,6 +183,35 @@ openerp.web.list_editable = function (instance) {
                 cells[el.getAttribute('data-field')] = el
             });
             return cells;
+        },
+        /**
+         * If currently editing a row, resizes all registered form fields based
+         * on the corresponding row cell
+         */
+        resizeFields: function () {
+            if (!this.editor.isEditing()) { return; }
+            for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
+                var item = this.fields_for_resize[i];
+                this.resizeField(item.field, item.cell);
+            }
+        },
+        /**
+         * Resizes a field's root element based on the corresponding cell of
+         * a listview row
+         *
+         * @param {instance.web.form.AbstractField} field
+         * @param {jQuery} cell
+         */
+        resizeField: function (field, cell) {
+            var $cell = $(cell);
+            var position = $cell.position();
+
+            field.$element.css({
+                top: position.top,
+                left: position.left,
+                width: $cell.outerWidth(),
+                minHeight: $cell.outerHeight()
+            });
         },
         /**
          * @return {jQuery.Deferred}
