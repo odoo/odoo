@@ -316,7 +316,7 @@
                                     <t t-if="record.date_action.raw_value"> : </t>
                                     <field name="title_action"/>
                                 </div>
-                                <div class="oe_right">
+                                <div class="oe_kanban_bottom_right">
                                     <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
                                     <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
                                     <!--
@@ -468,7 +468,7 @@
                         <h2>
                             <field name="planned_revenue" class="oe_inline"/>
                             <field name="company_currency" class="oe_inline"/> at 
-                            <field name="probability" class="oe_inline"/> %% success rate
+                            <field name="probability" class="oe_inline"/>%% success rate
                         </h2>
                     </div>
                     <group>

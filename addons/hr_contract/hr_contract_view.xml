@@ -71,19 +71,18 @@
                     <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" class="oe_inline"/>, <field name="employee_id" class="oe_inline"/>
+                            <field name="name" placeholder="Contract Reference"/>
                         </h1>
-                        <h2>
-                            <div>
-                                <label for="job_id" class="oe_edit_only"/>
-                                <field name="job_id"/>
-                            </div>
-                            <div>
-                                <label for="type_id" class="oe_edit_only"/>
-                                <field name="type_id"/>
-                            </div>
-                        </h2>
                     </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="type_id"/>
+                        </group>
+                    </group>
                     <notebook>
                         <page string="Information" name="information">
                             <group>
