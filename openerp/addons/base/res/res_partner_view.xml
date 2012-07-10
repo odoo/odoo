@@ -122,6 +122,8 @@
                                     </div>
                                 </td>
                                 <td>
+                                </td>
+                                <td>
                                     <label for="function" class="oe_edit_only"/>
                                 </td>
                             </tr>
@@ -133,6 +135,12 @@
                                             domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                             class="oe_inline"
                                             on_change="onchange_address(use_parent_address, parent_id)"/>
+                                        
+                                    </h2>
+                                </td>
+                                <td>
+                                    <h2>
+                                        <label string="," class="oe_inline" attrs="{'invisible': ['|', ('parent_id', '=', False), ('function', '=', False)]}"/>
                                     </h2>
                                 </td>
                                 <td>
