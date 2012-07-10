@@ -359,12 +359,8 @@ openerp.web.list_editable = function (instance) {
                 if (saveInfo.created) {
                     return self.startEdition();
                 }
-                var next_index = self.records.indexOf(saveInfo.record) + 1;
-                if (next_index === self.records.length) {
-                    next_index = 0;
-                }
-
-                return self.startEdition(self.records.at(next_index));
+                return self.startEdition(
+                    self.records.succ(saveInfo.record, {wraparound: true}));
             });
         },
         keyup_ESCAPE: function () {

@@ -1849,7 +1849,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
      * @returns this
      */
     remove: function (record) {
-        var index = _(this.records).indexOf(record);
+        var index = this.indexOf(record);
         if (index === -1) {
             _(this._proxies).each(function (proxy) {
                 proxy.remove(record);
@@ -1885,12 +1885,14 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
 
     // underscore-type methods
     find: function (callback) {
-        var record = null;
+        var record;
         for(var section in this._proxies) {
-            if (this._proxies.hasOwnProperty(section)) {
-                record = this._proxies[section].find(callback);
+            if (!this._proxies.hasOwnProperty(section)) {
+                continue
             }
-            if (record) { return record; }
+            if ((record = this._proxies[section].find(callback))) {
+                return record;
+            }
         }
         for(var i=0; i<this.length; ++i) {
             record = this.records[i];
@@ -1923,6 +1925,25 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
     },
     indexOf: function (record) {
         return _(this.records).indexOf(record);
+    },
+    succ: function (record, options) {
+        options = options || {wraparound: false};
+        var result;
+        for(var section in this._proxies) {
+            if (!this._proxies.hasOwnProperty(section)) {
+                continue
+            }
+            if ((result = this._proxies[section].succ(record, options))) {
+                return result;
+            }
+        }
+        var index = this.indexOf(record);
+        if (index === -1) { return null; }
+        var next_index = index + 1;
+        if (options.wraparound && (next_index === this.length)) {
+            return this.at(0);
+        }
+        return this.at(next_index);
     }
 });
 Collection.include(Events);
