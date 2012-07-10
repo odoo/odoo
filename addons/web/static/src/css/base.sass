@@ -1449,7 +1449,7 @@ $sheet-max-width: 860px
             label
                 line-height: 18px
                 display: block
-                min-width: 120px
+                min-width: 110px
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 6px
         .oe_form_group
@@ -1512,9 +1512,10 @@ $sheet-max-width: 860px
             width: 100%
         .oe_form_field_char input,
         .oe_form_field_url input,
+        .oe_form_field_email input,
         .oe_form_field_text textarea,
         .oe_form_field_selection select
-            width: inherit
+            width: 100%
         .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
         .oe_form_field_float input
@@ -1560,14 +1561,6 @@ $sheet-max-width: 860px
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-        .oe_form_field_many2one input, .oe_form_field_binary input, .oe_form_field_binary input, .oe_form_field_url input
-            border-right: none
-            -webkit-border-top-right-radius: 0px
-            -webkit-border-bottom-right-radius: 0px
-            -moz-border-radius-topright: 0px
-            -moz-border-radius-bottomright: 0px
-            border-top-right-radius: 0px
-            border-bottom-right-radius: 0px
         .oe_form_field_url button img
             vertical-align: top
         .oe_form_field_date,
@@ -1618,14 +1611,25 @@ $sheet-max-width: 860px
             filter: alpha(opacity=50)
             right: 5px
             top: 3px
-        .oe_form_field_with_button
+        .oe_form_field_with_button.oe_no_button > .oe_button
+            display: none
+        .oe_form_field_with_button:not(.oe_no_button)
             input
-                width: 100%
+                border-right: none
+                -webkit-border-top-right-radius: 0px
+                -webkit-border-bottom-right-radius: 0px
+                -moz-border-radius-topright: 0px
+                -moz-border-radius-bottomright: 0px
+                border-top-right-radius: 0px
+                border-bottom-right-radius: 0px
             > .oe_button
                 float: right
                 @include radius(0)
                 border-bottom-left-radius: 0px
                 height: 22px
+        .oe_form_field_with_button
+            input
+                width: 100%
             > div
                 position: relative
                 overflow: hidden
@@ -1680,8 +1684,8 @@ $sheet-max-width: 860px
             position: relative
         span.oe_m2o_drop_down_button
             position: absolute
-            top: 3px
-            right: 2px
+            top: 1px
+            right: 0px
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
