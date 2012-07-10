@@ -14,12 +14,6 @@
                     <field name="date_deadline"/>
                     <field name="create_date"/>
                     <templates>
-                        <t t-name="kanban-tooltip">
-                           <ul class="oe_kanban_tooltip">
-                              <li><b>Project:</b> <field name="project_id"/></li>
-                              <li><b>Category:</b> <field name="categ_id"/></li>
-                           </ul>
-                        </t>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_kanban_content" tooltip="kanban-tooltip">
@@ -29,6 +23,9 @@
                                         <field name="version_id"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
+                                        <div class="oe_left">
+                                            <field name="categ_id"/>
+                                        </div>
                                         <div class="oe_right">
                                             Creation: <field name="create_date"/>
                                             <span class="oe_kanban_highlight">
