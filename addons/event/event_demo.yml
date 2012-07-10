@@ -1,0 +1,73 @@
+-
+  from datetime import datetime, timedelta
+-
+  !record {model: event.type, id: event_type_0}:
+    name: 'Seminar'
+-
+  !record {model: event.type, id: event_type_1}:
+    name: 'Exhibition'
+-
+  !record {model: event.type, id: event_type_2}:
+    name: 'Conference'
+-
+  !record {model: event.type, id: event_type_3}:
+    name: 'Show'
+-
+  !record {model: event.type, id: event_type_4}:
+    name: 'Training'
+-
+  !record {model: event.event, id: event_0}:
+    name: 'Concert of Bon Jovi'
+    date_begin: !eval time.strftime('%Y-%m-01 19:05:15')
+    date_end: !eval time.strftime('%Y-%m-01 23:05:15')
+    register_max: 500
+    type: event_type_1
+-
+  !record {model: event.event, id: event_1}:
+    name: 'Opera of Verdi'
+    date_begin: !eval (datetime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 18:00:00')
+    date_end: !eval (datetime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 21:00:00')
+    register_min: 50
+    register_max: 350
+    type: event_type_1
+-
+  !record {model: event.event, id: event_2}:
+    name: 'Conference on ERP Business'
+    date_begin: !eval (datetime.today()+ timedelta(days=20)).strftime('%Y-%m-%d 14:00:00')
+    date_end: !eval (datetime.today()+ timedelta(days=20)).strftime('%Y-%m-%d 16:30:00')
+    register_min: 50
+    register_max: 350
+    type: event_type_2
+-
+  !record {model: event.registration, id: reg_1_1}:
+    name: 'Agrolait'
+    email: 's.l@agrolait.be'
+    phone: '003281588558'
+    event_id: event_1
+    partner_id: base.res_partner_asus
+    nb_register: 5
+-
+  !record {model: event.registration, id: reg_1_2}:
+    name: 'ASUStek'
+    email: 'info@asustek.com'
+    phone: '+ 1 64 61 04 01'
+    event_id: event_1
+    partner_id: base.res_partner_asus
+    nb_register: 10
+-
+  !record {model: event.registration, id: reg_0_1}:
+    name: 'Syleam'
+    email: 'contact@syleam.fr'
+    phone: '+33 (0) 2 33 31 22 10'
+    event_id: event_0
+    partner_id: base.res_partner_sednacom
+    nb_register: 6
+-
+  !record {model: event.registration, id: reg_0_2}:
+    name: 'Camptocamp'
+    email: 'openerp@camptocamp.com'
+    phone: '+41 21 619 10 04'
+    event_id: event_2
+    partner_id: base.res_partner_c2c
+    nb_register: 5
+ 
