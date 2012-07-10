@@ -53,11 +53,11 @@ Partners are also sent mails with user name and password for the invitation of t
         'test/survey_question_type.yml',
         'test/survey_report.yml',
     ],
-    'css': ['static/src/css/survey.css'],
     'installable': True,
     'auto_install': False,
     'certificate' : '001131639736864143245',
-    'images': ['images/survey_answers.jpeg','images/survey_pages.jpeg','images/surveys.jpeg'],
-    'css' : ['static/css/survey.css'],
+    'images': ['images/survey_answers.jpeg','images/survey_pages.jpeg','images/surveys.jpeg'],   
+    'css': ['static/src/css/survey.css','static/css/survey.css'],
+    'js' : ['static/src/js/survey.js'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
