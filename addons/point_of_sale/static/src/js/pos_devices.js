@@ -1,7 +1,7 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 
-    window.debug_devices = new (instance.web.Class.extend({
+     var debug_devices = new (instance.web.Class.extend({
         active: false,
         payment_status: 'waiting_for_payment',
         weight: 0,
@@ -16,6 +16,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         reject_payment: function(){ this.activate(); this.payment_status = 'payment_rejected'; },
         delay_payment:  function(){ this.activate(); this.payment_status = 'waiting_for_payment'; },
     }))();
+
+    //window.debug_devices = debug_devices;
 
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
@@ -36,14 +38,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.connection.setup(url);
             
         },
-        message : function(name,params,callback){
-            var success_callback = function(result){};  //console.log('PROXY SUCCESS:'+name+': ',result); }
-            var error_callback = function(result){};    // console.log('PROXY ERROR:'+name+': ',result); }
-            //console.log('PROXY: '+name);
-            if(debug_devices.active){
+        message : function(name,params,success_callback, error_callback){
+            success_callback = success_callback || function(){}; 
+            error_callback   =  error_callback  || function(){};    
+
+            if(debug_devices && debug_devices.active){
                 console.log('PROXY:',name,params);
             }else{
-                this.connection.rpc('/pos/'+name, params || {}, callback || success_callback, error_callback);
+                this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
             }
         },
         
@@ -70,7 +72,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //the client is starting to weight
         weighting_start: function(){
             this.weight = 0;
-            debug_devices.weigth = 0;
+            if(debug_devices){
+                debug_devices.weigth = 0;
+            }
             this.weighting = true;
             this.message('weighting_start');
         },
@@ -80,12 +84,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
-            if(debug_devices.active){
+            if(debug_devices && debug_devices.active){
                 return debug_devices.weight;
             }else{
                 this.message('weighting_read_kg',{},function(weight){
                     if(self.weighting){
-                        console.log('PROXY SUCCESSFULLY READ WEIGHT:',weight);
                         self.weight = weight;
                     }
                 });
@@ -106,7 +109,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         payment_request: function(price, method, info){
             this.paying = true;
             this.payment_status = 'waiting_for_payment';
-            debug_devices.payment_status = 'waiting_for_payment';
+            if(debug_devices){
+                debug_devices.payment_status = 'waiting_for_payment';
+            }
             this.message('payment_request',{'price':price,'method':method,'info':info});
         },
 
@@ -394,10 +399,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     if (codeNumbers.length == 13) {
                         //We have found what seems to be a valid codebar
                         var parse_result = self.parse_ean(codeNumbers.join(''));
-                        console.log('BARCODE:',parse_result);
 
                         if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                            console.log('ERROR: barcode checksum error:',parse_result);
+                            console.error('ERROR: barcode checksum error:',parse_result);
                         }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
                             if(self.action_callback['product']){
                                 self.action_callback['product'](parse_result);

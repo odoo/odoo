@@ -154,9 +154,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
 
         close_button_action: function(){
-            console.log("Close!");
             this.pos_widget.try_close();
-            //TODO
         },
 
         barcode_product_screen:         'products',     //if defined, this screen will be loaded when a product is scanned
@@ -353,7 +351,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             self.pos.proxy.weighting_start();
-            console.log('Active product:',self.pos_widget.screen_selector.get_current_screen_param('product'));
 
             this.intervalID = setInterval(function(){
                 var weight = self.pos.proxy.weighting_read_kg();
@@ -436,7 +433,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_name: function(){
             var product = this.get_product();
-            console.log('PRoduct?',product);
             return (product ? product.get('name') : undefined) || 'Unnamed Product';
         },
         get_product_price: function(){
@@ -566,6 +562,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_categories_widget.reset_category();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
+            if(this.pos.use_virtual_keyboard){
+                this.pos_widget.onscreen_keyboard.connect();
+            }
         },
 
         close: function(){
@@ -648,6 +647,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
+            if(this.pos.use_cashbox){
+                this.pos.proxy.open_cashbox();
+            }
+
             this.set_numpad_state(this.pos_widget.numpad.state);
             
             this.back_button = this.pos_widget.action_bar.add_new_button({
@@ -677,8 +680,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         validateCurrentOrder: function() {
             var self = this;
             var currentOrder = this.pos.get('selectedOrder');
-
-            console.log('RECEIPT:',currentOrder.export_for_printing());
 
             this.validate_button.$element.attr('disabled','disabled');  //FIXME is the css actually using this attr ? 
 

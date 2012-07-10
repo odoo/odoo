@@ -76,6 +76,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
                     self.page_down();
                 }
             });
+            // FIXME: use the event bus to handle window resize events
             $(window).unbind('resize',this.resize_handler);
             $(window).bind('resize',this.resize_handler);
 

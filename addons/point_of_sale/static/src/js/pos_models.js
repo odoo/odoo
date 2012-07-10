@@ -90,10 +90,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'currency':         {symbol: '$', position: 'after'},
                 'shop':             null, 
                 'company':          null,
-                'user':             null,
-                'user_list':        null,
-                'cashier':          null,
-                'client':         null,
+                'user':             null,   // the user that loaded the pos
+                'user_list':        null,   // list of all users
+                'cashier':          null,   // the logged cashier, if different from user
+                'client':         null,     // the logged client 
 
                 'orders':           new module.OrderCollection(),
                 //this is the product list as seen by the product list widgets, it will change based on the category filters
@@ -110,7 +110,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'selectedOrder':    undefined,
             });
 
-            this.get('orders').bind('remove', _.bind( this.on_removed_order, this ) );
+            this.get('orders').bind('remove', function(){ self.on_removed_order(); });
             
             // We fetch the backend data on the server asynchronously
 
@@ -118,7 +118,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 .pipe(function(users){
                     var user = users[0];
                     self.set('user',user);
-                    console.log('USER_DONE');
 
                     return fetch('res.company',
                     [
@@ -135,12 +134,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).pipe(function(companies){
                     var company = companies[0];
                     self.set('company',company);
-                    console.log('COMPANY_DONE');
 
                     return fetch('res.currency',['symbol','position'],[['id','=',company.currency_id[0]]]);
                 }).pipe(function (currencies){
                     self.set('currency',currencies[0]);
-                    console.log('CURRENCY_DONE');
                 });
 
             var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'category_image_small'])
@@ -154,7 +151,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
                     self.set({'product_list': result});
-                    console.log('PRODUCTS_DONE');
                 });
 
             var uom_def = fetch(    //unit of measure
@@ -168,16 +164,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         units_by_id[result[i].id] = result[i];
                     }
                     self.set({'units_by_id':units_by_id});
-                    console.log('UOM_DONE');
                 });
 
-            var user_def = fetch(
+            var users_def = fetch(
                 'res.users',
                 ['name','ean13'],
                 [['ean13', '!=', false]]
                 ).then(function(result){
                     self.set({'user_list':result});
-                    console.log('USERS_DONE');
                 });
 
 
@@ -197,13 +191,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     for(var i = 0; i < product_list.length; i++){
                         product_list[i].pos_category = cat_by_id[product_list[i].pos_categ_id[0]];
                     }
-                    console.log('PROD_PROCESS_DONE');
                 });
 
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
                 .then(function(result){
                     self.set({'taxes': result});
-                    console.log('TAX_DONE');
                 });
 
             var session_def = fetch(    // loading the PoS Session.
@@ -227,7 +219,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 ['name','journal_ids','shop_id','journal_id',
                                  'iface_self_checkout', 'iface_websql', 'iface_led', 'iface_cashdrawer',
                                  'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                                 'iface_print_via_proxy','state','sequence_id','session_ids'],
+                                 'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
                                 [['id','=', pos_session.config_id[0]]]
                             ).pipe(function(result){
                                 var pos_config = result[0]
@@ -239,12 +231,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 self.use_websql             = pos_config.iface_websql            || false;
                                 self.use_barcode_scanner    = pos_config.iface_barscan           || false;
                                 self.use_selfcheckout       = pos_config.iface_self_checkout     || false;
-                                console.log('POS_CONFIG_DONE');
+                                self.use_cashbox            = pos_config.iface_cashdrawer        || false;
 
                                 return shop_def = fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
                             }).pipe(function(shops){
                                 self.set('shop',shops[0]);
-                                console.log('SHOP_DONE');
                             });
 
                         var bank_def = fetch(
@@ -253,7 +244,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             [['state','=','open'],['pos_session_id', '=', pos_session.id]]
                             ).then(function(result){
                                 self.set({'bank_statements':result});
-                                console.log('BANK_DEF_DONE');
                             });
 
                         var journal_def = fetch(
@@ -262,7 +252,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             [['user_id','=',pos_session.user_id[0]]]
                             ).then(function(result){
                                 self.set({'journals':result});
-                                console.log('JOURNALS_DONE');
                             });
 
                         // associate the bank statements with their journals. 
@@ -278,7 +267,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                         }
                                     }
                                 }
-                                console.log('BANK_PROCESS_DONE');
                             });
 
                         session_data_def = $.when(pos_config_def,bank_def,journal_def,bank_process_def);
@@ -290,12 +278,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, prod_def, user_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
+            $.when(cat_def, prod_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
                 .then(function(){ 
-                    //self.build_tree();
                     self.build_categories(); 
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
-                    self.log_loaded_data();
+                    //self.log_loaded_data();
                     self.ready.resolve();
                 },function(){
                     //we failed to load some backend data, or the backend was badly configured.
@@ -635,6 +622,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 product_id: this.get_product().get('id'),
             };
         },
+        //used to create a json of the ticket, to be sent to the printer
         export_for_printing: function(){
             return {
                 quantity:           this.get_quantity(),
@@ -734,6 +722,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 amount: this.get_amount()
             };
         },
+        //exports as JSON for receipt printing
         export_for_printing: function(){
             return {
                 amount: this.get_amount(),
@@ -832,7 +821,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // the order also stores the screen status, as the PoS supports
         // different active screens per order. This method is used to
-        // store the screen status, and is used by 
+        // store the screen status.
         set_screen_data: function(key,value){
             if(arguments.length === 2){
                 this.screen_data[key] = value;
@@ -846,6 +835,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_screen_data: function(key){
             return this.screen_data[key];
         },
+        // exports a JSON for receipt printing
         export_for_printing: function(){
             var orderlines = [];
             this.get('orderLines').each(function(orderline){

@@ -68,7 +68,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.$element.click(function(){
                 if (self.pos.get('selectedOrder').get('screen') === 'receipt'){  //TODO Why ?
-                    console.log('TODO should not get there...?');
+                    console.warn('TODO should not get there...?');
                     return;
                 }
                 self.pos.get('selectedOrder').addPaymentLine(self.cashRegister);
@@ -410,12 +410,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 $(button).appendTo(this.$('.category-list')).click(function(event){
                     var id = category.id;
-                    console.log('Clicked category:',category);
                     var cat = self.pos.categories_by_id[id];
                     self.set_category(cat);
                     self.renderElement();
                     self.search_and_categories(cat);
-                    console.log('coucou');
                 });
             });
             // breadcrumb click actions
@@ -618,8 +616,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super(arguments[0],{});
             
             this.pos = new module.PosModel(this.session);
-            window.pos = this.pos;
-            window.pos_widget = this;
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
@@ -762,8 +758,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 default_mode: this.pos.use_selfcheckout ?  'client' : 'cashier',
             });
             this.screen_selector.set_default_screen();
-
-            window.screen_selector = this.screen_selector; //DEBUG
 
             this.pos.barcode_reader.connect();
         },
