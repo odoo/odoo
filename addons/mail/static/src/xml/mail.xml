@@ -139,6 +139,7 @@
                             <li><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
                             <li><a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
                         </t>
+                        <li t-if="record.type == 'email'"><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Repzefly</a></li>
                         <li t-if="record.type == 'email'"><a href="#" class="oe_mail_msg_details">Details</a></li>
                     </ul>
                 </span>
@@ -148,11 +149,11 @@
                         <t t-raw="record.subject"/>
                     </h1>
                     <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
-                        <a href="#" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}' class="oe_mail_internal_link"><t t-raw="record.record_name"/></a>
+                        <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a>
                     </div>
                     <div class="oe_mail_msg_body">
-                        <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a>
-                        <t t-raw="record.body"/>
+                        <a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a>
+                        <div class="oe_mail_msg_record_body"><t t-raw="record.body"/></div>
                     </div>
                     <ul class="oe_mail_msg_footer">
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
