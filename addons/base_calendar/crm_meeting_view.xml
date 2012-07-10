@@ -96,18 +96,18 @@
                         <h2>
                             <label for="date" string="Starting at"/>
                             <field name="date" required="1" class="oe_inline"/>
-                            <label for="location" string="in" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/>
+                            <label for="location" string="at" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/>
                             <field name="location" placeholder="Specify the location here" class="oe_inline"/>
                         </h2>
                         <h2>
-                            <label for="duration" string="Duration" />
+                            <label for="duration" string="Duration" attrs="{'invisible': [('allday', '=', True)]}"/>
                             <field name="duration" widget="float_time"
                                 on_change="onchange_dates(date,duration,False,allday)"
-                                class="oe_inline"/> ( 
+                                class="oe_inline" attrs="{'invisible': [('allday', '=', True)]}"/> <label string="(" attrs="{'invisible': [('allday', '=', True)]}"/>
                             <field name="date_deadline" 
                                 string="End Date" required="1"
-                                on_change="onchange_dates(date,False,date_deadline)"                            
-                                class="oe_inline"/> )
+                                on_change="onchange_dates(date,False,date_deadline)"
+                                class="oe_inline" attrs="{'invisible': [('allday', '=', True)]}"/> <label string=")" attrs="{'invisible': [('allday', '=', True)]}"/>
                         </h2>
                     </div>
                     <group>
