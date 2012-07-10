@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import mail_compose_message
 import crm_add_note
 
 import crm_lead_to_partner
