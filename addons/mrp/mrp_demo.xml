@@ -251,709 +251,431 @@
 
         <!-- Resource: mrp.bom -->
 
-        <record id="mrp_bom_12" model="mrp.bom">
-            <field name="name">Regular processor config</field>
-            <field name="sequence">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="routing_id" ref="mrp_routing_2"/>
-            <field name="type">normal</field>
-            <field model="product.product" name="product_id" ref="product.product_product_16"/>
-        </record>
 
         <record id="mrp_bom_1" model="mrp.bom">
-            <field name="name">Assembly Basic+ PC</field>
-            <field name="sequence">5</field>
+            <field name="name">HDD 500GB</field>
+            <field name="product_id" ref="product.product_product_18"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">5</field>            
             <field name="routing_id" ref="mrp_routing_0"/>
-            <field model="product.product" name="product_id" ref="product.product_product_4" />
+            <field name="type">normal</field>
         </record>
 
         <record id="mrp_bom_2" model="mrp.bom">
-            <field name="name">Assembly Medium PC</field>
-            <field name="sequence">8</field>
+            <field name="name">320GB HDD</field>
+            <field name="product_id" ref="product.product_product_17"/>
+            <field name="product_qty">2</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field model="product.product" name="product_id" ref="product.product_product_5"/>
+            <field name="sequence">5</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_1"/>
         </record>
 
         <record id="mrp_bom_3" model="mrp.bom">
-            <field name="name">Assembly Customizable PC</field>
-            <field name="sequence">11</field>
+            <field name="name">HDD 2TB on Demand</field>
+            <field name="product_id" ref="product.product_product_19"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field model="product.product" name="product_id" ref="product.product_product_6"/>
+            <field name="sequence">5</field>            
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="type">normal</field>
         </record>
 
         <record id="mrp_bom_4" model="mrp.bom">
-            <field name="name">HDD on demand</field>
-            <field name="sequence">14</field>
+            <field name="name">HDD 500GB</field>
+            <field name="product_id" ref="product.product_product_18"/>
+            <field name="product_qty">4</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="sequence">5</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_3"/>
         </record>
 
         <record id="mrp_bom_5" model="mrp.bom">
-            <field name="name">RAM512 on demand</field>
-            <field name="sequence">18</field>
+            <field name="name">HDD on Demand</field>
+            <field name="product_id" ref="product.product_product_19"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field model="product.product" name="product_id" ref="product.product_product_21"/>
+            <field name="sequence">10</field>            
+            <field name="type">normal</field>
         </record>
 
         <record id="mrp_bom_6" model="mrp.bom">
-            <field name="name">HDD on demand</field>
-            <field name="sequence">21</field>
+            <field name="name">320GB HDD</field>
+            <field name="product_id" ref="product.product_product_17"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="sequence">5</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_5"/>
         </record>
 
         <record id="mrp_bom_7" model="mrp.bom">
-            <field name="name">HDD on demand</field>
-            <field name="sequence">25</field>
+            <field name="name">Laptop Customized</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="sequence">5</field>            
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="type">normal</field>
+        </record>
+
+        <record id="mrp_bom_8" model="mrp.bom">
+            <field name="name">Windows 7 Professional</field>
+            <field name="product_id" ref="product.product_product_40"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_9" model="mrp.bom">
-            <field name="name">Assembly Basic PC</field>
-            <field name="sequence">29</field>
+            <field name="name">USB Keyboard, QWERTY</field>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="routing_id" ref="mrp_routing_0"/>
+            <field name="sequence">4</field>            
             <field name="type">normal</field>
-            <field model="product.product" name="product_id" ref="product.product_product_3"/>
+            <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_10" model="mrp.bom">
-            <field name="name">Complete PC with peripherals</field>
-            <field name="sequence">33</field>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field model="product.product" name="product_id" ref="product.product_product_23"/>
+            <field name="sequence">6</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_11" model="mrp.bom">
-            <field name="name">RAM256 on demand</field>
-            <field name="sequence">36</field>
+            <field name="name">Laptop Customized + Azerty</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field model="product.product" name="product_id" ref="product.product_product_21"/>
+            <field name="sequence">10</field>            
+            <field name="type">normal</field>
+        </record>
+
+        <record id="mrp_bom_12" model="mrp.bom">
+            <field name="name">Windows 7 Professional</field>
+            <field name="product_id" ref="product.product_product_40"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_11"/>
         </record>
 
         <record id="mrp_bom_13" model="mrp.bom">
-            <field name="name">High Speed Processor + main board on demand</field>
-            <field name="sequence">38</field>
+            <field name="name">USB Keyboard, AZERTY</field>
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="routing_id" ref="mrp_routing_1"/>
-            <field model="product.product" name="product_id" ref="product.product_product_10"/>
-        </record>
-
-        <record id="mrp_bom_17" model="mrp.bom">
-            <field name="name">ARM100 + Subproduct</field>
-            <field name="sequence">40</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field model="product.product" name="product_id" ref="product.product_product_28" />
-        </record>
-
-        <record id="mrp_bom_50" model="mrp.bom">
-            <field name="code">KIT</field>
-            <field name="name">Kit Keyboard + Mouse</field>
-            <field name="sequence">42</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field name="bom_id" ref="mrp_bom_10"/>
-            <field model="product.product" name="product_id" ref="product.product_product_26"/>
-        </record>
-
-        <record id="mrp_bom_16" model="mrp.bom">
-            <field name="name">Moon PC</field>
-            <field name="sequence">45</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_10"/>
-            <field model="product.product" name="product_id" ref="product.product_product_4"/>
-        </record>
-
-        <record id="mrp_bom_18" model="mrp.bom">
-            <field name="name">Mainboard ASUStek A7N8X</field>
-            <field name="sequence">49</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_13"/>
-            <field model="product.product" name="product_id" ref="product.product_product_6"/>
-        </record>
-
-        <record id="mrp_bom_19" model="mrp.bom">
-            <field name="name">Processor AMD Athlon 2200+</field>
-            <field name="sequence">51</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_13"/>
-            <field model="product.product" name="product_id" ref="product.product_product_19"/>
+            <field name="sequence">4</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_11"/>
         </record>
 
         <record id="mrp_bom_14" model="mrp.bom">
-            <field name="name">Regular Case Fan</field>
-            <field name="sequence">54</field>
+            <field name="name">Mouse, Laser</field>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_13"/>
-            <field model="product.product" name="product_id" ref="product.product_product_14"/>
-        </record>
-
-        <record id="mrp_bom_23" model="mrp.bom">
-            <field name="name">DDR 256MB PC333</field>
-            <field name="sequence">57</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">6</field>            
+            <field name="type">normal</field>
             <field name="bom_id" ref="mrp_bom_11"/>
-            <field model="product.product" name="product_id" ref="product.product_product_17"/>
         </record>
 
         <record id="mrp_bom_15" model="mrp.bom">
-            <field name="name">DDR 512MB PC400</field>
-            <field name="sequence">59</field>
+            <field name="name">Computer Case-1</field>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_13"/>
-            <field model="product.product" name="product_id" ref="product.product_product_18"/>
+            <field name="sequence">5</field>            
+            <field name="type">normal</field>
+        </record>
+
+        <record id="mrp_bom_16" model="mrp.bom">
+            <field name="name">Processesor AMD 8-Core</field>
+            <field name="product_id" ref="product.product_product_23"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">4</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_15"/>
+        </record>
+
+        <record id="mrp_bom_17" model="mrp.bom">
+            <field name="name">Motherboard I9P57</field>
+            <field name="product_id" ref="product.product_product_20"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">6</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_15"/>
+        </record>
+
+        <record id="mrp_bom_18" model="mrp.bom">
+            <field name="name">HDD 320GB</field>
+            <field name="product_id" ref="product.product_product_17"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">8</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_15"/>
+        </record>
+
+        <record id="mrp_bom_19" model="mrp.bom">
+            <field name="name">Computer Case-2</field>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">10</field>            
+            <field name="type">normal</field>
+        </record>
+
+        <record id="mrp_bom_20" model="mrp.bom">
+            <field name="name">Processor Core i5 2.70 Ghz</field>
+            <field name="product_id" ref="product.product_product_22"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_19"/>
+        </record>
+
+        <record id="mrp_bom_21" model="mrp.bom">
+            <field name="name">Motherboard A20Z7</field>
+            <field name="product_id" ref="product.product_product_21"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">4</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_19"/>
         </record>
 
         <record id="mrp_bom_22" model="mrp.bom">
-            <field name="name">DDR 1024MB PC400</field>
-            <field name="sequence">61</field>
+            <field name="name">HDD 500GB</field>
+            <field name="product_id" ref="product.product_product_18"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_5"/>
-            <field model="product.product" name="product_id" ref="product.product_product_18"/>
+            <field name="sequence">6</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_19"/>
+        </record>
+
+        <record id="mrp_bom_23" model="mrp.bom">
+            <field name="name">Graphics Card</field>
+            <field name="product_id" ref="product.product_product_24"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">10</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_19"/>
         </record>
 
         <record id="mrp_bom_24" model="mrp.bom">
-            <field name="name">HDD Seagate 7200.8 80GB</field>
-            <field name="sequence">64</field>
+            <field name="name">PC Assemble + 2GB RAM</field>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_7"/>
-            <field model="product.product" name="product_id" ref="product.product_product_13"/>
+            <field name="sequence">5</field>            
+            <field name="type">phantom</field>
         </record>
 
         <record id="mrp_bom_25" model="mrp.bom">
-            <field name="name">HDD Seagate 7200.8 120GB</field>
-            <field name="sequence">66</field>
+            <field name="name">15" LCD Monitor </field>
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">2</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_4"/>
-            <field model="product.product" name="product_id" ref="product.product_product_11"/>
+            <field name="bom_id" ref="mrp_bom_24"/>
         </record>
 
         <record id="mrp_bom_26" model="mrp.bom">
-            <field name="name">RAM on demand</field>
-            <field name="sequence">69</field>
+            <field name="name">Computer Case-1</field>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_3"/>
-            <field model="product.product" name="product_id" ref="product.product_product_21"/>
+            <field name="sequence">4</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_24"/>
         </record>
 
         <record id="mrp_bom_27" model="mrp.bom">
-            <field name="name">HDD on demand</field>
-            <field name="sequence">73</field>
+            <field name="name">Mouse, Laser</field>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_3"/>
-            <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="sequence">6</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_24"/>
         </record>
 
         <record id="mrp_bom_28" model="mrp.bom">
-            <field name="name">ATX middle-size case</field>
-            <field name="sequence">76</field>
+            <field name="name">USB Keyboard, QWERTY</field>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">8</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_3"/>
-            <field model="product.product" name="product_id" ref="product.product_product_27"/>
+            <field name="bom_id" ref="mrp_bom_24"/>
         </record>
 
         <record id="mrp_bom_29" model="mrp.bom">
-            <field name="name">Processor on demand</field>
-            <field name="sequence">79</field>
+            <field name="name">RAM DDR2 1GB</field>
+            <field name="product_id" ref="product.product_product_15"/>
+            <field name="product_qty">2</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">10</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_3"/>
-            <field model="product.product" name="product_id" ref="product.product_product_16"/>
+            <field name="bom_id" ref="mrp_bom_24"/>
         </record>
 
         <record id="mrp_bom_30" model="mrp.bom">
-            <field name="name">ATX Middle-size case</field>
-            <field name="sequence">81</field>
+            <field name="name">PC Assemble + 512MB RAM</field>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_2"/>
-            <field model="product.product" name="product_id" ref="product.product_product_27"/>
+            <field name="sequence">5</field>            
+            <field name="routing_id" ref="mrp_routing_2"/>
+            <field name="type">phantom</field>
         </record>
 
         <record id="mrp_bom_31" model="mrp.bom">
-            <field name="name">HDD Seagate 7200.8 80GB</field>
-            <field name="sequence">83</field>
+            <field name="name">17" LCD Monitor</field>
+            <field name="product_id" ref="product.product_product_7"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">2</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_2"/>
-            <field model="product.product" name="product_id" ref="product.product_product_11"/>
+            <field name="bom_id" ref="mrp_bom_30"/>
         </record>
 
         <record id="mrp_bom_32" model="mrp.bom">
-            <field name="name">High speed processor config</field>
-            <field name="sequence">85</field>
+            <field name="name">Computer Case-2</field>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">4</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_2"/>
-            <field model="product.product" name="product_id" ref="product.product_product_19"/>
+            <field name="bom_id" ref="mrp_bom_30"/>
         </record>
 
         <record id="mrp_bom_33" model="mrp.bom">
-            <field name="name">HDD Seagate 7200.8 120GB</field>
-            <field name="sequence">87</field>
+            <field name="name">Mouse, Laser</field>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">6</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_6"/>
-            <field model="product.product" name="product_id" ref="product.product_product_12"/>
+            <field name="bom_id" ref="mrp_bom_30"/>
         </record>
 
         <record id="mrp_bom_34" model="mrp.bom">
-            <field name="name">Regular processor config</field>
-            <field name="sequence">89</field>
+            <field name="name">USB Keyboard, QWERTY</field>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">8</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_1"/>
-            <field model="product.product" name="product_id" ref="product.product_product_16"/>
+            <field name="bom_id" ref="mrp_bom_30"/>
         </record>
 
         <record id="mrp_bom_35" model="mrp.bom">
-            <field name="name">ATX middle-size case</field>
-            <field name="sequence">92</field>
+            <field name="name">RAM DDR 512MB</field>
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">10</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_1"/>
-            <field model="product.product" name="product_id" ref="product.product_product_27"/>
+            <field name="bom_id" ref="mrp_bom_30"/>
         </record>
 
         <record id="mrp_bom_36" model="mrp.bom">
-            <field name="name">HDD Seagate 7200.8 120GB</field>
-            <field name="sequence">95</field>
+            <field name="name">PC Assemble + Custom RAM (PC on Demand)</field>
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_1"/>
-            <field model="product.product" name="product_id" ref="product.product_product_12"/>
+            <field name="sequence">5</field>            
+            <field name="routing_id" ref="mrp_routing_2"/>
+            <field name="type">phantom</field>
         </record>
 
-        <record id="mrp_bom_53" model="mrp.bom">
-            <field name="name">processor</field>
-            <field name="sequence">98</field>
+        <record id="mrp_bom_37" model="mrp.bom">
+            <field name="name">15" LCD Monitor </field>
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">2</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_12"/>
-            <field model="product.product" name="product_id" ref="product.product_product_9"/>
+            <field name="bom_id" ref="mrp_bom_36"/>
         </record>
 
         <record id="mrp_bom_38" model="mrp.bom">
-            <field name="name">mainboard</field>
-            <field name="sequence">101</field>
+            <field name="name">Computer Case-1</field>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">4</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_12"/>
-            <field model="product.product" name="product_id" ref="product.product_product_7"/>
+            <field name="bom_id" ref="mrp_bom_36"/>
         </record>
 
-        <record id="mrp_bom_47" model="mrp.bom">
-            <field name="name">fan</field>
-            <field name="sequence">105</field>
+        <record id="mrp_bom_39" model="mrp.bom">
+            <field name="name">RAM DDR 512MB</field>
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">6</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_12"/>
-            <field model="product.product" name="product_id" ref="product.product_product_14"/>
-        </record>
-
-        <record id="mrp_bom_54" model="mrp.bom">
-            <field name="name">RAM</field>
-            <field name="sequence">108</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_12"/>
-            <field model="product.product" name="product_id" ref="product.product_product_17"/>
-        </record>
-
-        <record id="mrp_bom_48" model="mrp.bom">
-            <field name="code">KIT</field>
-            <field name="sequence">15</field>
-            <field name="name">Kit Keyboard + Mouse</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field model="product.product" name="product_id" ref="product.product_product_26"/>
-        </record>
-
-        <record id="mrp_bom_52" model="mrp.bom">
-            <field name="name">Mouse</field>
-            <field name="sequence">121</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_48"/>
-            <field model="product.product" name="product_id" ref="product.product_product_25"/>
+            <field name="bom_id" ref="mrp_bom_36"/>
         </record>
 
         <record id="mrp_bom_40" model="mrp.bom">
-            <field name="name">Keyboard</field>
-            <field name="sequence">123</field>
+            <field name="name">Mouse, Laser</field>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_48"/>
-            <field model="product.product" name="product_id" ref="product.product_product_24"/>
+            <field name="sequence">8</field>            
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_36"/>
         </record>
 
         <record id="mrp_bom_41" model="mrp.bom">
-            <field name="name">Regular processor config</field>
-            <field name="sequence">111</field>
+            <field name="name">USB Keyboard, QWERTY</field>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
+            <field name="sequence">10</field>            
             <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_9"/>
-            <field model="product.product" name="product_id" ref="product.product_product_16"/>
+            <field name="bom_id" ref="mrp_bom_36"/>
         </record>
 
-        <record id="mrp_bom_42" model="mrp.bom">
-            <field name="name">HDD Seagate 7200.8 80GB</field>
-            <field name="sequence">113</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_9"/>
-            <field model="product.product" name="product_id" ref="product.product_product_11"/>
-        </record>
-
-        <record id="mrp_bom_43" model="mrp.bom">
-            <field name="name">ATX Middle-size case</field>
-            <field name="sequence">115</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_9"/>
-            <field model="product.product" name="product_id" ref="product.product_product_27"/>
-        </record>
-
-        <record id="mrp_bom_49" model="mrp.bom">
-            <field name="code">KIT</field>
-            <field name="sequence">118</field>
-            <field name="name">Kit Keyboard + Mouse</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">phantom</field>
-            <field name="bom_id" ref="mrp_bom_9"/>
-            <field model="product.product" name="product_id" ref="product.product_product_26"/>
-        </record>
-
-        <record id="mrp_bom_34" model="mrp.bom">
-            <field name="name">SIDEPAN</field>
-            <field name="sequence">121</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
-            <field name="bom_id" ref="mrp_bom_17"/>
-            <field model="product.product" name="product_id" ref="product.product_product_41"/>
-        </record>
-        <!-- Resource: mrp.bom new EVV -->
-
-    <record id="mrp_bom_45" model="mrp.bom">
-        <field name="name">Default BOM for Shelf of 100cm</field>
-        <field name="code">SHE100</field>
-        <field name="sequence">10</field>
-        <field name="product_id" ref="product.product_product_29"/>
+    <record id="mrp_production_1" model="mrp.production">
+        <field name="product_id" ref="product.product_product_4"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">1.0</field>
-        <field name="routing_id" ref="mrp.mrp_routing_1"/>
-    </record>
-
-    <!-- BoMs for 1 Shelf 100cm
-            Product Ref.     Qty       UoM     Type of BoM
-                SIDEPAN      2         PCE     normal
-                PROFIL       4         PCE     phantom
-                RPAN100      1         PCE     phantom
-                RCK100       3         PCE     phantom -->
-
-    <record id="mrp_bom_64" model="mrp.bom">
-        <field name="name">Side Panel</field>
-        <field name="sequence">101</field>
-        <field name="product_id" ref="product.product_product_41"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">2.0</field>
-        <field name="bom_id" ref="mrp_bom_45"/>
-    </record>
-
-    <record id="mrp_bom_20" model="mrp.bom">
-        <field name="name">Assembly Section</field>
-        <field name="sequence">102</field>
-        <field name="product_id" ref="product.product_product_44"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">4.0</field>
-        <field name="bom_id" ref="mrp_bom_45"/>
-        <field name="type">phantom</field>
-    </record>
-
-    <record id="mrp_bom_55" model="mrp.bom">
-       <field name="sequence">103</field>
-       <field name="product_id" ref="product.product_product_39"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_45"/>
-       <field name="product_qty">1.0</field>
-       <field name="name">Rear panel SHE100</field>
-       <field name="type">phantom</field>
-    </record>
-
-    <record id="mrp_bom_60" model="mrp.bom">
-       <field name="sequence">104</field>
-       <field name="product_id" ref="product.product_product_42"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_45"/>
-       <field name="product_qty">3.0</field>
-       <field name="name">RCK100</field>
-       <field name="type">phantom</field>
-    </record>
-
-    <!--
-        BOMs for 1 RCK100 PCE
-                    Product Ref     Qty    UoM  Type of BoM
-                    SPAN100         1      PCE  phantom
-                    METC000         4      PCE  normal -->
-    <record id="mrp_bom_62" model="mrp.bom">
-       <field name="sequence">133</field>
-       <field name="product_id" ref="product.product_product_42"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="product_qty">1.0</field>
-       <field name="name">RCK100</field>
-    </record>
-    <record id="mrp_bom_61" model="mrp.bom">
-       <field name="sequence">1331</field>
-       <field name="product_id" ref="product.product_product_31"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_62"/>
-       <field name="product_qty">1.0</field>
-       <field name="type">phantom</field> <!-- It should be phantom -->
-       <field name="name">SPAN100</field>
-    </record>
-    <record id="mrp_bom_59" model="mrp.bom">
-       <field name="sequence">1332</field>
-       <field name="product_id" ref="product.product_product_46"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_62"/>
-       <field name="product_qty">4.0</field>
-       <field name="name">METC000</field>
-    </record>
-    <!--
-    Bill of Materials for 1 SPAN100 PCE
-                    Product Code     Quantity     Unit of Measure
-                    WOOD010          0.083        m -->
-    <record id="mrp_bom_67" model="mrp.bom">
-       <field name="sequence">135</field>
-       <field name="product_id" ref="product.product_product_31"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="product_qty">1.0</field>
-       <field name="name">SPAN100</field>
-    </record>
-    <record id="mrp_bom_68" model="mrp.bom">
-       <field name="sequence">1351</field>
-       <field name="product_id" ref="product.product_product_34"/>
-       <field name="product_uom" ref="product.product_uom_meter"/>
-       <field name="bom_id" ref="mrp_bom_67"/>
-       <field name="product_qty">0.083</field>
-       <field name="name">WOOD010</field>
-    </record>
-    <!-- BoMs for 1 Assembly Section PCE
-            Product Ref.     Qty     UoM
-                LIN40        0.25    Meter
- -->
-    <record id="mrp_bom_21" model="mrp.bom">
-        <field name="name">Assembly Section</field>
-        <field name="sequence">123</field>
-        <field name="product_id" ref="product.product_product_44"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">1.0</field>
-        <field name="routing_id" ref="mrp.mrp_routing_0"/>
-
-    </record>
-
-    <record id="mrp_bom_69" model="mrp.bom">
-       <field name="sequence">1231</field>
-       <field name="product_id" ref="product.product_product_45"/>
-       <field name="product_uom" ref="product.product_uom_meter"/>
-       <field name="product_qty">0.25</field>
-       <field name="bom_id" ref="mrp_bom_21"/>
-       <field name="name">Wood Lintel 0.25m</field>
-    </record>
-    <!--
-    Bill of Materials for 1 RPAN100 PCE
-                    Product Code     Quantity     Unit of Measure
-                    WOOD002          0.25         m -->
-    <record id="mrp_bom_56" model="mrp.bom">
-       <field name="sequence">131</field>
-       <field name="product_id" ref="product.product_product_39"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="product_qty">1.0</field>
-       <field name="name">Rear panel SHE100</field>
-        <field name="routing_id" ref="mrp.mrp_routing_0"/>
-    </record>
-    <record id="mrp_bom_57" model="mrp.bom">
-       <field name="sequence">1311</field>
-       <field name="product_id" ref="product.product_product_32"/>
-       <field name="product_uom" ref="product.product_uom_meter"/>
-       <field name="bom_id" ref="mrp_bom_56"/>
-       <field name="product_qty">0.25</field>
-       <field name="name">WOOD002 0.25m</field>
-    </record>
-
-
-    <record id="mrp_bom_46" model="mrp.bom">
-        <field name="name">Default BOM for Shelf of 200cm</field>
-        <field name="code">SHE200</field>
-        <field name="sequence">137</field>
-        <field name="product_id" ref="product.product_product_30"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">1.0</field>
-    </record>
-
-    <!--Defining BoMs of Shelf 200cm
-            Product Ref.     Qty     UoM     Type of BoM
-             RPAN200         1       PCE     normal
-             PROFIL          4       PCE     normal
-             SIDEPAN         2       PCE     normal
-             METC000         12      PCE     normal
-             RCK200          3       PCE     normal -->
-    <record id="mrp_bom_58" model="mrp.bom">
-       <field name="sequence">147</field>
-       <field name="product_id" ref="product.product_product_40"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_46"/>
-       <field name="product_qty">1.0</field>
-       <field name="name">Rear panel SHE200</field>
-    </record>
-
-    <record id="mrp_bom_39" model="mrp.bom">
-        <field name="name">Assembly Section</field>
-        <field name="sequence">149</field>
-        <field name="product_id" ref="product.product_product_44"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">4.0</field>
-        <field name="bom_id" ref="mrp_bom_46"/>
-    </record>
-
-    <record id="mrp_bom_66" model="mrp.bom">
-        <field name="name">Side Panel</field>
-        <field name="sequence">151</field>
-        <field name="product_id" ref="product.product_product_41"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">2.0</field>
-        <field name="bom_id" ref="mrp_bom_46"/>
-    </record>
-
-    <record id="mrp_bom_63" model="mrp.bom">
-       <field name="sequence">153</field>
-       <field name="product_id" ref="product.product_product_43"/>
-       <field name="product_uom" ref="product.product_uom_unit"/>
-       <field name="bom_id" ref="mrp_bom_46"/>
-       <field name="product_qty">3.0</field>
-       <field name="name">Shelf 200</field>
-    </record>
-
-    <record id="mrp_bom_51" model="mrp.bom">
-        <field name="name">Metal Cleats</field>
-        <field name="sequence">155</field>
-        <field name="product_id" ref="product.product_product_46"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">12.0</field>
-        <field name="bom_id" ref="mrp_bom_46"/>
-    </record>
-
-    <record id="mrp_bom_44" model="mrp.bom">
-        <field name="name">Default BOM for KIT Shelf of 100cm</field>
-        <field name="code">SHE100KIT</field>
-        <field name="sequence">139</field>
-        <field name="product_id" ref="product.product_product_48"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">1.0</field>
-        <field name="type">phantom</field>
-    </record>
-
-    <!--Defining BoMs of KIT Shelf 100cm
-            Product Ref.     Qty     UoM     Type of BoM
-                PROFIL       4       PCE     normal
-                SIDEPAN      2       PCE     normal -->
-
-    <record id="mrp_bom_37" model="mrp.bom">
-        <field name="name">Assembly Section</field>
-        <field name="sequence">143</field>
-        <field name="product_id" ref="product.product_product_44"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">4.0</field>
-        <field name="bom_id" ref="mrp_bom_44"/>
-    </record>
-
-    <record id="mrp_bom_65" model="mrp.bom">
-        <field name="name">Side Panel</field>
-        <field name="sequence">145</field>
-        <field name="product_id" ref="product.product_product_41"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">2.0</field>
-        <field name="bom_id" ref="mrp_bom_44"/>
-    </record>
-
-<record id="product.product_uom_dozen" model="product.uom">
-            <field name="category_id" ref="product.product_uom_categ_unit"/>
-            <field name="name">Dozen</field>
-            <field name="factor" eval="0.083"/>
-            <field name="uom_type">bigger</field>
-    </record>
-
-    <record id="mrp_production_shelf100cm" model="mrp.production">
-        <field name="product_id" ref="product.product_product_29"/>
-        <field name="product_uom" ref="product.product_uom_dozen"/>
         <field name="product_qty">3</field>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
-        <field name="bom_id" ref="mrp_bom_45"/>
+        <field name="bom_id" ref="mrp_bom_24"/>
+        <field name="routing_id" ref="mrp.mrp_routing_2"/>
     </record>
 
-    <record id="mrp_production_order1" model="mrp.production">
-        <field name="product_id" ref="product.product_product_3"/>
+    <record id="mrp_production_2" model="mrp.production">
+        <field name="product_id" ref="product.product_product_27"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
-        <field name="bom_id" ref="mrp.mrp_bom_9"/>
-        <field name="routing_id" ref="mrp.mrp_routing_0"/>
+        <field name="bom_id" ref="mrp.mrp_bom_7"/>
+        <field name="routing_id" ref="mrp.mrp_routing_1"/>
     </record>
-    <workflow action="button_confirm" model="mrp.production" ref="mrp_production_order1"/>
+    <workflow action="button_confirm" model="mrp.production" ref="mrp_production_1"/>
 
     <!-- Run Scheduler -->
     <function model="procurement.order" name="run_scheduler"/>
