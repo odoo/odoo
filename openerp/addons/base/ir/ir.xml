@@ -9,6 +9,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Bindings" version="7.0">
+                  <sheet>
                     <group>
                         <group string="Action Binding">
                             <field name="name"/>
@@ -22,6 +23,7 @@
                             <field name="value_unpickle" colspan="4" string="Action Reference"/>
                         </group>
                     </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -32,7 +34,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User-defined Defaults" version="7.0">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                   <sheet>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <group>
                         <group string="Model">
@@ -48,6 +51,7 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -71,9 +75,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Client Actions">
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="key2"/>
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
+                        string="Client Action"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
@@ -137,6 +141,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sequences" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -174,6 +179,7 @@
                         </group>
                     </page>
                     </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -202,7 +208,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences">
-                    <field name="name"/>
+                    <field name="name" string="Sequence"/>
                     <field name="code"/>
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -229,10 +235,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sequence Type" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -255,8 +263,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences Type">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Sequence Type"/>
                 </search>
             </field>
         </record>
@@ -281,11 +288,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action" version="7.0">
+                  <sheet>
                     <group>
                         <field name="name"/>
                         <field name="type"/>
                         <field name="usage"/>
                     </group>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -306,8 +315,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Action">
-                    <field name="name"/>
-                    <field name="type"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Action"/>
                 </search>
             </field>
         </record>
@@ -320,7 +328,7 @@
             <field name="view_id" ref="action_view_tree"/>
             <field name="search_view_id" ref="action_view_search"/>
         </record>
-        <menuitem id="next_id_6" name="Actions" parent="base.next_id_4" sequence="1"/>
+        <menuitem id="next_id_6" name="Actions" parent="base.menu_custom" sequence="2"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
         <menuitem action="act_values_form_action" id="menu_values_form_action" parent="next_id_6"/>
         <menuitem action="act_values_form_defaults" id="menu_values_form_defaults" parent="next_id_6"/>
@@ -333,6 +341,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report" version="7.0">
+                  <sheet>
                     <group col="6">
                         <field name="name"/>
                         <field name="model"/>
@@ -367,6 +376,7 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -390,13 +400,11 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Report xml">
+                <search string="Report Xml">
                     <group col="10" colspan="4">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="type"/>
-                        <field name="report_name"/>
-                        <field name="report_type"/>
+                        <field name="name"
+                            filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
+                            string="Report"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By" colspan="4">
@@ -437,6 +445,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open a Window" version="7.0">
+                  <sheet>
                     <group col="6">
                         <field name="name"/>
                         <field name="res_model"/>
@@ -487,6 +496,7 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -497,8 +507,7 @@
             <field name="arch" type="xml">
                 <search string="Open a Window">
                     <group col="10" colspan="4">
-                        <field name="name"/>
-                        <field name="res_model"/>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
                         <field name="view_type"/>
                     </group>
                     <newline/>
@@ -567,9 +576,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wizards">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="wiz_name"/>
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]"
+                        string="Wizard"/>
                 </search>
             </field>
         </record>
@@ -616,6 +625,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Views" version="7.0">
+                   <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -630,6 +640,7 @@
                         </group>
                     </group>
                     <field name="arch"/>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -656,6 +667,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Views">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="View"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_zoom"
                         string="Search"
                         domain="[('type', '=', 'search')]"/>
@@ -666,10 +679,8 @@
                         string="Form"
                         domain="[('type', '=','form')]"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="model"/>
                     <field name="inherit_id"/>
+                    <field name="type"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
@@ -707,11 +718,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Customized Views" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="user_id"/>
                         <field name="ref_id"/>
                         <field name="arch" colspan="4" nolabel="1"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -742,34 +755,36 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments" version="7.0">
-                    <group col="4">
-                        <field name="name" />
-                        <field name="type"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook>
-                    <page string="Attachment">
-                        <group>
-                            <group attrs="{'invisible':[('type','=','url')]}" string="Data">
-                                <field name="datas" filename="datas_fname"/>
-                                <field name="datas_fname"/>
-                                <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            </group>
-                            <group string="Attached To">
-                                <field name="res_model"/>
-                                <field name="res_id"/>
-                                <field name="res_name"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Created">
-                                <field name="create_uid"/>
-                                <field name="create_date"/>
-                            </group>
+                   <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group string="Data">
+                            <field name="type"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                         </group>
-                    </page>
-                    <page string="Notes">
-                        <field name="description"/>
-                    </page>
-                    </notebook>
+                        <group string="Attached To">
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="res_name"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                        <group groups="base.group_no_one" string="History">
+                            <label for="create_uid" string="Creation"/>
+                            <div name="creation_div">
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group name="description_group" string="Description" colspan="4">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -795,29 +810,28 @@
             <field name="arch" type="xml">
                 <search string="Attachments">
                     <group colspan="4" col="10">
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
+                        <field name="create_date"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-stage"
                             string="URL"
                             domain="[('type','=','url')]"/>
                         <filter icon="terp-stock_align_left_24"
                             string="Binary"
                             domain="[('type','=','binary')]"/>
+                        <filter name="my_documents_filter" 
+                            string="My Document(s)"
+                            icon="terp-personal"
+                            domain="[('create_uid','=',uid)]"
+                            help="Filter on my documents"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-month" string="Month"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
+                        <field name="create_uid"/>
                         <field name="type"/>
-                        <field name="datas_fname"/>
-                        <field name="create_uid">
-                            <filter icon="terp-personal"
-                                domain="[('create_uid','=',uid)]"
-                                help="Filter on my documents" />
-                        </field>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_no_one"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
@@ -843,6 +857,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Model Description" version="7.0">
+                  <sheet>
                     <group col="6">
                         <field name="name"/>
                         <field name="model"/>
@@ -916,6 +931,7 @@
                             <field name="view_ids"/>
                         </page>
                     </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -941,26 +957,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Model Description">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
                         string="In Memory"
                         domain="[('osv_memory', '=', True)]"/>
-                    <separator orientation="vertical"/>
-
                     <filter icon="terp-stock_align_left_24"
                         string="Custom"
                         domain="[('state', '=', 'manual')]"/>
-                    <separator orientation="vertical"/>
-
                     <filter icon="terp-translate"
                         string="Base"
                         domain="[('state', '=', 'base')]"/>
-
-                    <separator orientation="vertical"/>
-
-                    <field name="name"/>
-                    <field name="model"/>
-
-                    <newline/>
                 </search>
             </field>
         </record>
@@ -972,6 +979,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fields" version="7.0">
+                  <sheet>
                     <group colspan="4" col="6">
                         <field name="name" />
                         <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
@@ -1004,6 +1012,7 @@
                             <field name="groups"/>
                         </page>
                     </notebook>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -1029,20 +1038,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fields">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('field_description','ilike',self)]" string="Field"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+"
                         string="Required"
                         domain="[('required', '=', True)]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-dialog-close"
                         string="Readonly"
                         domain="[('readonly', '=', True)]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-translate"
                         string="Translate"
                         domain="[('translate', '=', True)]"/>
                     <newline/>
-                    <field name="name"/>
-                    <field name="field_description"/>
                     <field name="model_id"/>
                     <field name="ttype"/>
                     <field name="required"/>
@@ -1051,7 +1058,6 @@
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
-
                 </search>
             </field>
         </record>
@@ -1062,16 +1068,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="External Identifiers" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
+                  <group>
+                    <group>
+                        <field name="complete_name"/>
                         <field name="module"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="display_name"/>
                         <field name="model"/>
                         <field name="res_id"/>
+                    </group>
+                    <group>
                         <field name="noupdate"/>
-                        <newline/>
                         <field name="date_update" />
                         <field name="date_init" />
                     </group>
+                  </group>
                 </form>
             </field>
         </record>
@@ -1082,10 +1095,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="External Identifiers">
-                    <field name="module"/>
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="res_id"/>
+                    <field name="complete_name"/>
+                    <field name="display_name"/>
+                    <field name="model" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -1096,13 +1108,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="External Identifiers">
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('module','ilike',self)]"
+                        string="External Identifier"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
                         string="Updatable"
                         domain="[('noupdate', '=', False)]"/>
                     <separator orientation="vertical"/>
-                    <field name="module"/>
-                    <field name="name"/>
-                    <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
                     <newline/>
@@ -1114,6 +1127,65 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_model_constraint_form">
+            <field name="name">ir.model.constraint.form</field>
+            <field name="model">ir.model.constraint</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Model Constraints">
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <newline/>
+                    <field name="date_update" />
+                    <field name="date_init" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_constraint_list" model="ir.ui.view">
+            <field name="name">ir.model.constraint.list</field>
+            <field name="model">ir.model.constraint</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Model Constraints">
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_model_relation_form">
+            <field name="name">ir.model.relation.form</field>
+            <field name="model">ir.model.relation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="ManyToMany Relations">
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <newline/>
+                    <field name="date_update" />
+                    <field name="date_init" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_relation_list" model="ir.ui.view">
+            <field name="name">ir.model.relation.list</field>
+            <field name="model">ir.model.relation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="ManyToMany Relations">
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Models</field>
@@ -1143,6 +1215,24 @@
         <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
                   groups="base.group_no_one"/>
 
+        <record id="action_model_constraint" model="ir.actions.act_window">
+            <field name="name">Model Constraints</field>
+            <field name="res_model">ir.model.constraint</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_model_constraint_list"/>
+        </record>
+        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
+                  groups="base.group_no_one"/>
+
+        <record id="action_model_relation" model="ir.actions.act_window">
+            <field name="name">ManyToMany Relations</field>
+            <field name="res_model">ir.model.relation</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_model_relation_list"/>
+        </record>
+        <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
+                  groups="base.group_no_one"/>
+
         <!-- Translations -->
 
         <record id="view_translation_search" model="ir.ui.view">
@@ -1168,6 +1258,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Translations" version="7.0">
+                   <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -1184,6 +1275,7 @@
                            <field name="value" nolabel="1" height="400"/>
                         </group>
                     </group>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -1260,6 +1352,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Menu" version="7.0">
+                  <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -1288,6 +1381,7 @@
                             </field>
                         </page>
                     </notebook>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1298,7 +1392,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Menu">
-                    <field name="name" string="Menu" />
+                    <field name="name" string="Menu"/>
                     <field name="parent_id"/>
                 </search>
             </field>
@@ -1340,6 +1434,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Actions" version="7.0">
+                   <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -1366,6 +1461,7 @@
                         <field name="args"/>
                     </page>
                     </notebook>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1376,7 +1472,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scheduled Actions">
-                    <field name="name"/>
+                    <field name="name" string="Scheduled Action"/>
+                    <separator orientation="vertical"/>
                     <field name="user_id" widget="selection"/>
                     <field name="nextcall"/>
                     <field name="active"/>
@@ -1439,6 +1536,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access Controls" version="7.0">
+                   <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -1450,6 +1548,7 @@
                         <field name="perm_create"/>
                         <field name="perm_unlink"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1459,22 +1558,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Access Controls">
-                <group>
-                        <filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
+                    <group>
+                        <field name="name" string="Access Control"/>
                         <separator orientation="vertical"/>
+                        <filter string="Global" icon="terp-stage" domain="[('group_id','=',False)]"/>
                         <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                         <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
                         <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                          <field name="model_id"/>
+                        <field name="model_id"/>
                         <field name="group_id"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
-                     <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
-                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
-                   </group>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
+                        <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1496,6 +1595,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules" version="7.0">
+                  <sheet>
                     <group>
                         <group string="General">
                             <field colspan="4" name="name"/>
@@ -1528,6 +1628,7 @@
                         <label colspan="2"
                             string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"/>
                     </group>
+                   </sheet> 
                 </form>
             </field>
         </record>
@@ -1553,16 +1654,16 @@
             <field name="model">ir.rule</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Record rules">
+                <search string="Record Rules">
                     <group>
-                        <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
+                        <field name="name" string="Record Rule"/>
                         <separator orientation="vertical"/>
+                        <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
                         <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                         <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
                         <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                         <separator orientation="vertical"/>
                         <field name="model_id"/>
-                        <field name="name"/>
                         <field name="groups"/>
                     </group>
                 </search>
@@ -1593,6 +1694,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action" version="7.0">
+                  <sheet> 
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -1607,7 +1709,7 @@
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <group string="Trigger Configuration" col="4">
                                 <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                                <field name="trigger_obj_id" context="{'key':''}" 
+                                <field name="trigger_obj_id" context="{'key':''}"
                                        domain="[('model_id','=',model_id),('ttype','in',['many2one','int'])]"
                                        attrs="{'required':[('state','=','trigger')]}"/>
                                 <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
@@ -1669,6 +1771,7 @@
                         </page>
                     </notebook>
                     <field name="type" readonly="1"/>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -1694,13 +1797,14 @@
             <field name="arch" type="xml">
                 <search string="Server Actions">
                     <group col="10" colspan="4">
-                        <field name="name"/>
-                        <field name="state"/>
+                        <field name="name" string="Server Action"/>
+                    <separator orientation="vertical"/>
                         <field name="model_id"/>
+                        <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By" colspan="4" col="4">
-                       <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -1745,6 +1849,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Config Wizard Steps" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="action_id"/>
                         <field name="type"/>
@@ -1764,6 +1869,7 @@
                             string="Set as Todo" type="object"
                             icon="gtk-convert"/>
                     </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -1796,7 +1902,7 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/> 
+        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/>
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="menu_ir_actions_todo"/>
 
         <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
@@ -1862,6 +1968,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Outgoing Mail Servers" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="sequence"/>
@@ -1877,6 +1984,7 @@
                         <field name="smtp_pass" password="True"/>
                         <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
                     </group>
+                  </sheet>  
                 </form>
             </field>
         </record>
@@ -1902,9 +2010,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Outgoing Mail Servers">
-                    <field name="name"/>
-                    <field name="smtp_host"/>
-                    <field name="smtp_user"/>
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('smtp_host','ilike',self), ('smtp_user','ilike',self)]"
+                        string="Outgoing Mail Server"/>
                     <field name="smtp_encryption"/>
                 </search>
             </field>

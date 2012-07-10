@@ -70,11 +70,6 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-# Prefixes for external IDs of schema elements
-EXT_ID_PREFIX_FK = "_foreign_key_"
-EXT_ID_PREFIX_M2M_TABLE = "_m2m_rel_table_"
-EXT_ID_PREFIX_CONSTRAINT = "_constraint_"
-
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
@@ -1742,6 +1737,15 @@ class BaseModel(object):
 
         # translate view
         if 'lang' in context:
+            if node.text and node.text.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
+                if trans:
+                    node.text = node.text.replace(node.text.strip(), trans)
+            if node.tail and node.tail.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
+                if trans:
+                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+
             if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
@@ -1750,18 +1754,13 @@ class BaseModel(object):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
-            if node.get('confirm'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('confirm'))
-                if trans:
-                    node.set('confirm', trans)
-            if node.get('sum'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
-                if trans:
-                    node.set('sum', trans)
-            if node.get('help'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
-                if trans:
-                    node.set('help', trans)
+
+            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+                attr_value = node.get(attr_name)
+                if attr_value:
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
+                    if trans:
+                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
@@ -2737,13 +2736,45 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
-    # quick creation of ir.model.data entry to make uninstall of schema elements easier
-    def _make_ext_id(self, cr, ext_id):
-        cr.execute('SELECT 1 FROM ir_model_data WHERE name=%s AND module=%s', (ext_id, self._module))
+    def _save_constraint(self, cr, constraint_name, type):
+        """
+        Record the creation of a constraint for this model, to make it possible
+        to delete it later when the module is uninstalled. Type can be either
+        'f' or 'u' depending on the constraing being a foreign key or not.
+        """
+        assert type in ('f', 'u')
+        cr.execute("""
+            SELECT 1 FROM ir_model_constraint, ir_module_module
+            WHERE ir_model_constraint.module=ir_module_module.id
+                AND ir_model_constraint.name=%s
+                AND ir_module_module.name=%s
+            """, (constraint_name, self._module))
         if not cr.rowcount:
-            cr.execute("""INSERT INTO ir_model_data (name,date_init,date_update,module,model)
-                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC', %s, %s)""",
-                       (ext_id, self._module, self._name))
+            cr.execute("""
+                INSERT INTO ir_model_constraint
+                    (name, date_init, date_update, module, model, type)
+                VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s), %s)""",
+                    (constraint_name, self._module, self._name, type))
+
+    def _save_relation_table(self, cr, relation_table):
+        """
+        Record the creation of a many2many for this model, to make it possible
+        to delete it later when the module is uninstalled.
+        """
+        cr.execute("""
+            SELECT 1 FROM ir_model_relation, ir_module_module
+            WHERE ir_model_relation.module=ir_module_module.id
+                AND ir_model_relation.name=%s
+                AND ir_module_module.name=%s
+            """, (relation_table, self._module))
+        if not cr.rowcount:
+            cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
+                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s))""",
+                       (relation_table, self._module, self._name))
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -3084,7 +3115,7 @@ class BaseModel(object):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
-            self._make_ext_id(cr,  "%s%s_%s_fkey" % (EXT_ID_PREFIX_FK, t, k))
+            self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f')
         cr.commit()
         del self._foreign_keys
 
@@ -3173,7 +3204,7 @@ class BaseModel(object):
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
-        self._make_ext_id(cr,  EXT_ID_PREFIX_M2M_TABLE + m2m_tbl)
+        self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
@@ -3209,7 +3240,7 @@ class BaseModel(object):
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
-            self._make_ext_id(cr, EXT_ID_PREFIX_CONSTRAINT + conname)
+            self._save_constraint(cr, conname, 'u')
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
             sql_actions = {
@@ -3487,10 +3518,7 @@ class BaseModel(object):
             for sub_ids in cr.split_for_in_conditions(ids):
                 if rule_clause:
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
-                                         % (self._description,))
+                    self._check_record_rules_result_count(cr, user, sub_ids, 'read', context=context)
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
@@ -3669,6 +3697,26 @@ class BaseModel(object):
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
+    def _check_record_rules_result_count(self, cr, uid, ids, operation, context=None):
+        """Verify that number of returned rows after applying record rules matches
+           the length of `ids`, and raise an appropriate exception if it does not.
+        """
+        if cr.rowcount != len(ids):
+            # Attempt to distinguish record rule restriction vs deleted records, 
+            # to provide a more specific error message
+            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
+            if cr.rowcount != len(ids):
+                if operation == 'unlink':
+                    # no need to warn about deleting an already deleted record!
+                    return
+                _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
+                raise except_orm(_('Missing document(s)'),
+                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+            _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+            raise except_orm(_('Access Denied'),
+                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                (self._description, operation))
+
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to the access rights."""
@@ -3700,7 +3748,7 @@ class BaseModel(object):
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
-            # have log_access enabled and this the create_uid column is always there.
+            # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
             cr.execute("""SELECT distinct create_uid
@@ -3708,9 +3756,8 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for transient models '
-                    '(except for the super-user).' % operation.capitalize())
+                raise except_orm(_('Access Denied'),
+                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
         else:
             where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
             if where_clause:
@@ -3719,10 +3766,7 @@ class BaseModel(object):
                     cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
                                ' WHERE ' + self._table + '.id IN %s' + where_clause,
                                [sub_ids] + where_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                         % (operation, self._description))
+                    self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
         """Call given workflow trigger as a result of a CRUD operation""" 

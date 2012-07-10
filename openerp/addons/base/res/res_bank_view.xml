@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank" version="7.0">
+                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="bic"/>
@@ -19,8 +20,8 @@
                                 <field name="street" placeholder="Street..."/>
                                 <field name="street2"/>
                                 <div>
-                                    <field name="zip" class="oe_form_inline" placeholder="ZIP"/>
-                                    <field name="city" class="oe_form_inline" placeholder="City"/>
+                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
+                                    <field name="city" class="oe_inline" placeholder="City"/>
                                 </div>
                                 <field name="state" placeholder="State"/>
                                 <field name="country" placeholder="Country"/>
@@ -33,6 +34,7 @@
                             <field name="active"/>
                         </group>
                     </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -100,17 +102,22 @@
                     <group>
                         <group name="owner" string="Bank Account Owner">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                            <field name="owner_name"/>
-                            <field name="street"/>
-                            <field name="city"/>
-                            <field name="zip"/>
-                            <field name="country_id"/>
-                            <field name="state_id"/>
+                            <label for="street" string="Address"/>
+                            <div>
+                                <field name="owner_name" placeholder="Name"/>
+                                <field name="street" placeholder="Street"/>
+                                <div>
+                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
+                                    <field name="city" class="oe_inline" placeholder="City"/>
+                                </div>
+                                <field name="state_id" placeholder="State"/>
+                                <field name="country_id" placeholder="Country"/>
+                            </div>
                         </group>
                         <group name="bank" string="Information About the Bank">
                             <field name="bank" on_change="onchange_bank_id(bank)"/>
                             <field name="bank_name" attrs="{'required': [('company_id','&lt;&gt;',False)]}"/>
-                            <field name="bank_bic"/>
+                            <field name="bank_bic" placeholder="[Identifier code]" />
                         </group>
                     </group>
 
@@ -138,12 +145,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Bank Accounts">
+                    <field name="bank_name" filter_domain="['|', ('bank_name','ilike',self), ('acc_number','ilike',self)]" string="Bank Name"/>
+                    <separator orientation="vertical"/>
                     <filter name="my_bank" icon="terp-check" string="My Banks" domain="[('company_id','&lt;&gt;',False)]" help="Bank accounts belonging to one of your companies"/>
                     <separator orientation="vertical"/>
-                    <field name="acc_number"/>
                     <field name="company_id" invisible="context.get('company_hide', True)"/>
                     <field name="partner_id"/>
-                    <field name="bank_name"/>
                 </search>
             </field>
         </record>

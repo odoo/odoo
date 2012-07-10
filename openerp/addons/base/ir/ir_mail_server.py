@@ -161,7 +161,7 @@ def encode_rfc2822_address_header(header_text):
 
  
 class ir_mail_server(osv.osv):
-    """Represents an SMTP server, able to send outgoing e-mails, with SSL and TLS capabilities."""
+    """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
 
     _columns = {
@@ -396,7 +396,7 @@ class ir_mail_server(osv.osv):
                  MailDeliveryException and logs root cause.
         """
         smtp_from = message['Return-Path'] or message['From']
-        assert smtp_from, "The Return-Path or From header is required for any outbound e-mail"
+        assert smtp_from, "The Return-Path or From header is required for any outbound email"
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
         from_rfc2822 = extract_rfc2822_addresses(smtp_from)
