@@ -95,7 +95,6 @@ class sale_configuration(osv.osv_memory):
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
-        'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
     }
     def _check_decimal(self, cr, uid, ids, context=None):
         for decimal in self.browse(cr, uid, ids, context=context):
@@ -136,14 +135,6 @@ class sale_configuration(osv.osv_memory):
         'time_unit': _get_default_time_unit,
     }
 
-    def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
-        return {'decimal_precision': dp.digits}
-
-    def set_default_dp(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
-        dp.write({'digits': config.decimal_precision})
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
