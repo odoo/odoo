@@ -152,7 +152,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.dialog_title = action.name;
             this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
-            this.dialog_viewmanager.$element.addClass("oe_view_manager_" + action.target);
+            this.dialog_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
             this.dialog.open();
         } else  {
             this.dialog_stop();
@@ -167,7 +167,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var inner_viewmanager = this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.breadcrumb.push_actionmanager(inner_viewmanager);
             this.inner_viewmanager.appendTo(this.$element);
-            this.inner_viewmanager.$element.addClass("oe_view_manager_" + action.target);
+            this.inner_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
