@@ -1182,6 +1182,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             if (!$tr || row_cols < colspan) {
                 $tr = $('<tr/>').addClass('oe_form_group_row').appendTo($table);
                 row_cols = cols;
+            } else if (tagName==='group') {
+                // When <group> <group/><group/> </group>, we need a spacing between the two groups
+                $child.addClass('oe_group_right')
+
             }
             row_cols -= colspan;
 
