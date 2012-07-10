@@ -261,6 +261,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 am.$element.show();
                 if (am.active_view !== bookmarked_view) {
                     am.on_mode_switch(bookmarked_view);
+                    console.log("breadcrunb pushaction man ager set title on show");
                     am.set_title();
                 }
             },
@@ -273,8 +274,8 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 if (mode === 'form') {
                     self.push_actionmanager(am, 'form');
                 } else {
-                    var last = self.items[self.items.length - 1];
-                    if (last.widget === am && last.view === 'form') {
+                    var previous = self.items[self.items.length - 1];
+                    if (previous.widget === am && previous && previous.view === 'form') {
                         self.pop();
                     }
                 }
@@ -459,6 +460,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
 
         controller.on("change:title", this, function() {
             if (self.active_view === view_type) {
+                console.log("controller.on change:title");
                 self.set_title(controller.get('title'));
             }
         });
