@@ -136,22 +136,23 @@
                                 <field name="street" placeholder="Street..."/>
                                 <field name="street2"/>
                                 <div>
-                                    <field name="city" placeholder="City" style="width: 45%% !important"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 20%% !important"/>
-                                    <field name="zip" placeholder="ZIP" style="width: 34%% !important"/>
+                                    <field name="city" placeholder="City" style="width: 40%%"/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                    <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
                                 <field name="country_id" placeholder="Country" class="oe_no_button"/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                         </group>
                         <group>
-                            <field name="function" placeholder="Job Position"
+                            <field name="function" placeholder="e.g. Sales Director"
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
                             <field name="email" widget="email"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]" attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="title" domain="[('domain', '=', 'contact')]"
+                                class="oe_no_button" attrs="{'invisible': [('is_company','=', True)]}"/>
                         </group>
                     </group>
 
