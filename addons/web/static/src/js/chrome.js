@@ -482,22 +482,26 @@ instance.web.Login =  instance.web.Widget.extend({
             }
         }
     },
+    open_db_manager: function(){
+        var self = this;
+        self.$element.find('.oe_login_bottom').hide();
+        self.$element.find('.oe_login_pane').hide();
+        self.databasemanager = new instance.web.DatabaseManager(self);
+        self.databasemanager.appendTo(self.$element);
+        self.databasemanager.do_exit.add_last(function() {
+            self.databasemanager.destroy();
+            self.$element.find('.oe_login_bottom').show();
+            self.$element.find('.oe_login_pane').show();
+            self.load_db_list(true).then(self.proxy('_db_list_loaded'));
+        });
+    },
     start: function() {
         var self = this;
 
         self.$element.find("form").submit(self.on_submit);
         
         self.$element.find('.oe_login_manage_db').click(function() {
-            self.$element.find('.oe_login_bottom').hide();
-            self.$element.find('.oe_login_pane').hide();
-            self.databasemanager = new instance.web.DatabaseManager(self);
-            self.databasemanager.appendTo(self.$element);
-            self.databasemanager.do_exit.add_last(function() {
-                self.databasemanager.destroy();
-                self.$element.find('.oe_login_bottom').show();
-                self.$element.find('.oe_login_pane').show();
-                self.load_db_list(true).then(self.proxy('_db_list_loaded'));
-            });
+            self.open_db_manager();
         });
         return self.load_db_list().then(self.proxy('_db_list_loaded'));
     },
@@ -523,15 +527,7 @@ instance.web.Login =  instance.web.Widget.extend({
             dbdiv.hide();
         }
         if(list.length === 0){
-            self.$element.find('.oe_login_bottom').hide();
-            self.$element.find('.oe_login_pane').hide();
-            self.databasemanager = new instance.web.DatabaseManager(self);
-            self.databasemanager.appendTo(self.$element);
-            self.databasemanager.do_exit.add_last(function() {
-                self.databasemanager.destroy();
-                self.$element.find('.oe_login_bottom').show();
-                self.$element.find('.oe_login_pane').show();
-                });
+            self.open_db_manager();
         }
         else {
             dbdiv.show();
