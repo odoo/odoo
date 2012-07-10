@@ -917,15 +917,15 @@ class purchase_order_line(osv.osv):
 
         qty = qty or 1.0
         supplierinfo = False
-        supplierinfo_ids = product_supplierinfo.search(cr, uid, [('name','=',partner_id),('product_id','=',product.id)])
-        if supplierinfo_ids:
-            supplierinfo = product_supplierinfo.browse(cr, uid, supplierinfo_ids[0], context=context)
-            if supplierinfo.product_uom.id != uom_id:
-                res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
-            min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-            if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
-                res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
-                qty = min_qty
+        for supplier in product.seller_ids:
+            if supplier.name.id == partner_id:
+                supplierinfo = supplier
+                if supplierinfo.product_uom.id != uom_id:
+                    res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
+                min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
+                if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
+                    res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
+                    qty = min_qty
 
         dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
