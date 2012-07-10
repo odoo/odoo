@@ -767,17 +767,20 @@ class account_invoice(osv.osv):
                 if not key in tax_key:
                     raise osv.except_osv(_('Warning !'), _('Taxes are missing!\nClick on compute button.'))
 
-    def compute_invoice_totals(self, cr, uid, inv, company_currency, ref, invoice_move_lines):
+    def compute_invoice_totals(self, cr, uid, inv, company_currency, ref, invoice_move_lines,context=None):
+        if context is None:
+            context={}
         total = 0
         total_currency = 0
         cur_obj = self.pool.get('res.currency')
         for i in invoice_move_lines:
             if inv.currency_id.id != company_currency:
+                context.update({'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
                 i['currency_id'] = inv.currency_id.id
                 i['amount_currency'] = i['price']
                 i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
                         company_currency, i['price'],
-                        context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
+                        context=context)
             else:
                 i['amount_currency'] = False
                 i['currency_id'] = False
@@ -887,7 +890,7 @@ class account_invoice(osv.osv):
             # create one move line for the total and possibly adjust the other lines amount
             total = 0
             total_currency = 0
-            total, total_currency, iml = self.compute_invoice_totals(cr, uid, inv, company_currency, ref, iml)
+            total, total_currency, iml = self.compute_invoice_totals(cr, uid, inv, company_currency, ref, iml,context=ctx)
             acc_id = inv.account_id.id
 
             name = inv['name'] or '/'
