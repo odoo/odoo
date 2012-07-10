@@ -2614,6 +2614,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.current_display = self.$input.val();
                 if (self.$input.val() === "") {
                     self.set({value: false});
+                    self.floating = false;
                 } else {
                     self.floating = true;
                 }
