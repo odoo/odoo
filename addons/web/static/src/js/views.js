@@ -231,8 +231,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
 instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
     init: function(parent) {
         this._super(parent);
-        this.action_manager = parent;
         this.items = [];
+        this.action_manager = parent;
         this.action_manager.$element.on('click', '.oe_breadcrumb_item', this.on_item_clicked);
     },
     push: function(item) {
@@ -249,13 +249,11 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         item.get_title = item.get_title || function() {
             return item.title || item.widget.get('title');
         };
-        console.log("breadcrumb push", item);
         this.items.push(item);
     },
-    push_viewmanager: function(vm, view_type) {
+    push_viewmanager: function(vm) {
         var self = this;
-        var bookmarked_view = view_type || vm.active_view || vm.views_src[0].view_type;
-        var views = [bookmarked_view];
+        var views = [vm.active_view || vm.views_src[0].view_type];
         vm.on_mode_switch.add(function(mode) {
             var last = views.slice(-1)[0];
             if (mode !== last) {
@@ -264,11 +262,9 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 }
                 views.push(mode);
             }
-            console.log(views);
         });
         this.push({
             widget: vm,
-            view: bookmarked_view,
             show: function($e) {
                 var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
                 var view_to_select = views[index];
@@ -294,8 +290,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 tit = [tit];
             }
             for (var j = 0; j < tit.length; j += 1) {
-                var t= tit[j];
-                var label = _.escape(t);
+                var label = _.escape(tit[j]);
                 if (i === this.items.length - 1 && j === tit.length - 1) {
                     titles.push(label);
                 } else {
@@ -320,28 +315,21 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 continue;
             }
             if (item) {
+                // Remove items after selected item
                 this.remove_item(i);
             }
         }
-        if (item) {
-            item.show($e);
-        } else {
-            console.warn("Breadcrumb: Can't select item at index", index);
-        }
+        item.show($e);
     },
     remove_item: function(index) {
-        console.log("Breadcrumb remove index", index);
         var item = this.items.splice(index, 1)[0];
         if (item) {
             var dups = _.filter(this.items, function(it) {
-                    return item.widget === it.widget;
+                return item.widget === it.widget;
             });
             if (!dups.length) {
-                console.log("Breadcrumb Destroy", item);
                 item.destroy();
             }
-        } else {
-            console.warn("Breadcrumb: Can't remove item at index", index);
         }
     },
     clear: function() {
