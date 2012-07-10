@@ -6,6 +6,7 @@ $facets-border: #afafb6
 $facets-border-selected: #a6a6fe
 $hover-background: #f0f0fa
 $colour4: #8a89ba
+$sheet-max-width: 860px
 // }}}
 // Mixins {{{
 @font-face
@@ -1353,6 +1354,8 @@ $colour4: #8a89ba
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
+        .oe_form .oe_form_field_date
+            width: auto
     .oe_form_nosheet 
         margin-left: 10px
         margin-right: 10px
@@ -1373,7 +1376,7 @@ $colour4: #8a89ba
                 float: right
         footer
             min-width: 650px
-            max-width: 960px
+            max-width: $sheet-max-width
             margin: 0 auto
     ul.oe_form_steps
         height: 30px
@@ -1428,7 +1431,7 @@ $colour4: #8a89ba
             border-bottom: 1px solid #ddd 
         .oe_form_sheet_width
             min-width: 650px
-            max-width: 960px
+            max-width: $sheet-max-width
             margin: 0 auto
         .oe_form_sheet
             background: white
@@ -1449,19 +1452,22 @@ $colour4: #8a89ba
             label
                 line-height: 18px
                 display: block
-                min-width: 120px
+                min-width: 110px
         td.oe_form_group_cell + .oe_form_group_cell
-            padding-left: 8px
+            padding-left: 6px
         .oe_form_group
             width: 100%
             margin: 4px 0 4px 0
+            .oe_group_right
+                > tbody > tr > td:first-child
+                    padding-left: 18px
     // }}}
     // FormView.label {{{
     .oe_form
         .oe_form_label_help[for], .oe_form_label[for]
             font-weight: bold
             white-space: nowrap
-            padding-right: 8px
+            padding-right: 6px
             span
                 font-size: 80%
                 color: darkGreen
@@ -1509,9 +1515,10 @@ $colour4: #8a89ba
             width: 100%
         .oe_form_field_char input,
         .oe_form_field_url input,
+        .oe_form_field_email input,
         .oe_form_field_text textarea,
         .oe_form_field_selection select
-            width: inherit
+            width: 100%
         .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
         .oe_form_field_float input
@@ -1537,7 +1544,7 @@ $colour4: #8a89ba
         .oe_form_field_float
             width: 180px
         .oe_form_field_date
-            width: 7em
+            width: 7.5em
         .oe_form_field_datetime
             width: 11em
         input[type="text"], input[type="password"], input[type="file"], select
@@ -1557,14 +1564,6 @@ $colour4: #8a89ba
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-        .oe_form_field_many2one input, .oe_form_field_binary input, .oe_form_field_binary input, .oe_form_field_url input
-            border-right: none
-            -webkit-border-top-right-radius: 0px
-            -webkit-border-bottom-right-radius: 0px
-            -moz-border-radius-topright: 0px
-            -moz-border-radius-bottomright: 0px
-            border-top-right-radius: 0px
-            border-bottom-right-radius: 0px
         .oe_form_field_url button img
             vertical-align: top
         .oe_form_field_date,
@@ -1615,14 +1614,25 @@ $colour4: #8a89ba
             filter: alpha(opacity=50)
             right: 5px
             top: 3px
-        .oe_form_field_with_button
+        .oe_form_field_with_button.oe_no_button > .oe_button
+            display: none
+        .oe_form_field_with_button:not(.oe_no_button)
             input
-                width: 100%
+                border-right: none
+                -webkit-border-top-right-radius: 0px
+                -webkit-border-bottom-right-radius: 0px
+                -moz-border-radius-topright: 0px
+                -moz-border-radius-bottomright: 0px
+                border-top-right-radius: 0px
+                border-bottom-right-radius: 0px
             > .oe_button
                 float: right
                 @include radius(0)
                 border-bottom-left-radius: 0px
                 height: 22px
+        .oe_form_field_with_button
+            input
+                width: 100%
             > div
                 position: relative
                 overflow: hidden
@@ -1677,8 +1687,8 @@ $colour4: #8a89ba
             position: relative
         span.oe_m2o_drop_down_button
             position: absolute
-            top: 3px
-            right: 2px
+            top: 1px
+            right: 0px
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
@@ -1749,7 +1759,6 @@ $colour4: #8a89ba
             @include opacity(0.6)
         > tbody
             cursor: pointer
-            background: white
             > tr
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell

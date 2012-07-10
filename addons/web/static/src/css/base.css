@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp a {
   text-decoration: none;
@@ -1737,6 +1737,9 @@
 .openerp .oe_form_readonly .oe_edit_only, .openerp .oe_form_readonly .oe_form_field:empty {
   display: none !important;
 }
+.openerp .oe_form_readonly .oe_form .oe_form_field_date {
+  width: auto;
+}
 .openerp .oe_form_nosheet {
   margin-left: 10px;
   margin-right: 10px;
@@ -1764,7 +1767,7 @@
 }
 .openerp .oe_form footer {
   min-width: 650px;
-  max-width: 960px;
+  max-width: 860px;
   margin: 0 auto;
 }
 .openerp ul.oe_form_steps {
@@ -1833,7 +1836,7 @@
 }
 .openerp .oe_application .oe_form_sheet_width {
   min-width: 650px;
-  max-width: 960px;
+  max-width: 860px;
   margin: 0 auto;
 }
 .openerp .oe_application .oe_form_sheet {
@@ -1858,19 +1861,22 @@
 .openerp .oe_form td.oe_form_group_cell_label label {
   line-height: 18px;
   display: block;
-  min-width: 120px;
+  min-width: 110px;
 }
 .openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
-  padding-left: 8px;
+  padding-left: 6px;
 }
 .openerp .oe_form .oe_form_group {
   width: 100%;
   margin: 4px 0 4px 0;
 }
+.openerp .oe_form .oe_form_group .oe_group_right > tbody > tr > td:first-child {
+  padding-left: 18px;
+}
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   font-weight: bold;
   white-space: nowrap;
-  padding-right: 8px;
+  padding-right: 6px;
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
@@ -1927,9 +1933,10 @@
 }
 .openerp .oe_form .oe_form_field_char input,
 .openerp .oe_form .oe_form_field_url input,
+.openerp .oe_form .oe_form_field_email input,
 .openerp .oe_form .oe_form_field_text textarea,
 .openerp .oe_form .oe_form_field_selection select {
-  width: inherit;
+  width: 100%;
 }
 .openerp .oe_form .oe_form_field_text.oe_inline, .openerp .oe_form .oe_form_field_text.oe_inline > textarea {
   width: 500px;
@@ -1966,7 +1973,7 @@
   width: 180px;
 }
 .openerp .oe_form .oe_form_field_date {
-  width: 7em;
+  width: 7.5em;
 }
 .openerp .oe_form .oe_form_field_datetime {
   width: 11em;
@@ -1998,15 +2005,6 @@
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
-}
-.openerp .oe_form .oe_form_field_many2one input, .openerp .oe_form .oe_form_field_binary input, .openerp .oe_form .oe_form_field_binary input, .openerp .oe_form .oe_form_field_url input {
-  border-right: none;
-  -webkit-border-top-right-radius: 0px;
-  -webkit-border-bottom-right-radius: 0px;
-  -moz-border-radius-topright: 0px;
-  -moz-border-radius-bottomright: 0px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
 }
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
@@ -2071,16 +2069,28 @@
   right: 5px;
   top: 3px;
 }
-.openerp .oe_form .oe_form_field_with_button input {
-  width: 100%;
+.openerp .oe_form .oe_form_field_with_button.oe_no_button > .oe_button {
+  display: none;
 }
-.openerp .oe_form .oe_form_field_with_button > .oe_button {
+.openerp .oe_form .oe_form_field_with_button:not(.oe_no_button) input {
+  border-right: none;
+  -webkit-border-top-right-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-topright: 0px;
+  -moz-border-radius-bottomright: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.openerp .oe_form .oe_form_field_with_button:not(.oe_no_button) > .oe_button {
   float: right;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
   border-bottom-left-radius: 0px;
   height: 22px;
+}
+.openerp .oe_form .oe_form_field_with_button input {
+  width: 100%;
 }
 .openerp .oe_form .oe_form_field_with_button > div {
   position: relative;
@@ -2136,8 +2146,8 @@
 }
 .openerp .oe_form_field_many2one span.oe_m2o_drop_down_button {
   position: absolute;
-  top: 3px;
-  right: 2px;
+  top: 1px;
+  right: 0px;
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
@@ -2216,7 +2226,6 @@
 }
 .openerp .oe_list_content > tbody {
   cursor: pointer;
-  background: white;
 }
 .openerp .oe_list_content > tbody > tr {
   border-top: 1px solid #dddddd;
