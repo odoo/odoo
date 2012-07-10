@@ -396,18 +396,6 @@
     </table>
 </t>
 
-<t t-name="BreadCrumb">
-    <t t-foreach="widget.items" t-as="item">
-        <t t-if="!item_last">
-            <a href="#" class="oe_breadcrumb_item" t-att-data-index="item_index">
-                <t t-esc="item.get_title()"/>
-            </a> /
-        </t>
-        <t t-if="item_last">
-            <t t-esc="item.get_title()"/>
-        </t>
-    </t>
-</t>
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">

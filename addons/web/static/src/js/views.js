@@ -165,7 +165,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
             this.inner_action = action;
             var inner_viewmanager = this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
-            this.breadcrumb.push_actionmanager(inner_viewmanager);
+            this.breadcrumb.push_viewmanager(inner_viewmanager);
             this.inner_viewmanager.appendTo(this.$element);
             this.inner_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
         }
@@ -236,6 +236,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         this.action_manager.$element.on('click', '.oe_breadcrumb_item', this.on_item_clicked);
     },
     push: function(item) {
+        item.id = _.uniqueId('breadcrumb_');
         item.show = item.show || function() {
             item.widget.$element.show();
         };
@@ -251,43 +252,58 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         console.log("breadcrumb push", item);
         this.items.push(item);
     },
-    push_actionmanager: function(am, view_type) {
+    push_viewmanager: function(vm, view_type) {
         var self = this;
-        var bookmarked_view = view_type || am.active_view || am.views_src[0].view_type;
+        var bookmarked_view = view_type || vm.active_view || vm.views_src[0].view_type;
+        var views = [bookmarked_view];
+        vm.on_mode_switch.add(function(mode) {
+            var last = views.slice(-1)[0];
+            if (mode !== last) {
+                if (mode !== 'form') {
+                    views.length = 0;
+                }
+                views.push(mode);
+            }
+            console.log(views);
+        });
         this.push({
-            widget: am,
+            widget: vm,
             view: bookmarked_view,
-            show: function() {
-                am.$element.show();
-                if (am.active_view !== bookmarked_view) {
-                    am.on_mode_switch(bookmarked_view);
-                    console.log("breadcrunb pushaction man ager set title on show");
-                    am.set_title();
+            show: function($e) {
+                var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+                var view_to_select = views[index];
+                vm.$element.show();
+                if (vm.active_view !== view_to_select) {
+                    vm.on_mode_switch(view_to_select);
+                    vm.set_title();
                 }
             },
             get_title: function() {
-                return am.views[bookmarked_view].controller.get('title');
+                return _.map(views, function(v) {
+                    return vm.views[v].controller.get('title');
+                });
             }
         });
-        if (bookmarked_view !== 'form') {
-            am.on_mode_switch.add_first(function(mode) {
-                if (mode === 'form') {
-                    self.push_actionmanager(am, 'form');
-                } else {
-                    var previous = self.items[self.items.length - 1];
-                    if (previous.widget === am && previous && previous.view === 'form') {
-                        self.pop();
-                    }
-                }
-            });
-        }
-    },
-    pop: function() {
-        this.remove_item(this.items.length - 1);
-        this.select_item(this.items.length - 1);
     },
     get_title: function() {
-        return QWeb.render('BreadCrumb', { widget: this });
+        var titles = [];
+        for (var i = 0; i < this.items.length; i += 1) {
+            var item = this.items[i];
+            var tit = item.get_title();
+            if (!_.isArray(tit)) {
+                tit = [tit];
+            }
+            for (var j = 0; j < tit.length; j += 1) {
+                var t= tit[j];
+                var label = _.escape(t);
+                if (i === this.items.length - 1 && j === tit.length - 1) {
+                    titles.push(label);
+                } else {
+                    titles.push(_.str.sprintf('<a href="#" class="oe_breadcrumb_item" data-id="%s">%s</a>', item.id, label));
+                }
+            }
+        }
+        return titles.join(' / ');
     },
     hide_items: function() {
         _.each(this.items, function(i) {
@@ -296,16 +312,19 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
     },
     on_item_clicked: function(ev) {
         var $e = $(ev.target);
-        var index = $e.data('index');
-        this.select_item(index);
-    },
-    select_item: function(index) {
-        for (var i = index + 1; i < this.items.length; i += 1) {
-            this.remove_item(i);
+        var item;
+        for (var i = 0; i < this.items.length; i += 1) {
+            var it = this.items[i];
+            if (it.id == $e.data('id')) {
+                item = it;
+                continue;
+            }
+            if (item) {
+                this.remove_item(i);
+            }
         }
-        var item = this.items[index];
         if (item) {
-            item.show();
+            item.show($e);
         } else {
             console.warn("Breadcrumb: Can't select item at index", index);
         }
@@ -315,9 +334,9 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         var item = this.items.splice(index, 1)[0];
         if (item) {
             var dups = _.filter(this.items, function(it) {
-                return item.widget === it.widget;
+                    return item.widget === it.widget;
             });
-            if (dups.length === 0) {
+            if (!dups.length) {
                 console.log("Breadcrumb Destroy", item);
                 item.destroy();
             }
@@ -460,7 +479,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
 
         controller.on("change:title", this, function() {
             if (self.active_view === view_type) {
-                console.log("controller.on change:title");
                 self.set_title(controller.get('title'));
             }
         });
