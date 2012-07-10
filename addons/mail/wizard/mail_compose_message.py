@@ -118,74 +118,91 @@ class mail_compose_message(osv.TransientModel):
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
-        """Returns a defaults-like dict with initial values for the composition
-           wizard when sending an email related to the document record identified
-           by ``model`` and ``res_id``.
+        """ Returns a defaults-like dict with initial values for the composition
+            wizard when sending an email related to the document record
+            identified by ``model`` and ``res_id``.
 
-           The default implementation returns an empty dictionary, and is meant
-           to be overridden by subclasses.
+            The default implementation returns an empty dictionary, and is meant
+            to be overridden by subclasses.
 
-           :param str model: model name of the document record this mail is related to.
-           :param int res_id: id of the document record this mail is related to.
-           :param dict context: several context values will modify the behavior
-                                of the wizard, cfr. the class description.
+            :param str model: model name of the document record this mail is
+                related to.
+            :param int res_id: id of the document record this mail is related to.
+            :param dict context: several context values will modify the behavior
+                of the wizard, cfr. the class description.
         """
-        return {}
+        result = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        result.update({
+            'model': model,
+            'res_id': res_id,
+            'email_from': user.user_email or tools.config.get('email_from', False),
+            'body_html': '<br />---<br />' + tools.ustr(user.signature or ''),
+        })
+        return result
 
     def get_message_data(self, cr, uid, message_id, context=None):
-        """Returns a defaults-like dict with initial values for the composition
-           wizard when replying to the given message (e.g. including the quote
-           of the initial message, and the correct recipient).
-           Should not be called unless ``context['mail.compose.message.mode'] == 'reply'``.
+        """ Returns a defaults-like dict with initial values for the composition
+            wizard when replying to the given message (e.g. including the quote
+            of the initial message, and the correct recipient). It should not be
+            called unless ``context['mail.compose.message.mode'] == 'reply'``.
 
-           :param int message_id: id of the mail.message to which the user
-                                  is replying.
-           :param dict context: several context values will modify the behavior
-                                of the wizard, cfr. the class description.
-                                When calling this method, the ``'mail'`` value
-                                in the context should be ``'reply'``.
+            :param int message_id: id of the mail.message to which the user
+                is replying.
+            :param dict context: several context values will modify the behavior
+                of the wizard, cfr. the class description.
         """
         if context is None:
             context = {}
         result = {}
-        mail_message = self.pool.get('mail.message')
-        if message_id:
-            message_data = mail_message.browse(cr, uid, message_id, context)
-            subject = tools.ustr(message_data.subject or '')
-            # we use the plain text version of the original mail, by default,
-            # as it is easier to quote than the HTML version.
-            # XXX TODO: make it possible to switch to HTML on the fly
-            current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            body = message_data.body_text or current_user.signature or ''
-            if context.get('mail.compose.message.mode') == 'reply':
-                sent_date = _('On %(date)s, ') % {'date': message_data.date} if message_data.date else ''
-                sender = _('%(sender_name)s wrote:') % {'sender_name': tools.ustr(message_data.email_from or _('You'))}
-                quoted_body = '> %s' % tools.ustr(body.replace('\n', "\n> ") or '')
-                body = '\n'.join(["\n", (sent_date + sender), quoted_body])
-                body += "\n" + (current_user.signature or '')
-                re_prefix = _("Re:")
-                if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
-                    subject = "%s %s" % (re_prefix, subject)
-            result.update({
-                    'content_subtype' : 'plain', # default to the text version due to quoting
-                    'body_text' : body,
-                    'body_html': body,
-                    'subject' : subject,
-                    'attachment_ids' : [],
-                    'model' : message_data.model or False,
-                    'res_id' : message_data.res_id or False,
-                    'email_from' : current_user.user_email or message_data.email_to or False,
-                    'email_to' : message_data.reply_to or message_data.email_from or False,
-                    'email_cc' : message_data.email_cc or False,
-                    'user_id' : uid,
-                    # pass msg-id and references of mail we're replying to, to construct the
-                    # new ones later when sending
-                    'message_id' :  message_data.message_id or False,
-                    'references' : message_data.references and tools.ustr(message_data.references) or False,
-                })
+        if not message_id:
+            return result
+
+        current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        message_data = self.pool.get('mail.message').browse(cr, uid, message_id, context)
+        # Form the subject
+        re_prefix = _("Re:")
+        reply_subject = tools.ustr(message_data.subject or '')
+        if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)):
+            reply_subject = "%s %s" % (re_prefix, reply_subject)
+        # Form the bodies (text and html). We use the plain text version of the
+        # original mail, by default, as it is easier to quote than the HTML
+        # version. TODO: make it possible to switch to HTML on the fly
+        sent_date = _('On %(date)s, ') % {'date': message_data.date} if message_data.date else ''
+        sender = _('%(sender_name)s wrote:') % {'sender_name': tools.ustr(message_data.email_from or _('You'))}
+        body_text = message_data.body_text or ''
+        quoted_body_text = '> %s' % tools.ustr(body_text.replace('\n', "\n> ") or '')
+        quoted_body_html = '> %s' % tools.ustr(body_text.replace('\n', "<br />&gt; ") or '')
+        reply_body_text = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_text, current_user.signature)
+        reply_body_html = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_html, current_user.signature)
+        # Update header and references
+        reply_headers = {}
+        reply_references = message_data.references and tools.ustr(message_data.references) or False
+        reply_message_id = message_data.message_id or False
+        if reply_message_id:
+            reply_references = (reply_references or '') + " " + mail_wiz.message_id
+            reply_headers['In-Reply-To'] = mail_wiz.message_id
+        # update the result
+        result.update({
+            'body_text': reply_body_text,
+            'body_html': quoted_body_html,
+            'subject': reply_subject,
+            'attachment_ids': [],
+            'model': message_data.model or False,
+            'res_id': message_data.res_id or False,
+            'email_from': current_user.user_email or message_data.email_to or False,
+            'email_to': message_data.reply_to or message_data.email_from or False,
+            'email_cc': message_data.email_cc or False,
+            'user_id': uid,
+            # pass msg-id and references of mail we're replying to, to construct the
+            # new ones later when sending
+            'message_id': reply_message_id,
+            'references': reply_references,
+            'headers': reply_headers,
+        })
         return result
 
-    def compose_message(self, cr, uid, ids, context=None):
+    def send_mail(self, cr, uid, ids, context=None):
         '''Process the wizard contents and proceed with sending the corresponding
            email(s), rendering any template patterns on the fly if needed.
            If the wizard is in mass-mail mode (context['mail.compose.message.mode'] is
@@ -197,8 +214,6 @@ class mail_compose_message(osv.TransientModel):
            :param dict context: several context values will modify the behavior
                                 of the wizard, cfr. the class description.
         '''
-        print 'compose_message'
-        print context
         if context is None:
             context = {}
         mail_message = self.pool.get('mail.message')
@@ -216,7 +231,8 @@ class mail_compose_message(osv.TransientModel):
             if formatting:
                 content_subtype = 'html'
             else:
-                content_subtype='text'
+                content_subtype = 'text'
+                subject = False
             if email_mode:
                 type = 'email'
             else:
@@ -242,11 +258,6 @@ class mail_compose_message(osv.TransientModel):
                 mail_thread_enabled = True
             else:
                 mail_thread_enabled = False
-            
-            # Reply Email
-            if context.get('mail.compose.message.mode') == 'reply' and mail_wiz.message_id:
-                references = (mail_wiz.references or '') + " " + mail_wiz.message_id
-                headers['In-Reply-To'] = mail_wiz.message_id
 
             if context.get('mail.compose.message.mode') == 'mass_mail':
                 # Mass mailing: must render the template patterns
@@ -274,106 +285,16 @@ class mail_compose_message(osv.TransientModel):
             else:
                 # normal mode - no mass-mailing
                 if mail_thread_enabled:
-                    print mail_wiz.body_html
                     msg_ids = active_model_pool.message_append(cr, uid, active_ids,
                             mail_wiz.subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=content_subtype, state='outgoing',
                             email_to=mail_wiz.email_to, email_from=mail_wiz.email_from, email_cc=mail_wiz.email_cc, email_bcc=mail_wiz.email_bcc,
                             reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context,
                             type=type)
                 else:
-                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), mail_wiz.subject, body,
+                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), mail_wiz.subject, body_text,
                         model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), email_bcc=to_email(mail_wiz.email_bcc), reply_to=mail_wiz.reply_to,
                         attachments=attachment, references=references, res_id=int(mail_wiz.res_id),
                         content_subtype=mail_wiz.content_subtype, headers=headers, context=context)]
-                # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
-                mail_message.send(cr, uid, msg_ids, context=context)
-
-        return {'type': 'ir.actions.act_window_close'}
-
-    def send_mail(self, cr, uid, ids, context=None):
-        '''Process the wizard contents and proceed with sending the corresponding
-           email(s), rendering any template patterns on the fly if needed.
-           If the wizard is in mass-mail mode (context['mail.compose.message.mode'] is
-           set to ``'mass_mail'``), the resulting email(s) are scheduled for being
-           sent the next time the mail.message scheduler runs, or the next time
-           ``mail.message.process_email_queue`` is called.
-           Otherwise the new message is sent immediately.
-
-           :param dict context: several context values will modify the behavior
-                                of the wizard, cfr. the class description.
-        '''
-        print 'send_mail'
-        print context
-        if context is None:
-            context = {}
-        mail_message = self.pool.get('mail.message')
-        for mail in self.browse(cr, uid, ids, context=context):
-            attachment = {}
-            for attach in mail.attachment_ids:
-                attachment[attach.datas_fname] = attach.datas and attach.datas.decode('base64')
-            references = None
-            headers = {}
-
-            body =  mail.body_html if mail.content_subtype == 'html' else mail.body_text
-
-            # Get model, and check whether it is OpenChatter enabled, aka inherit from mail.thread
-            if context.get('mail.compose.message.mode') == 'mass_mail':
-                if context.get('active_ids') and context.get('active_model'):
-                    active_ids = context['active_ids']
-                    active_model = context['active_model']
-                else:
-                    active_model = mail.model
-                    active_model_pool = self.pool.get(active_model)
-                    active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail.filter_id.domain), context=ast.literal_eval(mail.filter_id.context))
-            else:
-                active_model = mail.model
-                active_ids = [int(mail.res_id)]
-            active_model_pool = self.pool.get(active_model)
-            if hasattr(active_model_pool, '_inherit') and 'mail.thread' in active_model_pool._inherit:
-                mail_thread_enabled = True
-            else:
-                mail_thread_enabled = False
-            
-            # Reply Email
-            if context.get('mail.compose.message.mode') == 'reply' and mail.message_id:
-                references = (mail.references or '') + " " + mail.message_id
-                headers['In-Reply-To'] = mail.message_id
-
-            if context.get('mail.compose.message.mode') == 'mass_mail':
-                # Mass mailing: must render the template patterns
-                for active_id in active_ids:
-                    subject = self.render_template(cr, uid, mail.subject, active_model, active_id)
-                    rendered_body = self.render_template(cr, uid, body, active_model, active_id)
-                    email_from = self.render_template(cr, uid, mail.email_from, active_model, active_id)
-                    email_to = self.render_template(cr, uid, mail.email_to, active_model, active_id)
-                    email_cc = self.render_template(cr, uid, mail.email_cc, active_model, active_id)
-                    email_bcc = self.render_template(cr, uid, mail.email_bcc, active_model, active_id)
-                    reply_to = self.render_template(cr, uid, mail.reply_to, active_model, active_id)
-    
-                    # in mass-mailing mode we only schedule the mail for sending, it will be 
-                    # processed as soon as the mail scheduler runs.
-                    if mail_thread_enabled:
-                        active_model_pool.message_append(cr, uid, [active_id],
-                            subject, body_text=mail.body_text, body_html=mail.body_html, content_subtype=mail.content_subtype, state='outgoing',
-                            email_to=email_to, email_from=email_from, email_cc=email_cc, email_bcc=email_bcc,
-                            reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
-                    else:
-                        mail_message.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body,
-                            model=mail.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
-                            attachments=attachment, references=references, res_id=active_id,
-                            content_subtype=mail.content_subtype, headers=headers, context=context)
-            else:
-                # normal mode - no mass-mailing
-                if mail_thread_enabled:
-                    msg_ids = active_model_pool.message_append(cr, uid, active_ids,
-                            mail.subject, body_text=mail.body_text, body_html=mail.body_html, content_subtype=mail.content_subtype, state='outgoing',
-                            email_to=mail.email_to, email_from=mail.email_from, email_cc=mail.email_cc, email_bcc=mail.email_bcc,
-                            reply_to=mail.reply_to, references=references, attachments=attachment, headers=headers, context=context)
-                else:
-                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail.email_from, to_email(mail.email_to), mail.subject, body,
-                        model=mail.model, email_cc=to_email(mail.email_cc), email_bcc=to_email(mail.email_bcc), reply_to=mail.reply_to,
-                        attachments=attachment, references=references, res_id=int(mail.res_id),
-                        content_subtype=mail.content_subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
                 mail_message.send(cr, uid, msg_ids, context=context)
 
@@ -424,24 +345,17 @@ class mail_compose_message_extended(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, res_id, context=None):
-        """Overrides the default implementation to provide more default field values
-           related to the corresponding CRM case.
+        """ Overrides the default implementation to provide more default field values
+            related to the corresponding CRM case.
         """
-        print 'get_value'
         result = super(mail_compose_message_extended, self).get_value(cr, uid,  model, res_id, context=context)
         model_obj = self.pool.get(model)
         if getattr(model_obj, '_mail_compose_message', False) and res_id:
             data = model_obj.browse(cr, uid , res_id, context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result.update({
-                'model': model,
-                'res_id': res_id,
-                'email_from': user.user_email or tools.config.get('email_from', False),
                 'email_to': data.email_from or False,
                 'email_cc': tools.ustr(data.email_cc or ''),
                 'subject': data.name or False,
-                'body_text': '\n' + tools.ustr(user.signature or ''),
-                'subtype': 'plain',
             })
             if hasattr(data, 'section_id'):
                 result['reply_to'] = data.section_id and data.section_id.reply_to or False
