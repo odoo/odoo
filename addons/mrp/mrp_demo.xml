@@ -50,11 +50,20 @@
             <field name="costs_general_account_id" ref="account.a_expense"/>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
+
         <record id="mrp_workcenter_1" model="mrp.workcenter">
             <field name="name">Repairs workshop</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="time_cycle">1</field>
         </record>
+
+        <record id="mrp_workcenter_2" model="mrp.workcenter">
+            <field name="name">Assemble</field>
+            <field name="resource_type">user</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="time_cycle">0.75</field>
+        </record>
+
       <!--
     Resource: res.company
     -->
@@ -68,33 +77,43 @@
         <record id="mrp_property_group_ram" model="mrp.property.group">
             <field name="name">RAM</field>
         </record>
+
         <record id="mrp_property_group_hdd" model="mrp.property.group">
             <field name="name">HDD</field>
         </record>
+
         <record id="mrp_property_group_cpu" model="mrp.property.group">
             <field name="name">CPU</field>
         </record>
+
         <record id="mrp_property_group_cdrw" model="mrp.property.group">
             <field name="name">CDRW</field>
         </record>
+
         <record id="mrp_property_group_cdrom" model="mrp.property.group">
             <field name="name">CPROM</field>
         </record>
+
         <record id="mrp_property_group_dvdrom" model="mrp.property.group">
             <field name="name">DVDROM</field>
         </record>
+
         <record id="mrp_property_group_dvdrw" model="mrp.property.group">
             <field name="name">DVDRW</field>
         </record>
+
         <record id="mrp_property_group_case" model="mrp.property.group">
             <field name="name">case</field>
         </record>
+
         <record id="mrp_property_group_cooler" model="mrp.property.group">
             <field name="name">cooler</field>
         </record>
+
         <record id="mrp_property_group_mb" model="mrp.property.group">
             <field name="name">MB</field>
         </record>
+
         <record id="mrp_property_group_psu" model="mrp.property.group">
             <field name="name">PSU</field>
         </record>
@@ -107,58 +126,72 @@
             <field name="group_id" ref="mrp_property_group_ram"/>
             <field name="name">DDR 512MB PC400</field>
         </record>
+
         <record id="mrp_property_1" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_ram"/>
             <field name="name">DDR 256MB PC400</field>
         </record>
+
         <record id="mrp_property_2" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_hdd"/>
             <field name="name">HDD Seagate 7200.8 120GB</field>
         </record>
+
         <record id="mrp_property_3" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_hdd"/>
             <field name="name">HDD Seagate 7200.8 80GB</field>
         </record>
+
         <record id="mrp_property_4" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_cpu"/>
             <field name="name">CPU AMD Athlon XP 1800+</field>
         </record>
+
         <record id="mrp_property_6" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_cpu"/>
             <field name="name">CPU Intel CeleronD 2.53Ghz</field>
         </record>
+
         <record id="mrp_property_7" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_cdrw"/>
             <field name="name">CD Burner Plextor PX-4824</field>
         </record>
+
         <record id="mrp_property_8" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_cdrom"/>
             <field name="name">CD Reader Samsung cd-520</field>
         </record>
+
         <record id="mrp_property_9" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_dvdrom"/>
             <field name="name">DVD Reader LG dvd-r16</field>
         </record>
+
         <record id="mrp_property_10" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_dvdrw"/>
             <field name="name">DVD Burner Nec ND-3550</field>
         </record>
+
         <record id="mrp_property_11" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_case"/>
             <field name="name">Case Antec Sonata 2</field>
         </record>
+
         <record id="mrp_property_12" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_cooler"/>
             <field name="name">Cooler ThermalTake big Typhoon</field>
         </record>
+
         <record id="mrp_property_13" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_mb"/>
             <field name="name">MB Abit NF7-s</field>
         </record>
+
         <record id="mrp_property_14" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_mb"/>
             <field name="name">MB DFI NF8 Ultra-D</field>
         </record>
+
         <record id="mrp_property_15" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_psu"/>
             <field name="name">PSU LC Power LC6550</field>
@@ -171,12 +204,15 @@
         <record id="mrp_routing_0" model="mrp.routing">
             <field name="name">Assembly Line 1</field>
         </record>
+
         <record id="mrp_routing_1" model="mrp.routing">
             <field name="name">Custom Assembly Line</field>
         </record>
+
         <record id="mrp_routing_2" model="mrp.routing">
-            <field name="name">Component Manufacturing</field>
+            <field name="name">Manual Component's Assembly</field>
         </record>
+
 
         <!--
     Resource: mrp.routing.workcenter
@@ -185,18 +221,20 @@
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_0"/>
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
-            <field name="name">Short time assembly</field>
+            <field name="name">Manual Assembly</field>
             <field name="hour_nbr">2</field>
             <field name="sequence">5</field>
         </record>
+
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
-            <field name="name">long time assembly</field>
+            <field name="name">Long time assembly</field>
             <field name="hour_nbr">5</field>
             <field name="cycle_nbr">2</field>
             <field name="sequence">15</field>
         </record>
+
         <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
@@ -215,11 +253,11 @@
 
         <record id="mrp_routing_workcenter_2" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_2"/>
-            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_2"/>
             <field name="cycle_nbr">0.5</field>
-            <field name="hour_nbr">3</field>
+            <field name="hour_nbr">2</field>
             <field name="sequence">5</field>
-            <field name="name">assembly main + processor + fan</field>
+            <field name="name">Manual Assembly</field>
         </record>
 
         <!--
@@ -244,6 +282,7 @@
             <field name="routing_id" ref="mrp_routing_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_4" />
         </record>
+
         <record id="mrp_bom_2" model="mrp.bom">
             <field name="name">Assembly Medium PC</field>
             <field name="sequence">8</field>
@@ -251,6 +290,7 @@
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_5"/>
         </record>
+
         <record id="mrp_bom_3" model="mrp.bom">
             <field name="name">Assembly Customizable PC</field>
             <field name="sequence">11</field>
@@ -258,6 +298,7 @@
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_6"/>
         </record>
+
         <record id="mrp_bom_4" model="mrp.bom">
             <field name="name">HDD on demand</field>
             <field name="sequence">14</field>
@@ -266,6 +307,7 @@
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
         </record>
+
         <record id="mrp_bom_5" model="mrp.bom">
             <field name="name">RAM512 on demand</field>
             <field name="sequence">18</field>
@@ -274,6 +316,7 @@
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_21"/>
         </record>
+
         <record id="mrp_bom_6" model="mrp.bom">
             <field name="name">HDD on demand</field>
             <field name="sequence">21</field>
@@ -282,6 +325,7 @@
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
         </record>
+
         <record id="mrp_bom_7" model="mrp.bom">
             <field name="name">HDD on demand</field>
             <field name="sequence">25</field>
@@ -290,6 +334,7 @@
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
         </record>
+
         <record id="mrp_bom_9" model="mrp.bom">
             <field name="name">Assembly Basic PC</field>
             <field name="sequence">29</field>
@@ -299,6 +344,7 @@
             <field name="type">normal</field>
             <field model="product.product" name="product_id" ref="product.product_product_3"/>
         </record>
+
         <record id="mrp_bom_10" model="mrp.bom">
             <field name="name">Complete PC with peripherals</field>
             <field name="sequence">33</field>
@@ -306,6 +352,7 @@
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_23"/>
         </record>
+
         <record id="mrp_bom_11" model="mrp.bom">
             <field name="name">RAM256 on demand</field>
             <field name="sequence">36</field>
@@ -351,6 +398,7 @@
             <field name="bom_id" ref="mrp_bom_10"/>
             <field model="product.product" name="product_id" ref="product.product_product_4"/>
         </record>
+
         <record id="mrp_bom_18" model="mrp.bom">
             <field name="name">Mainboard ASUStek A7N8X</field>
             <field name="sequence">49</field>
@@ -359,6 +407,7 @@
             <field name="bom_id" ref="mrp_bom_13"/>
             <field model="product.product" name="product_id" ref="product.product_product_6"/>
         </record>
+
         <record id="mrp_bom_19" model="mrp.bom">
             <field name="name">Processor AMD Athlon 2200+</field>
             <field name="sequence">51</field>
@@ -367,6 +416,7 @@
             <field name="bom_id" ref="mrp_bom_13"/>
             <field model="product.product" name="product_id" ref="product.product_product_19"/>
         </record>
+
         <record id="mrp_bom_1900" model="mrp.bom">
             <field name="name">Regular Case Fan</field>
             <field name="sequence">54</field>
@@ -375,6 +425,7 @@
             <field name="bom_id" ref="mrp_bom_13"/>
             <field model="product.product" name="product_id" ref="product.product_product_14"/>
         </record>
+
         <record id="mrp_bom_23" model="mrp.bom">
             <field name="name">DDR 256MB PC333</field>
             <field name="sequence">57</field>
@@ -383,6 +434,7 @@
             <field name="bom_id" ref="mrp_bom_11"/>
             <field model="product.product" name="product_id" ref="product.product_product_17"/>
         </record>
+
         <record id="mrp_bom_1901" model="mrp.bom">
             <field name="name">DDR 512MB PC400</field>
             <field name="sequence">59</field>
@@ -391,6 +443,7 @@
             <field name="bom_id" ref="mrp_bom_13"/>
             <field model="product.product" name="product_id" ref="product.product_product_18"/>
         </record>
+
         <record id="mrp_bom_22" model="mrp.bom">
             <field name="name">DDR 1024MB PC400</field>
             <field name="sequence">61</field>
@@ -399,6 +452,7 @@
             <field name="bom_id" ref="mrp_bom_5"/>
             <field model="product.product" name="product_id" ref="product.product_product_18"/>
         </record>
+
         <record id="mrp_bom_24" model="mrp.bom">
             <field name="name">HDD Seagate 7200.8 80GB</field>
             <field name="sequence">64</field>
@@ -407,6 +461,7 @@
             <field name="bom_id" ref="mrp_bom_7"/>
             <field model="product.product" name="product_id" ref="product.product_product_13"/>
         </record>
+
         <record id="mrp_bom_25" model="mrp.bom">
             <field name="name">HDD Seagate 7200.8 120GB</field>
             <field name="sequence">66</field>
@@ -416,6 +471,7 @@
             <field name="bom_id" ref="mrp_bom_4"/>
             <field model="product.product" name="product_id" ref="product.product_product_11"/>
         </record>
+
         <record id="mrp_bom_26" model="mrp.bom">
             <field name="name">RAM on demand</field>
             <field name="sequence">69</field>
@@ -424,6 +480,7 @@
             <field name="bom_id" ref="mrp_bom_3"/>
             <field model="product.product" name="product_id" ref="product.product_product_21"/>
         </record>
+
         <record id="mrp_bom_27" model="mrp.bom">
             <field name="name">HDD on demand</field>
             <field name="sequence">73</field>
@@ -432,6 +489,7 @@
             <field name="bom_id" ref="mrp_bom_3"/>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
         </record>
+
         <record id="mrp_bom_28" model="mrp.bom">
             <field name="name">ATX middle-size case</field>
             <field name="sequence">76</field>
@@ -441,6 +499,7 @@
             <field name="bom_id" ref="mrp_bom_3"/>
             <field model="product.product" name="product_id" ref="product.product_product_27"/>
         </record>
+
         <record id="mrp_bom_29" model="mrp.bom">
             <field name="name">Processor on demand</field>
             <field name="sequence">79</field>
@@ -450,6 +509,7 @@
             <field name="bom_id" ref="mrp_bom_3"/>
             <field model="product.product" name="product_id" ref="product.product_product_16"/>
         </record>
+
         <record id="mrp_bom_30" model="mrp.bom">
             <field name="name">ATX Middle-size case</field>
             <field name="sequence">81</field>
@@ -459,6 +519,7 @@
             <field name="bom_id" ref="mrp_bom_2"/>
             <field model="product.product" name="product_id" ref="product.product_product_27"/>
         </record>
+
         <record id="mrp_bom_31" model="mrp.bom">
             <field name="name">HDD Seagate 7200.8 80GB</field>
             <field name="sequence">83</field>
@@ -468,6 +529,7 @@
             <field name="bom_id" ref="mrp_bom_2"/>
             <field model="product.product" name="product_id" ref="product.product_product_11"/>
         </record>
+
         <record id="mrp_bom_32" model="mrp.bom">
             <field name="name">High speed processor config</field>
             <field name="sequence">85</field>
@@ -477,6 +539,7 @@
             <field name="bom_id" ref="mrp_bom_2"/>
             <field model="product.product" name="product_id" ref="product.product_product_19"/>
         </record>
+
         <record id="mrp_bom_33" model="mrp.bom">
             <field name="name">HDD Seagate 7200.8 120GB</field>
             <field name="sequence">87</field>
@@ -486,6 +549,7 @@
             <field name="bom_id" ref="mrp_bom_6"/>
             <field model="product.product" name="product_id" ref="product.product_product_12"/>
         </record>
+
         <record id="mrp_bom_34" model="mrp.bom">
             <field name="name">Regular processor config</field>
             <field name="sequence">89</field>
@@ -495,6 +559,7 @@
             <field name="bom_id" ref="mrp_bom_1"/>
             <field model="product.product" name="product_id" ref="product.product_product_16"/>
         </record>
+
         <record id="mrp_bom_35" model="mrp.bom">
             <field name="name">ATX middle-size case</field>
             <field name="sequence">92</field>
@@ -504,6 +569,7 @@
             <field name="bom_id" ref="mrp_bom_1"/>
             <field model="product.product" name="product_id" ref="product.product_product_27"/>
         </record>
+
         <record id="mrp_bom_36" model="mrp.bom">
             <field name="name">HDD Seagate 7200.8 120GB</field>
             <field name="sequence">95</field>
@@ -513,6 +579,7 @@
             <field name="bom_id" ref="mrp_bom_1"/>
             <field model="product.product" name="product_id" ref="product.product_product_12"/>
         </record>
+
         <record id="mrp_bom_processor" model="mrp.bom">
             <field name="name">processor</field>
             <field name="sequence">98</field>
@@ -522,6 +589,7 @@
             <field name="bom_id" ref="mrp_bom_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_9"/>
         </record>
+
         <record id="mrp_bom_38" model="mrp.bom">
             <field name="name">mainboard</field>
             <field name="sequence">101</field>
@@ -531,6 +599,7 @@
             <field name="bom_id" ref="mrp_bom_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_7"/>
         </record>
+
         <record id="mrp_bom_fan" model="mrp.bom">
             <field name="name">fan</field>
             <field name="sequence">105</field>
@@ -540,6 +609,7 @@
             <field name="bom_id" ref="mrp_bom_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_14"/>
         </record>
+
         <record id="mrp_bom_ram" model="mrp.bom">
             <field name="name">RAM</field>
             <field name="sequence">108</field>
@@ -587,6 +657,7 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_16"/>
         </record>
+
         <record id="mrp_bom_42" model="mrp.bom">
             <field name="name">HDD Seagate 7200.8 80GB</field>
             <field name="sequence">113</field>
@@ -596,6 +667,7 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_11"/>
         </record>
+
         <record id="mrp_bom_43" model="mrp.bom">
             <field name="name">ATX Middle-size case</field>
             <field name="sequence">115</field>
@@ -605,6 +677,7 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_27"/>
         </record>
+
         <record id="mrp_bom_kit2" model="mrp.bom">
             <field name="code">KIT</field>
             <field name="sequence">118</field>
@@ -615,6 +688,7 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_26"/>
         </record>
+
         <record id="mrp_bom_34" model="mrp.bom">
             <field name="name">SIDEPAN</field>
             <field name="sequence">121</field>
