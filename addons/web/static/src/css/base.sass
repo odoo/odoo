@@ -1351,6 +1351,8 @@ $sheet-max-width: 860px
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
+        .oe_form .oe_form_field_date
+            width: auto
     .oe_form_nosheet 
         margin-left: 10px
         margin-right: 10px
@@ -1449,17 +1451,20 @@ $sheet-max-width: 860px
                 display: block
                 min-width: 120px
         td.oe_form_group_cell + .oe_form_group_cell
-            padding-left: 8px
+            padding-left: 6px
         .oe_form_group
             width: 100%
             margin: 4px 0 4px 0
+            .oe_group_right
+                > tbody > tr > td:first-child
+                    padding-left: 18px
     // }}}
     // FormView.label {{{
     .oe_form
         .oe_form_label_help[for], .oe_form_label[for]
             font-weight: bold
             white-space: nowrap
-            padding-right: 8px
+            padding-right: 6px
             span
                 font-size: 80%
                 color: darkGreen
@@ -1535,7 +1540,7 @@ $sheet-max-width: 860px
         .oe_form_field_float
             width: 180px
         .oe_form_field_date
-            width: 7em
+            width: 7.5em
         .oe_form_field_datetime
             width: 11em
         input[type="text"], input[type="password"], input[type="file"], select
