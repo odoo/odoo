@@ -2303,7 +2303,6 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
 instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
 
     initialize_content: function() {
-        console.log('initialize_content');
         this.$textarea = this.$element.find('textarea');
         this.$textarea.cleditor({
           //width:        500, // width not including margins, borders or padding
