@@ -111,23 +111,26 @@
                 <form string="Email message" version="7.0">
                     <sheet>
                         <label for="subject" class="oe_edit_only"/>
-                        <h1><field name="subject"/></h1>
-						<label for="user_id"/>
-                        <h2><field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/></h2>
-                        <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+                        <h2><field name="subject"/></h2>
+						<div>
+                            by <field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
+                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                 context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                        </div>
                         <notebook colspan="4">
                             <page string="Message Details">
-                                <group string="Recipients">
-                                    <field name="email_from"/>
-                                    <field name="email_to"/>
-                                    <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
-                                    <field name="email_bcc" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
-                                    <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
-                                </group>
-                                <group string="Partner information">
-                                    <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
-                                    <field name="partner_ids" readonly="1" WIDGET="many2many_tags"/>
+                                <group>
+                                    <group>
+                                        <field name="email_from"/>
+                                        <field name="email_to"/>
+                                        <field name="email_cc"/>
+                                        <field name="email_bcc"/>
+                                        <field name="reply_to"/>
+                                    </group>
+                                    <group>
+                                        <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
+                                        <field name="partner_ids" readonly="1" WIDGET="many2many_tags"/>
+                                    </group>
                                 </group>
                                 <notebook>
                                     <page string="Body (Rich)">
@@ -138,37 +141,29 @@
                                     </page>
                                 </notebook>
                             </page>
-                            <page string="Attachments">
-                                <field name="attachment_ids"/>
-                            </page>
                             <page string="Advanced" groups="base.group_no_one">
                                 <group>
-                                    <group string="Type details">
+                                    <group>
                                         <field name="auto_delete"/>
                                         <field name="type"/>
                                         <field name="content_subtype"/>
                                         <field name="state" colspan="2"/>
-                                        <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
-                                        <field name="original" attrs="{'invisible':[('original', '=', False)]}"/>
-                                    </group>
-                                    <group string="Headers">
-                                        <field name="message_id"/>
-<!--
-                                        <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
--->
-                                        <field name="references"/>
-<!--
-                                        <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
--->
-                                        <field name="headers" attrs="{'invisible':[('headers', '=', False)]}"/>
-                                    </group>
-                                </group>
-                                <group string="Message Details">
-                                    <field name="model"/>
-                                    <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"
+                                        <field name="mail_server_id"/>
+                                        <field name="original"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                        <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"
                                             attrs="{'invisible':['|', ('model', '=', ''), ('res_id', '=', False)]}"/>
-                                    <field name="res_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
                                 </group>
+                            </page>
+                            <page string="Attachments">
+                                <field name="attachment_ids"/>
                             </page>
                         </notebook>
                     </sheet>
