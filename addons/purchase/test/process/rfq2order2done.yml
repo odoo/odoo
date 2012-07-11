@@ -3,22 +3,22 @@
 -
   I check the total untaxed amount of the RFQ is correctly computed
 -
-  !assert {model: purchase.order, id: order_purchase1, string: The amount of RFQ is not correctly computed}:
+  !assert {model: purchase.order, id: purchase_order_1, string: The amount of RFQ is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
 -
   I confirm the RFQ.
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase1}
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_1}
 -
   I check the "Approved" status  after confirmed RFQ.
 -
-  !assert {model: purchase.order, id: order_purchase1}:
+  !assert {model: purchase.order, id: purchase_order_1}:
     - state == 'approved'
 -
   I check that the invoice details which is generated after confirmed RFQ.
 -
   !python {model: purchase.order}: |
-    purchase_order = self.browse(cr, uid, ref("order_purchase1"))
+    purchase_order = self.browse(cr, uid, ref("purchase_order_1"))
     assert len(purchase_order.invoice_ids) >= 1, "Invoice is not generated more or less than one"
     for invoice in purchase_order.invoice_ids:
       assert invoice.state == "draft", "Invoice state should be draft"
@@ -36,7 +36,7 @@
   I check that Reception details after confirmed RFQ.
 -
   !python {model: purchase.order}: |
-    purchase_order = self.browse(cr, uid, ref("order_purchase1"))
+    purchase_order = self.browse(cr, uid, ref("purchase_order_1"))
     assert len(purchase_order.picking_ids) >= 1, "You should have only one reception order"
     for picking in purchase_order.picking_ids:
       assert picking.state == "assigned", "Reception state should be in assigned state"
@@ -46,21 +46,21 @@
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("order_purchase1")).picking_ids
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids
     partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 -
   I check that purchase order is shipped.
 -
   !python {model: purchase.order}: |
-     assert self.browse(cr, uid, ref("order_purchase1")).shipped == True,"Purchase order should be delivered"
+     assert self.browse(cr, uid, ref("purchase_order_1")).shipped == True,"Purchase order should be delivered"
 
 -
   I Validate Invoice of Purchase Order.
 -
   !python {model: purchase.order}: |
     import netsvc
-    invoice_ids = [x.id for x in self.browse(cr, uid, ref("order_purchase1")).invoice_ids]
+    invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids]
     wf_service = netsvc.LocalService("workflow")
     for invoice in invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice', invoice, 'invoice_open', cr)
@@ -68,5 +68,5 @@
   I check that purchase order is invoiced.
 -
   !python {model: purchase.order}: |
-     assert self.browse(cr, uid, ref("order_purchase1")).invoiced == True,"Purchase Order should be invoiced"
+     assert self.browse(cr, uid, ref("purchase_order_1")).invoiced == True,"Purchase Order should be invoiced"
 
