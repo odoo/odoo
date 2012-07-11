@@ -589,12 +589,8 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             var self = this;
 
+            // sort comments
             mail.ChatterUtils.sort_comments(this.comments_structure, records, this.params.parent_id);
-            
-            /* WIP: map matched regexp -> records to browse with name */
-            //_(records).each(function (record) {
-                //self.do_check_internal_links(record.body_text);
-            //});
 
             //build attachments download urls and compute time-relative from dates
             for (var k in records) {
@@ -635,6 +631,7 @@ openerp.mail = function(session) {
         /** Displays a record, performs text/link formatting */
         display_comment: function (record) {
             record.body = mail.ChatterUtils.do_text_nl2br(record.body, true);
+            // if (record.type == 'email' && record.state == 'received') {
             if (record.type == 'email') {
                 record.mini_url = ('/mail/static/src/img/email_icon.png');
             } else {
