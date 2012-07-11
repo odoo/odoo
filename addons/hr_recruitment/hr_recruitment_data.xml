@@ -1,31 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<!--
 <data noupdate="1">
--->
-<data>
-
-        <record id="outgoing_test" model="ir.mail_server">
-            <field name="smtp_host">smtp.openerp.com</field>
-            <field name="name">smtp.openerp.com</field>
-            <field name="smtp_encryption">starttls</field>
-            <field name="smtp_port">2525</field>
-            <field name="smtp_user">tde</field>
-            <field name="sequence">9</field>
-        </record>
-
-
-        <record id="fetchmail_hr_applicant_test" model="fetchmail.server">
-            <field name="object_id" ref="hr_recruitment.model_hr_applicant"/>
-            <field name="attach" eval="True"/>
-            <field name="original" eval="False"/>
-            <field name="server">imap.openerp.com</field>
-            <field name="name">imap.openerp.com</field>
-            <field name="user">tde</field>
-            <field name="is_ssl">True</field>
-            <field name="port">993</field>
-            <field name="type">imap</field>
-        </record>
 
     <!-- Meeting Types (for interview meetings) -->
     <record model="crm.meeting.type" id="categ_meet_interview">
