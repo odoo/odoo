@@ -4,7 +4,7 @@
   Now I cancel Quotation.
 -
   !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order7")])
+    self.action_cancel(cr, uid, [ref("sale_order_7")])
 -
   I check state of Quotation after cancelled.
 -
@@ -14,7 +14,7 @@
   I set cancelled quotation to draft.
 -
   !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order7")])
+    self.action_cancel_draft(cr, uid, [ref("sale_order_7")])
 -
   I confirm order.
 -
@@ -23,7 +23,7 @@
   I send delivery in two shipments, so I am doing a partial delivery order.
 -
   !python {model: stock.picking}: |
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale_order_7"))])
     first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
       first_move = first_picking.move_lines[0]
@@ -34,7 +34,7 @@
 -
   !python {model: stock.picking}: |
     import netsvc
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale_order_7"))])
     last_delivery_order_id = delivery_orders[0]
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
@@ -67,7 +67,7 @@
 -
   !python {model: sale.order}: |
     import netsvc
-    invoice_ids = self.browse(cr, uid, ref("order7")).invoice_ids
+    invoice_ids = self.browse(cr, uid, ref("sale_order_7")).invoice_ids
     wf_service = netsvc.LocalService("workflow")
     first_invoice_id = invoice_ids[0]
     wf_service.trg_validate(uid, 'account.invoice', first_invoice_id.id, 'invoice_cancel', cr)

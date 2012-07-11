@@ -42,7 +42,7 @@
   I add free delivery cost in Sale order.
 -
   !python {model: sale.order}: |
-    self.delivery_set(cr, uid, [ref("sale.order2")], context=context)
+    self.delivery_set(cr, uid, [ref("sale.sale_order_2")], context=context)
 -
   I check sale order after added delivery cost.
 -
