@@ -1,6 +1,6 @@
 id,code,name,parent_id:id,type,user_type:id,reconcile
-lu_2011_account_0,0,Plan de compte Luxembourgeois - Loi de Juin 2009 (THAMINI & ADN),,view,account_type_2011_node,f
-lu_2011_account_bilan,bilan,COMPTES DE BILAN,lu_2011_account_0,view,account_type_2011_node,
+lu_2011_account_0,0,Plan de compte Luxembourgeois - Loi de Juin 2009 (THAMINI & ADN),,view,account.data_account_type_view,f
+lu_2011_account_bilan,bilan,COMPTES DE BILAN,lu_2011_account_0,view,account.data_account_type_view,f
 lu_2011_account_1,1,"CLASSE 1 - COMPTES DE CAPITAUX, DE PROVISIONS ET DE DETTES FINANCIERES",lu_2011_account_bilan,view,account_type_2011_1_capital,f
 lu_2011_account_10,10,Capital ou dotation des succursales et comptes de l’exploitant,lu_2011_account_1,view,account_type_2011_1_capital,f
 lu_2011_account_101,101,Capital souscrit (Sociétés de capitaux - Montant total),lu_2011_account_10,other,account_type_2011_1_capital,f
@@ -159,7 +159,7 @@ lu_2011_account_19821,19821,Autres emprunts,lu_2011_account_1982,other,account_t
 lu_2011_account_19822,19822,Rentes viagères capitalisées,lu_2011_account_1982,other,account_type_2011_1_provision,f
 lu_2011_account_19823,19823,Autres dettes assimilées,lu_2011_account_1982,other,account_type_2011_1_provision,f
 lu_2011_account_19824,19824,Intérêts courus sur autres emprunts et dettes assimilées,lu_2011_account_1982,other,account_type_2011_1_provision,f
-lu_2011_account_2,2,CLASSE 2 - COMPTES DE FRAIS D’ETABLISSEMENT ET D’ACTIFS IMMOBILISES,lu_2011_account_bilan,view,account_type_2011_node,f
+lu_2011_account_2,2,CLASSE 2 - COMPTES DE FRAIS D’ETABLISSEMENT ET D’ACTIFS IMMOBILISES,lu_2011_account_bilan,view,account.data_account_type_view,f
 lu_2011_account_20,20,Frais d’établissement et frais assimilés,lu_2011_account_2,view,account_type_2011_2_immo,f
 lu_2011_account_201,201,Frais de constitution,lu_2011_account_20,other,account_type_2011_2_immo,f
 lu_2011_account_202,202,Frais de premier établissement,lu_2011_account_20,view,account_type_2011_2_immo,f
@@ -256,7 +256,7 @@ lu_2011_account_23621,23621,Dépôts,lu_2011_account_2362,other,account_type_201
 lu_2011_account_23622,23622,Cautionnements,lu_2011_account_2362,other,account_type_2011_2_immo,f
 lu_2011_account_2363,2363,Créances immobilisées,lu_2011_account_236,other,account_type_2011_2_immo,f
 lu_2011_account_237,237,Actions propres ou parts propres,lu_2011_account_23,other,account_type_2011_2_immo,f
-lu_2011_account_3,3,CLASSE 3 - COMPTES DE STOCKS,lu_2011_account_bilan,view,account_type_2011_node,f
+lu_2011_account_3,3,CLASSE 3 - COMPTES DE STOCKS,lu_2011_account_bilan,view,account.data_account_type_view,f
 lu_2011_account_30,30,Matières premières et consommables,lu_2011_account_3,view,account_type_2011_3_stock,f
 lu_2011_account_301,301,Matières premières,lu_2011_account_30,other,account_type_2011_3_stock,f
 lu_2011_account_302,302,Matières consommables,lu_2011_account_30,other,account_type_2011_3_stock,f
@@ -298,7 +298,7 @@ lu_2011_account_341,341,Acomptes versés sur matières premières et consommable
 lu_2011_account_342,342,Acomptes versés sur produits en cours de fabrication et commandes en cours,lu_2011_account_34,other,account_type_2011_3_stock,f
 lu_2011_account_343,343,Acomptes versés sur produits finis et marchandises,lu_2011_account_34,other,account_type_2011_3_stock,f
 lu_2011_account_344,344,Acomptes versés sur terrains et immeubles destinés à la revente,lu_2011_account_34,other,account_type_2011_3_stock,f
-lu_2011_account_4,4,CLASSE 4 - COMPTES DE TIERS,lu_2011_account_bilan,view,account_type_2011_node,f
+lu_2011_account_4,4,CLASSE 4 - COMPTES DE TIERS,lu_2011_account_bilan,view,account.data_account_type_view,f
 lu_2011_account_40,40,Créances résultant de ventes et prestations de services,lu_2011_account_4,view,account_type_2011_4_creance,f
 lu_2011_account_401,401,Créances dont la durée résiduelle est inférieure ou égale à un an,lu_2011_account_40,view,account_type_2011_4_creance,f
 lu_2011_account_4011,4011,Clients,lu_2011_account_401,receivable,account_type_2011_4_creance,t
@@ -552,15 +552,15 @@ lu_2011_account_47243,47243,"Personnel – Oppositions, saisies",lu_2011_account
 lu_2011_account_47248,47248,Personnel – Autres,lu_2011_account_4724,other,account_type_2011_4_dette,f
 lu_2011_account_4726,4726,Etat – Droits d’émission à restituer,lu_2011_account_472,other,account_type_2011_4_dette,f
 lu_2011_account_4728,4728,Autres dettes diverses,lu_2011_account_472,other,account_type_2011_4_dette,f
-lu_2011_account_48,48,Comptes de régularisation,lu_2011_account_4,view,account_type_2011_node,f
+lu_2011_account_48,48,Comptes de régularisation,lu_2011_account_4,view,account.data_account_type_view,f
 lu_2011_account_481,481,Charges à reporter,lu_2011_account_48,other,account_type_2011_4_regul_actif,f
 lu_2011_account_482,482,Produits à reporter,lu_2011_account_48,other,account_type_2011_4_regul_actif,f
-lu_2011_account_483,483,Etat – droits d’émission alloués,lu_2011_account_48,other,account_type_2011_unknown_balance,f
+lu_2011_account_483,483,Etat – droits d’émission alloués,lu_2011_account_48,other,account_type_2011_4_regul_actif,f
 lu_2011_account_484,484,Comptes transitoires ou d’attente – Actif,lu_2011_account_48,other,account_type_2011_4_regul_actif,f
 lu_2011_account_485,485,Comptes transitoires ou d’attente – Passif,lu_2011_account_48,other,account_type_2011_4_regul_passif,f
 lu_2011_account_486,486,Comptes de liaison – Actif,lu_2011_account_48,other,account_type_2011_4_regul_actif,f
 lu_2011_account_487,487,Comptes de liaison – Passif,lu_2011_account_48,other,account_type_2011_4_regul_passif,f
-lu_2011_account_5,5,CLASSE 5 - COMPTES FINANCIERS,lu_2011_account_bilan,view,account_type_2011_node,f
+lu_2011_account_5,5,CLASSE 5 - COMPTES FINANCIERS,lu_2011_account_bilan,view,account.data_account_type_view,f
 lu_2011_account_50,50,Valeurs mobilières,lu_2011_account_5,view,account_type_2011_5_disponibilite,f
 lu_2011_account_501,501,Parts dans des entreprises liées,lu_2011_account_50,other,account_type_2011_5_disponibilite,f
 lu_2011_account_502,502,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_50,other,account_type_2011_5_disponibilite,f
@@ -582,8 +582,8 @@ lu_2011_account_514,514,Compte chèque postal,lu_2011_account_51,other,account_t
 lu_2011_account_516,516,Caisse,lu_2011_account_51,other,account_type_2011_5_disponibilite,f
 lu_2011_account_517,517,Virements internes,lu_2011_account_51,other,account_type_2011_5_disponibilite,t
 lu_2011_account_518,518,Autres avoirs,lu_2011_account_51,other,account_type_2011_5_disponibilite,f
-lu_2011_account_resultat,resultat,COMPTES DE PERTES ET PROFITS,lu_2011_account_0,view,account_type_2011_node,
-lu_2011_account_6,6,CLASSE 6 - COMPTES DE CHARGES,lu_2011_account_resultat,view,account_type_2011_node,f
+lu_2011_account_resultat,resultat,COMPTES DE PERTES ET PROFITS,lu_2011_account_0,view,account.data_account_type_view,
+lu_2011_account_6,6,CLASSE 6 - COMPTES DE CHARGES,lu_2011_account_resultat,view,account.data_account_type_view,f
 lu_2011_account_60,60,Consommation de marchandises et de matières premières et consommables,lu_2011_account_6,view,account_type_2011_6_charge_exploitation,f
 lu_2011_account_601,601,Matières premières,lu_2011_account_60,view,account_type_2011_6_charge_exploitation,f
 lu_2011_account_602,602,Matières consommables,lu_2011_account_60,view,account_type_2011_6_charge_exploitation,f
@@ -953,7 +953,7 @@ lu_2011_account_682,682,Taxe d’abonnement,lu_2011_account_68,other,account_typ
 lu_2011_account_683,683,Impôts étrangers,lu_2011_account_68,other,account_type_2011_6_charge_impot,f
 lu_2011_account_688,688,Autres impôts et taxes,lu_2011_account_68,other,account_type_2011_6_charge_impot,f
 lu_2011_account_689,689,Dotations aux provisions pour autres impôts,lu_2011_account_68,other,account_type_2011_6_charge_impot,f
-lu_2011_account_7,7,CLASSE 7 - COMPTES DE PRODUITS,lu_2011_account_resultat,view,account_type_2011_node,f
+lu_2011_account_7,7,CLASSE 7 - COMPTES DE PRODUITS,lu_2011_account_resultat,view,account.data_account_type_view,f
 lu_2011_account_70,70,Montant net du chiffre d’affaires,lu_2011_account_7,view,account_type_2011_7_produit_exploitation,f
 lu_2011_account_701,701,Ventes sur commandes en cours,lu_2011_account_70,view,account_type_2011_7_produit_exploitation,f
 lu_2011_account_7011,7011,Produits,lu_2011_account_701,other,account_type_2011_7_produit_exploitation,f
@@ -1157,4 +1157,3 @@ lu_2011_account_782,782,Régularisations de taxes d’abonnement,lu_2011_account
 lu_2011_account_783,783,Régularisations d’impôts étrangers,lu_2011_account_78,other,account_type_2011_7_produit_exceptionnel,f
 lu_2011_account_788,788,Régularisations d’autres impôts et taxes,lu_2011_account_78,other,account_type_2011_7_produit_exceptionnel,f
 lu_2011_account_789,789,Reprises sur provisions pour autres impôts,lu_2011_account_78,other,account_type_2011_7_produit_exceptionnel,f
-lu_2011_account_x_ouverture,x_ouverture,Compte d'ouverture,lu_2011_account_0,other,account_type_2011_unknown_none,f
