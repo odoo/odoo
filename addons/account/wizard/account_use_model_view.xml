@@ -8,16 +8,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 	            <form string="Create Entries From Models" version="7.0">
-	                <header>
-	                    <button string="Create Entries" name="create_entries" type="object" class="oe_highlight"/>
-	                    or
-	                    <button string="Cancel" class="oe_link" special="cancel"/>
-	                </header>
 	                <separator string="This wizard will create recurring accounting entries"/>
 	                <label string="Create manual recurring entries in a chosen journal."/>
 	                <group>
 	                    <field name="model"/>
 	                </group>
+	                <footer>
+	                    <button string="Create Entries" name="create_entries" type="object" class="oe_highlight"/>
+	                    or
+	                    <button string="Cancel" class="oe_link" special="cancel"/>
+	                </footer>
 	            </form>
             </field>
         </record>
@@ -40,12 +40,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Use Model" version="7.0">
-                    <header>
+                    <label string = "Are you sure you want to create entries?"/>
+                    <footer>
                         <button string="Ok" name="create_entries" type="object" default_focus='1' class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
-                    <label string = "Are you sure you want to create entries?"/>
+                    </footer>
                </form>
             </field>
         </record>
