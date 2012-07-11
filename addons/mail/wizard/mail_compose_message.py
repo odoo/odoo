@@ -230,6 +230,7 @@ class mail_compose_message(osv.TransientModel):
             # default message values according to the wizard options
             if formatting:
                 content_subtype = 'html'
+                subject = mail_wiz.subject
             else:
                 content_subtype = 'text'
                 subject = False
@@ -262,7 +263,7 @@ class mail_compose_message(osv.TransientModel):
             if context.get('mail.compose.message.mode') == 'mass_mail':
                 # Mass mailing: must render the template patterns
                 for active_id in active_ids:
-                    subject = self.render_template(cr, uid, mail_wiz.subject, active_model, active_id)
+                    rendered_subject = self.render_template(cr, uid, subject, active_model, active_id)
                     rendered_body = self.render_template(cr, uid, body, active_model, active_id)
                     email_from = self.render_template(cr, uid, mail_wiz.email_from, active_model, active_id)
                     email_to = self.render_template(cr, uid, mail_wiz.email_to, active_model, active_id)
@@ -274,7 +275,7 @@ class mail_compose_message(osv.TransientModel):
                     # processed as soon as the mail scheduler runs.
                     if mail_thread_enabled:
                         active_model_pool.message_append(cr, uid, [active_id],
-                            subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=mail_wiz.content_subtype, state='outgoing',
+                            rendered_subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=mail_wiz.content_subtype, state='outgoing',
                             email_to=email_to, email_from=email_from, email_cc=email_cc, email_bcc=email_bcc,
                             reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
                     else:
@@ -286,12 +287,12 @@ class mail_compose_message(osv.TransientModel):
                 # normal mode - no mass-mailing
                 if mail_thread_enabled:
                     msg_ids = active_model_pool.message_append(cr, uid, active_ids,
-                            mail_wiz.subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=content_subtype, state='outgoing',
+                            subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=content_subtype, state='outgoing',
                             email_to=mail_wiz.email_to, email_from=mail_wiz.email_from, email_cc=mail_wiz.email_cc, email_bcc=mail_wiz.email_bcc,
                             reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context,
                             type=type)
                 else:
-                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), mail_wiz.subject, body_text,
+                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), subject, body_text,
                         model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), email_bcc=to_email(mail_wiz.email_bcc), reply_to=mail_wiz.reply_to,
                         attachments=attachment, references=references, res_id=int(mail_wiz.res_id),
                         content_subtype=mail_wiz.content_subtype, headers=headers, context=context)]
