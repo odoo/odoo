@@ -1036,7 +1036,7 @@ instance.web.WebClient = instance.web.Widget.extend({
                 if (options.needaction) {
                     action.context.search_default_needaction_pending = true;
                 }
-                self.action_manager.breadcrumb.clear();
+                self.action_manager.clear_breadcrumbs();
                 self.action_manager.do_action(action);
             });
     },
