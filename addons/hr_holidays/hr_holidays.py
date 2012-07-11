@@ -153,7 +153,6 @@ class hr_holidays(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_holidays, self).create(cr, uid, vals, context=context)
-        self.create_notificate(cr, uid, [obj_id], context=context)
         return obj_id
     
     def _create_resource_leave(self, cr, uid, leaves, context=None):
@@ -374,18 +373,11 @@ class hr_holidays(osv.osv):
             if obj.employee_id.parent_id and not obj.employee_id.parent_id.user_id.id in user_ids:
                 user_ids.append(obj.employee_id.parent_id.user_id.id)
         return user_ids
-        
-    def create_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("The %s request has been <b>created</b> and is waiting confirmation")
-                        % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
-        return True
     
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'), 
-                    _("The %s request has been <b>confirmed</b> and is waiting for validation by the manager.")
+                    _("The %s request has been <b>submitted</b> and is waiting for validation by the manager.")
                     % ('leave' if obj.type == 'remove' else 'allocation',), type='notification')
     
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
