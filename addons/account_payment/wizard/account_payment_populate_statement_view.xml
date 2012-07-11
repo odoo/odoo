@@ -8,14 +8,14 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Populate Statement:" version="7.0">
-                    <header>
-                        <button name="populate_statement" string="ADD" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group>
                         <field name="lines"/>
                     </group>
+                    <footer>
+                        <button name="populate_statement" string="ADD" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
              </field>
         </record>

@@ -309,6 +309,10 @@ class res_users(osv.osv):
 
         return user_id
 
+    _columns = {
+        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
+        }
+
 res_users()
 
 

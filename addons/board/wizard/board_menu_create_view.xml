@@ -10,15 +10,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Menu For Dashboard" version="7.0">
-                    <header>
-                        <button string="Create Menu" name="board_menu_create" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group colspan="4" string="Menu Information">
                         <field name="menu_name"/>
                         <field name="menu_parent_id"/>
                     </group>
+                    <footer>
+                        <button string="Create Menu" name="board_menu_create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
