@@ -291,6 +291,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             $(".oe_form_button_edit").wrap(div);
             $("#bounce").addClass('oe_bounce_button_left');
             var edit_btn = $(".oe_form_button_edit");
+            if (jQuery(window).scrollTop() > 75 ) {
+                $('body,html').animate({ scrollTop: 0 }, 200);
+            }
+            if (jQuery(window).scrollLeft() > 225 ) {
+                $('body,html').animate({ scrollLeft: 0 }, 200);
+            }
             self.do_bounce(edit_btn);
             e.stopImmediatePropagation();
         });

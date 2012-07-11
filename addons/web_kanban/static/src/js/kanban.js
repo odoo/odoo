@@ -418,6 +418,9 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         var add_btn = this.$element.find('.oe_kanban_add');
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
+                if (jQuery(window).scrollTop() > 120 ) {
+                    $('body,html').animate({ scrollTop: 0 }, 200);
+                }
                 self.view.do_bounce(add_btn);
             }
         });
