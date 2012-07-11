@@ -8,16 +8,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording" version="7.0">
-                    <header>
-                        <button name="record_save" string="Continue" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group string="Recording Information">
                         <field name="info_status"/>
                         <field name="info_text"/>
                         <field name="info_yaml"/>
                    </group>
+                    <footer>
+                        <button name="record_save" string="Continue" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
