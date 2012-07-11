@@ -84,6 +84,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             'fields': this.fields,
             'toolbar': has_toolbar
         }));
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
 
         this.dataset.read_slice(this.fields_list()).then(function(records) {
             if (!has_toolbar) {
@@ -179,7 +180,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 }
             });
             if (is_loaded === 0) {
-                if (!$this.parent().hasClass('oe-open')) {
+                if (!$this.parent().hasClass('oe_open')) {
                     self.getdata(record_id, children_ids);
                 }
             } else {
@@ -208,7 +209,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             });
 
             if ($curr_node.length) {
-                $curr_node.addClass('oe-open');
+                $curr_node.addClass('oe_open');
                 $curr_node.after(children_rows);
             } else {
                 self.$element.find('tbody').html(children_rows);
@@ -247,11 +248,11 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     // show & hide the contents
     showcontent: function (record_id, show) {
         this.$element.find('#treerow_' + record_id)
-                .toggleClass('oe-open', show);
+                .toggleClass('oe_open', show);
 
         _(this.records[record_id][this.children_field]).each(function (child_id) {
             var $child_row = this.$element.find('#treerow_' + child_id);
-            if ($child_row.hasClass('oe-open')) {
+            if ($child_row.hasClass('oe_open')) {
                 this.showcontent(child_id, false);
             }
             $child_row.toggle(show);

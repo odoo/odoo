@@ -194,7 +194,9 @@ class WebClient(openerpweb.Controller):
             if mods is not None:
                 path += '?mods=' + mods
             return [path]
-        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
+        # old code to force cache reloading
+        #return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
+        return [el[1] for el in self.manifest_glob(req, mods, extension)]
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
@@ -437,18 +439,21 @@ class Database(openerpweb.Controller):
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
-        db_dump = base64.b64decode(
-            req.session.proxy("db").dump(backup_pwd, backup_db))
-        filename = "%(db)s_%(timestamp)s.dump" % {
-            'db': backup_db,
-            'timestamp': datetime.datetime.utcnow().strftime(
-                "%Y-%m-%d_%H-%M-%SZ")
-        }
-        return req.make_response(db_dump,
-            [('Content-Type', 'application/octet-stream; charset=binary'),
-             ('Content-Disposition', 'attachment; filename="' + filename + '"')],
-            {'fileToken': int(token)}
-        )
+        try:
+            db_dump = base64.b64decode(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            filename = "%(db)s_%(timestamp)s.dump" % {
+                'db': backup_db,
+                'timestamp': datetime.datetime.utcnow().strftime(
+                    "%Y-%m-%d_%H-%M-%SZ")
+            }
+            return req.make_response(db_dump,
+               [('Content-Type', 'application/octet-stream; charset=binary'),
+               ('Content-Disposition', 'attachment; filename="' + filename + '"')],
+               {'fileToken': int(token)}
+            )
+        except xmlrpclib.Fault, e:
+             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -1286,7 +1291,8 @@ class SearchView(View):
                 del filter['context']
                 del filter['domain']
         return filters
-
+    
+     
     @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
         to_eval = common.nonliterals.CompoundContext(context_to_save)
@@ -1520,8 +1526,12 @@ class Action(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
-        return clean_action(req, req.session.model('ir.actions.server').run(
-            [action_id], req.session.eval_context(req.context)))
+        return_action = req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context))
+        if return_action:
+            return clean_action(req, return_action)
+        else:
+            return False
 
 class Export(View):
     _cp_path = "/web/export"

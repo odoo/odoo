@@ -68,7 +68,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
         this.open({
             buttons: [
                 {text: _t("Close"), click: function() { self.destroy(); }},
-                {text: _t("Import File"), click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
+                {text: _t("Import File"), click: function() { self.do_import(); }, 'class': 'oe_import_dialog_button'}
             ],
             close: function(event, ui) {
                 self.destroy();
@@ -78,7 +78,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
         this.$element.find('#csvfile').change(this.on_autodetect_data);
         this.$element.find('fieldset').change(this.on_autodetect_data);
         this.$element.delegate('fieldset legend', 'click', function() {
-            $(this).parent().toggleClass('oe-closed');
+            $(this).parent().toggleClass('oe_closed');
         });
         this.ready.push(new instance.web.DataSet(this, this.model).call(
             'fields_get', [], function (fields) {
@@ -157,7 +157,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
     },
     toggle_import_button: function (newstate) {
     	instance.web.dialog(this.$element, 'widget')
-                .find('.oe-dialog-import-button')
+                .find('.oe_import_dialog_button')
                 .button('option', 'disabled', !newstate);
     },
     do_import: function() {
@@ -202,7 +202,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
         if (results['error']) {
             result_node.append(QWeb.render('ImportView.error', {
                 'error': results['error']}));
-            this.$element.find('fieldset').removeClass('oe-closed');
+            this.$element.find('fieldset').removeClass('oe_closed');
             return;
         }
         if (results['success']) {
@@ -224,11 +224,11 @@ instance.web.DataImport = instance.web.Dialog.extend({
                           : with_headers ? results.records.slice(1)
                           : results.records
             }));
-            this.$element.find('fieldset').addClass('oe-closed');
+            this.$element.find('fieldset').addClass('oe_closed');
         }
-        this.$element.find('form').removeClass('oe-import-no-result');
+        this.$element.find('form').removeClass('oe_import_no_result');
 
-        this.$element.delegate('.oe-m2o-drop-down-button', 'click', function () {
+        this.$element.delegate('.oe_m2o_drop_down_button', 'click', function () {
             $(this).prev('input').focus();
         });
 

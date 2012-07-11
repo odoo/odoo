@@ -33,30 +33,49 @@
     .oe_kanban_clear
         clear: both
     .oe_kanban_content
+        .oe_star_on, .oe_star_off
+            color: #ccc
+            text-shadow: 0 0 2px black
+            vertical-align: top
+            position: relative
+            top: -5px
+            &:hover
+                text-decoration: none
+        .oe_star_on
+            color: gold
         div:first-child
-            margin-right: 12px
+            margin-right: 16px
+    .oe_kanban_button_new
+        color: white
+        background: #DC5F59
     // }}}
     // KanbanGroups {{{
     .oe_kanban_groups
         height: inherit
         width: 100%
+    .oe_kanban_header
+        &:hover
+            .oe_dropdown_kanban
+                display: inline-block
+        .oe_dropdown_menu
+            font-weight: normal
+            font-size: 13px
     .oe_kanban_group_title
-        margin: 1px 1px 4px
-        padding-left: 2px
-        font-size: 100%
+        font-size: 16px
         font-weight: bold
+        min-height: 30px
         color: #333333
         text-shadow: 0 1px 0 white
+        > span
+            float: left
+            margin-right: 4px
 
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
-        padding: 6px 7px 6px 6px
+        padding: 6px 6px 6px 5px
 
     .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         background: #f0eeee
-
-    .oe_kanban_group_header.oe_kanban_no_group
-        display: none
 
     .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         border-left: 1px solid #f0f8f8
@@ -102,30 +121,30 @@
         height: 16px
         background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat
     .oe_kanban_group_folded .oe_kanban_fold_icon
-        background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat
     // }}}
     // KanbanQuickCreate {{{
-    .oe_kanban_add
+    .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
+        margin-left: 4px
         cursor: pointer
-        position: absolute
-        top: 6px
-        right: 6px
-        width: 16px
-        height: 16px
-        background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat
+        position: relative
+        top: -8px
+    .oe_kanban_add
+        float: right
+
     .oe_kanban_quick_create
-        // apply block formatting context
         overflow: hidden
+        margin-bottom: 4px
+    .oe_kanban_quick_create_buttons
+        margin: 4px 0
     .oe_kanban_no_group .oe_kanban_quick_create
         width: 200px
         padding: 10px
     .oe_kanban_quick_create input
         display: block
-        // margins within width
+        margin: 0 0 8px 0
+        font-size: 13px
         box-sizing: border-box
         width: 100%
-    .oe_kanban_quick_create button
-        float: right
     // }}}
     // KanbanRecords {{{
     .oe_kanban_vignette
@@ -287,6 +306,8 @@
             text-decoration: none
         h3:hover
             text-decoration: none
+        .oe_dropdown_kanban
+            margin-top: 4px
     .oe_kanban_star
         float: left
         position: inline-block
@@ -294,8 +315,29 @@
     .oe_kanban_avatar
         @include radius(3px)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
-    //.oe_kanban_footer_left
-    //   float: left
+    .oe_kanban_footer_left
+        margin-top: 2px
+        > span
+            margin-top: 2px
+            display: inline-block
+            background: #E6E6E6
+            border: 1px solid #B9B9B9
+            color: #666
+            padding: 0 2px
+            line-height: 16px
+            @include radius(3px)
+            .oe_e
+                line-height: 12px
+                font-size: 22px
+        .oe_kanban_mail_new
+            line-height: 18px
+            position: relative
+            top: -1px
+    .oe_kanban_bottom_right
+        float: right
+        position: relative
+        top: 2px
+       
     .oe_kanban_status
         display: inline-block
         height: 12px
@@ -310,8 +352,9 @@
         background: red
         @include radial-gradient((#ee7777 0%, #cc3333 40%, #bb0808 100%))
     .oe_kanban_text_red
-        background: red
-        color: #000
+        color: #A61300
+        font-weight: bold
+        @include radius(4px)
     .oe_kanban_ellipsis
         overflow: hidden
         text-overflow: ellipsis
@@ -323,12 +366,12 @@
         top: -8px
         right: 3px
         display: none
-        color: #4c4c4c
         cursor: pointer
         &:hover
             text-decoration: none
         .oe_dropdown_menu
-            right: -140px
+            left: 0
+            top: 28px
             min-width: 160px
     // }}}
     // KanbanColorPicker {{{

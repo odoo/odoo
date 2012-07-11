@@ -13,7 +13,7 @@
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <t t-if="widget._is_create_enabled()">
-            <button type="button" class="oe_button oe_kanban_button_new oe_form_button_hi">
+            <button type="button" class="oe_button oe_kanban_button_new oe_highlight oe_form_button_hi">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
         </t>
@@ -23,15 +23,23 @@
     <td class="oe_kanban_group_header">
         <t t-if="widget.view.group_by">
             <div class="oe_kanban_header">
-                <div class="oe_kanban_fold_icon"></div>
                 <t t-if="widget.view._is_quick_create_enabled()">
-                    <div class="oe_kanban_add"></div>
+                    <div class="oe_kanban_add oe_e">]</div>
                 </t>
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
-                        <t t-esc="widget.title"/>
+                        <span><t t-esc="widget.title"/></span>
                         <span class="oe_kanban_group_length">(<t t-esc="widget.group.length"/>)</span>
+                        <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                          <span class="oe_e">í</span>
+                          <ul class="oe_dropdown_menu">
+                            <li><a data-type="fold" href="#" class="">Fold</a></li>
+                            <li><a data-type="edit" href="#" class="">Edit</a></li>
+                            <li><a data-type="delete" href="#" class="">Delete</a></li>
+                          </ul>
+                        </div>
                     </div>
+                    <div class="oe_clear"/>
                     <ul class="oe_kanban_aggregates">
                         <li t-foreach="widget.aggregates" t-as="aggregate">
                             <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
@@ -68,8 +76,8 @@
     <input t-att-placeholder="_t('Create a new record')"/>
     <t t-if="widget._buttons">
         <div class="oe_kanban_quick_create_buttons">
-            <button class="oe-kanban-quick_create_add">Add</button>
-            or <a class="oe-kanban-quick_create_close">Cancel</a>
+            <button class="oe_kanban_quick_create_add">Add</button>
+            or <a class="oe_kanban_quick_create_close">Cancel</a>
         </div>
     </t>
 </div>

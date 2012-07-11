@@ -334,11 +334,14 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             .appendTo(document.body)
             .load(function () {
                 try {
-                    if (options.error) {
-                        options.error(JSON.parse(
-                            this.contentDocument.body.childNodes[1].textContent
-                        ));
-                    }
+                   if (options.error) {
+                         if (!this.contentDocument.body.childNodes[1]) {
+                            options.error(this.contentDocument.body.childNodes);
+                        }
+                        else {
+                            options.error(JSON.parse(this.contentDocument.body.childNodes[1].textContent));
+                        }
+                   }
                 } finally {
                     complete();
                 }
@@ -595,7 +598,7 @@ instance.web.qweb.preprocess_node = function() {
             break;
         case 1:
             // Element
-            var attr, attrs = ['label', 'title', 'alt'];
+            var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
             while (attr = attrs.pop()) {
                 if (this.attributes[attr]) {
                     this.attributes[attr] = instance.web._t(this.attributes[attr]);
@@ -605,15 +608,31 @@ instance.web.qweb.preprocess_node = function() {
 };
 
 /** Setup jQuery timeago */
-var timeago_setup = function () {
-    var s = $.timeago.settings.strings;
-    _.each(s, function(v,k) {
-        if(_.isString(v)) {
-            s[k] = instance.web._t(v);
-        }
-    });
+var _t = instance.web._t;
+/*
+ * Strings in timeago are "composed" with prefixes, words and suffixes. This
+ * makes their detection by our translating system impossible. Use all literal
+ * strings we're using with a translation mark here so the extractor can do its
+ * job.
+ */
+{
+    _t('less than a minute ago');
+    _t('about a minute ago');
+    _t('%d minutes ago');
+    _t('about an hour ago');
+    _t('%d hours ago');
+    _t('a day ago');
+    _t('%d days ago');
+    _t('about a month ago');
+    _t('%d months ago');
+    _t('about a year ago');
+    _t('%d years ago');
 }
-instance.connection.on('module_loaded', this, timeago_setup);
+
+instance.connection.on('module_loaded', this, function () {
+    // provide timeago.js with our own translator method
+    $.timeago.settings.translator = instance.web._t;
+});
 
 /**
  * Registry for all the client actions key: tag value: widget

@@ -13,7 +13,7 @@ openerp.web_tests = function (instance) {
             this.form.registry = instance.web.form.readonly;
         },
         render: function () {
-            return '<div class="oe-bunchaforms"></div>';
+            return '<div class="oe_bunchaforms"></div>';
         },
         start: function () {
             $.when(

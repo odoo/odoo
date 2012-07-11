@@ -18,18 +18,18 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var self = this;
         this._super.apply(this, arguments);
 
-        this.$element.find('.oe-dashboard-column').sortable({
-            connectWith: '.oe-dashboard-column',
-            handle: '.oe-dashboard-action-header',
+        this.$element.find('.oe_dashboard_column').sortable({
+            connectWith: '.oe_dashboard_column',
+            handle: '.oe_dashboard_action_header',
             scroll: false
         }).disableSelection().bind('sortstop', self.do_save_dashboard);
 
         // Events
-        this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
-        this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
+        this.$element.find('.oe_dashboard_link_reset').click(this.on_reset);
+        this.$element.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
 
-        this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
-        this.$element.delegate('.oe-dashboard-column .ui-icon-closethick', 'click', this.on_close_action);
+        this.$element.delegate('.oe_dashboard_column .oe_dashboard_fold', 'click', this.on_fold_action);
+        this.$element.delegate('.oe_dashboard_column .ui-icon-closethick', 'click', this.on_close_action);
 
         // Init actions
         _.each(this.node.children, function(column, column_index) {
@@ -54,7 +54,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     on_change_layout: function() {
         var self = this;
         var qdict = {
-            current_layout : this.$element.find('.oe-dashboard').attr('data-layout')
+            current_layout : this.$element.find('.oe_dashboard').attr('data-layout')
         };
         var $dialog = instance.web.dialog($('<div>'), {
                             modal: true,
@@ -69,7 +69,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         });
     },
     do_change_layout: function(new_layout) {
-        var $dashboard = this.$element.find('.oe-dashboard');
+        var $dashboard = this.$element.find('.oe_dashboard');
         var current_layout = $dashboard.attr('data-layout');
         if (current_layout != new_layout) {
             var clayout = current_layout.split('-').length,
@@ -77,22 +77,22 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 column_diff = clayout - nlayout;
             if (column_diff > 0) {
                 var $last_column = $();
-                $dashboard.find('.oe-dashboard-column').each(function(k, v) {
+                $dashboard.find('.oe_dashboard_column').each(function(k, v) {
                     if (k >= nlayout) {
-                        $(v).find('.oe-dashboard-action').appendTo($last_column);
+                        $(v).find('.oe_dashboard_action').appendTo($last_column);
                     } else {
                         $last_column = $(v);
                     }
                 });
             }
-            $dashboard.toggleClass('oe-dashboard-layout_' + current_layout + ' oe-dashboard-layout_' + new_layout);
+            $dashboard.toggleClass('oe_dashboard_layout_' + current_layout + ' oe_dashboard_layout_' + new_layout);
             $dashboard.attr('data-layout', new_layout);
             this.do_save_dashboard();
         }
     },
     on_fold_action: function(e) {
         var $e = $(e.currentTarget),
-            $action = $e.parents('.oe-dashboard-action:first'),
+            $action = $e.parents('.oe_dashboard_action:first'),
             id = parseInt($action.attr('data-id'), 10);
         if ($e.is('.ui-icon-minusthick')) {
             $action.data('action_attrs').fold = '1';
@@ -100,12 +100,12 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             delete($action.data('action_attrs').fold);
         }
         $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
-        $action.find('.oe-dashboard-action-content').toggle();
+        $action.find('.oe_dashboard_action_content').toggle();
         this.do_save_dashboard();
     },
     on_close_action: function(e) {
         if (confirm(_t("Are you sure you want to remove this item ?"))) {
-            $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
+            $(e.currentTarget).parents('.oe_dashboard_action:first').remove();
             this.do_save_dashboard();
         }
     },
@@ -113,12 +113,12 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var self = this;
         var board = {
                 form_title : this.view.fields_view.arch.attrs.string,
-                style : this.$element.find('.oe-dashboard').attr('data-layout'),
+                style : this.$element.find('.oe_dashboard').attr('data-layout'),
                 columns : []
             };
-        this.$element.find('.oe-dashboard-column').each(function() {
+        this.$element.find('.oe_dashboard_column').each(function() {
             var actions = [];
-            $(this).find('.oe-dashboard-action').each(function() {
+            $(this).find('.oe_dashboard_action').each(function() {
                 var action_id = $(this).attr('data-id'),
                     new_attrs = _.clone($(this).data('action_attrs'));
                 if (new_attrs.domain) {
@@ -138,7 +138,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             view_id: this.view.fields_view.view_id,
             arch: arch
         }, function() {
-            self.$element.find('.oe-dashboard-link-reset').show();
+            self.$element.find('.oe_dashboard_link_reset').show();
         });
     },
     on_load_action: function(result, index, action_attrs) {

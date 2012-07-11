@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v1.7.2b1
+ * jQuery JavaScript Library v1.7.2
  * http://jquery.com/
  *
  * Copyright 2011, John Resig
@@ -11,7 +11,7 @@
  * Copyright 2011, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
- * Date: Tue Jan 31 20:11:27 2012 -0500
+ * Date: Wed Mar 21 12:46:34 2012 -0700
  */
 (function( window, undefined ) {
 
@@ -210,7 +210,7 @@ jQuery.fn = jQuery.prototype = {
 	selector: "",
 
 	// The current version of jQuery being used
-	jquery: "1.7.2b1",
+	jquery: "1.7.2",
 
 	// The default length of a jQuery object is 0
 	length: 0,
@@ -578,6 +578,9 @@ jQuery.extend({
 
 	// Cross-browser xml parsing
 	parseXML: function( data ) {
+		if ( typeof data !== "string" || !data ) {
+			return null;
+		}
 		var xml, tmp;
 		try {
 			if ( window.DOMParser ) { // Standard
@@ -1362,7 +1365,6 @@ jQuery.support = (function() {
 		select,
 		opt,
 		input,
-		marginDiv,
 		fragment,
 		tds,
 		events,
@@ -1449,6 +1451,9 @@ jQuery.support = (function() {
 		pixelMargin: true
 	};
 
+	// jQuery.boxModel DEPRECATED in 1.3, use jQuery.support.boxModel instead
+	jQuery.boxModel = support.boxModel = (document.compatMode === "CSS1Compat");
+
 	// Make sure checked status is properly cloned
 	input.checked = true;
 	support.noCloneChecked = input.cloneNode( true ).checked;
@@ -1483,6 +1488,10 @@ jQuery.support = (function() {
 	support.radioValue = input.value === "t";
 
 	input.setAttribute("checked", "checked");
+
+	// #11217 - WebKit loses check when the name is after the checked attribute
+	input.setAttribute( "name", "t" );
+
 	div.appendChild( input );
 	fragment = document.createDocumentFragment();
 	fragment.appendChild( div.lastChild );
@@ -1496,23 +1505,6 @@ jQuery.support = (function() {
 
 	fragment.removeChild( input );
 	fragment.appendChild( div );
-
-	div.innerHTML = "";
-
-	// Check if div with explicit width and no margin-right incorrectly
-	// gets computed margin-right based on width of container. For more
-	// info see bug #3333
-	// Fails in WebKit before Feb 2011 nightlies
-	// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
-	if ( window.getComputedStyle ) {
-		marginDiv = document.createElement( "div" );
-		marginDiv.style.width = "0";
-		marginDiv.style.marginRight = "0";
-		div.style.width = "2px";
-		div.appendChild( marginDiv );
-		support.reliableMarginRight =
-			( parseInt( ( window.getComputedStyle( marginDiv, null ) || { marginRight: 0 } ).marginRight, 10 ) || 0 ) === 0;
-	}
 
 	// Technique from Juriy Zaytsev
 	// http://perfectionkills.com/detecting-event-support-without-browser-sniffing/
@@ -1539,12 +1531,13 @@ jQuery.support = (function() {
 	fragment.removeChild( div );
 
 	// Null elements to avoid leaks in IE
-	fragment = select = opt = marginDiv = div = input = null;
+	fragment = select = opt = div = input = null;
 
 	// Run tests that need a body at doc ready
 	jQuery(function() {
 		var container, outer, inner, table, td, offsetSupport,
-			conMarginTop, ptlm, vb, style, html,
+			marginDiv, conMarginTop, style, html, positionTopLeftWidthHeight,
+			paddingMarginBorderVisibility, paddingMarginBorder,
 			body = document.getElementsByTagName("body")[0];
 
 		if ( !body ) {
@@ -1553,15 +1546,16 @@ jQuery.support = (function() {
 		}
 
 		conMarginTop = 1;
-		ptlm = "position:absolute;top:0;left:0;width:1px;height:1px;margin:0;";
-		vb = "visibility:hidden;border:0;";
-		style = "style='" + ptlm + "border:5px solid #000;padding:0;'";
-		html = "<div " + style + "><div></div></div>" +
-			"<table " + style + " cellpadding='0' cellspacing='0'>" +
+		paddingMarginBorder = "padding:0;margin:0;border:";
+		positionTopLeftWidthHeight = "position:absolute;top:0;left:0;width:1px;height:1px;";
+		paddingMarginBorderVisibility = paddingMarginBorder + "0;visibility:hidden;";
+		style = "style='" + positionTopLeftWidthHeight + paddingMarginBorder + "5px solid #000;";
+		html = "<div " + style + "display:block;'><div style='" + paddingMarginBorder + "0;display:block;overflow:hidden;'></div></div>" +
+			"<table " + style + "' cellpadding='0' cellspacing='0'>" +
 			"<tr><td></td></tr></table>";
 
 		container = document.createElement("div");
-		container.style.cssText = vb + "width:0;height:0;position:static;top:0;margin-top:" + conMarginTop + "px";
+		container.style.cssText = paddingMarginBorderVisibility + "width:0;height:0;position:static;top:0;margin-top:" + conMarginTop + "px";
 		body.insertBefore( container, body.firstChild );
 
 		// Construct the test element
@@ -1575,8 +1569,7 @@ jQuery.support = (function() {
 		// display:none (it is still safe to use offsets if a parent element is
 		// hidden; don safety goggles and see bug #4512 for more information).
 		// (only IE 8 fails this test)
-		div.innerHTML = "<table><tr><td style='padding:0;border:0;display:none'></td><td>t</td></tr></table>";
-
+		div.innerHTML = "<table><tr><td style='" + paddingMarginBorder + "0;display:none'></td><td>t</td></tr></table>";
 		tds = div.getElementsByTagName( "td" );
 		isSupported = ( tds[ 0 ].offsetHeight === 0 );
 
@@ -1587,28 +1580,44 @@ jQuery.support = (function() {
 		// (IE <= 8 fail this test)
 		support.reliableHiddenOffsets = isSupported && ( tds[ 0 ].offsetHeight === 0 );
 
-		// Figure out if the W3C box model works as expected
-		div.innerHTML = "";
-		div.style.width = div.style.paddingLeft = "1px";
-		jQuery.boxModel = support.boxModel = div.offsetWidth === 2;
+		// Check if div with explicit width and no margin-right incorrectly
+		// gets computed margin-right based on width of container. For more
+		// info see bug #3333
+		// Fails in WebKit before Feb 2011 nightlies
+		// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
+		if ( window.getComputedStyle ) {
+			div.innerHTML = "";
+			marginDiv = document.createElement( "div" );
+			marginDiv.style.width = "0";
+			marginDiv.style.marginRight = "0";
+			div.style.width = "2px";
+			div.appendChild( marginDiv );
+			support.reliableMarginRight =
+				( parseInt( ( window.getComputedStyle( marginDiv, null ) || { marginRight: 0 } ).marginRight, 10 ) || 0 ) === 0;
+		}
 
 		if ( typeof div.style.zoom !== "undefined" ) {
 			// Check if natively block-level elements act like inline-block
 			// elements when setting their display to 'inline' and giving
 			// them layout
 			// (IE < 8 does this)
+			div.innerHTML = "";
+			div.style.width = div.style.padding = "1px";
+			div.style.border = 0;
+			div.style.overflow = "hidden";
 			div.style.display = "inline";
 			div.style.zoom = 1;
-			support.inlineBlockNeedsLayout = ( div.offsetWidth === 2 );
+			support.inlineBlockNeedsLayout = ( div.offsetWidth === 3 );
 
 			// Check if elements with layout shrink-wrap their children
 			// (IE 6 does this)
-			div.style.display = "";
-			div.innerHTML = "<div style='width:4px;'></div>";
-			support.shrinkWrapBlocks = ( div.offsetWidth !== 2 );
+			div.style.display = "block";
+			div.style.overflow = "visible";
+			div.innerHTML = "<div style='width:5px;'></div>";
+			support.shrinkWrapBlocks = ( div.offsetWidth !== 3 );
 		}
 
-		div.style.cssText = ptlm + vb;
+		div.style.cssText = positionTopLeftWidthHeight + paddingMarginBorderVisibility;
 		div.innerHTML = html;
 
 		outer = div.firstChild;
@@ -1643,7 +1652,7 @@ jQuery.support = (function() {
 		}
 
 		body.removeChild( container );
-		div = container = null;
+		marginDiv = div = container = null;
 
 		jQuery.extend( support, offsetSupport );
 	});
@@ -1987,7 +1996,7 @@ function dataAttr( elem, key, data ) {
 				data = data === "true" ? true :
 				data === "false" ? false :
 				data === "null" ? null :
-				jQuery.isNumeric( data ) ? parseFloat( data ) :
+				jQuery.isNumeric( data ) ? +data :
 					rbrace.test( data ) ? jQuery.parseJSON( data ) :
 					data;
 			} catch( e ) {}
@@ -2196,7 +2205,7 @@ jQuery.fn.extend({
 			}
 		}
 		resolve();
-		return defer.promise();
+		return defer.promise( object );
 	}
 });
 
@@ -2365,7 +2374,7 @@ jQuery.fn.extend({
 
 		if ( !arguments.length ) {
 			if ( elem ) {
-				hooks = jQuery.valHooks[ elem.nodeName.toLowerCase() ] || jQuery.valHooks[ elem.type ];
+				hooks = jQuery.valHooks[ elem.type ] || jQuery.valHooks[ elem.nodeName.toLowerCase() ];
 
 				if ( hooks && "get" in hooks && (ret = hooks.get( elem, "value" )) !== undefined ) {
 					return ret;
@@ -2409,7 +2418,7 @@ jQuery.fn.extend({
 				});
 			}
 
-			hooks = jQuery.valHooks[ this.nodeName.toLowerCase() ] || jQuery.valHooks[ this.type ];
+			hooks = jQuery.valHooks[ this.type ] || jQuery.valHooks[ this.nodeName.toLowerCase() ];
 
 			// If set returns undefined, fall back to normal setting
 			if ( !hooks || !("set" in hooks) || hooks.set( this, val, "value" ) === undefined ) {
@@ -2555,7 +2564,7 @@ jQuery.extend({
 	},
 
 	removeAttr: function( elem, value ) {
-		var propName, attrNames, name, l,
+		var propName, attrNames, name, l, isBool,
 			i = 0;
 
 		if ( value && elem.nodeType === 1 ) {
@@ -2567,13 +2576,17 @@ jQuery.extend({
 
 				if ( name ) {
 					propName = jQuery.propFix[ name ] || name;
+					isBool = rboolean.test( name );
 
 					// See #9699 for explanation of this approach (setting first, then removal)
-					jQuery.attr( elem, name, "" );
+					// Do not do this for boolean attributes (see #10870)
+					if ( !isBool ) {
+						jQuery.attr( elem, name, "" );
+					}
 					elem.removeAttribute( getSetAttribute ? name : propName );
 
 					// Set corresponding property to false for boolean attributes
-					if ( rboolean.test( name ) && propName in elem ) {
+					if ( isBool && propName in elem ) {
 						elem[ propName ] = false;
 					}
 				}
@@ -2727,7 +2740,8 @@ if ( !getSetAttribute ) {
 
 	fixSpecified = {
 		name: true,
-		id: true
+		id: true,
+		coords: true
 	};
 
 	// Use this for any attribute in IE6/7
@@ -3246,12 +3260,18 @@ jQuery.event = {
 			delegateCount = handlers.delegateCount,
 			args = [].slice.call( arguments, 0 ),
 			run_all = !event.exclusive && !event.namespace,
+			special = jQuery.event.special[ event.type ] || {},
 			handlerQueue = [],
 			i, j, cur, jqcur, ret, selMatch, matched, matches, handleObj, sel, related;
 
 		// Use the fix-ed jQuery.Event rather than the (read-only) native event
 		args[0] = event;
 		event.delegateTarget = this;
+
+		// Call the preDispatch hook for the mapped type, and let it bail if desired
+		if ( special.preDispatch && special.preDispatch.call( this, event ) === false ) {
+			return;
+		}
 
 		// Determine handlers that should run if there are delegated events
 		// Avoid non-left-click bubbling in Firefox (#3861)
@@ -3262,7 +3282,7 @@ jQuery.event = {
 			jqcur.context = this.ownerDocument || this;
 
 			for ( cur = event.target; cur != this; cur = cur.parentNode || this ) {
-			
+
 				// Don't process events on disabled elements (#6911, #8165)
 				if ( cur.disabled !== true ) {
 					selMatch = {};
@@ -3320,6 +3340,11 @@ jQuery.event = {
 					}
 				}
 			}
+		}
+
+		// Call the postDispatch hook for the mapped type
+		if ( special.postDispatch ) {
+			special.postDispatch.call( this, event );
 		}
 
 		return event.result;
@@ -3613,15 +3638,22 @@ if ( !jQuery.support.submitBubbles ) {
 					form = jQuery.nodeName( elem, "input" ) || jQuery.nodeName( elem, "button" ) ? elem.form : undefined;
 				if ( form && !form._submit_attached ) {
 					jQuery.event.add( form, "submit._submit", function( event ) {
-						// If form was submitted by the user, bubble the event up the tree
-						if ( this.parentNode && !event.isTrigger ) {
-							jQuery.event.simulate( "submit", this.parentNode, event, true );
-						}
+						event._submit_bubble = true;
 					});
 					form._submit_attached = true;
 				}
 			});
 			// return undefined since we don't need an event listener
+		},
+		
+		postDispatch: function( event ) {
+			// If form was submitted by the user, bubble the event up the tree
+			if ( event._submit_bubble ) {
+				delete event._submit_bubble;
+				if ( this.parentNode && !event.isTrigger ) {
+					jQuery.event.simulate( "submit", this.parentNode, event, true );
+				}
+			}
 		},
 
 		teardown: function() {
@@ -5565,7 +5597,7 @@ jQuery.each({
 		return jQuery.dir( elem, "previousSibling", until );
 	},
 	siblings: function( elem ) {
-		return jQuery.sibling( elem.parentNode.firstChild, elem );
+		return jQuery.sibling( ( elem.parentNode || {} ).firstChild, elem );
 	},
 	children: function( elem ) {
 		return jQuery.sibling( elem.firstChild );
@@ -5709,7 +5741,7 @@ var nodeNames = "abbr|article|aside|audio|bdi|canvas|data|datalist|details|figca
 	rhtml = /<|&#?\w+;/,
 	rnoInnerhtml = /<(?:script|style)/i,
 	rnocache = /<(?:script|object|embed|option|style)/i,
-	rnoshimcache = new RegExp("<(?:" + nodeNames + ")", "i"),
+	rnoshimcache = new RegExp("<(?:" + nodeNames + ")[\\s/>]", "i"),
 	// checked="checked" or checked
 	rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
 	rscriptType = /\/(java|ecma)script/i,
@@ -6036,6 +6068,8 @@ jQuery.fn.extend({
 				jQuery.each( scripts, function( i, elem ) {
 					if ( elem.src ) {
 						jQuery.ajax({
+							type: "GET",
+							global: false,
 							url: elem.src,
 							async: false,
 							dataType: "script"
@@ -6141,12 +6175,16 @@ function cloneFixAttributes( src, dest ) {
 	// cloning other types of input fields
 	} else if ( nodeName === "input" || nodeName === "textarea" ) {
 		dest.defaultValue = src.defaultValue;
+
+	// IE blanks contents when cloning scripts
+	} else if ( nodeName === "script" && dest.text !== src.text ) {
+		dest.text = src.text;
 	}
 
 	// Event data gets referenced instead of copied if the expando
 	// gets copied too
 	dest.removeAttribute( jQuery.expando );
-	
+
 	// Clear flags for bubbling special change/submit events, they must
 	// be reattached when the newly cloned events are first activated
 	dest.removeAttribute( "_submit_attached" );
@@ -6275,7 +6313,7 @@ jQuery.extend({
 			destElements,
 			i,
 			// IE<=8 does not properly clone detached, unknown element nodes
-			clone = jQuery.support.html5Clone || !rnoshimcache.test( "<" + elem.nodeName ) ?
+			clone = jQuery.support.html5Clone || jQuery.isXMLDoc(elem) || !rnoshimcache.test( "<" + elem.nodeName + ">" ) ?
 				elem.cloneNode( true ) :
 				shimCloneNode( elem );
 
@@ -6325,7 +6363,8 @@ jQuery.extend({
 	},
 
 	clean: function( elems, context, fragment, scripts ) {
-		var checkScriptType;
+		var checkScriptType, script, j,
+				ret = [];
 
 		context = context || document;
 
@@ -6333,8 +6372,6 @@ jQuery.extend({
 		if ( typeof context.createElement === "undefined" ) {
 			context = context.ownerDocument || context[0] && context[0].ownerDocument || document;
 		}
-
-		var ret = [], j;
 
 		for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
 			if ( typeof elem === "number" ) {
@@ -6357,7 +6394,9 @@ jQuery.extend({
 					var tag = ( rtagName.exec( elem ) || ["", ""] )[1].toLowerCase(),
 						wrap = wrapMap[ tag ] || wrapMap._default,
 						depth = wrap[0],
-						div = context.createElement("div");
+						div = context.createElement("div"),
+						safeChildNodes = safeFragment.childNodes,
+						remove;
 
 					// Append wrapper element to unknown element safe doc fragment
 					if ( context === document ) {
@@ -6402,6 +6441,21 @@ jQuery.extend({
 					}
 
 					elem = div.childNodes;
+
+					// Clear elements from DocumentFragment (safeFragment or otherwise)
+					// to avoid hoarding elements. Fixes #11356
+					if ( div ) {
+						div.parentNode.removeChild( div );
+
+						// Guard against -1 index exceptions in FF3.6
+						if ( safeChildNodes.length > 0 ) {
+							remove = safeChildNodes[ safeChildNodes.length - 1 ];
+
+							if ( remove && remove.parentNode ) {
+								remove.parentNode.removeChild( remove );
+							}
+						}
+					}
 				}
 			}
 
@@ -6430,16 +6484,17 @@ jQuery.extend({
 				return !elem.type || rscriptType.test( elem.type );
 			};
 			for ( i = 0; ret[i]; i++ ) {
-				if ( scripts && jQuery.nodeName( ret[i], "script" ) && (!ret[i].type || ret[i].type.toLowerCase() === "text/javascript") ) {
-					scripts.push( ret[i].parentNode ? ret[i].parentNode.removeChild( ret[i] ) : ret[i] );
+				script = ret[i];
+				if ( scripts && jQuery.nodeName( script, "script" ) && (!script.type || rscriptType.test( script.type )) ) {
+					scripts.push( script.parentNode ? script.parentNode.removeChild( script ) : script );
 
 				} else {
-					if ( ret[i].nodeType === 1 ) {
-						var jsTags = jQuery.grep( ret[i].getElementsByTagName( "script" ), checkScriptType );
+					if ( script.nodeType === 1 ) {
+						var jsTags = jQuery.grep( script.getElementsByTagName( "script" ), checkScriptType );
 
 						ret.splice.apply( ret, [i + 1, 0].concat( jsTags ) );
 					}
-					fragment.appendChild( ret[i] );
+					fragment.appendChild( script );
 				}
 			}
 		}
@@ -6659,7 +6714,7 @@ jQuery.extend({
 	}
 });
 
-// DEPRECATED, Use jQuery.css() instead
+// DEPRECATED in 1.3, Use jQuery.css() instead
 jQuery.curCSS = jQuery.css;
 
 if ( document.defaultView && document.defaultView.getComputedStyle ) {
@@ -7228,7 +7283,7 @@ jQuery.extend({
 		isLocal: rlocalProtocol.test( ajaxLocParts[ 1 ] ),
 		global: true,
 		type: "GET",
-		contentType: "application/x-www-form-urlencoded",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		processData: true,
 		async: true,
 		/*
@@ -7927,8 +7982,7 @@ jQuery.ajaxSetup({
 // Detect, normalize options and install callbacks for jsonp requests
 jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 
-	var inspectData = s.contentType === "application/x-www-form-urlencoded" &&
-		( typeof s.data === "string" );
+	var inspectData = ( typeof s.data === "string" ) && /^application\/x\-www\-form\-urlencoded/.test( s.contentType );
 
 	if ( s.dataTypes[ 0 ] === "jsonp" ||
 		s.jsonp !== false && ( jsre.test( s.url ) ||
@@ -8229,7 +8283,13 @@ if ( jQuery.support.ajax ) {
 									if ( xml && xml.documentElement /* #4958 */ ) {
 										responses.xml = xml;
 									}
-									responses.text = xhr.responseText;
+
+									// When requesting binary data, IE6-9 will throw an exception
+									// on any attempt to access responseText (#11426)
+									try {
+										responses.text = xhr.responseText;
+									} catch( _ ) {
+									}
 
 									// Firefox throws an exception when accessing
 									// statusText for faulty cross-domain requests
@@ -8456,7 +8516,7 @@ jQuery.fn.extend({
 					prop[ name ] = prop[ p ];
 					delete prop[ p ];
 				}
-				
+
 				if ( ( hooks = jQuery.cssHooks[ name ] ) && "expand" in hooks ) {
 					replace = hooks.expand( prop[ name ] );
 					delete prop[ name ];
@@ -8699,11 +8759,11 @@ jQuery.extend({
 	},
 
 	easing: {
-		linear: function( p, n, firstNum, diff ) {
-			return firstNum + diff * p;
+		linear: function( p ) {
+			return p;
 		},
-		swing: function( p, n, firstNum, diff ) {
-			return ( ( -Math.cos( p*Math.PI ) / 2 ) + 0.5 ) * diff + firstNum;
+		swing: function( p ) {
+			return ( -Math.cos( p*Math.PI ) / 2 ) + 0.5;
 		}
 	},
 
@@ -8933,12 +8993,14 @@ jQuery.extend( jQuery.fx, {
 	}
 });
 
-// Adds width/height step functions
-// Do not set anything below 0
-jQuery.each([ "width", "height" ], function( i, prop ) {
-	jQuery.fx.step[ prop ] = function( fx ) {
-		jQuery.style( fx.elem, prop, Math.max(0, fx.now) + fx.unit );
-	};
+// Ensure props that can't be negative don't go there on undershoot easing
+jQuery.each( fxAttrs.concat.apply( [], fxAttrs ), function( i, prop ) {
+	// exclude marginTop, marginLeft, marginBottom and marginRight from this list
+	if ( prop.indexOf( "margin" ) ) {
+		jQuery.fx.step[ prop ] = function( fx ) {
+			jQuery.style( fx.elem, prop, Math.max(0, fx.now) + fx.unit );
+		};
+	}
 });
 
 if ( jQuery.expr && jQuery.expr.filters ) {
@@ -8975,7 +9037,7 @@ function defaultDisplay( nodeName ) {
 			// document to it; WebKit & Firefox won't allow reusing the iframe document.
 			if ( !iframeDoc || !iframe.createElement ) {
 				iframeDoc = ( iframe.contentWindow || iframe.contentDocument ).document;
-				iframeDoc.write( ( document.compatMode === "CSS1Compat" ? "<!doctype html>" : "" ) + "<html><body>" );
+				iframeDoc.write( ( jQuery.support.boxModel ? "<!doctype html>" : "" ) + "<html><body>" );
 				iframeDoc.close();
 			}
 
@@ -9279,7 +9341,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 				// 3rd condition allows Nokia support, as it supports the docElem prop but not CSS1Compat
 				doc = elem.document;
 				docElemProp = doc.documentElement[ clientProp ];
-				return doc.compatMode === "CSS1Compat" && docElemProp ||
+				return jQuery.support.boxModel && docElemProp ||
 					doc.body && doc.body[ clientProp ] || docElemProp;
 			}
 
@@ -9287,8 +9349,16 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 			if ( elem.nodeType === 9 ) {
 				// Either scroll[Width/Height] or offset[Width/Height], whichever is greater
 				doc = elem.documentElement;
+
+				// when a window > document, IE6 reports a offset[Width/Height] > client[Width/Height]
+				// so we can't use max, as it'll choose the incorrect offset[Width/Height]
+				// instead we use the correct client[Width/Height]
+				// support:IE6
+				if ( doc[ clientProp ] >= doc[ scrollProp ] ) {
+					return doc[ clientProp ];
+				}
+
 				return Math.max(
-					doc[ clientProp ],
 					elem.body[ scrollProp ], doc[ scrollProp ],
 					elem.body[ offsetProp ], doc[ offsetProp ]
 				);

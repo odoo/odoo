@@ -515,21 +515,18 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         }
     },
     do_node_add: function(side){
-        var self = this;
+        var self = this,property_to_check = [];
         var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
         var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
-        parent_tr = $(parent_tr).find('a').text();
+        parent_tr = self.get_object_by_id(parseInt($(parent_tr).attr('id').replace(/[^0-9]+/g, '')), this.one_object['main_object'], [])[0].att_list[0];
+        _.each([tr, parent_tr],function(element) {
+            var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false; 
+            property_to_check.push(value);
+        });
         field_dataset.call( 'fields_get', [],  function(result) {
             var fields = _.keys(result);
             fields.push(" "),fields.sort();
-            var property_to_check = [];
-            _.each([tr, parent_tr],function(element) {
-                property_to_check.push(
-                _.detect(_.keys(_CHILDREN),function(res){
-                    return _.str.include(element, res);
-                }));
-            });
             self.on_add_node(property_to_check, fields);
         });
     },
@@ -990,7 +987,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
     render_new_field :function( result ) {
         var self = this;
         var action = {
-            context: {'default_model_id': result.id, 'manual': true, 'module' : result.modules},
+            context: {'default_model_id': result.id, 'manual': true, 'module' : result.model},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
@@ -1168,8 +1165,16 @@ var _CHILDREN = {
     'label': [],
     'button' : [],
     'newline': [],
-    'separator': []
+    'separator': [],
+    'sheet' :['group','field','notebook','label','separator','div','page'],
+    'kanban' : ['field'],
+    'html_tag':['notebook', 'group', 'field', 'label', 'button','board', 'newline', 'separator']
+//e.g.:xyz 'td' : ['field']
 };
+// Generic html_tag list and can be added html tag in future. It's support above _CHILDREN dict's *html_tag* by default.
+// For specific child node one has to define tag above and specify children tag in list. Like above xyz example. 
+var html_tag = ['div','h1','h2','h3','h4','h5','h6','td','tr'];
+
 var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
             'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',

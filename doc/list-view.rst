@@ -7,12 +7,12 @@ Style Hooks
 The list view provides a few style hook classes for re-styling of list views in
 various situations:
 
-``.oe-listview``
+``.oe_list``
 
     The root element of the list view, styling rules should be rooted
     on that class.
 
-``table.oe-listview-content``
+``table.oe_list_content``
 
     The root table for the listview, accessory components may be
     generated or added outside this section, this is the list view
@@ -31,7 +31,7 @@ various situations:
         The "alternative choice" for the list view, by default text
         along the lines of "or import" with a link.
 
-``.oe-field-cell``
+``.oe_list_field_cell``
 
     The cell (``td``) for a given field of the list view, cells which
     are *not* fields (e.g. name of a group, or number of items in a
@@ -42,7 +42,7 @@ various situations:
 
         Numeric cell types (integer and float)
 
-    ``.oe-button``
+    ``.oe_button``
 
         Action button (``button`` tag in the view) inside the cell
 
@@ -56,7 +56,7 @@ various situations:
         is the field's @widget if there is one, otherwise it's the
         field's type.
 
-``.oe-record-selector``
+``.oe_list_record_selector``
 
     Selector cells
 
@@ -68,7 +68,7 @@ classes, for edition situations:
 
 ``.oe_editing``
 
-    Added to both ``.oe-listview`` and ``.oe_list_button`` (as the
+    Added to both ``.oe_list`` and ``.oe_list_button`` (as the
     buttons may be outside of the list view) when a row of the list is
     currently being edited.
 

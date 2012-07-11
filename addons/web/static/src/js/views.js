@@ -136,7 +136,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             };
         }
         if (action.target === 'new') {
-            if (this.dialog == null) {
+            if (this.dialog === null) {
                 this.dialog = new instance.web.Dialog(this, { width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -144,8 +144,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_viewmanager.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this, action);
+            this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
             this.dialog.open();
         } else  {
             this.dialog_stop();
@@ -158,7 +159,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
-            this.inner_viewmanager.$element.addClass("oe_view_manager_global");
+            this.inner_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -862,13 +863,13 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
         self.items['files'] = attachments;
         self.redraw();
-        this.$('.oe_sidebar_add_attachment .oe-binary-file').change(this.on_attachment_changed);
+        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
         this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$element.find('form.oe-binary-form').submit();
+            this.$element.find('form.oe_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
