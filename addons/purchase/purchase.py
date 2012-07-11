@@ -467,7 +467,7 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'invoice_line': [(6, 0, inv_lines)],
                 'origin': order.name,
-                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+                'fiscal_position': order.fiscal_position.id or False,
                 'payment_term': order.payment_term.id or False,
                 'company_id': order.company_id.id,
             }
