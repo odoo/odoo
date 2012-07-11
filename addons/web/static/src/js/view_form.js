@@ -2915,6 +2915,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     selectable: self.multi_selection,
                     sortable: false,
                     import_enabled: false,
+                    deletable: true
                 });
                 if (self.get("effective_readonly")) {
                     _.extend(view.options, {
