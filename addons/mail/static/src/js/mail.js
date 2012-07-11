@@ -541,7 +541,7 @@ openerp.mail = function(session) {
             var self = this;
             this.reinit();
             if (! this.view.datarecord.id ||
-                instance.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
+                session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$element.find('.oe_mail_thread').hide();
                 return;
             }

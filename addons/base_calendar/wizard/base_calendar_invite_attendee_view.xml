@@ -10,11 +10,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invite People" version="7.0">
-                    <header>
-                        <button name="do_invite" string="Invite" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <separator string="Invite People" colspan="4"/>
                     <field name="type"/>
                     <field name="send_mail"/>
@@ -36,6 +31,11 @@
                             </group>
                         </page>
                     </notebook>
+                    <footer>
+                        <button name="do_invite" string="Invite" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
