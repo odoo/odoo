@@ -8,6 +8,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Create Invoice" version="7.0">
+                <header>
+                    <button name="do_create" string="Create Invoices" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </header>
                 <notebook>
                     <page string="Billing Data">
                        <group>
@@ -23,11 +28,6 @@
                        </group>
                     </page>
                 </notebook>
-                <footer>
-                    <button name="do_create" string="Create Invoices" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel" />
-                </footer>
             </form>
             </field>
         </record>

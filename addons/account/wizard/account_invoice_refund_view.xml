@@ -8,6 +8,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Credit Note" version="7.0">
+                    <header>
+                        <button string='Refund' name="invoice_refund" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
                     <separator string="Credit Note Options"/>
                     <group col="4">
                          <field name="description"/>
@@ -19,11 +24,6 @@
                     <label string="Modify Invoice: Cancels the current invoice and creates a new copy of it ready for editing."/>
                     <label string="Credit Note: Creates the credit note, ready for editing."/>
                     <label string="Cancel Invoice: Creates the credit note, validate and reconcile it to cancel the current invoice."/>
-                    <footer>
-                        <button string='Refund' name="invoice_refund" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
                </form>
             </field>
         </record>

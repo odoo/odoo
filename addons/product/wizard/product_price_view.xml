@@ -10,6 +10,11 @@
               <field name="type">form</field>
               <field name="arch" type="xml">
                 <form string="Price List" version="7.0">
+                    <header>
+                        <button name="print_report" string="Print"  type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group string="Calculate Product Price per Unit Based on Pricelist Version.">
                         <field name="price_list" widget="selection"/>
                         <field name="qty1"/>
@@ -18,11 +23,6 @@
                         <field name="qty4"/>
                         <field name="qty5"/>
                     </group>
-                    <footer>
-                        <button name="print_report" string="Print"  type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
               </field>
         </record>

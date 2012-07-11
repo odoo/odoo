@@ -8,6 +8,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Browse Caldav" version="7.0">
+                    <header>
+                        <button special="cancel" string="_Close" icon="gtk-close"/>
+                    </header>
                     <sheet>
                         <group>
                             <separator string="Browse Caldav" colspan="4"/>
@@ -34,9 +37,6 @@
                             
                         </group>
                     </sheet>
-                    <footer>
-                        <button special="cancel" string="_Close" icon="gtk-close"/>
-                    </footer>
                 </form>
             </field>
         </record>

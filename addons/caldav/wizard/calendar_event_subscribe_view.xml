@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscribe to Remote Calendar" version="7.0">
+                    <header>
+                        <button name="process_imp_ics"  string="_Subscribe" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
                     <group colspan="4" >
                          <separator string="Provide Path for Remote Calendar"/>
                           <field name="url_path" colspan="4" width="300" nolabel="1" widget="url"/>
                     </group>
-                    <footer>
-                        <button name="process_imp_ics"  string="_Subscribe" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
                </form>
             </field>
         </record>

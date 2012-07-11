@@ -7,16 +7,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Create invoice" version="7.0">
+                  <header>
+                      <button name="open_invoice" string="Create" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel"/>
+                  </header>
                   <group string="Create Invoice">
                       <field name="journal_id"/>
                       <field name="group"/>
                       <field name="invoice_date" />
                   </group>
-                  <footer>
-                      <button name="open_invoice" string="Create" type="object" class="oe_highlight"/>
-                      or
-                      <button string="Cancel" class="oe_link" special="cancel"/>
-                  </footer>
              </form>
             </field>
         </record>

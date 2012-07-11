@@ -8,6 +8,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sharing: preparation" version="7.0">
+                    <header>
+                        <button name="go_step_1" string="Next" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <separator
                         string="Please select the action that opens the screen containing the data you want to share."/>
                     <group>
@@ -16,11 +21,6 @@
                             string="Optionally, you may specify an additional domain restriction that will be applied to the shared data."/>
                         <field name="domain"/>
                     </group>
-                    <footer>
-                        <button name="go_step_1" string="Next" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
             </field>
         </record>
@@ -31,6 +31,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
+                    <header>
+                        <button name="go_step_2" string="Share" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group>
                         <field name="user_type" invisible="1"/>
                         <field name="invite" invisible="1"/>
@@ -55,11 +60,6 @@
                             <field name="access_mode"/>
                         </group>
                     </group>
-                    <footer>
-                        <button name="go_step_2" string="Share" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
             </field>
         </record>
@@ -70,6 +70,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access granted!" version="7.0">
+                    <header>
+                        <field name="user_type" invisible="1"/>
+                        <field name="access_mode" invisible="1"/>
+                    </header>
                     <group attrs="{'invisible':[('user_type','=','embedded')]}"
                         string="An email notification with instructions has been sent to the following people:">
                         <field name="result_line_ids" nolabel="1" mode="tree">
@@ -96,10 +100,6 @@
                                 attrs="{'invisible':[('access_mode','=','readonly')]}"/>
                         </group>
                     </group>
-                    <footer>
-                        <field name="user_type" invisible="1"/>
-                        <field name="access_mode" invisible="1"/>
-                    </footer>
 
                 </form>
             </field>

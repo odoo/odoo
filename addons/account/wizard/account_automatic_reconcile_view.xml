@@ -8,6 +8,11 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Reconciliation" version="7.0">
+                    <header>
+                        <button name="reconcile" string="Reconcile" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
                     <separator string="Reconciliation"/>
                     <label string="For an invoice to be considered as paid, the invoice entries must be reconciled with counterparts, usually payments. With the automatic reconciliation functionality, OpenERP makes its own search for entries to reconcile in a series of accounts. It finds entries for each partner where the amounts correspond."/>
                     <field name="account_ids" domain="[('reconcile','=',1)]"/>
@@ -21,11 +26,6 @@
                         <field name="journal_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
                         <field name="period_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
                     </group>
-                    <footer>
-                        <button name="reconcile" string="Reconcile" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
                 </form>
              </field>
          </record>

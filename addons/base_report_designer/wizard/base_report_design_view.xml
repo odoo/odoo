@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Get a report" version="7.0">
-                <group string="Select your report">
-                    <field name="report_id"/>
-                </group>
-                <footer>
+                <header>
                     <button name="get_report" string="Continue" type="object" class="oe_highlight"/>
                     <button name="upload_report" string="Upload the modified report" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
-                </footer>
+                </header>
+                <group string="Select your report">
+                    <field name="report_id"/>
+                </group>
             </form>
             </field>
        </record>

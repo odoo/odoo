@@ -8,13 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
              <form string="Unreconciliation" version="7.0">
-                <separator string="Unreconciliation Transactions" />
-                <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"/>
-                <footer>
+                <header>
                     <button name="trans_unrec" default_focus="1" string="Unreconcile" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
-                </footer>
+                </header>
+                <separator string="Unreconciliation Transactions" />
+                <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"/>
              </form>
             </field>
         </record>

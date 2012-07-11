@@ -11,15 +11,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Produce" version="7.0">
+                    <header>
+                        <button name="do_produce" type="object" string="Confirm" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group string="Produce">
                         <field name="mode"/>
                         <field name="product_qty" colspan="2"/>
                     </group>    
-                    <footer>
-                        <button name="do_produce" type="object" string="Confirm" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
             </field>
         </record>

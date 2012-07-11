@@ -8,14 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Questionnaires" version="7.0">
-                    <group>
-                        <field name="questionnaire_id"/>
-                    </group>
-                    <footer>
+                    <header>
                         <button name="build_form" string="Open Questionnaire" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
+                    </header>
+                    <group>
+                        <field name="questionnaire_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -35,13 +35,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
-                    <separator colspan="4" string="Questionnaire"/>
-                    <field name="question_ans_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200"/>
-                    <footer>
+                    <header>
                         <button name="questionnaire_compute" string="Save Data" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
+                    </header>
+                    <separator colspan="4" string="Questionnaire"/>
+                    <field name="question_ans_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200"/>
                 </form>
             </field>
         </record>

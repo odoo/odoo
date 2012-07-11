@@ -10,14 +10,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Cancel Repair Order" version="7.0">
-                    <group>
-                        <label string="This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?"/>
-                    </group>
-                    <footer>
+                    <header>
                         <button name="cancel_repair" string="Yes" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
+                    </header>
+                    <group>
+                        <label string="This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?"/>
+                    </group>
                 </form>
             </field>
         </record>         

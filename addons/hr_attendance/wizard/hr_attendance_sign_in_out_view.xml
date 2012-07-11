@@ -7,6 +7,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign in / Sign out" version="7.0">
+                    <header>
+                        <button string="Sign in" name="si_check" type="object" class="oe_highlight"/>
+                        <button string="Sign out" name="so_check" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group>
                         <separator colspan="4" string="Sign in / Sign out"/>
                         <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
@@ -16,12 +22,6 @@
                     <field name="name" />
                     <field name="state" />
                     </group>
-                    <footer>
-                        <button string="Sign in" name="si_check" type="object" class="oe_highlight"/>
-                        <button string="Sign out" name="so_check" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                </form>
             </field>
         </record>

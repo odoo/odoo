@@ -8,14 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Search Payment lines" version="7.0">
-                <group>
-                    <field name="duedate" />
-                </group>
-                <footer>
+                <header>
                     <button name="search_entries" string="Search" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
-                </footer>
+                </header>
+                <group>
+                    <field name="duedate" />
+                </group>
             </form>
             </field>
         </record>
@@ -26,14 +26,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Search Payment lines" version="7.0">
-                    <group string="Entries">
-                        <field name="entries"/>
-                    </group>
-                    <footer>
+                    <header>
                         <button name="create_payment" string="_Add to payment order" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
+                    </header>
+                    <group string="Entries">
+                        <field name="entries"/>
+                    </group>
                 </form>
             </field>
         </record>

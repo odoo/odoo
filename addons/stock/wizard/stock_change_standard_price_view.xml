@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Change Standard Price" version="7.0">
+                  <header>
+                      <button name="change_price" string="_Apply" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />
+                  </header>
                   <separator string="Change Price"/>
                   <group>
                       <field name="new_price" string="Cost Price"/>
                   </group>
-                  <footer>
-                      <button name="change_price" string="_Apply" type="object" class="oe_highlight"/>
-                      or
-                      <button string="Cancel" class="oe_link" special="cancel" />
-                  </footer>
               </form>
             </field>
         </record>

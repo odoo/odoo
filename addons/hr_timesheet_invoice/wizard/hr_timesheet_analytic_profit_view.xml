@@ -7,27 +7,27 @@
             <field name="model">hr.timesheet.analytic.profit</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet Profit" version="7.0">
+				<form string="Timesheet Profit" version="7.0">
+                   <header>
+                        <button name="print_report" string="Print" colspan="1" type="object" class="oe_highlight"/> or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                   </header>
                    <sheet>
                        <group> 
-                           <label for="date_from" string="Duration" />
+                           <label for="date_from" string="Duration" />					
                            <div>
-                               <field name="date_from" nolabel="1" class="oe_inline" />
+ 						       <field name="date_from" nolabel="1" class="oe_inline" />
                                - <field name="date_to" nolabel="1" class="oe_inline"/>
                            </div>
                        </group>
                        <group>
                            <separator string="Journals" colspan="4"/>
-                           <field name="journal_ids" colspan="4" nolabel="1"/>
+						   <field name="journal_ids" colspan="4" nolabel="1"/>
                            <separator string="Users" colspan="4"/>
-                           <field name="employee_ids" colspan="4" nolabel="1"/>
-                       </group>
+						   <field name="employee_ids" colspan="4" nolabel="1"/>
+					   </group>
                    </sheet>
-                   <footer>
-                        <button name="print_report" string="Print" colspan="1" type="object" class="oe_highlight"/> or
-                        <button special="cancel" string="Cancel" class="oe_link"/>
-                   </footer>
-               </form>
+			   </form>
             </field>
         </record>
 

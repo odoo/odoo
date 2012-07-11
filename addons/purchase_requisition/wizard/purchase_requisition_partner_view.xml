@@ -7,14 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Requisition" version="7.0">
-                    <group>
-                        <field name="partner_id"/>
-                    </group>
-                    <footer>
+                    <header>
                         <button name="create_order" string="Create Quotation" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
+                    </header>
+                    <group>
+                        <field name="partner_id"/>
+                    </group>
                 </form>
             </field>
         </record>

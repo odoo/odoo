@@ -7,14 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reconciliation" version="7.0">
-                    <group>
-                         <field name="account_id"/>
-                    </group>
-                    <footer>
+                    <header>
                         <button string="Open for Reconciliation" name="action_open_window" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
+                    </header>
+                    <group>
+                         <field name="account_id"/>
+                    </group>
                </form>
             </field>
         </record>

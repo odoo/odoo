@@ -10,14 +10,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Cost Structure" version="7.0">
-                    <group string="Print Cost Structure of Product.">
-                        <field name="number"/>
-                    </group>
-                    <footer>
+                    <header>
                         <button name="print_report" type="object" string="Print" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
+                    </header>
+                    <group string="Print Cost Structure of Product.">
+                        <field name="number"/>
+                    </group>
                 </form>
             </field>
         </record>

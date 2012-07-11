@@ -10,14 +10,14 @@
               <field name="type">form</field>
               <field name="arch" type="xml">
                 <form string="Receipt :" version="7.0">
-                    <group>
-                        <label string="Print the Receipt of the Sale"/>
-                    </group>    
-                    <footer>
+                    <header>
                       <button name="print_report" string="Print Receipt" type="object" class="oe_highlight"  />
                       or
                       <button string="Cancel" class="oe_link" special="cancel" />  
-                    </footer>
+                    </header>
+                    <group>
+                        <label string="Print the Receipt of the Sale"/>
+                    </group>    
                 </form>
               </field>
         </record>

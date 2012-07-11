@@ -8,14 +8,14 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Evaluation Reminders" version="7.0">
-                <group string="Send Evaluation Reminder">
-                    <field name="evaluation_id"/>
-                </group>
-                <footer>
+                <header>
                     <button name="send_mail" string="Send Mail" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
-                </footer>
+                </header>
+                <group string="Send Evaluation Reminder">
+                    <field name="evaluation_id"/>
+                </group>
              </form>
         </field>
     </record>

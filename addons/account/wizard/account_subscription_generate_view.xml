@@ -8,16 +8,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscription Compute" version="7.0">
+                    <header>
+                        <button string="Generate Entries" name="action_generate" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <separator string="Generate Entries before:"/>
                     <label string ="Automatically generate entries based on what has been entered in the  system before a specific date."/>
                     <group>
                         <field name="date"/>
                     </group>
-                    <footer>
-                        <button string="Generate Entries" name="action_generate" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                </form>
             </field>
         </record>

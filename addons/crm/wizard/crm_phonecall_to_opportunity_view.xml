@@ -10,17 +10,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Convert To Opportunity " version="7.0">
+                    <header>
+                        <button name="make_opportunity" type="object" string="_Convert" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group col="4">
                         <field name="name"/>
                         <field name="partner_id" />
                         <field name="planned_revenue"/>
                         <field name="probability"/>
                     </group>
-                    <footer>
-                        <button name="make_opportunity" type="object" string="_Convert" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
             </field>
         </record>

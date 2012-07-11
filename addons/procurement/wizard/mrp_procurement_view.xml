@@ -10,15 +10,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters" version="7.0">
-                    <group>
-                        <label string="This wizard will schedule procurements."/>
-                    </group>
-                    <footer>
+                    <header>
                         <button name="procure_calculation" string="Compute Procurements"
                             type="object" class="oe_highlight"  />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />    
-                    </footer>
+                    </header>
+                    <group>
+                        <label string="This wizard will schedule procurements."/>
+                    </group>
                 </form>
             </field>
         </record>

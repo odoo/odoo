@@ -9,16 +9,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Monthly Employee Timesheet" version="7.0">
+                    <header>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group colspan="4">
                         <field name="month"/>
                         <field name="year"/>
                         <field name="employee_id" colspan="3"/>
                     </group>
-                    <footer>
-                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
             </field>
         </record>
