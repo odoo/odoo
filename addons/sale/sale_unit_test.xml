@@ -3,7 +3,7 @@
     <data>
         <!-- Resource: sale.order -->
         <record id="test_order_1" model="sale.order">
-            <field name="shop_id" ref="shop"/>
+            <field name="shop_id" ref="sale_shop_1"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
