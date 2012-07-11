@@ -134,7 +134,7 @@
                             <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
                         </li>
                         <li t-if="record.type == 'email' &amp;&amp; ! thread.params.is_wall"><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
-                        <li t-if="record.type == 'email'"><a href="#" class="oe_mail_msg_details">Details</a></li>
+                        <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
                         <li><a href="#" class="oe_mail_msg_debug">Debug data</a></li>
                     </ul>
                 </span>
