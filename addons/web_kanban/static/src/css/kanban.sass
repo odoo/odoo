@@ -296,8 +296,8 @@
             margin-bottom: 0
         &:hover
             @include box-shadow(0 0 3px rgba(0,0,0,0.6))
-            .oe_dropdown_kanban
-                display: block
+            .oe_dropdown_kanban > span
+                visibility: visible
         h3
             margin: 0 16px 0 0
             color: #4c4c4c
@@ -363,14 +363,17 @@
         position: absolute
         top: -8px
         right: 3px
-        display: none
         cursor: pointer
+        > span
+            visibility: hidden
         &:hover
             text-decoration: none
         .oe_dropdown_menu
             left: 0
             top: 28px
             min-width: 160px
+    .oe_dropdown_kanban.oe_opened > span
+        visibility: visible
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker
