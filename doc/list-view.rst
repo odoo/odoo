@@ -50,6 +50,12 @@ various situations:
 
         Readonly field cell
 
+    ``.oe_list_field_$type``
+
+        Additional class for the precise type of the cell, ``$type``
+        is the field's @widget if there is one, otherwise it's the
+        field's type.
+
 ``.oe-record-selector``
 
     Selector cells

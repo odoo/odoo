@@ -656,7 +656,7 @@
         <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
         <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-attf-class="oe-field-cell #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
+            t-attf-class="oe-field-cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
         </td>
