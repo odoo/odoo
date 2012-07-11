@@ -33,7 +33,7 @@
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
-        "static/lib/cleditor/jquery.cleditor.min.js",
+        "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
