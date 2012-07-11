@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web.views = function(instance) {
+    this.action_manager.inner_widget = item.widget;
 var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
@@ -24,12 +25,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog_viewmanager = null;
             this.dialog.destroy();
             this.dialog = null;
-        }
-    },
-    content_stop: function () {
-        if (this.inner_widget) {
-            this.inner_widget.destroy();
-            this.inner_widget = null;
         }
     },
     do_push_state: function(state) {
@@ -123,7 +118,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     null_action: function() {
         this.dialog_stop();
-        this.content_stop();
         this.breadcrumb.clear();
     },
     ir_actions_act_window: function (action, on_close) {
@@ -150,7 +144,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            //this.content_stop();
             this.breadcrumb.hide_items();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
@@ -180,7 +173,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     ir_actions_client: function (action) {
-        //this.content_stop();
         this.dialog_stop();
         this.breadcrumb.hide_items();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
@@ -259,8 +251,7 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
         });
         this.push({
             widget: vm,
-            show: function($e) {
-                var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+            show: function(index, $e) {
                 var view_to_select = views[index];
                 vm.$element.show();
                 if (vm.active_view !== view_to_select) {
@@ -313,7 +304,9 @@ instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
                 this.remove_item(i);
             }
         }
-        item.show($e);
+        var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        item.show(index, $e);
+        this.action_manager.inner_widget = item.widget;
     },
     remove_item: function(index) {
         var item = this.items.splice(index, 1)[0];
