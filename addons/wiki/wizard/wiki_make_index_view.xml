@@ -10,13 +10,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Menu" version="7.0">
-                    <header>
+                    <separator string="Menu Information"/>
+                    <label string="Want to create a Index on Selected Pages ? "/>
+                    <footer>
                         <button name="wiki_do_index" string="Create Index" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <separator string="Menu Information"/>
-                    <label string="Want to create a Index on Selected Pages ? "/>
+                    </footer>
                 </form>
             </field>
         </record>

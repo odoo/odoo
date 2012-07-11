@@ -8,12 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Convert To Partner" version="7.0">
-                    <header>
+                    <label string="Are you sure you want to create a contact based on this job request ?"/>
+                    <footer>
                         <button name="make_order" string="Create Contact" type="object" groups="base.group_partner_manager" class="oe_highlight"/>
                         <label string="or" groups="base.group_partner_manager"/>
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <label string="Are you sure you want to create a contact based on this job request ?"/>
+                    </footer>
                 </form>
             </field>
         </record>
