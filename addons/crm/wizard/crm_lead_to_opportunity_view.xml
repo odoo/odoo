@@ -6,11 +6,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity" version="7.0">
-                    <header>
-                        <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <field name="action"/>
                     <group attrs="{'invisible':[('action','!=','exist')]}">
                         <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
@@ -27,6 +22,11 @@
                             <field name="section_id" />
                         </tree>
                     </field>
+                    <footer>
+                        <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record> 
@@ -37,11 +37,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity" version="7.0">
-                    <header>
-                        <button name="mass_convert" string="Convert into Opportunities" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <field name="action"/>
                     <field name="name" colspan="4"/>
                     <group string="Assigned Opportunities to">
@@ -53,6 +48,11 @@
                             <field name="name" />
                         </tree>
                     </field>
+                    <footer>
+                        <button name="mass_convert" string="Convert into Opportunities" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

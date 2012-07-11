@@ -54,7 +54,6 @@ class report_project_task_user(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True, groups="base.group_multi_company"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'type_id': fields.many2one('project.task.type', 'Stage', readonly=True),
     }
     _order = 'name desc, project_id'
 
