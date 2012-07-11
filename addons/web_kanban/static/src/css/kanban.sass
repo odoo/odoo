@@ -44,7 +44,7 @@
         .oe_star_on
             color: gold
         div:first-child
-            margin-right: 12px
+            margin-right: 16px
     .oe_kanban_button_new
         color: white
         background: #DC5F59
@@ -63,6 +63,7 @@
     .oe_kanban_group_title
         font-size: 16px
         font-weight: bold
+        min-height: 30px
         color: #333333
         text-shadow: 0 1px 0 white
         > span
@@ -71,7 +72,7 @@
 
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
-        padding: 6px 7px 0 6px
+        padding: 6px 6px 6px 5px
 
     .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         background: #f0eeee
@@ -317,8 +318,29 @@
     .oe_kanban_avatar
         @include radius(3px)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
-    //.oe_kanban_footer_left
-    //   float: left
+    .oe_kanban_footer_left
+        margin-top: 2px
+        > span
+            margin-top: 2px
+            display: inline-block
+            background: #E6E6E6
+            border: 1px solid #B9B9B9
+            color: #666
+            padding: 0 2px
+            line-height: 16px
+            @include radius(3px)
+            .oe_e
+                line-height: 12px
+                font-size: 22px
+        .oe_kanban_mail_new
+            line-height: 18px
+            position: relative
+            top: -1px
+    .oe_kanban_bottom_right
+        float: right
+        position: relative
+        top: 2px
+       
     .oe_kanban_status
         display: inline-block
         height: 12px
@@ -352,6 +374,7 @@
             text-decoration: none
         .oe_dropdown_menu
             left: 0
+            top: 28px
             min-width: 160px
     // }}}
     // KanbanColorPicker {{{
