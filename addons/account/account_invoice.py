@@ -1351,7 +1351,7 @@ class account_invoice_line(osv.osv):
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Price Unit')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', type="float",
             digits_compute= dp.get_precision('Account'), store=True),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),

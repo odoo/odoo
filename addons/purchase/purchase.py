@@ -804,7 +804,7 @@ class purchase_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Price Unit')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),

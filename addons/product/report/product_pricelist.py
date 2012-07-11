@@ -112,7 +112,7 @@ class product_pricelist(report_sxw.rml_parse):
         return res
 
     def _get_price(self,pricelist_id, product_id,qty):
-        sale_price_digits = self.get_digits(dp='Price Unit')
+        sale_price_digits = self.get_digits(dp='Product Price')
         pool = pooler.get_pool(self.cr.dbname)
         price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)
         if price_dict[pricelist_id]:

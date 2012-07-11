@@ -640,7 +640,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'to_invoice': fields.boolean('To Invoice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], required=True),
         'invoiced': fields.boolean('Invoiced',readonly=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Price Unit')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal',digits_compute= dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
         'product_uom_qty': fields.float('Quantity (Unit of Measure)', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),

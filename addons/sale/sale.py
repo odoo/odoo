@@ -1113,7 +1113,7 @@ class sale_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Price Unit'), readonly=True, states={'draft': [('readonly', False)]}),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -1205,7 +1205,7 @@ class sale_order_line(osv.osv):
             pu = 0.0
             if uosqty:
                 pu = round(line.price_unit * line.product_uom_qty / uosqty,
-                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Price Unit'))
+                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Price'))
             fpos = line.order_id.fiscal_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:

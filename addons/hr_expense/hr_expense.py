@@ -258,7 +258,7 @@ class hr_expense_line(osv.osv):
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
-        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Price Unit')),
+        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
         'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Product Unit of Measure')),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure'),

@@ -238,8 +238,8 @@ class delivery_grid_line(osv.osv):
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
-        'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Price Unit'), required=True),
-        'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Price Unit'), required=True),
+        'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Product Price'), required=True),
+        'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'), required=True),
     }
     _defaults = {
         'type': lambda *args: 'weight',
