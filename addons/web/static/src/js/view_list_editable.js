@@ -105,8 +105,8 @@ openerp.web.list_editable = function (instance) {
                     .off('click', 'button.oe_list_save')
                     .on('click', 'button.oe_list_save', this.proxy('saveEdition'));
                 this.$element
-                    .off('click', 'tbody tr')
-                    .on('click', 'tbody tr', function () {
+                    .off('click', 'tbody td:not(.oe_list_field_cell)')
+                    .on('click', 'tbody td:not(.oe_list_field_cell)', function () {
                         if (!self.editor.isEditing()) {
                             self.startEdition();
                         }
