@@ -10,12 +10,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Schedule/Log a Call" version="7.0">
-                    <header>
-                        <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
-                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"  />
-                        or
-                        <button name="action_cancel" string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <group>
                             <field name="action"/>
@@ -34,6 +28,12 @@
                         </group>
                     </group>
                     <field name="note" placeholder="Call Description" />
+                    <footer>
+                        <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
+                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"  />
+                        or
+                        <button name="action_cancel" string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

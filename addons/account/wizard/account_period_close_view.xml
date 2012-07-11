@@ -8,14 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close Period" version="7.0">
-                    <header>
-                        <button string="Close Period" name="data_save" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group string="Are you sure?">
                         <field name="sure"/>
                     </group>
+                    <footer>
+                        <button string="Close Period" name="data_save" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

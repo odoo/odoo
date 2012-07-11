@@ -7,11 +7,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0">
-                    <header>
-                        <button name="send_mail" string="Send" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
@@ -33,6 +28,11 @@
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
+                    <footer>
+                        <button name="send_mail" string="Send" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

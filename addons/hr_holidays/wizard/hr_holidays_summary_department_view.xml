@@ -8,15 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Leaves by Department" version="7.0">
-                <header>
-                    <button name="print_report" string="Print" type="object" class="oe_highlight"/> or
-                    <button string="Cancel" special="cancel" class="oe_link"/>
-                </header>
                 <group>
                     <field name="date_from" />
                     <field name="holiday_type"/>
                     <field name="depts"/>
                 </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/> or
+                    <button string="Cancel" special="cancel" class="oe_link"/>
+                </footer>
             </form>
             </field>
         </record>
