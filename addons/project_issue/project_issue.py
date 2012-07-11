@@ -236,7 +236,7 @@ class project_issue(base_stage, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
-        'categ_ids': fields.many2many('project.category', 'project_issue_categ_rel', 'project_issue_id', 'project_category_id', 'Categories'),
+        'categ_ids': fields.many2many('project.category', string='Categories'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
