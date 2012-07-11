@@ -2304,18 +2304,19 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
 
     initialize_content: function() {
         this.$textarea = this.$element.find('textarea');
+        var width = ((this.node.attrs || {}).editor_width || '100%');
+        var height = ((this.node.attrs || {}).editor_height || '100%');
         this.$textarea.cleditor({
-          //width:        500, // width not including margins, borders or padding
-          //height:       250, // height not including margins, borders or padding
-          controls:     // controls to add to the toolbar
+            width:      width, // width not including margins, borders or padding
+            height:     height, // height not including margins, borders or padding
+            controls:   // controls to add to the toolbar
                         "bold italic underline strikethrough | size " +
                         "| removeformat | bullets numbering | outdent " +
                         "indent | " +
                         "link unlink | source",  
-          sizes:        // sizes in the font size popup
+            sizes:      // sizes in the font size popup
                         "1,2,3,4,5,6,7",
-          useCSS:       false, // use CSS to style HTML when possible (not supported in ie)
-          bodyStyle:    // style to assign to document body contained within the editor
+            bodyStyle:  // style to assign to document body contained within the editor
                         "margin:4px; font:13px monospace; cursor:text"
         });
         // call super now, because cleditor seems to reset the disable attr
