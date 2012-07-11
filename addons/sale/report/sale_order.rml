@@ -266,10 +266,10 @@
             <para style="terp_default_Right_9">[[ formatLang(line.product_uos and line.product_uos_qty or line.product_uom_qty) ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.price_unit ), digits=get_digits(dp='Product Price')]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.price_unit , digits=get_digits(dp='Product Price'))]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ formatLang(line.discount), digits=get_digits(dp='Discount')]]</para>
+            <para style="terp_default_Centre_9">[[ formatLang(line.discount, digits=get_digits(dp='Discount'))]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal, digits=get_digits(dp='Account'), currency_obj=o.pricelist_id.currency_id) ]] </para>
