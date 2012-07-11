@@ -364,7 +364,7 @@ class account_invoice(osv.osv):
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
                 raise orm.except_orm(_('Configuration Error!'),
-                     _('There is no Accounting Journal of type Sale/Purchase defined!'))
+                     _('No Sale/Purchase Journal(s) defined !'))
             else:
                 raise orm.except_orm(_('Unknown Error'), str(e))
 
@@ -554,7 +554,7 @@ class account_invoice(osv.osv):
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
-                            _('Can not find a chart of account, you should create one from the configuration of the accounting menu.'))
+                            _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.'))
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
                     else:
@@ -569,7 +569,7 @@ class account_invoice(osv.osv):
                                 result_id = account_obj.search(cr, uid, [('name','=',line.account_id.name),('company_id','=',company_id)])
                                 if not result_id:
                                     raise osv.except_osv(_('Configuration Error !'),
-                                        _('Can not find a chart of account, you should create one from the configuration of the accounting menu.'))
+                                        _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.'))
                                 inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[-1]})
             else:
                 if invoice_line:
@@ -577,7 +577,7 @@ class account_invoice(osv.osv):
                         obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
                         if obj_l.company_id.id != company_id:
                             raise osv.except_osv(_('Configuration Error !'),
-                                _('Invoice line account company does not match with invoice company.'))
+                                _('Company of invoice line account and the company of invoice does not match.'))
                         else:
                             continue
         if company_id and type:
@@ -598,7 +598,7 @@ class account_invoice(osv.osv):
                 if r[1] == 'journal_id' and r[2] in journal_ids:
                     val['journal_id'] = r[2]
             if not val.get('journal_id', False):
-                raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type)))
+                raise osv.except_osv(_('Configuration Error !'), (_('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % (journal_type)))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])
@@ -1475,7 +1475,7 @@ class account_invoice_line(osv.osv):
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
                  warning = {
                     'title': _('Warning!'),
-                    'message': _('You selected an Unit of Measure which is not compatible with the product.')
+                    'message': _('You selected a Unit of Measure which is not compatible with the Unit of Measure of the product.')
             }
             return {'value': res['value'], 'warning': warning}
         return res

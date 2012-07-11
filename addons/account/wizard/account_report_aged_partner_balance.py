@@ -53,7 +53,7 @@ class account_aged_trial_balance(osv.osv_memory):
 
         period_length = data['form']['period_length']
         if period_length<=0:
-            raise osv.except_osv(_('UserError'), _('You must enter a period length that cannot be 0 or below !'))
+            raise osv.except_osv(_('UserError'), _('You must enter a period length greater than 0 !'))
         if not data['form']['date_from']:
             raise osv.except_osv(_('UserError'), _('Enter a Start date !'))
 

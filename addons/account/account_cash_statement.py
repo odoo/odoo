@@ -298,7 +298,7 @@ class account_cash_statement(osv.osv):
         if journal_type == 'bank':
             return super(account_cash_statement, self).balance_check(cr, uid, cash_id, journal_type, context)
         if not self._equal_balance(cr, uid, cash_id, context):
-            raise osv.except_osv(_('Error !'), _('The closing balance should be the same than the computed balance!'))
+            raise osv.except_osv(_('Error !'), _('The closing balance should be equal to compute balance on this cash register !'))
         return True
 
     def statement_close(self, cr, uid, ids, journal_type='bank', context=None):
