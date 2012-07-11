@@ -220,7 +220,7 @@ class project(osv.osv):
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
                         type='many2many', relation='res.users', string='Followers'),
      }
-    
+
     def dummy(self, cr, uid, ids, context):
         return True
 
@@ -566,7 +566,7 @@ class task(base_stage, osv.osv):
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
         return result
-    
+
     def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         res_users = self.pool.get('res.users')
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
@@ -903,7 +903,7 @@ class task(base_stage, osv.osv):
         return True
 
     def action_close(self, cr, uid, ids, context=None):
-        """ This action closes the task 
+        """ This action closes the task
         """
         task_id = len(ids) and ids[0] or False
         self._check_child_task(cr, uid, ids, context=context)
@@ -913,7 +913,7 @@ class task(base_stage, osv.osv):
     def do_close(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_close. """
         return self.case_close(cr, uid, ids, context=context)
-    
+
     def case_close(self, cr, uid, ids, context=None):
         """ Closes Task """
         if not isinstance(ids, list): ids = [ids]
@@ -946,7 +946,7 @@ class task(base_stage, osv.osv):
     def do_cancel(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_cancel. """
         return self.case_cancel(cr, uid, ids, context=context)
-    
+
     def case_cancel(self, cr, uid, ids, context=None):
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
@@ -958,7 +958,7 @@ class task(base_stage, osv.osv):
     def do_open(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_open. """
         return self.case_open(cr, uid, ids, context=context)
-    
+
     def case_open(self, cr, uid, ids, context=None):
         if not isinstance(ids,list): ids = [ids]
         self.case_set(cr, uid, ids, 'open', {'date_start': fields.datetime.now()}, context=context)
@@ -968,7 +968,7 @@ class task(base_stage, osv.osv):
     def do_draft(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_draft. """
         return self.case_draft(cr, uid, ids, context=context)
-    
+
     def case_draft(self, cr, uid, ids, context=None):
         self.case_set(cr, uid, ids, 'draft', {}, context=context)
         self.case_draft_send_note(cr, uid, ids, context=context)
@@ -977,11 +977,11 @@ class task(base_stage, osv.osv):
     def do_pending(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_pending. """
         return self.case_pending(cr, uid, ids, context=context)
-    
+
     def case_pending(self, cr, uid, ids, context=None):
         self.case_set(cr, uid, ids, 'pending', {}, context=context)
         return self.case_pending_send_note(cr, uid, ids, context=context)
-    
+
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
         attachment = self.pool.get('ir.attachment')
         attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
@@ -1083,7 +1083,7 @@ class task(base_stage, osv.osv):
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                #TO FIX:Kanban view doesn't raise warning 
+                #TO FIX:Kanban view doesn't raise warning
                 #stages = [stage.id for stage in t.project_id.type_ids]
                 #if new_stage not in stages:
                     #raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
@@ -1129,7 +1129,7 @@ class task(base_stage, osv.osv):
 
         result += "\n"
         return result
-    
+
     # ---------------------------------------------------
     # OpenChatter methods and notifications
     # ---------------------------------------------------
@@ -1359,3 +1359,11 @@ class project_task_history_cumulative(osv.osv):
         )
         """)
 
+
+class project_category(osv.osv):
+    """ Category of project's task (or issue) """
+    _name = "project.category"
+    _description = "Category of project's task, issue, ..."
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+    }

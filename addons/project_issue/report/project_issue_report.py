@@ -50,7 +50,7 @@ class project_issue_report(osv.osv):
         'opening_date': fields.date('Date of Opening', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
+        'categ_ids': fields.many2many('project.category', 'project_issue_categ_rel', 'project_issue_id', 'project_category_id', 'Categories'),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True),

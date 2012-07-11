@@ -13,6 +13,7 @@
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="create_date"/>
+                    <field name="categ_ids"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click">
@@ -24,7 +25,8 @@
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <div class="oe_left">
-                                            <field name="categ_id"/>
+                                            <!-- <field name="categ_ids" widget="many2many_tags"/> -->
+                                            <t t-raw="record.categ_ids.raw_value"/>
                                         </div>
                                         <div class="oe_right">
                                             Creation: <field name="create_date"/>
