@@ -417,9 +417,13 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         });
             var click_column = this.$element.find('.oe_kanban_add');
             click_column.addClass('oe_kanban_quick_create_bounce');
-            this.$records.click(function() {
+            this.$records.click(function(e) {
+            var $target = e.target;
+            var $currenttarget = e.currentTarget;
+            if ($target == $currenttarget) {
             self.view.do_bounce(click_column);
-                });
+                }
+            });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
