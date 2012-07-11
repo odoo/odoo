@@ -671,6 +671,9 @@
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save Row</button>
     </t>
+    <t t-jquery="a.oe_list_button_import" t-operation="after">
+        <a href="#" class="oe_bold oe_list_discard">discard</a>
+    </t>
 </t>
 
 <t t-name="FormView">

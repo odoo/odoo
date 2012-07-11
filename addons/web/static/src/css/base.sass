@@ -1723,13 +1723,15 @@ $sheet-max-width: 860px
     // }}}
     // ListView {{{
     .oe_list_buttons
-        .oe_list_save
+        .oe_list_save, .oe_list_discard
             display: none
         &.oe_editing
-            .oe_list_add, .oe_alternative
+            .oe_list_add, .oe_list_button_import
                 display: none
             .oe_list_save
                 display: inline-block
+            .oe_list_discard
+                display: inline
 
     .oe_list
         position: relative

@@ -102,8 +102,13 @@ openerp.web.list_editable = function (instance) {
             if (this.options.editable) {
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
-                    .off('click', 'button.oe_list_save')
-                    .on('click', 'button.oe_list_save', this.proxy('saveEdition'));
+                    .off('click', '.oe_list_save')
+                    .on('click', '.oe_list_save', this.proxy('saveEdition'))
+                    .off('click', '.oe_list_discard')
+                    .on('click', '.oe_list_discard', function (e) {
+                        e.preventDefault();
+                        self.cancelEdition();
+                    });
                 this.$element
                     .off('click', 'tbody td:not(.oe_list_field_cell)')
                     .on('click', 'tbody td:not(.oe_list_field_cell)', function () {

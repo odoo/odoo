@@ -2179,14 +2179,17 @@
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
 }
-.openerp .oe_list_buttons .oe_list_save {
+.openerp .oe_list_buttons .oe_list_save, .openerp .oe_list_buttons .oe_list_discard {
   display: none;
 }
-.openerp .oe_list_buttons.oe_editing .oe_list_add, .openerp .oe_list_buttons.oe_editing .oe_alternative {
+.openerp .oe_list_buttons.oe_editing .oe_list_add, .openerp .oe_list_buttons.oe_editing .oe_list_button_import {
   display: none;
 }
 .openerp .oe_list_buttons.oe_editing .oe_list_save {
   display: inline-block;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_discard {
+  display: inline;
 }
 .openerp .oe_list {
   position: relative;
