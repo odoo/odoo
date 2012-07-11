@@ -750,7 +750,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             // Set the cache duration in seconds.
             url += '&cache=' + parseInt(cache, 10);
         }
-        if (this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
+        if (this.record[field] && this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
             url = 'data:image/png;base64,' + this.record[field].value;
         }
         return url;
