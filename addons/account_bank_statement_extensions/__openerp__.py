@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    'name': 'Bank Statement extensions to support e-banking',
+    'name': 'Bank Statement Extensions to Support e-banking',
     'version': '0.3',
     'license': 'AGPL-3',
     'author': 'Noviat',

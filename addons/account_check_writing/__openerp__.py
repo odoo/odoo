@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    "name" : "Check writing",
+    "name" : "Check Writing",
     "version" : "1.1",
     "author" : "OpenERP SA, NovaPoint Group",
     "category": "Generic Modules/Accounting",

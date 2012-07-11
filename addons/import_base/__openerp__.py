@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Framework for complex import',
+    'name': 'Framework for Complex Import',
     'version': '0.9',
     'category': 'Hidden/Dependency',
     'description': """
