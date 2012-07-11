@@ -53,7 +53,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
         $.when(this.action_manager.do_action(action)).then(function() {
-            var viewmanager = self.action_manager.inner_viewmanager,
+            var viewmanager = self.action_manager.inner_widget,
                 controller = viewmanager.views[viewmanager.active_view].controller;
             self.action_manager.appendTo(self.view_edit_dialog.$element);
             self.action_manager.renderElement(self.view_edit_dialog);
@@ -88,7 +88,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                     } else {
                         $.when(self.do_save_view(view_values)).then(function() {
                             self.create_view_dialog.close();
-                            var controller = self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller;
+                            var controller = self.action_manager.inner_widget.views[self.action_manager.inner_widget.active_view].controller;
                             controller.reload_content();
                         });
                     }
@@ -167,7 +167,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
     do_delete_view: function() {
         var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
-            var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
+            var controller = this.action_manager.inner_widget.views[this.action_manager.inner_widget.active_view].controller;
             this.dataset.unlink([this.main_view_id]).then(function() {
                 controller.reload_content();
                 self.main_view_id = self.parent.fields_view.view_id;
@@ -397,7 +397,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                     action_manager.do_action(action);
                 }},
                 {text: _t("Close"), click: function(){
-                    self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller.reload_content();
+                    self.action_manager.inner_widget.views[self.action_manager.inner_widget.active_view].controller.reload_content();
                     self.edit_xml_dialog.close();
                 }}
             ]

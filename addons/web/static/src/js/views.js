@@ -10,10 +10,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
-        this.inner_viewmanager = null;
+        this.inner_widget = null;
         this.dialog = null;
         this.dialog_viewmanager = null;
-        this.client_widget = null;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -28,14 +27,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
     },
     content_stop: function () {
-        // TODO: problem with bread crumb here. Check if those references are needed
-        if (this.inner_viewmanager) {
-            this.inner_viewmanager.destroy();
-            this.inner_viewmanager = null;
-        }
-        if (this.client_widget) {
-            this.client_widget.destroy();
-            this.client_widget = null;
+        if (this.inner_widget) {
+            this.inner_widget.destroy();
+            this.inner_widget = null;
         }
     },
     do_push_state: function(state) {
@@ -54,7 +48,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var self = this,
             action_loaded;
         if (state.action_id) {
-            var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
+            var run_action = (!this.inner_widget && !this.inner_widget.action) || this.inner_widget.action.id !== state.action_id;
             if (run_action) {
                 this.null_action();
                 action_loaded = this.do_action(state.action_id);
@@ -94,8 +88,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
 
         $.when(action_loaded || null).then(function() {
-            if (self.inner_viewmanager) {
-                self.inner_viewmanager.do_load_state(state, warm);
+            if (self.inner_widget && self.inner_widget.do_load_state) {
+                self.inner_widget.do_load_state(state, warm);
             }
         });
     },
@@ -164,10 +158,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 });
             }
             this.inner_action = action;
-            var inner_viewmanager = this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
-            this.breadcrumb.push_viewmanager(inner_viewmanager);
-            this.inner_viewmanager.appendTo(this.$element);
-            this.inner_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
+            var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
+            this.breadcrumb.push_viewmanager(inner_widget);
+            this.inner_widget.appendTo(this.$element);
+            this.inner_widget.$element.addClass("oe_view_manager_" + (action.target || 'current'));
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -190,12 +184,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_stop();
         this.breadcrumb.hide_items();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
-        this.client_widget = new ClientWidget(this, action.params);
+        this.inner_widget = new ClientWidget(this, action.params);
         this.breadcrumb.push({
-            widget: this.client_widget,
+            widget: this.inner_widget,
             title: action.name
         });
-        this.client_widget.appendTo(this.$element);
+        this.inner_widget.appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
