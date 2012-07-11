@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+        <record model="ir.ui.view" id="res_company_vat_lu">
+            <field name="name">res.company.config.vat.lu</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <page string="Configuration" position="inside">
+                    <group string="VAT" colspan="2">
+                        <field name="vat_matricule"/>
+                        <field name="vat_office"/>
+                        <field name="vat_mode"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+	</data>
+</openerp>

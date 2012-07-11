@@ -6,15 +6,17 @@
             <field name="model">vat.declaration.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Print Tax Statements">
-	               <field name="tax_code_id" widget="selection"/>
-	               <field name="period_id" widget="selection"/>
-	               <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="print_vat_declaration_report" string="Print Tax Statements" type="object" icon="gtk-ok"/>
-                    </group>
-	             </form>
+                <form string="Print Tax Statements">
+                    <field name="tax_code_id" widget="selection"/>
+                    <field name="type"/>
+                    <field name="period_id" widget="selection"/>
+                    <field name="to_period_id" widget="selection"/>
+                    <separator colspan="4"/>
+                        <group colspan="4" col="6">
+                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                            <button name="print_vat_declaration_report" string="Print Tax Statements" type="object" icon="gtk-ok"/>
+                        </group>
+                </form>
             </field>
         </record>
 
