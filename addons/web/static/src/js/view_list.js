@@ -1013,10 +1013,10 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             })
             .delegate('tr', 'click', function (e) {
                 var row_id = self.row_id(e.currentTarget);
-                if (row_id !== undefined) {
+                if (row_id) {
                     e.stopPropagation();
                     if (!self.dataset.select_id(row_id)) {
-                        throw "Could not find id in dataset"
+                        throw new Error("Could not find id in dataset");
                     }
                     self.row_clicked(e);
                 }
