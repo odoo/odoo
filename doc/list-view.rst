@@ -1,6 +1,79 @@
 List View
 =========
 
+Style Hooks
+-----------
+
+The list view provides a few style hook classes for re-styling of list views in
+various situations:
+
+``.oe-listview``
+
+    The root element of the list view, styling rules should be rooted
+    on that class.
+
+``table.oe-listview-content``
+
+    The root table for the listview, accessory components may be
+    generated or added outside this section, this is the list view
+    "proper".
+
+``.oe_list_buttons``
+
+    The action buttons array for the list view, with its sub-elements
+
+    ``.oe_list_add``
+
+        The default "Create"/"Add" button of the list view
+
+    ``.oe_alternative``
+
+        The "alternative choice" for the list view, by default text
+        along the lines of "or import" with a link.
+
+``.oe-field-cell``
+
+    The cell (``td``) for a given field of the list view, cells which
+    are *not* fields (e.g. name of a group, or number of items in a
+    group) will not have this class. The field cell can be further
+    specified:
+
+    ``.oe_number``
+
+        Numeric cell types (integer and float)
+
+    ``.oe-button``
+
+        Action button (``button`` tag in the view) inside the cell
+
+    ``.oe_readonly``
+
+        Readonly field cell
+
+``.oe-record-selector``
+
+    Selector cells
+
+Editable list view
+++++++++++++++++++
+
+The editable list view module adds a few supplementary style hook
+classes, for edition situations:
+
+``.oe_editing``
+
+    Added to both ``.oe-listview`` and ``.oe_list_button`` (as the
+    buttons may be outside of the list view) when a row of the list is
+    currently being edited.
+
+``tr.oe_edition``
+
+    Class set on the row being edited itself. Note that the edition
+    form is *not* contained within the row, this allows for styling or
+    modifying the row while it's being edited separately. Mostly for
+    fields which can not be edited (e.g. read-only fields).
+
+
 Editable list view
 ------------------
 
@@ -30,7 +103,7 @@ view.
 
     ``options.read_only``
 
-        worthless shit added by niv in the listview directly (wtf?)
+        force options.editable to false, or something?
 
         .. note:: can probably be replaced by cancelling ``edit:before``
 
@@ -172,6 +245,20 @@ view provides a number of dedicated events to its lifecycle.
 
     Invoked after a pending edition has been cancelled.
 
+DOM events
+++++++++++
+
+The list view has grown hooks for the ``keyup`` event on its edition
+form (during edition): any such event bubbling out of the edition form
+will be forwarded to a method ``keyup_EVENTNAME``, where ``EVENTNAME``
+is the name of the key in ``$.ui.keyCode``.
+
+The method will also get the event object (originally passed to the
+``keyup`` handler) as its sole parameter.
+
+The base editable list view has handlers for the ``ENTER`` and
+``ESCAPE`` keys.
+
 Editor
 ------
 
@@ -299,8 +386,40 @@ Changes from 6.1
     :js:class:`~openerp.web.ListView.List` for editability has been
     drastically simplified, and most of the behavior has been moved to
     the list view itself. Only
-    :js:function:`~openerp.web.ListView.List.edit_record` remains from
-    the methods previously added, and only
-    :js:function:`~openerp.web.ListView.List.row_clicked` and
-    :js:function:`~openerp.web.ListView.List.init` are still
+    :js:func:`~openerp.web.ListView.List.row_clicked` is still
     overridden.
+
+  * A new method ``getRowFor(record) -> jQuery(tr) | null`` has been
+    added to both ListView.List and ListView.Group, it can be called
+    from the list view to get the table row matching a record (if such
+    a row exists).
+
+* ``ListView#ensure_saved`` has been re-capitalized to
+  :js:func:`~openerp.web.ListView.ensureSaved`
+
+* :js:func:`~openerp.web.ListView.do_button_action`'s core behavior
+  has been split away to
+  :js:func:`~openerp.web.ListView.handleButton`. This allows bypassing
+  overrides of :js:func:`~openerp.web.ListView.do_button_action` in a
+  parent class.
+
+  Ideally, :js:func:`~openerp.web.ListView.handleButton` should not be
+  overridden.
+
+* Modifiers handling has been improved (all modifiers information
+  should now be available through :js:func:`~Column.modifiers_for`,
+  not just ``invisible``)
+
+* Changed some handling of the list view's record: a record may now
+  have no id, and the listview will handle that correctly (for new
+  records being created) as well as correctly handle the ``id`` being
+  set.
+
+* Extended the internal collections structure of the list view with
+  `#find`_, `#succ`_ and `#pred`_.
+
+.. _#find: http://underscorejs.org/#find
+
+.. _#succ: http://hackage.haskell.org/packages/archive/base/latest/doc/html/Prelude.html#v:succ
+
+.. _#pred: http://hackage.haskell.org/packages/archive/base/latest/doc/html/Prelude.html#v:pred
