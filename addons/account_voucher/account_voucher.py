@@ -1047,6 +1047,8 @@ class account_voucher(osv.osv):
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
+                if not line.move_line_id.amount_residual:
+                    raise osv.except_osv(_('Wrong bank statement line'),_("You must have delete the bank statement line manualy to which the payment was reconcile. Please check the payment of the partner %s by the amount of %s !")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
                 currency_rate_difference = line.move_line_id.amount_residual - amount
             else:
                 currency_rate_difference = 0.0
