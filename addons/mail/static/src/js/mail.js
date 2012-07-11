@@ -876,15 +876,30 @@ openerp.mail = function(session) {
             this.add_event_handlers();
             // load mail.message search view
             var search_view_ready = this.load_search_view(this.params.search_view_id, {}, false);
+            // load composition form
+            var compose_done = this.instantiate_composition_form();
             // fetch first threads
             var comments_ready = this.init_and_fetch_comments(this.params.limit, 0);
-            return (search_view_ready && comments_ready);
+            return (search_view_ready && comments_ready && compose_done);
         },
         
         stop: function () {
             this._super.apply(this, arguments);
         },
-        
+
+        instantiate_composition_form: function(mode, msg_id) {
+            if (this.compose_message_widget) {
+                this.compose_message_widget.destroy();
+            }
+            this.compose_message_widget = new mail.ComposeMessage(this, {
+                'extended_mode': false, 'uid': this.session.uid, 'res_model': 'res.users',
+                'res_id': this.session.uid, 'mode': mode || 'comment', 'msg_id': msg_id });
+            var composition_node = this.$element.find('div.oe_mail_wall_action');
+            composition_node.empty();
+            var compose_done = this.compose_message_widget.appendTo(composition_node);
+            return compose_done;
+        },
+
         /** Add events */
         add_event_handlers: function () {
             var self = this;
