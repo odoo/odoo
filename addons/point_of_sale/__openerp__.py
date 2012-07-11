@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Point Of Sale',
+    'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
     "sequence": 6,

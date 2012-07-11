@@ -34,9 +34,9 @@
     "depends": ["base_tools"],
     "category" : "Tools",
     'description': """
-    The base module to manage lunch
+    The base module to manage lunch.
 
-    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.
+    keep track for the Lunch Order, Cash Moves, CashBox, Product.
     Apply Different Category for the product.
     """,
     "init_xml": [],

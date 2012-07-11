@@ -30,7 +30,7 @@ Accounting and Financial Management.
 Financial and accounting module that covers:
 --------------------------------------------
 General accountings
-Cost / Analytic accounting
+Cost/Analytic accounting
 Third party accounting
 Taxes management
 Budgets

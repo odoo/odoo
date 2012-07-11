@@ -46,7 +46,7 @@ Note that:
                 then select the ones you want to choose, click on the print icon and select the option
                 'Leaves Summary'
     - The wizard allows you to choose if you want to print either the Approved & Confirmed holidays or both. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
-                Administration / Users / Users
+                Settings/Users/Users
                 for example, you maybe will do it for the user 'admin'.
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],

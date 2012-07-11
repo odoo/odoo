@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Contract On Project",
+    "name" : "Contract on Project",
     "version": "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
