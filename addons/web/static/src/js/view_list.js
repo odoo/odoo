@@ -405,20 +405,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             if (column.modifiers) {
                 var modifiers = JSON.parse(column.modifiers);
                 column.modifiers_for = function (fields) {
-                    if (!modifiers.invisible) {
-                        return {};
+                    var out = {};
+
+                    for (var attr in modifiers) {
+                        if (!modifiers.hasOwnProperty(attr)) { continue; }
+                        var modifier = modifiers[attr];
+                        out[attr] = _.isBoolean(modifier)
+                            ? modifier
+                            : domain_computer(modifier, fields);
                     }
-                    return {
-                        'invisible': domain_computer(modifiers.invisible, fields)
-                    };
+
+                    return out;
                 };
                 if (modifiers['tree_invisible']) {
                     column.invisible = '1';
                 } else {
                     delete column.invisible;
                 }
+                column.modifiers = modifiers;
             } else {
                 column.modifiers_for = noop;
+                column.modifiers = {};
             }
             return column;
         };
@@ -430,10 +437,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (grouped) {
             this.columns.unshift({
                 id: '_group', tag: '', string: _t("Group"), meta: true,
-                modifiers_for: function () { return {}; }
+                modifiers_for: function () { return {}; },
+                modifiers: {}
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
-                modifiers_for: function () { return {}; }
+                modifiers_for: function () { return {}; },
+                modifiers: {}
             });
         }
 

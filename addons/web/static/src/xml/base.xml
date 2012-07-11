@@ -641,6 +641,7 @@
 <tr t-name="ListView.row" t-att-class="row_parity"
         t-att-data-id="record.get('id')"
         t-att-style="view.style_for(record)">
+    <t t-set="asData" t-value="record.toForm().data"/>
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 
@@ -652,10 +653,10 @@
         <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
     <t t-foreach="columns" t-as="column">
-        <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
+        <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
+        <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe-field-cell' + (align ? ' oe_number' : '')
-                         + (column.tag === 'button' ? ' oe-button' : '')"
+            t-attf-class="oe-field-cell #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
         </td>
