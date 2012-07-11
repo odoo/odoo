@@ -73,7 +73,7 @@ class hr_expense_expense(osv.osv):
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, string='Total Amount'),
-        'invoice_id': fields.many2one('account.invoice', "Employee's Invoice"),
+        'voucher_id': fields.many2one('account.voucher', "Employee's Voucher"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -131,95 +131,86 @@ class hr_expense_expense(osv.osv):
         return True
 
     def invoice(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-        inv_ids = []
+        wkf_service = netsvc.LocalService("workflow")
+        
+        if not ids: return []
+        exp = self.browse(cr, uid, ids[0], context=context)
+        
+        voucher_ids = []
         for id in ids:
-            wf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
-            inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
+            wkf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
+            voucher_ids.append(self.browse(cr, uid, id, context=context).voucher_id.id)
+        res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
+        res_id = res and res[1] or False
         return {
-            'name': _('Supplier Invoices'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': [res and res[1] or False],
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
+            'res_model': 'account.voucher',
+            'views': [(res_id, 'form')],
+            'view_id': res_id,
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'nodestroy': True,
-            'target': 'current',
-            'res_id': inv_ids and inv_ids[0] or False,
+            'res_id': voucher_ids and voucher_ids[0] or False,
+            'close_after_process': True,
         }
-
-    def action_invoice_create(self, cr, uid, ids):
+    def action_voucher_create(self, cr, uid, ids, context=None):
         res = False
         invoice_obj = self.pool.get('account.invoice')
         property_obj = self.pool.get('ir.property')
         sequence_obj = self.pool.get('ir.sequence')
-        analytic_journal_obj = self.pool.get('account.analytic.journal')
         account_journal = self.pool.get('account.journal')
-        for exp in self.browse(cr, uid, ids):
+        voucher_obj = self.pool.get('account.voucher')
+        
+        for exp in self.browse(cr, uid, ids, context=None):
             company_id = exp.company_id.id
             lines = []
+            total = 0.0
             for l in exp.line_ids:
-                tax_id = []
                 if l.product_id:
                     acc = l.product_id.product_tmpl_id.property_account_expense
                     if not acc:
                         acc = l.product_id.categ_id.property_account_expense_categ
-                    tax_id = [x.id for x in l.product_id.supplier_taxes_id]
                 else:
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase, `property_account_expense_categ`'))
+                
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc.id,
-                    'price_unit': l.unit_amount,
-                    'quantity': l.unit_quantity,
-                    'uos_id': l.uom_id.id,
-                    'product_id': l.product_id and l.product_id.id or False,
-                    'invoice_line_tax_id': tax_id and [(6, 0, tax_id)] or False,
-                    'account_analytic_id': l.analytic_account.id,
+                    'amount': l.unit_amount,
+                    'type': 'dr'
                 }))
+                total += l.unit_amount
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
-            payment_term_id = exp.employee_id.address_home_id.property_payment_term.id
-            inv = {
+            voucher = {
                 'name': exp.name,
-                'reference': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
+                'number': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
                 'account_id': acc,
-                'type': 'in_invoice',
+                'type': 'purchase',
                 'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
-                'origin': exp.name,
-                'invoice_line': lines,
+    #            'origin': exp.name,
+                'line_ids': lines,
                 'currency_id': exp.currency_id.id,
-                'payment_term': payment_term_id,
-                'fiscal_position': exp.employee_id.address_home_id.property_account_position.id
+                'amount': total
             }
-            if payment_term_id:
-                to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)
-                if to_update:
-                    inv.update(to_update['value'])
             journal = False
             if exp.journal_id:
-                inv['journal_id']=exp.journal_id.id
+                voucher['journal_id'] = exp.journal_id.id
                 journal = exp.journal_id
             else:
                 journal_id = invoice_obj._get_journal(cr, uid, context={'type': 'in_invoice', 'company_id': company_id})
                 if journal_id:
-                    inv['journal_id'] = journal_id
+                    voucher['journal_id'] = journal_id
                     journal = account_journal.browse(cr, uid, journal_id)
-            if journal and not journal.analytic_journal_id:
-                analytic_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')])
-                if analytic_journal_ids:
-                    account_journal.write(cr, uid, [journal.id],{'analytic_journal_id':analytic_journal_ids[0]})
-            inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
-            invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
-            self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
-            res = inv_id
+            voucher_id = voucher_obj.create(cr, uid, voucher, context)
+            aaa = self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'invoiced'})
+            res = voucher_id
         return res
 
 hr_expense_expense()

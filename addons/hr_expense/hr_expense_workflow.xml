@@ -51,8 +51,8 @@
             <field name="wkf_id" ref="wkf_expenses"/>
             <field name="name">invoice</field>
             <field name="kind">subflow</field>
-            <field name="subflow_id" ref="account.wkf"/>
-            <field name="action">action_invoice_create()</field>
+            <field name="subflow_id" ref="account_voucher.wkf"/>
+            <field name="action">action_voucher_create()</field>
         </record>
 
         <record id="t1" model="workflow.transition">
@@ -99,7 +99,7 @@
         <record id="t9" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_paid"/>
-            <field name="signal">subflow.paid</field>
+            <field name="signal">subflow.done</field>
             <field name="group_id" ref="base.group_hr_user"/>
         </record>
 

@@ -43,7 +43,7 @@ re-invoice your customer's expenses if your work by project.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
-    'depends': ['hr', 'account'],
+    'depends': ['hr', 'account_voucher'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
