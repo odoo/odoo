@@ -447,8 +447,7 @@ class mail_thread(osv.Model):
         return ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
 
     def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, count=False,
-                        get_ids=False, context=None):
+                        limit=100, offset=0, domain=None, count=False, context=None):
         """ OpenChatter feature: return thread messages ids according to the
             search domain given by ``message_search_get_domain``.
             
@@ -485,7 +484,7 @@ class mail_thread(osv.Model):
         return message_res
 
     def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, context=None):
+                        limit=100, offset=0, domain=None, context=None):
         """ OpenChatter feature: read the messages related to some threads.
             This method is used mainly the Chatter widget, to directly have
             read result instead of searching then reading.
@@ -493,7 +492,7 @@ class mail_thread(osv.Model):
             Please see message_search for more information about the parameters.
         """
         message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
-            limit, offset, context=context)
+            limit, offset, domain, context=context)
         messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
         
         """ Retrieve all attachments names """
@@ -846,7 +845,7 @@ class mail_thread(osv.Model):
 
     def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False,
                             type='notification', content_subtype='html', subtype=None, context=None):
-        if type in ['notification', 'reply']:
+        if type in ['notification', 'comment']:
             subject = None
         if content_subtype == 'html':
             body_html = body
