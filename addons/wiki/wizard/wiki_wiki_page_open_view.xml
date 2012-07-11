@@ -10,12 +10,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open Page" version="7.0">
-                    <header>
+                    <label string="Want to open a wiki page? "/>
+                    <footer>
                         <button name="open_wiki_page" string="Open Wiki Page" type="object"  class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <label string="Want to open a wiki page? "/>
+                    </footer>
              </form>
             </field>
         </record>

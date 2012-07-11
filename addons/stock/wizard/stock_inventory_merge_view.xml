@@ -8,13 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Merge Inventories" version="7.0">
-                    <header>
+                    <separator string="Merge Inventories" />
+                    <label string="Do you want to merge theses inventories?"/>
+                    <footer>
                         <button name="do_merge" string="Yes" type="object" icon="gtk-apply" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <separator string="Merge Inventories" />
-                    <label string="Do you want to merge theses inventories?"/>
+                    </footer>
                 </form>
             </field>
         </record>
