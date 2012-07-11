@@ -41,14 +41,9 @@ This is the base module to manage the accounting chart for Luxembourg.
     'init_xml': [],
     'update_xml': [
         # basic accounting data
-        #'account.account.type-2009.csv',
         'account.account.type-2011.csv',
-        # memorial 2009 account chart - required for 2011+
-        # Change BRE to activate taxes and accounts 2011
-        #'account.account.template-2009.csv',
         'account.account.template-2011.csv',
         'account.tax.code.template-2011.csv',
-        #'account.chart.template-2009.csv',
         'account.chart.template-2011.csv',
         'account.tax.template-2011.csv',
         # Change BRE: adds fiscal position
