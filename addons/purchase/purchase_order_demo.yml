@@ -3,74 +3,79 @@
     partner_id: base.res_partner_1
     invoice_method: order
     order_line:
-      - product_id: product.product_product_4
-        price_unit: 150.50
+      - product_id: product.product_product_15
+        price_unit: 79.80
+        product_qty: 15.0
+      - product_id: product.product_product_25
+        price_unit: 2868.70
         product_qty: 5.0
-      - product_id: product.product_product_3
-        price_unit: 450.20
-        product_qty: 2.0
+      - product_id: product.product_product_27
+        price_unit: 3297.20
+        product_qty: 4.0
 
 -
   !record {model: purchase.order, id: order_purchase2}:
     partner_id: base.res_partner_3
     invoice_method: picking
     order_line:
-      - product_id: product.product_product_5
-        price_unit: 900
+      - product_id: product.product_product_31
+        price_unit: 132.50
+        product_qty: 20.0
+      - product_id: product.product_product_29
+        price_unit: 89
+        product_qty: 5
 
 -
   !record {model: purchase.order, id: order_purchase3}:
     partner_id: base.res_partner_12
     order_line:
       - product_id: product.product_product_2
-        price_unit: 900.20
+        price_unit: 25.50
         product_qty: 10.0
-      - product_id: product.product_product_1
-        price_unit: 100.00
-        product_qty: 5
 
 -
   !record {model: purchase.order, id: order_purchase4}:
     partner_id: base.res_partner_4
     order_line:
-      - product_id: product.product_product_4
-        price_unit: 40
-        product_qty: 5
-      - product_id: product.product_product_7
-        price_unit: 45
-        product_qty: 15.0
+      - product_id: product.product_product_14
+        price_unit: 85.50
+        product_qty: 6.0
+      - product_id: product.product_product_20
+        price_unit: 1690
+        product_qty: 5.0
       - product_id: product.product_product_6
-        price_unit: 45
-        product_qty: 15
+        price_unit: 800
+        product_qty: 7.0
 
 -
   !record {model: purchase.order, id: order_purchase5}:
     partner_id: base.res_partner_19
     order_line:
-      - product_id: product.product_product_9
+      - product_id: product.product_product_22
         product_qty: 3
-      - product_id: product.product_product_10
-        product_qty: 13
-      - product_id: product.product_product_11
-        product_qty: 10
+      - product_id: product.product_product_24
+        product_qty: 3
 
 -
   !record {model: purchase.order, id: order_purchase6}:
     partner_id: base.res_partner_22
     order_line:
-      - product_id: product.product_product_12
-        product_qty: 10
-      - product_id: product.product_product_17
-        product_qty: 10
-      - product_id: product.product_product_18
-        product_qty: 10
+      - product_id: product.product_product_38
+        price_unit: 58
+        product_qty: 9
+      - product_id: product.product_product_39
+        product_qty: 3
+        price_unit: 65
+      - product_id: product.product_product_44
+        product_qty: 4
+        price_unit: 154.5
 
 -
   !record {model: purchase.order, id: order_purchase7}:
-    partner_id: base.res_partner_12
+    partner_id: base.res_partner_16
     order_line:
-      - product_id: product.product_product_2
+      - product_id: product.product_product_12
         product_qty: 5
-      - product_id: product.product_product_1
+      - product_id: product.product_product_34
         product_qty: 15
 
