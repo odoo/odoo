@@ -47,8 +47,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     });
 
-    var fetch = function(model, fields, domain){
-        return new instance.web.Model(model).query(fields).filter(domain).all()
+    var fetch = function(model, fields, domain, ctx){
+        return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
     };
     
     // The PosModel contains the Point Of Sale's representation of the backend.
@@ -112,7 +112,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             this.get('orders').bind('remove', function(){ self.on_removed_order(); });
             
-            // We fetch the backend data on the server asynchronously
+            // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
+            // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
 
             var user_def = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
                 .pipe(function(users){
@@ -144,14 +145,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 .pipe(function(result){
                     return self.set({'categories': result});
                 });
-            
-            var prod_def = fetch( 
-                'product.product', 
-                ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
-                [['pos_categ_id','!=', false]] 
-                ).then(function(result){
-                    self.set({'product_list': result});
-                });
 
             var uom_def = fetch(    //unit of measure
                 'product.uom',
@@ -172,25 +165,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 [['ean13', '!=', false]]
                 ).then(function(result){
                     self.set({'user_list':result});
-                });
-
-
-            // associate the products with their categories
-            var prod_process_def = $.when(cat_def, prod_def)
-                .pipe(function(){
-                    var product_list = self.get('product_list');
-                    var categories = self.get('categories');
-                    var cat_by_id = {};
-                    for(var i = 0; i < categories.length; i++){
-                        cat_by_id[categories[i].id] = categories[i];
-                    }
-                    //set the parent in the category
-                    for(var i = 0; i < categories.length; i++){
-                        categories[i].parent_category = cat_by_id[categories[i].parent_id[0]];
-                    }
-                    for(var i = 0; i < product_list.length; i++){
-                        product_list[i].pos_category = cat_by_id[product_list[i].pos_categ_id[0]];
-                    }
                 });
 
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
@@ -236,6 +210,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 return shop_def = fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
                             }).pipe(function(shops){
                                 self.set('shop',shops[0]);
+                                return fetch( 
+                                    'product.product', 
+                                    //context {pricelist: shop.pricelist_id[0]} 
+                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                                    [['pos_categ_id','!=', false]],
+                                    {pricelist: shop.pricelist_id[0]} // context for price
+                                    );
+                            }).pipe( function(product_list){
+                                self.set({'product_list': product_list});
                             });
 
                         var bank_def = fetch(
@@ -277,12 +260,32 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return session_data_def;
                 });
 
+            console.log('Yhaoooefe');
+            // associate the products with their categories
+            var prod_process_def = $.when(cat_def, session_def)
+                .pipe(function(){
+                    var product_list = self.get('product_list');
+                    var categories = self.get('categories');
+                    var cat_by_id = {};
+                    for(var i = 0; i < categories.length; i++){
+                        cat_by_id[categories[i].id] = categories[i];
+                    }
+                    //set the parent in the category
+                    for(var i = 0; i < categories.length; i++){
+                        categories[i].parent_category = cat_by_id[categories[i].parent_id[0]];
+                    }
+                    for(var i = 0; i < product_list.length; i++){
+                        product_list[i].pos_category = cat_by_id[product_list[i].pos_categ_id[0]];
+                    }
+                });
+
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, prod_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
+            $.when(cat_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
                 .then(function(){ 
                     self.build_categories(); 
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
-                    //self.log_loaded_data();
+                    self.log_loaded_data();
+                    console.log("YHAAAA");
                     self.ready.resolve();
                 },function(){
                     //we failed to load some backend data, or the backend was badly configured.
@@ -324,6 +327,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
 
+        // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
         push_order: function(record) {
             var self = this;
             return this.dao.add_operation(record).pipe(function(){

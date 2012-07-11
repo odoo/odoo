@@ -8,9 +8,9 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
         <field name="arch" type="xml">
-            <group name="preferences" position="inside">
+            <xpath expr="//group[@name='preferences']" position="inside">
                 <field name="pos_config" />
-            </group>
+            </xpath>
         </field>
     </record>
 

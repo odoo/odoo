@@ -16,7 +16,7 @@
             <field name="model">pos.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Orders" layout="manual">
+                <form string="Point of Sale Orders" version="7.0"> 
                     <div class="oe_form_topbar">
                         <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                         <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
@@ -27,7 +27,7 @@
                                 <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                             </div>
                     </div>
-                    <sheet layout="auto">
+                    <sheet> 
                     <group col="4" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
@@ -650,15 +650,17 @@
             <field name="model">pos.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Product PoS Categories">
-                    <group colspan="4" col="6">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="sequence"/>
-                    </group>
-                    <group colspan="2" col="1">
-                      <field name="category_image" widget='image' nolabel="1"/>
-                    </group>
+                <form string="Product PoS Categories" version="7.0">
+                    <sheet>
+                        <field name="category_image" widget='image' class="oe_avatar oe_right"/>
+                        <div class="oe_left">
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_id"/>
+                                <field name="sequence"/>
+                            </group>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -761,22 +763,24 @@
             <field name="model">pos.config</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Configuration" layout="manual">
-                    <div class="oe_form_topbar">
+                <form string="Point of Sale Configuration" version="7.0">
+                    <header>
                         <button string="Set to Active" name="set_active" type="object" states="inactive,deprecated"/>
                         <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
                         <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
                         </div>
-                    </div>
+                    </header>
 
-                    <sheet layout="auto">
+                    <sheet>
+                        <group>
                         <field name="name"/>
                         <field name="shop_id" widget="selection" />
                         <field name="journal_id" widget="selection" />
                         <field name="sequence_id" readonly="1"/>
                         <field name="group_by" />
+                        </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">
                             <tree string="Journals">
@@ -787,16 +791,21 @@
                                 <field name="closing_control" />
                             </tree>
                         </field>
-                        <separator string="Material Interfaces" colspan="4"/>
-                        <field name="iface_self_checkout" />
-                        <field name="iface_websql" />
-                        <field name="iface_led" />
-                        <field name="iface_cashdrawer" />
-                        <field name="iface_payment_terminal" />
-                        <field name="iface_electronic_scale" />
-                        <field name="iface_barscan" />
-                        <field name="iface_vkeyboard" />
-                        <field name="iface_print_via_proxy" />
+                        <group string="Material Interfaces" >
+                            <group>
+                                <field name="iface_self_checkout" />
+                                <field name="iface_websql" />
+                                <field name="iface_led" />
+                                <field name="iface_cashdrawer" />
+                                <field name="iface_payment_terminal" />
+                            </group>
+                            <group>
+                                <field name="iface_electronic_scale" />
+                                <field name="iface_barscan" />
+                                <field name="iface_vkeyboard" />
+                                <field name="iface_print_via_proxy" />
+                            </group>
+                        </group>
                     </sheet>
 
                 </form>
@@ -869,8 +878,8 @@
             <field name="model">pos.session</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Session" layout="manual">
-                    <div class="oe_form_topbar">
+                <form string="Point of Sale Session" version="7.0">  
+                    <header>
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" /> 
                         <button name="cashbox_control" type="workflow" string="End of Session" states="opened" /> 
                         <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control,opened" />
@@ -878,14 +887,14 @@
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
                         </div>
-                    </div>
-                    <sheet layout="auto">
+                    </header>
+                    <sheet>
 
-                    <group colspan="4" col="4">
+                    <group>
                         <field name="config_id"/>
                         <field name="has_opening_control" invisible="1" />
                         <field name="has_closing_control" invisible="1" />
-            			<group colspan="2" col="2">
+            			<group>
             				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
             				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
                             <button name="open_frontend_cb" type="object" string="Open Point Of Sale" states="opened" />
