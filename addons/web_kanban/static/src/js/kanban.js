@@ -198,15 +198,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                if (_.isEmpty(records)) {
-                    self.no_result();
-                    def.reject();
-                } else {
-                    var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
-                    self.do_add_groups([kgroup]).then(function() {
-                        def.resolve();
-                    });
-                }
+                var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                self.do_add_groups([kgroup]).then(function() {
+                    if (_.isEmpty(records)) {
+                        self.no_result();
+                    }
+                    def.resolve();
+                });
             }).then(null, function() {
                 def.reject();
             });
