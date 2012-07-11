@@ -26,7 +26,7 @@
     'description': """The module adds google contact in partner address and add google calendar events details in Meeting.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'import_base', 'google_base_account','crm'],
+    'depends': ['base', 'import_base', 'google_base_account', 'base_calendar'],
     'init_xml': [],
     'update_xml': ['security/ir.model.access.csv',
                 'sync_google_calendar_view.xml',
