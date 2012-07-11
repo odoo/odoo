@@ -287,6 +287,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
             }
             this.$buttons.find('.oe_list_add')
+                    .wrap("<div></div>")
+                    .addClass('oe_bounce_button_left')
                     .click(this.proxy('do_add_record'))
                     .prop('disabled', grouped && this.options.editable);
             this.$buttons.on('click', '.oe_list_button_import', function() {
@@ -983,6 +985,12 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     }
                     self.row_clicked(e);
                 }
+                else{
+                    if (opts.options.$buttons){
+                    var bounce_val = $(opts.options.$buttons.find('.oe_list_add'));
+                    self.view.do_bounce(bounce_val);
+                    }
+                    }
             });
     },
     row_clicked: function (e, view) {
