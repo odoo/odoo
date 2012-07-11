@@ -984,13 +984,12 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw "Could not find id in dataset"
                     }
                     self.row_clicked(e);
-                }
-                else{
-                    if (opts.options.$buttons){
-                    var bounce_val = $(opts.options.$buttons.find('.oe_list_add'));
-                    self.view.do_bounce(bounce_val);
+                } else {
+                    if (opts.options.$buttons) {
+                        var create_btn = $(opts.options.$buttons.find('.oe_list_add'));
+                        self.view.do_bounce(create_btn);
                     }
-                    }
+               }
             });
     },
     row_clicked: function (e, view) {
