@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Split Move" version="7.0">
-                <header>
-                    <button name="split" string="Ok" type="object" class="oe_highlight" />
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
                 <separator string="Quantity to Leave in the Current Pack"/>
                 <group>
                     <field name="quantity"/>
                 </group>
+                <footer>
+                    <button name="split" string="Ok" type="object" class="oe_highlight" />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>
