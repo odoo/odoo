@@ -127,20 +127,15 @@
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
                         <t t-if="display['show_delete']">
-<!--
-                            <t t-if="thread._is_author(record.user_id[0])">
--->
-                            <li><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
-<!--
-                            </t>
--->
+                                <li t-if="record.is_author"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         </t>
-                        <t t-if="display['show_hide']">
-                            <li><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
-                            <li><a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
-                        </t>
-                        <li t-if="record.type == 'email'"><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Repzefly</a></li>
+                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
+                        <li t-if="display['show_hide']">
+                            <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
+                        </li>
+                        <li t-if="record.type == 'email'"><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
                         <li t-if="record.type == 'email'"><a href="#" class="oe_mail_msg_details">Details</a></li>
+                        <li><a href="#" class="oe_mail_msg_debug">Debug data</a></li>
                     </ul>
                 </span>
                 <!-- message itself -->
