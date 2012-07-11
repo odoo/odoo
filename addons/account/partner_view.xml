@@ -79,11 +79,12 @@
                     <group col="4">
                         <group string="Customer Accounting Properties" col="4">
                             <field name="property_account_receivable" groups="account.group_account_invoice" />
-                            <field name="property_account_position" widget="selection"/>
                             <field name="property_payment_term" widget="selection"/>
+                            <field name="property_account_position" widget="selection"/>
                         </group>
                         <group string="Supplier Accounting Properties" col="4">
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
+                            <field name="property_supplier_payment_term" widget="selection"/>
                         </group>
                         <group string="Customer Credit" col="4">
                             <field name="credit"/>

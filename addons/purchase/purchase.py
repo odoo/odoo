@@ -203,6 +203,7 @@ class purchase_order(osv.osv):
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums",help="The total amount"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
+        'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
@@ -271,12 +272,17 @@ class purchase_order(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:
-            return {'value':{'fiscal_position': False}}
+            return {'value': {
+                'fiscal_position': False,
+                'payment_term': False,
+                }}
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
         supplier = partner.browse(cr, uid, partner_id)
-        pricelist = supplier.property_product_pricelist_purchase.id
-        fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
-        return {'value':{'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
+        return {'value': {
+            'pricelist_id': supplier.property_product_pricelist_purchase.id,
+            'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
+            'payment_term': supplier.property_supplier_payment_term.id or False,
+            }}
 
     def view_invoice(self, cr, uid, ids, context=None):
         '''
@@ -462,7 +468,7 @@ class purchase_order(osv.osv):
                 'invoice_line': [(6, 0, inv_lines)],
                 'origin': order.name,
                 'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-                'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
+                'payment_term': order.payment_term.id or False,
                 'company_id': order.company_id.id,
             }
             inv_id = inv_obj.create(cr, uid, inv_data, context=context)
@@ -1070,7 +1076,8 @@ class procurement_order(osv.osv):
                 'pricelist_id': pricelist_id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
+                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
+                'payment_term': partner.property_supplier_payment_term.id or False,
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
