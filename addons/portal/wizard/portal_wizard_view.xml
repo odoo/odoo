@@ -17,18 +17,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Portal Access" version="7.0">
-                    <header>
-                        <button string="Send Invitations"
-                            name="action_create" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />    
-                    </header>
                     <group col="4">
                         <field name="portal_id" widget="selection"/>
                     </group>
                     <field name="user_ids"/>
                     <label string="The following text will be included in the welcome email sent to users."/>
                     <field name="message"/>
+                    <footer>
+                        <button string="Send Invitations"
+                            name="action_create" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />    
+                    </footer>
                 </form>
             </field>
         </record>
