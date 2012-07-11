@@ -875,7 +875,7 @@
     </span>
 </t>
 <t t-name="FieldEmail">
-    <span class="oe_form_field oe_form_field_email oe_form_field_with_button" t-att-style="widget.node.attrs.style">
+    <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri" target="_blank"/>
         <t t-if="!widget.get('effective_readonly')">
             <div>
@@ -892,11 +892,6 @@
 <t t-name="FieldUrl" t-extend="FieldEmail">
     <t t-jquery="span:first">
         this.removeClass('oe_form_field_email').addClass('oe_form_field_url');
-    </t>
-    <t t-jquery="button.oe_button" t-operation="replace">
-        <button class="oe_button" tabindex="-1" type="button" title="Open this resource">
-            <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
-        </button>
     </t>
 </t>
 <t t-name="FieldText">
@@ -1472,11 +1467,11 @@
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
     </t>
     <t t-if="multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save &amp; Close</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
     </t>
     <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
 </t>
