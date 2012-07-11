@@ -51,7 +51,6 @@ This is the base module to manage the accounting chart for Luxembourg.
         'account.fiscal.position.tax.template-2011.csv',
         # configuration wizard, views, reports...
         'l10n_lu_wizard.xml',
-        'account.tax.template.csv',
         'l10n_lu_view.xml',
         'wizard/print_vat_view.xml'
     ],
