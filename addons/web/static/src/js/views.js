@@ -140,7 +140,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.dialog_title = action.name;
             this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
-            this.dialog_viewmanager.$element.addClass("oe_view_manager_" + (action.target || 'current'));
             this.dialog.open();
         } else  {
             this.dialog_stop();
@@ -154,7 +153,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
             this.breadcrumb.push_viewmanager(inner_widget);
             this.inner_widget.appendTo(this.$element);
-            this.inner_widget.$element.addClass("oe_view_manager_" + (action.target || 'current'));
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -644,6 +642,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_debug_view').change(this.on_debug_changed);
+        this.$element.addClass("oe_view_manager_" + (this.action.target || 'current'));
 
         if (this.action.help && !this.flags.low_profile) {
             var Users = new instance.web.DataSet(self, 'res.users'),
