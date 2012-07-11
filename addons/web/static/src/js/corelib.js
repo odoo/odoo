@@ -711,10 +711,10 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             $el = $(_.str.trim(instance.web.qweb.render(
                 this.template, {widget: this})));
         } else {
-            var attrs = _.extend({}, getValue(this, 'attributes') || {});
+            var attrs = _.extend({}, this.attributes || {});
             if (this.id) { attrs.id = this.id; }
             if (this.className) { attrs['class'] = this.className; }
-            $el = $(this.make(this.tagName, attrs))
+            $el = $(this.make(this.tagName, attrs));
         }
         var $oldel = this.$el;
         this.setElement($el);
