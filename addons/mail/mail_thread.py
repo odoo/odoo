@@ -919,13 +919,12 @@ class mail_thread(osv.Model):
         # Trying to unsubscribe somebody not in subscribers: returns False
         # if special management is needed; allows to know that an automatically
         # subscribed user tries to unsubscribe and allows to warn him
-        mail_thread_model = self.pool.get('mail.thread')
-        if not user_ids and not uid in mail_thread_model.message_get_subscribers(cr, uid, ids, context=context):
-            return False
-        subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
+        subscription_obj = self.pool.get('mail.subscription')
         to_delete_sub_ids = subscription_obj.search(cr, uid,
                         ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
+        if not to_delete_sub_ids:
+            return False
         return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
 
     def message_subscription_hide(self, cr, uid, ids, subtype=None, context=None):
