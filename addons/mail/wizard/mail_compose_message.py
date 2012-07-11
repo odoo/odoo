@@ -254,7 +254,7 @@ class mail_compose_message(osv.TransientModel):
                 active_model = mail_wiz.model
                 active_ids = [int(mail_wiz.res_id)]
             active_model_pool = self.pool.get(active_model)
-            if hasattr(active_model_pool, '_inherit') and 'mail.thread' in active_model_pool._inherit:
+            if hasattr(active_model_pool, 'message_append'):
                 mail_thread_enabled = True
             else:
                 mail_thread_enabled = False
