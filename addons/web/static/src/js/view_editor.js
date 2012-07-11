@@ -998,7 +998,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         };
         var action_manager = new instance.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
-            var controller = action_manager.dialog_viewmanager.views['form'].controller;
+            var controller = action_manager.dialog_widget.views['form'].controller;
             controller.on_button_cancel.add_last(function(){
                 action_manager.destroy()
             });

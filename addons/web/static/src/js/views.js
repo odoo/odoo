@@ -13,7 +13,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.inner_action = null;
         this.inner_widget = null;
         this.dialog = null;
-        this.dialog_viewmanager = null;
+        this.dialog_widget = null;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -21,8 +21,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     dialog_stop: function () {
         if (this.dialog) {
-            this.dialog_viewmanager.destroy();
-            this.dialog_viewmanager = null;
+            this.dialog_widget.destroy();
+            this.dialog_widget = null;
             this.dialog.destroy();
             this.dialog = null;
         }
@@ -135,11 +135,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if(on_close)
                     this.dialog.on_close.add(on_close);
             } else {
-                this.dialog_viewmanager.destroy();
+                this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this.dialog, action);
-            this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog_widget = new instance.web.ViewManagerAction(this.dialog, action);
+            this.dialog_widget.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
             this.dialog_stop();
