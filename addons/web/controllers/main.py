@@ -353,25 +353,15 @@ class WebClient(openerpweb.Controller):
         langs = lang.split(separator)
         langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
 
-        transs = {}
-        for addon_name in mods:
-            transl = {"messages":[]}
-            transs[addon_name] = transl
-            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
-            for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
-                if not os.path.exists(f_name):
-                    continue
-                try:
-                    with open(f_name) as t_file:
-                        po = babel.messages.pofile.read_po(t_file)
-                except Exception:
-                    continue
-                for x in po:
-                    if x.id and x.string and "openerp-web" in x.auto_comments:
-                        transl["messages"].append({'id': x.id, 'string': x.string})
-        return {"modules": transs,
-                "lang_parameters": lang_obj}
+        messages = {}
+        for mod in mods:
+            messages[mod] = {"messages":[]}
+            proxy = req.session.proxy("translation")
+            trans = proxy.load(req.session._db, [mod], langs, "web")
+            if trans:
+                messages[mod] = trans
+        return {"modules": {'messages': messages},
+                "lang_parameters": lang_obj} 
 
     @openerpweb.jsonrequest
     def version_info(self, req):
