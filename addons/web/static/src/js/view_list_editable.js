@@ -104,6 +104,13 @@ openerp.web.list_editable = function (instance) {
                 this.$buttons
                     .off('click', 'button.oe_list_save')
                     .on('click', 'button.oe_list_save', this.proxy('saveEdition'));
+                this.$element
+                    .off('click', 'tbody tr')
+                    .on('click', 'tbody tr', function () {
+                        if (!self.editor.isEditing()) {
+                            self.startEdition();
+                        }
+                    });
                 // Editor is not restartable due to formview not being
                 // restartable
                 this.editor = this.makeEditor();

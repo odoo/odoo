@@ -1006,9 +1006,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 e.stopPropagation();
             })
             .delegate('tr', 'click', function (e) {
-                e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
                 if (row_id !== undefined) {
+                    e.stopPropagation();
                     if (!self.dataset.select_id(row_id)) {
                         throw "Could not find id in dataset"
                     }
