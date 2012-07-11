@@ -2250,6 +2250,11 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         } else {
             this.$textarea.attr('disabled', 'disabled');
         }
+        this.$element.keyup(function (e) {
+            if (e.which === $.ui.keyCode.ENTER) {
+                e.stopPropagation();
+            }
+        });
         this.setupFocus(this.$textarea);
     },
     set_value: function(value_) {
