@@ -3196,6 +3196,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }));
         this.on('edit:before', this, this.proxy('_beforeEdit'));
         this.on('save:before cancel:before', this, this.proxy('_beforeUnEdit'));
+
+        this.records
+            .bind('add', this.proxy("changedRecords"))
+            .bind('edit', this.proxy("changedRecords"))
+            .bind('remove', this.proxy("changedRecords"));
     },
     start: function () {
         var ret = this._super();
@@ -3203,6 +3208,9 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             .off('mousedown.handleButtons')
             .on('mousedown.handleButtons', 'table button', this.proxy('_buttonDown'));
         return ret;
+    },
+    changedRecords: function () {
+        this.o2m.trigger_on_change();
     },
     is_valid: function () {
         var form = this.editor.form;
@@ -3276,13 +3284,19 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             readonly: self.o2m.get("effective_readonly")
         });
     },
-    do_button_action: function () {
+    do_button_action: function (name, id, callback) {
+        if (!_.isNumber(id)) {
+            instance.webclient.notification.warn(
+                _t("Action Button"),
+                _t("The o2m record must be saved before an action can be used"));
+            return;
+        }
         var parent_form = this.o2m.view;
-        var self = this, args = arguments;
-        return this.ensureSaved().pipe(function () {
+        var self = this;
+        this.ensureSaved().pipe(function () {
             return parent_form.do_save();
         }).then(function () {
-            self.handleButton.apply(self, args);
+            self.handleButton(name, id, callback);
         });
     },
 
