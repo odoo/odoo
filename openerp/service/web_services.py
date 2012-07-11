@@ -777,6 +777,55 @@ class report_spool(netsvc.ExportService):
         else:
             raise Exception, 'ReportNotFound'
 
+class translation(netsvc.ExportService):
+
+    def __init__(self, name="translation"):
+        netsvc.ExportService.__init__(self, name)
+    
+    def exp_load(self, db, modules, langs, flag=None, context=None):
+        translated_data = []
+        cr = pooler.get_db(db).cursor()
+        for module_name in modules:
+            modpath = openerp.modules.get_module_path(module_name)
+            if not modpath:
+                # unable to find the module. we skip
+                continue
+            for lang in langs:
+                iso_lang = tools.get_iso_codes(lang)
+                f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
+                context2 = context and context.copy() or {}
+                if f and '_' in iso_lang:
+                    iso_lang2 = iso_lang.split('_')[0]
+                    f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
+                    if f2:
+                        _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
+                        translated_data.append(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, context=context))
+                        context2['overwrite'] = True
+                # Implementation notice: we must first search for the full name of
+                # the language derivative, like "en_UK", and then the generic,
+                # like "en".
+                if (not f) and '_' in iso_lang:
+                    iso_lang = iso_lang.split('_')[0]
+                    f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
+                if f:
+                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
+                    translated_data.append(tools.trans_load(cr, f, lang, verbose=False, flag=flag, context=context2))
+                elif iso_lang != 'en':
+                    _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
+        cr.commit()
+        cr.close()
+        return translated_data
+    
+    def dispatch(self, method, params):
+        if method in ['load']:
+            # No security check for these methods
+            pass
+        else:
+            raise KeyError("Method not found: %s" % method)
+        fn = getattr(self, 'exp_'+method)
+        return fn(*params)
+
+translation()
 
 def start_web_services():
     db()
@@ -784,6 +833,7 @@ def start_web_services():
     objects_proxy()
     wizard()
     report_spool()
+    translation()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

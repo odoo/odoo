@@ -43,6 +43,7 @@ import misc
 from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
+import babel.messages.pofile
 
 _logger = logging.getLogger(__name__)
 
@@ -842,12 +843,22 @@ def trans_generate(lang, modules, cr):
 
     return out
 
-def trans_load(cr, filename, lang, verbose=True, context=None):
+def trans_load(cr, filename, lang, verbose=True, flag=None, context=None):
     try:
         fileobj = misc.file_open(filename)
+        pool = pooler.get_pool(cr.dbname)
+        traslation_obj = pool.get('ir.translation')
         _logger.info("loading %s", filename)
-        fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
+        if flag == 'web':
+            transl = {"messages":[]}
+            po = babel.messages.pofile.read_po(fileobj)
+            for x in po:
+                if x.id and x.string and "openerp-web" in x.auto_comments:
+                    transl["messages"].append({'id': x.id, 'string': x.string})
+            return transl
+        else:
+            fileformat = os.path.splitext(filename)[-1][1:].lower()
+            r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
