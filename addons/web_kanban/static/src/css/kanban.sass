@@ -364,16 +364,21 @@
         top: -8px
         right: 3px
         cursor: pointer
-        > span
-            visibility: hidden
         &:hover
             text-decoration: none
         .oe_dropdown_menu
             left: 0
             top: 28px
             min-width: 160px
-    .oe_dropdown_kanban.oe_opened > span
-        visibility: visible
+    .oe_kanban_header
+        .oe_dropdown_kanban
+            display: none
+    .oe_kanban_column
+        .oe_dropdown_kanban
+            &.oe_opened > span
+                visibility: visible
+            > span
+                visibility: hidden
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker
