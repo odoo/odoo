@@ -91,162 +91,155 @@
                             <label string="at" class="oe_inline" attrs="{'invisible': [('location', '=', False)]}"/> <field name="location" placeholder="Location" class="oe_inline"/>
                         </h2>
                     </group>
-                    <group>
-                        <h2>
-                            <label for="duration" string="Duration" />
-                            
-                        </h2>
-                    </group>
-                <group colspan="4" col="4">
-                    <group colspan="2">
-                        <field name="user_id" />
-                        <field name="section_id" widget="selection"/>
-                        <field name="partner_id" string="Partner"                            on_change="onchange_partner_id(partner_id)" />
-                        <field name="email_from"/>
-                    </group>
-                    <group> 
-                        <field name="date_deadline" 
-                                string="End Date" required="1"
-                                on_change="onchange_dates(date,False,date_deadline)"/>
-                        <field name="duration" widget="float_time"
-                                on_change="onchange_dates(date,duration,False,allday)"/>
-                        <field name="alarm_id" string="Reminder" widget="selection" />
-                        <field name="class" string="Privacy"/>
-                        <field name="show_as"/>
-                        <field name="categ_id" widget="selection"
-                            string="Meeting Type"
-                            domain="[('object_id.model', '=', 'crm.meeting')]" />
-                        <field name="rrule" invisible="1" readonly="1"/>
-                        <field name="recurrent_id" invisible="1"/>
-                        <field name="recurrent_uid" invisible="1"/>
-                    </group>
-                    <group colspan="2">
-                    </group>
-                </group>
-                <notebook>
-                    <page string="Invitation Detail">
-                        <button string="Invite People"
-                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            icon="terp-partner" type="action"
-                            attrs="{'readonly': [('state', '=', 'done')]}"
-                            context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
-                        <field name="attendee_ids" colspan="4"
-                            nolabel="1" widget="one2many" mode="tree">
-                            <tree string="Invitation details" editable="top">
-                                <field name="sent_by_uid" string="From"/>
-                                <field name="user_id" string="To"/>
-                                <field name="email" string="Mail To"/>
-                                <field name="role" />
-                                <field name="state" />
-                                <button name="do_tentative"
-                                    states="needs-action,declined,accepted"
-                                    string="Uncertain" type="object"
-                                    icon="terp-crm" />
-                                <button name="do_accept" string="Accept"
-                                    states="needs-action,tentative,declined"
-                                    type="object" icon="gtk-apply" />
-                                <button name="do_decline" string="Decline"
-                                    states="needs-action,tentative,accepted"
-                                    type="object" icon="gtk-cancel" />
-                                <button
-                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                    string="Delegate" type="action"
-                                    icon="gtk-sort-descending"
-                                    states="needs-action,tentative,declined,accepted"
-                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                            </tree>
-                            <form string="Invitation details" version="7.0">
-                                <notebook colspan="4">
-                                    <page string="Details">
-                                        <field name="email" />
-                                        <field name="rsvp" />
-                                        <field name="cutype" />
-                                        <field name="role" />
-                                        <separator colspan="4" string="" />
-                                        <group col="6" colspan="4">
-                                            <field name="state" />
-                                            <button name="do_tentative"
-                                                states="needs-action,declined,accepted"
-                                                string="Uncertain"
-                                                type="object"
-                                                icon="terp-crm" />
-                                            <button name="do_accept"
-                                                string="Accept"
-                                                states="needs-action,tentative,declined"
-                                                type="object"
-                                                icon="gtk-apply" />
-                                            <button name="do_decline"
-                                                string="Decline"
-                                                states="needs-action,tentative,accepted"
-                                                type="object"
-                                                icon="gtk-cancel" />
-                                            <button
-                                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                                string="Delegate"
-                                                type="action"
-                                                icon="gtk-sort-descending"
-                                                states="needs-action,tentative,declined,accepted"
-                                                context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                                        </group>
-                                    </page>
-                                    <page string="Other">
-                                        <field name="user_id"/>
-                                        <newline />
-                                    </page>
-                                </notebook>
-                            </form>
-                        </field>
-                    </page>
-                    <page string="Recurrence Options"><!-- attrs="{'invisible': [('recurrency','=',False)], 'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">-->
-                        <group col="4" colspan="4" name="rrule">
-                            <group col="4" colspan="4">
-                                <field name="rrule_type" string=" Recurrence Pattern" />
-                                <field name="interval" />
-                                <field name="end_type" />
-                                <label string=" " colspan="2" />
-                                <newline />
-                                <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
-                                <label string=" " colspan="2" />
-                                <newline />
-                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
-                                <newline />
-
-
-                            </group>
-                            <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
-                                <separator string="Choose day where repeat the meeting" colspan="8"/>
-                                <field name="mo" colspan="1" />
-                                <field name="tu" colspan="1" />
-                                <field name="we" colspan="1" />
-                                <field name="th" colspan="1" />
-                                <newline/>
-                                <field name="fr" colspan="1" />
-                                <field name="sa" colspan="1"  />
-                                <field name="su" colspan="1"  />
-                                <newline />
-                            </group>
-                            <group col="10" colspan="4"
-                                attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
-                                <separator string="Choose day in the month where repeat the meeting" colspan="12"/>
-                                <group col="2" colspan="1">
-                                    <field name="select1" />
-                                </group>
-                                <group col="2" colspan="1">
-                                    <field name="day"
-                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
-                                            'invisible' : [('select1','=','day')]}" />
-                                </group>
-                                <group col="3" colspan="1">
-                                    <field name="byday" string="The"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
-                                    <field name="week_list" nolabel="1"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
-                                </group>
-                            </group>
+                    <group colspan="4" col="4">
+                        <group colspan="2">
+                            <field name="user_id" />
+                            <field name="section_id" widget="selection"/>
+                            <field name="partner_id" string="Partner"                            on_change="onchange_partner_id(partner_id)" />
+                            <field name="email_from"/>
                         </group>
+                        <group> 
+                            <field name="date_deadline" 
+                                    string="End Date" required="1"
+                                    on_change="onchange_dates(date,False,date_deadline)"/>
+                            <field name="duration" widget="float_time"
+                                    on_change="onchange_dates(date,duration,False,allday)"/>
+                            <field name="alarm_id" string="Reminder" widget="selection" />
+                            <field name="class" string="Privacy"/>
+                            <field name="show_as"/>
+                            <field name="categ_id" widget="selection"
+                                string="Meeting Type"
+                                domain="[('object_id.model', '=', 'crm.meeting')]" />
+                            <field name="rrule" invisible="1" readonly="1"/>
+                            <field name="recurrent_id" invisible="1"/>
+                            <field name="recurrent_uid" invisible="1"/>
+                        </group>
+                        <group colspan="2">
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Invitation Detail">
+                            <button string="Invite People"
+                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                icon="terp-partner" type="action"
+                                attrs="{'readonly': [('state', '=', 'done')]}"
+                                context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
+                            <field name="attendee_ids" colspan="4"
+                                nolabel="1" widget="one2many" mode="tree">
+                                <tree string="Invitation details" editable="top">
+                                    <field name="sent_by_uid" string="From"/>
+                                    <field name="user_id" string="To"/>
+                                    <field name="email" string="Mail To"/>
+                                    <field name="role" />
+                                    <field name="state" />
+                                    <button name="do_tentative"
+                                        states="needs-action,declined,accepted"
+                                        string="Uncertain" type="object"
+                                        icon="terp-crm" />
+                                    <button name="do_accept" string="Accept"
+                                        states="needs-action,tentative,declined"
+                                        type="object" icon="gtk-apply" />
+                                    <button name="do_decline" string="Decline"
+                                        states="needs-action,tentative,accepted"
+                                        type="object" icon="gtk-cancel" />
+                                    <button
+                                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                        string="Delegate" type="action"
+                                        icon="gtk-sort-descending"
+                                        states="needs-action,tentative,declined,accepted"
+                                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                                </tree>
+                                <form string="Invitation details" version="7.0">
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="email" />
+                                            <field name="rsvp" />
+                                            <field name="cutype" />
+                                            <field name="role" />
+                                            <separator colspan="4" string="" />
+                                            <group col="6" colspan="4">
+                                                <field name="state" />
+                                                <button name="do_tentative"
+                                                    states="needs-action,declined,accepted"
+                                                    string="Uncertain"
+                                                    type="object"
+                                                    icon="terp-crm" />
+                                                <button name="do_accept"
+                                                    string="Accept"
+                                                    states="needs-action,tentative,declined"
+                                                    type="object"
+                                                    icon="gtk-apply" />
+                                                <button name="do_decline"
+                                                    string="Decline"
+                                                    states="needs-action,tentative,accepted"
+                                                    type="object"
+                                                    icon="gtk-cancel" />
+                                                <button
+                                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                                    string="Delegate"
+                                                    type="action"
+                                                    icon="gtk-sort-descending"
+                                                    states="needs-action,tentative,declined,accepted"
+                                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                                            </group>
+                                        </page>
+                                        <page string="Other">
+                                            <field name="user_id"/>
+                                            <newline />
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Recurrence Options"><!-- attrs="{'invisible': [('recurrency','=',False)], 'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">-->
+                            <group col="4" colspan="4" name="rrule">
+                                <group col="4" colspan="4">
+                                    <field name="rrule_type" string=" Recurrence Pattern" />
+                                    <field name="interval" />
+                                    <field name="end_type" />
+                                    <label string=" " colspan="2" />
+                                    <newline />
+                                    <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
+                                    <label string=" " colspan="2" />
+                                    <newline />
+                                    <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                    <newline />
 
-                    </page>
-                </notebook>
+
+                                </group>
+                                <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                    <separator string="Choose day where repeat the meeting" colspan="8"/>
+                                    <field name="mo" colspan="1" />
+                                    <field name="tu" colspan="1" />
+                                    <field name="we" colspan="1" />
+                                    <field name="th" colspan="1" />
+                                    <newline/>
+                                    <field name="fr" colspan="1" />
+                                    <field name="sa" colspan="1"  />
+                                    <field name="su" colspan="1"  />
+                                    <newline />
+                                </group>
+                                <group col="10" colspan="4"
+                                    attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
+                                    <separator string="Choose day in the month where repeat the meeting" colspan="12"/>
+                                    <group col="2" colspan="1">
+                                        <field name="select1" />
+                                    </group>
+                                    <group col="2" colspan="1">
+                                        <field name="day"
+                                            attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
+                                                'invisible' : [('select1','=','day')]}" />
+                                    </group>
+                                    <group col="3" colspan="1">
+                                        <field name="byday" string="The"
+                                            attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
+                                        <field name="week_list" nolabel="1"
+                                            attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <footer>
                     <field name="message_ids" widget="mail_thread"/>
