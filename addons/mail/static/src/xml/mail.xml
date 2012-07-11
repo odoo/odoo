@@ -146,6 +146,21 @@
                     <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
                         <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a>
                     </div>
+                    <ul class="oe_mail_invisible oe_mail_debug">
+                        <li>document: (<t t-raw="record.model"/>,<t t-raw="record.res_id"/>)</li>
+                        <li>id: <t t-raw="record.id"/></li>
+                        <li>type: <t t-raw="record.type"/></li>
+                        <li>content_subtype: <t t-raw="record.content_subtype"/></li>
+                        <li>parent_id: <t t-raw="record.parent_id"/></li>
+                        <li>email_from: <t t-raw="record.email_from"/></li>
+                        <li>email_to: <t t-raw="record.email_to"/></li>
+                        <li>email_cc: <t t-raw="record.email_cc"/></li>
+                        <li>email_bcc: <t t-raw="record.email_bcc"/></li>
+                        <li>reply_to: <t t-raw="record.reply_to"/></li>
+                        <li t-if="record.type == 'email'">message_id: <t t-raw="record.message_id"/></li>
+                        <li t-if="record.type == 'email'">references: <t t-raw="record.references"/></li>
+                    </ul>
+                    <div class="oe_clear"/>
                     <div class="oe_mail_msg_body">
                         <a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a>
                         <div class="oe_mail_msg_record_body"><t t-raw="record.body"/></div>

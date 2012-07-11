@@ -134,7 +134,7 @@ openerp.mail = function(session) {
 
         /** Removes html tags, except b, em, br, ul, li */
         do_text_remove_html_tags: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li)\\s*&gt;', 'gi'), '<$1$2>');
+            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li|div)\\s*&gt;', 'gi'), '<$1$2>');
             return html;
         },
         
@@ -432,7 +432,7 @@ openerp.mail = function(session) {
         start: function() {
             this._super.apply(this, arguments);
             // add events
-            this.add_events();
+            this.bind_events();
             // display user, fetch comments
             this.display_current_user();
             if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
@@ -462,8 +462,12 @@ openerp.mail = function(session) {
         do_customize_display: function() {
             if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_action').eq(0).show(); }
         },
-        
-        add_events: function() {
+
+
+        /**
+         * Bind events in the widget. Each event is slightly described
+         * in the function. */
+        bind_events: function() {
             var self = this;
             // generic events from Chatter Mixin
             mail.ChatterUtils.do_bind_chatter_events(this);
@@ -480,6 +484,12 @@ openerp.mail = function(session) {
             // event: click on 'Reply' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
                 var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_action:first');
+                act_dom.toggle();
+                event.preventDefault();
+            });
+            // event: click on 'attachment(s)' in msg
+            this.$element.delegate('a.oe_mail_msg_view_attachments', 'click', function (event) {
+                var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
                 act_dom.toggle();
                 event.preventDefault();
             });
@@ -522,17 +532,17 @@ openerp.mail = function(session) {
                 event.preventDefault();
                 return call_defer;
             });
-            // event: click on "reply by email" in msg side menu
+            // event: click on "Reply" in msg side menu (email style)
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
                 var msg_id = event.srcElement.dataset.msg_id;
                 if (! msg_id) return false;
                 self.instantiate_composition_form('reply', msg_id);
                 event.preventDefault();
             });
-            // event: click on 'attachment(s)' in msg
-            this.$element.delegate('a.oe_mail_msg_view_attachments', 'click', function (event) {
-                var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
-                act_dom.toggle();
+            // event: click on "Debug data" in msg side menu (email style)
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_debug', 'click', function (event) {
+                var act_dom = $(event.srcElement).parents('div.oe_mail_msg_content').find('ul.oe_mail_debug');
+                act_dom.toggleClass('oe_mail_invisible');
                 event.preventDefault();
             });
         },
