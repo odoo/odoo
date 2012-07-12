@@ -849,12 +849,11 @@ def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, co
         pool = pooler.get_pool(cr.dbname)
         traslation_obj = pool.get('ir.translation')
         _logger.info("loading %s", filename)
-        if flag == 'web':
-            transl = {"messages":[]}
-            po = babel.messages.pofile.read_po(fileobj)
-            for x in po:
-                if x.id and x.string and "openerp-web" in x.auto_comments:
-                    transl["messages"].append({'id': x.id, 'string': x.string})
+        if flag == 'web' and module_name == 'web':
+            transl = []
+            trans_ids = traslation_obj.search(cr, 1, [('module','=', module_name),('lang','=',lang)])
+            for trans in traslation_obj.browse(cr, 1, trans_ids, context=context):
+                transl.append({'id': trans.src, 'string': trans.value})
             return transl
         else:
             fileformat = os.path.splitext(filename)[-1][1:].lower()
@@ -913,7 +912,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
-            #  'src': ..., 'value': ...}
+            #  'src': ..., 'value': ..., 'module':...}
             dic = {'lang': lang}
             dic_module = False
             for i in range(len(f)):
