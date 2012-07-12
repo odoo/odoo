@@ -340,9 +340,7 @@ class ir_translation(osv.osv):
                     f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
                     if f2:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
-                        trans = tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context)
-                        if trans:
-                            translated_data['messages'].extend(trans)
+                        translated_data['messages'].extend(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context))
                         context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
@@ -352,9 +350,7 @@ class ir_translation(osv.osv):
                     f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
                 if f:
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
-                    trans = tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2)
-                    if trans:
-                        translated_data['messages'].extend(trans)
+                    translated_data['messages'].extend(tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2))
                 elif iso_lang != 'en':
                     _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
         return translated_data

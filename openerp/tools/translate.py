@@ -857,9 +857,9 @@ def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, co
             return transl
         else:
             fileformat = os.path.splitext(filename)[-1][1:].lower()
-            r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
+            trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
         fileobj.close()
-        return r
+        return []
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
