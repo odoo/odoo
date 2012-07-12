@@ -42,8 +42,5 @@ portal are installed.
     'css': [
         'static/src/css/portal_project_issue.css',
     ],
-    'js': [
-        'static/src/js/portal_project_issue.js',
-    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
