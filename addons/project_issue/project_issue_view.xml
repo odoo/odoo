@@ -16,9 +16,9 @@
         <record id="action_project_issue_unread" model="ir.values">
             <field name="name">action_project_issue_unread</field>
             <field name="action_id" ref="actions_server_project_issue_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_unread'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_unread'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_project_issue" />
+            <field name="model_id" ref="model_project_issue"/>
             <field name="model">project.issue</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -34,9 +34,9 @@
         <record id="action_project_issue_read" model="ir.values">
             <field name="name">action_project_issue_read</field>
             <field name="action_id" ref="actions_server_project_issue_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_read'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_issue_read'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_project_issue" />
+            <field name="model_id" ref="model_project_issue"/>
             <field name="model">project.issue</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -204,7 +204,7 @@
                         <separator orientation="vertical"/>
                         <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
-                        <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
+                        <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
                         <field name="project_id"/>
@@ -290,6 +290,11 @@
                                         <field name="version_id"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
+                                        <div class="oe_left oe_field_many2many_tags">
+                                            <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
+                                                <span class="oe_field_many2many_tag" t-att-data-categ_id="categ_id"></span>
+                                            </t>
+                                        </div>
                                         <div class="oe_right">
                                             <span class="oe_kanban_highlight">
                                                 <t t-set="priority" t-value="record.priority.raw_value || 5"/>
@@ -427,7 +432,7 @@
                     <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
                 </xpath>
                 <xpath expr='//separator[@name="project_sep"]' position='after'>
-                    <field name="use_issues" />
+                    <field name="use_issues"/>
                 </xpath>
             </field>
         </record>

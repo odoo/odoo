@@ -24,9 +24,9 @@
                                         <field name="version_id"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <div class="oe_left">
+                                        <div class="oe_left oe_field_many2many_tags">
                                             <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
-                                                <span class="oe_form_field_many2manytags_box" t-att-data-categ_id="categ_id"></span>
+                                                <span class="oe_field_many2many_tag" t-att-data-categ_id="categ_id"></span>
                                             </t>
                                         </div>
                                         <div class="oe_right">

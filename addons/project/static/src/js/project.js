@@ -44,7 +44,7 @@ openerp.project = function(openerp) {
             dataset.read_slice(['id', 'name']).then(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
-                    self.$element.find('span[data-categ_id=' + v.id + ']').text(v.name).toggle();
+                    self.$element.find('span[data-categ_id=' + v.id + ']').text(v.name);
                 });
             });
         },
