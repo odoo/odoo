@@ -2,6 +2,18 @@
 <openerp>
 <data noupdate="1">
 
+    <!-- Categories -->
+    <record id="project_issue_category_01" model="project.category">
+        <field name="name">Little problem</field>
+    </record>
+    <record id="project_issue_category_02" model="project.category">
+        <field name="name">PBCK</field>
+    </record>
+    <record id="project_issue_category_03" model="project.category">
+        <field name="name">Deadly bug</field>
+    </record>
+
+    <!-- Issues -->
     <record id="crm_case_buginaccountsmodule0" model="project.issue">
         <field eval="time.strftime('%Y-%m-08 10:15:00')" name="date"/>
         <field eval="&quot;5&quot;" name="priority"/>
@@ -14,6 +26,8 @@
         <field eval="&quot;Bug in Accounts module&quot;" name="name"/>
         <field eval="&quot;agr@agrolait.com&quot;" name="email_from"/>
         <field name="stage_id" ref="project.project_tt_specification"/>
+        <field name="categ_ids" eval="[(6, 0, [
+                ref('project_issue_category_01')])]"/>
     </record>
 
     <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
@@ -39,6 +53,9 @@
         <field name="project_id" ref="project.project_project_23"/>
         <field eval="&quot;Output incorrect&quot;" name="name"/>
         <field name="stage_id" ref="project.project_tt_development"/>
+        <field name="categ_ids" eval="[(6, 0, [
+                ref('project_issue_category_01'),
+                ref('project_issue_category_02')])]"/>
     </record>
 
     <record id="crm_case_problemloadingpage0" model="project.issue">
@@ -78,6 +95,9 @@
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Programming Error&quot;" name="name"/>
         <field name="stage_id" ref="project.project_tt_testing"/>
+        <field name="categ_ids" eval="[(6, 0, [
+                ref('project_issue_category_02'),
+                ref('project_issue_category_03')])]"/>
     </record>
 
     <record id="crm_case_logicalerrorinprogram0" model="project.issue">
