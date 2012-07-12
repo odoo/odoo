@@ -227,7 +227,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_widget = new instance.web.ViewManagerAction(this.dialog, action);
+            this.dialog_widget = new instance.web.ViewManagerAction(this, action);
             this.dialog_widget.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
