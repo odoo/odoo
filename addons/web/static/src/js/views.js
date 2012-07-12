@@ -800,7 +800,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 view: controller,
                 view_manager: self
             }));
-            self.set_title(fvg.arch.attrs.string || fvg.name);
+            self.set_title();
         });
     },
     do_create_view: function(view_type) {
