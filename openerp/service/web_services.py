@@ -783,39 +783,10 @@ class translation(netsvc.ExportService):
         netsvc.ExportService.__init__(self, name)
     
     def exp_load(self, db, modules, langs, flag=None, context=None):
-        translated_data = {'messages':[]}
         cr = pooler.get_db(db).cursor()
-        for module_name in modules:
-            modpath = openerp.modules.get_module_path(module_name)
-            if not modpath:
-                # unable to find the module. we skip
-                continue
-            for lang in langs:
-                iso_lang = tools.get_iso_codes(lang)
-                f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
-                context2 = context and context.copy() or {}
-                if f and '_' in iso_lang:
-                    iso_lang2 = iso_lang.split('_')[0]
-                    f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
-                    if f2:
-                        _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
-                        trans = tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context)
-                        if trans:
-                            translated_data['messages'].extend(trans)
-                        context2['overwrite'] = True
-                # Implementation notice: we must first search for the full name of
-                # the language derivative, like "en_UK", and then the generic,
-                # like "en".
-                if (not f) and '_' in iso_lang:
-                    iso_lang = iso_lang.split('_')[0]
-                    f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
-                if f:
-                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
-                    trans = tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2)
-                    if trans:
-                        translated_data['messages'].extend(trans)
-                elif iso_lang != 'en':
-                    _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
+        pool = pooler.get_pool(cr.dbname)
+        traslation_obj = pool.get('ir.translation')
+        translated_data = traslation_obj.load(cr, modules, langs, flag, context=context)
         cr.commit()
         cr.close()
         return translated_data

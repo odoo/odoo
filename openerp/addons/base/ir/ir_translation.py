@@ -22,6 +22,7 @@
 from osv import fields, osv
 import tools
 import logging
+import openerp.modules
 
 _logger = logging.getLogger(__name__)
 
@@ -322,6 +323,41 @@ class ir_translation(osv.osv):
         """ Return a cursor-like object for fast inserting translations
         """
         return ir_translation_import_cursor(cr, uid, self, context=context)
+    
+    def load(self, cr, modules, langs, flag, context=None):
+        translated_data = {'messages':[]}
+        for module_name in modules:
+            modpath = openerp.modules.get_module_path(module_name)
+            if not modpath:
+                # unable to find the module. we skip
+                continue
+            for lang in langs:
+                iso_lang = tools.get_iso_codes(lang)
+                f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
+                context2 = context and context.copy() or {}
+                if f and '_' in iso_lang:
+                    iso_lang2 = iso_lang.split('_')[0]
+                    f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
+                    if f2:
+                        _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
+                        trans = tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context)
+                        if trans:
+                            translated_data['messages'].extend(trans)
+                        context2['overwrite'] = True
+                # Implementation notice: we must first search for the full name of
+                # the language derivative, like "en_UK", and then the generic,
+                # like "en".
+                if (not f) and '_' in iso_lang:
+                    iso_lang = iso_lang.split('_')[0]
+                    f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
+                if f:
+                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
+                    trans = tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2)
+                    if trans:
+                        translated_data['messages'].extend(trans)
+                elif iso_lang != 'en':
+                    _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
+        return translated_data
 
 ir_translation()
 
