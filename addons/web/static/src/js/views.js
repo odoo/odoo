@@ -30,13 +30,18 @@ instance.web.ActionManager = instance.web.Widget.extend({
     /**
      * Add a new item to the breadcrumb
      *
+     * If the title of an item is an array, the multiple title mode is in use.
+     * (eg: a widget with multiple views might need to display a title for each view)
+     * In multiple title mode, the show() callback can check the index it receives
+     * in order to detect which of its titles has been clicked on by the user.
+     *
      * @param {Object} item breadcrumb item
      * @param {Object} item.widget widget containing the view(s) to be added to the breadcrumb added
-     * @param {null|Function} item.show callback triggered whenever the widget should be shown back
-     * @param {null|Function} item.hide callback triggered whenever the widget should be shown hidden
-     * @param {null|Function} item.destroy callback triggered whenever the widget should be destroyed
-     * @param {null|String|Array} item.title title(s) of the view(s) to be displayed in the breadcrumb
-     * @param {null|Function} item.get_title function returning the title(s) of the view(s) to be displayed in the breadcrumb
+     * @param {Function} [item.show] triggered whenever the widget should be shown back
+     * @param {Function} [item.hide] triggered whenever the widget should be shown hidden
+     * @param {Function} [item.destroy] triggered whenever the widget should be destroyed
+     * @param {String|Array} [item.title] title(s) of the view(s) to be displayed in the breadcrumb
+     * @param {Function} [item.get_title] should return the title(s) of the view(s) to be displayed in the breadcrumb
      */
     push_breadcrumb: function(item) {
         var last = this.breadcrumbs.slice(-1)[0];
@@ -45,24 +50,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var item = _.extend({
             show: function(index) {
-                // If multiple titles are used, the index can be used in order
-                // to define which item of the breadcrumb has been trigerred.
                 this.widget.$element.show();
             },
             hide: function() {
-                // Called on the last pushed item before pusing a new breadcrumb.
                 this.widget.$element.hide();
             },
             destroy: function() {
-                // Called on all breadcrumbs items when it should be cleared.
-                // Eg: new action triggered from menu
                 this.widget.destroy();
             },
             get_title: function() {
-                // Should return the title(s) of the widget as a string.
-                // If an array is returned, multiple titles can be used
-                // (eg: a widget switching views). The #show() callback will receive
-                // the index of the selected title.
                 return this.title || this.widget.get('title');
             }
         }, item);
