@@ -189,7 +189,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             StringIO.__init__(self, None)
         else:
             _logger.error("Incorrect mode %s specified", mode)
-            raise IOError(errno.EINVAL, "Invalid file mode")
+            raise IOError(errno.EINVAL, "Invalid file mode!")
         self.mode = mode
 
     def size(self):
@@ -269,7 +269,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
             StringIO.__init__(self, None)
         else:
             _logger.error("Incorrect mode %s specified", mode)
-            raise IOError(errno.EINVAL, "Invalid file mode")
+            raise IOError(errno.EINVAL, "Invalid file mode!")
         self.mode = mode
 
     def size(self):
@@ -317,7 +317,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
                     (base64.encodestring(data), len(data), par.file_id))
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db file #%d for close:', par.file_id)
+            _logger.exception('Cannot update db file #%d for close !', par.file_id)
             raise
         finally:
             cr.close()
@@ -401,10 +401,10 @@ class document_storage(osv.osv):
         #     self._logger.debug('Npath: %s', npath)
         for n in npath:
             if n == '..':
-                raise ValueError("Invalid '..' element in path")
+                raise ValueError("Invalid '..' element in path!")
             for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?',):
                 if ch in n:
-                    raise ValueError("Invalid char %s in path %s" %(ch, n))
+                    raise ValueError("Invalid char %s in path %s!" %(ch, n))
         dpath = [store_path,]
         dpath += npath[:-1]
         path = os.path.join(*dpath)
@@ -420,7 +420,7 @@ class document_storage(osv.osv):
         """
         boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
-            raise IOError(errno.EREMOTE, 'medium offline')
+            raise IOError(errno.EREMOTE, 'medium offline!')
         
         if fil_obj:
             ira = fil_obj
@@ -435,10 +435,10 @@ class document_storage(osv.osv):
             context = {}
         boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
-            raise IOError(errno.EREMOTE, 'medium offline')
+            raise IOError(errno.EREMOTE, 'medium offline!')
         
         if boo.readonly and mode not in ('r', 'rb'):
-            raise IOError(errno.EPERM, "Readonly medium")
+            raise IOError(errno.EPERM, "Readonly medium!")
         
         ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
         if boo.type == 'filestore':
@@ -448,7 +448,7 @@ class document_storage(osv.osv):
                 if mode in ('r','r+'):
                     if ira.file_size:
                         _logger.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
-                    raise IOError(errno.ENOENT, 'No file can be located')
+                    raise IOError(errno.ENOENT, 'No file can be located!')
                 else:
                     store_fname = self.__get_random_fname(boo.path)
                     cr.execute('UPDATE ir_attachment SET store_fname = %s WHERE id = %s',
@@ -478,10 +478,10 @@ class document_storage(osv.osv):
             return nodefd_file(file_node, path=fpath, mode=mode)
 
         elif boo.type == 'virtual':
-            raise ValueError('Virtual storage does not support static files')
+            raise ValueError('Virtual storage does not support static file(s).')
         
         else:
-            raise TypeError("No %s storage" % boo.type)
+            raise TypeError("No %s storage !" % boo.type)
 
     def __get_data_3(self, cr, uid, boo, ira, context):
         if boo.type == 'filestore':
@@ -524,10 +524,10 @@ class document_storage(osv.osv):
                 raise IOError(errno.ENOENT, "File not found: %s" % fpath)
 
         elif boo.type == 'virtual':
-            raise ValueError('Virtual storage does not support static files')
+            raise ValueError('Virtual storage does not support static file(s).')
 
         else:
-            raise TypeError("No %s storage" % boo.type)
+            raise TypeError("No %s storage!" % boo.type)
 
     def set_data(self, cr, uid, id, file_node, data, context=None, fil_obj=None):
         """ store the data.
@@ -541,10 +541,10 @@ class document_storage(osv.osv):
             ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
 
         if not boo.online:
-            raise IOError(errno.EREMOTE, 'medium offline')
+            raise IOError(errno.EREMOTE, 'Medium offline!')
         
         if boo.readonly:
-            raise IOError(errno.EPERM, "Readonly medium")
+            raise IOError(errno.EPERM, "Readonly medium!")
 
         _logger.debug( "Store data for ir.attachment #%d" % ira.id)
         store_fname = None
@@ -565,7 +565,7 @@ class document_storage(osv.osv):
                 # TODO Here, an old file would be left hanging.
 
             except Exception, e:
-                _logger.warning( "Couldn't save data to %s", path, exc_info=True)
+                _logger.warning( "Cannot save data to %s.", path, exc_info=True)
                 raise except_orm(_('Error!'), str(e))
         elif boo.type == 'db':
             filesize = len(data)
@@ -593,14 +593,14 @@ class document_storage(osv.osv):
                 store_fname = os.path.join(*npath)
                 # TODO Here, an old file would be left hanging.
             except Exception,e :
-                _logger.warning("Couldn't save data:", exc_info=True)
+                _logger.warning("Cannot save data:", exc_info=True)
                 raise except_orm(_('Error!'), str(e))
 
         elif boo.type == 'virtual':
-            raise ValueError('Virtual storage does not support static files')
+            raise ValueError('Virtual storage does not support static file(s).')
 
         else:
-            raise TypeError("No %s storage" % boo.type)
+            raise TypeError("No %s storage!" % boo.type)
 
         # 2nd phase: store the metadata
         try:
@@ -629,7 +629,7 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            self._logger.warning("Couldn't save data:", exc_info=True)
+            self._logger.warning("Cannot save data:", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
@@ -639,10 +639,10 @@ class document_storage(osv.osv):
         files that have to be removed, too. """
 
         if not storage_bo.online:
-            raise IOError(errno.EREMOTE, 'medium offline')
+            raise IOError(errno.EREMOTE, 'Medium offline!')
         
         if storage_bo.readonly:
-            raise IOError(errno.EPERM, "Readonly medium")
+            raise IOError(errno.EPERM, "Readonly medium!")
 
         if storage_bo.type == 'filestore':
             fname = fil_bo.store_fname
@@ -659,7 +659,7 @@ class document_storage(osv.osv):
             path = storage_bo.path
             return ( storage_bo.id, 'file', os.path.join(path, fname))
         else:
-            raise TypeError("No %s storage" % storage_bo.type)
+            raise TypeError("No %s storage!" % storage_bo.type)
 
     def do_unlink(self, cr, uid, unres):
         for id, ktype, fname in unres:
@@ -667,9 +667,9 @@ class document_storage(osv.osv):
                 try:
                     os.unlink(fname)
                 except Exception:
-                    _logger.warning("Could not remove file %s, please remove manually.", fname, exc_info=True)
+                    _logger.warning("Cannot remove file %s, please remove manually.", fname, exc_info=True)
             else:
-                _logger.warning("Unknown unlink key %s" % ktype)
+                _logger.warning("Unlink unknown key %s." % ktype)
 
         return True
 
@@ -699,9 +699,9 @@ class document_storage(osv.osv):
             fname = ira.store_fname
 
             if not fname:
-                _logger.warning("Trying to rename a non-stored file")
+                _logger.warning("Trying to rename a non-stored file.")
             if fname != os.path.join(*npath):
-                _logger.warning("inconsistency in realstore: %s != %s" , fname, repr(npath))
+                _logger.warning("Inconsistency to realstore: %s != %s." , fname, repr(npath))
 
             oldpath = os.path.join(path, npath[-1])
             newpath = os.path.join(path, new_name)
@@ -711,7 +711,7 @@ class document_storage(osv.osv):
             store_fname = os.path.join(*store_path)
             return { 'name': new_name, 'datas_fname': new_name, 'store_fname': store_fname }
         else:
-            raise TypeError("No %s storage" % sbro.type)
+            raise TypeError("No %s storage!" % sbro.type)
 
     def simple_move(self, cr, uid, file_node, ndir_bro, context=None):
         """ A preparation for a file move.
@@ -739,8 +739,8 @@ class document_storage(osv.osv):
                 break
             par = par.parent_id
         if file_node.storage_id != psto:
-            _logger.debug('Cannot move file %r from %r to %r', file_node, file_node.parent, ndir_bro.name)
-            raise NotImplementedError('Cannot move files between storage media')
+            _logger.debug('Cannot move file %r from %r to %r.', file_node, file_node.parent, ndir_bro.name)
+            raise NotImplementedError('Cannot move file(s) between storage media.')
 
         if sbro.type in ('filestore', 'db', 'db64'):
             # nothing to do for a rename, allow to change the db field
@@ -752,9 +752,9 @@ class document_storage(osv.osv):
             fname = ira.store_fname
 
             if not fname:
-                _logger.warning("Trying to rename a non-stored file")
+                _logger.warning("Trying to rename a non-stored file.")
             if fname != os.path.join(*opath):
-                _logger.warning("inconsistency in realstore: %s != %s" , fname, repr(opath))
+                _logger.warning("Inconsistency to realstore: %s != %s." , fname, repr(opath))
 
             oldpath = os.path.join(path, opath[-1])
             
@@ -762,12 +762,12 @@ class document_storage(osv.osv):
             npath = filter(lambda x: x is not None, npath)
             newdir = os.path.join(*npath)
             if not os.path.isdir(newdir):
-                _logger.debug("Must create dir %s", newdir)
+                _logger.debug("Must create dir %s.", newdir)
                 os.makedirs(newdir)
             npath.append(opath[-1])
             newpath = os.path.join(*npath)
             
-            _logger.debug("Going to move %s from %s to %s", opath[-1], oldpath, newpath)
+            _logger.debug("Going to move %s from %s to %s.", opath[-1], oldpath, newpath)
             shutil.move(oldpath, newpath)
             
             store_path = npath[1:] + [opath[-1],]
@@ -775,7 +775,7 @@ class document_storage(osv.osv):
             
             return { 'store_fname': store_fname }
         else:
-            raise TypeError("No %s storage" % sbro.type)
+            raise TypeError("No %s storage!" % sbro.type)
 
 
 document_storage()
