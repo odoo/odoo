@@ -131,11 +131,9 @@ class hr_expense_expense(osv.osv):
         return True
 
     def invoice(self, cr, uid, ids, context=None):
+        if not ids: return []
         mod_obj = self.pool.get('ir.model.data')
         wkf_service = netsvc.LocalService("workflow")
-        
-        if not ids: return []
-        exp = self.browse(cr, uid, ids[0], context=context)
         
         voucher_ids = []
         for id in ids:
