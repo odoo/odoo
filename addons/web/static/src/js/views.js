@@ -28,9 +28,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
     },
     push_breadcrumb: function(item) {
-        _.each(this.breadcrumbs, function(i) {
-            i.hide();
-        });
+        var last = this.breadcrumbs.slice(-1)[0];
+        if (last) {
+            last.hide();
+        }
         item.id = _.uniqueId('breadcrumb_');
         item.show = item.show || function() {
             item.widget.$element.show();
@@ -280,9 +281,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_ui_menu: function (action) {
         this.getParent().do_action(action);
     }
-});
-
-instance.web.BreadCrumb = instance.web.CallbackEnabled.extend({
 });
 
 instance.web.ViewManager =  instance.web.Widget.extend({
