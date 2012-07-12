@@ -360,6 +360,24 @@ class WebClient(openerpweb.Controller):
             trans = proxy.load(req.session._db, [mod], langs, "web")
             if trans:
                 messages[mod] = trans
+        #  keep loading from .po (Reason to run web without embedded mode)
+        if not messages['web']['messages']:
+            for addon_name in mods:
+                transl = {'messages':[]}
+                messages[addon_name] = transl
+                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+                for l in langs:
+                    f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
+                    if not os.path.exists(f_name):
+                        continue
+                    try:
+                        with open(f_name) as t_file:
+                            po = babel.messages.pofile.read_po(t_file)
+                    except Exception:
+                        continue
+                    for x in po:
+                        if x.id and x.string and "openerp-web" in x.auto_comments:
+                            transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": messages,
                 "lang_parameters": lang_obj} 
 
