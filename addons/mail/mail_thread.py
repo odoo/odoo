@@ -241,49 +241,61 @@ class mail_thread(osv.Model):
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
                         type='email', subtype=None, email_date=None, parent_id=False,
-                        content_subtype='plain', state=None, email_from=False, email_to=False,
+                        content_subtype='plain', state=None,
+                        partner_ids=None, email_from=False, email_to=False,
                         email_cc=None, email_bcc=None, reply_to=None,
                         headers=None, message_id=False, references=None,
                         attachments=None, original=None, context=None):
-        """Creates a new mail.message through message_create. The new message
-           is attached to the current mail.thread, containing all the details 
-           passed as parameters. All attachments will be attached to the 
-           thread record as well as to the actual message.
+        """ Creates a new mail.message through message_create. The new message
+            is attached to the current mail.thread, containing all the details 
+            passed as parameters. All attachments will be attached to the 
+            thread record as well as to the actual message.
            
-           This method calls message_create that will handle management of
-           subscription and notifications, and effectively create the message.
+            This method calls message_create that will handle management of
+            subscription and notifications, and effectively create the message.
            
-           If ``email_from`` is not set or ``type`` not set as 'email',
-           a note message is created (comment or system notification), 
-           without the usual envelope attributes (sender, recipients, etc.).
+            If ``email_from`` is not set or ``type`` not set as 'email',
+            a note message is created (comment or system notification), 
+            without the usual envelope attributes (sender, recipients, etc.).
 
-        :param threads: list of thread ids, or list of browse_records representing
-                        threads to which a new message should be attached
-        :param subject: subject of the message, or description of the event if this
-                        is an *event log* entry.
-        :param body_text: plaintext contents of the mail or log message
-        :param body_html: html contents of the mail or log message
-        :param type: optional type of message: 'email', 'comment', 'notification'
-        :param subtype: optional subtype of message, such as 'create' or 'cancel'
-        :param email_date: email date string if different from now, in server timezone
-        :param parent_id: id of the parent message (threaded messaging model)
-        :param content_subtype: optional content_subtype of message: 'plain' or 'html', corresponding to the main
-                        body contents (body_text or body_html).
-        :param state: optional state of message; 'received' by default
-        :param email_from: Email From / Sender address if any
-        :param email_to: Email-To / Recipient address
-        :param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
-        :param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
-        :param reply_to: reply_to header
-        :param headers: mail headers to store
-        :param message_id: optional email identifier
-        :param references: optional email references
-        :param dict attachments: map of attachment filenames to binary contents, if any.
-        :param str original: optional full source of the RFC2822 email, for reference
-        :param dict context: if a ``thread_model`` value is present
-                             in the context, its value will be used
-                             to determine the model of the thread to
-                             update (instead of the current model).
+            :param threads: list of thread ids, or list of browse_records
+                representing threads to which a new message should be attached
+            :param subject: subject of the message, or description of the event;
+                this is totally optional as subjects are not important except
+                for specific messages (blog post, job offers) or for emails
+            :param body_text: plaintext contents of the mail or log message
+            :param body_html: html contents of the mail or log message
+            :param type: type of message: 'email', 'comment', 'notification';
+                email by default
+            :param subtype: subtype of message, such as 'create' or 'cancel'
+            :param email_date: email date string if different from now, in
+                server timezone
+            :param parent_id: id of the parent message (threaded messaging model)
+            :param content_subtype: optional content_subtype of message: 'plain'
+                or 'html', corresponding to the main body contents (body_text or
+                body_html).
+            :param state: state of message
+            :param partner_ids: destination partners of the message, in addition
+                to the now fully optional email_to; this method is supposed to
+                received a list of ids is not None. The specific many2many
+                instruction will be generated by this method.
+            :param email_from: Email From / Sender address if any
+            :param email_to: Email-To / Recipient address
+            :param email_cc: Comma-Separated list of Carbon Copy Emails To
+                addresses if any
+            :param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To
+                addresses if any
+            :param reply_to: reply_to header
+            :param headers: mail headers to store
+            :param message_id: optional email identifier
+            :param references: optional email references
+            :param dict attachments: map of attachment filenames to binary
+                contents, if any.
+            :param str original: optional full source of the RFC2822 email, for
+                reference
+            :param dict context: if a ``thread_model`` value is present in the
+                context, its value will be used to determine the model of the
+                thread to update (instead of the current model).
         """
         if context is None:
             context = {}
@@ -319,10 +331,15 @@ class mail_thread(osv.Model):
                     'res_id': thread.id,
                 }
                 to_attach.append(ir_attachment.create(cr, uid, data_attach, context=context))
-
+            # find related partner: partner_id column in thread object, or self is res.partner model
             partner_id = ('partner_id' in thread._columns.keys()) and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
                 partner_id = thread.id
+            # destination partners
+            if partner_ids is None:
+                partner_ids = []
+            mail_partner_ids = [6, 0, partner_ids]
+
             data = {
                 'subject': subject,
                 'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
@@ -334,6 +351,7 @@ class mail_thread(osv.Model):
                 'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
+                'partner_ids': mail_partner_ids,
                 'attachment_ids': [(6, 0, to_attach)],
                 'user_id': uid,
                 'model' : thread._name,
@@ -346,7 +364,6 @@ class mail_thread(osv.Model):
                     if isinstance(param, list):
                         param = ", ".join(param)
                 data.update({
-                    'subject': subject or _('History'),
                     'email_to': email_to,
                     'email_from': email_from or \
                         (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
@@ -385,6 +402,7 @@ class mail_thread(osv.Model):
                             subtype = msg_dict.get('subtype'),
                             content_subtype = msg_dict.get('content_subtype'),
                             state = msg_dict.get('state'),
+                            partner_ids = msg_dict.get('partner_ids'),
                             email_from = msg_dict.get('from', msg_dict.get('email_from')),
                             email_to = msg_dict.get('to', msg_dict.get('email_to')),
                             email_cc = msg_dict.get('cc', msg_dict.get('email_cc')),
