@@ -1,17 +1,17 @@
 -
   In order to check the calculation of price of the products according to pricelist,
 -
-  I check sale price of PC2.
+  I check sale price of Assemble Computer
 -
   !python {model: product.product}: |
     context.update({'pricelist': ref("customer_pricelist"), 'quantity':1})
     product = self.browse(cr, uid, ref("product_product_4"), context=context)
-    assert product.price == product.lst_price-product.lst_price*(0.10), "Sell price is not correspond."
+    assert product.price == (product.lst_price-product.lst_price*(0.10)), "Sell price is not correspond."
 -
-  I check sale price of PC3.
+  I check sale price of Laptop.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_product_5"), context=context)
+    product = self.browse(cr, uid, ref("product_product_25"), context=context)
     assert product.price == product.lst_price + 1, "Sell price is not correspond."
 -
   I check sale price of IT componet.
@@ -48,15 +48,15 @@
 -
   !python {model: product.product}: |
     context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4'), 'pricelist': ref("supplier_pricelist")})
-    product = self.browse(cr, uid, ref("product_product_4"), context=context)
-    assert product.price == 450, "cost price is not correspond."
+    product = self.browse(cr, uid, ref("product_product_6"), context=context)
+    assert product.price == 785, "cost price is not correspond."
 -
   I check cost price of PC2 if more than 3 Unit.
 -
   !python {model: product.product}: |
     context.update({'quantity':3})
-    product = self.browse(cr, uid, ref("product_product_4"), context=context)
-    assert product.price == 400, "cost price is not correspond."
+    product = self.browse(cr, uid, ref("product_product_6"), context=context)
+    assert product.price == 780, "cost price is not correspond."
 
 -
  I print the sale prices report.

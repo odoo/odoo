@@ -13,21 +13,21 @@
             - name: Default pricelist
               base: -1
               base_pricelist_id: list0 
-            - name: 10% Discount on PC2
+            - name: 10% Discount on Assemble Computer
               sequence: 1
               product_id: product_product_4
               base: !eval (ref('product.list_price'))
               price_discount: -0.10
-            - name: 1 surchange on PC3
+            - name: 1 surchange on Laptop
               sequence: 1
-              product_id: product_product_5
+              product_id: product_product_25
               base: !eval (ref('product.list_price'))
               price_surcharge: 1
-            - name: 5% Discount on all IT components
+            - name: 5% Discount on all Computer related products
               sequence: 1
               min_quantity: 2
               base: !eval (ref('product.list_price'))
-              categ_id: product_category_10
+              categ_id: product_category_4
               price_discount: -0.05
       - name: v2.0 (Special Discount on all products during last 5 days in current year)
         date_start: 2011-12-27
@@ -48,15 +48,15 @@
               sequence: 1
               price_min_margin: 2
               price_max_margin: -5
-              product_id: product_product_4
+              product_id: product_product_6
               base: -2
 -
   !record {model: pricelist.partnerinfo, id: supplier_pricelist0_product_pc2}:
-    suppinfo_id: supplierinfo6
+    suppinfo_id: product_supplierinfo_2
     min_quantity: 3
-    price: 405
+    price: 785
 -
   !record {model: pricelist.partnerinfo, id: supplier_pricelist1_product_pc2}:
-    suppinfo_id: supplierinfo6
+    suppinfo_id: product_supplierinfo_2
     min_quantity: 1
-    price: 455
+    price: 790
