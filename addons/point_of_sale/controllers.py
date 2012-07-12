@@ -69,14 +69,14 @@ class PointOfSaleController(openerpweb.Controller):
         print "payment_request: price:"+str(price)+" method:"+str(method)+" info:"+str(info)
         return 
 
-    #@openerpweb.jsonrequest
+    @openerpweb.jsonrequest
     def is_payment_accepted(self, request):
         print "is_payment_accepted"
-        return 
+        return 'waiting_for_payment' 
 
-    #@openerpweb.jsonrequest
-    def payment_cancelled(self, request):
-        print "payment_cancelled"
+    @openerpweb.jsonrequest
+    def payment_canceled(self, request):
+        print "payment_canceled"
         return 
 
     @openerpweb.jsonrequest

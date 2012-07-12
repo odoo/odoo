@@ -112,6 +112,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template:'OrderWidget',
         init: function(parent, options) {
             this._super(parent,options);
+            this.compact = false;   
             this.set_numpad_state(options.numpadState);
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bind_orderline_events();
@@ -163,6 +164,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
+
+            if(!this.compact){
+                $('.point-of-sale .order-container').css({'bottom':'0px'});
+            }
+
             var $content = this.$('.orderlines');
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new module.OrderlineWidget(this, {
@@ -198,11 +204,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if( at_bottom ){
                 this.scrollbar.set_position(Number.MAX_VALUE, false);
             }
+
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
             var total = order ? order.getTotal() : 0;
             this.$('.summary .value.total').html(this.format_currency(total));
+        },
+        set_compact: function(compact){
+            if(this.compact !== compact){
+                this.compact = compact;
+                this.renderElement();
+            }
         },
     });
 
@@ -563,7 +576,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(this.mode === 'cashier'){
                 user = this.pos.get('cashier') || this.pos.get('user');
             }else{
-                user = this.pos.get('client')  || this.pos.get('user');
+                user = this.pos.get('selectedOrder').get_client()  || this.pos.get('user');
             }
             if(user){
                 return user.name;
@@ -757,6 +770,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 default_cashier_screen: 'products',
                 default_mode: this.pos.use_selfcheckout ?  'client' : 'cashier',
             });
+
             this.screen_selector.set_default_screen();
 
             this.pos.barcode_reader.connect();
@@ -769,19 +783,23 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if (!scannedProductModel){
                 return false;
             } else {
-                selectedOrder.addProduct(new module.Product(scannedProductModel));
+                if(parsed_ean.type === 'price'){
+                    selectedOrder.addProduct(new module.Product(scannedProductModel), { price:parsed_ean.value});
+                }else if(parsed_ean.type === 'weight'){
+                    selectedOrder.addProduct(new module.Product(scannedProductModel), { quantity:parsed_ean.value, merge:false});
+                }else{
+                    selectedOrder.addProduct(new module.Product(scannedProductModel));
+                }
                 return true;
             }
         },
 
-        // returns a product that has a packaging with an EAN matching to provided parsed ean . 
-        // returns undefined if no such product is found.
         get_product_by_ean: function(parsed_ean) {
             var allProducts = this.pos.get('product_list');
             var allPackages = this.pos.get('product.packaging');
             var scannedProductModel = undefined;
 
-            if (parsed_ean.type === 'price') {
+            if (parsed_ean.type === 'price' || parsed_ean.type === 'weight') {
                 var itemCode = parsed_ean.id;
                 var scannedPackaging = _.detect(allPackages, function(pack) { 
                     return pack.ean && pack.ean.substring(0,7) === itemCode;
@@ -790,24 +808,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
                 }else{
                     scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13  && (pc.ean13.substring(0,7) === parsed_ean.id);});   
-                }
-                if(scannedProductModel){
-                    scannedProductModel.list_price = parsed_ean.value;
-                }
-            } else if (parsed_ean.type === 'weight') {
-                var weight = parsed_ean.value;
-                var itemCode = parsed_ean.id;
-                var scannedPackaging = _.detect(allPackages, function(pack) { 
-                    return pack.ean  && pack.ean.substring(0,7) === itemCode;
-                });
-                if (scannedPackaging){
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                }else{
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13  && (pc.ean13.substring(0,7) === parsed_ean.id);});   
-                }
-                if(scannedProductModel){
-                    scannedProductModel.list_price *= weight;
-                    scannedProductModel.name += ' - ' + weight + ' Kg.';
                 }
             } else if(parsed_ean.type === 'unit'){
                 scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === parsed_ean.ean;});   //TODO DOES NOT SCALE
@@ -827,22 +827,22 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         // shows or hide the numpad and related controls like the paypad.
         set_numpad_visible: function(visible){
-            if(visible != this.numpad_visible){
+            if(visible !== this.numpad_visible){
                 this.numpad_visible = visible;
                 if(visible){
                     this.numpad.show();
                     this.paypad.show();
-                    $('.point-of-sale .order-container').css({'bottom':'232px'});
+                    this.order_widget.set_compact(true);
                 }else{
                     this.numpad.hide();
                     this.paypad.hide();
-                    $('.point-of-sale .order-container').css({'bottom':'0px'});
+                    this.order_widget.set_compact(false);
                 }
             }
         },
         //shows or hide the leftpane (contains the list of orderlines, the numpad, the paypad, etc.)
         set_leftpane_visible: function(visible){
-            if(visible != this.leftpane_visible){
+            if(visible !== this.leftpane_visible){
                 this.leftpane_visible = visible;
                 if(visible){
                     $('#leftpane').show().animate({'width':this.leftpane_width},500,'swing');
@@ -856,7 +856,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         //shows or hide the controls in the PosWidget that are specific to the cashier ( Orders, close button, etc. ) 
         set_cashier_controls_visible: function(visible){
-            if(visible != this.cashier_controls_visible){
+            if(visible !== this.cashier_controls_visible){
                 this.cashier_controls_visible = visible;
                 if(visible){
                     $('#loggedas').show();

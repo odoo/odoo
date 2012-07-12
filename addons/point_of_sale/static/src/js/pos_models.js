@@ -44,7 +44,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }
             }
         },
-
     });
 
     var fetch = function(model, fields, domain, ctx){
@@ -93,7 +92,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'user':             null,   // the user that loaded the pos
                 'user_list':        null,   // list of all users
                 'cashier':          null,   // the logged cashier, if different from user
-                'client':         null,     // the logged client 
 
                 'orders':           new module.OrderCollection(),
                 //this is the product list as seen by the product list widgets, it will change based on the category filters
@@ -750,6 +748,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 orderLines:     new module.OrderlineCollection(),
                 paymentLines:   new module.PaymentlineCollection(),
                 name:           "Order " + this.generateUniqueId(),
+                client:         null,
             });
             this.pos =     attributes.pos; 
             this.selected_orderline = undefined;
@@ -759,18 +758,22 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         generateUniqueId: function() {
             return new Date().getTime();
         },
-        addProduct: function(product,quantity){
+        addProduct: function(product, options){
+            options = options || {};
             var attr = product.toJSON();
             attr.pos = this.pos;
             attr.order = this;
             var line = new module.Orderline({}, {pos: this.pos, order: this, product: product});
 
-            if(quantity !== undefined){
-                line.set_quantity(quantity);
+            if(options.quantity !== undefined){
+                line.set_quantity(options.quantity);
+            }
+            if(options.price !== undefined){
+                line.set_list_price(options.price);
             }
 
             var last_orderline = this.getLastOrderline();
-            if( last_orderline && last_orderline.can_be_merged_with(line) ){
+            if( last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false){
                 last_orderline.merge(line);
             }else{
                 this.get('orderLines').add(line);
@@ -821,6 +824,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
         },
+        // the client related to the current order.
+        set_client: function(client){
+            this.set('client',client);
+        },
+        get_client: function(){
+            return this.get('client');
+        },
         // the order also stores the screen status, as the PoS supports
         // different active screens per order. This method is used to
         // store the screen status.
@@ -848,7 +858,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.get('paymentLines').each(function(paymentline){
                 paymentlines.push(paymentline.export_for_printing());
             });
-            var client  = this.pos.get('client');
+            var client  = this.get('client');
             var cashier = this.pos.get('cashier') || this.pos.get('user');
             var company = this.pos.get('company');
             var shop    = this.pos.get('shop');

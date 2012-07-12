@@ -257,8 +257,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             if(arguments.length == 2){
                 this.action_callback[action] = callback;
             }else{
-                for(action in arguments[0]){
-                    this.set_action_callback(action,arguments[0][action]);
+                var actions = arguments[0];
+                for(action in actions){
+                    this.set_action_callback(action,actions[action]);
                 }
             }
         },
