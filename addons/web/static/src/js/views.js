@@ -34,16 +34,36 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         item.id = _.uniqueId('breadcrumb_');
         _.defaults(item, {
-            show: function() {
+            show: function(index) {
+                /*
+                 * This callback is used whenever the widget should be shown.
+                 * If multiple titles are used, the index can be used in order
+                 * to define which item of the breadcrumb has been trigerred.
+                 */
                 item.widget.$element.show();
             },
             hide: function() {
+                /*
+                 * This callback is used whenever the widget should be hidden.
+                 * Called on the last pushed item before pusing a new
+                 * breadcrumb.
+                 */
                 item.widget.$element.hide();
             },
             destroy: function() {
+                /*
+                 * This callback is used whenever the widget should be
+                 * destroyed. Happens when the breadcrumb is cleared.
+                 */
                 item.widget.destroy();
             },
             get_title: function() {
+                /*
+                 * Should return the title of the widget as a string. If an
+                 * array is returned, multiple titles can be used (eg: a
+                 * widget switching views). The #show() callback will receive
+                 * the index of the selected title.
+                 */
                 return item.title || item.widget.get('title');
             }
         });
