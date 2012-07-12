@@ -133,7 +133,7 @@
                         <li t-if="display['show_hide']">
                             <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
                         </li>
-                        <li t-if="record.type == 'email' &amp;&amp; ! thread.params.is_wall"><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
+                        <li><a href="#" t-attf-data-msg_id="{record.id}" t-attf-data-type="{record.type}" t-attf-data-formatting="{record.content_subtype}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
                         <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
                         <li><a href="#" class="oe_mail_msg_debug">Debug data</a></li>
                     </ul>
@@ -158,6 +158,7 @@
                         <li>email_cc: <t t-raw="record.email_cc"/></li>
                         <li>email_bcc: <t t-raw="record.email_bcc"/></li>
                         <li>reply_to: <t t-raw="record.reply_to"/></li>
+                        <li>partner_ids: <t t-raw="record.partner_ids"/></li>
                         <li t-if="record.type == 'email'">message_id: <t t-raw="record.message_id"/></li>
                         <li t-if="record.type == 'email'">references: <t t-raw="record.references"/></li>
                     </ul>

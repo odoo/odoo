@@ -274,6 +274,8 @@ openerp.mail = function(session) {
             } else {
                 this.params.active_id = this.params.res_id;
             }
+            this.email_mode = false;
+            this.formatting = false;
             // create a context for the default_get of the compose form
             var context = {
                 'active_model': this.params.res_model,
@@ -305,6 +307,8 @@ openerp.mail = function(session) {
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
                 self.bind_events();
                 self.form_view.do_show();
+                if (self.params.email_mode) { self.toggle_email_mode(); }
+                if (self.params.formatting) { self.toggle_formatting_mode(); }
             });
         },
 
@@ -321,32 +325,13 @@ openerp.mail = function(session) {
             // sending an email (partner_ids)
             this.$element.find('a.oe_mail_compose_message_email').click(function (event) {
                 event.preventDefault();
-                self.params.email_mode = ! self.params.email_mode;
-                // update context of datasetsearch
-                self.ds_compose.context.email_mode = self.params.email_mode;
-                // update 'Post' button -> 'Send'
-                // update 'Send an Email' link -> 'Post a comment'
-                if (self.params.email_mode) {
-                    self.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Send</span>');
-                    self.$element.find('a.oe_mail_compose_message_email').html('Comment');
-                } else {
-                    self.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Post</span>');
-                    self.$element.find('a.oe_mail_compose_message_email').html('Send an Email');
-                }
-                // toggle display
-                self.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
+                self.toggle_email_mode();
             });
             // event: click on 'Formatting' icon-link that toggles the advanced
             // formatting options for writing a message (subject, body_html)
             this.$element.find('a.oe_mail_compose_message_formatting').click(function (event) {
                 event.preventDefault();
-                self.params.formatting = ! self.params.formatting;
-                // update context of datasetsearch
-                self.ds_compose.context.formatting = self.params.formatting;
-                // toggle display
-                self.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
-                self.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
-                self.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
+                self.toggle_formatting_mode();
             });
             // event: click on 'Attachment' icon-link that opens the dialog to
             // add an attachment.
@@ -362,6 +347,37 @@ openerp.mail = function(session) {
                 // not yet implemented
                 self.set_body_value('checklist', 'checklist');
             });
+        },
+
+        /**
+         * Toggle the formatting mode. */
+        toggle_formatting_mode: function() {
+            this.formatting = ! this.formatting;
+            // update context of datasetsearch
+            this.ds_compose.context.formatting = this.formatting;
+            // toggle display
+            this.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
+            this.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
+            this.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
+        },
+
+        /**
+         * Toggle the email mode. */
+        toggle_email_mode: function() {
+            this.email_mode = ! this.email_mode;
+            // update context of datasetsearch
+            this.ds_compose.context.email_mode = this.email_mode;
+            // update 'Post' button -> 'Send'
+            // update 'Send an Email' link -> 'Post a comment'
+            if (this.email_mode) {
+                this.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Send</span>');
+                this.$element.find('a.oe_mail_compose_message_email').html('Comment');
+            } else {
+                this.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Post</span>');
+                this.$element.find('a.oe_mail_compose_message_email').html('Send an Email');
+            }
+            // toggle display
+            this.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
         },
 
         /**
@@ -455,13 +471,14 @@ openerp.mail = function(session) {
             return display_done && compose_done;
         },
 
-        instantiate_composition_form: function(mode, msg_id) {
+        instantiate_composition_form: function(mode, email_mode, formatting, msg_id) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
                 'extended_mode': false, 'uid': this.params.uid, 'res_model': this.params.res_model,
-                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
+                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id,
+                'email_mode': email_mode || false, 'formatting': formatting || false });
             var composition_node = this.$element.find('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
@@ -470,6 +487,9 @@ openerp.mail = function(session) {
 
         do_customize_display: function() {
             if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_action').eq(0).show(); }
+            if (this.session.debug) {
+                this.$element.find('ul.oe_mail_debug').toggleClass('oe_mail_invisible');
+            }
         },
 
 
@@ -544,8 +564,10 @@ openerp.mail = function(session) {
             // event: click on "Reply" in msg side menu (email style)
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
                 var msg_id = event.srcElement.dataset.msg_id;
+                var email_mode = (event.srcElement.dataset.type == 'email');
+                var formatting = (event.srcElement.dataset.formatting == 'html');
                 if (! msg_id) return false;
-                self.instantiate_composition_form('reply', msg_id);
+                self.instantiate_composition_form('reply', email_mode, formatting, msg_id);
                 event.preventDefault();
             });
             // event: click on "Debug data" in msg side menu (email style)

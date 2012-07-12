@@ -188,6 +188,7 @@ class mail_compose_message(osv.TransientModel):
             'body_html': quoted_body_html,
             'subject': reply_subject,
             'attachment_ids': [],
+            'dest_partner_ids': [1],
             'model': message_data.model or False,
             'res_id': message_data.res_id or False,
             'email_from': current_user.user_email or message_data.email_to or False,
