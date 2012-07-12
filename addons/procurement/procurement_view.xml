@@ -70,21 +70,21 @@
                             <field name="date_planned"/>
                             <field name="procure_method"/>
                             <field name="priority"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group col="2" colspan="2"/>
                     </group>
                     <notebook>
                     <page string="Procurement Details">
-                        <group string="Product &amp; Location" col="4">
+                        <group col="4">
                             <group>
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                                <label for="product_qty" />
+                                <label for="product_qty"/>
                                 <div>
                                     <field name="product_qty" class="oe_inline"/>
                                     <field name="product_uom" class="oe_inline"/>
                                 </div>
-                                <label for="product_uos_qty" />
+                                <label for="product_uos_qty" string="Quentity UoS"/>
                                 <div>
                                     <field name="product_uos_qty" groups="product.group_uos" class="oe_inline"/>
                                     <field name="product_uos"  groups="product.group_uos" class="oe_inline"/>

@@ -246,7 +246,7 @@
                     <sheet>
                         <group>
                             <group string = "General Info">
-                                <field name="company_id" select = "1" widget= "selection"
+                                <field name="company_id" widget= "selection"
                                              on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                                 <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                                 <field name="period_id" />

@@ -121,16 +121,14 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name" placeholder="Annual inventory" class="oe_inline"/>
-                        <span> - </span>
-                        <field name="date" class="oe_inline"/>
-                    </h1>
-                    <label for="company_id" class="oe_edit_only"/>
-                    <h2>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Annual inventory"  class="oe_inline"/> -
+                            <field name="date" class="oe_inline"/>
+                        </h1>
+                    <group>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </h2>
+                    </group>
                     <notebook>
                     <page string="General Informations">
                         <field name="inventory_line_id">
@@ -147,11 +145,6 @@
                             </tree>
                             <form string="Products" version="7.0">
                                 <sheet>
-                                    <div class="oe_right oe_button_box">
-                                        <button name="%(stock.action_view_stock_inventory_line_split)d"
-                                            string="Split inventory lines" groups="stock.group_inventory_valuation"
-                                            type="action" icon="terp-stock_effects-object-colorize"/>
-                                    </div>
                                     <group>
                                         <group>
                                             <field domain="[('usage','=','internal')]" name="location_id"/>
@@ -164,6 +157,9 @@
                                                 <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                                             </div>
                                             <field name="prod_lot_id" groups="stock.group_production_lot"/>
+                                            <button name="%(stock.action_view_stock_inventory_line_split)d"
+                                            string="Split inventory lines" groups="stock.group_inventory_valuation"
+                                            type="action" icon="terp-stock_effects-object-colorize"/>
                                         </group>
                                     </group>
                                 </sheet>
@@ -748,7 +744,7 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
-                        <label string="-" attrs="{'invisible':[('origin','=',False)]}"/> 
+                        <span attr="{'invisible': [('origin','=',False)]}"> - </span>
                         <field name="origin" placeholder="PO0032" class="oe_inline"/>
                     </h1>
                     <label for="partner_id" class="oe_edit_only"/>

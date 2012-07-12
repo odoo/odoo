@@ -28,9 +28,8 @@
                             <field name="partner_id"/>
                             <field name="product_id"/>
                             <field name="active"/>
-                            <separator string="Pricing Information" colspan="4"/>
-                            <group colspan="4" col="4">
-                                <group col="2" colspan="2">
+                            <group string="Pricing Information">
+                                <group>
                                     <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                                     <label for="free_if_more_than"/>
                                     <div>
@@ -42,7 +41,7 @@
                             <newline/>
                             <field name="use_detailed_pricelist"/>
                         </group>
-                        <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
+                        <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
                             <tree string="Delivery grids">
                                   <field name="sequence"/>
                                   <field name="name"/>
@@ -127,15 +126,13 @@
                             <field name="line_ids"/>
                         </page>
                         <page string="Destination">
-                            <group>
-                                <group>
-                                    <field name="country_ids" widget="many2many_tags"/>
-                                    <field name="state_ids" widget="many2many_tags"/>
-                                </group>
-                                <group>
-                                    <field name="zip_from" class="oe_inline"/>
-                                    <field name="zip_to" class="oe_inline"/>
-                                </group>
+                            <group string="Countries">
+                                <field name="country_ids"/>
+                            </group>
+                            <group string="States">
+                                <field colspan="2" name="state_ids" nolabel="1"/>
+                                <field name="zip_from"/>
+                                <field name="zip_to"/>
                             </group>
                         </page>
                     </notebook>
@@ -158,28 +155,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines" version="7.0">
-                    <sheet>
-                        <label for="name" class="oe_edit_only"/>
-
-                            <field name="name" col="4"/>
-
-                        <group col="4">
-                            <group>
-                                <label string="Condition" for="type"/>
-                                <div>
-                                    <field name="type"/>
-                                    <field name="operator"/>
-                                    <field name="max_value"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="list_price"/>
-                                <field name="standard_price"/>
-                                <field name="price_type"/>
-                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
-                            </group>
-                        </group>
-                    </sheet>
+                    <field colspan="4" name="name"/>
+                    <div>
+                        <label string="condition" for="type"/>
+                        <field name="type" class="oe_inline"/>
+                        <field name="operator" class="oe_inline"/>
+                        <field name="max_value" class="oe_inline"/>
+                    </div>
+                    <group col="4">
+                        <field name="list_price"/>
+                        <field name="standard_price"/>
+                        <field name="price_type"/>
+                        <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                    </group>
                 </form>
             </field>
         </record>
