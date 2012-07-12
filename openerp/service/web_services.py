@@ -799,7 +799,7 @@ class translation(netsvc.ExportService):
                     f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
                     if f2:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
-                        translated_data.append(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, context=context))
+                        translated_data.append(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context))
                         context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
@@ -809,7 +809,7 @@ class translation(netsvc.ExportService):
                     f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
                 if f:
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
-                    translated_data.append(tools.trans_load(cr, f, lang, verbose=False, flag=flag, context=context2))
+                    translated_data.append(tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2))
                 elif iso_lang != 'en':
                     _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
         cr.commit()

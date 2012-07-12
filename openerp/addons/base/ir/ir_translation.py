@@ -70,7 +70,6 @@ class ir_translation_import_cursor(object):
 
         cr.execute('''CREATE TEMP TABLE %s(
             imd_model VARCHAR(64),
-            imd_module VARCHAR(64),
             imd_name VARCHAR(128)
             ) INHERITS (%s) ''' % (self._table_name, self._parent_table))
 
@@ -80,10 +79,10 @@ class ir_translation_import_cursor(object):
 
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
-                        imd_model, imd_module, imd_name, value)
+                        imd_model, module, imd_name, value)
                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 (ddict['name'], ddict['lang'], ddict.get('res_id'), ddict['src'], ddict['type'],
-                    ddict.get('imd_model'), ddict.get('imd_module'), ddict.get('imd_name'),
+                    ddict.get('imd_model'), ddict.get('module'), ddict.get('imd_name'),
                     ddict['value']))
 
     def finish(self):
@@ -101,18 +100,18 @@ class ir_translation_import_cursor(object):
             SET res_id = imd.res_id
             FROM ir_model_data AS imd
             WHERE ti.res_id IS NULL
-                AND ti.imd_module IS NOT NULL AND ti.imd_name IS NOT NULL
+                AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
 
-                AND ti.imd_module = imd.module AND ti.imd_name = imd.name
+                AND ti.module = imd.module AND ti.imd_name = imd.name
                 AND ti.imd_model = imd.model; """ % self._table_name)
 
         if self._debug:
-            cr.execute("SELECT imd_module, imd_model, imd_name FROM %s " \
-                "WHERE res_id IS NULL AND imd_module IS NOT NULL" % self._table_name)
+            cr.execute("SELECT module, imd_model, imd_name FROM %s " \
+                "WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
             for row in cr.fetchall():
                 _logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
 
-        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND imd_module IS NOT NULL" % \
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
             self._table_name)
 
         # Records w/o res_id must _not_ be inserted into our db, because they are
@@ -132,8 +131,8 @@ class ir_translation_import_cursor(object):
 
         # Step 3: insert new translations
 
-        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value)
-            SELECT name, lang, res_id, src, type, value
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module)
+            SELECT name, lang, res_id, src, type, value, module
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
@@ -167,6 +166,7 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
+        'module': fields.char('Module Name', size=128),
     }
     
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 

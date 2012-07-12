@@ -843,7 +843,7 @@ def trans_generate(lang, modules, cr):
 
     return out
 
-def trans_load(cr, filename, lang, verbose=True, flag=None, context=None):
+def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, context=None):
     try:
         fileobj = misc.file_open(filename)
         pool = pooler.get_pool(cr.dbname)
@@ -858,7 +858,7 @@ def trans_load(cr, filename, lang, verbose=True, flag=None, context=None):
             return transl
         else:
             fileformat = os.path.splitext(filename)[-1][1:].lower()
-            r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
+            r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
         fileobj.close()
         return r
     except IOError:
@@ -866,7 +866,7 @@ def trans_load(cr, filename, lang, verbose=True, flag=None, context=None):
             _logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
+def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, module_name=None, context=None):
     """Populates the ir_translation table."""
     if verbose:
         _logger.info('loading translation file for language %s', lang)
@@ -896,7 +896,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 break
         elif fileformat == 'po':
             reader = TinyPoFile(fileobj)
-            f = ['type', 'name', 'res_id', 'src', 'value']
+            f = ['type', 'name', 'res_id', 'src', 'value', 'module']
         else:
             _logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
@@ -929,6 +929,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if res_id and isinstance(res_id, (int, long)) \
                 or (isinstance(res_id, basestring) and res_id.isdigit()):
                     dic['res_id'] = int(res_id)
+                    dic['module'] = module_name
             else:
                 try:
                     tmodel = dic['name'].split(',')[0]
@@ -938,9 +939,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                         tmodule = dic_module
                         tname = res_id
                     dic['imd_model'] = tmodel
-                    dic['imd_module'] = tmodule
+                    dic['module'] = tmodule
                     dic['imd_name'] =  tname
-
                     dic['res_id'] = None
                 except Exception:
                     _logger.warning("Could not decode resource for %s, please fix the po file.",
