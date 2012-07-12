@@ -849,7 +849,7 @@ def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, co
         pool = pooler.get_pool(cr.dbname)
         traslation_obj = pool.get('ir.translation')
         _logger.info("loading %s", filename)
-        if flag == 'web' and module_name == 'web':
+        if flag == 'web':
             transl = []
             trans_ids = traslation_obj.search(cr, 1, [('module','=', module_name),('lang','=',lang)])
             for trans in traslation_obj.browse(cr, 1, trans_ids, context=context):
