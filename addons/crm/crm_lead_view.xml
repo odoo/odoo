@@ -521,10 +521,10 @@
                                     <field name="street" placeholder="Street..."/>
                                     <field name="street2"/>
                                     <div>
-                                        <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                        <field name="city" class="oe_inline" placeholder="City"/>
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
-                                    <field name="state_id" placeholder="State"/>
                                     <field name="country_id" placeholder="Country"/>
                                 </div>
                             </group>
@@ -532,8 +532,8 @@
                             <group>
                                 <label for="contact_name" />
                                 <div>
-                                    <field name="contact_name" class="oe_inline"/>,
-                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                                    <field name="contact_name" class="oe_inline"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
                                 </div>
                                 <field name="function" />
                                 <field name="mobile"/>
