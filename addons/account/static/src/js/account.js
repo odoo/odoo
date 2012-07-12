@@ -48,7 +48,7 @@ instance.account.extend_actionmanager = instance.web.ActionManager.include({
     
 instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
     init: function(parent, action) {
-        this._super.apply(this,arguments);
+        this._super.apply(this, arguments);
         //Fix me: pass hard coded model name, find the way to fetch it from server
         this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.partner.info', action.context, action.domain);
     },
@@ -104,6 +104,7 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         viewmanager.action.domain = this.original_domain
         $.when(this._super(action)).then(function() {
             var id = self.get_fields_values().partner_id;
+            // apply domain on list
             viewmanager.action.domain = (viewmanager.action.domain || []).concat([["partner_id", "=", id]])
             viewmanager.searchview.do_search()
         })
@@ -153,7 +154,6 @@ instance.account.btn_extend = instance.web.form.WidgetButton.extend({
                         self.view.on_pager_action()
                      }
                 })
-               
             });
     },
 })
@@ -188,5 +188,18 @@ instance.account.list_button = instance.web.form.WidgetButton.extend({
         });
    }
 })
- 
+instance.account.set_selection = instance.web.ListView.List.include({
+    render: function(){
+        this._super()
+        self = this
+        if (this.options.action && this.options.action.extended_form_view_id){
+            this.$current.find('th.oe_list_record_selector input')
+            .closest('tr').each(function () {
+                var record = self.records.get($(this).data('id'));
+                if (!record.get('reconcile_id'))
+                    $(this).find('th.oe_list_record_selector input').prop('checked', true)
+            })
+        }
+    }
+})
 }
