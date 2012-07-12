@@ -71,17 +71,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     on_breadcrumb_clicked: function(ev) {
         var $e = $(ev.target);
+        var id = $e.data('id');
         var item;
-        for (var i = 0; i < this.breadcrumbs.length; i += 1) {
+        for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
             var it = this.breadcrumbs[i];
-            if (it.id == $e.data('id')) {
+            if (it.id == id) {
                 item = it;
-                continue;
+                break;
             }
-            if (item) {
-                // Remove items after selected item
-                this.remove_breadcrumb(i);
-            }
+            this.remove_breadcrumb(i);
         }
         var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
         item.show(index, $e);
