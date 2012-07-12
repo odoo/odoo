@@ -54,47 +54,37 @@
             <field name="arch" type="xml">
                 <form string="Membership products" version="7.0">
                     <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                         <group>
                             <group>
-                                <field name="name" />
-                                <field name="default_code" />
-                                <field name="type" />
-                                <field name="categ_id" />
-                                <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
+                                <field name="default_code"/>
+                                <field name="categ_id"/>
+                                <field name="membership" invisible="1"/>
+                                <field name="company_id"
+                                    groups="base.group_multi_company"
+                                    widget="selection"/>
+                                <field name="active"/>
                             </group>
                             <group>
-                                <field name="membership" invisible="1"/>
-                                <label for="membership_date_from"
-                                    string="Membership Duration" />
-                                <div style="min-width:370px">
+                                <label for="membership_date_from" string="Membership Duration"/>
+                                <div>
                                     <field name="membership_date_from" required="1" class="oe_inline"/> - 
-                                    <field name="membership_date_to" required="1"  class="oe_inline"/>
+                                    <field name="membership_date_to" required="1" class="oe_inline"/>
                                 </div>
-                                <field name="list_price"
-                                    string="Membership Fee" />
+                                <field name="list_price" string="Membership Fee"/>
                                 <field
                                     name="property_account_income"
-                                    domain="[('type', '!=', 'view')]" />
+                                    domain="[('type', '!=', 'view')]"/>
+                                <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
                             </group>
                         </group>
-                        <group>
-                            <field name="company_id"
-                                groups="base.group_multi_company"
-                                widget="selection" />
-                            <field name="active" />
-                        </group>
-                        <group>
-                            <field colspan="4" name="description" placeholder="Add a description"
-                                nolabel="1" />
-                        </group>
-                        <group>
-                            <field colspan="4" name="description_sale" placeholder="Add a sale description"
-                                nolabel="1" />
-                        </group>
-                        <group>
-                            <field colspan="4" placeholder="Add a purchase description"
-                                name="description_purchase" nolabel="1" />
-                        </group>
+                        <label for="description"/>
+                        <field colspan="4" name="description" placeholder="Add a description..."/>
+                        <label for="description_sale"/>
+                        <field colspan="4" name="description_sale" placeholder="This note will be displayed on quotations..."/>
                     </sheet>
                  </form>
             </field>
