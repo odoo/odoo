@@ -35,12 +35,13 @@
     width: 484px;
 }
 
-.openerp div.oe_mail_wall_action textarea.oe_mail_compose_textarea {
+.openerp div.oe_mail_wall_action textarea.oe_mail_compose_textarea,
+.openerp div.oe_mail_wall_action div.oe_mail_compose_message_body_text textarea {
     width: 474px;
     height: 60px;
     padding: 4px;
     margin-bottom: 8px;
-    /*float: right;*/
+    float: right;
 }
 
 .openerp ul.oe_mail_wall_threads {
@@ -161,8 +162,9 @@
     clear: both; 
 }
 
-/* TODO */
-.openerp textarea.oe_mail_compose_textarea {
+/* default textarea (oe_mail_compose_textarea), and body_text textarea for compose form view */
+.openerp textarea.oe_mail_compose_textarea,
+.openerp div.oe_mail_compose_message_body_text textarea {
     width: 474px;
     height: 60px;
     padding: 4px;
@@ -170,7 +172,9 @@
     border: 1px solid #cccccc;
 }
 
-.openerp textarea.oe_mail_compose_textarea:focus {
+/* default textarea (oe_mail_compose_textarea), and body_text textarea for compose form view */
+.openerp textarea.oe_mail_compose_textarea:focus,
+.openerp div.oe_mail_compose_message_body_text textarea:focus {
     outline: 0;
     border-color: rgba(82, 168, 236, 0.8);
     -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
@@ -311,15 +315,9 @@
 }
 
 /* body_html: cleditor */
-/*.openerp div.cleditorMain {
-    width: 468px !important;
-    height: 115px !important;
+.openerp div.cleditorMain {
+    border: 1px solid #cccccc;
 }
-
-.openerp div.cleditorMain iframe {
-    width: 468px !important;
-    height: 90px !important;
-}*/
 
 
 /* ------------------------------------------------------------ */
