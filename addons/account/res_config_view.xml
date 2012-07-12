@@ -70,6 +70,7 @@
                             <field name="decimal_precision"/>
                             <field name="default_purchase_tax" domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
                                 attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
+                            <field name="tax_calculation_rounding_method"/>
                             <field name="module_account_asset"/>
                             <field name="module_account_budget"/>
                             <separator string="Customer Invoices" colspan="2"/>

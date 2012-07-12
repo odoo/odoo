@@ -8,21 +8,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Objects Recording" version="7.0">
-                    <header>
-                        <button name="record_objects" icon="gtk-ok" string="Record" type="object" class="oe_highlight"/>
+                    <group>
+                        <field name="check_date"/>
+                        <field name="filter_cond"/>
+                    </group>
+                    <separator string="Choose objects to record"/>
+                    <field name="objects"/>
+                    <group><field name="info_yaml"/></group>
+                    <footer>
+                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
                         or
-                        <button icon="gtk-cancel" string="Cancel" special="cancel" class="oe_link"/>
-                    </header>
-                    <sheet>
-                        <group>
-                            <field name="check_date"/>
-                            <field name="filter_cond"/>
-                        </group>
-                        <group string="Choose objects to record">
-                            <field name="objects" nolabel="1"/>
-                        </group>
-                        <group><field name="info_yaml"/></group>
-                    </sheet>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -89,11 +86,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording" version="7.0">
-                    <header>
-                        <button string="Continue" name="inter_call" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group string="Module Information">
                         <field name="name"/>
                         <field name="directory_name"/>
@@ -105,6 +97,11 @@
                     </group>
                     <separator string="Description"/>
                     <field name="description"/>
+                    <footer>
+                        <button string="Continue" name="inter_call" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
          </record>
