@@ -357,9 +357,7 @@ class WebClient(openerpweb.Controller):
         for mod in mods:
             messages[mod] = {"messages":[]}
             proxy = req.session.proxy("translation")
-            trans = proxy.load(req.session._db, [mod], langs, "web")
-            if trans:
-                messages[mod] = trans
+            messages[mod] = proxy.load(req.session._db, [mod], langs, "web")
         #  keep loading from .po (Reason to run web without embedded mode)
         if not messages['web']['messages']:
             for addon_name in mods:
