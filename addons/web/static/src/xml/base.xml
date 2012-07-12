@@ -535,14 +535,16 @@
 </t>
 
 <t t-name="TreeView">
-    <select t-if="toolbar" style="width: 30%">
-    </select>
-    <table class="oe_tree_table">
+    <div class = "tree_header">
+         <select t-if="toolbar" ></select>
+         <button id = "tree_view_collapse">Collapse All</button>
+         <button id = "tree_view_expand">Expand All</button>
+     </div>
+    <table class="oe-treeview-table">
         <thead>
             <tr>
                 <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible"
-                    class="treeview-header">
+                    t-if="!field.attrs.modifiers.tree_invisible">
                     <t t-esc="fields[field.attrs.name].string" />
                 </th>
             </tr>
@@ -554,11 +556,11 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level + 1">
+        t-att-data-id="record.id" t-att-data-level="level">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
-    <t t-set="rank" t-value="'oe_tree_first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
+    <t t-set="rank" t-value="'oe-treeview-first'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + 19*(level-1) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"

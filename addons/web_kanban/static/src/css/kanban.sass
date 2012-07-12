@@ -120,7 +120,6 @@
         width: 16px
         height: 16px
         background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat
-    .oe_kanban_group_folded .oe_kanban_fold_icon
     // }}}
     // KanbanQuickCreate {{{
     .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
@@ -132,7 +131,6 @@
         float: right
 
     .oe_kanban_quick_create
-        overflow: hidden
         margin-bottom: 4px
     .oe_kanban_quick_create_buttons
         margin: 4px 0
@@ -298,8 +296,8 @@
             margin-bottom: 0
         &:hover
             @include box-shadow(0 0 3px rgba(0,0,0,0.6))
-            .oe_dropdown_kanban
-                display: block
+            .oe_dropdown_kanban > span
+                visibility: visible
         h3
             margin: 0 16px 0 0
             color: #4c4c4c
@@ -365,7 +363,6 @@
         position: absolute
         top: -8px
         right: 3px
-        display: none
         cursor: pointer
         &:hover
             text-decoration: none
@@ -373,6 +370,15 @@
             left: 0
             top: 28px
             min-width: 160px
+    .oe_kanban_header
+        .oe_dropdown_kanban
+            display: none
+    .oe_kanban_column
+        .oe_dropdown_kanban
+            &.oe_opened > span
+                visibility: visible
+            > span
+                visibility: hidden
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker
