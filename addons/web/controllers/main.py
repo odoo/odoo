@@ -360,7 +360,7 @@ class WebClient(openerpweb.Controller):
             trans = proxy.load(req.session._db, [mod], langs, "web")
             if trans:
                 messages[mod] = trans
-        return {"modules": {'messages': messages},
+        return {"modules": messages,
                 "lang_parameters": lang_obj} 
 
     @openerpweb.jsonrequest
