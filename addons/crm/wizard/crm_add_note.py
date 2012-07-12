@@ -25,7 +25,7 @@ class crm_add_note(osv.osv_memory):
             context = {}
 
         if not context.get('active_model'):
-            raise osv.except_osv(_('Error'), _('Can not add note!'))
+            raise osv.except_osv(_('Error'), _('Cannot add note.'))
 
         model = context.get('active_model')
         case_pool = self.pool.get(model)
