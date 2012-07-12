@@ -180,7 +180,7 @@ class hr_expense_expense(osv.osv):
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc.id,
-                    'amount': l.unit_amount,
+                    'amount': l.total_amount,
                     'type': 'dr'
                 }))
                 total += l.total_amount
@@ -196,7 +196,6 @@ class hr_expense_expense(osv.osv):
                 'company_id': company_id,
     #            'origin': exp.name,
                 'line_ids': lines,
-                'currency_id': exp.currency_id.id,
                 'amount': total
             }
             journal = False
