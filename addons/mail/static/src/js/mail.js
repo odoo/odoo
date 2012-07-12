@@ -317,13 +317,22 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // event: click on 'Send a Message' link that toggles the form for
+            // event: click on 'Send an Email' link that toggles the form for
             // sending an email (partner_ids)
             this.$element.find('a.oe_mail_compose_message_email').click(function (event) {
                 event.preventDefault();
                 self.params.email_mode = ! self.params.email_mode;
                 // update context of datasetsearch
                 self.ds_compose.context.email_mode = self.params.email_mode;
+                // update 'Post' button -> 'Send'
+                // update 'Send an Email' link -> 'Post a comment'
+                if (self.params.email_mode) {
+                    self.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Send</span>');
+                    self.$element.find('a.oe_mail_compose_message_email').html('Comment');
+                } else {
+                    self.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Post</span>');
+                    self.$element.find('a.oe_mail_compose_message_email').html('Send an Email');
+                }
                 // toggle display
                 self.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
             });
