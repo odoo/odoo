@@ -222,7 +222,7 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Purchase Receipt" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
