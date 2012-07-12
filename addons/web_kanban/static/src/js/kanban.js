@@ -416,12 +416,18 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.focus();
         });
         var add_btn = this.$element.find('.oe_kanban_add');
+        var fold_btn = this.$element.find('.oe_dropdown_kanban');
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (jQuery(window).scrollTop() > 120 ) {
                     $('body,html').animate({ scrollTop: 0 }, 200);
                 }
-                self.view.do_bounce(add_btn);
+                if (!self.state.folded) {
+                    self.view.do_bounce(add_btn);
+                }else {
+                    fold_btn.css('display','inline-block');
+                    self.view.do_bounce(fold_btn);
+                }
             }
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
