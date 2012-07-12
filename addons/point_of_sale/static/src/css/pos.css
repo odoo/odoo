@@ -16,6 +16,8 @@
     width: 100%;
     height: 100%;
     -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
 }
 
 .point-of-sale .shadow-top{
@@ -25,6 +27,9 @@
     right:0;
     height:10px;
     background: -webkit-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
+    background:    -moz-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
+    background:     -ms-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
+    background:         linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
 }
 .point-of-sale .darker-shadow-top{
     position: absolute;
@@ -33,6 +38,9 @@
     right:0;
     height:10px;
     background: -webkit-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
+    background:    -moz-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
+    background:     -ms-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
+    background:         linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
 }
 /*  ********* The black loading screen ********* */
 
@@ -64,12 +72,12 @@
     padding: 4px 10px;
     font-size: 11px;
     border: 1px solid #cacaca;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
     border-radius: 4px;
     background: #e2e2e2;
-    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
     background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background:  -ms-linear-gradient(#f0f0f0, #e2e2e2);
+    background:      linear-gradient(#f0f0f0, #e2e2e2);
 }
 .point-of-sale ul, .point-of-sale ol {
     padding: 0;
@@ -84,8 +92,7 @@
 .point-of-sale .pos-right-align input {
     text-align: right;
     border: 1px solid #cecbcb;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 /*  ********* The black header bar ********* */
@@ -155,8 +162,10 @@
     margin-right:0px;
     border: 1px solid black;
     background: #7f82ac;
-    background: -moz-linear-gradient(#b2b3d7, #7f82ac);
     background: -webkit-gradient(linear, left top, left bottom, from(#b2b3d7), to(#7f82ac));
+    background: -moz-linear-gradient(#b2b3d7, #7f82ac);
+    background:  -ms-linear-gradient(#b2b3d7, #7f82ac);
+    background:      linear-gradient(#b2b3d7, #7f82ac);
 }
 
 .point-of-sale #rightheader button.neworder-button {
@@ -217,7 +226,10 @@
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
 .point-of-sale #leftpane {
-    -webkit-box-sizing:border-box;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
     position:absolute;
     left:0;
     width:440px;
@@ -256,8 +268,10 @@
 .point-of-sale #paypad button:hover {
     color: white;
     background: #7f82ac;
-    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
     background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background:  -ms-linear-gradient(#9d9fc5, #7f82ac);
+    background:      linear-gradient(#9d9fc5, #7f82ac);
 }
 
 /*  ********* The Numpad ********* */
@@ -279,14 +293,18 @@
 .point-of-sale #numpad button:hover {
     color: white;
     background: #7f82ac;
-    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
     background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background:  -ms-linear-gradient(#9d9fc5, #7f82ac);
+    background:      linear-gradient(#9d9fc5, #7f82ac);
 }
 .point-of-sale #numpad .selected-mode {
     color: white;
     background: #7f82ac;
-    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
     background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background:  -ms-linear-gradient(#9d9fc5, #7f82ac);
+    background:      linear-gradient(#9d9fc5, #7f82ac);
 }
 .point-of-sale .input-button {
     font-size: 24px;
@@ -323,6 +341,9 @@
 
 .point-of-sale .product-list-scroller{
     -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
     width:100%;
     height:100%;
     overflow: hidden;
@@ -372,8 +393,6 @@
 }
 .point-of-sale .searchbox input {
     width: 130px;
-    -moz-border-radius: 11px;
-    -webkit-border-radius: 11px;
     border-radius: 11px;
     border: 1px solid #cecbcb;
     padding: 3px 19px;
@@ -404,6 +423,9 @@
     right:0;
     bottom:0;
     background: -webkit-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
+    background:    -moz-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
+    background:     -ms-linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
+    background:         linear-gradient(bottom,rgba(255,255,255,0.5),rgba(255,255,255,0));
 }
 .point-of-sale #categories h4 {
     display: inline-block;
@@ -425,12 +447,10 @@
     height:120px;
     background:#fff;
     border: 1px solid #fff;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     border-radius: 3px;
-    -moz-box-shadow: 0px 1px 8px #777777;
     -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
-    -box-shadow: 0px 1px 8px rgba(0,0,0,0.9);
+       -moz-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
+            box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
     cursor: pointer;
 }
 
@@ -445,6 +465,9 @@
 .point-of-sale .category-button .category-name {
     position: absolute;
     -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
     top:auto;
     left: 2px;
     right: 2px;
@@ -454,7 +477,7 @@
     /*color:#8a89ba;*/
     color: #FFF;
     cursor: pointer;
-    -webkit-border-radius: 2px;
+    border-radius: 3px;
 }
 
 /*  e) the product */
@@ -469,12 +492,10 @@
     height:120px;
     background:#fff;
     border: 1px solid #fff;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     border-radius: 3px;
-    -moz-box-shadow: 0px 1px 8px #777777;
     -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
-    -box-shadow: 0px 1px 8px rgba(0,0,0,0.9);
+       -moz-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
+            box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
 }
 
 .point-of-sale .product .product-img {
@@ -493,18 +514,22 @@
     color: white;
     background: #7f82ac;
     padding: 2px 5px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
 }
 
 .point-of-sale .product .product-name {
     position: absolute;
     -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
     bottom:0;
     top:auto;
     width:100%;
     background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     /*background:#FFF;*/
     padding: 3px;
     padding-top:15px;
@@ -553,6 +578,9 @@
 }
 .point-of-sale .screen .content-cell{
     width:100%;
+}
+.point-of-sale .screen .content-cell .content-container{
+    height:100%;
     position:relative;
 }
 
@@ -658,6 +686,9 @@
 
 .point-of-sale .scale-screen .product-picture {
     -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
     display: float;
     float: right;
     margin: 5px;
@@ -668,12 +699,10 @@
 
     background:#fff;
     border: 1px solid #fff;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     border-radius: 3px;
-    -moz-box-shadow: 0px 1px 8px #777777;
     -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
-    -box-shadow: 0px 1px 8px rgba(0,0,0,0.9);
+       -moz-box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
+            box-shadow: 0px 1px 8px rgba(0,0,0,0.2);
 }
 
 .point-of-sale .scale-screen .product-picture img{
@@ -691,8 +720,6 @@
     color:white;
     background: #7f82ac;
     padding: 2px 5px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
     cursor:pointer;
 }
@@ -743,8 +770,11 @@
 }
 
 .point-of-sale .order{
-    background: #FFF;
+    background: #F00;
     background: -webkit-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
+    background:    -moz-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
+    background:     -ms-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
+    background:         linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
     padding-bottom:15px;
     padding-top:15px;
     margin-left:16px;
@@ -753,6 +783,8 @@
     margin-bottom:16px;
     font-size:16px;
     -webkit-box-shadow: 0px 5px 16px rgba(0,0,0, 0.3);
+       -moz-box-shadow: 0px 5px 16px rgba(0,0,0, 0.3);
+            box-shadow: 0px 5px 16px rgba(0,0,0, 0.3);
 
 }
 
@@ -793,16 +825,25 @@
     padding-right:15px;
     cursor: pointer;
     -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
     -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
 }
 .point-of-sale .order .orderline:hover{
     background: rgba(140,143,183,0.05);
     -webkit-transition: background 50ms ease-in-out;
+       -moz-transition: background 50ms ease-in-out;
+            transition: background 50ms ease-in-out;
 }
 
 .point-of-sale .order .orderline.selected{
     background: rgba(140,143,183,0.2);
     -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
     cursor: default;
 }
 .point-of-sale .order .orderline .product-name{
@@ -877,14 +918,16 @@
     cursor: pointer;
 
     border: 1px solid #cacaca;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
     border-radius: 4px;
 
     background: #e2e2e2;
-    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
+    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
+    background:         linear-gradient(#f0f0f0, #e2e2e2);
     -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+            box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
 .point-of-sale .pos-actionbar .button .label{
     margin-top: 37px;
@@ -896,8 +939,10 @@
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
-    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
-    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+    background: -webkit-linear-gradient(#9d9fc5, #7f82ac);
+    background:    -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background:     -ms-linear-gradient(#9d9fc5, #7f82ac);
+    background:         linear-gradient(#9d9fc5, #7f82ac);
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
@@ -935,6 +980,8 @@
     background-color: #F0EEEE;
     border: 1px solid #E0DDDD;
     -webkit-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+       -moz-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+        -ms-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
     z-index:1200;
 }
 .point-of-sale .popup .footer{
@@ -961,21 +1008,25 @@
     cursor: pointer;
 
     border: 1px solid #cacaca;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
     border-radius: 4px;
 
     background: #e2e2e2;
-    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
-    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
+    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
+    background:         linear-gradient(#f0f0f0, #e2e2e2);
     -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+            box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
 .point-of-sale .popup .button:hover {
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
-    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
-    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+    background: -webkit-linear-gradient(#9d9fc5, #7f82ac);
+    background:    -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background:     -ms-linear-gradient(#9d9fc5, #7f82ac);
+    background:         linear-gradient(#9d9fc5, #7f82ac);
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
@@ -1020,14 +1071,21 @@
     border-radius: 4px;
     cursor: pointer;
     -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
     transition: all 250ms ease-in-out;
 }
 .point-of-sale .scrollbar .button{
+    color:white;
     background: rgba(0,0,0,0.6);
     -webkit-box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
-    color:white;
+       -moz-box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
+            box-shadow: 0px 1px 4px rgba(0,0,0,0.01);
     text-shadow: rgba(255,255,255,0.5) 0px 0px 10px;
     -webkit-transition: all 250ms ease-in-out;
+       -moz-transition: all 250ms ease-in-out;
+            transition: all 250ms ease-in-out;
 }
 .point-of-sale .scrollbar .button:hover{
     text-shadow: rgba(255,255,255,0.8) 0px 0px 15px;
@@ -1036,6 +1094,8 @@
     background: rgba(0,0,0,0.3);
     color:rgba(255,255,255,0.5);
     -webkit-transition: all 250ms ease-in-out;
+       -moz-transition: all 250ms ease-in-out;
+            transition: all 250ms ease-in-out;
 }
 .point-of-sale .scrollbar .down-button{
     position:absolute;

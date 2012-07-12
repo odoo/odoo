@@ -215,7 +215,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                     //context {pricelist: shop.pricelist_id[0]} 
                                     ['name', 'list_price','price','pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
                                     [['pos_categ_id','!=', false]],
-                                    {pricelist: shop.pricelist_id[0]} // context for price
+                                    {pricelist: shops[0].pricelist_id[0]} // context for price
                                     );
                             }).pipe( function(product_list){
                                 self.set({'product_list': product_list});
@@ -260,7 +260,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return session_data_def;
                 });
 
-            console.log('Yhaoooefe');
             // associate the products with their categories
             var prod_process_def = $.when(cat_def, session_def)
                 .pipe(function(){
@@ -284,8 +283,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 .then(function(){ 
                     self.build_categories(); 
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
-                    self.log_loaded_data();
-                    console.log("YHAAAA");
+                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
                     self.ready.resolve();
                 },function(){
                     //we failed to load some backend data, or the backend was badly configured.
