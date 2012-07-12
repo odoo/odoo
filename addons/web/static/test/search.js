@@ -1061,17 +1061,11 @@ $(document).ready(function () {
 
     module('saved_filters', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.formats(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('checkboxing', 6, function () {
