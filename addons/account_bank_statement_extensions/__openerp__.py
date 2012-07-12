@@ -27,6 +27,7 @@
     'category': 'Generic Modules/Accounting',
     'description': '''
 Module that extends the standard account_bank_statement_line object for improved e-banking support.
+===================================================================================================
 
 Adds
 - valuta date

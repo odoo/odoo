@@ -27,8 +27,8 @@
     "author" : "OpenERP SA",
     "category": 'Tools',
     "description": """
-Retrieve incoming email on POP / IMAP servers
-=============================================
+Retrieve incoming email on POP / IMAP servers.
+==============================================
 
 Enter the parameters of your POP/IMAP account(s), and any incoming
 emails on these accounts will be automatically downloaded into your OpenERP

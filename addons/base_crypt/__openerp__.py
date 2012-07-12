@@ -26,8 +26,9 @@
     "website" : "http://www.openerp.com",
     "category" : "Tools",
     "description": """
-Replaces cleartext passwords in the database with a secure hash
-===============================================================
+Replaces cleartext passwords in the database with a secure hash.
+================================================================
+
 For your existing user base, the removal of the cleartext
 passwords occurs immediately when you instal base_crypt.
 

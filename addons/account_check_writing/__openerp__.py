@@ -24,7 +24,7 @@
     "author" : "OpenERP SA, NovaPoint Group",
     "category": "Generic Modules/Accounting",
     "description": """
-    Module for the Check writing and check printing  
+Module for the Check writing and check printing.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

@@ -54,7 +54,7 @@ These email templates are also at the heart of the marketing campaign system
 campaigns on any OpenERP document.
 
 Technical note: only the templating system of the original Power Email by
-Openlabs was kept
+Openlabs was kept.
 
     """,
     "data": [

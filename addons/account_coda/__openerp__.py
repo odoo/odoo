@@ -53,6 +53,7 @@ The removal of a CODA File containing multiple Bank Statements will also remove 
 statements.
 
 The following reconciliation logic has been implemented in the CODA processing:
+
 1) The Company's Bank Account Number of the CODA statement is compared against the Bank Account Number field of the Company's CODA Bank Account configuration records (whereby bank accounts defined in type='info' configuration records are ignored). If this is the case an 'internal transfer' transaction is generated using the 'Internal Transfer Account' field of the CODA File Import wizard.
 2) As a second step the 'Structured Communication' field of the CODA transaction line is matched against the reference field of in- and outgoing invoices (supported : Belgian Structured Communication Type).
 3) When the previous step doesn't find a match, the transaction counterparty is located via the Bank Account Number configured on the OpenERP Customer and Supplier records.

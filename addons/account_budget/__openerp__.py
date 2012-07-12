@@ -36,6 +36,7 @@ Budget in order to ensure the total planned is not greater/lower than what he pl
 for this Budget. Each list of record can also be switched to a graphical view of it.
 
 Three reports are available:
+
     1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts.
 
     2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.

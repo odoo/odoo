@@ -24,8 +24,8 @@
     'version': '1.0',
     "category": 'Hidden/Dependency',
     'description': """
-VAT validation for Partners' VAT numbers
-========================================
+VAT validation for Partners' VAT numbers.
+=========================================
 
 After installing this module, values entered in the VAT field of Partners will
 be validated for all supported countries. The country is inferred from the
