@@ -46,7 +46,7 @@ class sugarsoapBindingSOAP:
     # op: create_session
     def create_session(self, request):
         if isinstance(request, create_sessionRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction= URL+"/create_session", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -58,7 +58,7 @@ class sugarsoapBindingSOAP:
     # op: end_session
     def end_session(self, request):
         if isinstance(request, end_sessionRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/end_session", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -70,7 +70,7 @@ class sugarsoapBindingSOAP:
     # op: contact_by_email
     def contact_by_email(self, request):
         if isinstance(request, contact_by_emailRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/contact_by_email", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -82,7 +82,7 @@ class sugarsoapBindingSOAP:
     # op: user_list
     def user_list(self, request):
         if isinstance(request, user_listRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/user_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -94,7 +94,7 @@ class sugarsoapBindingSOAP:
     # op: search
     def search(self, request):
         if isinstance(request, searchRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/search", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -106,7 +106,7 @@ class sugarsoapBindingSOAP:
     # op: track_email
     def track_email(self, request):
         if isinstance(request, track_emailRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/track_email", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -118,7 +118,7 @@ class sugarsoapBindingSOAP:
     # op: create_contact
     def create_contact(self, request):
         if isinstance(request, create_contactRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/create_contact", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -130,7 +130,7 @@ class sugarsoapBindingSOAP:
     # op: create_lead
     def create_lead(self, request):
         if isinstance(request, create_leadRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/create_lead", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -142,7 +142,7 @@ class sugarsoapBindingSOAP:
     # op: create_account
     def create_account(self, request):
         if isinstance(request, create_accountRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/create_account", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -154,7 +154,7 @@ class sugarsoapBindingSOAP:
     # op: create_opportunity
     def create_opportunity(self, request):
         if isinstance(request, create_opportunityRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/create_opportunity", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -166,7 +166,7 @@ class sugarsoapBindingSOAP:
     # op: create_case
     def create_case(self, request):
         if isinstance(request, create_caseRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/create_case", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -178,7 +178,7 @@ class sugarsoapBindingSOAP:
     # op: login
     def login(self, request):
         if isinstance(request, loginRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         
         # no input wsaction
@@ -191,7 +191,7 @@ class sugarsoapBindingSOAP:
     # op: is_loopback
     def is_loopback(self, request):
         if isinstance(request, is_loopbackRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/is_loopback", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -203,7 +203,7 @@ class sugarsoapBindingSOAP:
     # op: seamless_login
     def seamless_login(self, request):
         if isinstance(request, seamless_loginRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/seamless_login", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -215,7 +215,7 @@ class sugarsoapBindingSOAP:
     #op: get_document_list
     def get_document_list(self, request):
         if isinstance(request, get_document_revisionRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_document_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -227,7 +227,7 @@ class sugarsoapBindingSOAP:
     # op: get_entry_list
     def get_entry_list(self, request):
         if isinstance(request, get_entry_listRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_entry_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -242,7 +242,7 @@ class sugarsoapBindingSOAP:
     # op: get_entry
     def get_entry(self, request):
         if isinstance(request, get_entryRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_entry", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -254,7 +254,7 @@ class sugarsoapBindingSOAP:
     # op: get_entries
     def get_entries(self, request):
         if isinstance(request, get_entriesRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -266,7 +266,7 @@ class sugarsoapBindingSOAP:
     # op: set_entry
     def set_entry(self, request):
         if isinstance(request, set_entryRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/set_entry", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -278,7 +278,7 @@ class sugarsoapBindingSOAP:
     # op: set_entries
     def set_entries(self, request):
         if isinstance(request, set_entriesRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/set_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -290,7 +290,7 @@ class sugarsoapBindingSOAP:
     # op: set_note_attachment
     def set_note_attachment(self, request):
         if isinstance(request, set_note_attachmentRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/set_note_attachment", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -302,7 +302,7 @@ class sugarsoapBindingSOAP:
     # op: get_note_attachment
     def get_note_attachment(self, request):
         if isinstance(request, get_note_attachmentRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_note_attachment", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -314,7 +314,7 @@ class sugarsoapBindingSOAP:
     # op: relate_note_to_module
     def relate_note_to_module(self, request):
         if isinstance(request, relate_note_to_moduleRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/relate_note_to_module", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -326,7 +326,7 @@ class sugarsoapBindingSOAP:
     # op: get_related_notes
     def get_related_notes(self, request):
         if isinstance(request, get_related_notesRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_related_notes", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -338,7 +338,7 @@ class sugarsoapBindingSOAP:
     # op: logout
     def logout(self, request):
         if isinstance(request, logoutRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/logout", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -350,7 +350,7 @@ class sugarsoapBindingSOAP:
     # op: get_module_fields
     def get_module_fields(self, request):
         if isinstance(request, get_module_fieldsRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_module_fields", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -362,7 +362,7 @@ class sugarsoapBindingSOAP:
     # op: get_available_modules
     def get_available_modules(self, request):
         if isinstance(request, get_available_modulesRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_available_modules", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -374,7 +374,7 @@ class sugarsoapBindingSOAP:
     # op: update_portal_user
     def update_portal_user(self, request):
         if isinstance(request, update_portal_userRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/update_portal_user", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -386,7 +386,7 @@ class sugarsoapBindingSOAP:
     # op: test
     def test(self, request):
         if isinstance(request, testRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/test", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -398,7 +398,7 @@ class sugarsoapBindingSOAP:
     # op: get_user_id
     def get_user_id(self, request):
         if isinstance(request, get_user_idRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_user_id", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -410,7 +410,7 @@ class sugarsoapBindingSOAP:
     # op: get_user_team_id
     def get_user_team_id(self, request):
         if isinstance(request, get_user_team_idRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_user_team_id", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -422,7 +422,7 @@ class sugarsoapBindingSOAP:
     # op: get_server_time
     def get_server_time(self, request):
         if isinstance(request, get_server_timeRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_server_time", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -434,7 +434,7 @@ class sugarsoapBindingSOAP:
     # op: get_gmt_time
     def get_gmt_time(self, request):
         if isinstance(request, get_gmt_timeRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_gmt_time", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -446,7 +446,7 @@ class sugarsoapBindingSOAP:
     # op: get_sugar_flavor
     def get_sugar_flavor(self, request):
         if isinstance(request, get_sugar_flavorRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_sugar_flavor", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -458,7 +458,7 @@ class sugarsoapBindingSOAP:
     # op: get_server_version
     def get_server_version(self, request):
         if isinstance(request, get_server_versionRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_server_version", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -470,7 +470,7 @@ class sugarsoapBindingSOAP:
     # op: get_relationships
     def get_relationships(self, request):
         if isinstance(request, get_relationshipsRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -482,7 +482,7 @@ class sugarsoapBindingSOAP:
     # op: set_relationship
     def set_relationship(self, request):
         if isinstance(request, set_relationshipRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/set_relationship", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -494,7 +494,7 @@ class sugarsoapBindingSOAP:
     # op: set_relationships
     def set_relationships(self, request):
         if isinstance(request, set_relationshipsRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/set_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -506,7 +506,7 @@ class sugarsoapBindingSOAP:
     # op: set_document_revision
     def set_document_revision(self, request):
         if isinstance(request, set_document_revisionRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/set_document_revision", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -518,7 +518,7 @@ class sugarsoapBindingSOAP:
     # op: search_by_module
     def search_by_module(self, request):
         if isinstance(request, search_by_moduleRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/search_by_module", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -530,7 +530,7 @@ class sugarsoapBindingSOAP:
     # op: sync_get_modified_relationships
     def sync_get_modified_relationships(self, request):
         if isinstance(request, sync_get_modified_relationshipsRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/sync_get_modified_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -542,7 +542,7 @@ class sugarsoapBindingSOAP:
     # op: get_modified_entries
     def get_modified_entries(self, request):
         if isinstance(request, get_modified_entriesRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_modified_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
@@ -554,7 +554,7 @@ class sugarsoapBindingSOAP:
     # op: get_attendee_list
     def get_attendee_list(self, request):
         if isinstance(request, get_attendee_listRequest) is False:
-            raise TypeError, "%s incorrect request type" % (request.__class__)
+            raise TypeError, "%s incorrect request type !" % (request.__class__)
         kw = {}
         # no input wsaction
         self.binding.Send(None, None, request, soapaction=URL+"/get_attendee_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
