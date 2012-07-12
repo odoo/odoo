@@ -144,6 +144,7 @@ class hr_expense_expense(osv.osv):
         res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
         res_id = res and res[1] or False
         return {
+            'name': _('Purchase Receipt'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.voucher',
@@ -153,7 +154,6 @@ class hr_expense_expense(osv.osv):
             'target': 'new',
             'nodestroy': True,
             'res_id': voucher_ids and voucher_ids[0] or False,
-            'close_after_process': True,
         }
     def action_voucher_create(self, cr, uid, ids, context=None):
         res = False
@@ -189,12 +189,11 @@ class hr_expense_expense(osv.osv):
             acc = exp.employee_id.address_home_id.property_account_payable.id
             voucher = {
                 'name': exp.name,
-                'number': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
+                'reference': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
                 'account_id': acc,
                 'type': 'purchase',
                 'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
-    #            'origin': exp.name,
                 'line_ids': lines,
                 'amount': total
             }
