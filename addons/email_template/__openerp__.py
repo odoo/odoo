@@ -28,8 +28,8 @@
     "category" : "Marketing",
     "depends" : ['mail'],
     "description": """
-Email Templating (simplified version of the original Power Email by Openlabs)
-=============================================================================
+Email Templating (simplified version of the original Power Email by Openlabs).
+==============================================================================
 
 Lets you design complete email templates related to any OpenERP document (Sale
 Orders, Invoices and so on), including sender, recipient, subject, body (HTML and

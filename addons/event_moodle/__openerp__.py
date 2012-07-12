@@ -29,30 +29,28 @@ Configure your moodle server.
 ============================= 
 
 With this module you are able to connect your OpenERP with a moodle plateform.
-This module will create courses and students automatically in your moodle plateform to avoid wasting time.
+This module will create courses and students automatically in your moodle plateform 
+to avoid wasting time.
 Now you have a simple way to create training or courses with OpenERP and moodle
-
 
 STEPS TO CONFIGURE
 ------------------
 
-1. activate web service in moodle
+1. activate web service in moodle.
 ----------------------------------
->site administration >plugins >web sevices >manage protocols 
-activate the xmlrpc web service 
+>site administration >plugins >web sevices >manage protocols activate the xmlrpc web service 
 
 
->site administration >plugins >web sevices >manage tokens
-create a token 
+>site administration >plugins >web sevices >manage tokens create a token 
 
 
->site administration >plugins >web sevices >overview
-activate webservice
+>site administration >plugins >web sevices >overview activate webservice
 
 
-2. Create confirmation email with login and password
-----------------------------------------------------
-we strongly suggest you to add those following lines at the bottom of your event confirmation email to communicate the login/password of moodle to your subscribers.
+2. Create confirmation email with login and password.
+-----------------------------------------------------
+we strongly suggest you to add those following lines at the bottom of your event
+confirmation email to communicate the login/password of moodle to your subscribers.
 
 
 ........your configuration text.......
