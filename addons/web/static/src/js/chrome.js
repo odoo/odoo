@@ -894,11 +894,12 @@ instance.web.WebClient = instance.web.Widget.extend({
         });
         this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
-            var $menu = $(this).find('.oe_dropdown_menu');
+            var $toggle = $(this);
+            var $menu = $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
                 // Do not alter propagation
-                $menu.toggleClass('oe_opened', !state);
+                $toggle.add($menu).toggleClass('oe_opened', !state);
                 if (!state) {
                     // Move $menu if outside window's edge
                     var doc_width = $(document).width();
