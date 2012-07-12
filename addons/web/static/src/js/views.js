@@ -27,6 +27,17 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog = null;
         }
     },
+    /**
+     * Add a new item to the breadcrumb
+     *
+     * @param {Object} item breadcrumb item
+     * @param {Object} item.widget widget containing the view(s) to be added to the breadcrumb added
+     * @param {null|Function} item.show callback triggered whenever the widget should be shown back
+     * @param {null|Function} item.hide callback triggered whenever the widget should be shown hidden
+     * @param {null|Function} item.destroy callback triggered whenever the widget should be destroyed
+     * @param {null|String|Array} item.title title(s) of the view(s) to be displayed in the breadcrumb
+     * @param {null|Function} item.get_title function returning the title(s) of the view(s) to be displayed in the breadcrumb
+     */
     push_breadcrumb: function(item) {
         var last = this.breadcrumbs.slice(-1)[0];
         if (last) {
@@ -35,35 +46,24 @@ instance.web.ActionManager = instance.web.Widget.extend({
         item.id = _.uniqueId('breadcrumb_');
         _.defaults(item, {
             show: function(index) {
-                /*
-                 * This callback is used whenever the widget should be shown.
-                 * If multiple titles are used, the index can be used in order
-                 * to define which item of the breadcrumb has been trigerred.
-                 */
+                // If multiple titles are used, the index can be used in order
+                // to define which item of the breadcrumb has been trigerred.
                 item.widget.$element.show();
             },
             hide: function() {
-                /*
-                 * This callback is used whenever the widget should be hidden.
-                 * Called on the last pushed item before pusing a new
-                 * breadcrumb.
-                 */
+                // Called on the last pushed item before pusing a new breadcrumb.
                 item.widget.$element.hide();
             },
             destroy: function() {
-                /*
-                 * This callback is used whenever the widget should be
-                 * destroyed. Happens when the breadcrumb is cleared.
-                 */
+                // Called on all breadcrumbs items when it should be cleared.
+                // Eg: new action triggered from menu
                 item.widget.destroy();
             },
             get_title: function() {
-                /*
-                 * Should return the title of the widget as a string. If an
-                 * array is returned, multiple titles can be used (eg: a
-                 * widget switching views). The #show() callback will receive
-                 * the index of the selected title.
-                 */
+                // Should return the title(s) of the widget as a string.
+                // If an array is returned, multiple titles can be used
+                // (eg: a widget switching views). The #show() callback will receive
+                // the index of the selected title.
                 return item.title || item.widget.get('title');
             }
         });
