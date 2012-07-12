@@ -29,7 +29,7 @@
 This module provides a quick and easy sale process.
 ===================================================
 
-Main features :
+Main features:
 ---------------
     * Fast encoding of the sale.
     * Allow to choose one payment mode (the quick way) or to split the payment between several payment mode.

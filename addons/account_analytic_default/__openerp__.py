@@ -27,11 +27,11 @@
 Allows to automatically select analytic accounts based on criterions:
 =====================================================================
 
-* Product
-* Partner
-* User
-* Company
-* Date
+    * Product
+    * Partner
+    * User
+    * Company
+    * Date
     """,
     'author'    : 'OpenERP SA',
     'website'   : 'http://www.openerp.com',

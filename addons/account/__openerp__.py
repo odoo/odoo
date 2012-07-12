@@ -29,20 +29,20 @@ Accounting and Financial Management.
 
 Financial and accounting module that covers:
 --------------------------------------------
-General accountings
-Cost/Analytic accounting
-Third party accounting
-Taxes management
-Budgets
-Customer and Supplier Invoices
-Bank statements
-Reconciliation process by partner
+    * General accountings
+    * Cost/Analytic accounting
+    * Third party accounting
+    * Taxes management
+    * Budgets
+    * Customer and Supplier Invoices
+    * Bank statements
+    * Reconciliation process by partner
 
 Creates a dashboard for accountants that includes:
 --------------------------------------------------
-* List of Customer Invoice to Approve
-* Company Analysis
-* Graph of Treasury
+    * List of Customer Invoice to Approve
+    * Company Analysis
+    * Graph of Treasury
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) for a particular
 financial year and for preparation of vouchers there is a module named account_voucher.
