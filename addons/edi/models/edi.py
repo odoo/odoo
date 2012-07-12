@@ -129,7 +129,7 @@ class edi_document(osv.osv):
         _logger.debug("get_document(%s)", edi_token)
         edi_ids = self.search(cr, uid, [('name','=', edi_token)], context=context)
         if not edi_ids:
-            raise ValueError('Invalid EDI token: %s' % edi_token)
+            raise ValueError('Invalid EDI token: %s.' % edi_token)
         edi = self.browse(cr, uid, edi_ids[0], context=context)
         return edi.document
 

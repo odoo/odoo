@@ -151,8 +151,8 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                 connection = server.connect()
                 server.write({'state':'done'})
             except Exception, e:
-                _logger.exception("Failed to connect to %s server %s", server.type, server.name)
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                _logger.exception("Failed to connect to %s server %s.", server.type, server.name)
+                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
             finally:
                 try:
                     if connection:
