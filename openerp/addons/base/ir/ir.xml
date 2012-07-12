@@ -749,34 +749,34 @@
             <field name="arch" type="xml">
                 <form string="Attachments" version="7.0">
                    <sheet>
-                    <group col="4">
-                        <field name="name" />
-                        <field name="type"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook>
-                    <page string="Attachment">
-                        <group>
-                            <group attrs="{'invisible':[('type','=','url')]}" string="Data">
-                                <field name="datas" filename="datas_fname"/>
-                                <field name="datas_fname"/>
-                                <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            </group>
-                            <group string="Attached To">
-                                <field name="res_model"/>
-                                <field name="res_id"/>
-                                <field name="res_name"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Created">
-                                <field name="create_uid"/>
-                                <field name="create_date"/>
-                            </group>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group string="Data">
+                            <field name="type"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                         </group>
-                    </page>
-                    <page string="Notes">
-                        <field name="description"/>
-                    </page>
-                    </notebook>
+                        <group string="Attached To">
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="res_name"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                        <group groups="base.group_no_one" string="History">
+                            <label for="create_uid" string="Creation"/>
+                            <div name="creation_div">
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group name="description_group" string="Description" colspan="4">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </group>
                   </sheet>
                 </form>
             </field>
