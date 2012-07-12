@@ -41,7 +41,6 @@
     height: 60px;
     padding: 4px;
     margin-bottom: 8px;
-    float: right;
 }
 
 .openerp ul.oe_mail_wall_threads {
@@ -51,7 +50,7 @@
 /* Specific display of threads in the wall */
 /* ------------------------------------------------------------ */
 
-.openerp ul.oe_mail_wall_threads textarea {
+.openerp ul.oe_mail_wall_threads .oe_mail_msg_content textarea {
     width: 434px;
     height: 30px;
     padding: 4px;
@@ -163,8 +162,8 @@
 }
 
 /* default textarea (oe_mail_compose_textarea), and body_text textarea for compose form view */
-.openerp textarea.oe_mail_compose_textarea,
-.openerp div.oe_mail_compose_message_body_text textarea {
+.openerp .oe_mail_msg_content textarea.oe_mail_compose_textarea,
+.openerp .oe_mail_msg_content div.oe_mail_compose_message_body_text textarea {
     width: 474px;
     height: 60px;
     padding: 4px;
@@ -173,8 +172,8 @@
 }
 
 /* default textarea (oe_mail_compose_textarea), and body_text textarea for compose form view */
-.openerp textarea.oe_mail_compose_textarea:focus,
-.openerp div.oe_mail_compose_message_body_text textarea:focus {
+.openerp .oe_mail_msg_content textarea.oe_mail_compose_textarea:focus,
+.openerp .oe_mail_msg_content div.oe_mail_compose_message_body_text textarea:focus {
     outline: 0;
     border-color: rgba(82, 168, 236, 0.8);
     -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
@@ -285,7 +284,7 @@
 }
 
 /* ------------------------------------------------------------ */
-/* mail.compose.message form view
+/* mail.compose.message form view & OpenERP hacks
 /* ------------------------------------------------------------ */
 
 /* form_view: delete white background */
@@ -301,7 +300,8 @@
     margin: 0px;
 }
 
-.openerp .oe_mail_msg_content table.oe_form_field {
+.openerp .oe_mail_msg_content table.oe_form_field,
+.openerp .oe_mail_msg_content div.oe_form_field {
     padding: 0px;
 }
 
@@ -315,8 +315,14 @@
 }
 
 /* body_html: cleditor */
-.openerp div.cleditorMain {
+.openerp .oe_mail_msg_content div.cleditorMain {
     border: 1px solid #cccccc;
+}
+
+/* destination_partner_ids */
+.openerp .oe_mail_msg_content div.text-core {
+    height: 22px !important;
+    width: 472px;
 }
 
 
