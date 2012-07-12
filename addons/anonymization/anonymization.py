@@ -425,7 +425,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'integer':
                     anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
-                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference"
+                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference."
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
                 if anonymized_value is None:
@@ -515,7 +515,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         wizards = self.browse(cr, uid, ids, context=context)
         for wizard in wizards:
             if not wizard.file_import:
-                msg = "The anonymization export file was not supplied. It is not possible to reverse the anonymization process without this file."
+                msg = "It is not possible to reverse the anonymization process without supplying anonymization export file."
                 self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
             # reverse the anonymization:
