@@ -200,16 +200,16 @@
                     </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1" class="oe_edit_only"/>
-                            (<field name="login" readonly="1" class="oe_edit_only"/>)
+                            <field name="name" readonly="1" class="oe_edit_only oe_inline"/>
+                            (<field name="login" readonly="1" class="oe_edit_only oe_inline"/>)
                         </h1>
-                        <label for="company_id" class="oe_edit_only"/>
+                        <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                         <h2>
                             <field name="company_id" widget="selection" readonly="0"
                                 groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                         </h2>
                     </div>
-                    <group col="4" string="Preferences">
+                    <group col="4" name="preferences" string="Preferences">
                         <field name="context_lang" readonly="0"/>
                         <field name="context_tz" readonly="0"/>
                     </group>
