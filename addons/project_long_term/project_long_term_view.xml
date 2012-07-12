@@ -111,12 +111,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="Tasks"]' position='after'>
-                    <label for="use_phases"/>
-                    <div>
-                        <field name="use_phases"/>
-                        <button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/>
-                    </div>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr>
+                        <td><group><field name="use_phases"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
+                    </tr>
                 </xpath>
             </field>
         </record>
@@ -156,20 +155,21 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
-                        <label for="project_id" class="oe_edit_only"/>
-                        <h2>
-                            <field name="project_id" on_change="onchange_project(project_id)" colspan="3"/>
-                        </h2>
                     </div>
                     <group>
-                    <label for="date_start" string="Duration"/>
-                    <div>
-                        <div>
-                            <field name="duration" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline"/>
-                        </div>
-                        <field name="date_start" class="oe_inline"/><label string=" - " class="oe_inline"/><field name="date_end" class="oe_inline"/>
-                    </div>
+                        <group>
+                            <label for="date_start" string="Duration"/>
+                            <div>
+                                <div>
+                                    <field name="duration" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline"/>
+                                </div>
+                                <field name="date_start" class="oe_inline"/><label string=" - " class="oe_inline"/><field name="date_end" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="project_id" on_change="onchange_project(project_id)"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Planning of Users">
@@ -209,10 +209,10 @@
                                <group>
                                     <field name="constraint_date_start"/>
                                     <field name="constraint_date_end"/>
-                                     <field name="user_force_ids" widget="many2many_tags"/>
                                 </group>
                                 <group>
                                     <field name="sequence"/>
+                                     <field name="user_force_ids" widget="many2many_tags"/>
                                 </group>
                             </group>
                            <separator string="Previous Phases"/>

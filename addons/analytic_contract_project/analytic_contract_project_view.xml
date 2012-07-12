@@ -16,8 +16,8 @@
                                 <label for="date_start" string="Duration"/>
                                 <div name="duration">
                                     <field name="date_start" class="oe_inline"/> 
-                                     <span  attrs="{'invisible':[('date','=',False)]}" class="oe_inline"> - </span>
-                                     <field name="date" class="oe_inline"/>
+                                    <label attrs="{'invisible':[('date','=',False)]}" class="oe_inline" string=" - "/>
+                                    <field name="date" class="oe_inline"/>
                                 </div>
                                 <label for="quantity_max"/>
                                 <div>
@@ -105,12 +105,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="Tasks"]' position='after'>
-                   <label for="use_timesheets"/>
-                    <div>
-                        <field name="use_timesheets"/>
-                        <button icon="terp-gtk-go-back-rtl" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/>
-                    </div>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr>
+                        <td><group><field name="use_timesheets"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
+                    </tr>
                 </xpath>
             </field>
         </record>

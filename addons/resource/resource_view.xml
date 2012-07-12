@@ -233,27 +233,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leave Detail" version="7.0">
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="resource_id" on_change="onchange_resource(resource_id)"/>
-                                <field name="name" string="Reason"/>
-                            </group>
-                            <group>
-                                <field name="calendar_id"/>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                            <field name="resource_id" on_change="onchange_resource(resource_id)"/>
+                            <field name="name" string="Reason"/>
                         </group>
                         <group>
-                           <group>
-                             <label for="date_from" string="Duration"/> 
-                             <div>
-                               <field name="date_from" class="oe_inline"/>- 
-                               <field name="date_to" class="oe_inline"/>
-                             </div>
-                           </group>
+                            <field name="calendar_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
-                    </sheet>
+                    </group>
+                    <group>
+                       <group>
+                         <label for="date_from" string="Duration"/> 
+                         <div>
+                           <field name="date_from" class="oe_inline"/> - 
+                           <field name="date_to" class="oe_inline"/>
+                         </div>
+                       </group>
+                    </group>
                 </form>
             </field>
         </record>
