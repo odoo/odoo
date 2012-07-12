@@ -399,16 +399,17 @@
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-            <col width="33%"/>
-            <col width="33%"/>
-            <col width="34%"/>
+            <col width="25%"/>
+            <col width="25%"/>
+            <col width="25%"/>
+            <col width="25%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
                             <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
                         </h2>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_view_search" t-opentag="true"/>
                 </td>
             </tr>
@@ -416,7 +417,7 @@
                 <td>
                         <div class="oe_view_manager_buttons"/>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_sidebar"/>
                 </td>
                 <td>
