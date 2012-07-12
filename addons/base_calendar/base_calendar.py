@@ -413,7 +413,7 @@ property or property parameter."),
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
-            raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))
+            raise osv.except_osv(_('Warning !'),_("First specified the date for Invitation."))
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -1000,9 +1000,9 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative'))
+                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
             if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count cannot be negative'))
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative.'))
             if datas['recurrency']:
                 result[event] = self.compute_rule_string(datas)
             else:
@@ -1191,7 +1191,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         def get_month_string(freq, datas):
             if freq == 'monthly':
                 if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
-                    raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
+                    raise osv.except_osv(_('Error!'), ("Please select proper Day of month."))
                 
                 if datas.get('select1')=='day':
                     return ';BYDAY=' + datas.get('byday') + datas.get('week_list')
@@ -1408,7 +1408,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
             
         if 'date' in groupby:
-            raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead'))
+            raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead.'))
         virtual_id = context.get('virtual_id', True)
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)

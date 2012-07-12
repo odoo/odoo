@@ -490,7 +490,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     _constraints = [
-        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
+        (_check_mail, 'Error: The mail is not well formated.', ['act_mail_body']),
     ]
 
 base_action_rule()

@@ -181,7 +181,7 @@ class users(osv.osv):
             cr = pooler.get_db(db).cursor()
             return self._login(cr, db, login, password)
         except Exception:
-            _logger.exception('Could not authenticate')
+            _logger.exception('Cannot authenticate!')
             return Exception('Access Denied')
         finally:
             if cr is not None:
