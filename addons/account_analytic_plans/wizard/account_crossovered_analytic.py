@@ -58,7 +58,7 @@ class account_crossovered_analytic(osv.osv_memory):
                 flag = False
                 break
         if flag:
-            raise osv.except_osv(_('User Error'),_('There are no Analytic lines related to Account %s' % name))
+            raise osv.except_osv(_('User Error'),_('There are no Analytic lines related to Account %s.' % name))
 
         datas = {
              'ids': [],
