@@ -8,16 +8,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Plannify Timebox" version="7.0">
-                    <header>
-                        <button name="process" string="Add to Timebox" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                       <group col="4">
                           <field name="timebox_id" widget="selection"/>
                           <field name="timebox_to_id" widget="selection"/>
                       </group>
                       <field name="task_ids" domain="[('timebox_id','=',timebox_id),('state','=','open')]" />
+                    <footer>
+                        <button name="process" string="Add to Timebox" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

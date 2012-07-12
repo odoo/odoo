@@ -9,16 +9,16 @@
           <field name="type">form</field>
           <field name="arch" type="xml">
               <form string="Create a Partner" version="7.0">
-                  <header>
-                      <button name="make_partner" string="Continue" type="object" class="oe_highlight"/>
-                      or
-                      <button string="Cancel" class="oe_link" special="cancel" />
-                  </header>
                   <group col="4">
                       <separator string="Create a Partner"/>
                       <field name="action"/>
                       <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                   </group>
+                  <footer>
+                      <button name="make_partner" string="Continue" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />
+                  </footer>
               </form>
           </field>
        </record>

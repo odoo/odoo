@@ -21,11 +21,8 @@
 
 from base_status.base_stage import base_stage
 from crm import crm
-from crm import wizard
 from osv import fields, osv
 from tools.translate import _
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.fundraising')
 
 class crm_fundraising(base_stage, osv.osv):
     """ Fund Raising Cases """
@@ -34,6 +31,7 @@ class crm_fundraising(base_stage, osv.osv):
     _description = "Fund Raising"
     _order = "id desc"
     _inherit = ['mail.thread']
+    _mail_compose_message = True
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),

@@ -7,14 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice Currency" version="7.0">
-                    <header>
-                        <button name="change_currency" string="Change Currency" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group string="This wizard will change the currency of the invoice">
                         <field name="currency_id"/>
                     </group>
+                    <footer>
+                        <button name="change_currency" string="Change Currency" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

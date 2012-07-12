@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Invoices in Statement" version="7.0">
-                    <header>
-                        <button string="Go" name="search_invoices" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group>
                         <field name="date"/>
                         <field name="journal_ids"  domain="[('type','in',['sale','purchase','cash'])]"/>
                     </group>
+                    <footer>
+                        <button string="Go" name="search_invoices" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
@@ -35,13 +35,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Entries" version="7.0">
-                    <header>
+                    <separator string="Payable and Receivables"/>
+                    <field height="300" width="700" name="line_ids" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
+                    <footer>
                         <button string="Ok" name="populate_statement" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
-                    <separator string="Payable and Receivables"/>
-                    <field height="300" width="700" name="line_ids" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
+                    </footer>
                </form>
             </field>
         </record>

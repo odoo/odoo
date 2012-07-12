@@ -289,7 +289,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                <span class="oe_e">i</span>
+                                <span class="oe_e">í</span>
                                 <ul class="oe_dropdown_menu">
                                     <li><a type="edit" >Edit...</a></li>
                                     <li><a type="delete">Delete</a></li>
@@ -311,18 +311,14 @@
                                     <field name="partner_id"/>
                                 </div>
                                 <div style="padding-left: 0.5em">
-                                    <i>
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                        <span t-attf-class="#{red || ''}">
-                                            <field name="date_action"/>
-                                        </span>
-                                        <t t-if="record.date_action.raw_value"> : </t>
-                                        <field name="title_action"/>
-                                    </i>
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                    <t t-if="record.date_action.raw_value"> : </t>
+                                    <field name="title_action"/>
                                 </div>
-                                <div class="oe_right">
-                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                <div class="oe_kanban_bottom_right">
+                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
                                     <!--
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
                                     <span t-attf-class="oe_kanban_status #{red}"> </span>
@@ -471,8 +467,8 @@
                         <label for="planned_revenue" class="oe_edit_only"/>
                         <h2>
                             <field name="planned_revenue" class="oe_inline"/>
-                            <field name="company_currency" class="oe_edit_only oe_inline"/> at 
-                            <field name="probability" class="oe_inline"/> %% success rate
+                            <field name="company_currency" class="oe_inline"/> at 
+                            <field name="probability" class="oe_inline"/>%% success rate
                         </h2>
                     </div>
                     <group>

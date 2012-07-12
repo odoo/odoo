@@ -11,13 +11,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Convert To Meeting" version="7.0">
-                    <header>
+                    <label string="Are you sure to schedule a Meeting for this Phonecall?"/>
+                    <footer>
                         <button name="action_make_meeting" type="object"
                             string="_Schedule" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <label string="Are you sure to schedule a Meeting for this Phonecall?"/>
+                    </footer>
                 </form>
             </field>
         </record>
