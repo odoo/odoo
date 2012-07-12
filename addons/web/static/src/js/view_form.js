@@ -2304,8 +2304,8 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
 
     initialize_content: function() {
         this.$textarea = this.$element.find('textarea');
-        var width = ((this.node.attrs || {}).editor_width || '100%');
-        var height = ((this.node.attrs || {}).editor_height || '100%');
+        var width = ((this.node.attrs || {}).editor_width || 468);
+        var height = ((this.node.attrs || {}).editor_height || 100);
         this.$textarea.cleditor({
             width:      width, // width not including margins, borders or padding
             height:     height, // height not including margins, borders or padding
@@ -2317,8 +2317,9 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
             sizes:      // sizes in the font size popup
                         "1,2,3,4,5,6,7",
             bodyStyle:  // style to assign to document body contained within the editor
-                        "margin:4px; font:13px monospace; cursor:text"
+                        "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
         });
+        this.$cleditor = this.$textarea.cleditor()[0];
         // call super now, because cleditor seems to reset the disable attr
         this._super.apply(this, arguments);
         if (this.$textarea.attr('disabled') == 'disabled') {
@@ -2340,14 +2341,12 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
         if (show_value && this.view.options.resize_textareas) {
             this.do_resize(this.view.options.resize_textareas);
         }
-        this.$textarea.cleditor()[0].updateFrame();
+        this.$cleditor.updateFrame();
     },
 
     get_value: function() {
-        // retrive cleditor and get its html content
-        var cleditor = this.$textarea.cleditor()[0];
         // cleditor.updateTextArea();
-        var value = cleditor.$area.val();
+        var value = this.$cleditor.$area.val();
         return value;
     },
 });
