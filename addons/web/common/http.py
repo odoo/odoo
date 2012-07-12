@@ -453,7 +453,7 @@ class Root(object):
         static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
             self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
-                self.dispatch, static_dirs)
+                self.dispatch, static_dirs, cache=False)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):

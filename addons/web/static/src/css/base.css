@@ -2353,6 +2353,59 @@
   color: #333333;
 }
 
+.openerp .tree_header {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #cacaca;
+  color: #4c4c4c;
+  padding: 5px;
+  height: 25px;
+}
+.openerp .tree_header button {
+  float: right;
+  height: 27px;
+  margin-right: 5px;
+}
+.openerp .oe-treeview-table {
+  width: 100%;
+  background-color: white;
+  border-spacing: 0;
+}
+.openerp .oe-treeview-table th {
+  padding: 10px;
+  color: #4c4c4c;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-bottom: 2px solid #cacaca;
+}
+.openerp .oe-treeview-table .treeview-tr, .openerp .oe-treeview-table .treeview-td {
+  cursor: pointer;
+  border-right: 1px dotted #afafb6;
+  vertical-align: top;
+  text-align: left;
+  border-bottom: 1px solid #cfcccc;
+}
+.openerp .oe-treeview-table tr:hover {
+  background-color: #e0e0f8;
+}
+.openerp .oe-treeview-table .oe-number {
+  text-align: right !important;
+}
+.openerp .oe-treeview-table span {
+  font-size: 90%;
+  font-weight: normal;
+  white-space: nowrap;
+  display: block;
+}
+.openerp .oe-treeview-table .treeview-tr.oe-treeview-first {
+  background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat;
+}
+.openerp .oe-treeview-table .oe_open .treeview-tr.oe-treeview-first {
+  background-image: url(/web/static/src/img/collapse.gif);
+}
+.openerp .oe-treeview-table .treeview-tr.oe-treeview-first span, .openerp .oe-treeview-table .treeview-td.oe-treeview-first span {
+  margin-left: 16px;
+}
+
 .kitten-mode-activated {
   background-image: url(http://placekitten.com/g/1365/769);
   background-size: cover;
