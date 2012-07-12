@@ -69,7 +69,7 @@ class mail_thread(osv.Model):
             subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
             res[id] = {
                 'message_ids': message_ids,
-                'message_summary': "<span><span class='oe_e'>9</span> %d</span> . <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(subscriber_ids)),
+                'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(subscriber_ids)),
             }
         return res
 
