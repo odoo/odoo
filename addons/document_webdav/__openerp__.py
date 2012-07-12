@@ -40,7 +40,8 @@ With this module, the WebDAV server for documents is activated.
 
 You can then use any compatible browser to remotely see the attachments of OpenObject.
 
-After installation, the WebDAV server can be controlled by a [webdav] section in the server's config.
+After installation, the WebDAV server can be controlled by a [webdav] section in 
+the server's config.
 Server Configuration Parameter:
 
     [webdav]
