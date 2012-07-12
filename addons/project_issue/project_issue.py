@@ -350,23 +350,6 @@ class project_issue(base_stage, osv.osv):
             'nodestroy': True
         }
 
-
-    # def _convert(self, cr, uid, ids, xml_id, context=None):
-    #     data_obj = self.pool.get('ir.model.data')
-    #     id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
-    #     categ_id = False
-    #     if id2:
-    #         categ_id = data_obj.browse(cr, uid, id2, context=context).res_id
-    #     if categ_id:
-    #         self.write(cr, uid, ids, {'categ_id': categ_id})
-    #     return True
-
-    # def convert_to_feature(self, cr, uid, ids, context=None):
-    #     return self._convert(cr, uid, ids, 'feature_request_categ', context=context)
-
-    # def convert_to_bug(self, cr, uid, ids, context=None):
-    #     return self._convert(cr, uid, ids, 'bug_categ', context=context)
-
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:
