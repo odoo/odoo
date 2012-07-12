@@ -596,8 +596,8 @@ class module(osv.osv):
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         if context is None:
             context = {}
+        pool = pooler.get_pool(cr.dbname)
         if not filter_lang:
-            pool = pooler.get_pool(cr.dbname)
             lang_obj = pool.get('res.lang')
             lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)])
             filter_lang = [lang.code for lang in lang_obj.browse(cr, uid, lang_ids)]
@@ -607,32 +607,8 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids):
             if mod.state != 'installed':
                 continue
-            modpath = modules.get_module_path(mod.name)
-            if not modpath:
-                # unable to find the module. we skip
-                continue
-            for lang in filter_lang:
-                iso_lang = tools.get_iso_codes(lang)
-                f = modules.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
-                context2 = context and context.copy() or {}
-                if f and '_' in iso_lang:
-                    iso_lang2 = iso_lang.split('_')[0]
-                    f2 = modules.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
-                    if f2:
-                        _logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
-                        tools.trans_load(cr, f2, lang, verbose=False, module_name=mod.name, context=context)
-                        context2['overwrite'] = True
-                # Implementation notice: we must first search for the full name of
-                # the language derivative, like "en_UK", and then the generic,
-                # like "en".
-                if (not f) and '_' in iso_lang:
-                    iso_lang = iso_lang.split('_')[0]
-                    f = modules.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
-                if f:
-                    _logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
-                    tools.trans_load(cr, f, lang, verbose=False, module_name=mod.name, context=context2)
-                elif iso_lang != 'en':
-                    _logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
+            traslation_obj = pool.get('ir.translation')
+            traslation_obj.load(cr, [mod.name], filter_lang, context=context)
 
     def check(self, cr, uid, ids, context=None):
         for mod in self.browse(cr, uid, ids, context=context):

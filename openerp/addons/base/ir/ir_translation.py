@@ -324,7 +324,7 @@ class ir_translation(osv.osv):
         """
         return ir_translation_import_cursor(cr, uid, self, context=context)
     
-    def load(self, cr, modules, langs, flag, context=None):
+    def load(self, cr, modules, langs, flag=None, context=None):
         translated_data = {'messages':[]}
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
