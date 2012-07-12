@@ -103,20 +103,14 @@ class stock_change_product_qty(osv.osv_memory):
             self.change_product_qty_send_note(cr, uid, [data.id], context)
         return {}
 
-    def change_product_qty_send_note (self, cr, uid, ids, context=None):
+    def change_product_qty_send_note(self, cr, uid, ids, context=None):
         prod_obj = self.pool.get('product.product')
         location_obj = self.pool.get('stock.location')
-        prod_temp_obj = self.pool.get('product.template')
-        uom_obj = self.pool.get('product.uom')
 
         for data in self.browse(cr, uid, ids, context=context):
-            for location in location_obj.browse(cr, uid, [data.location_id.id], context=context):
-                location_name = location.name
-            for prod in prod_obj.browse(cr, uid, [data.product_id.id], context=context):
-                for prod_temp in prod_temp_obj.browse(cr, uid, [prod.product_tmpl_id.id], context=context):
-                    for uom in uom_obj.browse(cr, uid, [prod_temp.uom_id.id], context=context):
-                        message = _("<b>Quantity has been changed</b> to <em>%s %s </em> for <em>%s</em> location.") % (data.new_quantity,uom.name,location_name)
-                        prod_obj.message_append_note(cr, uid, [prod.id], body=message, context=context)
+            location_name = location_obj.browse(cr, uid, data.location_id.id, context=context).name
+            message = _("<b>Quantity has been changed</b> to <em>%s %s </em> for <em>%s</em> location.") % (data.new_quantity, data.product_id.uom_id.name, location_name)
+            prod_obj.message_append_note(cr, uid, [data.product_id.id], body=message, context=context)
 
 stock_change_product_qty()
 
