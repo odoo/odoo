@@ -183,7 +183,7 @@ class hr_expense_expense(osv.osv):
                     'amount': l.unit_amount,
                     'type': 'dr'
                 }))
-                total += l.unit_amount
+                total += l.total_amount
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
