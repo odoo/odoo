@@ -164,7 +164,7 @@ class stock_partial_picking(osv.osv_memory):
 
             #Quantiny must be Positive
             if wizard_line.quantity < 0:
-                raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+                raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity.'))
 
             #Compute the quantity for respective wizard_line in the line uom (this jsut do the rounding if necessary)
             qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
