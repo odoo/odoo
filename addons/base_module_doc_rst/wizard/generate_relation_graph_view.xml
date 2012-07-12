@@ -8,12 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Generate Relationship Graph" version="7.0">
-                    <header>
+                    <separator string="Relationship Graphs" colspan="6"/>
+                    <footer>
                         <button name="get_graph" string="Create Graphs" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
-                    <separator string="Relationship Graphs" colspan="6"/>
+                    </footer>
                 </form>
             </field>
         </record>
