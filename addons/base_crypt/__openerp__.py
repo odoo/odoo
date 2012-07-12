@@ -29,16 +29,14 @@
 Replaces cleartext passwords in the database with a secure hash.
 ================================================================
 
-For your existing user base, the removal of the cleartext
-passwords occurs immediately when you instal base_crypt.
+For your existing user base, the removal of the cleartext passwords occurs 
+immediately when you instal base_crypt.
 
-All passwords will be replaced by a secure, salted, cryptographic
-hash, preventing anyone from reading the original password in
-the database.
+All passwords will be replaced by a secure, salted, cryptographic hash, 
+preventing anyone from reading the original password in the database.
 
-After installing this module it won't be possible to recover a
-forgotten password for your users, the only solution is for an
-admin to set a new password.
+After installing this module it won't be possible to recover a forgotten password 
+for your users, the only solution is for an admin to set a new password.
 
 Security Warning
 ++++++++++++++++
