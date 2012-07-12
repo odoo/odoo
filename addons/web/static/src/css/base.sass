@@ -336,7 +336,7 @@ $sheet-max-width: 860px
             margin: 4px
     .oe_avatar
         margin: 0 16px 0 0
-        img
+        > img
             height: 50px
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
@@ -1669,6 +1669,7 @@ $sheet-max-width: 860px
             vertical-align: top
             .oe_form_field_image_controls
                 position: absolute
+                white-space: nowrap
                 top: 1px
                 padding: 3px 0 0 0
                 margin: 0 1px
