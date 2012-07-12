@@ -1,41 +1,40 @@
 -
   I confirm the Quotation with "Deliver & invoice on demand".
 -
-  !workflow {model: sale.order, action: order_confirm, ref: order4}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_2}
 -
   I check that Invoice should not created.
 -
   !python {model: sale.order}: |
-    sale_order = self.browse(cr, uid, ref("sale_order_4"))
+    sale_order = self.browse(cr, uid, ref("sale_order_2"))
     assert len(sale_order.invoice_ids) == False, "Invoice should not created."
-    assert sale_order.picking_ids, "Delivery order should be created."
 -
   I create advance invoice.
 -
   !python {model: sale.advance.payment.inv}: |
     ctx = context.copy()
-    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_4")], "active_id":ref("sale_order_4")})
-    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("line7"), context=context)
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
+    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("sale_order_line_4"), context=context)
     pay_id = self.create(cr, uid, {'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
     self.create_invoices(cr, uid, [pay_id], context=ctx)
 -
   I check Invoice which made advance
 -
   !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref('order4'))
+    order = self.browse(cr, uid, ref('sale_order_2'))
     assert order.invoice_ids, "Invoice should be created after make advance invoice."
 -
   I create Invoice from sale order line.
 -
   !python {model: sale.order.line.make.invoice}: |
     ctx = context.copy()
-    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("line8")], "active_id":ref("line8")})
+    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("sale_order_line_5")], "active_id":ref("sale_order_line_5")})
     self.make_invoices(cr, uid, [], context=ctx)
 -
   I check Invoice which made from sale order line.
 -
   !python {model: sale.order.line}: |
-    line = self.browse(cr, uid, ref('line8'))
+    line = self.browse(cr, uid, ref('sale_order_line_5'))
     assert line.invoiced, "Line is not invoiced."
     assert line.invoice_lines, "Invoice line should be created."
 -
@@ -46,7 +45,7 @@
 -
   !python {model: sale.make.invoice}: |
     ctx = context.copy()
-    ctx = ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_4")], "active_id":ref("sale_order_4")})
+    ctx = ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
     self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], context)
 -
   I open the Invoice.
@@ -54,7 +53,7 @@
   !python {model: sale.order}: |
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    so = self.browse(cr, uid, ref("sale_order_4"))
+    so = self.browse(cr, uid, ref("sale_order_2"))
     for invoice in so.invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
 -
@@ -62,7 +61,7 @@
 -
   !python {model: account.invoice}: |
     sale_order = self.pool.get('sale.order')
-    order = sale_order.browse(cr, uid, ref("sale_order_4"))
+    order = sale_order.browse(cr, uid, ref("sale_order_2"))
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     for invoice in order.invoice_ids:
         invoice.pay_and_reconcile(
@@ -74,7 +73,7 @@
   I check Invoice after do manual.
 -
   !python {model: sale.order}: |
-    sale_order = self.browse(cr, uid, ref("sale_order_4"))
+    sale_order = self.browse(cr, uid, ref("sale_order_2"))
     assert sale_order.invoice_ids, "Invoice should be created."
     assert sale_order.invoiced, "Order is not invoiced."
     assert sale_order.state == 'manual', 'Order should be in Manual.'
