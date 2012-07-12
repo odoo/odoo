@@ -266,7 +266,7 @@ $(document).ready(function () {
             {id: 2, value: 2},
             {id: 3, value: 3},
             {id: 4, value: 5},
-            {id: 5, value: 8},
+            {id: 5, value: 8}
         ]);
 
         deepEqual(root.succ(root.at(2)).attributes,
@@ -304,7 +304,7 @@ $(document).ready(function () {
             {id: 2, value: 2},
             {id: 3, value: 3},
             {id: 4, value: 5},
-            {id: 5, value: 8},
+            {id: 5, value: 8}
         ]);
 
         deepEqual(root.pred(root.at(2)).attributes,
