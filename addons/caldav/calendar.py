@@ -786,7 +786,7 @@ class basic_calendar_line(osv.osv):
         res = cr.fetchone()
         if res:
             if res[0] > 0:
-                raise osv.except_osv(_('Warning !'), _('Can not create line "%s" more than once') % (vals.get('name')))
+                raise osv.except_osv(_('Warning !'), _('Cannot create line "%s" more than once.') % (vals.get('name')))
         return super(basic_calendar_line, self).create(cr, uid, vals, context=context)
 
 basic_calendar_line()
@@ -876,7 +876,7 @@ class basic_calendar_fields(osv.osv):
             line = line_obj.browse(cr, uid, l_id, context=context)[0]
             line_rel = line.object_id.model
             if (relation != 'NULL') and (not relation == line_rel):
-                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines') % (name))
+                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines.') % (name))
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -1192,7 +1192,7 @@ class Alarm(CalDAV, osv.osv_memory):
                 elif isinstance(child.value, datetime):
                     # TODO
                     # remember, spec says this datetime is in UTC
-                    raise NotImplementedError("we cannot parse absolute triggers")
+                    raise NotImplementedError("We cannot parse absolute triggers.")
                 if not seconds:
                     duration = abs(days)
                     related = days > 0 and 'after' or 'before'
