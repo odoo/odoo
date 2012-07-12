@@ -1002,7 +1002,7 @@ class account_invoice(osv.osv):
             'quantity': x.get('quantity',1.00),
             'product_id': x.get('product_id', False),
             'product_uom_id': x.get('uos_id', False),
-            'analytic_account_id': x.get('analytic_account_id', False),
+            'analytic_account_id': x.get('account_analytic_id', False),
         }
 
     def action_number(self, cr, uid, ids, context=None):
@@ -1691,7 +1691,7 @@ class account_invoice_tax(osv.osv):
                 'account_id': t['account_id'],
                 'tax_code_id': t['tax_code_id'],
                 'tax_amount': t['tax_amount'],
-                'analytic_account_id': t['account_analytic_id'],
+                'account_analytic_id': t['account_analytic_id'],
             })
         return res
 
