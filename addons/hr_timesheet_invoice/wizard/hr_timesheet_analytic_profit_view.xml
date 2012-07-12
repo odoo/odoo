@@ -8,22 +8,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet Profit" version="7.0">
-                    <header>
-                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <group height="420" width="370">
-                        <group col="4" colspan="4">
-                            <field name="date_from"/>
-                            <field name="date_to"/>
-                            <separator string="Journals" colspan="4"/>
-                            <field name="journal_ids" colspan="4" nolabel="1"/>
-                            <separator string="Users" colspan="4"/>
-                            <field name="employee_ids" colspan="4" nolabel="1"/>
-                        </group>
-                    </group>
-                </form>
+                   <sheet>
+                       <group> 
+                           <label for="date_from" string="Duration" />
+                           <div>
+                               <field name="date_from" nolabel="1" class="oe_inline" />
+                               - <field name="date_to" nolabel="1" class="oe_inline"/>
+                           </div>
+                       </group>
+                       <group>
+                           <separator string="Journals" colspan="4"/>
+                           <field name="journal_ids" colspan="4" nolabel="1"/>
+                           <separator string="Users" colspan="4"/>
+                           <field name="employee_ids" colspan="4" nolabel="1"/>
+                       </group>
+                   </sheet>
+                   <footer>
+                        <button name="print_report" string="Print" colspan="1" type="object" class="oe_highlight"/> or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                   </footer>
+               </form>
             </field>
         </record>
 
@@ -38,7 +42,7 @@
 
            <menuitem action="action_hr_timesheet_analytic_profit"
             id="menu_hr_timesheet_analytic_profit"
-            parent="hr_timesheet.menu_hr_reporting_timesheet" icon="STOCK_PRINT"/>
+            parent="hr.menu_hr_reporting_timesheet" sequence="3" icon="STOCK_PRINT"/>
 
     </data>
 </openerp>

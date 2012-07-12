@@ -21,13 +21,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
-                    <header>
+                    <separator string="Products"/>
+                    <field name="move_ids"/>
+                    <footer>
                         <button name="do_partial" string="_Validate" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <separator string="Products"/>
-                    <field name="move_ids"/>
+                    </footer>
                 </form>
             </field>
         </record>

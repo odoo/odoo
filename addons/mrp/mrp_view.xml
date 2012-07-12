@@ -961,9 +961,8 @@
                 </xpath>
                 <xpath expr="//field[@name='close_move']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
-                    <separator colspan="4" string="Properties" />
-                    <field colspan="4" name="property_ids" nolabel="1"/>
-                     </group>
+                        <field colspan="4" name="property_ids" widget="many2many_tags"/>
+                    </group>
                 </xpath>
                </data>
             </field>

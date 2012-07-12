@@ -235,10 +235,10 @@ class google_import(import_framework):
 
 
     def get_event_category(self, val, name):
-        fields = ['name', 'object_id']
-        nameid = 'event_category_'+name
-        data = [name, 'crm.meeting']
-        return self.import_object(fields, data, 'crm.case.categ', "crm_case_categ", nameid, [('name', 'ilike', name)])
+        nameid = 'event_category_' + name
+        fields = ['name']
+        data = [name]
+        return self.import_object(fields, data, 'crm.meeting.type', "crm_meeting_type", nameid, [('name', 'ilike', name)])
 
     def get_rec(self, val):
         if val.get("recurrency"):

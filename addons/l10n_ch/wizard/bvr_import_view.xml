@@ -8,14 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="BVR Import" version="7.0">
-                    <header>
-                        <button name="import_bvr" string="Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="file"/>
                     </group>
+                    <footer>
+                        <button name="import_bvr" string="Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

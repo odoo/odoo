@@ -12,25 +12,23 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group string="Manufacturing Order">
-                            <field name="module_mrp_operations"/>
-                            <field name="module_stock_planning"/>
-                            <field name="module_mrp_subproduct"/>
-                            <field name="module_mrp_repair"/>
-                        </group>
-                        <group string="Logistics">
-                            <field name="module_mrp_jit"/>
-                            <field name="module_stock_no_autopicking"/>
-                        </group>
-                        <group string="Bill Of Material">
-                            <field name="group_mrp_routings"/>
-                            <field name="group_mrp_properties"/>
-                        </group>
-                        <group string="Products">
-                            <field name="module_product_manufacturer"/>
-                        </group>
-                    </sheet>
+                    <group string="Manufacturing Order">
+                        <field name="module_mrp_operations"/>
+                        <field name="module_stock_planning"/>
+                        <field name="module_mrp_subproduct"/>
+                        <field name="module_mrp_repair"/>
+                    </group>
+                    <group string="Logistics">
+                        <field name="module_mrp_jit"/>
+                        <field name="module_stock_no_autopicking"/>
+                    </group>
+                    <group string="Bill Of Material">
+                        <field name="group_mrp_routings"/>
+                        <field name="group_mrp_properties"/>
+                    </group>
+                    <group string="Products">
+                        <field name="module_product_manufacturer"/>
+                    </group>
                 </form>
             </field>
         </record>

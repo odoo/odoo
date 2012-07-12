@@ -36,7 +36,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             context = {}
 
         model = context.get('active_model')
-        if not model or model != 'stock.picking':
+        if not model or 'stock.picking' not in model:
             return []
 
         model_pool = self.pool.get(model)
