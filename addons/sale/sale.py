@@ -295,7 +295,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sale order, you must cancel it before ! To cancel a sale order, you must first cancel related picking or delivery orders.'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sales order, you must cancel it before ! To cancel a sale order, you must first cancel related picking for delivery orders.'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -702,8 +702,8 @@ class sale_order(osv.osv):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel sales order !'),
-                        _('You must first cancel all picking attached to this sales order.'))
+                        _('Could not cancel sales order!'),
+                        _('First cancelled all picking attached to this sale order.'))
                 if pick.state == 'cancel':
                     for mov in pick.move_lines:
                         proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
@@ -716,8 +716,8 @@ class sale_order(osv.osv):
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel this sales order !'),
-                        _('You must first cancel all invoices attached to this sales order.'))
+                        _('Could not cancel this sales order!'),
+                        _('First cancelled all invoices attached to this sale order.'))
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
@@ -1210,7 +1210,7 @@ class sale_order_line(osv.osv):
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
                 raise osv.except_osv(_('Error !'),
-                            _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
+                            _('There is no Fiscal Position defined or income category account defined for Product Categories default Properties.'))
             return {
                 'name': line.name,
                 'origin': line.order_id.name,
@@ -1254,7 +1254,7 @@ class sale_order_line(osv.osv):
             for move_line in line.move_ids:
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
-                            _('Could not cancel sales order line!'),
+                            _('Cannot cancel sale order line!'),
                             _('You must first cancel stock moves attached to this sales order line.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
@@ -1347,7 +1347,7 @@ class sale_order_line(osv.osv):
         context = context or {}
         lang = lang or context.get('lang',False)
         if not  partner_id:
-            raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
+            raise osv.except_osv(_('No Customer Defined !'), _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
