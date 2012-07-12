@@ -63,7 +63,7 @@ class hr_expense_expense(osv.osv):
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True),
-        'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is invoiced"),
+        'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is paid."),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', select=True, help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
