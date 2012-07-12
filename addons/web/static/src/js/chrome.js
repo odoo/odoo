@@ -63,7 +63,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
-            width: 580,
+            width: 750,
             min_width: 0,
             max_width: '95%',
             height: 'auto',
