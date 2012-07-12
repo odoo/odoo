@@ -109,8 +109,15 @@
                                     </group>
                                 </form>
                             </field>
-                            <separator string="Notes"/>
-                            <field name="note" placeholder="Free Notes"/>
+                            <group>
+                                <div>
+                                    <separator string="Notes"/>
+                                    <field name="note" placeholder="Free Notes"/>
+                                </div>
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Other Info">
                             <group>
