@@ -120,11 +120,6 @@ class mail_message_common(osv.TransientModel):
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-        'partner_ids': fields.many2many('res.partner',
-            'mail_message_common_destination_partner_rel',
-            'common_id', 'partner_id', 'Destination partners',
-            help="When sending emails through the social network composition wizard"\
-                 "you may choose to send a copy of the mail to partners."),
         'headers': fields.text('Message Headers', readonly=1,
             help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
@@ -212,6 +207,11 @@ class mail_message(osv.Model):
                         For example, it is used to add the possibility to hide \
                         notifications in the wall."),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
+        'partner_ids': fields.many2many('res.partner',
+            'mail_message_destination_partner_rel',
+            'message_id', 'partner_id', 'Destination partners',
+            help="When sending emails through the social network composition wizard"\
+                 "you may choose to send a copy of the mail to partners."),
         'user_id': fields.many2one('res.users', 'Related User', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
@@ -291,7 +291,7 @@ class mail_message(osv.Model):
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False,
-                             email_cc=None, email_bcc=None, reply_to=False, attachments=None,
+                             email_cc=None, email_bcc=None, reply_to=False, attachments=None, partner_ids=None,
                              message_id=False, references=False, res_id=False, content_subtype='plain',
                              headers=None, mail_server_id=False, auto_delete=False, context=None):
         """Schedule sending a new email message, to be sent the next time the mail scheduler runs, or
@@ -328,6 +328,8 @@ class mail_message(osv.Model):
             context = {}
         if attachments is None:
             attachments = {}
+        if partner_ids is None:
+            partner_ids = []
         attachment_obj = self.pool.get('ir.attachment')
         for param in (email_to, email_cc, email_bcc):
             if param and not isinstance(param, list):
@@ -345,6 +347,7 @@ class mail_message(osv.Model):
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
                 'email_bcc': email_bcc and ','.join(email_bcc) or '',
+                'partner_ids': partner_ids,
                 'reply_to': reply_to,
                 'message_id': message_id,
                 'references': references,

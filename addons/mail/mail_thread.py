@@ -338,7 +338,7 @@ class mail_thread(osv.Model):
             # destination partners
             if partner_ids is None:
                 partner_ids = []
-            mail_partner_ids = [6, 0, partner_ids]
+            mail_partner_ids = [(6, 0, partner_ids)]
 
             data = {
                 'subject': subject,

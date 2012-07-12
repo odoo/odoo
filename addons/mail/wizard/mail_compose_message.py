@@ -175,6 +175,8 @@ class mail_compose_message(osv.TransientModel):
         quoted_body_html = '> %s' % tools.ustr(body_text.replace('\n', "<br />&gt; ") or '')
         reply_body_text = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_text, current_user.signature)
         reply_body_html = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_html, current_user.signature)
+        # form dest_partner_ids
+        dest_partner_ids = [partner.id for partner in message_data.partner_ids]
         # Update header and references
         reply_headers = {}
         reply_references = message_data.references and tools.ustr(message_data.references) or False
@@ -188,7 +190,7 @@ class mail_compose_message(osv.TransientModel):
             'body_html': quoted_body_html,
             'subject': reply_subject,
             'attachment_ids': [],
-            'dest_partner_ids': [1],
+            'dest_partner_ids': dest_partner_ids,
             'model': message_data.model or False,
             'res_id': message_data.res_id or False,
             'email_from': current_user.user_email or message_data.email_to or False,
@@ -217,88 +219,79 @@ class mail_compose_message(osv.TransientModel):
         '''
         if context is None:
             context = {}
-        mail_message = self.pool.get('mail.message')
+        # composition wizard options
+        email_mode = context.get('email_mode')
+        formatting = context.get('formatting')
+        mass_mail_mode = context.get('mail.compose.message.mode') == 'mass_mail'
+
+        mail_message_obj = self.pool.get('mail.message')
         for mail_wiz in self.browse(cr, uid, ids, context=context):
             # attachments
             attachment = {}
             for attach in mail_wiz.attachment_ids:
                 attachment[attach.datas_fname] = attach.datas and attach.datas.decode('base64')
 
-            # composition wizard options
-            email_mode = context.get('email_mode')
-            formatting = context.get('formatting')
-
-            # default message values according to the wizard options
-            if formatting:
-                content_subtype = 'html'
-                subject = mail_wiz.subject
-            else:
-                content_subtype = 'text'
-                subject = False
-            if email_mode:
-                type = 'email'
-            else:
-                type = 'comment'
+            # default values, according to the wizard options
+            subject = mail_wiz.subject if formatting else False
+            content_subtype = 'html' if formatting else 'plain'
+            type = 'email' if email_mode else 'comment'
+            partner_ids = [partner.id for partner in mail_wiz.dest_partner_ids]
             references = None
             headers = {}
-            body = mail_wiz.body_html if mail_wiz.content_subtype == 'html' else mail_wiz.body_text
+            body = mail_wiz.body_html if content_subtype == 'html' else mail_wiz.body_text
 
-            # Get model, and check whether it is OpenChatter enabled, aka inherit from mail.thread
-            if context.get('mail.compose.message.mode') == 'mass_mail':
-                if context.get('active_ids') and context.get('active_model'):
-                    active_ids = context['active_ids']
-                    active_model = context['active_model']
-                else:
-                    active_model = mail_wiz.model
-                    active_model_pool = self.pool.get(active_model)
-                    active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail_wiz.filter_id.domain), context=ast.literal_eval(mail_wiz.filter_id.context))
+            # get model, active_ids, and check if model is openchatter-enabled
+            if mass_mail_mode and context.get('active_ids') and context.get('active_model'):
+                active_ids = context['active_ids']
+                active_model = context['active_model']
+            elif mass_mail_mode:
+                active_model = mail_wiz.model
+                active_model_pool = self.pool.get(active_model)
+                active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail_wiz.filter_id.domain), context=ast.literal_eval(mail_wiz.filter_id.context))
             else:
                 active_model = mail_wiz.model
-                active_ids = [int(mail_wiz.res_id)]
+                active_ids = [mail_wiz.res_id]
             active_model_pool = self.pool.get(active_model)
-            if hasattr(active_model_pool, 'message_append'):
-                mail_thread_enabled = True
-            else:
-                mail_thread_enabled = False
+            mail_thread_enabled = hasattr(active_model_pool, 'message_append')
 
             if context.get('mail.compose.message.mode') == 'mass_mail':
                 # Mass mailing: must render the template patterns
                 for active_id in active_ids:
                     rendered_subject = self.render_template(cr, uid, subject, active_model, active_id)
-                    rendered_body = self.render_template(cr, uid, body, active_model, active_id)
+                    rendered_body_html = self.render_template(cr, uid, mail_wiz.body_html, active_model, active_id)
+                    rendered_body_text = self.render_template(cr, uid, mail_wiz.body_text, active_model, active_id)
                     email_from = self.render_template(cr, uid, mail_wiz.email_from, active_model, active_id)
                     email_to = self.render_template(cr, uid, mail_wiz.email_to, active_model, active_id)
                     email_cc = self.render_template(cr, uid, mail_wiz.email_cc, active_model, active_id)
                     email_bcc = self.render_template(cr, uid, mail_wiz.email_bcc, active_model, active_id)
                     reply_to = self.render_template(cr, uid, mail_wiz.reply_to, active_model, active_id)
-    
+
                     # in mass-mailing mode we only schedule the mail for sending, it will be 
                     # processed as soon as the mail scheduler runs.
                     if mail_thread_enabled:
-                        active_model_pool.message_append(cr, uid, [active_id],
-                            rendered_subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=mail_wiz.content_subtype, state='outgoing',
-                            email_to=email_to, email_from=email_from, email_cc=email_cc, email_bcc=email_bcc,
+                        active_model_pool.message_append(cr, uid, [active_id], rendered_subject, rendered_body_text, rendered_body_html,
+                            type=type, content_subtype=content_subtype, state='outgoing', partner_ids=partner_ids,
+                            email_from=email_from, email_to=email_to, email_cc=email_cc, email_bcc=email_bcc,
                             reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
                     else:
-                        mail_message.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body,
+                        mail_message_obj.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body_text,
                             model=mail_wiz.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
-                            attachments=attachment, references=references, res_id=active_id,
+                            attachments=attachment, references=references, res_id=active_id, partner_ids=partner_ids,
                             content_subtype=mail_wiz.content_subtype, headers=headers, context=context)
             else:
                 # normal mode - no mass-mailing
                 if mail_thread_enabled:
-                    msg_ids = active_model_pool.message_append(cr, uid, active_ids,
-                            subject, body_text=mail_wiz.body_text, body_html=mail_wiz.body_html, content_subtype=content_subtype, state='outgoing',
-                            email_to=mail_wiz.email_to, email_from=mail_wiz.email_from, email_cc=mail_wiz.email_cc, email_bcc=mail_wiz.email_bcc,
-                            reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context,
-                            type=type)
+                    msg_ids = active_model_pool.message_append(cr, uid, active_ids, subject, mail_wiz.body_text, mail_wiz.body_html,
+                        type=type, content_subtype=content_subtype, state='outgoing', partner_ids=partner_ids,
+                        email_from=mail_wiz.email_from, email_to=mail_wiz.email_to, email_cc=mail_wiz.email_cc, email_bcc=mail_wiz.email_bcc,
+                        reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context)
                 else:
-                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), subject, body_text,
+                    msg_ids = [mail_message_obj.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), subject, mail_wiz.body_text,
                         model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), email_bcc=to_email(mail_wiz.email_bcc), reply_to=mail_wiz.reply_to,
-                        attachments=attachment, references=references, res_id=int(mail_wiz.res_id),
+                        attachments=attachment, references=references, res_id=int(mail_wiz.res_id), partner_ids=partner_ids,
                         content_subtype=mail_wiz.content_subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
-                mail_message.send(cr, uid, msg_ids, context=context)
+                mail_message_obj.send(cr, uid, msg_ids, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

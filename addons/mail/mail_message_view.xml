@@ -34,7 +34,7 @@
                                 <field name="date"/>
                                 <field name="type"/>
                                 <field name="content_subtype"/>
-                                <field name="partner_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="partner_ids" widget="many2many_tags"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -128,8 +128,8 @@
                                         <field name="reply_to"/>
                                     </group>
                                     <group>
-                                        <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
-                                        <field name="partner_ids" readonly="1" WIDGET="many2many_tags"/>
+                                        <field name="partner_id" readonly="1"/>
+                                        <field name="partner_ids" widget="many2many_tags"/>
                                     </group>
                                 </group>
                                 <notebook>
