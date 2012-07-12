@@ -33,18 +33,20 @@ instance.web.ActionManager = instance.web.Widget.extend({
             last.hide();
         }
         item.id = _.uniqueId('breadcrumb_');
-        item.show = item.show || function() {
-            item.widget.$element.show();
-        };
-        item.hide = item.hide || function() {
-            item.widget.$element.hide();
-        };
-        item.destroy = item.destroy || function() {
-            item.widget.destroy();
-        };
-        item.get_title = item.get_title || function() {
-            return item.title || item.widget.get('title');
-        };
+        _.defaults(item, {
+            show: function() {
+                item.widget.$element.show();
+            },
+            hide: function() {
+                item.widget.$element.hide();
+            },
+            destroy: function() {
+                item.widget.destroy();
+            },
+            get_title: function() {
+                return item.title || item.widget.get('title');
+            }
+        });
         this.breadcrumbs.push(item);
     },
     on_breadcrumb_clicked: function(ev) {
