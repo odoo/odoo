@@ -16,21 +16,6 @@
         </field>
     </record>
 
-    <!-- CRM Meeting Calendar -->
-
-    <record model="ir.ui.view" id="view_crm_meeting_calendar">
-        <field name="name">CRM - Meetings Calendar</field>
-        <field name="model">crm.meeting</field>
-        <field name="type">calendar</field>
-        <field name="inherit_id" ref="base_calendar.view_crm_meeting_calendar"/>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <field name="partner_id" position="after">
-                <field name="section_id" widget="selection"/>
-            </field>
-        </field>
-    </record>
-
     <!-- Calendar Attendee Form View -->
 
     <record id="attendee_form_view_inherit" model="ir.ui.view">
