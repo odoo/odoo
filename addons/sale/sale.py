@@ -726,7 +726,7 @@ class sale_order(osv.osv):
             self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
-    
+
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         wf_service = netsvc.LocalService('workflow')
@@ -1017,7 +1017,7 @@ class sale_order(osv.osv):
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     return True
         return False
-    
+
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
@@ -1107,7 +1107,7 @@ class sale_order_line(osv.osv):
     _description = 'Sales Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.text('Product Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
@@ -1127,7 +1127,7 @@ class sale_order_line(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
-        'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft': [('readonly', False)]}),
+        'discount': fields.float('Discount', digits=(16, 2), readonly=True, states={'draft': [('readonly', False)]}),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
@@ -1382,8 +1382,6 @@ class sale_order_line(osv.osv):
                     uos = False
             else:
                 uos = False
-        if product_obj.description_sale:
-            result['notes'] = product_obj.description_sale
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
@@ -1392,6 +1390,8 @@ class sale_order_line(osv.osv):
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
+            if product_obj.description_sale:
+                result['name'] += '\n'+product_obj.description_sale
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
