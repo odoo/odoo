@@ -325,8 +325,9 @@ class ir_translation(osv.osv):
         return ir_translation_import_cursor(cr, uid, self, context=context)
     
     def load(self, cr, modules, langs, flag=None, context=None):
-        translated_data = {'messages':[]}
+        translated_data = {}
         for module_name in modules:
+            translated_data[module_name] = {'messages':[]}
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:
                 # unable to find the module. we skip
@@ -340,7 +341,7 @@ class ir_translation(osv.osv):
                     f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
                     if f2:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
-                        translated_data['messages'].extend(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context))
+                        translated_data[module_name]['messages'].extend(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context))
                         context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
@@ -350,7 +351,7 @@ class ir_translation(osv.osv):
                     f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
                 if f:
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
-                    translated_data['messages'].extend(tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2))
+                    translated_data[module_name]['messages'].extend(tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2))
                 elif iso_lang != 'en':
                     _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
         return translated_data
