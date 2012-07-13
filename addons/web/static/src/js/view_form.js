@@ -526,7 +526,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-        	instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+            instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
                 title:result.warning.title,
                 modal: true,
                 buttons: [
