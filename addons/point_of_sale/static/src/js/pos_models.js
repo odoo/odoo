@@ -157,6 +157,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.set({'units_by_id':units_by_id});
                 });
 
+            var pack_def = fetch(
+                'product.packaging',
+                null,
+                null
+                ).then(function(packaging){
+                    self.set('product.packaging',packaging);
+                });
+
             var users_def = fetch(
                 'res.users',
                 ['name','ean13'],
@@ -277,7 +285,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
+            $.when(pack_def, cat_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
                 .then(function(){ 
                     self.build_categories(); 
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
