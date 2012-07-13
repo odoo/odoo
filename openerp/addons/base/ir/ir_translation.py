@@ -22,6 +22,7 @@
 from osv import fields, osv
 import tools
 import logging
+import openerp.modules
 
 _logger = logging.getLogger(__name__)
 
@@ -70,7 +71,6 @@ class ir_translation_import_cursor(object):
 
         cr.execute('''CREATE TEMP TABLE %s(
             imd_model VARCHAR(64),
-            imd_module VARCHAR(64),
             imd_name VARCHAR(128)
             ) INHERITS (%s) ''' % (self._table_name, self._parent_table))
 
@@ -80,10 +80,10 @@ class ir_translation_import_cursor(object):
 
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
-                        imd_model, imd_module, imd_name, value)
+                        imd_model, module, imd_name, value)
                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 (ddict['name'], ddict['lang'], ddict.get('res_id'), ddict['src'], ddict['type'],
-                    ddict.get('imd_model'), ddict.get('imd_module'), ddict.get('imd_name'),
+                    ddict.get('imd_model'), ddict.get('module'), ddict.get('imd_name'),
                     ddict['value']))
 
     def finish(self):
@@ -101,18 +101,18 @@ class ir_translation_import_cursor(object):
             SET res_id = imd.res_id
             FROM ir_model_data AS imd
             WHERE ti.res_id IS NULL
-                AND ti.imd_module IS NOT NULL AND ti.imd_name IS NOT NULL
+                AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
 
-                AND ti.imd_module = imd.module AND ti.imd_name = imd.name
+                AND ti.module = imd.module AND ti.imd_name = imd.name
                 AND ti.imd_model = imd.model; """ % self._table_name)
 
         if self._debug:
-            cr.execute("SELECT imd_module, imd_model, imd_name FROM %s " \
-                "WHERE res_id IS NULL AND imd_module IS NOT NULL" % self._table_name)
+            cr.execute("SELECT module, imd_model, imd_name FROM %s " \
+                "WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
             for row in cr.fetchall():
                 _logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
 
-        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND imd_module IS NOT NULL" % \
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
             self._table_name)
 
         # Records w/o res_id must _not_ be inserted into our db, because they are
@@ -132,8 +132,8 @@ class ir_translation_import_cursor(object):
 
         # Step 3: insert new translations
 
-        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value)
-            SELECT name, lang, res_id, src, type, value
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module)
+            SELECT name, lang, res_id, src, type, value, module
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
@@ -167,6 +167,7 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
+        'module': fields.char('Module Name', size=128),
     }
     
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 
@@ -322,6 +323,38 @@ class ir_translation(osv.osv):
         """ Return a cursor-like object for fast inserting translations
         """
         return ir_translation_import_cursor(cr, uid, self, context=context)
+    
+    def load(self, cr, modules, langs, flag=None, context=None):
+        translated_data = {}
+        for module_name in modules:
+            translated_data[module_name] = {'messages':[]}
+            modpath = openerp.modules.get_module_path(module_name)
+            if not modpath:
+                # unable to find the module. we skip
+                continue
+            for lang in langs:
+                iso_lang = tools.get_iso_codes(lang)
+                f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
+                context2 = context and context.copy() or {}
+                if f and '_' in iso_lang:
+                    iso_lang2 = iso_lang.split('_')[0]
+                    f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
+                    if f2:
+                        _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
+                        translated_data[module_name]['messages'].extend(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context))
+                        context2['overwrite'] = True
+                # Implementation notice: we must first search for the full name of
+                # the language derivative, like "en_UK", and then the generic,
+                # like "en".
+                if (not f) and '_' in iso_lang:
+                    iso_lang = iso_lang.split('_')[0]
+                    f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
+                if f:
+                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
+                    translated_data[module_name]['messages'].extend(tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2))
+                elif iso_lang != 'en':
+                    _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
+        return translated_data
 
 ir_translation()
 

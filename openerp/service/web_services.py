@@ -777,6 +777,27 @@ class report_spool(netsvc.ExportService):
         else:
             raise Exception, 'ReportNotFound'
 
+class translation(netsvc.ExportService):
+
+    def __init__(self, name="translation"):
+        netsvc.ExportService.__init__(self, name)
+    
+    def exp_load(self, db, modules, langs, flag=None, context=None):
+        cr = pooler.get_db(db).cursor()
+        translated_data = pooler.get_pool(db).get('ir.translation').load(cr, modules, langs, flag, context=context)
+        cr.commit()
+        cr.close()
+        return translated_data
+    
+    def dispatch(self, method, params):
+        if method in ['load']:
+            # No security check for these methods
+            pass
+        else:
+            raise KeyError("Method not found: %s" % method)
+        fn = getattr(self, 'exp_'+method)
+        return fn(*params)
+
 
 def start_web_services():
     db()
@@ -784,6 +805,7 @@ def start_web_services():
     objects_proxy()
     wizard()
     report_spool()
+    translation()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
