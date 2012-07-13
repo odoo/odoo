@@ -8,16 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Leaves by Department" version="7.0">
-                <header>
-                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
                 <group>
                     <field name="date_from" />
                     <field name="holiday_type"/>
                     <field name="depts"/>
                 </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/> or
+                    <button string="Cancel" special="cancel" class="oe_link"/>
+                </footer>
             </form>
             </field>
         </record>
@@ -33,7 +32,7 @@
 
         <menuitem
             name="Leaves by Department"
-            parent="menu_hr_reporting_holidays"
+            parent="hr.menu_hr_reporting_timesheet"
             action="action_hr_holidays_summary_dept"
             id="menu_account_central_journal"
             icon="STOCK_PRINT"/>
