@@ -162,6 +162,7 @@ class hr_expense_expense(osv.osv):
         res = False
         property_obj = self.pool.get('ir.property')
         sequence_obj = self.pool.get('ir.sequence')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
         account_journal = self.pool.get('account.journal')
         voucher_obj = self.pool.get('account.voucher')
         
@@ -208,7 +209,11 @@ class hr_expense_expense(osv.osv):
                 if journal_id:
                     voucher['journal_id'] = journal_id
                     journal = account_journal.browse(cr, uid, journal_id, context=context)
-            voucher_id = voucher_obj.create(cr, uid, voucher, context)
+            if journal and not journal.analytic_journal_id:
+                analytic_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')], context=context)
+                if analytic_journal_ids:
+                    account_journal.write(cr, uid, [journal.id], {'analytic_journal_id': analytic_journal_ids[0]}, context=context)
+            voucher_id = voucher_obj.create(cr, uid, voucher, context=context)
             self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'}, context=context)
             res = voucher_id
         return res
