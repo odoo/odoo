@@ -21,6 +21,7 @@
 
 from osv import osv
 from osv import fields
+import re
 
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
@@ -39,6 +40,36 @@ class res_partner(osv.osv):
             search_domain = ['|'] + initial_domain + [('partner_id', 'in', ids)]
         return search_domain
 
-res_partner()
+    def name_create(self, cr, uid, name, context=None):
+        """ Overrider of orm's name_create method for partners. The purpose is
+            to handle some basic syntaxic tricks to create partners using the
+            name_create.
+            Supported syntax:
+            - 'info@mail.com': create a partner with name info@mail.com, and
+              sets its email to info@mail.com
+            - 'Raoul Grosbedon <raoul@grosbedon.fr>': create a partner with name
+              Raoul Grosbedon, and set its email to raoul@grosbedon.fr
+            - anything else: fall back on the default name_create
+            Regex :
+            - (^|\s)([\w|\.]+)@([\w|\.]*): (void), info, openerp.com
+            - (^|\s)([\w|\.|\s]+)[\<]([\w|\.]+)@([\w|\.]*)[\>]: (void), Raoul
+              Grosbedon, raoul, grosbedon.fr
+        """
+        contact_regex = re.compile('(^|\s)([\w|\.|\s]+)[\<]([\w|\.]+)@([\w|\.]*)[\>]')
+        email_regex = re.compile('(^|\s)([\w|\.]+)@([\w|\.]*)')
+        contact_regex_res = contact_regex.findall(name)
+        email_regex_res = email_regex.findall(name)
+        if contact_regex_res:
+            name = contact_regex_res[0][1]
+            name = name.rstrip(' ') # remove extra spaces on the right
+            email = '%s@%s' % (contact_regex_res[0][2], contact_regex_res[0][3])
+            rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        elif email_regex:
+            email = '%s@%s' % (email_regex_res[0][1], email_regex_res[0][2])
+            rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        else:
+            return super(res_partner, self).create(cr, uid, name, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
