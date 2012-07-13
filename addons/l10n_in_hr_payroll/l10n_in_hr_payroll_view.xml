@@ -32,7 +32,7 @@
             </data>
             </field>
         </record>
-        
+
         <record id="hr_employee_form_in_inherit" model="ir.ui.view">
             <field name="name">hr.employee.form.inherit</field>
             <field name="model">hr.employee</field>
@@ -63,7 +63,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_hr_bank_advice_form" model="ir.ui.view">
             <field name="name">hr.payroll.advice.form</field>
             <field name="model">hr.payroll.advice</field>
@@ -120,8 +120,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payment advice">
                     <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Advice"/>
-                        <filter icon="terp-camera_test" string="Done" domain="[('state','=','confirm')]" help="Done Advice"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Advices"/>
+                        <filter icon="terp-camera_test" string="Confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -130,11 +130,11 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Bank" name="bank_id" icon="terp-folder-orange" context="{'group_by':'bank_id'}"/>
-                        <separator orientation="vertical" />
-                        <filter string="Companies" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
+                        <filter string="Bank" name="bank_id" icon="terp-go-home" context="{'group_by':'bank_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Company" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     </group>
                 </search>
             </field>
@@ -148,7 +148,7 @@
             <field name="view_id" ref="view_hr_bank_advice_tree"/>
             <field name="search_view_id" ref="view_hr_payroll_advice_filter"/>
         </record>
-        
+
         <menuitem
             action="action_view_hr_bank_advice_tree"
             id="hr_menu_payment_advice"
