@@ -3,52 +3,52 @@
 -
   I confirm the purchase order.
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_4}
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_5}
 -
   I check the "Approved" status  after confirmed RFQ.
 -
-  !assert {model: purchase.order, id: purchase_order_4}:
+  !assert {model: purchase.order, id: purchase_order_5}:
     - state == 'approved'
 -
   First I cancel  receptions related to this order if order shipped.
 -
   !python {model: purchase.order}: |
-    order = self.browse(cr, uid, ref("purchase_order_4"))
+    order = self.browse(cr, uid, ref("purchase_order_5"))
     self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
 -
   I check order status in "Shipping Exception".
 -
   !python {model: purchase.order}: |
-    order = self.browse(cr, uid, ref("purchase_order_4"))
+    order = self.browse(cr, uid, ref("purchase_order_5"))
     assert order.state == "except_picking", "order should be in Ship Exception state after cancel shipment"    
 -
   Now I am able to cancel purchase order.
 -
   !python {model: purchase.order}: |
-    self.action_cancel(cr, uid, [ref("purchase_order_4")])
+    self.action_cancel(cr, uid, [ref("purchase_order_5")])
 -
   I check that order is cancelled.
 -
-  !assert {model: purchase.order, id: purchase_order_4}:
+  !assert {model: purchase.order, id: purchase_order_5}:
     - state == 'cancel'
 -
   After cancel the order, I check that it's related invoice cancelled.
 -
   !python {model: purchase.order}: |
-    order = self.browse(cr, uid, ref("purchase_order_4"))
+    order = self.browse(cr, uid, ref("purchase_order_5"))
     assert order.invoice_ids[0].state == "cancel", "order's related invoice should be cancelled"   
 -
   Now again set cancelled order to draft.
 -
   !python {model: purchase.order}: |
-    self.action_cancel_draft(cr, uid, [ref("purchase_order_4")])
+    self.action_cancel_draft(cr, uid, [ref("purchase_order_5")])
 -
   Now I again to cancel draft order.
 -
   !python {model: purchase.order}: |
-    self.action_cancel(cr, uid, [ref("purchase_order_4")])
+    self.action_cancel(cr, uid, [ref("purchase_order_5")])
 -
   I check that order is cancelled.
 -
-  !assert {model: purchase.order, id: purchase_order_4}:
+  !assert {model: purchase.order, id: purchase_order_5}:
     - state == 'cancel'

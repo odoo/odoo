@@ -4,7 +4,7 @@
   I check the total untaxed amount of the RFQ is correctly computed
 -
   !assert {model: purchase.order, id: purchase_order_1, string: The amount of RFQ is not correctly computed}:
-    - sum([l.price_subtotal for l in order_line]) == amount_untaxed
+    - round(sum([l.price_subtotal for l in order_line]), 2) == round(amount_untaxed, 2)
 -
   I confirm the RFQ.
 -
