@@ -3,7 +3,7 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web example module.
+OpenERP Web example module.
         """,
     "version": "2.0",
     "depends": [],

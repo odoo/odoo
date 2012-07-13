@@ -3,7 +3,7 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web Mobile.
+OpenERP Web Mobile.
         """,
     "version" : "2.0",
     "depends" : [],

@@ -3,7 +3,7 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web kanban view.
+OpenERP Web kanban view.
         """,
     "version" : "2.0",
     "depends" : ["web"],

@@ -3,7 +3,7 @@
     "version": "2.0",
      "description":
         """
-        OpenERP Web process view.
+OpenERP Web process view.
         """,
     "depends" : ["web_diagram"],
     "js": [
