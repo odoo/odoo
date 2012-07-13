@@ -482,24 +482,26 @@ instance.web.Login =  instance.web.Widget.extend({
             }
         }
     },
+    open_db_manager: function(){
+        var self = this;
+        self.$element.find('.oe_login_bottom').hide();
+        self.$element.find('.oe_login_pane').hide();
+        self.databasemanager = new instance.web.DatabaseManager(self);
+        self.databasemanager.appendTo(self.$element);
+        self.databasemanager.do_exit.add_last(function() {
+            self.databasemanager.destroy();
+            self.$element.find('.oe_login_bottom').show();
+            self.$element.find('.oe_login_pane').show();
+            self.load_db_list(true).then(self.on_db_list_loaded);
+        });
+    },
     start: function() {
         var self = this;
-
         self.$element.find("form").submit(self.on_submit);
-
         self.$element.find('.oe_login_manage_db').click(function() {
-            self.$element.find('.oe_login_bottom').hide();
-            self.$element.find('.oe_login_pane').hide();
-            self.databasemanager = new instance.web.DatabaseManager(self);
-            self.databasemanager.appendTo(self.$element);
-            self.databasemanager.do_exit.add_last(function() {
-                self.databasemanager.destroy();
-                self.$element.find('.oe_login_bottom').show();
-                self.$element.find('.oe_login_pane').show();
-                self.load_db_list(true).then(self.proxy('_db_list_loaded'));
-            });
+            self.open_db_manager();
         });
-        return self.load_db_list().then(self.proxy('_db_list_loaded'));
+        return self.load_db_list().then(self.on_db_list_loaded);
     },
     load_db_list: function (force) {
         var d = $.when(), self = this;
@@ -514,11 +516,14 @@ instance.web.Login =  instance.web.Widget.extend({
         }
         return d;
     },
-    _db_list_loaded: function () {
-        var list = this._db_list,
-            dbdiv = this.$element.find('div.oe_login_dbpane');
+    on_db_list_loaded: function () {
+        var self = this;
+        var list = this._db_list;
+        var dbdiv = this.$element.find('div.oe_login_dbpane');
         this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
-        if(list && list.length === 1) {
+        if(list.length === 0) {
+            self.open_db_manager();
+        } else if(list && list.length === 1) {
             dbdiv.hide();
         } else {
             dbdiv.show();
