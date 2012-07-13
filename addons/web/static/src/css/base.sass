@@ -214,7 +214,9 @@ $sheet-max-width: 860px
         @include radius(8px)
         @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
         @include background-clip()
-        .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
+        .ui-dialog-content
+            padding: 0px
+        .ui-dialog-titlebar, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
             border-bottom: 1px solid #cacaca
@@ -1430,15 +1432,15 @@ $sheet-max-width: 860px
             padding: 0 !important
         td.oe_form_group_cell_label
             border-right: none
-        .oe_form_field
-            width: auto !important
         .oe_subtotal_footer_separator
             border-top: 1px solid #cacaca
-            font-sie: 120%
             font-weight: bold
+            font-size: 18px
         label.oe_subtotal_footer_separator
             font-weight: bold !important
             padding: 2px 8px 2px 0px !important
+        label.oe_form_label_help
+            font-weight: normal
     // no sheet in popups
     .oe_application
         .oe_form_sheetbg
@@ -1537,12 +1539,6 @@ $sheet-max-width: 860px
             width: 100%
         .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
-        .oe_form_field_float input
-            width: 100px
-        h1 .oe_form_field_float input
-            width: 140px
-        h2 .oe_form_field_float input
-            width: 120px
         h1, h2, h3, h4, h5, h6
             margin: 0 0 4px 0
             input
@@ -1556,9 +1552,9 @@ $sheet-max-width: 860px
             input
                 margin: 0px
         .oe_form_field_integer
-            width: 180px
+            width: 7em
         .oe_form_field_float
-            width: 180px
+            width: 8em
         .oe_form_field_date
             width: 7.5em
         .oe_form_field_datetime
@@ -1693,6 +1689,12 @@ $sheet-max-width: 860px
             display: none
     .oe_form_field_one2many
         // TODO: oe_form_field_one2many_list?
+        .oe_list_content
+            > thead
+                border-bottom: 1px
+            > tbody
+                tr:nth-child(odd)
+                    background: transparent
         .oe_list .oe_list_edit_row_save
             background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
             &:before
@@ -1773,6 +1775,7 @@ $sheet-max-width: 860px
                         border-width: 0
                 > td.oe_number
                     text-align: right !important
+                    width: 100px
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)

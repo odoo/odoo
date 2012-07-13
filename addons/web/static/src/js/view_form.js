@@ -3868,7 +3868,6 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         var self = this;
         this.renderElement();
         new instance.web.Dialog(this, {
-            width: '90%',
             min_width: '800px',
             close: function() {
                 self.check_exit(true);

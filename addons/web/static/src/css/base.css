@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp a {
   text-decoration: none;
@@ -202,7 +202,10 @@
   -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
-.openerp.ui-dialog .ui-dialog-titlebar, .openerp.ui-dialog .ui-dialog-content, .openerp.ui-dialog .ui-dialog-buttonpane {
+.openerp.ui-dialog .ui-dialog-content {
+  padding: 0px;
+}
+.openerp.ui-dialog .ui-dialog-titlebar, .openerp.ui-dialog .ui-dialog-buttonpane {
   padding: 16px;
 }
 .openerp.ui-dialog .ui-dialog-titlebar {
@@ -1840,17 +1843,17 @@
 .openerp .oe_form .oe_subtotal_footer td.oe_form_group_cell_label {
   border-right: none;
 }
-.openerp .oe_form .oe_subtotal_footer .oe_form_field {
-  width: auto !important;
-}
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
   border-top: 1px solid #cacaca;
-  font-sie: 120%;
   font-weight: bold;
+  font-size: 18px;
 }
 .openerp .oe_form .oe_subtotal_footer label.oe_subtotal_footer_separator {
   font-weight: bold !important;
   padding: 2px 8px 2px 0px !important;
+}
+.openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
+  font-weight: normal;
 }
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
@@ -1964,15 +1967,6 @@
 .openerp .oe_form .oe_form_field_text.oe_inline, .openerp .oe_form .oe_form_field_text.oe_inline > textarea {
   width: 500px;
 }
-.openerp .oe_form .oe_form_field_float input {
-  width: 100px;
-}
-.openerp .oe_form h1 .oe_form_field_float input {
-  width: 140px;
-}
-.openerp .oe_form h2 .oe_form_field_float input {
-  width: 120px;
-}
 .openerp .oe_form h1, .openerp .oe_form h2, .openerp .oe_form h3, .openerp .oe_form h4, .openerp .oe_form h5, .openerp .oe_form h6 {
   margin: 0 0 4px 0;
 }
@@ -1990,10 +1984,10 @@
   margin: 0px;
 }
 .openerp .oe_form .oe_form_field_integer {
-  width: 180px;
+  width: 7em;
 }
 .openerp .oe_form .oe_form_field_float {
-  width: 180px;
+  width: 8em;
 }
 .openerp .oe_form .oe_form_field_date {
   width: 7.5em;
@@ -2150,6 +2144,12 @@
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
 }
+.openerp .oe_form_field_one2many .oe_list_content > thead {
+  border-bottom: 1px;
+}
+.openerp .oe_form_field_one2many .oe_list_content > tbody tr:nth-child(odd) {
+  background: transparent;
+}
 .openerp .oe_form_field_one2many .oe_list .oe_list_edit_row_save {
   background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat;
 }
@@ -2250,6 +2250,7 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_number {
   text-align: right !important;
+  width: 100px;
 }
 .openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;
