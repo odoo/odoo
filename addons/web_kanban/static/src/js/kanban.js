@@ -415,6 +415,9 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.appendTo($(".oe_kanban_group_list_header", self.$records));
             self.quick.focus();
         });
+        /*
+         * Add bounce effect on image '+' of kanban header when click on empty space of kanban grouped column.
+         */
         var add_btn = this.$element.find('.oe_kanban_add');
         var fold_btn = this.$element.find('.oe_dropdown_kanban');
         this.$records.click(function (ev) {

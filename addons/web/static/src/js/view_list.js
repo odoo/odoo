@@ -982,7 +982,11 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw "Could not find id in dataset"
                     }
                     self.row_clicked(e);
-                } else if (opts.options.$buttons) {
+                } 
+                /*
+                 * Add bounce effect on button 'Create' when click on empty row of list view.
+                 */
+                else if (opts.options.$buttons) {
                     var create_btn = $(opts.options.$buttons.find('.oe_list_add'));
                     create_btn.wrap('<div>').css('margin-right','4px').addClass('oe_bounce_left oe_bounce');
                }

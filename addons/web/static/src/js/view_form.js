@@ -562,6 +562,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             _.each(this.fields,function(field){
                 field.set({"force_readonly": true});
             });
+            /*
+             * Add bounce effect on button 'Edit' when click on readonly page view.
+             */
             var edit_btn = $(".oe_form_button_edit");
             this.$element.find(".oe_form_field, .oe_form_group_cell").click(function (e) {
                 edit_btn.wrap('<div>').css('margin-right','4px').addClass('oe_bounce_left oe_bounce');
