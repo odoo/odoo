@@ -19,12 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
-import os
-import openerp 
-import tools
+from osv import fields,osv
 
-class res_company(osv.osv):
+class res_company(osv.Model):
     _name = "res.company"
     _description = "companies"
     _inherit = "res.company"

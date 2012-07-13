@@ -19,12 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
-import os
-import openerp 
-import tools
+from osv import fields,osv
 
-class ir_translation(osv.osv):
+class ir_translation(osv.Model):
     _name = "ir.translation"
     _description="Translation"
     _inherit="ir.translation"
