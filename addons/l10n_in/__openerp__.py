@@ -23,8 +23,8 @@
     "name": "India - Accounting",
     "version": "1.0",
     "description": """
-Indian Accounting : Chart of Account.
-=====================================
+Indian Accounting: Chart of Account.
+====================================
 
 Indian accounting chart and localization.
     """,
