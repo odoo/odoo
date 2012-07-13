@@ -14,38 +14,19 @@
         </record>
 
         <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
-            <field name="code">HRAM</field>
+            <field name="code">HRA</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50)</field>
+            <field name="amount_python_compute">result=payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50) if (contract.city_type=='metro') else payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40) if (contract.city_type=='non-metro') else 0.00</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">House Rent Allowance for metro city</field>
+            <field name="name">House Rent Allowance</field>
             <field name="sequence" eval="51"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = (contract.city_type=='metro')</field>
             <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
 Income tax exemption for HRA will be least of following:
     1. The actual amount of HRA received as a part of salary.
-    2. 40% (if living in non-metro area).
+    2. 50% (if living in metro area) and 40% (if living in non-metro area) of (basic salary+Dearness allowance(if applicable)).
     3. Rent paid minus 10% of (basic salary+DA).
             </field>
         </record>
-
-        <record id="hr_salary_rule_houserentallowancenonmetro" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40)</field>
-            <field name="code">HRANM</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">House Rent Allowance for non metro city</field>
-            <field name="sequence" eval="52"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = (contract.city_type=='non-metro')</field>
-            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
-Income tax exemption for HRA will be least of following:
-    1. The actual amount of HRA received as a part of salary.
-    2. 50% (if living in metro area) of (basic salary+Dearness allowance (DA)).
-    3. Rent paid minus 10% of (basic salary+DA).
-             </field>
-         </record>
 
         <record id="hr_salary_trans_allownce" model="hr.salary.rule">
             <field name="code">TCA</field>
