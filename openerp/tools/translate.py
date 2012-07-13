@@ -850,7 +850,7 @@ def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, co
         _logger.info("loading %s", filename)
         transl = []
         if flag == 'web':
-            cr.execute("select DISTINCT src,value from ir_translation where module='%s' AND value != ''"% (module_name))
+            cr.execute("select DISTINCT src,value from ir_translation where module='%s' AND lang='%s' AND value != ''"% (module_name,lang))
             for src, value in cr.fetchall():
                 transl.append({'id': src, 'string': value})
         else:
