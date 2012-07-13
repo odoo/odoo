@@ -40,6 +40,7 @@ class ir_model_access(osv.Model):
                         LEFT JOIN ir_module_category c ON (c.id=g.category_id)
                       WHERE
                         m.model=%s AND
+                        a.active IS true AND
                         (g.share IS NULL or g.share IS false) AND
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
