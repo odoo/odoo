@@ -44,6 +44,10 @@ class hr_contract(osv.osv):
         'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
         'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
+        'city_type': fields.selection([
+            ('metro', 'Metro'),
+            ('non-metro', 'Non-Metro'),
+            ], 'Type of City', readonly=False),
     }
 
 hr_contract()
