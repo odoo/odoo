@@ -564,7 +564,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             });
             var edit_btn = $(".oe_form_button_edit");
             this.$element.find(".oe_form_field, .oe_form_group_cell").click(function (e) {
-                edit_btn.addClass('oe_bounce_button_left');
+                edit_btn.wrap("<div>").addClass('oe_bounce_button_left');
                 self.do_bounce(edit_btn);
                 e.stopImmediatePropagation();
             });

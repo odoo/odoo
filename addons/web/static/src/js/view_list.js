@@ -287,8 +287,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
             }
             this.$buttons.find('.oe_list_add')
-                    .wrap("<div></div>")
-                    .addClass('oe_bounce_button_left')
                     .click(this.proxy('do_add_record'))
                     .prop('disabled', grouped && this.options.editable);
             this.$buttons.on('click', '.oe_list_button_import', function() {
@@ -984,11 +982,10 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw "Could not find id in dataset"
                     }
                     self.row_clicked(e);
-                } else {
-                    if (opts.options.$buttons) {
-                        var create_btn = $(opts.options.$buttons.find('.oe_list_add'));
-                        self.view.do_bounce(create_btn);
-                    }
+                } else if (opts.options.$buttons) {
+                    var create_btn = $(opts.options.$buttons.find('.oe_list_add'));
+                    create_btn..wrap("<div>").addClass('oe_bounce_button_left')
+                    self.view.do_bounce(create_btn);
                }
             });
     },
