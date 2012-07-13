@@ -1372,9 +1372,6 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
-    .oe_form_nosheet
-        margin-left: 10px
-        margin-right: 10px
     .oe_form_nosheet > header
         margin-left: -10px
         margin-right: -10px
@@ -1693,6 +1690,12 @@ $sheet-max-width: 860px
             display: none
     .oe_form_field_one2many
         // TODO: oe_form_field_one2many_list?
+        .oe_list_content
+            > thead
+                border-bottom: 1px
+            > tbody
+                tr:nth-child(odd)
+                    background: transparent
         .oe_list .oe_list_edit_row_save
             background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
             &:before
