@@ -202,7 +202,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         };
 
         CuteEdge.creation_callback = function(node_start, node_end){
-            return {label:_t("")};
+            return {label: ""};
         };
         CuteEdge.new_edge_callback = function(cuteedge){
             self.add_connector(cuteedge.get_start().id,
