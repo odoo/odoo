@@ -48,14 +48,14 @@ class mrp_workcenter(osv.osv):
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
         'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work Center per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
-            help="Complete this only if you want automatic analytic accounting entries on production orders."),
+            help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work Center per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
-            help="Complete this only if you want automatic analytic accounting entries on production orders."),
+            help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
-        'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to track easily your production costs in the analytic accounting."),
+        'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,

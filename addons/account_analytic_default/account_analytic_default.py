@@ -30,13 +30,13 @@ class account_analytic_default(osv.osv):
     _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of analytic distribution"),
-        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account' , help="Analytical Account"),
-        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="select a product which will use analytical account specified in analytic default (eg. create new cutomer invoice or Sale order if we select this product, it will automatically take this as an analytical account)"),
-        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade', help="select a partner which will use analytical account specified in analytic default (eg. create new cutomer invoice or Sale order if we select this partner, it will automatically take this as an analytical account)"),
-        'user_id': fields.many2one('res.users', 'User', ondelete='cascade', help="select a user which will use analytical account specified in analytic default"),
-        'company_id': fields.many2one('res.company', 'Company', ondelete='cascade', help="select a company which will use analytical account specified in analytic default (eg. create new cutomer invoice or Sale order if we select this company, it will automatically take this as an analytical account)"),
-        'date_start': fields.date('Start Date', help="Default start date for this Analytical Account"),
-        'date_stop': fields.date('End Date', help="Default end date for this Analytical Account"),
+        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Select a product which will use analytic account specified in analytic default (eg. create new customer invoice or Sale order if we select this product, it will automatically take this as an analytic account)"),
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade', help="Select a partner which will use analytic account specified in analytic default (eg. create new customer invoice or Sale order if we select this partner, it will automatically take this as an analytic account)"),
+        'user_id': fields.many2one('res.users', 'User', ondelete='cascade', help="Select a user which will use analytic account specified in analytic default."),
+        'company_id': fields.many2one('res.company', 'Company', ondelete='cascade', help="Select a company which will use analytic account specified in analytic default (eg. create new customer invoice or Sale order if we select this company, it will automatically take this as an analytic account)"),
+        'date_start': fields.date('Start Date', help="Default start date for this Analytic Account."),
+        'date_stop': fields.date('End Date', help="Default end date for this Analytic Account."),
     }
 
     def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context=None):
