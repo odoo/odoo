@@ -7,30 +7,32 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='time_grp']" position="after">
-                    <field name="ldaps" nolabel="1" colspan="4">
-                        <form string="LDAP Configuration" version="7.0">
-                            <group col="4">
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group string="LDAP Parameters">
+                        <field name="ldaps" nolabel="1" colspan="4">
+                            <form string="LDAP Configuration" version="7.0">
+                                <group col="4">
+                                    <field name="ldap_server"/>
+                                    <field name="ldap_server_port"/>
+                                    <field name="ldap_binddn"/>
+                                    <field name="ldap_password"/>
+                                    <field name="ldap_base"/>
+                                    <field name="ldap_filter"/>
+                                    <field name="create_user"/>
+                                    <field name="user"/>
+                                    <newline/>
+                                    <field name="sequence"/>
+                                    <field name="ldap_tls"/>
+                                </group>
+                            </form>
+                            <tree string="LDAP Configuration">
+                                <field name="sequence"/>
                                 <field name="ldap_server"/>
                                 <field name="ldap_server_port"/>
-                                <field name="ldap_binddn"/>
-                                <field name="ldap_password"/>
                                 <field name="ldap_base"/>
-                                <field name="ldap_filter"/>
-                                <field name="create_user"/>
-                                <field name="user"/>
-                                <newline/>
-                                <field name="sequence"/>
-                                <field name="ldap_tls"/>
-                            </group>
-                        </form>
-                        <tree string="LDAP Configuration">
-                            <field name="sequence"/>
-                            <field name="ldap_server"/>
-                            <field name="ldap_server_port"/>
-                            <field name="ldap_base"/>
-                        </tree>
-                    </field>
+                            </tree>
+                        </field>
+                    </group>
                 </xpath>
             </field>
         </record>

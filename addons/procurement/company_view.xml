@@ -9,8 +9,10 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='day_grp']" position="inside">
-                    <field name="schedule_range"/>
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="logistics_grp" string="Logistics"/>
+                        <field name="schedule_range"/>
+                    </group>
                 </xpath>
             </field>
        </record>

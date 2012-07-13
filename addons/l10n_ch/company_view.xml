@@ -7,18 +7,20 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='bank_acc']" position="after">
-                    <group string="BVR data" colspan="4">
-                        <field name="bvr_delta_horz"/>
-                        <field name="bvr_delta_vert"/>
-                        <field name="bvr_scan_line_vert"/>
-                        <field name="bvr_scan_line_horz"/>
-                        <field name="bvr_scan_line_font_size"/>
-                        <field name="bvr_scan_line_letter_spacing"/>
-                        <field name="bvr_background"/>
-                        <field name="bvr_only"/>
-                        <field name="invoice_only"/>
-                    </group>
+                <xpath expr="//notebook" position="inside">
+                    <page string="BVR Data"/>
+                        <group colspan="4">
+                            <field name="bvr_delta_horz"/>
+                            <field name="bvr_delta_vert"/>
+                            <field name="bvr_scan_line_vert"/>
+                            <field name="bvr_scan_line_horz"/>
+                            <field name="bvr_scan_line_font_size"/>
+                            <field name="bvr_scan_line_letter_spacing"/>
+                            <field name="bvr_background"/>
+                            <field name="bvr_only"/>
+                            <field name="invoice_only"/>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>
