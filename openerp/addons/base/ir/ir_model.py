@@ -462,12 +462,17 @@ class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
+        'active': fields.boolean('Active', help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module.'),
         'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
         'perm_unlink': fields.boolean('Delete Access'),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
     def check_groups(self, cr, uid, group):
@@ -493,14 +498,16 @@ class ir_model_access(osv.osv):
             cr.execute("SELECT perm_" + mode + " "
                    "  FROM ir_model_access a "
                    "  JOIN ir_model m ON (m.id = a.model_id) "
-                   " WHERE m.model = %s AND a.group_id = %s", (model_name, group_id)
+                   " WHERE m.model = %s AND a.active IS True "
+                   " AND a.group_id = %s", (model_name, group_id)
                    )
             r = cr.fetchone()
             if r is None:
                 cr.execute("SELECT perm_" + mode + " "
                        "  FROM ir_model_access a "
                        "  JOIN ir_model m ON (m.id = a.model_id) "
-                       " WHERE m.model = %s AND a.group_id IS NULL", (model_name, )
+                       " WHERE m.model = %s AND a.active IS True "
+                       " AND a.group_id IS NULL", (model_name, )
                        )
                 r = cr.fetchone()
 
@@ -525,6 +532,7 @@ class ir_model_access(osv.osv):
                         LEFT JOIN ir_module_category c ON (c.id=g.category_id)
                       WHERE
                         m.model=%s AND
+                        a.active IS True AND
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
@@ -554,6 +562,7 @@ class ir_model_access(osv.osv):
                    '  JOIN res_groups_users_rel gu ON (gu.gid = a.group_id) '
                    ' WHERE m.model = %s '
                    '   AND gu.uid = %s '
+                   '   AND a.active IS True '
                    , (model_name, uid,)
                    )
         r = cr.fetchone()[0]
@@ -565,6 +574,7 @@ class ir_model_access(osv.osv):
                        '  JOIN ir_model m ON (m.id = a.model_id) '
                        ' WHERE a.group_id IS NULL '
                        '   AND m.model = %s '
+                       '   AND a.active IS True '
                        , (model_name,)
                        )
             r = cr.fetchone()[0]
