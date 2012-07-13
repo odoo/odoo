@@ -70,7 +70,7 @@ class stock_partial_picking(osv.osv_memory):
         'date': fields.datetime('Date', required=True),
         'move_ids' : fields.one2many('stock.partial.picking.line', 'wizard_id', 'Product Moves'),
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
-        'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
+        'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
      }
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

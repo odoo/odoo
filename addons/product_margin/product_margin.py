@@ -98,7 +98,7 @@ class product_product(osv.osv):
                 ('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid')
             ], string='Invoice State',multi='product_margin', readonly=True),
         'sale_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
-            help="Avg. Price in Customer Invoices)"),
+            help="Avg. Price in Customer Invoices."),
         'purchase_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Supplier Invoices "),
         'sale_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced', multi='product_margin',
