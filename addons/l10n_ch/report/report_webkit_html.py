@@ -207,7 +207,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         if not header and report_xml.header:
           raise except_osv(
                 _('No header defined for this Webkit report!'),
-                _('Please set a header in company settings')
+                _('Please set a header in company settings.')
             )
         if not report_xml.header :
             #I know it could be cleaner ...

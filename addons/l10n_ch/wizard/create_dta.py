@@ -99,7 +99,7 @@ class record:
         Must instanciate a fields list, field = (name,size)
         and update a local_values dict.
         """
-        raise _('not implemented')
+        raise _('Not implemented.')
 
     def generate(self):
         res=''
@@ -373,7 +373,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         #         _('Please confirm it'))
     if not payment.mode:
         raise osv.except_osv(_('Error'),
-                _('No payment mode'))
+                _('No payment mode.'))
     bank = payment.mode.bank_id
     if not bank:
         raise osv.except_osv(_('Error'), _('No bank account for the company.'))
@@ -558,7 +558,7 @@ def _create_dta(obj, cr, uid, data, context=None):
                     raise osv.except_osv(_('Error'),
                                          _('BVR reference number is not valid \n'
                                            'for the line: %s. \n'
-                                           'Mod10 check failed') % pline.name)
+                                           'Mod10 check failed.') % pline.name)
                 # fill reference with 0
                 v['reference'] = v['reference'].rjust(27, '0')
             else:
@@ -603,7 +603,7 @@ def _create_dta(obj, cr, uid, data, context=None):
             v['partner_bank_number'] = '/C/'+v['partner_post_number']
             record_type = record_gt827
         else:
-            raise osv.except_osv(_('Error'), _('The Bank type %s of the bank account: %s is not supported') \
+            raise osv.except_osv(_('Error'), _('The Bank type %s of the bank account: %s is not supported.') \
                     % (elec_pay, res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1],))
 
         dta_line = record_type(v).generate()
