@@ -1677,7 +1677,7 @@ class BaseModel(object):
                         dom = []
                         if column._domain and not isinstance(column._domain, basestring):
                             dom = column._domain
-                        dom += eval(node.get('domain', '[]'), {'uid': user, 'time': time})
+                        dom = dom + eval(node.get('domain', '[]'), {'uid': user, 'time': time})
                         search_context = dict(context)
                         if column._context and not isinstance(column._context, basestring):
                             search_context.update(column._context)
