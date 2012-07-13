@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp><data>
+<openerp>
+<data noupdate="1">
 
     <record id="account_coda_comp_rule" model="ir.rule">
         <field name="name">Account Coda model company rule</field>
@@ -8,4 +9,5 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-</data></openerp>
+</data>
+</openerp>

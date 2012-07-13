@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
-
-    <record id="product_comp_rule" model="ir.rule">
-        <field name="name" >Product multi-company</field>
-        <field name="model_id" ref="model_product_template"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force"> ['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
-    </record>
+<data noupdate="0">
 
     <record id="group_product_variant" model="res.groups">
         <field name="name">Product Variant</field>
@@ -42,6 +35,16 @@
     <record id="group_mrp_properties" model="res.groups">
         <field name="name">Manage Properties of Product</field>
         <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</data>
+<data noupdate="1">
+
+    <record id="product_comp_rule" model="ir.rule">
+        <field name="name" >Product multi-company</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force"> ['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
     <record model="ir.rule" id="product_pricelist_comp_rule">

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp><data>
+<openerp>
+<data noupdate="0">
 
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Invoicing &amp; Payments</field>
@@ -21,6 +22,9 @@
         <field name="name">Pro-forma Invoices</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+
+</data>
+<data noupdate="1">
 
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
@@ -142,4 +146,5 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-</data></openerp>
+</data>
+</openerp>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
 
         <!-- CATEGORY -->
         <record model="ir.module.category" id="module_category_social">
@@ -15,6 +15,9 @@
             <field name="comment"></field>
             <field name="category_id" ref="module_category_social"/>
         </record>
+
+    </data>
+    <data noupdate="1">
 
         <!-- RULES -->
         <record id="group_rule_public_and_joined" model="ir.rule">

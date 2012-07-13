@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+<data noupdate="0">
+
+    <!-- make Employee users Survey users -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
+    </record>
+
     <record id="survey.menu_surveys" model="ir.ui.menu">
         <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
     </record>
@@ -19,7 +25,10 @@
     <record id="survey.menu_answer_surveys" model="ir.ui.menu">
         <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
     </record>
-    
+
+</data>
+<data noupdate="1">
+
     <record id="hr_evaluation_plan_comp_rule" model="ir.rule">
         <field name="name">Evaluation Plan multi company rule</field>
         <field model="ir.model" name="model_id" ref="model_hr_evaluation_plan"/>
@@ -50,10 +59,5 @@
         <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
     </record>
     
-    <!-- make Employee users Survey users -->
-    <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
-    </record>
-
     </data>
 </openerp>

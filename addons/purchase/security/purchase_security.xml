@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
 
     <record id="group_purchase_user" model="res.groups">
         <field name="name">User</field>
@@ -24,6 +24,9 @@
         <field name="category_id" ref="base.module_category_hidden"/>
         <field name="implied_ids" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
     </record>
+
+</data>
+<data noupdate="1">
 
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
