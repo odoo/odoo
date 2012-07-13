@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-06-26 07:48+0000\n"
+"PO-Revision-Date: 2012-07-10 14:17+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-27 06:13+0000\n"
-"X-Generator: Launchpad (build 15482)\n"
+"X-Launchpad-Export-Date: 2012-07-11 05:33+0000\n"
+"X-Generator: Launchpad (build 15593)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -893,7 +893,7 @@ msgstr "Albanien / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr "Opportunities"
+msgstr "Affärsmöjligheter"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -3484,7 +3484,7 @@ msgstr "Fältmappning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_dashboard
 msgid "web Dashboard"
-msgstr ""
+msgstr "Webbinfopanel"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -4503,6 +4503,19 @@ msgid ""
 "You can also use the geolocalization without using the GPS coordinates.\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul används av OpenERP SA för att omdirigera kunder till sina "
+"företag, baserat på geolokalisering.\n"
+"============================================================================="
+"=======\n"
+"\n"
+"Du kan geolocalize dina affärsmöjligheter med hjälp av denna modul.\n"
+"\n"
+"Använd geolokalisering när du tilldelar affärsmöjligheter till företag.\n"
+"Bestäm GPS-koordinater enligt företagsadress .\n"
+"Det mest lämpliga företaget kan tilldelas.\n"
+"Du kan också använda geolokalisering utan att använda GPS-koordinater.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,help:0
@@ -5262,6 +5275,13 @@ msgid ""
 "revenue\n"
 "reports, etc."
 msgstr ""
+"Generera dina fakturor från Utgifter, Tidrapporter ...\n"
+"Modul för att skapa fakturor baserade på kostnader (personal, utgifter, "
+"...).\n"
+"================================================== ========\n"
+"\n"
+"Du kan definiera prislistor i objektkonto, göra några teoretiska intäkts-\n"
+"rapporter etc."
 
 #. module: base
 #: field:ir.ui.menu,parent_id:0
@@ -7949,6 +7969,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul kan automatiskt skapa projektaktiviteter baserat på inkommande e-"
+"post\n"
+"===================================================================\n"
+"\n"
+"Tillåter dig att skapa uppgifter baserat på nya e-postmeddelanden som kommer "
+"till en viss brevlåda,\n"
+"likhet med vad CRM programmet har för kundämnen / affärsmöjligheter.\n"
+"Det finns två vanliga alternativ för att konfigurera brevlådeintegrationen:\n"
+"\n"
+"* Installera `` fetchmail `` modul och konfigurera en ny brevlåda, välj "
+"sedan\n"
+"`` Projektaktiviteter `` som mål för inkommande e-post.\n"
+"* Ställ in det manuellt på e-postservern baserat på \"post-gateway\" script\n"
+"ges i `` mail `` modul - och anslut den till `project.task` modell.\n"
+"\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -9967,6 +10005,35 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"\n"
+"Redovisning och ekonomisk förvaltning.\n"
+"===============================\n"
+"\n"
+"Ekonomi och redovisning modul som omfattar:\n"
+"----------------------------------------------------------------\n"
+"allmänna Redovisningen\n"
+"Kostnad / Analytisk redovisning\n"
+"Tredjepart redovisning\n"
+"skattehantering\n"
+"budgetar\n"
+"Kund-och leverantörsfakturor\n"
+"kontoutdrag\n"
+"Avstämning av företag\n"
+"\n"
+"Skapar en instrumentpanel för revisorer som innehåller:\n"
+"-----------------------------------------------------------------------------"
+"\n"
+"* Lista över kundfakturor att godkänna\n"
+"* Företagsanalys\n"
+"* Graf över kassaflödet\n"
+"* Graf över finanserna\n"
+"\n"
+"De processer som upprätthåller huvudboken sker genom de definierade "
+"finansiella journal (bokföringsregler eller\n"
+"gruppering upprätthålls genom journalen) för ett visst budgetår och för "
+"beredning av bokföringsorder finns \n"
+"modulen account_voucher.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,view_type:0
@@ -12825,7 +12892,7 @@ msgstr "Estland"
 #: model:ir.module.module,shortdesc:base.module_board
 #: model:ir.ui.menu,name:base.menu_dashboard
 msgid "Dashboards"
-msgstr "Startsidor"
+msgstr "Infopaneler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
@@ -14555,7 +14622,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "Leads & Opportunities"
+msgstr "Kundämnen och affärsmöjligheter"
 
 #. module: base
 #: selection:base.language.install,lang:0
