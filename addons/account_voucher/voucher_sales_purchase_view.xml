@@ -130,13 +130,13 @@
                                     <field name="narration" placeholder="Internal Notes" nolabel="1" />
                                 </group>
                                 <group>
-                                    <group class="oe_subtotal_footer" string="Total">
+                                    <group class="oe_subtotal_<div class="oe_chatter">
                                         <field name="tax_id" 
                                             on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
                                             widget="selection"
                                             domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                         <field name="tax_amount" nolabel="1"/>
-                                        <field name="amount" class="oe_subtotal_footer_separator" />
+                                        <field name="amount" class="oe_subtotal_div" />
                                         <button type="object"
                                             icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax"
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
@@ -167,9 +167,9 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                    </div>
                 </form>
             </field>
         </record>
@@ -320,9 +320,9 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                    </div>
                 </form>
             </field>
         </record>
