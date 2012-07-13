@@ -272,7 +272,7 @@ class hr_employee(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_recursion, 'Error ! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
 hr_employee()

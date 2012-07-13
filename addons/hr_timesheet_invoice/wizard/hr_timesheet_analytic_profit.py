@@ -55,7 +55,7 @@ class account_analytic_profit(osv.osv_memory):
                 ('user_id', 'in', data['form']['employee_ids']),
                 ], context=context)
         if not ids_chk:
-            raise osv.except_osv(_('Data Insufficient!'), _('No Records Found for Report!'))
+            raise osv.except_osv(_('Data Insufficient!'), _('No records found for Report!'))
 
         data['form']['journal_ids'] = [(6, 0, data['form']['journal_ids'])] # Improve me => Change the rml/sxw so that it can support withou [0][2]
         data['form']['employee_ids'] = [(6, 0, data['form']['employee_ids'])]

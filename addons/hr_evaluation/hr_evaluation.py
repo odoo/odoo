@@ -240,7 +240,7 @@ class hr_evaluation(osv.osv):
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
         for id in self.browse(cr, uid, ids, context=context):
             if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', 'in', ['done','cancel'])], context=context)):
-                raise osv.except_osv(_('Warning !'),_("You cannot change state, because some appraisal in waiting answer or draft state"))
+                raise osv.except_osv(_('Warning !'),_("You cannot change state, because some appraisal in waiting answer or draft state."))
         return True
 
     def button_done(self,cr, uid, ids, context=None):
