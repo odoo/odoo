@@ -235,6 +235,8 @@ $sheet-max-width: 860px
             @include radius(0 0 2px 2px)
             button
                 margin-left: 8px
+            .ui-dialog-buttonset
+                float: left
         .ui-dialog-titlebar-close
             padding: 0
             .ui-icon-closethick
@@ -330,7 +332,7 @@ $sheet-max-width: 860px
             margin: 4px
     .oe_avatar
         margin: 0 16px 0 0
-        img
+        > img
             height: 50px
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
@@ -356,8 +358,28 @@ $sheet-max-width: 860px
             text-decoration: none
         .oe_star_on
             color: gold
-
-    //.oe_edit_only 
+    // }}}
+    // Tags (for many2many tags, among others) {{{
+    .oe_tags
+        .text-wrap
+            width: 100% !important
+            textarea
+                width: 100% !important
+        .oe_tag
+            border-radius: 2px
+            @include box-sizing(border)
+            position: relative
+            float: left
+            border: 1px solid #9DACCC
+            background: #E2E6F0
+            color: black
+            padding: 0px 3px 0px 3px
+            margin: 0 2px 2px 0
+            height: 16px
+            font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
+        .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
+            font-style: italic
+            text-decoration: none
     // }}}
     // Tooltips {{{
     &.oe_tooltip
@@ -817,7 +839,7 @@ $sheet-max-width: 860px
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include radius(4px)
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
-        .oe_menu_counter 
+        .oe_menu_counter
             float: right
             background: #8a89ba
             color: #eee
@@ -840,7 +862,7 @@ $sheet-max-width: 860px
                 color: $colour4
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
-            .oe_menu_counter 
+            .oe_menu_counter
                 background: #eee
                 color: #8a89ba
         .oe_menu_toggler:before
@@ -1306,7 +1328,7 @@ $sheet-max-width: 860px
                 margin: 0 0 0 4px
                 padding: 0
 
-                    
+
     // }}}
     // Views Common {{{
     .oe_view_nocontent
@@ -1350,7 +1372,7 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
-    .oe_form_nosheet 
+    .oe_form_nosheet
         margin-left: 10px
         margin-right: 10px
     .oe_form_nosheet > header
@@ -1358,17 +1380,17 @@ $sheet-max-width: 860px
         margin-right: -10px
     // }}}
     // FormView.custom tags and classes {{{
-    .oe_form 
+    .oe_form
         header
             position: relative
             border-bottom: 1px solid #cacaca
             @include vertical-gradient(#fcfcfc, #dedede)
             padding: 0 8px
-            line-height: 30px 
+            line-height: 30px
             ul
                 display: inline-block
                 float: right
-        footer
+        div.oe_chatter
             min-width: 650px
             max-width: $sheet-max-width
             margin: 0 auto
@@ -1381,12 +1403,12 @@ $sheet-max-width: 860px
             vertical-align: top
             margin-left: 8px
         li
-            border-right: none 
+            border-right: none
             padding: 0
             margin: 0
-            float: left 
+            float: left
             vertical-align: top
-            height: 30px 
+            height: 30px
             padding: 0 0 0 12px
             &:first-child
                 border-left: 1px solid #cacaca
@@ -1422,7 +1444,7 @@ $sheet-max-width: 860px
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
             padding: 8px 0
-            border-bottom: 1px solid #ddd 
+            border-bottom: 1px solid #ddd
         .oe_form_sheet_width
             min-width: 650px
             max-width: $sheet-max-width
@@ -1566,26 +1588,6 @@ $sheet-max-width: 860px
         .oe_form_field_boolean
             padding-top: 4px
             width: auto
-        .oe_form_field_many2manytags
-            .text-wrap
-                width: 100% !important
-                textarea
-                    width: 100% !important
-            .oe_form_field_many2manytags_box
-                border-radius: 2px
-                @include box-sizing(border)
-                position: relative
-                float: left
-                border: 1px solid #9DACCC
-                background: #E2E6F0
-                color: black
-                padding: 0px 3px 0px 3px
-                margin: 0 2px 2px 0
-                height: 16px
-                font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
-            .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
-                font-style: italic
-                text-decoration: none
         .oe_datepicker_container
             display: none
         .oe_datepicker_root
@@ -1663,6 +1665,7 @@ $sheet-max-width: 860px
             vertical-align: top
             .oe_form_field_image_controls
                 position: absolute
+                white-space: nowrap
                 top: 1px
                 padding: 3px 0 0 0
                 margin: 0 1px

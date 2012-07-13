@@ -240,6 +240,9 @@
 .openerp.ui-dialog .ui-dialog-buttonpane button {
   margin-left: 8px;
 }
+.openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float: left;
+}
 .openerp.ui-dialog .ui-dialog-titlebar-close {
   padding: 0;
 }
@@ -389,7 +392,7 @@
 .openerp .oe_avatar {
   margin: 0 16px 0 0;
 }
-.openerp .oe_avatar img {
+.openerp .oe_avatar > img {
   height: 50px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -443,6 +446,32 @@
 }
 .openerp .oe_webclient .oe_star_on {
   color: gold;
+}
+.openerp .oe_tags .text-wrap {
+  width: 100% !important;
+}
+.openerp .oe_tags .text-wrap textarea {
+  width: 100% !important;
+}
+.openerp .oe_tags .oe_tag {
+  border-radius: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  float: left;
+  border: 1px solid #9daccc;
+  background: #e2e6f0;
+  color: black;
+  padding: 0px 3px 0px 3px;
+  margin: 0 2px 2px 0;
+  height: 16px;
+  font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;
+}
+.openerp .oe_tags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
+  font-style: italic;
+  text-decoration: none;
 }
 .openerp.oe_tooltip {
   font-size: 12px;
@@ -1759,7 +1788,7 @@
   display: inline-block;
   float: right;
 }
-.openerp .oe_form footer {
+.openerp .oe_form div.oe_chatter {
   min-width: 650px;
   max-width: 860px;
   margin: 0 auto;
@@ -2011,32 +2040,6 @@
   padding-top: 4px;
   width: auto;
 }
-.openerp .oe_form .oe_form_field_many2manytags .text-wrap {
-  width: 100% !important;
-}
-.openerp .oe_form .oe_form_field_many2manytags .text-wrap textarea {
-  width: 100% !important;
-}
-.openerp .oe_form .oe_form_field_many2manytags .oe_form_field_many2manytags_box {
-  border-radius: 2px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-  position: relative;
-  float: left;
-  border: 1px solid #9daccc;
-  background: #e2e6f0;
-  color: black;
-  padding: 0px 3px 0px 3px;
-  margin: 0 2px 2px 0;
-  height: 16px;
-  font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;
-}
-.openerp .oe_form .oe_form_field_many2manytags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
-  font-style: italic;
-  text-decoration: none;
-}
 .openerp .oe_form .oe_datepicker_container {
   display: none;
 }
@@ -2119,6 +2122,7 @@
 }
 .openerp .oe_form .oe_form_field_image .oe_form_field_image_controls {
   position: absolute;
+  white-space: nowrap;
   top: 1px;
   padding: 3px 0 0 0;
   margin: 0 1px;

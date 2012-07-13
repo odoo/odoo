@@ -63,7 +63,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
-            width: 580,
+            width: 700,
             min_width: 0,
             max_width: '95%',
             height: 'auto',
@@ -86,7 +86,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (this.dialog_options.autoOpen) {
             this.open();
         } else {
-            instance.web.dialog(this.$element, this.get_options());
+            test = instance.web.dialog(this.$element, this.get_options());
         }
     },
     get_options: function(options) {
@@ -145,9 +145,9 @@ instance.web.Dialog = instance.web.Widget.extend({
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
-	if (! this.isDestroyed()) {
-	    this.$element.dialog('destroy');
-	}
+    if (! this.isDestroyed()) {
+        this.$element.dialog('destroy');
+    }
         this._super();
     }
 });
@@ -212,11 +212,11 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
         dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
     },
     on_javascript_exception: function(exception) {
-	this.on_traceback({
-	    type: _t("Client Error"),
-	    message: exception,
-	    data: {debug: ""}
-	});
+    this.on_traceback({
+        type: _t("Client Error"),
+        message: exception,
+        data: {debug: ""}
+    });
     },
 });
 
@@ -822,8 +822,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 {text: _t("Change password"), click: function(){ self.change_password(); }},
                 {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
                 {text: _t("Save"), click: function(){
-                        var inner_viewmanager = action_manager.inner_viewmanager;
-                        inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
+                        var inner_widget = action_manager.inner_widget;
+                        inner_widget.views[inner_widget.active_view].controller.do_save()
                         .then(function() {
                             self.dialog.destroy();
                             // needs to refresh interface in case language changed
@@ -1037,6 +1037,7 @@ instance.web.WebClient = instance.web.Widget.extend({
                 if (options.needaction) {
                     action.context.search_default_needaction_pending = true;
                 }
+                self.action_manager.clear_breadcrumbs();
                 self.action_manager.do_action(action);
             });
     },
