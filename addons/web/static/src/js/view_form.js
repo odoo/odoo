@@ -284,26 +284,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this._super();
     },
-    on_wrong_click : function (){
-        var self = this;
-        var div = $("<div />", {id:"bounce"});
-        this.$element.find(".oe_form_field, .oe_form_group_cell").click(function (e) {
-            $(".oe_form_button_edit").wrap(div);
-            $("#bounce").addClass('oe_bounce_button_left');
-            var edit_btn = $(".oe_form_button_edit");
-            if (jQuery(window).scrollTop() > 75 ) {
-                $('body,html').animate({ scrollTop: 0 }, 200);
-            }
-            if (jQuery(window).scrollLeft() > 225 ) {
-                $('body,html').animate({ scrollLeft: 0 }, 200);
-            }
-            self.do_bounce(edit_btn);
-            e.stopImmediatePropagation();
-        });
-    },
     on_record_loaded: function(record) {
         var self = this, set_values = [];
-        self.on_wrong_click();
         if (!record) {
             this.do_warn("Form", "The record could not be found in the database.", true);
             return $.Deferred().reject();
@@ -345,7 +327,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             self.$element.add(self.$buttons).removeClass('oe_form_dirty');
         });
-          
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
@@ -581,6 +562,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             _.each(this.fields,function(field){
                 field.set({"force_readonly": true});
             });
+            var edit_btn = $(".oe_form_button_edit");
+            this.$element.find(".oe_form_field, .oe_form_group_cell").click(function (e) {
+                edit_btn.addClass('oe_bounce_button_left');
+                self.do_bounce(edit_btn);
+                e.stopImmediatePropagation();
+            });
         } else {
             self.$element.removeClass('oe_form_readonly').addClass('oe_form_editable');
             self.$buttons.find('.oe_form_buttons_edit').show();
@@ -605,10 +592,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.do_save().then(function(result) {
             self.set({mode: "view"});
-            self.on_wrong_click();
         });
-        
-    },    
+    },
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
             this.set({mode: "view"});

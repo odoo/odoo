@@ -746,7 +746,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
         return false;
     },
-    
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;

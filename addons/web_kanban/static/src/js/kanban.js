@@ -419,13 +419,10 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         var fold_btn = this.$element.find('.oe_dropdown_kanban');
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
-                if (jQuery(window).scrollTop() > 120 ) {
-                    $('body,html').animate({ scrollTop: 0 }, 200);
-                }
                 if (!self.state.folded) {
                     self.view.do_bounce(add_btn);
                 }else {
-                    fold_btn.css('display','inline-block');
+//                    fold_btn.css('display','inline-block');
                     self.view.do_bounce(fold_btn);
                 }
             }
