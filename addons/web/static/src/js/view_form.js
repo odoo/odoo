@@ -2138,7 +2138,18 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             isSelecting = false;
         });
 
-        this.setupFocus(this.$input.add(this.$menu_btn));
+        this.setupFocus(this.$menu_btn);
+        this.$input.bind({
+            focus: function () {
+                $(self).trigger('widget-focus')
+            },
+            blur: function () {
+                if (!isSelecting) {
+                    $(self).trigger('widget-blur');
+                }
+                isSelecting = false;
+            }
+        })
     },
     // autocomplete component content handling
     get_search_result: function(request, response) {
@@ -2257,7 +2268,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         if (back_orig_value === undefined) { // first use after a set_value()
             return;
         }
-        if (this.value !== undefined && ((back_orig_value ? back_orig_value[0] : null)
+        if (this.value != undefined && ((back_orig_value ? back_orig_value[0] : null)
                 !== (this.value ? this.value[0] : null))) {
             this.on_ui_change();
         }
