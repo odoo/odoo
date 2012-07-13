@@ -71,7 +71,8 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
                         _.str.sprintf("%s — %s", format.label, format.error)),
                     opt.childNodes[0])
             }
-            $fmts.append(opt);
+            var options = $fmts.prop('options');
+            options[options.length] = opt;
         });
     },
     show_exports_list: function() {
@@ -348,7 +349,8 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var field_list = this.$element.find('#fields_list');
         if (this.$element.find("#fields_list option[value='" + field_id + "']")
                 && !this.$element.find("#fields_list option[value='" + field_id + "']").length) {
-            field_list.append(new Option(string, field_id));
+            var options = field_list.prop('options');
+            options[options.length] = new Option(string, field_id);
         }
     },
     get_fields: function() {
