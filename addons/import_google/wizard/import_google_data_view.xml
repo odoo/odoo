@@ -7,11 +7,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import contacts from a google account" version="7.0">
-                    <header>
-                        <button name="import_google" string="_Import Contacts" type="object" class="oe_highlight"  />
-                        or 
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group colspan="4" col="4" width="430">
                        <field name="group_name" colspan="4"/>
                        <newline/>
@@ -21,6 +16,11 @@
                             <field name="supplier"  colspan="4"/>
                        </group>
                     </group>
+                    <footer>
+                        <button name="import_google" string="_Import Contacts" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -33,14 +33,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Google Calendar Events" version="7.0">
-                    <header>
-                        <button name="import_google" string="_Import Events" type="object" class="oe_highlight"  />
-                        or 
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group colspan="4" col="4" width="320">
                        <field name="calendar_name" />
                     </group>
+                    <footer>
+                        <button name="import_google" string="_Import Events" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
