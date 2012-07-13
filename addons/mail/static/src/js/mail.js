@@ -352,7 +352,14 @@ openerp.mail = function(session) {
         /**
          * Toggle the formatting mode. */
         toggle_formatting_mode: function() {
+            var self = this;
             this.formatting = ! this.formatting;
+            // calls onchange
+            var call_defer = this.ds_compose.call('onchange_formatting', [[], this.formatting, this.params.res_model, this.params.res_id]).then(
+                function (result) {
+                    console.log(result);
+                    self.form_view.on_processed_onchange(result, []);
+                });
             // update context of datasetsearch
             this.ds_compose.context.formatting = this.formatting;
             // toggle display
@@ -364,7 +371,14 @@ openerp.mail = function(session) {
         /**
          * Toggle the email mode. */
         toggle_email_mode: function() {
+            var self = this;
             this.email_mode = ! this.email_mode;
+            // calls onchange
+            var call_defer = this.ds_compose.call('onchange_email_mode', [[], this.email_mode, this.params.res_model, this.params.res_id]).then(
+                function (result) {
+                    console.log(result);
+                    self.form_view.on_processed_onchange(result, []);
+                });
             // update context of datasetsearch
             this.ds_compose.context.email_mode = this.email_mode;
             // update 'Post' button -> 'Send'

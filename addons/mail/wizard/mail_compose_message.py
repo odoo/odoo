@@ -141,6 +141,35 @@ class mail_compose_message(osv.TransientModel):
         })
         return result
 
+    def onchange_email_mode(self, cr, uid, ids, value, model, res_id, context=None):
+        """ email_mode (values: True or False). This onchange on the email mode
+            allows to have some specific behavior when going in email mode, or
+            when going out of email mode.
+            Basically, dest_partner_ids is reset when going out of email
+            mode.
+            This method can be overridden for models that want to have their
+            specific behavior.
+            Note that currently, this onchange is used in mail.js and called
+            manually on the form instantiated in the Chatter.
+        """
+        if not value:
+            return {'value': {'dest_partner_ids': []}}
+        return {'value': {}}
+
+    def onchange_formatting(self, cr, uid, ids, value, model, res_id, context=None):
+        """ onchange_formatting (values: True or False). This onchange on the
+            formatting allows to have some specific behavior when going in 
+            formatting mode, or when going out of formatting.
+            Basically, subject is reset when going out of formatting mode.
+            This method can be overridden for models that want to have their
+            specific behavior.
+            Note that currently, this onchange is used in mail.js and called
+            manually on the form instantiated in the Chatter.
+        """
+        if not value:
+            return {'value': {'subject': False}}
+        return {'value': {}}
+
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
             wizard when replying to the given message (e.g. including the quote
@@ -343,7 +372,7 @@ class mail_compose_message_extended(osv.TransientModel):
         """ Overrides the default implementation to provide more default field values
             related to the corresponding CRM case.
         """
-        result = super(mail_compose_message_extended, self).get_value(cr, uid,  model, res_id, context=context)
+        result = super(mail_compose_message_extended, self).get_value(cr, uid, model, res_id, context=context)
         model_obj = self.pool.get(model)
         if getattr(model_obj, '_mail_compose_message', False) and res_id:
             data = model_obj.browse(cr, uid , res_id, context)
@@ -354,6 +383,50 @@ class mail_compose_message_extended(osv.TransientModel):
             })
             if hasattr(data, 'section_id'):
                 result['reply_to'] = data.section_id and data.section_id.reply_to or False
+        return result
+
+    def onchange_email_mode(self, cr, uid, ids, value, model, res_id, context=None):
+        """ Overrides the default implementation to provide default values for
+            dest_partner_ids. This method checks that a partner maching the
+            ``email_from`` of the record exists. It it does not exist, it
+            creates a new partner. The found or created partner is then added
+            in dest_partner_ids.
+            Partner check/creation valid inly if the value is True, and if 
+            the model has the ``_mail_compose_message`` attribute.
+        """
+        result = super(mail_compose_message_extended, self).onchange_email_mode(cr, uid, ids, value, model, res_id, context=context)
+        model_obj = self.pool.get(model)
+        if not value or not (getattr(model_obj, '_mail_compose_message', False) and res_id):
+            return result
+        data = model_obj.browse(cr, uid , res_id, context=context)
+        partner_obj = self.pool.get('res.partner')
+        partner_ids = partner_obj.search(cr, uid, [('email', '=', data.email_from)], context=context)
+        if partner_ids:
+            partner_id = partner_ids[0]
+        else:
+            partner_id = partner_obj.name_create(cr, uid, data.email_from, context=context)[0]
+        result['value'].update({
+            'dest_partner_ids': [partner_id],
+            'email_cc': tools.ustr(data.email_cc or ''),
+        })
+        if hasattr(data, 'section_id'):
+            result['value']['reply_to'] = data.section_id and data.section_id.reply_to or False
+        return result
+
+    def onchange_formatting(self, cr, uid, ids, value, model, res_id, context=None):
+        """ Overrides the default implementation to provide default values for
+            the subject.
+            Subject re-creation valid only if the value is True, and if the
+            model has the ``_mail_compose_message`` attribute.
+        """
+        result = super(mail_compose_message_extended, self).onchange_formatting(cr, uid, ids, value, model, res_id, context=context)
+        model_obj = self.pool.get(model)
+        if not value or not (getattr(model_obj, '_mail_compose_message', False) and res_id):
+            return result
+        data = model_obj.browse(cr, uid , res_id, context=context)
+        result['value'].update({
+            'subject': data.name or False,
+        })
         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,7 +21,6 @@
 
 from osv import osv
 from osv import fields
-import re
 
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
