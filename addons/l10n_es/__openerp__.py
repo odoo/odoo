@@ -31,14 +31,14 @@
 Spanish Charts of Accounts (PGCE 2008).
 =======================================
 
-* Defines the following chart of account templates:
-    * Spanish General Chart of Accounts 2008.
-    * Spanish General Chart of Accounts 2008 for small and medium companies.
-* Defines templates for sale and purchase VAT.
-* Defines tax code templates.
+    * Defines the following chart of account templates:
+        * Spanish General Chart of Accounts 2008.
+        * Spanish General Chart of Accounts 2008 for small and medium companies.
+    * Defines templates for sale and purchase VAT.
+    * Defines tax code templates.
 
-Note: You should install the l10n_ES_account_balance_report module
-for yearly account reporting (balance, profit & losses).
+Note: You should install the l10n_ES_account_balance_report module for yearly
+      account reporting (balance, profit & losses).
 """,
     "license" : "GPL-3",
     "depends" : ["account", "base_vat", "base_iban"],

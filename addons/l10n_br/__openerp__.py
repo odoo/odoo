@@ -22,8 +22,8 @@
     'name': 'Brazilian - Accounting',
     'category': 'Localization/Account Charts',
     'description': """
-Base module for the Brazilian localization
-==========================================
+Base module for the Brazilian localization.
+===========================================
 
 This module consists in:
 
