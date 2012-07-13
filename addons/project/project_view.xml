@@ -21,6 +21,43 @@
             view_mode="kanban,tree,form,calendar,graph"
             view_type="form"/>
 
+        <!-- Project Read/Unread actions -->
+        <record id="actions_server_project_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_unread" model="ir.values">
+            <field name="name">action_project_unread</field>
+            <field name="action_id" ref="actions_server_project_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_project" />
+            <field name="model">project.project</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_project_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_read" model="ir.values">
+            <field name="name">action_project_read</field>
+            <field name="action_id" ref="actions_server_project_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_project" />
+            <field name="model">project.project</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -45,17 +82,12 @@
                     <h1>
                         <field name="name" string="Project Name"/>
                     </h1>
-                    <label for="parent_id" class="oe_edit_only" string="Parent Project"/>
-                    <h2>
-                        <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
-                    </h2>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="analytic_account_id" invisible="1" required="0"/>
-                            <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                             <field name="privacy_visibility"/>
+                            <field name="analytic_account_id" invisible="1" required="0"/>
                         </group>
                         <group>
                             <table>
@@ -102,6 +134,7 @@
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                     <field name="currency_id" groups="base.group_multi_company" required="1"/>
+                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                 </group>
                             </group>
                         </page>
@@ -111,7 +144,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" widget="ThreadView"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </footer>
                 </form>
             </field>
@@ -125,6 +158,11 @@
                 <search string="Search Project">
                    <group>
                        <field name="complete_name" string="Project Name"/> 
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-mail-message-new"
+                           string="Inbox" help="Unread messages"
+                           name="needaction_pending"
+                           domain="[('needaction_pending','=',True)]"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
@@ -197,7 +235,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">i</span>
+                                    <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <li><a type="edit">Edit...</a></li>
                                         <li><a type="delete">Delete</a></li>
@@ -308,6 +346,44 @@
         </record>
 
         <!-- Task -->
+
+        <!-- Task Read/Unread actions -->
+        <record id="actions_server_project_task_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_task"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_task_unread" model="ir.values">
+            <field name="name">action_project_task_unread</field>
+            <field name="action_id" ref="actions_server_project_task_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_task" />
+            <field name="model">project.task</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_project_task_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_task"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_project_task_read" model="ir.values">
+            <field name="name">action_project_task_read</field>
+            <field name="action_id" ref="actions_server_project_task_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_project_task" />
+            <field name="model">project.task</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
             <field name="model">project.task</field>
@@ -324,11 +400,9 @@
                                     states="cancel,done"/>
                             -->
                             <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                    states="done" context="{'button_reactivate':True}" class="oe_highlight"/>
-                             <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                    states="cancelled" context="{'button_reactivate':True}"/>
+                                    states="cancelled,done" context="{'button_reactivate':True}"/>
                             <button name="action_close" string="Done" type="object"
-                                    states="draft,open,pending"/>
+                                    states="draft,open,pending" class="oe_highlight"/>
                             <button name="do_pending" string="Pending" type="object"
                                     states="open"/>
                             <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
@@ -337,7 +411,7 @@
                                     states="draft,open,pending"/>
                             <button name="stage_previous" string="Previous Stage" type="object"
                                     states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                            <button name="stage_next" string="Next Stage" type="object"
+                            <button name="stage_next" string="Next Stage" type="object" class="oe_highlight"
                                     states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         </span>
                         <field name="stage_id" widget="statusbar"/>
@@ -347,23 +421,16 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <label for="project_id" class="oe_edit_only"/>
-                    <h2>
-                        <field name="project_id"  on_change="onchange_project(project_id)"/>
-                    </h2>
                     <group>
                         <group>
+                            <field name="project_id"  on_change="onchange_project(project_id)"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
                             <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                            <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"
-                                groups="project.group_time_work_estimation_tasks"
-                                on_change="onchange_planned(planned_hours, effective_hours)"/>
                             <field name="progress" widget="progressbar"
-                                groups="project.group_time_work_estimation_tasks"
-                                invisible="1"/>
+                                groups="project.group_time_work_estimation_tasks"/>
                         </group>
                     </group>
                     <notebook>
@@ -377,14 +444,15 @@
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                            <group>
+                             <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
                                 <field name="effective_hours" widget="float_time"/>
                                 <label for="remaining_hours" string="Remaining" groups="project.group_time_work_estimation_tasks"/>
                                 <div>
-                                    <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" target="new" states="open,pending" icon="gtk-edit"/>
-                                    <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" groups="project.group_time_work_estimation_tasks"/>
+                                    <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','in',('done','cancelled'))]}" groups="project.group_time_work_estimation_tasks"/>
                                 </div>
                                 <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
+                             </group>
                             </group>
                             <div class="oe_clear"/>
                         </page>
@@ -410,13 +478,16 @@
                                 <field name="priority" groups="base.group_user"/>
                                 <field name="sequence"/>
                                 <field name="partner_id"/>
+                                <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"
+                                    groups="project.group_time_work_estimation_tasks"
+                                    on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                         </page>
                     </notebook>
                     </sheet>
                     <footer>
-                        <field name="message_ids" widget="ThreadView"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </footer>
                 </form>
             </field>
@@ -440,6 +511,8 @@
                     <field name="kanban_state"/>
                     <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
+                    <field name="message_summary"/>
+                    <field name="needaction_pending"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -567,6 +640,11 @@
                <search string="Tasks">
                     <group>
                         <field name="name" string="Tasks"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-mail-message-new"
+                            string="Inbox" help="Unread messages"
+                            name="needaction_pending"
+                            domain="[('needaction_pending','=',True)]"/>
                         <separator orientation="vertical"/>
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>

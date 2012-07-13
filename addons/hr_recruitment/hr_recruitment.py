@@ -24,15 +24,10 @@ import time
 from datetime import datetime, timedelta
 
 from osv import fields, osv
-from crm import crm
 import tools
 import collections
 import binascii
-import tools
 from tools.translate import _
-from crm import wizard
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -98,6 +93,7 @@ class hr_applicant(base_stage, osv.Model):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """
@@ -181,7 +177,7 @@ class hr_applicant(base_stage, osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Subject', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -213,7 +209,7 @@ class hr_applicant(base_stage, osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability (Days)'),
+        'availability': fields.integer('Availability'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -239,7 +235,7 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'priority': lambda *a: '',
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
     }
 
@@ -293,49 +289,22 @@ class hr_applicant(base_stage, osv.Model):
         return False
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current applicant
+            @return: Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Opportunity
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Opportunity to Meeting IDs
-        @param context: A standard dictionary for contextual values
-
-        @return: Dictionary value for created Meeting view
-        """
-        data_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        value = {}
-        for opp in self.browse(cr, uid, ids, context=context):
-            # Get meeting views
-            search_view = data_obj.get_object(cr, uid, 'crm', 'view_crm_case_meetings_filter', context)
-            calendar_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_calendar_view_meet', context)
-            form_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_form_view_meet', context)
-            tree_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_tree_view_meet', context)
-            category = data_obj.get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
-            context.update({
-                'default_applicant_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
-                'default_categ_id': category.id,
-                'default_name': opp.name,
-            })
-            value = {
-                'name': ('Meetings'),
-                'domain': "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(calendar_view.id, 'calendar'), (form_view.id, 'form'), (tree_view.id, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view.id,
-                'nodestroy': True,
-            }
-        return value
+        applicant = self.browse(cr, uid, ids[0], context)
+        category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_applicant_id': applicant.id,
+            'default_partner_id': applicant.partner_id and applicant.partner_id.id or False,
+            'default_user_id': uid,
+            'default_email_from': applicant.email_from,
+            'default_state': 'open',
+            'default_name': applicant.name,
+            'default_categ_id': category.id,
+        }
+        return res
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
@@ -357,54 +326,53 @@ class hr_applicant(base_stage, osv.Model):
         return value
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically called when new email message arrives"""
-        res_id = super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        subject = msg.get('subject') or _("No Subject")
-        body = msg.get('body_text')
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name':  msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'description': body,
             'user_id': False,
-        }
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
-        self.write(cr, uid, [res_id], vals, context)
-        return res_id
+        })
+        if msg.get('priority'):
+            custom_values['priority'] = msg.get('priority')
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
+        return super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
-    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        if vals is None:
-            vals = {}
-        msg_from = msg['from']
-        vals.update({
-            'description': msg['body_text']
+        if update_vals is None: vals = {}
+        
+        update_vals.update({
+            'description': msg.get('body'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
         })
-        if msg.get('priority', False):
-            vals['priority'] = msg.get('priority')
+        if msg.get('priority'):
+            update_vals['priority'] = msg.get('priority')
 
         maps = {
-            'cost':'planned_cost',
+            'cost': 'planned_cost',
             'revenue': 'planned_revenue',
-            'probability':'probability'
+            'probability': 'probability',
         }
-        vls = { }
-        for line in msg['body_text'].split('\n'):
+        for line in msg.get('body_text', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
+                update_vals[key] = res.group(2).lower()
 
-        vals.update(vls)
-        res = self.write(cr, uid, ids, vals, context=context)
-        self.message_append_dict(cr, uid, ids, msg, context=context)
-        return res
+        return super(hr_applicant, self).message_update(cr, uids, ids, update_vals=update_vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
@@ -493,20 +461,14 @@ class hr_applicant(base_stage, osv.Model):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-    
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        """ Override to add responsible user. """
+        user_ids = super(hr_applicant, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

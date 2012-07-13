@@ -845,7 +845,8 @@ class sale_order(osv.osv):
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
-            'note': line.notes
+            'note': line.notes,
+            'property_ids': [(6, 0, [x.id for x in line.property_ids])]
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
@@ -1022,10 +1023,10 @@ class sale_order(osv.osv):
     # ------------------------------------------------
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if (obj.state == 'manual' or obj.state == 'progress'):
-                result[obj.id] = [obj.user_id.id]
+                result[obj.id].append(obj.user_id.id)
         return result
  
     def create_send_note(self, cr, uid, ids, context=None):

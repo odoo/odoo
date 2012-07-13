@@ -96,11 +96,24 @@ class mail_message_common(osv.osv_memory):
                 continue
             result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
         return result
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for message in self.browse(cr, uid, ids, context=context):
+            name = ''
+            if message.subject:
+                name = '%s: ' % (message.subject)
+            if message.body_text:
+                name = '%s%s ' % (name, message.body_text[0:20])
+            if message.date:
+                name = '%s(%s)' % (name, message.date)
+            res.append((message.id, name))
+        return res
+
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
-        'subject': fields.char('Subject', size=512, required=True),
+        'subject': fields.char('Subject', size=512),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string', string='Message Record Name',

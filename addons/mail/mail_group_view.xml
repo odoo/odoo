@@ -51,28 +51,30 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
-                    <div style="padding: 8px">
-                        <div class="oe_right">
-                            <field name="photo" widget='image' on_change="onchange_photo(photo)"/>
-                        </div>
-                        <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name"/> 
-                            </div>
-                            <h1><field name="name"/></h1>
-                            <div class="oe_edit_only">
-                                <label for="responsible_id"/> 
-                            </div>
-                            <field name="responsible_id" class="oe_inline"/>
-                            <div class="oe_edit_only">
-                                <label for="public"/> 
-                                <field name="public" class="oe_inline"/>
-                            </div>
-                            <field name="description" colspan="4" nolabel="1"/>
-                        </div>
-                    </div>
-                    <footer>
-                        <field name="message_ids" colspan="4" widget="ThreadView" options='{"thread_level": 1}'/>
+                    <sheet class="openerp_mail_group_sheet">
+                        <group colspan="4" col="8">
+                            <group colspan="1" col="2">
+                                <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
+                            </group>
+                            <group colspan="7" col="6">
+                                <div class="oe_edit_only">
+                                    <label for="name"/> 
+                                </div> 
+                                <h2><field name="name" colspan="4"/></h2>
+                                <newline/>
+                                <group colspan="4" col="4">
+                                    <field name="description" colspan="4" nolabel="1"/>
+                                </group>
+                                <group colspan="2" col="2" class="oe_edit_only">
+                                    <field name="responsible_id" colspan="2"/>
+                                    <field name="public" colspan="2"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer class="openerp_mail_group_footer">
+                        <field name="message_ids" widget="mail_thread"
+                                options='{"thread_level": 1}'/>
                     </footer>
                 </form>
             </field>

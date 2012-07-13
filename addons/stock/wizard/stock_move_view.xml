@@ -9,11 +9,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Consume Move" version="7.0">
-                    <header>
-                        <button name="do_move_consume" string="Ok" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group string="Consume Products">
                         <field name="product_id" readonly="1"/>
                         <label for="product_qty"/>
@@ -23,6 +18,11 @@
                         </div>
                         <field name="location_id"/>
                     </group>
+                    <footer>
+                        <button name="do_move_consume" string="Ok" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -42,11 +42,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scrap Move" version="7.0">
-                    <header>
-                        <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <separator string="Scrap Products"/>
                     <group>
                         <field name="product_id"  readonly="1"/>
@@ -57,6 +52,11 @@
                         </div>
                         <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection"/>
                     </group>
+                    <footer>
+                        <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -76,9 +76,6 @@
                 <field name="type">form</field>
                 <field name="arch" type="xml">
                 <form string="Split in Lots" version="7.0">
-                    <header>
-                        <button name="split_lot" string="Ok" type="object" icon="gtk-ok" class="oe_highlight"  />
-                    </header>
                     <group>
                         <field name="product_id" readonly="1"/>
                         <label for="qty"/>
@@ -113,6 +110,9 @@
                             </group>
                         </form>
                     </field>
+                    <footer>
+                        <button name="split_lot" string="Ok" type="object" icon="gtk-ok" class="oe_highlight"  />
+                    </footer>
                 </form>
                 </field>
             </record>
