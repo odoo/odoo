@@ -210,6 +210,47 @@ class payroll_advice(osv.osv):
 
 payroll_advice()
 
+class hr_payslip_run(osv.osv):
+
+    _inherit = 'hr.payslip.run'
+    _description = 'Payslip Batches'
+    _columns = {
+    }
+
+    def create_advice_run(self, cr, uid, ids, context=None):
+        res = super(hr_payslip_run, self).close_payslip_run(cr, uid, ids, context=context)
+        payslip_pool = self.pool.get('hr.payslip')
+        payslip_line_pool = self.pool.get('hr.payslip.line')
+        advice_pool = self.pool.get('hr.payroll.advice')
+        advice_line_pool = self.pool.get('hr.payroll.advice.line')
+        users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
+        for run in self.browse(cr, uid, ids, context=context):
+            advice_data = {
+                        'company_id': users[0].company_id.id,
+                        'name': run.name,
+                        'date': run.date_end,
+                        'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
+                    }
+            advice_id = advice_pool.create(cr, uid, advice_data, context=context)
+            
+            slip_ids = payslip_pool.search(cr, uid, [('payslip_run_id', '=', run.id), ('state', '=', 'done')], context=context)
+            for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+                if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
+                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
+                if line_ids:
+                    line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
+                    advice_line = {
+                            'advice_id': advice_id,
+                            'name': slip.employee_id.bank_account_id.acc_number,
+                            'employee_id': slip.employee_id.id,
+                            'bysal': line.total
+                    }
+                    advice_line_pool.create(cr, uid, advice_line, context=context)
+        return res
+
+hr_payslip_run()
+
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
