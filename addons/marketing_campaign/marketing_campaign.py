@@ -53,7 +53,7 @@ def _find_fieldname(model, field):
     for fn in all_columns:
         if all_columns[fn] is field:
             return fn
-    raise ValueError('field not found: %r' % (field,))
+    raise ValueError('Field not found: %r' % (field,))
 
 class selection_converter(object):
     """Format the selection in the browse record objects"""
@@ -133,7 +133,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activitie's in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -172,7 +172,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     #dead code
     def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
-            raise ValueError('signal cannot be False')
+            raise ValueError('Signal cannot be False.')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
         domain = [('object_id.model', '=', record._table._name),
@@ -211,7 +211,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_("Operation not supported"), _("You can not duplicate a campaign, it's not supported yet."))
+        raise osv.except_osv(_("Operation not supported"), _("You cannot duplicate a campaign, Not supported yet."))
 
     def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
@@ -505,7 +505,7 @@ class marketing_campaign_activity(osv.osv):
         method = '_process_wi_%s' % (activity.type,)
         action = getattr(self, method, None)
         if not action:
-            raise NotImplementedError('method %r in not implemented on %r object' % (method, self))
+            raise NotImplementedError('Method %r in not implemented on %r object' % (method, self))
 
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
@@ -539,7 +539,7 @@ class marketing_campaign_transition(osv.osv):
         assert len(ids) == 1
         transition = self.browse(cr, uid, ids[0], context=context)
         if transition.trigger != 'time':
-            raise ValueError('Delta is only relevant for timed transiton')
+            raise ValueError('Delta is only relevant for timed transiton.')
         return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
 
 
