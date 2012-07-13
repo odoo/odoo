@@ -7,8 +7,8 @@
 Adds enhanced support for (Ether)Pad attachments in the web client.
 ===================================================================
 
-Lets the company customize which Pad installation should be used to link to new pads
-(by default, http://ietherpad.com/).
+Lets the company customize which Pad installation should be used to link to new
+pads (by default, http://ietherpad.com/).
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',

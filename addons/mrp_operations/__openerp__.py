@@ -29,7 +29,8 @@ This module adds state, date_start, date_stop in manufacturing order operation l
 =============================================================================================================
 
 Status: draft, confirm, done, cancel
-When finishing/confirming, cancelling manufacturing orders set all state lines to the according state
+When finishing/confirming, cancelling manufacturing orders set all state lines
+to the according state.
 
 Create menus:
     Manufacturing > Manufacturing > Work Orders
