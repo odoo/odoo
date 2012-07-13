@@ -399,16 +399,17 @@
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-            <col width="33%"/>
-            <col width="33%"/>
-            <col width="34%"/>
+            <col width="25%"/>
+            <col width="25%"/>
+            <col width="25%"/>
+            <col width="25%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                            <span class="oe_view_title_text oe_breadcrumb_title"/>
                         </h2>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_view_search" t-opentag="true"/>
                 </td>
             </tr>
@@ -416,7 +417,7 @@
                 <td>
                         <div class="oe_view_manager_buttons"/>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_sidebar"/>
                 </td>
                 <td>
@@ -535,14 +536,16 @@
 </t>
 
 <t t-name="TreeView">
-    <select t-if="toolbar" style="width: 30%">
-    </select>
-    <table class="oe_tree_table">
+    <div class = "tree_header">
+         <select t-if="toolbar" ></select>
+         <button id = "tree_view_collapse">Collapse All</button>
+         <button id = "tree_view_expand">Expand All</button>
+     </div>
+    <table class="oe-treeview-table">
         <thead>
             <tr>
                 <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible"
-                    class="treeview-header">
+                    t-if="!field.attrs.modifiers.tree_invisible">
                     <t t-esc="fields[field.attrs.name].string" />
                 </th>
             </tr>
@@ -554,11 +557,11 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level + 1">
+        t-att-data-id="record.id" t-att-data-level="level">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
-    <t t-set="rank" t-value="'oe_tree_first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
+    <t t-set="rank" t-value="'oe-treeview-first'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + 19*(level-1) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
@@ -863,7 +866,7 @@
     </ul>
 </t>
 <t t-name="FieldChar">
-    <span t-att-class="'oe_form_field '+widget.widget_class">
+    <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <t  t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
@@ -875,7 +878,7 @@
     </span>
 </t>
 <t t-name="FieldEmail">
-    <span class="oe_form_field oe_form_field_email oe_form_field_with_button">
+    <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri" target="_blank"/>
         <t t-if="!widget.get('effective_readonly')">
             <div>
@@ -893,14 +896,9 @@
     <t t-jquery="span:first">
         this.removeClass('oe_form_field_email').addClass('oe_form_field_url');
     </t>
-    <t t-jquery="button.oe_button" t-operation="replace">
-        <button class="oe_button" tabindex="-1" type="button" title="Open this resource">
-            <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
-        </button>
-    </t>
 </t>
 <t t-name="FieldText">
-    <div class="oe_form_field oe_form_field_text">
+    <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
         <textarea rows="6"
             t-att-name="widget.name"
             class="field_text"
@@ -925,13 +923,13 @@
     </span>
 </t>
 <t t-name="FieldDate">
-    <span class="oe_form_field oe_datepicker_root oe_form_field_date"/>
+    <span class="oe_form_field oe_datepicker_root oe_form_field_date" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldDatetime">
-    <span class="oe_form_field oe_datepicker_root oe_form_field_datetime"/>
+    <span class="oe_form_field oe_datepicker_root oe_form_field_datetime" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldSelection">
-    <span class="oe_form_field oe_form_field_selection">
+    <span class="oe_form_field oe_form_field_selection" t-att-style="widget.node.attrs.style">
         <select t-if="!widget.get('effective_readonly')"
             t-att-name="widget.name"
             t-att-tabindex="widget.node.attrs.tabindex"
@@ -944,7 +942,7 @@
     </span>
 </t>
 <t t-name="FieldMany2One">
-    <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button">
+    <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
         <t t-if="!widget.get('effective_readonly')">
             <button class="oe_button oe_m2o_cm_button" title="Open Resource">
@@ -965,7 +963,7 @@
     </span>
 </t>
 <t t-name="FieldMany2ManyTags">
-    <div class="oe_form_field oe_form_field_many2manytags">
+    <div class="oe_form_field oe_form_field_many2manytags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">
             <textarea rows="1" style="width: 100%"
                 t-att-placeholder="widget.node.attrs.placeholder"></textarea>
@@ -982,7 +980,7 @@
     </t>
 </t>
 <t t-name="FieldReference">
-    <table class="oe_form_field oe_form_field_reference" border="0" cellpadding="0" cellspacing="0">
+    <table class="oe_form_field oe_form_field_reference" border="0" cellpadding="0" cellspacing="0" t-att-style="widget.node.attrs.style">
     <tr>
         <td t-attf-class="oe_form_frame_cell oe_form_selection">
             <span t-attf-class="oe_form_view_reference_selection"/>
@@ -994,7 +992,7 @@
     </table>
 </t>
 <t t-name="FieldBoolean">
-    <span class="oe_form_field oe_form_field_boolean">
+    <span class="oe_form_field oe_form_field_boolean" t-att-style="widget.node.attrs.style">
         <input type="checkbox"
             t-att-id="widget.id_for_label"
             t-att-name="widget.name"
@@ -1004,12 +1002,12 @@
     </span>
 </t>
 <t t-name="FieldProgressBar">
-    <span class="oe_form_field oe_form_field_progressbar" t-opentag="true">
+    <span class="oe_form_field oe_form_field_progressbar" t-att-style="widget.node.attrs.style">
         <span></span>
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul class="oe_form_steps"/>
+    <ul class="oe_form_steps" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-set="size" t-value="widget.to_show.length"/>
@@ -1021,7 +1019,7 @@
     </t>
 </t>
 <t t-name="FieldBinaryImage">
-    <span class="oe_form_field oe_form_field_image">
+    <span class="oe_form_field oe_form_field_image" t-att-style="widget.node.attrs.style">
         <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
@@ -1049,7 +1047,7 @@
 </t>
 <t t-name="FieldBinaryFile">
     <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0" t-att-style="widget.node.attrs.style">
         <tr>
             <td>
                 <input type="text" size="1" readonly="readonly"
@@ -1097,7 +1095,7 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <span>
+        <span t-att-style="widget.node.attrs.style">
             <a href="javascript:void(0)" class="oe_form_uri"/>
         </span>
     </t>
@@ -1116,6 +1114,7 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button oe_form_button"
+        t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus">
         <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
@@ -1471,11 +1470,11 @@
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
     </t>
     <t t-if="multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save &amp; Close</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
     </t>
     <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
 </t>
