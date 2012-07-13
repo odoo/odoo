@@ -3,7 +3,7 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web Dashboard view.
+OpenERP Web Dashboard view.
         """,
     "version": "2.0",
     "depends": ['web'],

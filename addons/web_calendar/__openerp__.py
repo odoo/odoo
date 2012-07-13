@@ -3,7 +3,7 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web Calendar view.
+OpenERP Web Calendar view.
         """,
     "version": "2.0",
     "depends": ['web'],
