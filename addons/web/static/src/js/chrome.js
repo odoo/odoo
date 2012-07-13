@@ -667,7 +667,7 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Number} id the action_id to match
      */
     open_action: function (id) {
-        var $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id=' + id + ']');
+        var $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id="' + id + '"]');
         var menu_id = $menu.data('menu');
         if (menu_id) {
             this.open_menu(menu_id);
