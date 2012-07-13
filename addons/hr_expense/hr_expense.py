@@ -212,6 +212,25 @@ class hr_expense_expense(osv.osv):
             self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'}, context=context)
             res = voucher_id
         return res
+    
+    def action_view_receipt(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing receipt of given expense ids.
+        '''
+        voucher_id = self.browse(cr, uid, ids[0], context=context).voucher_id.id
+        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
+        result = {
+            'name': _('Expense Receipt'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res[1] or False,
+            'res_model': 'account.voucher',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': voucher_id,
+        }
+        return result
 
 hr_expense_expense()
 
