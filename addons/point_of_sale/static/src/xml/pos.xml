@@ -173,7 +173,9 @@
                     <span class="product-price">
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
                     </span> 
-                    <img t-att-src="'data:image/gif;base64,'+ widget.get_product_image()" />
+                    <t t-if="widget.get_product_image()">
+                        <img t-att-src="'data:image/png;base64,'+ widget.get_product_image()" />
+                    </t>
                 </div>
             </div>
         </div>

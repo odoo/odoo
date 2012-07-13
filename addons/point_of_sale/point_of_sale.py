@@ -20,6 +20,7 @@
 ##############################################################################
 import pdb
 import io
+import openerp
 import addons
 
 import time
@@ -1194,6 +1195,15 @@ class pos_category(osv.osv):
             store = {
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['category_image'], 10),
             }),
+    }
+
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = openerp.modules.get_module_resource('point_of_sale', 'images', 'default_category_photo.png')
+        return open(image_path, 'rb').read().encode('base64')
+
+
+    _defaults = {
+        'category_image': _get_default_image,
     }
 
 pos_category()
