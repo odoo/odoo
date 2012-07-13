@@ -91,7 +91,7 @@ openerp.mail = function(session) {
             this.params = params;
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
-            this.params.msg_more_limit = this.params.msg_more_limit || 100;
+            this.params.msg_more_limit = this.params.msg_more_limit || 290;
             this.params.limit = this.params.limit || 100;
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
@@ -304,7 +304,6 @@ openerp.mail = function(session) {
 
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
-
             var rendered = session.web.qweb.render('mail.Thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
             $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // expand feature
@@ -497,7 +496,7 @@ openerp.mail = function(session) {
     });
     session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
 
-    /** ThreadView widget: thread of comments */
+    /** mail_thread widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.RecordThread',
 
@@ -541,7 +540,11 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             var self = this;
             this.reinit();
-            if (! this.view.datarecord.id) { this.$element.find('.oe_mail_thread').hide(); return; }
+            if (! this.view.datarecord.id ||
+                session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
+                this.$element.find('.oe_mail_thread').hide();
+                return;
+            }
             // fetch followers
             var fetch_sub_done = this.fetch_subscribers();
             // create and render Thread widget
@@ -598,7 +601,7 @@ openerp.mail = function(session) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
-    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
+    session.web.form.widgets.add( 'mail_thread', 'openerp.mail.RecordThread');
 
     /** WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
@@ -635,6 +638,7 @@ openerp.mail = function(session) {
         start: function () {
             this._super.apply(this, arguments);
             var self = this;
+            this.display_current_user();
             // add events
             this.add_event_handlers();
             // load mail.message search view
@@ -694,6 +698,14 @@ openerp.mail = function(session) {
             });
         },
 
+        display_current_user: function () {
+            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.session.uid));
+        },
+        
+        thread_get_avatar: function(model, field, id) {
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        },
+        
         /**
          * Initializes the wall and calls fetch_comments
          * @param {Number} limit: number of notifications to fetch

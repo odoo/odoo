@@ -110,35 +110,45 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet string="Leave Request">
-                    <group col="8" colspan="4">
-                    <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
-                    <group attrs="{'invisible':[('holiday_type','=','employee')]}">
-                        <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
+                    <group>
+                        <group>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
+                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                         </group>
-                        <group attrs="{'invisible':[('holiday_type','=','category')]}">
-                        <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}" groups="base.group_hr_user"/>
+                        <group>
+                            <field name="holiday_status_id" on_change="onchange_status_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
+                            <label for="number_of_days_temp" string="Duration"/>
+                            <div>
+                                <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/> - 
+                                <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/>
+                                <div>
+                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                </div>
+                            </div>
                         </group>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
-                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
-                            <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/>
-                            <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
-                            <field name="number_of_days_temp"/>
-                            <field name="double_validation" invisible="1"/>
+                            <group>
+                                <group>
+                                    <field name="manager_id" groups="base.group_no_one"/>
+                                    <field name="double_validation" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
+                                </group>
+                            </group>
                             <newline/>
-                            <field name="manager_id" groups="base.group_no_one"/>
-                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
-                            <separator string="Reasons" colspan="4"/>
-                            <field name="notes" nolabel="1" colspan="4"/>
+                            <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_sheet_width">
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
+                <footer>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                </footer>
                 </form>
             </field>
         </record>
@@ -159,31 +169,34 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
-                <group>
-                    <field name="name"/>
-                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Mode" groups="base.group_hr_manager"/>
-                    <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
-                    <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')], 'invisible':[('holiday_type','=','employee')]}"/>
-                </group>
-                <notebook>
-                    <page string="General">
-                        <group col="4">
-                            <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Mode" groups="base.group_hr_manager"/>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')], 'invisible':[('holiday_type','=','employee')]}"/>
                             <field name="department_id" attrs="{'readonly':['|', ('holiday_type','=','category'), ('state','not in' ,('draft', 'confirm'))]}"/>
-                            <field name="number_of_days_temp"/>
-                            <field name="double_validation" invisible="1"/>
-                            <field name="manager_id"/>
-                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                         </group>
-                        <separator string="Reasons"/>
-                        <field name="notes"/>
-                    </page>
-                </notebook>
-            </sheet>
-            <div class="oe_sheet_width">
-                <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-            </div>
-            </form>
+                        <group>
+                            <field name="holiday_status_id" on_change="onchange_status_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
+                            <field name="number_of_days_temp"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General">
+                            <group col="4">
+                                <field name="double_validation" invisible="1"/>
+                                <field name="manager_id"/>
+                                <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
+                            </group>
+                            <field name="notes" placeholder="Add a reason..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                </footer>
+                </form>
             </field>
         </record>
 
@@ -342,7 +355,7 @@
         <record model="ir.actions.act_window.view" id="action_request_approve_holidays_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="view_id" ref="edit_holiday_new"/>
             <field name="act_window_id" ref="request_approve_holidays"/>
         </record>
 
@@ -409,8 +422,7 @@
                 <form string="Leave Type" version="7.0">
                     <group col="4">
                         <field name="name"/>
-                        <field name="color_name"/>
-                        <field name="categ_id" widget="selection"/>
+                        <field name="categ_id"/>
                     </group>
                     <notebook>
                       <page string="Details">
@@ -420,6 +432,7 @@
                                   <field name="limit"/>
                               </group>
                               <group name="second" string="Misc">
+                                  <field name="color_name"/>
                                   <field name="active"/>
                               </group>
                           </group>
@@ -488,7 +501,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
             <field name="arch" type="xml">
-                <field name="date_to" position="after">
+                <field name="name" position="after">
                     <field name="holiday_id"/>
                 </field>
             </field>
@@ -529,8 +542,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="coach_id" position="after">
-                    <field name="remaining_leaves"/>
+                <field name="active" position="before">
+                    <label for="remaining_leaves"/>
+                    <div>
+                        <field name="remaining_leaves" class="oe_inline"/>
+                        <label/>
+                        <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" class="oe_inline oe_right"/>
+                    </div>
                 </field>
             </field>
         </record>

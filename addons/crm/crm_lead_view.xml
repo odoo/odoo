@@ -171,10 +171,13 @@
                             </div>
                         </group>
                         <group>
-                            <field name="contact_name" />
+                            <label for="contact_name" />
+                            <div>
+                                <field name="contact_name" class="oe_inline"/>,
+                                <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                            </div>
                             <field name="email_from" widget="email"/>
                             <field name="function" />
-                            <field domain="[('domain', '=', 'contact')]" name="title"/>
                             <field name="phone"/>
                             <field name="mobile"/>
                             <field name="fax"/>
@@ -210,7 +213,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" widget="ThreadView"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </footer>
             </form>
         </field>
@@ -286,7 +289,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                <span class="oe_e">i</span>
+                                <span class="oe_e">í</span>
                                 <ul class="oe_dropdown_menu">
                                     <li><a type="edit" >Edit...</a></li>
                                     <li><a type="delete">Delete</a></li>
@@ -308,18 +311,14 @@
                                     <field name="partner_id"/>
                                 </div>
                                 <div style="padding-left: 0.5em">
-                                    <i>
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                        <span t-attf-class="#{red || ''}">
-                                            <field name="date_action"/>
-                                        </span>
-                                        <t t-if="record.date_action.raw_value"> : </t>
-                                        <field name="title_action"/>
-                                    </i>
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                    <t t-if="record.date_action.raw_value"> : </t>
+                                    <field name="title_action"/>
                                 </div>
-                                <div class="oe_right">
-                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                <div class="oe_kanban_bottom_right">
+                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
                                     <!--
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
                                     <span t-attf-class="oe_kanban_status #{red}"> </span>
@@ -468,8 +467,8 @@
                         <label for="planned_revenue" class="oe_edit_only"/>
                         <h2>
                             <field name="planned_revenue" class="oe_inline"/>
-                            <field name="company_currency" class="oe_edit_only oe_inline"/> at 
-                            <field name="probability" class="oe_inline"/> %% success rate
+                            <field name="company_currency" class="oe_inline"/> at 
+                            <field name="probability" class="oe_inline"/>%% success rate
                         </h2>
                     </div>
                     <group>
@@ -522,18 +521,21 @@
                                     <field name="street" placeholder="Street..."/>
                                     <field name="street2"/>
                                     <div>
-                                        <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                        <field name="city" class="oe_inline" placeholder="City"/>
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
-                                    <field name="state_id" placeholder="State"/>
                                     <field name="country_id" placeholder="Country"/>
                                 </div>
                             </group>
 
                             <group>
-                                <field name="contact_name" />
+                                <label for="contact_name" />
+                                <div>
+                                    <field name="contact_name" class="oe_inline"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
+                                </div>
                                 <field name="function" />
-                                <field domain="[('domain', '=', 'contact')]" name="title"/>
                                 <field name="mobile"/>
                                 <field name="fax"/>
                             </group>
@@ -563,7 +565,7 @@
                     </notebook>
                 </sheet>
                 <footer>
-                    <field name="message_ids" widget="ThreadView"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </footer>
             </form>
         </field>

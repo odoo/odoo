@@ -17,21 +17,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Portal Access" version="7.0">
-                    <header>
+                    <group>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="portal_id" widget="selection"/>
+                    </group>
+                    <label for="user_ids"/>
+                    <field name="user_ids"/>
+                    <field name="message" placeholder="This text will be included in the welcome email sent to users."/>
+                    <footer>
                         <button string="Apply"
                             name="action_manage_portal_access" type="object" class="oe_highlight"  />
                         or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <group>
-                        <field name="partner_id" invisible="1"/>
-                        <field name="portal_id" on_change="onchange_portal_id(partner_id, portal_id)"/>
-                    </group>
-                    <separator string="Users"/>
-                    <field name="user_ids"/>
-                    <separator string="Message"/>
-                    <field name="message" placeholder="This text will be included in the welcome email sent to users."/>
-
+                        <button string="Cancel" class="oe_link" special="cancel" />    
+                    </footer>
                 </form>
             </field>
         </record>
