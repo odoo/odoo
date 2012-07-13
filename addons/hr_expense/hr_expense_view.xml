@@ -68,7 +68,7 @@
                     <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
-                    <button name="invoice" states="accepted" string="Invoice" type="object" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="receipt" states="accepted" string="Issue Receipt" type="object" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>

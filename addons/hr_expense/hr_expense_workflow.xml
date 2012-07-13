@@ -47,12 +47,12 @@
             <field name="action">expense_canceled()</field>
         </record>
 
-        <record id="act_invoice" model="workflow.activity">
+        <record id="act_receipt" model="workflow.activity">
             <field name="wkf_id" ref="wkf_expenses"/>
-            <field name="name">invoice</field>
+            <field name="name">receipt</field>
             <field name="kind">subflow</field>
             <field name="subflow_id" ref="account_voucher.wkf"/>
-            <field name="action">action_voucher_create()</field>
+            <field name="action">action_receipt_create()</field>
         </record>
 
         <record id="t1" model="workflow.transition">
@@ -91,13 +91,13 @@
 
         <record id="t8" model="workflow.transition">
             <field name="act_from" ref="act_accepted"/>
-            <field name="act_to" ref="act_invoice"/>
-            <field name="signal">invoice</field>
+            <field name="act_to" ref="act_receipt"/>
+            <field name="signal">receipt</field>
             <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t9" model="workflow.transition">
-            <field name="act_from" ref="act_invoice"/>
+            <field name="act_from" ref="act_receipt"/>
             <field name="act_to" ref="act_paid"/>
             <field name="signal">subflow.done</field>
             <field name="group_id" ref="base.group_hr_user"/>

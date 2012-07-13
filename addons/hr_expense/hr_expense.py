@@ -40,12 +40,16 @@ class hr_expense_expense(osv.osv):
         if context is None:
             context = {}
         if not default: default = {}
-        default.update({'invoice_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
+        default.update({'voucher_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN %s GROUP BY s.id ", (tuple(ids),))
-        res = dict(cr.fetchall())
+        res= {}
+        for expense in self.browse(cr, uid, ids, context=context):
+            total = 0.0
+            for line in expense.line_ids:
+                total += line.unit_amount * line.unit_quantity
+            res[expense.id] = total
         return res
 
     def _get_currency(self, cr, uid, context=None):
@@ -73,7 +77,7 @@ class hr_expense_expense(osv.osv):
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, string='Total Amount'),
-        'voucher_id': fields.many2one('account.voucher', "Employee's Voucher"),
+        'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -82,11 +86,11 @@ class hr_expense_expense(osv.osv):
             ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
-            ('invoiced', 'Invoiced'),
+            ('receipted', 'Receipted'),
             ('paid', 'Reimbursed')
             ],
             'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the status is \'Accepted\'.\n If an invoice is made for the expense request, the status is \'Invoiced\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Receipted\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
@@ -130,14 +134,14 @@ class hr_expense_expense(osv.osv):
         self.write(cr, uid, ids, {'state':'paid'})
         return True
 
-    def invoice(self, cr, uid, ids, context=None):
+    def receipt(self, cr, uid, ids, context=None):
         if not ids: return []
         mod_obj = self.pool.get('ir.model.data')
         wkf_service = netsvc.LocalService("workflow")
         
         voucher_ids = []
         for id in ids:
-            wkf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
+            wkf_service.trg_validate(uid, 'hr.expense.expense', id, 'receipt', cr)
             voucher_ids.append(self.browse(cr, uid, id, context=context).voucher_id.id)
         res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
         res_id = res and res[1] or False
@@ -153,9 +157,9 @@ class hr_expense_expense(osv.osv):
             'nodestroy': True,
             'res_id': voucher_ids and voucher_ids[0] or False,
         }
-    def action_voucher_create(self, cr, uid, ids, context=None):
+
+    def action_receipt_create(self, cr, uid, ids, context=None):
         res = False
-        invoice_obj = self.pool.get('account.invoice')
         property_obj = self.pool.get('ir.property')
         sequence_obj = self.pool.get('ir.sequence')
         account_journal = self.pool.get('account.journal')
@@ -200,12 +204,12 @@ class hr_expense_expense(osv.osv):
                 voucher['journal_id'] = exp.journal_id.id
                 journal = exp.journal_id
             else:
-                journal_id = invoice_obj._get_journal(cr, uid, context={'type': 'in_invoice', 'company_id': company_id})
+                journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
                 if journal_id:
                     voucher['journal_id'] = journal_id
                     journal = account_journal.browse(cr, uid, journal_id)
             voucher_id = voucher_obj.create(cr, uid, voucher, context)
-            aaa = self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'invoiced'})
+            self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'})
             res = voucher_id
         return res
 
