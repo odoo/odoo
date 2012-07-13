@@ -146,7 +146,7 @@ class hr_expense_expense(osv.osv):
         res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
         res_id = res and res[1] or False
         return {
-            'name': _('Purchase Receipt'),
+            'name': _('Expense Receipt'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.voucher',
@@ -169,23 +169,23 @@ class hr_expense_expense(osv.osv):
             company_id = exp.company_id.id
             lines = []
             total = 0.0
-            for l in exp.line_ids:
-                if l.product_id:
-                    acc = l.product_id.product_tmpl_id.property_account_expense
+            for line in exp.line_ids:
+                if line.product_id:
+                    acc = line.product_id.product_tmpl_id.property_account_expense
                     if not acc:
-                        acc = l.product_id.categ_id.property_account_expense_categ
+                        acc = line.product_id.categ_id.property_account_expense_categ
                 else:
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase, `property_account_expense_categ`'))
                 
                 lines.append((0, False, {
-                    'name': l.name,
+                    'name': line.name,
                     'account_id': acc.id,
-                    'amount': l.total_amount,
+                    'amount': line.total_amount,
                     'type': 'dr'
                 }))
-                total += l.total_amount
+                total += line.total_amount
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
@@ -207,9 +207,9 @@ class hr_expense_expense(osv.osv):
                 journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
                 if journal_id:
                     voucher['journal_id'] = journal_id
-                    journal = account_journal.browse(cr, uid, journal_id)
+                    journal = account_journal.browse(cr, uid, journal_id, context=context)
             voucher_id = voucher_obj.create(cr, uid, voucher, context)
-            self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'})
+            self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'}, context=context)
             res = voucher_id
         return res
 
