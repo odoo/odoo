@@ -506,11 +506,14 @@
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
                         <page string="Cash">
-                            <separator string="Profit &amp; Loss Accounts" colspan="4" />
-                            <field name="profit_account_id" />
-                            <field name="loss_account_id" />
-                            <separator string="Internal Account" colspan="4" />
-                            <field name="internal_account_id" />
+                            <group string="Profit &amp; Loss Accounts">
+                                <field name="profit_account_id" />
+                                <field name="loss_account_id" />
+                            </group>
+
+                            <group string="Internal Transfer Account">
+                                <field name="internal_account_id" />
+                            </group>
 
                             <separator string="Available Currencies" colspan="4" />
                             <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">

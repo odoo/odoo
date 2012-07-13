@@ -871,32 +871,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             self.pos.flush().then(function() {
                 self.close();
-                /*
-                if (self.pos.get('nbr_pending_operations').length > 0) {
-                    var confirm = false;
-                    $(QWeb.render('PosCloseWarning')).dialog({
-                        resizable: false,
-                        height:160,
-                        modal: true,
-                        title: "Warning",
-                        buttons: {
-                            "Yes": function() {
-                                confirm = true;
-                                $( this ).dialog( "close" );
-                            },
-                            "No": function() {
-                                $( this ).dialog( "close" );
-                            }
-                        },
-                        close: function() {
-                            if (confirm){
-                                close();
-                            }
-                        }
-                    });
-                } else {
-                    close();
-                }*/
             });
         },
         close: function() {
@@ -905,7 +879,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;
-                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'default_home'}});
+                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
                     this.do_action(action);
                 }, this));
             }, this));
