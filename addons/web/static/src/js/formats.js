@@ -1,7 +1,7 @@
 
 openerp.web.formats = function(openerp) {
 var _t = openerp.web._t;
-
+var QWeb = openerp.web.qweb;
 /**
  * Intersperses ``separator`` in ``str`` at the positions indicated by
  * ``indices``.
@@ -336,11 +336,8 @@ openerp.web.format_cell = function (row_data, column, options) {
             href: download_url,
             size: row_data[column.id].value
         });
-    case 'progressbar':
-        return _.template(
-            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
-                value: _.str.sprintf("%.0f", row_data[column.id].value || 0)
-            });
+    case 'progressbar': 
+        return QWeb.render('ListView.ProgressBar', {value: _.str.sprintf("%.0f", row_data[column.id].value || 0)})
     }
 
     return _.escape(openerp.web.format_value(
