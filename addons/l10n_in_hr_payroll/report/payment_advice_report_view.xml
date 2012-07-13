@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_payment_advice_tree" model="ir.ui.view">
+        <field eval="1" name="priority"/>
+        <field name="name">payment.advice.report.tree</field>
+        <field name="model">payment.advice.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree colors="blue:state == 'draft';black:state == 'confirm';gray:state == 'cancel' " string="Advices Analysis">
+                <field name="nbr" sum="# of Lines"/>
+                <field name="name" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="date" invisible="1"/>
+                <field name="bank_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="number" invisible="1"/>
+                <field name="bysal" sum="Total Salary"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="cheque_nos" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_payment_advice_search" model="ir.ui.view">
+        <field name="name">payment.advice.report.search</field>
+        <field name="model">payment.advice.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Advices Analysis">
+                 <group>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Payment Advices which are in draft state"/>
+                    <filter icon="terp-check" string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Payment Advices which are confirmed"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
+                    <field name="number"/>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="cheque_nos"/>
+                </group>
+                <newline/>
+                 <group expand="0" string="Extended Filters...">
+                    <field name="bank_id" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
+                <newline/>
+                <group expand="1" string="Group By...">
+                    <filter string="Employee" icon="terp-personal" context="{'group_by':'employee_id'}" />
+                    <filter string="Bank" icon="terp-go-home" context="{'group_by':'bank_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Date of Payment Advices"/>
+                    <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Month of Payment Advices"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Year of Payment Advices"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_advice_report_all" model="ir.actions.act_window">
+        <field name="name">Advices Analysis</field>
+        <field name="res_model">payment.advice.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_payment_advice_tree"/>
+        <field name="context">{'search_default_confirm':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">This report performs analysis on your payment advices</field>
+    </record>
+
+    <menuitem id="menu_payroll_reporting" name="Payroll" parent="hr.menu_hr_reporting" sequence="7" groups="base.group_hr_manager"/>
+    <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="menu_payroll_reporting" sequence="10"/>
+
+</data>
+</openerp>
