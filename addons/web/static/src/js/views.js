@@ -178,7 +178,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action)) {
+        if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);
@@ -1261,7 +1261,7 @@ instance.web.View = instance.web.Widget.extend({
             args.push(context);
             return dataset.call_button(action_data.name, args, handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
+            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
         }
