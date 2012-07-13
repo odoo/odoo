@@ -92,8 +92,9 @@
                             <page string="Payment Lines">
                                 <field name="line_ids" colspan="4" nolabel="1">
                                     <tree string="Payment Lines" editable="bottom">
-                                        <field name="employee_id" on_change="get_account_number(employee_id)"/>
+                                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                                         <field name="name"/>
+                                        <field name="ifsc_code"/>
                                         <field name="bysal"/>
                                         <field name="debit_credit"/>
                                     </tree>
@@ -103,6 +104,7 @@
                                 <group colspan="4" col="6">
                                 <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
                                 <field name="chaque_nos"/>
+                                <field name="neft"/>
                                 </group>
                                 <separator colspan="4" string="Letter Details"/>
                                 <field name="note" colspan="4" nolabel="1"/>

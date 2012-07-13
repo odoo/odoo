@@ -120,6 +120,7 @@ class payroll_advice(osv.osv):
         'number':fields.char('Number', size=16, readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Cheque Numbers', size=256),
+        'neft':fields.boolean('NEFT', size=16, help="NEFT should be checked if you want IFSC code"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
     }
@@ -215,22 +216,26 @@ class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
     '''    
-    def get_account_number(self, cr, uid, ids, employee_id=False, context=None):
+    def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
         res = {}
-        if employee_id:
+        if not (employee_id):
+            res = ''
+        else :  
             hr_obj = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
             acc_number = hr_obj.bank_account_id.acc_number
-            res.update({'name': acc_number})
+            ifsc_code_number = hr_obj.bank_account_id.bank_bic
+            res.update({'name': acc_number ,'ifsc_code': ifsc_code_number})
         return {'value': res}  
-    
+        
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
         'name': fields.char('Bank Account No.', size=32, required=True),
+        'ifsc_code': fields.char('IFSC', size=16, help="check neft if you want IFSC code"),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
-        'debit_credit': fields.char('c/d', size=8, required=False),
+        'debit_credit': fields.char('C/D', size=8, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
     }
     _defaults = {

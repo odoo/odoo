@@ -35,6 +35,8 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
@@ -49,6 +51,8 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
@@ -77,14 +81,13 @@
     <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P5" fontName="Helvetica" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P6" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P9" fontName="Helvetica" alignment="JUSTIFY"/>
-    <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P12" rightIndent="-0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P13" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P9" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P11" fontName="Helvetica" alignment="LEFT"/>
+    <paraStyle name="P12" fontName="Helvetica" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P13" rightIndent="-0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="JUSTIFY" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -144,8 +147,8 @@
     <blockTable colWidths="234.0,305.0" style="Table1">
       <tr>
         <td>
-          <para style="P14">[[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]]</para>
-          <para style="P10"/>
+          <para style="P7">[[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]]</para>
+          <para style="P9"/>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -158,7 +161,7 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_Bold_9">To,</para>
+          <para style="terp_default_Bold_9">To, </para>
           <para style="terp_default_Bold_9">The Manager</para>
         </td>
         <td>
@@ -194,7 +197,7 @@
     <blockTable colWidths="539.0" style="Table2">
       <tr>
         <td>
-          <para style="P8">Payment Advice from [[ o.name ]] A/C no. [[ o.company_id.bank_ids and o.company_id.bank_ids[0].acc_number ]] form period [[ get_month(o.date)['from_name'] ]] to [[ get_month(o.date)['to_name'] ]]</para>
+          <para style="P10">Payment Advice from [[ o.name ]] A/C no. [[ o.company_id.bank_ids and o.company_id.bank_ids[0].acc_number ]] form period [[ get_month(o.date)['from_name'] ]] to [[ get_month(o.date)['to_name'] ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -208,7 +211,7 @@
     <para style="terp_default_8_space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="50.0,153.0,134.0,101.0,101.0,0.0" style="Table4">
+    <blockTable colWidths="70.0,200.0,107.0,81.0,81.0" style="Table4">[[ o.neft == True and removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="P1">SI. No.</para>
@@ -223,46 +226,86 @@
           <para style="P3">By Salary</para>
         </td>
         <td>
-          <para style="P3">c/d</para>
-        </td>
-        <td>
-          <para style="P3">
-            <font color="white"> </font>
-          </para>
+          <para style="P3">C/D</para>
         </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(get_detail(o.line_ids),'line') ]]</para>
-      <blockTable colWidths="50.0,153.0,134.0,101.0,101.0" style="Table5">
+      <blockTable colWidths="70.0,200.0,107.0,81.0,81.0" style="Table5">[[ o.neft == True and removeParentNode('blockTable') ]]
         <tr>
           <td>
-            <para style="P9" leftIndent="15" bulletIndent="0">
+            <para style="P11" leftIndent="15" bulletIndent="0">
               <bullet><seq id="L1"/>.</bullet>
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="P7">[[ line['name'] ]]</para>
+            <para style="P8">[[ line['name'] ]]</para>
           </td>
           <td>
             <para style="P5">[[ line['acc_no'] ]]</para>
           </td>
           <td>
-            <para style="P7">[[formatLang(line['bysal'])]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
-          </td>
-           <td>
-            <para style="P5">[[ line['debit_credit'] ]]</para>
+            <para style="P8">[[formatLang(line['bysal'])]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
           </td>
           <td>
-            <para style="P7">
-              <font color="white"> </font>
-            </para>
+            <para style="P5">[[ line['debit_credit'] ]]</para>
           </td>
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="50.0,153.0,135.0,101.0,101.0" style="Table6">
+        <blockTable colWidths="40.0,123.0,107.0,107.0,81.0,81.0" style="Table4">[[ o.neft != True and removeParentNode('blockTable') ]]
+      <tr>
+        <td>
+          <para style="P1">SI. No.</para>
+        </td>
+        <td>
+          <para style="P1">Name of the Employe</para>
+        </td>
+        <td>
+          <para style="P3">Bank Account No.</para>
+        </td>
+        <td>
+          <para style="P3">IFSC Code </para>
+        </td>
+        <td>
+          <para style="P3">By Salary</para>
+        </td>
+        <td>
+          <para style="P3">C/D</para>
+        </td>
+      </tr>
+    </blockTable>
+    <section>
+      <para style="terp_default_8">[[ repeatIn(get_detail(o.line_ids),'line') ]]</para>
+      <blockTable colWidths="40.0,123.0,107.0,107.0,81.0,81.0" style="Table5">[[ o.neft !=True and removeParentNode('blockTable') ]]
+        <tr>
+          <td>
+            <para style="P11" leftIndent="15" bulletIndent="0">
+              <bullet><seq id="L1"/>.</bullet>
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="P8">[[ line['name'] ]]</para>
+          </td>
+          <td>
+            <para style="P5">[[ line['acc_no'] ]]</para>
+          </td>
+          <td>
+            <para style="P5">[[ line['ifsc_code'] ]]</para>
+          </td>
+          <td>
+            <para style="P8">[[formatLang(line['bysal'])]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+          </td>
+          <td>
+            <para style="P5">[[ line['debit_credit'] ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+    <blockTable colWidths="58.0,251.0,67.0,94.0,70.0" style="Table6">
       <tr>
         <td>
           <para style="terp_tblheader_Details">
