@@ -207,7 +207,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_record_loaded: function(record) {
         var self = this, set_values = [];
         if (!record) {
-            this.do_warn("Form", "The record could not be found in the database.", true);
+            this.do_warn(_t("Form"), _t("The record could not be found in the database."), true);
             return $.Deferred().reject();
         }
         this.datarecord = record;
@@ -574,7 +574,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         });
         msg += "</ul>";
-        this.do_warn("The following fields are invalid :", msg);
+        this.do_warn(_t("The following fields are invalid :"), msg);
     },
     on_saved: function(r, success) {
         if (!r.result) {
@@ -779,7 +779,7 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
         if (this.form.dataset.select_id(id)) {
             return this.form.do_show();
         } else {
-            this.do_warn("Could not find id in dataset");
+            this.do_warn(_t("Could not find id in dataset"));
             return $.Deferred().reject();
         }
     },
@@ -837,8 +837,10 @@ openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
                 ids: [parseInt($e.attr('data-id'))]
             }, function(r) {
                 $e.parent().remove();
-                self.do_update()
-                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+                self.do_update();
+                self.do_notify(
+                    _t("Delete an attachment"),
+                    _.str.sprintf(_t("The attachment '%s' has been deleted"), name));
             });
         }
     }
@@ -1558,7 +1560,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.value || !this.is_valid()) {
-            this.do_warn("E-mail error", "Can't send email to invalid e-mail address");
+            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.value;
         }
@@ -1575,7 +1577,7 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.value) {
-            this.do_warn("Resource error", "This resource is empty");
+            this.do_warn(_t("Resource error"), _t("This resource is empty"));
         } else {
             window.open(this.value);
         }
@@ -3428,7 +3430,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_file_uploaded: function(size, name, content_type, file_base64) {
         delete(window[this.iframe]);
         if (size === false) {
-            this.do_warn("File Upload", "There was a problem while uploading your file");
+            this.do_warn(_t("File Upload"), _t("There was a problem while uploading your file"));
             // TODO: use openerp web crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
