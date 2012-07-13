@@ -114,9 +114,6 @@ Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4
 cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verhogen.
 De extra cijfers worden dan achter het rekeningnummer aangevult met "nullen".
 
-    * Dit is dezelfe configuratie wizard welke aangeroepen kan worden via
-      Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
-
     """,
     "author"  : "Veritos - Jan Verlaan",
     "website" : "http://www.veritos.nl",

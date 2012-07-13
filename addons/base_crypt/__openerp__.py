@@ -38,8 +38,8 @@ preventing anyone from reading the original password in the database.
 After installing this module it won't be possible to recover a forgotten password 
 for your users, the only solution is for an admin to set a new password.
 
-Security Warning
-++++++++++++++++
+Security Warning:
+-----------------
 Installing this module does not mean you can ignore other security measures,
 as the password is still transmitted unencrypted on the network, unless you
 are using a secure protocol such as XML-RPCS or HTTPS.
@@ -48,8 +48,8 @@ contain critical data. Appropriate security measures need to be implemented
 by the system administrator in all areas, such as: protection of database
 backups, system files, remote shell access, physical server access.
 
-Interation with LDAP authentication
-+++++++++++++++++++++++++++++++++++
+Interation with LDAP authentication:
+------------------------------------
 This module is currently not compatible with the ``user_ldap`` module and
 will disable LDAP authentication completely if installed at the same time.
 
