@@ -101,23 +101,25 @@
                     <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
                     <field name="state" widget="statusbar" nolabel="1"/>
                 </header>
-                <group>
-                     <group>
-                         <field name="name"/>
-                         <field name="fiscalyear_id" widget="selection"/>
-                         <label for="date_start" string="Duration" />
-                         <div>
-                            <field name="date_start" class="oe_inline" nolabel="1"/> 
-                             <span attr="{'invisible': [('date_stop','=',False)]}"> - </span> 
-                             <field name="date_stop" nolabel="1" class="oe_inline"/>
-                          </div>
-                     </group>
-                     <group>
-                         <field name="code"/>
-                         <field name="special"/>
-                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                     </group>
-                 </group>
+                <sheet>
+	                <group>
+	                     <group>
+	                         <field name="name"/>
+	                         <field name="fiscalyear_id" widget="selection"/>
+	                         <label for="date_start" string="Duration" />
+	                         <div>
+	                            <field name="date_start" class="oe_inline" nolabel="1"/> 
+	                             <span attr="{'invisible': [('date_stop','=',False)]}"> - </span> 
+	                             <field name="date_stop" nolabel="1" class="oe_inline"/>
+	                          </div>
+	                     </group>
+	                     <group>
+	                         <field name="code"/>
+	                         <field name="special"/>
+	                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+	                     </group>
+	                 </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -1023,69 +1025,74 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Journal Item" version="7.0">
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="ref"/>
-                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
-
-                        <field name="journal_id"/>
-                        <field name="period_id"/>
-                        <field name="company_id" required="1" groups="base.group_multi_company"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Information">
-                            <group>
-                                <group string="Amount">
-                                    <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
-                                    <field name="debit"/>
-                                    <field name="credit"/>
-                                    <field name="quantity"/>
-                                </group>
-
-                                <group string="Accounting Documents">
-                                    <field name="invoice" readonly="True"/>
-                                    <field name="move_id" required="False"/>
-                                    <field name="statement_id" readonly="True"/>
-                                </group>
-
-                                <group string="Dates">
-                                    <field name="date"/>
-                                    <field name="date_maturity"/>
-                                    <field name="date_created" readonly="True"/>
-                                </group>
-
-                                <group string="Taxes">
-                                    <field name="tax_code_id"/>
-                                    <field name="tax_amount"/>
-                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                                </group>
-
-                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency">
-                                    <field name="currency_id"/>
-                                    <field name="amount_currency"/>
-                                </group>
-
-                                <group string="Reconciliation">
-                                    <field name="reconcile_id"/>
-                                    <field name="reconcile_partial_id"/>
-                                </group>
-
-                                <group string="States">
-                                    <field name="state"/>
-                                    <field name="blocked"/>
-                                </group>
-
-                                <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
-                                </group>
-                            </group>
-                            <separator string="Internal Note" colspan="4"/>
-                            <field name="narration" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
-                            <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
-                        </page>
-                    </notebook>
+                    <sheet> 
+	                    <group>
+	                       <group>
+		                        <field name="name"/>
+		                        <field name="ref"/>
+		                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+	                       </group>
+	                       <group>
+		                        <field name="journal_id"/>
+		                        <field name="period_id"/>
+		                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+	                        </group>
+	                    </group>
+	                    <notebook colspan="4">
+	                        <page string="Information">
+	                            <group>
+	                                <group string="Amount">
+	                                    <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+	                                    <field name="debit"/>
+	                                    <field name="credit"/>
+	                                    <field name="quantity"/>
+	                                </group>
+	
+	                                <group string="Accounting Documents">
+	                                    <field name="invoice" readonly="True"/>
+	                                    <field name="move_id" required="False"/>
+	                                    <field name="statement_id" readonly="True"/>
+	                                </group>
+	
+	                                <group string="Dates">
+	                                    <field name="date"/>
+	                                    <field name="date_maturity"/>
+	                                    <field name="date_created" readonly="True"/>
+	                                </group>
+	
+	                                <group string="Taxes">
+	                                    <field name="tax_code_id"/>
+	                                    <field name="tax_amount"/>
+	                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+	                                </group>
+	
+	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency">
+	                                    <field name="currency_id"/>
+	                                    <field name="amount_currency"/>
+	                                </group>
+	
+	                                <group string="Reconciliation">
+	                                    <field name="reconcile_id"/>
+	                                    <field name="reconcile_partial_id"/>
+	                                </group>
+	
+	                                <group string="States">
+	                                    <field name="state"/>
+	                                    <field name="blocked"/>
+	                                </group>
+	
+	                                <group groups="analytic.group_analytic_accounting" string="Analytic">
+	                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+	                                </group>
+	                            </group>
+	                            <separator string="Internal Note" colspan="4"/>
+	                            <field name="narration" colspan="4" nolabel="1"/>
+	                        </page>
+	                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
+	                            <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+	                        </page>
+	                    </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>

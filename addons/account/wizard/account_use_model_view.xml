@@ -8,10 +8,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 	            <form string="Create Entries From Models" version="7.0">
-	                <separator string="This wizard will create recurring accounting entries"/>
-	                <label string="Create manual recurring entries in a chosen journal."/>
-	                <group>
-	                    <field name="model"/>
+	                <group string="Create Entries From Models">
+	                    <field name="model" nolabel="1"/>
 	                </group>
 	                <footer>
 	                    <button string="Create Entries" name="create_entries" type="object" class="oe_highlight"/>

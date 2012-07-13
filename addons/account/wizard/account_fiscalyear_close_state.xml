@@ -7,14 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close states of Fiscal year and periods" version="7.0">
-	                <header>
-	                    <button icon="terp-locked" string="Close Fiscalyear" name="data_save" type="object" class="oe_highlight"  />
-	                </header>
-	                <separator string="Close states of Fiscal year and periods"/>
-	                <label string ="If no additional entries should be recorded on a fiscal year, you can close it from here. It will close all opened periods in this year that will make impossible any new entry record. Close a fiscal year when you need to finalize your end of year results definitive "/>
 	                <group>
 	                    <field name="fy_id"  domain="[('state','=','draft')]"/>
 	                </group>
+                    <footer>
+                        <button icon="terp-locked" string="Close Fiscal Year" name="data_save" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

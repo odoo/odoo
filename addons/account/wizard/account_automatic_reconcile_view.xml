@@ -8,8 +8,6 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Reconciliation" version="7.0">
-                    <separator string="Reconciliation"/>
-                    <label string="For an invoice to be considered as paid, the invoice entries must be reconciled with counterparts, usually payments. With the automatic reconciliation functionality, OpenERP makes its own search for entries to reconcile in a series of accounts. It finds entries for each partner where the amounts correspond."/>
                     <field name="account_ids" domain="[('reconcile','=',1)]"/>
                     <group col="4">
                         <field name="power"/>
