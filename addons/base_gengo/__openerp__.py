@@ -30,7 +30,9 @@ Automated Translations through Gengo API
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': [],
+    'update_xml': [
+        'ir_translation.xml'  
+           ],
     'demo_xml': [],
     'test': [],
     'installable': True,
