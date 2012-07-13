@@ -119,7 +119,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if up.path.startswith(self.davpath):
             self.headers['Destination'] = up.path[len(self.davpath):]
         else:
-            raise DAV_Forbidden("Not allowed to copy/move outside webdav path")
+            raise DAV_Forbidden("Not allowed to copy/move outside webdav path.")
         # TODO: locks
         DAVRequestHandler.copymove(self, CLASS)
 
@@ -338,7 +338,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             if isinstance(ldif, list):
                 if len(ldif) !=1 or (not isinstance(ldif[0], TagList)) \
                         or len(ldif[0].list) != 1:
-                    raise DAV_Error(400, "Cannot accept multiple tokens")
+                    raise DAV_Error(400, "Cannot accept multiple tokens!")
                 ldif = ldif[0].list[0]
                 if ldif[0] == '<' and ldif[-1] == '>':
                     ldif = ldif[1:-1]
@@ -352,7 +352,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             lock_data.update(self._lock_unlock_parse(body))
 
         if lock_data['refresh'] and not lock_data.get('token', False):
-            raise DAV_Error(400, 'Lock refresh must specify token')
+            raise DAV_Error(400, 'Lock refresh must specify token!')
 
         lock_data['depth'] = depth
 

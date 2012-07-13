@@ -176,7 +176,7 @@ class abstracted_fs(object):
             res = node.open_data(cr, mode)
             cr.commit()
         except TypeError:
-            raise IOError(errno.EINVAL, "No data")
+            raise IOError(errno.EINVAL, "No data.")
         return res
 
     # ok, but need test more
@@ -211,9 +211,9 @@ class abstracted_fs(object):
             self.cwd_node = None
             return None
         if not datacr[1]:
-            raise OSError(1, 'Operation not permitted')
+            raise OSError(1, 'Operation not permitted.')
         if datacr[1].type not in  ('collection','database'):
-            raise OSError(2, 'Path is not a directory')
+            raise OSError(2, 'Path is not a directory.')
         self.cwd = '/'+datacr[1].context.dbname + '/'
         self.cwd += '/'.join(datacr[1].full_path())
         self.cwd_node = datacr[1]
@@ -287,7 +287,7 @@ class abstracted_fs(object):
                 p_parts = p_parts[1:]
             # self._log.debug("Path parts: %r ", p_parts)
             if not p_parts:
-                raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
+                raise IOError(errno.EPERM, 'Cannot perform operation at root directory.')
             dbname = p_parts[0]
             if dbname not in self.db_list():
                 raise IOError(errno.ENOENT,'Invalid database path: %s' % dbname)
@@ -318,7 +318,7 @@ class abstracted_fs(object):
                 node = self.cwd_node
             if node is False and mode not in ('???'):
                 cr.close()
-                raise IOError(errno.ENOENT, 'Path does not exist')
+                raise IOError(errno.ENOENT, 'Path does not exist!')
             return (cr, node, rem_path)
 
     def get_node_cr_uid(self, node):
@@ -429,7 +429,7 @@ class abstracted_fs(object):
     def getsize(self, datacr):
         """Return the size of the specified file in bytes."""
         if not (datacr and datacr[1]):
-            raise IOError(errno.ENOENT, "No such file or directory")
+            raise IOError(errno.ENOENT, "No such file or directory.")
         if datacr[1].type in ('file', 'content'):
             return datacr[1].get_data_len(datacr[0]) or 0L
         return 0L

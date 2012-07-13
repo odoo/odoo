@@ -278,7 +278,7 @@ class addAuthTransport:
     
             return self._parse_response(h.getfile(), sock, resp)
 
-        raise ProtocolError(host+handler, 403, "No authentication",'')
+        raise ProtocolError(host+handler, 403, "No authentication.",'')
 
 class PersistentAuthTransport(addAuthTransport,PersistentTransport):
     pass
@@ -402,7 +402,7 @@ class DAVClient(object):
                 r1 = conn.getresponse()
         except httplib.BadStatusLine, bsl:
                 log.warning("Bad status line: %s", bsl.line)
-                raise Exception('Bad status line')
+                raise Exception('Bad status line.')
         if r1.status == 401: # and r1.headers:
                 if 'www-authenticate' in r1.msg:
                         (atype,realm) = r1.msg.getheader('www-authenticate').split(' ',1)
@@ -437,7 +437,7 @@ class DAVClient(object):
                     doc = xml.dom.minidom.parseString(data1)
                     _logger.debug("XML Body:\n %s", doc.toprettyxml(indent="\t"))
             except Exception:
-                _logger.warning("could not print xml", exc_info=True)
+                _logger.warning("cannot print xml", exc_info=True)
                 pass
         conn.close()
         return r1.status, r1.msg, data1
@@ -651,7 +651,7 @@ class DAVClient(object):
             if isinstance(crange, tuple):
                 crange = [crange,]
             if not isinstance(crange, list):
-                raise TypeError("Range must be a tuple or list of tuples")
+                raise TypeError("Range must be a tuple or list of tuples.")
             rs = []
             for r in crange:
                 rs.append('%d-%d' % r)
@@ -689,7 +689,7 @@ class DAVClient(object):
         """
         hdrs = { }
         if not (body or srcpath):
-            raise ValueError("PUT must have something to send")
+            raise ValueError("PUT must have something to send.")
         if (not body) and srcpath:
             fd = open(srcpath, 'rb')
             body = fd.read()
