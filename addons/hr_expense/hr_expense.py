@@ -183,6 +183,7 @@ class hr_expense_expense(osv.osv):
                 lines.append((0, False, {
                     'name': line.name,
                     'account_id': acc.id,
+                    'account_analytic_id': line.analytic_account.id,
                     'amount': line.total_amount,
                     'type': 'dr'
                 }))
