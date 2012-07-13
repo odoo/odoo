@@ -77,14 +77,16 @@ class ir_translation_import_cursor(object):
     def push(self, ddict):
         """Feed a translation, as a dictionary, into the cursor
         """
-
+        state= "translated"
+        if not ddict['value']:
+            state = 'translate'
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
-                        imd_model, imd_module, imd_name, value)
-                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                        imd_model, imd_module, imd_name, value,state)
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 (ddict['name'], ddict['lang'], ddict.get('res_id'), ddict['src'], ddict['type'],
                     ddict.get('imd_model'), ddict.get('imd_module'), ddict.get('imd_name'),
-                    ddict['value']))
+                    ddict['value'],state))
 
     def finish(self):
         """ Transfer the data from the temp table to ir.translation
@@ -125,15 +127,16 @@ class ir_translation_import_cursor(object):
         # Step 2: update existing (matching) translations
         if self._overwrite:
             cr.execute("""UPDATE ONLY %s AS irt
-                SET value = ti.value 
+                SET value = ti.value,
+                state = 'translated' 
                 FROM %s AS ti
                 WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
                 """ % (self._parent_table, self._table_name, find_expr))
 
         # Step 3: insert new translations
 
-        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value)
-            SELECT name, lang, res_id, src, type, value
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value,state)
+            SELECT name, lang, res_id, src, type, value,state
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
@@ -167,6 +170,11 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
+        'state':fields.selection([('translate','To Translate'),('inprogress','Translation in Progress'),('translated','Translated')])
+    }
+    
+    _defaults = {
+        'state':'translated',
     }
     
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 
@@ -297,6 +305,10 @@ class ir_translation(osv.osv):
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
+        if vals.get('src'):
+            result= vals.update({'state':'translate'})
+        if vals.get('value'):
+            result= vals.update({'state':'translated'})
         if not context:
             context = {}
         if isinstance(ids, (int, long)):
