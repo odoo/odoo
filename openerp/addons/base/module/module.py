@@ -594,9 +594,9 @@ class module(osv.osv):
             self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
 
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+        pool = pooler.get_pool(cr.dbname)
         if context is None:
             context = {}
-        pool = pooler.get_pool(cr.dbname)
         if not filter_lang:
             lang_obj = pool.get('res.lang')
             lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)])
@@ -607,8 +607,7 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids):
             if mod.state != 'installed':
                 continue
-            traslation_obj = pool.get('ir.translation')
-            traslation_obj.load(cr, [mod.name], filter_lang, context=context)
+            pool.get('ir.translation').load(cr, [mod.name], filter_lang, context=context)
 
     def check(self, cr, uid, ids, context=None):
         for mod in self.browse(cr, uid, ids, context=context):

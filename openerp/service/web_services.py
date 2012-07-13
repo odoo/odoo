@@ -784,9 +784,7 @@ class translation(netsvc.ExportService):
     
     def exp_load(self, db, modules, langs, flag=None, context=None):
         cr = pooler.get_db(db).cursor()
-        pool = pooler.get_pool(cr.dbname)
-        traslation_obj = pool.get('ir.translation')
-        translated_data = traslation_obj.load(cr, modules, langs, flag, context=context)
+        translated_data = pooler.get_pool(db).get('ir.translation').load(cr, modules, langs, flag, context=context)
         cr.commit()
         cr.close()
         return translated_data

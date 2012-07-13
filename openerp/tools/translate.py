@@ -846,20 +846,18 @@ def trans_generate(lang, modules, cr):
 def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, context=None):
     try:
         fileobj = misc.file_open(filename)
-        pool = pooler.get_pool(cr.dbname)
-        traslation_obj = pool.get('ir.translation')
+        traslation_obj = pooler.get_pool(cr.dbname).get('ir.translation')
         _logger.info("loading %s", filename)
+        transl = []
         if flag == 'web':
-            transl = []
             trans_ids = traslation_obj.search(cr, 1, [('module','=', module_name),('lang','=',lang)])
             for trans in traslation_obj.browse(cr, 1, trans_ids, context=context):
                 transl.append({'id': trans.src, 'string': trans.value})
-            return transl
         else:
             fileformat = os.path.splitext(filename)[-1][1:].lower()
             trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
         fileobj.close()
-        return []
+        return transl
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
