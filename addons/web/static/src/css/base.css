@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp a {
   text-decoration: none;
@@ -1840,17 +1840,17 @@
 .openerp .oe_form .oe_subtotal_footer td.oe_form_group_cell_label {
   border-right: none;
 }
-.openerp .oe_form .oe_subtotal_footer .oe_form_field {
-  width: auto !important;
-}
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
   border-top: 1px solid #cacaca;
-  font-sie: 120%;
   font-weight: bold;
+  font-size: 18px;
 }
 .openerp .oe_form .oe_subtotal_footer label.oe_subtotal_footer_separator {
   font-weight: bold !important;
   padding: 2px 8px 2px 0px !important;
+}
+.openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
+  font-weight: normal;
 }
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
@@ -1993,7 +1993,7 @@
   width: 180px;
 }
 .openerp .oe_form .oe_form_field_float {
-  width: 180px;
+  width: 112px;
 }
 .openerp .oe_form .oe_form_field_date {
   width: 7.5em;
@@ -2250,6 +2250,7 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_number {
   text-align: right !important;
+  width: 100px;
 }
 .openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;
