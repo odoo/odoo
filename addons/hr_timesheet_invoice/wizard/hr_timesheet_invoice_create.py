@@ -99,7 +99,7 @@ class account_analytic_line(osv.osv):
             for product_id, factor_id, qty, uom in cr.fetchall():
                 product = product_obj.browse(cr, uid, product_id, context2)
                 if not product:
-                    raise osv.except_osv(_('Error'), _('At least one line has no product !'))
+                    raise osv.except_osv(_('Error'), _('At least one line has no product!'))
                 factor_name = ''
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
                 if not data.get('product', False):

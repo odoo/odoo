@@ -271,7 +271,7 @@ class hr_timesheet_sheet(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
             else:
-                raise osv.except_osv(_('Warning !'), _('Please verify that the total difference of the sheet is lower than %.2f !') %(di,))
+                raise osv.except_osv(_('Warning !'), _('Please verify that the total difference of the sheet is lower than %.2f!') %(di,))
         return True
 
     def date_today(self, cr, uid, ids, context=None):
@@ -612,7 +612,7 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'], context=context)
             if ts.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet!'))
         res = super(hr_attendance,self).create(cr, uid, vals, context=context)
         if 'sheet_id' in context:
             if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
@@ -643,7 +643,7 @@ class hr_attendance(osv.osv):
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
             if att.sheet_id and att.sheet_id.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet!'))
         return True
 
 hr_attendance()
