@@ -119,26 +119,35 @@
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="project_id" class="oe_edit_only"/>
-                    <h2><field name="project_id" required="True" on_change="on_change_project(project_id)"/></h2>
                     <group>
                         <group>
                             <field name="user_id"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
-                        </group><group>
-                            <field name="task_id" on_change="onchange_task_id(task_id)"/>
-                            <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                            <field name="version_id" widget="selection"/>
+                        </group>
+                        <group>
                             <field name="priority"/>
-                            <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
-                            <field name="state" groups="base.group_no_one"/>
+                            <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
+                            <label for="task_id"/>
+                            <div>
+                                <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline"/>
+                                <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
+                            </div>
                         </group>
                     </group>
-                    <field name="description" placeholder="Add a description..."/>
-
-                    <notebook groups="base.group_no_one">
-                        <page string="Extra Info">
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <group>
+                                    <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                                </group>
+                                <group>
+                                    <field name="version_id" widget="selection"/>
+                                </group>
+                            </group>
+                            <field name="description" placeholder="Add a description..."/>
+                        </page>
+                        <page string="Extra Info" groups="base.group_no_one">
                             <group col="4" colspan="4">
                                 <separator string="Statistics" colspan="4" col="4"/>
                                 <field name="day_open"/>
@@ -152,6 +161,10 @@
                                 <separator string="References" colspan="4"/>
                                 <field name="id"/>
                                 <field name="active"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <separator string="Status" colspan="4"/>
+                                <field name="state" groups="base.group_no_one" string="Status"/>
                             </group>
                         </page>
                     </notebook>
