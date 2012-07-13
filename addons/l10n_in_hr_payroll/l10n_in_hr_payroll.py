@@ -131,7 +131,6 @@ class payroll_advice(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
-
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
@@ -210,45 +209,6 @@ class payroll_advice(osv.osv):
         }
 
 payroll_advice()
-
-class hr_payslip_run(osv.osv):
-
-    _inherit = 'hr.payslip.run'
-    _description = 'Payslip Batches'
-    _columns = {
-    }
-
-    def close_payslip_run(self, cr, uid, ids, context=None):
-
-        payslip_pool = self.pool.get('hr.payslip')
-        payslip_run_pool = self.pool.get('hr.payslip.run')
-        advice_line_pool = self.pool.get('hr.payroll.advice.line')
-        advice_pool = self.pool.get('hr.payroll.advice')
-        payslip_line_pool = self.pool.get('hr.payslip.line')
-
-        for advice in self.browse(cr, uid, ids, context=context):
-            for slip in advice.slip_ids:
-                if slip.id:
-                    line = payslip_line_pool.browse(cr, uid, ids, context=context)[0]
-                    advice_line = advice_pool.browse(cr, uid, ids, context=context)[0]
-                    adv = {
-                            'advice_id': advice.id,
-                            'name': slip.employee_id.name,
-                            'employee_id': slip.employee_id.id,
-                            }
-                    advice_record = advice_pool.create(cr, uid, adv, context=context)
-                    advice_line = {
-                            'advice_id': advice.id,
-                            'name': slip.employee_id.name,
-                            'employee_id': slip.employee_id.id,
-                            }
-                    adviceline_record = advice_line_pool.create(cr, uid, advice_line, context=context)
-                payslip_record = payslip_pool.write(cr, uid, ids, {'advice_id': advice.id, 'name': slip.employee_id.name, 'employee_id': slip.employee_id.id}, context=context)
-            return super(hr_payslip_run, self).close_payslip_run(cr, uid, ids, context=context)
-
-        return True
-
-hr_payslip_run()
 
 class payroll_advice_line(osv.osv):
     '''
