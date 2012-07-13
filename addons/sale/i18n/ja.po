@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-16 18:37+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-07-10 08:39+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-17 04:54+0000\n"
-"X-Generator: Launchpad (build 15419)\n"
+"X-Launchpad-Export-Date: 2012-07-11 05:35+0000\n"
+"X-Generator: Launchpad (build 15593)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -50,7 +50,7 @@ msgstr "販売単位"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr "現在の受注オーダーの出荷住所"
+msgstr "現在の受注オーダーの送付先住所"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
@@ -140,7 +140,7 @@ msgstr "配達基準の請求書"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Line"
-msgstr ""
+msgstr "オーダー行"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_form
@@ -153,6 +153,9 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"受注オーダーは顧客からの見積とオーダーの管理と助けます。OpenERPは見積の作成から開始することを提案します。それが確認されると見積は受注オーダーに変換"
+"されます。受注オーダーはタスク、配達オーダー、製造オーダー、発注などを引き起こすようにOpenERPは製品の幾つかのタイプを取り扱うことができます。受注オ"
+"ーダーの設定を基本として、ドラフト請求書は顧客に請求したい時に、確認しなければならないように作成されます。"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -163,138 +166,140 @@ msgid ""
 "the product is a service, shipped quantities means hours spent on the "
 "associated tasks."
 msgstr ""
+"受注オーダーは請求書案（ドラフト請求書）を自動的に作成します。オーダーされたものと、配達された数量は同じでは無いかもしれません。あなたはオーダー基準または"
+"出荷数量基準のどちらで請求するのかを決める必要があります。製品がサービスである場合は、出荷数量は関連したタスクに費やされた時間を意味します。"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr ""
+msgstr "デフォルト支払条件"
 
 #. module: sale
 #: field:sale.config.picking_policy,deli_orders:0
 msgid "Based on Delivery Orders"
-msgstr ""
+msgstr "配達オーダー基準"
 
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
 msgid "Main Working Time Unit"
-msgstr ""
+msgstr "主作業時間単位"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "State"
-msgstr ""
+msgstr "状態"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "割引（%）"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "合計価格"
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "同じ顧客のために請求書をグループ化するにはこのボックスをチェックします。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "My Sale Orders"
-msgstr ""
+msgstr "私の受注オーダー"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "注文数量"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr ""
+msgstr "販売員による受注"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
-msgstr ""
+msgstr "在庫移動"
 
 #. module: sale
 #: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr ""
+msgstr "オーダー参照"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "その他情報"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Dates"
-msgstr ""
+msgstr "日付"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
 msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
-msgstr ""
+msgstr "出荷方針が集荷時に請求または配達後に請求の場合は、請求書は自動的に作成されます。"
 
 #. module: sale
 #: field:sale.config.picking_policy,task_work:0
 msgid "Based on Tasks' Work"
-msgstr ""
+msgstr "タスク作業基準"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "見積と受注"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "受注による請求書作成"
 
 #. module: sale
 #: code:addons/sale/sale.py:330
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "価格リストの警告。"
 
 #. module: sale
 #: field:sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "割引（%）"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 msgid "My Quotations"
-msgstr ""
+msgstr "私の見積"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr ""
+msgstr "受注管理ダッシュボード"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "梱包"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "受注オーダーから"
 
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "店名"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -310,29 +315,36 @@ msgid ""
 "  - The 'Invoice based on deliveries' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"請求方針は請求書と配達処理を同期するために使用されます。\n"
+"  ・ \"配達前の支払\"の選択は、最初に請求書を生成し、そしてこの請求書の支払後に集荷オーダーを生成します。\n"
+"  ・ "
+"\"オンデマンドで配達と請求\"は、直接集荷オーダーを作成し、そしてユーザが受注オーダーまたは受注オーダー行基準のドラフト請求書を生成するための請求書ボタ"
+"ンを手動でクリックするのを待ちます。\n"
+"  ・ \"配達後請求\"の選択は、全ての集荷リストが終了した後に受注オーダー基準のドラフト請求書を生成します。\n"
+"  ・ \"配達基準の請求\"の選択は、集荷処理の途中で請求書を作成する時に使用されます。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "顧客が定義されていません。"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
-msgstr ""
+msgstr "例外の受注"
 
 #. module: sale
 #: code:addons/sale/sale.py:1158 code:addons/sale/sale.py:1277
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "設定エラーです。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Conditions"
-msgstr ""
+msgstr "条件"
 
 #. module: sale
 #: code:addons/sale/sale.py:1034
@@ -340,64 +352,64 @@ msgstr ""
 msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
-msgstr ""
+msgstr "製品分類のためのデフォルト属性の中に収入分類のアカウントが無いか、または会計ポジションが定義されていません。"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "August"
-msgstr ""
+msgstr "8月"
 
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "違う製品のロットを割り当てることはできません。"
 
 #. module: sale
 #: code:addons/sale/sale.py:655
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
+msgstr "テスト状態では不正なモード"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "June"
-msgstr ""
+msgstr "6月"
 
 #. module: sale
 #: code:addons/sale/sale.py:617
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "この受注オーダーのキャンセルはできません。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "受注オーダーの統計値"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "受注オーダーに関連した分析アカウント"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "October"
-msgstr ""
+msgstr "10月"
 
 #. module: sale
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "参照は会社ごとに固有でなければいけません。"
 
 #. module: sale
 #: view:board.board:0 view:sale.order:0 view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "見積"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "現在の受注オーダーのための価格リスト"
 
 #. module: sale
 #: report:sale.order:0
@@ -409,69 +421,69 @@ msgstr ""
 msgid ""
 "Number of days between the order confirmation the shipping of the products "
 "to the customer"
-msgstr ""
+msgstr "オーダー確認から顧客に製品の出荷がなされるまでの日数"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "見積日"
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "会計ポジション"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
 msgid "UoM"
-msgstr ""
+msgstr "単位"
 
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "パッケージ数"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "進行中"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
 msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
-msgstr ""
+msgstr "販売員は見積を確認します。受注オーダーの状態は進行中または手動進行中になります。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1074
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced!"
-msgstr ""
+msgstr "受注オーダー行は既に請求済であるためキャンセルできません。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1079
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
+msgstr "最初にこの受注オーダー行に付随する在庫移動をキャンセルする必要があります。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1147
 #, python-format
 msgid "(n/a)"
-msgstr ""
+msgstr "（利用不可）"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
 "have to create it and set it as a default value on this field."
-msgstr ""
+msgstr "先進製品と呼ばれるサービスタイプを選択すると、それを作成し、そしてこの項目にデフォルト値としてセットする必要があります。"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Tel. :"
-msgstr ""
+msgstr "TEL："
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:64
@@ -479,112 +491,112 @@ msgstr ""
 msgid ""
 "You cannot make an advance on a sales order                              "
 "that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+msgstr "配達後の自動請求として定義された受注オーダーを前もって作ることはできません。"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "注記"
 
 #. module: sale
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "会社名は固有でなければいけません。"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "現在の受注オーダーのための請求書住所"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "月-1"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered month of the sales order"
-msgstr ""
+msgstr "受注オーダーのオーダー月"
 
 #. module: sale
 #: code:addons/sale/sale.py:504
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
+msgstr "同じパートナに対する異なった通貨を持つ受注はグループ化できません。"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "利用可能になった時に各製品を配達"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "請求済"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr ""
+msgstr "配達オーダー"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "確認日"
 
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr ""
+msgstr "インコターム"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "割当パートナ"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "3月"
 
 #. module: sale
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
 
 #. module: sale
 #: field:sale.config.picking_policy,sale_orders:0
 msgid "Based on Sales Orders"
-msgstr ""
+msgstr "受注オーダー基準"
 
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "合計金額"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "小計"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Invoice address :"
-msgstr ""
+msgstr "請求書住所："
 
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Line Sequence"
-msgstr ""
+msgstr "行順序"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
-msgstr ""
+msgstr "全ての受注オーダー行について、調達オーダーは販売された製品の供給を作成します。"
 
 #. module: sale
 #: help:sale.order,incoterm:0
@@ -592,154 +604,155 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
+"インコタームは国際商業規則（International Commercial terms）の略で、商業取引で使用される販売条件のシリーズを表します。"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "請求書住所"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr ""
+msgstr "未請求行の検索"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "見積 / オーダー"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "行数"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
 msgid "Sales Open Invoice"
-msgstr ""
+msgstr "受注中の請求書"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "受注オーダー行"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "倉庫"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "オーダー番号"
 
 #. module: sale
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "オーダー行"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "税抜金額"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
-msgstr ""
+msgstr "請求書の行"
 
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "数量"
 
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "作成日"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sales_configuration_misc
 msgid "Miscellaneous"
-msgstr ""
+msgstr "その他"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr ""
+msgstr "未請求かつ配達済行"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Total :"
-msgstr ""
+msgstr "合計："
 
 #. module: sale
 #: view:sale.report:0
 msgid "My Sales"
-msgstr ""
+msgstr "私の受注"
 
 #. module: sale
 #: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
 #: code:addons/sale/sale.py:1303
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "無効なアクションです。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "追加情報"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "価格リスト"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "数量の数"
 
 #. module: sale
 #: code:addons/sale/sale.py:1327
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "時"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "オーダー日"
 
 #. module: sale
 #: view:sale.order.line:0 view:sale.report:0 field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
-msgstr ""
+msgstr "出荷済"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
-msgstr ""
+msgstr "全見積"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Options"
-msgstr ""
+msgstr "オプション"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "September"
-msgstr ""
+msgstr "9月"
 
 #. module: sale
 #: code:addons/sale/sale.py:632
 #, python-format
 msgid "You cannot confirm a sale order which has no line."
-msgstr ""
+msgstr "行が無い受注オーダーの確認はできません。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1259
@@ -748,26 +761,28 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"受注フォームで価格リストまたは顧客を選択する必要があります。\n"
+"製品を選択する前にどちらかをセットして下さい。"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,categ_id:0
 msgid "Category of Product"
-msgstr ""
+msgstr "製品分類"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "税金："
 
 #. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "在庫移動"
 
 #. module: sale
 #: field:sale.order,state:0 field:sale.report,state:0
 msgid "Order State"
-msgstr ""
+msgstr "オーダー状態"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
@@ -777,60 +792,60 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Sales By Month"
-msgstr ""
+msgstr "月別受注"
 
 #. module: sale
 #: code:addons/sale/sale.py:1078
 #, python-format
 msgid "Could not cancel sales order line!"
-msgstr ""
+msgstr "受注行はキャンセルできません。"
 
 #. module: sale
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "安全日数"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
-msgstr ""
+msgstr "受注済材料の調達"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Create Final Invoice"
-msgstr ""
+msgstr "最終請求書の作成"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
-msgstr ""
+msgstr "送付先住所"
 
 #. module: sale
 #: help:sale.order,shipped:0
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
+msgstr "これは受注オーダーが配達されたことを示します。この項目はスケジューラが起動された後にのみ更新されます。"
 
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "拡張フィルタ…"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr ""
+msgstr "例外"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "会社"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -842,22 +857,25 @@ msgid ""
 "The 'Waiting Schedule' state is set when the invoice is confirmed but "
 "waiting for the scheduler to run on the order date."
 msgstr ""
+"見積または受注オーダーの状態を示します。 \n"
+"請求書の検証（請求書の例外）、または集荷リスト状態（出荷例外）でキャンセル操作が発生すると、例外状態が自動的にセットされます。 \n"
+"請求書が確認され、しかしオーダー日に実行されるスケジュールを待っている時は、スケジュール待ち状態にセットされます。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1272
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr ""
+msgstr "適切な価格リスト行が見つかりません："
 
 #. module: sale
 #: view:sale.order:0
 msgid "History"
-msgstr ""
+msgstr "履歴"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on order after delivery"
-msgstr ""
+msgstr "配達後のオーダーの請求書"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -865,39 +883,39 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr ""
+msgstr "これは、この受注オーダーのために生成された請求書のリストです。同じ受注オーダーは何回も請求されるかもしれません（例えば、行毎に）。"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr ""
+msgstr "あなたの参照"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
 msgid ""
 "The name and address of the contact who requested the order or quotation."
-msgstr ""
+msgstr "オーダーや見積は連絡先の名前と住所を要求します。"
 
 #. module: sale
 #: help:res.company,security_lead:0
 msgid ""
 "This is the days added to what you promise to customers for security purpose"
-msgstr ""
+msgstr "これは安全目的のために顧客に約束するために加える日数です。"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Qty"
-msgstr ""
+msgstr "数量"
 
 #. module: sale
 #: view:sale.order:0
 msgid "References"
-msgstr ""
+msgstr "参照"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "私の受注オーダー行"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -906,12 +924,12 @@ msgstr ""
 #: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line:0 view:sale.order.line.make.invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "オーダー参照は、会社ごとに固有でなければなりません。"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -919,183 +937,183 @@ msgstr ""
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0 view:sale.order.line:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "請求書作成"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "税抜合計"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order reference"
-msgstr ""
+msgstr "オーダー参照"
 
 #. module: sale
 #: view:sale.open.invoice:0
 msgid "You invoice has been successfully created!"
-msgstr ""
+msgstr "請求書は正常に作成されました。"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Partner"
-msgstr ""
+msgstr "パートナ別受注"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
-msgstr ""
+msgstr "オーダー連絡先"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
 #: view:sale.open.invoice:0
 msgid "Open Invoice"
-msgstr ""
+msgstr "請求書を開く"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.ir_actions_server_edi_sale
 msgid "Auto-email confirmed sale orders"
-msgstr ""
+msgstr "受注オーダーの自動Eメール確認"
 
 #. module: sale
 #: code:addons/sale/sale.py:413
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
+msgstr "この会社に定義された受注仕訳帳がありません：%s（ID：%d）"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "強制割当"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr ""
+msgstr "オーダー中"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
 msgid "Based on the shipped or on the ordered quantities."
-msgstr ""
+msgstr "出荷またはオーダー数量基準"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "全ての製品を一緒に配達"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr ""
+msgstr "関連する集荷"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "送付先住所："
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_partner
 msgid "Sales per Customer in last 90 days"
-msgstr ""
+msgstr "最新90日間の顧客別受注"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr ""
+msgstr "受注オーダーのドラフト状態"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
+msgstr "配達オーダーの作成"
 
 #. module: sale
 #: code:addons/sale/sale.py:1303
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'!"
-msgstr ""
+msgstr "受注オーダー行の状態は %s であるため、削除できません。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Qty(UoS)"
-msgstr ""
+msgstr "販売単位"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr ""
+msgstr "税込合計"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Create Pick List"
-msgstr ""
+msgstr "集荷リストの作成"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "受注オーダーのオーダー日"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Product Category"
-msgstr ""
+msgstr "製品分類別受注"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr ""
+msgstr "見積の確認"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:63
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "グループ化…"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Invoice"
-msgstr ""
+msgstr "請求書再作成"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "請求書の配達"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr ""
+msgstr "スケジュール待ち"
 
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "調達方法"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Pick List"
-msgstr ""
+msgstr "集荷リスト"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "ドラフトに設定"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
+msgstr "製造品へのあるいは顧客への移動のドキュメント"
 
 #. module: sale
 #: model:email.template,body_text:sale.email_template_edi_sale
@@ -1175,57 +1193,130 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name "
+"or ''} 様、\n"
+"\n"
+"これは、お客様のご注文の確認です。 ${object.partner_id.name}：\n"
+"       | ご注文番号： *${object.name}*\n"
+"       | ご注文合計： *${object.amount_total} "
+"${object.pricelist_id.currency_id.name}*\n"
+"       | ご注文日： ${object.date_order}\n"
+"       % if object.origin:\n"
+"       | ご注文の詳細： ${object.origin}\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       | お客様： ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       | お客様の連絡先： ${object.user_id.name} ${object.user_id.user_email and "
+"'<%s>'%(object.user_id.user_email) or ''}\n"
+"\n"
+"次のリンクから、ご注文のご確認、ダウンロード、また、オンラインでのお支払いが可能です。\n"
+"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+"\n"
+"% if object.order_policy in ('prepaid','manual') and "
+"object.company_id.paypal_account：\n"
+"<% \n"
+"comp_name = quote(object.company_id.name)\n"
+"order_name = quote(object.name)\n"
+"paypal_account = quote(object.company_id.paypal_account)\n"
+"order_amount = quote(str(object.amount_total))\n"
+"cur_name = quote(object.pricelist_id.currency_id.name)\n"
+"paypal_url = \"https://www.paypal.com/cgi-"
+"bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
+"unt=%s\" \\\n"
+"             "
+"\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
+"_%s\" % \\\n"
+"             "
+"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+"e)\n"
+"%>\n"
+"直接 Paypal を使ってお支払いいただくこともできます。\n"
+"    ${paypal_url}\n"
+"% endif\n"
+"\n"
+"何かご質問等がございましたら、ご遠慮なくお問い合わせ下さい。\n"
+"\n"
+"\n"
+"弊社をご利用いただき、ありがとうございました。 ${object.company_id.name}\n"
+"\n"
+"\n"
+"--\n"
+"${object.user_id.name} ${object.user_id.user_email and "
+"'<%s>'%(object.user_id.user_email) or ''}\n"
+"${object.company_id.name}\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street or ''}\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}\n"
+"% endif\n"
+"% if object.company_id.phone:\n"
+"Phone: ${object.company_id.phone}\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"${object.company_id.website or ''}\n"
+"% endif\n"
+"            "
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "検証"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "オーダーの確認"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Create Procurement Order"
-msgstr ""
+msgstr "調達オーダーの作成"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "税金"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "請求準備のできた受注オーダー"
 
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "受注オーダーの作成日"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "在庫移動"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "請求書を作成"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in current month"
-msgstr ""
+msgstr "今月作成された受注オーダー"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "FAX："
 
 #. module: sale
 #: help:sale.order.line,type:0
@@ -1234,26 +1325,28 @@ msgid ""
 "create a task, purchase order or manufacturing order linked to this sale "
 "order line."
 msgstr ""
+"もし、オーダー時であれば、受注オーダーがタスクを作成するために確認された時、この受注オーダー行とリンクした発注オーダーまたは製造オーダーを調達するきっかけ"
+"となります。"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr ""
+msgstr "前払金額"
 
 #. module: sale
 #: field:sale.config.picking_policy,charge_delivery:0
 msgid "Do you charge the delivery?"
-msgstr ""
+msgstr "配達に課金しますか？"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr ""
+msgstr "出荷数量"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr ""
+msgstr "受注オーダー基準の請求書"
 
 #. module: sale
 #: code:addons/sale/sale.py:331
@@ -1261,12 +1354,12 @@ msgstr ""
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
+msgstr "このオーダーの価格リストを変更した場合（通貨であっても）、既存オーダー行の価格は更新されません。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "集荷リスト"
 
 #. module: sale
 #: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
@@ -1274,103 +1367,103 @@ msgstr ""
 #: code:addons/sale/sale.py:1033
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "エラー"
 
 #. module: sale
 #: code:addons/sale/sale.py:603
 #, python-format
 msgid "Could not cancel sales order !"
-msgstr ""
+msgstr "受注オーダーはキャンセルできませんでした。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Qty(UoM)"
-msgstr ""
+msgstr "単位数量"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered Year of the sales order"
-msgstr ""
+msgstr "受注オーダーのオーダー年"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "July"
-msgstr ""
+msgstr "7月"
 
 #. module: sale
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "調達"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "出荷例外"
 
 #. module: sale
 #: code:addons/sale/sale.py:1156
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "集荷情報： "
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr ""
+msgstr "請求書のグループ化"
 
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Invoice Policy"
-msgstr ""
+msgstr "請求方針"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 #: view:sale.config.picking_policy:0
 msgid "Setup your Invoicing Method"
-msgstr ""
+msgstr "請求方法のセットアップ"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "会計士によってレビューされます。"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "単位の参照"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid ""
 "This tool will help you to install the right module and configure the system "
 "according to the method you use to invoice your customers."
-msgstr ""
+msgstr "このツールは、顧客に請求するために使用する方法にしたがって、正しいモジュールのインストールとシステムを設定するのに役立ちます。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
+msgstr "受注オーダー行の請求書を作成"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "請求書の例外"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Drives procurement and invoicing"
-msgstr ""
+msgstr "調達と請求を実施"
 
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr ""
+msgstr "支払済"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "受注分析"
 
 #. module: sale
 #: code:addons/sale/sale.py:1151
@@ -1381,22 +1474,26 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"あなたの選択した数量は %d です。\n"
+"しかし、それは選択した梱包と互換性がありません。\n"
+"これは、梱包による数量の提案です：\n"
+"EAN：%s　数量：%s　単位のタイプ：%s"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Packing"
-msgstr ""
+msgstr "梱包の再作成"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order.line,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "属性"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "見積"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -1405,46 +1502,47 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
+"受注オーダーの出荷方針が出荷は手動進行中の場合、販売員は請求書を手動で作成します。出荷方針が配達前に支払の場合、請求書は自動的に作成されます。"
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgstr "受注オーダー基準、または出荷基準の請求書を生成します。"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sale order lines, not yet delivered"
-msgstr ""
+msgstr "未配達の確認済受注オーダー行"
 
 #. module: sale
 #: code:addons/sale/sale.py:473
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "顧客請求書"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0 view:sale.report:0
 msgid "Sales"
-msgstr ""
+msgstr "受注"
 
 #. module: sale
 #: report:sale.order:0 field:sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "単価"
 
 #. module: sale
 #: selection:sale.order,state:0 view:sale.order.line:0
 #: selection:sale.order.line,state:0 selection:sale.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
-msgstr ""
+msgstr "請求書"
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -1453,63 +1551,65 @@ msgid ""
 "You have to select a customer in the sales form !\n"
 "Please set one customer before choosing a product."
 msgstr ""
+"受注フォームの顧客を選択する必要があります。\n"
+"製品を選択する前に１顧客をセットして下さい。"
 
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "元となるドキュメント"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "To Do"
-msgstr ""
+msgstr "ToDo"
 
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "集荷方針"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Document of the move to the customer."
-msgstr ""
+msgstr "顧客への移動のドキュメント"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "税抜金額"
 
 #. module: sale
 #: code:addons/sale/sale.py:604
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
+msgstr "最初にこの受注オーダーに結び付けられた全集荷をキャンセルする必要があります。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "受注前払請求書"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "月"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} オーダー(Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order.line:0 field:sale.order.line,product_id:0
 #: view:sale.report:0 field:sale.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "製品"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr ""
+msgstr "割当のキャンセル"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
@@ -1520,54 +1620,54 @@ msgstr ""
 #: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "月次売上高"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr ""
+msgstr "請求対象"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "オーダー日"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "製品販売単位"
 
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "手動進行中"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "製品単位"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Logistic"
-msgstr ""
+msgstr "物流"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order"
-msgstr ""
+msgstr "オーダー"
 
 #. module: sale
 #: code:addons/sale/sale.py:1017
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:71
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "この製品のために定義された損益勘定がありません：%s（ID：%d）"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "例外を無視"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1577,6 +1677,8 @@ msgid ""
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
 msgstr ""
+"受注オーダーの請求制御によって、請求書は配達、または受注数量基準とすることが可能です。したがって、受注オーダーは販売員によりそれが確認されるとすぐに、請求"
+"書、または配達オーダーを生成します。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1251
@@ -1585,11 +1687,13 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+"受注の計画量は %.2f %s。しかし %.2f %s のみ利用可能です。\n"
+"実在庫は %.2f %s です（予約を除く）。"
 
 #. module: sale
 #: view:sale.order:0
 msgid "States"
-msgstr ""
+msgstr "状態"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1599,17 +1703,17 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "顧客参照"
 
 #. module: sale
 #: field:sale.order,amount_total:0 view:sale.order.line:0
 msgid "Total"
-msgstr ""
+msgstr "合計"
 
 #. module: sale
 #: report:sale.order:0 view:sale.order.line:0
 msgid "Price"
-msgstr ""
+msgstr "価格"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -1617,56 +1721,56 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr ""
+msgstr "製造品場所の設定によって、製造領域と顧客の間の移動は、手動または自動的な配達オーダーを通して実施されます。"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Pay before delivery"
-msgstr ""
+msgstr "配達前支払"
 
 #. module: sale
 #: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "受注ダッシュボード"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
 #: view:sale.order:0
 msgid "Make Invoices"
-msgstr ""
+msgstr "請求書作成"
 
 #. module: sale
 #: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
 msgid "To Invoice"
-msgstr ""
+msgstr "請求対象"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr ""
+msgstr "受注オーダー確認日"
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract/Analytic Account"
-msgstr ""
+msgstr "契約 / 分析アカウント"
 
 #. module: sale
 #: field:sale.order,company_id:0 field:sale.order.line,company_id:0
 #: view:sale.report:0 field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "請求日"
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr ""
+msgstr "事前に請求される金額"
 
 #. module: sale
 #: code:addons/sale/sale.py:1269
@@ -1675,57 +1779,59 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"この製品と数量に一致する価格リスト行を見つけることができません。\n"
+"製品、数量、価格リストの何れかを変更する必要があります。"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is a list of picking that has been generated for this sales order."
-msgstr ""
+msgstr "この集荷リストはこの受注オーダーによって生成されました。"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create invoices"
-msgstr ""
+msgstr "請求書作成"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "合計："
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "キャンセル済"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "私の受注オーダーと関係する受注オーダー行"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
 #: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
 #: view:sale.report:0 field:sale.report,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "店"
 
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "確認日"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 msgid "Sales by Month"
-msgstr ""
+msgstr "月別受注"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1734,17 +1840,17 @@ msgstr ""
 #: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr ""
+msgstr "受注オーダー"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "販売単位の数量"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sale Order Lines that are in 'done' state"
-msgstr ""
+msgstr "完了状態の受注オーダー行"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -1754,69 +1860,71 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
+"受注オーダーが確認されると同時に調達オーダーとしてすぐに、集荷リストフォームが作成されます。これは受注オーダー部品の割り当てを表しています。受注オーダー行"
+"による１つの集荷リストは部品の入手可能性とともに展開します。"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "確認済"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Main Method Based On"
-msgstr ""
+msgstr "基本とする主な方法"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
-msgstr ""
+msgstr "確認"
 
 #. module: sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_product_total_price
 msgid "Sales by Product's Category in last 90 days"
-msgstr ""
+msgstr "最新90日間の製品分類別受注"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "請求書行"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0 view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "受注オーダー行"
 
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "配達リードタイム"
 
 #. module: sale
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "設定"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:146
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "EDIの価格リスト（%s）"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Print Order"
-msgstr ""
+msgstr "印刷順序"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in current year"
-msgstr ""
+msgstr "今年作成された受注オーダー"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1827,31 +1935,34 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
+"請求書は次の何れかの理由により、この受注オーダー行のために作成されません。\n"
+"1. この受注オーダー行の状態はドラフトまたはキャンセルの何れかである。\n"
+"2. 受注オーダー行は請求されている。"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sale order lines done"
-msgstr ""
+msgstr "受注オーダー行の完了"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
 msgid "Weight"
-msgstr ""
+msgstr "重量"
 
 #. module: sale
 #: view:sale.open.invoice:0 view:sale.order:0 field:sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "請求書"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "December"
-msgstr ""
+msgstr "12月"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "画像"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
@@ -1861,28 +1972,30 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
+"調達オーダーは、受注オーダーが確認された、または請求書が支払われた時に自動的に作成されます。それは支払と製品の製造のルールと受注オーダーのパラメータに関し"
+"て制御します。 "
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Uninvoiced"
-msgstr ""
+msgstr "未請求"
 
 #. module: sale
 #: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
 #: view:sale.order.line:0 field:sale.order.line,salesman_id:0
 #: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "販売員"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr ""
+msgstr "古い見積"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "非課税金額"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:170
@@ -1890,18 +2003,18 @@ msgstr ""
 #: view:sale.advance.payment.inv:0 view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
-msgstr ""
+msgstr "前払請求書"
 
 #. module: sale
 #: code:addons/sale/sale.py:624
 #, python-format
 msgid "The sales order '%s' has been cancelled."
-msgstr ""
+msgstr "受注オーダー %s はキャンセルされました。"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "ドラフト"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -1916,148 +2029,153 @@ msgid ""
 "            \n"
 "* The 'Cancelled' state is set when a user cancel the sales order related."
 msgstr ""
+"・ ドラフト状態は、関連する受注オーダーがドラフト状態の時にセットされます。\n"
+"・ 確認済状態は、関連する受注オーダーが確認された時にセットされます。\n"
+"・ 例外状態は、関連する受注オーダーが例外度してセットされた時にセットされます。\n"
+"・ 完了状態は、受注オーダー行が集荷された時にセットされます。\n"
+"・ キャンセル済は、ユーザが受注オーダーに関してキャンセルした時にセットされます。"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr ""
+msgstr "税金金額"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Packings"
-msgstr ""
+msgstr "梱包"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sale Order Lines ready to be invoiced"
-msgstr ""
+msgstr "請求準備ができた受注オーダー行"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in last month"
-msgstr ""
+msgstr "先月作成受注オーダー"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
 #: model:ir.ui.menu,name:sale.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "Eメールテンプレート"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
 #: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
 msgid "Sales Orders"
-msgstr ""
+msgstr "受注オーダー"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
-msgstr ""
+msgstr "販売店"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "November"
-msgstr ""
+msgstr "11月"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr ""
+msgstr "前払製品"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Compute"
-msgstr ""
+msgstr "計算"
 
 #. module: sale
 #: code:addons/sale/sale.py:618
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "最初にこの受注オーダーに関する全ての請求書をキャンセルする必要があります。"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
-msgstr ""
+msgstr "1月"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
-msgstr ""
+msgstr "進行中の受注オーダー"
 
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "この受注オーダー要求を生成したドキュメントへの参照"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "委任の遅延"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Deliver & invoice on demand"
-msgstr ""
+msgstr "オンデマンドの配達と請求"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
-msgstr ""
+msgstr "各受注オーダー行と各構成部品のための１つの調達オーダー"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
-msgstr ""
+msgstr "割当"
 
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "日付順"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr ""
+msgstr "請求する確認済受注オーダー"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "未確認状態の受注オーダー"
 
 #. module: sale
 #: code:addons/sale/sale.py:322
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
-msgstr ""
+msgstr "受注オーダー %s はドラフト状態にセットされています。"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr ""
+msgstr "在庫から"
 
 #. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #. module: sale
 #: code:addons/sale/sale.py:1261
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "価格リストがありません： "
 
 #. module: sale
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr ""
+msgstr "配達済"
 
 #. module: sale
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "この製品に製造ロットを割り当てる必要があります。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_shop_form
@@ -2068,68 +2186,70 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
+"あなたの会社の製品を再販する複数の店がある場合は、ここから作成と管理ができます。新規の見積や受注オーダーを記録する際には、店にリンク付けする必要があります"
+"。店には各特定の受注のために製品が配達される倉庫を定義します。"
 
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "請求書は支払済であることを示しています。"
 
 #. module: sale
 #: report:sale.order:0 field:sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "May"
-msgstr ""
+msgstr "5月"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "顧客"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr ""
+msgstr "前払"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "February"
-msgstr ""
+msgstr "2月"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "April"
-msgstr ""
+msgstr "4月"
 
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
-msgstr ""
+msgstr "会計"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "受注オーダーの検索"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "受注オーダー依頼"
 
 #. module: sale
 #: code:addons/sale/sale.py:1255
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "在庫不足です： "
 
 #. module: sale
 #: report:sale.order:0 field:sale.order,payment_term:0
 msgid "Payment Term"
-msgstr ""
+msgstr "支払条件"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2140,23 +2260,26 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"このレポートは見積と受注オーダー上の分析を実行します。分析は受注高をチェックし別のグループ基準（販売員、パートナ、製品など）により並べ替えます。まだ請求さ"
+"れていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要がありま"
+"す。"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "見積番号"
 
 #. module: sale
 #: field:sale.order,picked_rate:0 view:sale.report:0
 msgid "Picked"
-msgstr ""
+msgstr "集荷"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr ""
+msgstr "配達基準の請求書"

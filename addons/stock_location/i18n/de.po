@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-07-07 11:27+0000\n"
+"Last-Translator: Thorsten Vocks <Unknown>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 06:05+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-07-08 05:00+0000\n"
+"X-Generator: Launchpad (build 15558)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -41,7 +41,7 @@ msgstr "Warenfluss durch Push Regeln"
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Automatisch Keine weitere Bewegung"
+msgstr "Automatische Erstellung Lieferauftrag ohne Beleg"
 
 #. module: stock_location
 #: view:product.product:0
@@ -116,12 +116,13 @@ msgid ""
 msgstr ""
 "Festgelegt wird der Pfad des Produktes durch die Lagerorte des "
 "Unternehmens.\n"
-"Der Eintrag für 'Automatische Warenbewegung' erzeugt eine automatische "
-"weitere Warenbewegung unmittelbar im Anschluss an die aktuelle "
-"Warenbewegung. Mit 'Manueller Durchführung' muss diese weitere Warenbewegung "
-"durch einen Lagermitarbeiter validiert werden. Mit 'Automatisch Keine "
-"weitere Bewegung' wird ausschließlich der originäre Lagerort eingetragen "
-"ohne weitere Bewegung."
+"Der Eintrag für 'Automatische Erstellung Lieferauftrag' erzeugt automatisch "
+"einen weiteren Lieferauftrag unmittelbar im Anschluss an den aktuellen "
+"Lieferauftrag. Mit 'Manuelle Erstellung Lieferauftrag' muss der weitere "
+"Lieferauftrag  erst durch einen Lagermitarbeiter validiert werden. Mit "
+"'Automatische Erstellung Lieferauftrag ohne Beleg' wird ausschließlich der "
+"ursprüngliche Zielort ersetzt, ohne dabei einen neuen Lieferauftrag zu "
+"erstellen."
 
 #. module: stock_location
 #: view:product.product:0
@@ -215,7 +216,7 @@ msgstr "Manuelle Rechnungserstellung"
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr "Anzahl Tage für diese Warentransaktion"
+msgstr "Anzahl Tage für diese Lieferkette"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
@@ -364,7 +365,7 @@ msgstr "Lagerort (Ziel)"
 #: field:stock.location.path,auto:0
 #: selection:stock.location.path,auto:0
 msgid "Automatic Move"
-msgstr "Automatische Warenbewegung"
+msgstr "Automatischer neuer Lieferschein"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
