@@ -21,6 +21,7 @@
 
 .openerp .oe_kanban_view
     // KanbanView {{{
+    background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     height: inherit
     .ui-sortable-placeholder
         border: 1px dotted black
@@ -52,7 +53,6 @@
     // KanbanGroups {{{
     .oe_kanban_groups
         height: inherit
-        width: 100%
     .oe_kanban_header
         &:hover
             .oe_dropdown_kanban
@@ -76,10 +76,10 @@
 
     .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         background: #f0eeee
-
-    .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
+        min-width: 170px
+        max-width: 250px
 
     .oe_form
         .oe_kanban_column
@@ -90,8 +90,6 @@
         height: 100%
     .oe_kanban_aggregates
         padding: 0
-    .oe_kanban_group_header
-        position: relative
     .oe_kanban_group_folded
         .oe_kanban_group_title, &.oe_kanban_column > *, .oe_kanban_aggregates, .oe_kanban_add
             display: none

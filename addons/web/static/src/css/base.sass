@@ -213,13 +213,7 @@ $sheet-max-width: 860px
     // Modal box
     &.ui-dialog
         display: none
-        position: fixed
         padding: 6px
-        top: 50%
-        left: 50%
-        z-index: 1050
-        width: 560px
-        margin: -150px 0 0 -280px
         //overflow: hidden
         background-color: rgba(60,60,60,0.7)
         border: 1px solid
@@ -344,7 +338,7 @@ $sheet-max-width: 860px
             margin: 4px
     .oe_avatar
         margin: 0 16px 0 0
-        img
+        > img
             height: 50px
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
@@ -1677,6 +1671,7 @@ $sheet-max-width: 860px
             vertical-align: top
             .oe_form_field_image_controls
                 position: absolute
+                white-space: nowrap
                 top: 1px
                 padding: 3px 0 0 0
                 margin: 0 1px
@@ -1861,6 +1856,49 @@ $sheet-max-width: 860px
         float: right
         color: #333
     // }}}
+//Tree view
+.openerp
+    .tree_header
+        background-color: #f0f0f0
+        border-bottom: 1px solid #cacaca
+        color: #4c4c4c
+        padding: 5px
+        height: 25px
+        button
+            float: right
+            height: 27px
+            margin-right: 5px
+    .oe-treeview-table
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        th
+            padding: 10px
+            color: #4c4c4c
+            font-weight: bold
+            background-color: #f0f0f0
+            border-bottom: 2px solid #cacaca
+        .treeview-tr, .treeview-td
+            cursor: pointer
+            border-right: 1px dotted #afafb6
+            vertical-align: top
+            text-align: left
+            border-bottom: 1px solid #cfcccc
+        tr:hover
+            background-color: #e0e0f8
+        .oe-number
+            text-align: right !important
+        span
+            font-size: 90%
+            font-weight: normal
+            white-space: nowrap
+            display: block
+        .treeview-tr.oe-treeview-first
+            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
+        .oe_open .treeview-tr.oe-treeview-first
+            background-image: url(/web/static/src/img/collapse.gif)
+        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
+            margin-left: 16px
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
