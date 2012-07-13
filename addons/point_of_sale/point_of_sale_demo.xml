@@ -78,7 +78,7 @@
         </record>
         <record id="pos_order_pos11" model="pos.order">
             <field name="sale_journal" ref="account.sales_journal"/>
-            <field name="shop_id" ref="sale.shop"/>
+            <field name="shop_id" ref="sale.sale_shop_1"/>
             <field name="date_order" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field eval="1" name="nb_print"/>
