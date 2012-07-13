@@ -728,12 +728,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
         return false;
     },
-    /**
-    * Add bounce effect when click on wrong area 
-    */
-    do_bounce: function(element) {
-        element.effect("bounce", { times:3}, 300);
-    },
     do_notify: function() {
         if (this.getParent()) {
             return this.getParent().do_notify.apply(this,arguments);

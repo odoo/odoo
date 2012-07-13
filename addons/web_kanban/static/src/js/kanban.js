@@ -420,10 +420,10 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    self.view.do_bounce(add_btn);
+                    add_btn.wrap('<div>').addClass('oe_bounce');
                 }else {
-//                    fold_btn.css('display','inline-block');
-                    self.view.do_bounce(fold_btn);
+//                  fold_btn.css('display','inline-block');
+                    fold_btn.wrap('<div>').addClass('oe_bounce');
                 }
             }
         });
