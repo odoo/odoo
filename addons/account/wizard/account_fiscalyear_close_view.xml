@@ -7,11 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Generate Fiscal Year Opening Entries" version="7.0">
-                    <header>
-                        <button string="Create" name="data_save" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
+                    <separator string="Generate Fiscal Year Opening Entries"/>
                     <label string="This wizard will generate the end of year journal entries of selected fiscal year. Note that you can run this wizard many times for the same fiscal year: it will simply replace the old opening entries with the new ones."/>
                     <newline/>
                     <group col="4">
@@ -21,6 +17,11 @@
                         <field name="period_id" domain ="[('fiscalyear_id','=',fy2_id),('special','=', True)]" />
                         <field name="report_name"/>
                     </group>
+                    <footer>
+                        <button string="Create" name="data_save" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

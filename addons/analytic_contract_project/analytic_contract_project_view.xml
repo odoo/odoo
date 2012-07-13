@@ -15,7 +15,9 @@
                             <group string="Validity">
                                 <label for="date_start" string="Duration"/>
                                 <div name="duration">
-                                    <field name="date_start" class="oe_inline"/>  <span  attrs="{'invisible':[('date','=',False)]}" class="oe_inline"> - </span> <field name="date" class="oe_inline"/>
+                                    <field name="date_start" class="oe_inline"/> 
+                                    <label attrs="{'invisible':[('date','=',False)]}" class="oe_inline" string=" - "/>
+                                    <field name="date" class="oe_inline"/>
                                 </div>
                                 <label for="quantity_max"/>
                                 <div>

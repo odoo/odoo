@@ -921,9 +921,9 @@
                                   <field name="amount" attrs="{'readonly':[('type','in',('none', 'code', 'balance'))]}"/>
                                   <separator colspan="4" string="Accounting Information"/>
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
                                   <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
                                   <separator colspan="4" string="Tax Declaration: Invoices"/>
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
