@@ -62,15 +62,16 @@ class pos_order(osv.osv):
             statement_ids = order.pop('statement_ids')
             order_id = self.create(cr, uid, order, context)
             list.append(order_id)
+            for data in statement_ids:
             # call add_payment; refer to wizard/pos_payment for data structure
             # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
-            data = {
-                'journal': statement_ids[0][2]['journal_id'],
-                'amount': order['amount_paid'],
-                'payment_name': order['name'],
-                'payment_date': statement_ids[0][2]['name'],
-            }
-            order_obj.add_payment(cr, uid, order_id, data, context=context)
+                data = {
+                        'journal': data[2]['journal_id'],
+                        'amount': data[2]['amount'],
+                        'payment_name': order['name'],
+                        'payment_date': data[2]['name'],
+                    }
+                order_obj.add_payment(cr, uid, order_id, data, context=context)
         return list
 
     def unlink(self, cr, uid, ids, context=None):
