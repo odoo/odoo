@@ -50,10 +50,8 @@ The module allows:
     - Margins definition
     - Paper size definition
 
-... and much more
-
-Multiple headers and logos can be defined per company.
-CSS style, header and footer body are defined per company.
+Multiple headers and logos can be defined per company. CSS style, header and
+footer body are defined per company.
 
 For a sample report see also the webkit_report_sample module, and this video:
     http://files.me.com/nbessi/06n92k.mov
@@ -61,8 +59,8 @@ For a sample report see also the webkit_report_sample module, and this video:
 Requirements and Installation
 -----------------------------
 This module requires the ``wkthtmltopdf`` library to render HTML documents as
-PDF. Version 0.9.9 or later is necessary, and can be found at http://code.google.com/p/wkhtmltopdf/
-for Linux, Mac OS X (i386) and Windows (32bits).
+PDF. Version 0.9.9 or later is necessary, and can be found at
+http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows (32bits).
 
 After installing the library on the OpenERP Server machine, you need to set the
 path to the ``wkthtmltopdf`` executable file on each Company.
@@ -72,13 +70,13 @@ install a "static" version of the library. The default ``wkhtmltopdf`` on
 Ubuntu is known to have this issue.
 
 
-TODO
-----
+TODO:
+-----
 
- * JavaScript support activation deactivation
- * Collated and book format support
- * Zip return for separated PDF
- * Web client WYSIWYG
+    * JavaScript support activation deactivation
+    * Collated and book format support
+    * Zip return for separated PDF
+    * Web client WYSIWYG
 
                     """,
     "version": "0.9",
