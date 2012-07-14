@@ -366,23 +366,21 @@ $sheet-max-width: 860px
             color: gold
     // }}}
     // Tags (for many2many tags, among others) {{{
+    .oe_tag
+        border-radius: 2px
+        @include box-sizing(border)
+        border: 1px solid #9DACCC
+        background: #E2E6F0
+        color: black !important
+        padding: 0px 3px 0px 3px
+        margin: 0 2px 2px 0
+        height: 16px
+        // font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
     .oe_tags
         .text-wrap
             width: 100% !important
             textarea
                 width: 100% !important
-        .oe_tag
-            border-radius: 2px
-            @include box-sizing(border)
-            position: relative
-            float: left
-            border: 1px solid #9DACCC
-            background: #E2E6F0
-            color: black
-            padding: 0px 3px 0px 3px
-            margin: 0 2px 2px 0
-            height: 16px
-            font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
         .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
             font-style: italic
             text-decoration: none
