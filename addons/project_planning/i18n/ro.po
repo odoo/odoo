@@ -1,0 +1,635 @@
+# Romanian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-05-10 17:23+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"Language-Team: Romanian <ro@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:25+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,tasks:0
+#: help:report_account_analytic.planning.user,tasks:0
+msgid ""
+"This value is given by the sum of work remaining to do on the task for this "
+"planning, expressed in days."
+msgstr ""
+"Această valoare este dată de suma muncii care a rămas de efectuat la sarcină "
+"pentru această planificare, exprimată in zile."
+
+#. module: project_planning
+#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
+#: model:ir.ui.menu,name:project_planning.menu_board_planning
+#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning_stat
+msgid "Planning Statistics"
+msgstr "Statistică Planificare"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_line
+#: view:report_account_analytic.planning.line:0
+msgid "Planning Line"
+msgstr "Linie Planificare"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Unallocated Time"
+msgstr "Timpul Total Nealocat"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,name:0
+msgid "Planning Name"
+msgstr "Nume planificare"
+
+#. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Eroare ! Nu puteti crea sarcini recursive."
+
+#. module: project_planning
+#: view:board.board:0
+msgid "My Project's planning"
+msgstr "Planificarea Proiectului meu"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,timesheet:0
+#: report:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,sum_amount_real:0
+#: field:report_account_analytic.planning.user,timesheet:0
+msgid "Timesheet"
+msgstr "Foaie de pontaj"
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid ""
+"With its global system to schedule all resources of a company (people and "
+"material), OpenERP allows you to encode and then automatically compute tasks "
+"and phases scheduling, track resource allocation and availability."
+msgstr ""
+"Cu sistemul lui global de programare a tuturor resurselor unei companii "
+"(oameni si material), OpenERP vă permite să inregistrati si apoi să "
+"calculati automat programarea sarcinilor si a etapelor, să tineti evidenta "
+"alocării resurselor si disponibilitatea."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total planned tasks"
+msgstr "Total sarcini planificate"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,account_id:0
+msgid "Account"
+msgstr "Cont"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_project_task
+msgid "Task"
+msgstr "Sarcină"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+#: view:report_account_analytic.planning.line:0
+msgid "Notes"
+msgstr "Note"
+
+#. module: project_planning
+#: field:account.analytic.account,planning_ids:0
+#: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_form
+#: model:ir.ui.menu,name:project_planning.menu_report_account_analytic_planning
+msgid "Plannings"
+msgstr "Planificări"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Project"
+msgstr "Proiect"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Start Task"
+msgstr "Incepere sarcină"
+
+#. module: project_planning
+#: selection:report_account_analytic.planning,state:0
+msgid "Cancelled"
+msgstr "Anulat(ă)"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+#: view:report_account_analytic.planning.line:0
+msgid "Total Planned (in Days)"
+msgstr "Total planificat (In zile)"
+
+#. module: project_planning
+#: constraint:report_account_analytic.planning:0
+msgid ""
+"Invalid planning ! Planning dates can't overlap for the same responsible. "
+msgstr ""
+"Planificare invalidă ! Datele planificării nu se pot suprapune pentru "
+"acelasi responsabil. "
+
+#. module: project_planning
+#: field:report_account_analytic.planning,planning_account:0
+msgid "Planning By Account"
+msgstr "Planificare in functie de Cont"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Current Plannings"
+msgstr "Planificări curente"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Cont analitic"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Reset to Draft"
+msgstr "Resetare ca ciornă"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Extra Info"
+msgstr "Informaţii suplimentare"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Total planificat"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,timesheet:0
+#: help:report_account_analytic.planning.user,timesheet:0
+msgid ""
+"This value is given by the sum of all work encoded in the timesheet(s) "
+"between the 'Date From' and 'Date To' of the planning."
+msgstr ""
+"Această valoare este dată de suma intregii munci inregistrate in foaia "
+"(foile) de pontaj intre 'Data de la' si 'Data pană la' a planificării."
+
+#. module: project_planning
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Eroare! Nu puteti crea conturi analitice recursive."
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,plan_open:0
+#: field:report_account_analytic.planning.user,plan_open:0
+msgid "Time Allocation without Tasks"
+msgstr "Alocarea Timpului fără Sarcini"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
+msgstr "Linii planificare"
+
+#. module: project_planning
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Eroare! Nu puteti crea companii recursive."
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,account_id:0
+#: field:report_account_analytic.planning.line,account_id:0
+msgid "Analytic account"
+msgstr "Cont analitic"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,plan_open:0
+msgid ""
+"This value is given by the sum of time allocation with the checkbox "
+"'Assigned in Taks' set to FALSE, expressed in days."
+msgstr ""
+"Această valoare este dată de suma timpului alocat cu căsuta de selectare "
+"'Atribuit in Sarcini' setată pe FALS, exprimată in zile."
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Miscellaneous"
+msgstr "Diverse"
+
+#. module: project_planning
+#: help:res.company,planning_time_mode_id:0
+msgid "This will set the unit of measure used in plannings."
+msgstr "Acesta va seta unitatea de măsură folosită in planificări."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "HR Planning"
+msgstr "Planificare Resurse Umane"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,tasks:0
+#: field:report_account_analytic.planning.user,tasks:0
+msgid "Remaining Tasks"
+msgstr "Sarcinile rămase"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: model:ir.actions.report.xml,name:project_planning.report_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning
+#: model:ir.ui.menu,name:project_planning.next_id_85
+#: field:project.task,planning_line_id:0
+#: view:report_account_analytic.planning:0
+#: field:report_account_analytic.planning.account,planning_id:0
+#: field:report_account_analytic.planning.line,planning_id:0
+#: field:report_account_analytic.planning.stat,planning_id:0
+#: field:report_account_analytic.planning.user,planning_id:0
+msgid "Planning"
+msgstr "Planificare"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "Către :"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Time Encoding"
+msgstr "Codare Timp"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,free:0
+msgid "Unallocated Time"
+msgstr "Timp nealocat"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,plan_open:0
+msgid ""
+"This value is given by the sum of time allocation without task(s) linked, "
+"expressed in days."
+msgstr ""
+"Această valoare este dată de suma timpului alocat fără sarcină(sarcini) "
+"asociate, exprimată in zile."
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Delegate"
+msgstr "Delegat"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Analiză Planificare"
+
+#. module: project_planning
+#: help:report_account_analytic.planning,business_days:0
+msgid ""
+"Set here the number of working days within this planning for one person full "
+"time"
+msgstr ""
+"Aici setati numărul de zile lucătoare in cadrul acestei planificări pentru o "
+"persoană cu normă intreagă"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "["
+msgstr "["
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From :"
+msgstr "De la:"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,planning_user_ids:0
+msgid "Planning By User"
+msgstr "Planificare după Utilizator"
+
+#. module: project_planning
+#: model:ir.actions.act_window,name:project_planning.act_task_of_lines
+#: view:report_account_analytic.planning:0
+#: field:report_account_analytic.planning.stat,sum_amount_tasks:0
+msgid "Tasks"
+msgstr "Sarcini"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning By Account (in Days)"
+msgstr "Planificare după Cont (in Zile)"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Time without tasks"
+msgstr "Timp fără sarcini"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,date_from:0
+msgid "Start Date"
+msgstr "Data de început"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,total_free:0
+msgid "Total Free"
+msgstr "Total Liber"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.account,plan_tasks:0
+msgid ""
+"This value is given by the sum of time allocation with the checkbox "
+"'Assigned in Taks' set to TRUE expressed in days."
+msgstr ""
+"Această valoare este dată de suma timpului alocat cu căsuta de selectare "
+"'Atribuit in Sarcini' setată pe ADEVARAT exprimată in zile."
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Calculat ca zile lucrătoare - Timp Alocare Sarcini + Timp Alocare fără "
+"Sarcini + Concedii)"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount_unit:0
+msgid "Qty UoM"
+msgstr "UdM Cantitate"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,note:0
+msgid "Note"
+msgstr "Notă"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Draft"
+msgstr "Ciornă"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
+#: view:report_account_analytic.planning:0
+msgid "Planning by Account"
+msgstr "Planificare după Cont"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Pending"
+msgstr "În așteptare"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,sum_amount:0
+msgid "Planned Days"
+msgstr "Zile planificate"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,state:0
+msgid "Status"
+msgstr "Stare"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,holiday:0
+msgid ""
+"This value is given by the total of validated leaves into the 'Date From' "
+"and 'Date To' of the planning."
+msgstr ""
+"Această valoare este dată de totalul concediilor validate in 'Data de la' si "
+"'Data pană la' a planificării."
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,user_id:0
+#: report:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,user_id:0
+#: field:report_account_analytic.planning.user,user_id:0
+msgid "User"
+msgstr "Utilizator"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Remaining Tasks"
+msgstr "Total Sarcini rămase"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount_in_base_uom:0
+msgid "Quantity in base uom"
+msgstr "Cantitatea in udm de bază"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,plan_tasks:0
+msgid "Time Planned on Tasks"
+msgstr "Timpul planificat in sarcini"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,amount:0
+msgid "Quantity"
+msgstr "Cantitate"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,code:0
+msgid "Code"
+msgstr "Cod"
+
+#. module: project_planning
+#: view:account.analytic.account:0
+#: field:report_account_analytic.planning,line_ids:0
+msgid "Planning lines"
+msgstr "Linii planificare"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Done"
+msgstr "Efectuat"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning By User (in Days)"
+msgstr "Planificare după Utilizator (in Zile)"
+
+#. module: project_planning
+#: view:report_account_analytic.planning.stat:0
+msgid "Planning statistics"
+msgstr "Statistică Planificare"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+#: selection:report_account_analytic.planning,state:0
+msgid "Open"
+msgstr "Deschide"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_user
+#: view:report_account_analytic.planning:0
+msgid "Planning by User"
+msgstr "Planificare după Utilizator"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Information"
+msgstr "Informații"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,business_days:0
+msgid "Business Days"
+msgstr "Zile lucrătoare"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Reactivate"
+msgstr "Reactivează"
+
+#. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+"Eroare ! Data de sfarsit a sarcinii trebuie să fie mai mare decat data de "
+"inceput"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,user_id:0
+msgid "Responsible"
+msgstr "Responsabil"
+
+#. module: project_planning
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
+msgid "Planning stat"
+msgstr "Statistică Planificare"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.account,plan_tasks:0
+msgid "Time Allocation of Tasks"
+msgstr "Timp Alocat Sarcinilor"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Summary by user"
+msgstr "Rezumat după utilizator"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Time Allocation without Tasks"
+msgstr "Total Timp Alocat fără Sarcini"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.user,holiday:0
+msgid "Leaves"
+msgstr "Concedii"
+
+#. module: project_planning
+#: view:report_account_analytic.planning:0
+msgid "Total Time Allocation of Tasks"
+msgstr "Total Timp Alocare Sarcini"
+
+#. module: project_planning
+#: field:report_account_analytic.planning,date_to:0
+msgid "End Date"
+msgstr "Data de sfârșit"
+
+#. module: project_planning
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "Numele companiei trebuie sa fie unic !"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Remaining tasks"
+msgstr "Sarcini rămase"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Summary by project"
+msgstr "Rezumat după proiect"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible :"
+msgstr "Responsabil :"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "]"
+msgstr "]"
+
+#. module: project_planning
+#: field:res.company,planning_time_mode_id:0
+msgid "Planning Time Unit"
+msgstr "Planificare Unitate Timp"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.line,task_ids:0
+msgid "Planning Tasks"
+msgstr "Planificare Sarcini"
+
+#. module: project_planning
+#: field:report_account_analytic.planning.stat,manager_id:0
+msgid "Manager"
+msgstr "Manager"
+
+#. module: project_planning
+#: help:report_account_analytic.planning.user,plan_tasks:0
+msgid ""
+"This value is given by the sum of time allocation with task(s) linked, "
+"expressed in days."
+msgstr ""
+"Această valoare este dată de suma timpului alocat cu sarcina(i) asociate, "
+"exprimată in zile."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Eroare! Moneda trebuie sa fie aceeasi ca si moneda companiei selectate"
+
+#~ msgid "Planning Management Module"
+#~ msgstr "Modulul Managementului Planificării"
+
+#~ msgid "Miscelleanous"
+#~ msgstr "Diverse"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps you to manage your plannings.\n"
+#~ "\n"
+#~ "This module is based on the analytic accounting and is totally integrated "
+#~ "with\n"
+#~ "* the timesheets encoding\n"
+#~ "* the holidays management\n"
+#~ "* the project management\n"
+#~ "\n"
+#~ "So that, each department manager can know if someone in his team has still "
+#~ "unallocated time for a given planning (taking in consideration the validated "
+#~ "leaves) or if he still needs to encode tasks.\n"
+#~ "\n"
+#~ "At the end of the month, the planning manager can also check if the encoded "
+#~ "timesheets are respecting the planned time on each analytic account.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Acest modul vă ajută să vă gestionati planificările.\n"
+#~ "\n"
+#~ "Acest modul se bazează pe contabilitatea analitică si este integrat total "
+#~ "cu\n"
+#~ "* codarea foilor de pontaj\n"
+#~ "* managementul concediilor\n"
+#~ "* managementul proiectului\n"
+#~ "\n"
+#~ "Astfel, fiecare manager de departament stie dacă cineva din echipa lui mai "
+#~ "are incă timp nealocat pentru o sarcină anumită (luand in considerare "
+#~ "concediile validate) sau dacă incă mai trebuie să codeze sarcini.\n"
+#~ "\n"
+#~ "La sfarsitul lunii, managerul care se ocupă cu planificarea poate de "
+#~ "asemenea să verifice dacă foile de pontaj inregistrate respectă timpul "
+#~ "planificat in fiecare cont analitic.\n"
