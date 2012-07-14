@@ -51,7 +51,7 @@
             <field name="src_model">res.partner</field>
             <field name="res_model">crm.meeting</field>
             <field name="view_mode">calendar,tree,form,gantt</field>
-            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="context">{'search_default_partner_ids': active_id}</field>
         </record>
 
         <!-- open opportunities related to given partner -->
@@ -128,7 +128,7 @@
                     <button type="action"
                         string="Schedule a Meeting"
                         name="%(base_calendar.action_crm_meeting)d"
-                        context="{'search_default_partner_id': active_id, 'default_duration': 4.0}"/>
+                        context="{'search_default_partner_ids': active_id}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />

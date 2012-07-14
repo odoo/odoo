@@ -38,7 +38,7 @@ class res_partner(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Leads and Opportunities', domain=[('state','in', ('draft','open','pending'))]),
-        'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+        'meeting_ids': fields.one2many('crm.meeting', 'partner_ids',\
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
