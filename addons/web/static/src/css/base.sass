@@ -216,7 +216,7 @@ $sheet-max-width: 860px
         @include background-clip()
         .ui-dialog-content
             padding: 0px
-        .ui-dialog-titlebar, .ui-dialog-buttonpane
+        .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
             border-bottom: 1px solid #cacaca
@@ -257,6 +257,10 @@ $sheet-max-width: 860px
                 &:hover
                     color: black
                     text-decoration: none
+
+    &.ui-dialog.oe_act_window
+        .ui-dialog-content
+            padding: 0px
 
     .modal-backdrop
         position: fixed
@@ -1551,14 +1555,6 @@ $sheet-max-width: 860px
             line-height: 18px
             input
                 margin: 0px
-        .oe_form_field_integer
-            width: 7em
-        .oe_form_field_float
-            width: 8em
-        .oe_form_field_date
-            width: 7.5em
-        .oe_form_field_datetime
-            width: 11em
         input[type="text"], input[type="password"], input[type="file"], select
             height: 22px
             padding-top: 2px
@@ -1628,6 +1624,16 @@ $sheet-max-width: 860px
             > div
                 position: relative
                 overflow: hidden
+    .oe_form_editable
+        .oe_form
+            .oe_form_field_integer
+                width: 7em !important
+            .oe_form_field_float
+                width: 8em !important
+            .oe_form_field_date
+                width: 7.5em !important
+            .oe_form_field_datetime
+                width: 11em !important
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html

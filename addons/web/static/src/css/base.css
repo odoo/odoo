@@ -205,7 +205,7 @@
 .openerp.ui-dialog .ui-dialog-content {
   padding: 0px;
 }
-.openerp.ui-dialog .ui-dialog-titlebar, .openerp.ui-dialog .ui-dialog-buttonpane {
+.openerp.ui-dialog .ui-dialog-titlebar, .openerp.ui-dialog .ui-dialog-content, .openerp.ui-dialog .ui-dialog-buttonpane {
   padding: 16px;
 }
 .openerp.ui-dialog .ui-dialog-titlebar {
@@ -267,6 +267,9 @@
 .openerp.ui-dialog .ui-dialog-titlebar-close:before:hover {
   color: black;
   text-decoration: none;
+}
+.openerp.ui-dialog.oe_act_window .ui-dialog-content {
+  padding: 0px;
 }
 .openerp .modal-backdrop {
   position: fixed;
@@ -1983,18 +1986,6 @@
 .openerp .oe_form .oe_form_field input {
   margin: 0px;
 }
-.openerp .oe_form .oe_form_field_integer {
-  width: 7em;
-}
-.openerp .oe_form .oe_form_field_float {
-  width: 8em;
-}
-.openerp .oe_form .oe_form_field_date {
-  width: 7.5em;
-}
-.openerp .oe_form .oe_form_field_datetime {
-  width: 11em;
-}
 .openerp .oe_form input[type="text"], .openerp .oe_form input[type="password"], .openerp .oe_form input[type="file"], .openerp .oe_form select {
   height: 22px;
   padding-top: 2px;
@@ -2086,6 +2077,18 @@
 .openerp .oe_form .oe_form_field_with_button > div {
   position: relative;
   overflow: hidden;
+}
+.openerp .oe_form_editable .oe_form .oe_form_field_integer {
+  width: 7em !important;
+}
+.openerp .oe_form_editable .oe_form .oe_form_field_float {
+  width: 8em !important;
+}
+.openerp .oe_form_editable .oe_form .oe_form_field_date {
+  width: 7.5em !important;
+}
+.openerp .oe_form_editable .oe_form .oe_form_field_datetime {
+  width: 11em !important;
 }
 .openerp .oe_hidden_input_file {
   overflow: hidden;
