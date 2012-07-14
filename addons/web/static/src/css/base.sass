@@ -910,8 +910,9 @@ $sheet-max-width: 860px
         .oe_view_manager_view_kanban
             height: inherit
 
-        .oe_view_manager_header
+        table.oe_view_manager_header
             width: 100%
+            table-layout: fixed
             .oe_header_row
                 //min-height: 26px
                 //line-height: 26px
@@ -922,7 +923,6 @@ $sheet-max-width: 860px
                     padding-top: 0
             .oe_view_manager_sidebar
                 margin: 0px auto
-                width: 400px
                 text-align: center
             td
                 line-height: 26px
@@ -1055,7 +1055,7 @@ $sheet-max-width: 860px
         float: right
         padding: 1px 0
         line-height: 18px
-        width: 480px
+        width: 400px
         border: 1px solid #ababab
         background: white
         @include radius(13px)
@@ -1634,7 +1634,7 @@ $sheet-max-width: 860px
             .oe_form_field_date
                 width: 7.5em !important
             .oe_form_field_datetime
-                width: 11em !important
+                width: 11.5em !important
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1769,6 +1769,8 @@ $sheet-max-width: 860px
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px
+                    progress
+                        width: 100%
                 > td, > th
                     line-height: 18px
                     > button
@@ -1782,7 +1784,7 @@ $sheet-max-width: 860px
                         border-width: 0
                 > td.oe_number
                     text-align: right !important
-                    width: 100px
+                    max-width: 100px
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)

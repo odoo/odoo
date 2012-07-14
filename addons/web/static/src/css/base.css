@@ -1165,63 +1165,63 @@
 .openerp .oe_view_manager .oe_view_manager_view_kanban {
   height: inherit;
 }
-.openerp .oe_view_manager .oe_view_manager_header {
+.openerp .oe_view_manager table.oe_view_manager_header {
   width: 100%;
+  table-layout: fixed;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_header_row {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_header_row {
   clear: both;
   text-shadow: 0 1px 1px white;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_header_row:last-child td {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_header_row:last-child td {
   padding-top: 0;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_view_manager_sidebar {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_view_manager_sidebar {
   margin: 0px auto;
-  width: 400px;
   text-align: center;
 }
-.openerp .oe_view_manager .oe_view_manager_header td {
+.openerp .oe_view_manager table.oe_view_manager_header td {
   line-height: 26px;
 }
-.openerp .oe_view_manager .oe_view_manager_header h2 {
+.openerp .oe_view_manager table.oe_view_manager_header h2 {
   font-size: 18px;
   margin: 0;
   float: left;
 }
-.openerp .oe_view_manager .oe_view_manager_header h2 a {
+.openerp .oe_view_manager table.oe_view_manager_header h2 a {
   color: #8a89ba;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group {
   display: inline-block;
   border: 1px solid #ababab;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group li {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group li {
   float: left;
   border-right: 1px solid #ababab;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group li:last-child {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group li:last-child {
   border: none;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group a {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group a {
   color: #4c4c4c;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group a:hover {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group a:hover {
   text-decoration: none;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group .active {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group .active {
   background: #999999;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_button_group .active a {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_button_group .active a {
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-.openerp .oe_view_manager .oe_view_manager_header .oe_view_manager_buttons {
+.openerp .oe_view_manager table.oe_view_manager_header .oe_view_manager_buttons {
   white-space: nowrap;
 }
 .openerp .oe_view_manager .oe_view_manager_pager {
@@ -1348,7 +1348,7 @@
   float: right;
   padding: 1px 0;
   line-height: 18px;
-  width: 480px;
+  width: 400px;
   border: 1px solid #ababab;
   background: white;
   -moz-border-radius: 13px;
@@ -2089,7 +2089,7 @@
   width: 7.5em !important;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime {
-  width: 11em !important;
+  width: 11.5em !important;
 }
 .openerp .oe_hidden_input_file {
   overflow: hidden;
@@ -2235,6 +2235,9 @@
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {
   padding: 3px 6px;
 }
+.openerp .oe_list_content > tbody > tr > td.oe_list_field_cell progress {
+  width: 100%;
+}
 .openerp .oe_list_content > tbody > tr > td, .openerp .oe_list_content > tbody > tr > th {
   line-height: 18px;
 }
@@ -2254,7 +2257,7 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_number {
   text-align: right !important;
-  width: 100px;
+  max-width: 100px;
 }
 .openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;
