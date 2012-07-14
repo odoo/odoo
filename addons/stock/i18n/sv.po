@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-03 14:08+0000\n"
-"PO-Revision-Date: 2012-06-25 16:39+0000\n"
+"PO-Revision-Date: 2012-07-13 11:44+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-26 05:40+0000\n"
-"X-Generator: Launchpad (build 15482)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:39+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -154,7 +154,7 @@ msgstr "Fysiska Inventeringar"
 #: field:product.category,property_stock_journal:0 view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
-msgstr "Stock journal"
+msgstr "Lagerjournal"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -186,7 +186,7 @@ msgstr "Leverera / Ta emot Produkter"
 #: code:addons/stock/report/report_stock.py:135
 #, python-format
 msgid "You cannot delete any record!"
-msgstr "You cannot delete any record!"
+msgstr "Du kan inte radera någon post!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:49
@@ -232,7 +232,7 @@ msgstr "Referens"
 #: code:addons/stock/stock.py:670 code:addons/stock/stock.py:1516
 #, python-format
 msgid "Products to Process"
-msgstr "Produkter att Processa"
+msgstr "Produkter att bearbeta"
 
 #. module: stock
 #: constraint:product.category:0
@@ -273,7 +273,7 @@ msgstr "Varning!"
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Group by partner"
+msgstr "Gruppera på företag"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner view:report.stock.inventory:0
@@ -282,7 +282,7 @@ msgstr "Group by partner"
 #: field:stock.move,partner_id:0 view:stock.picking:0
 #: field:stock.picking,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr "Företag"
 
 #. module: stock
 #: help:stock.partial.move.line,currency:0
@@ -343,7 +343,7 @@ msgstr "Confirm Inventory"
 #: field:stock.move,state:0 view:stock.picking:0 field:stock.picking,state:0
 #: report:stock.picking.list:0
 msgid "State"
-msgstr "State"
+msgstr "Status"
 
 #. module: stock
 #: view:stock.location:0
@@ -409,12 +409,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:116
 #, python-format
 msgid "No product in this location."
-msgstr "No product in this location."
+msgstr "Produkt saknas på detta lagerställe"
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
-msgstr "Location Output"
+msgstr "Utleverans från lagerställe"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.split_into
@@ -438,7 +438,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.inventory,location_type:0 field:stock.location,usage:0
 msgid "Location Type"
-msgstr "Location Type"
+msgstr "Lagerställetyp"
 
 #. module: stock
 #: help:report.stock.move,type:0 help:stock.picking,type:0
@@ -546,7 +546,7 @@ msgstr "Lagerstyrning"
 #. module: stock
 #: view:stock.location:0 field:stock.location,comment:0
 msgid "Additional Information"
-msgstr "Additional Information"
+msgstr "Ytterligare information"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -600,7 +600,7 @@ msgstr "Posted Inventory"
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
 msgid "Move Information"
-msgstr "Move Information"
+msgstr "Rörelseinformation"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -639,7 +639,7 @@ msgstr "juni"
 #. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr "Procurement Location"
+msgstr "Anskaffningsplats"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -705,7 +705,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
 msgid "Process Now"
-msgstr "Process Now"
+msgstr "Berarbeta nu"
 
 #. module: stock
 #: field:stock.location,address_id:0
@@ -1001,13 +1001,13 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
 msgid "Author"
-msgstr "Author"
+msgstr "Upphovsman"
 
 #. module: stock
 #: code:addons/stock/stock.py:1332
 #, python-format
 msgid "Delivery Order"
-msgstr "Utgående Leverans"
+msgstr "Leveransorder"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
@@ -1017,7 +1017,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Manual Operation"
-msgstr "Manual Operation"
+msgstr "Manuell åtgärd"
 
 #. module: stock
 #: view:stock.location:0 view:stock.move:0
@@ -1573,7 +1573,7 @@ msgstr "Merging is only allowed on draft inventories."
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_dashboard_stock
 msgid "Dashboard"
-msgstr ""
+msgstr "Infopanel"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_track
@@ -1594,7 +1594,7 @@ msgstr "Partinummer"
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.ui.menu,name:stock.menu_board_warehouse
 msgid "Warehouse Dashboard"
-msgstr ""
+msgstr "Lagerinfopanel"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -1618,7 +1618,7 @@ msgstr "Du kan inte ta bort en partirad !"
 #: model:ir.model,name:stock.model_stock_move_scrap view:stock.move:0
 #: view:stock.move.scrap:0 view:stock.picking:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Kassera produkter"
 
 #. module: stock
 #: code:addons/stock/stock.py:1157
@@ -1978,7 +1978,7 @@ msgstr ""
 #: code:addons/stock/product.py:175
 #, python-format
 msgid "Products: "
-msgstr "Products: "
+msgstr "Produkter: "
 
 #. module: stock
 #: help:product.product,track_production:0
@@ -2036,7 +2036,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Products "
-msgstr ""
+msgstr "Produkter "
 
 #. module: stock
 #: field:product.product,track_incoming:0
@@ -2088,7 +2088,7 @@ msgstr "You can only delete draft moves."
 #: model:ir.ui.menu,name:stock.menu_stock_products_menu view:stock.inventory:0
 #: view:stock.partial.move:0 view:stock.partial.picking:0 view:stock.picking:0
 msgid "Products"
-msgstr "Products"
+msgstr "Produkter"
 
 #. module: stock
 #: view:stock.change.standard.price:0
@@ -2352,13 +2352,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in view:stock.move:0
 msgid "Receive Products"
-msgstr "Ta emot Produkter"
+msgstr "Ta emot produkter"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_out_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
 msgid "Deliver Products"
-msgstr "Leverera Produkter"
+msgstr "Leverera produkter"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2758,7 +2758,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_move_consume
 #: view:stock.move.consume:0
 msgid "Consume Products"
-msgstr ""
+msgstr "Förbrukar produkter"
 
 #. module: stock
 #: code:addons/stock/stock.py:1742
@@ -2799,7 +2799,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produkter per kategori"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
@@ -2817,7 +2817,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
 #: model:ir.model,name:stock.model_stock_location_product
 msgid "Products by Location"
-msgstr "Products by Location"
+msgstr "Produkter per plats"
 
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
