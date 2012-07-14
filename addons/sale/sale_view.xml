@@ -190,7 +190,7 @@
                                 <form string="Sales Order Lines" version="7.0">
                                     <header>
                                         <button name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
-				        <field name="invoiced" invisible="1"/>
+                        <field name="invoiced" invisible="1"/>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                     </header>
                                     <group>
@@ -237,14 +237,14 @@
                                             <field name="property_ids" widget="many2many_tags"/>
                                         </group>
                                     </group>
-				                    <label for="name"/>
+                                    <label for="name"/>
                                     <field name="name"/>
-				                    <div groups="base.group_no_one">
-				                        <label for="invoice_lines"/>
-				                        <field name="invoice_lines"/>
-				                        <label for="move_ids"/>
-				                        <field name="move_ids" widget="many2many"/>
-				                    </div>
+                                    <div groups="base.group_no_one">
+                                        <label for="invoice_lines"/>
+                                        <field name="invoice_lines"/>
+                                        <label for="move_ids"/>
+                                        <field name="move_ids" widget="many2many"/>
+                                    </div>
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field name="sequence"/>
@@ -266,9 +266,7 @@
                             <div class="oe_clear">
                                 <label for="note"/>
                             </div>
-                            <div>
-                                <field name="note" class="oe_inline"/>
-                            </div>
+                            <field name="note" class="oe_inline"/>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
