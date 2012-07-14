@@ -887,7 +887,7 @@ class sale_order(osv.osv):
             'move_type': order.picking_policy,
             'sale_id': order.id,
             'partner_id': order.partner_shipping_id.id,
-            'note': '\n'.join(line.name.split('\n')[1:]),
+            'note': order.note,
             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
             'company_id': order.company_id.id,
         }

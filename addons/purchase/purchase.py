@@ -164,8 +164,8 @@ class purchase_order(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'dest_address_id':fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
-            help="Put an address if you want to deliver directly from the supplier to the customer." \
-                "In this case, it will remove the warehouse link and set the customer location."
+            help="Put an address if you want to deliver directly from the supplier to the customer. " \
+                "Otherwise, keep empty to deliver to your own company."
         ),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')]),
@@ -796,7 +796,7 @@ class purchase_order_line(osv.osv):
             return False
 
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),

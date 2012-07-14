@@ -221,9 +221,11 @@
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
                                 <div class="oe_subtotal_footer_separator oe_inline" colspan="2">
-                                    <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline oe_left"/>
-                                    <field name="amount_total"/>
+				    <label name="amount_total"/>
+                                    <button name="button_dummy" 
+				    	states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                 </div>
+			        <field name="amount_total" nolabel="1"/>
                             </group>
                             <div class="oe_clear"/>
                             <label for="notes"/>
@@ -231,24 +233,19 @@
                         </page>
                         <page string="Delivery &amp; Invoicing">
                             <group>
-                                <group string="Delivery">
+                                <group>
                                     <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>
                                 </group>
                                 <group>
-                                    <field name="validator" groups="base.group_no_one"/>
-                                    <field name="date_approve"/>
-                                </group>
-                            </group>
-                            <group string="Invoicing">
-                                <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
-                                </group>
-                                <group>
                                     <field name="fiscal_position"/>
+				    <!-- we do not need these fields anymore, the information is in open chatter -->
+                                    <field name="validator" groups="base.group_no_one"/>
+                                    <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
                             <separator string="Invoices"/>
