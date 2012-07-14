@@ -107,11 +107,11 @@
                     <field name="meeting_count"/>
                 </field>
                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                    <a name="%(relate_partner_opportunities)d" type="action">
-                        <t t-if="record.opportunity_count.value"><t t-esc="record.opportunity_count.value"/> Opportunities</t>
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0" class="oe_tag">
+                        <t t-esc="record.opportunity_count.value"/> Opportunities
                     </a>
-                    <a name="%(crm_meeting_partner)d" type="action">
-                        <t t-if="record.meeting_count.value"><t t-esc="record.meeting_count.value"/> Meetings</t>
+                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0" class="oe_tag">
+                        <t t-esc="record.meeting_count.value"/> Meetings
                     </a>
                 </xpath>
             </field>
