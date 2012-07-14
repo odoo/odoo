@@ -214,6 +214,8 @@ $sheet-max-width: 860px
         @include radius(8px)
         @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
         @include background-clip()
+        .ui-dialog-content
+            padding: 0px
         .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
@@ -255,6 +257,10 @@ $sheet-max-width: 860px
                 &:hover
                     color: black
                     text-decoration: none
+
+    &.ui-dialog.oe_act_window
+        .ui-dialog-content
+            padding: 0px
 
     .modal-backdrop
         position: fixed
@@ -360,23 +366,21 @@ $sheet-max-width: 860px
             color: gold
     // }}}
     // Tags (for many2many tags, among others) {{{
+    .oe_tag
+        border-radius: 2px
+        @include box-sizing(border)
+        border: 1px solid #9DACCC
+        background: #E2E6F0
+        color: black !important
+        padding: 0px 3px 0px 3px
+        margin: 0 2px 2px 0
+        height: 16px
+        // font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
     .oe_tags
         .text-wrap
             width: 100% !important
             textarea
                 width: 100% !important
-        .oe_tag
-            border-radius: 2px
-            @include box-sizing(border)
-            position: relative
-            float: left
-            border: 1px solid #9DACCC
-            background: #E2E6F0
-            color: black
-            padding: 0px 3px 0px 3px
-            margin: 0 2px 2px 0
-            height: 16px
-            font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
         .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
             font-style: italic
             text-decoration: none
@@ -904,8 +908,9 @@ $sheet-max-width: 860px
         .oe_view_manager_view_kanban
             height: inherit
 
-        .oe_view_manager_header
+        table.oe_view_manager_header
             width: 100%
+            table-layout: fixed
             .oe_header_row
                 //min-height: 26px
                 //line-height: 26px
@@ -916,7 +921,6 @@ $sheet-max-width: 860px
                     padding-top: 0
             .oe_view_manager_sidebar
                 margin: 0px auto
-                width: 400px
                 text-align: center
             td
                 line-height: 26px
@@ -1049,7 +1053,7 @@ $sheet-max-width: 860px
         float: right
         padding: 1px 0
         line-height: 18px
-        width: 480px
+        width: 400px
         border: 1px solid #ababab
         background: white
         @include radius(13px)
@@ -1372,6 +1376,9 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
+    .oe_form_nosheet
+        margin-left: 10px
+        margin-right: 10px
     .oe_form_nosheet > header
         margin-left: -10px
         margin-right: -10px
@@ -1428,6 +1435,7 @@ $sheet-max-width: 860px
         td.oe_form_group_cell_label
             border-right: none
         .oe_subtotal_footer_separator
+            width: 108px
             border-top: 1px solid #cacaca
             font-weight: bold
             font-size: 18px
@@ -1534,12 +1542,6 @@ $sheet-max-width: 860px
             width: 100%
         .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
-        .oe_form_field_float input
-            width: 100px
-        h1 .oe_form_field_float input
-            width: 140px
-        h2 .oe_form_field_float input
-            width: 120px
         h1, h2, h3, h4, h5, h6
             margin: 0 0 4px 0
             input
@@ -1552,14 +1554,6 @@ $sheet-max-width: 860px
             line-height: 18px
             input
                 margin: 0px
-        .oe_form_field_integer
-            width: 180px
-        .oe_form_field_float
-            width: 112px
-        .oe_form_field_date
-            width: 7.5em
-        .oe_form_field_datetime
-            width: 11em
         input[type="text"], input[type="password"], input[type="file"], select
             height: 22px
             padding-top: 2px
@@ -1629,6 +1623,16 @@ $sheet-max-width: 860px
             > div
                 position: relative
                 overflow: hidden
+    .oe_form_editable
+        .oe_form
+            .oe_form_field_integer
+                width: 7em !important
+            .oe_form_field_float
+                width: 8em !important
+            .oe_form_field_date
+                width: 7.5em !important
+            .oe_form_field_datetime
+                width: 11.5em !important
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1763,6 +1767,8 @@ $sheet-max-width: 860px
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px
+                    progress
+                        width: 100%
                 > td, > th
                     line-height: 18px
                     > button
@@ -1776,7 +1782,7 @@ $sheet-max-width: 860px
                         border-width: 0
                 > td.oe_number
                     text-align: right !important
-                    width: 100px
+                    max-width: 100px
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)

@@ -222,7 +222,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             if (this.dialog === null) {
                 // These buttons will be overwrited by <footer> if any
                 this.dialog = new instance.web.Dialog(this, {
-                    buttons: { "Close": function() { $(this).dialog("close"); }}
+                    buttons: { "Close": function() { $(this).dialog("close"); }},
+		    dialogClass: 'oe_act_window'
                 });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -407,6 +408,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         container.hide();
                         controller.do_hide();
                     }
+		    // put the <footer> in the dialog's buttonpane
                     if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
                         self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
                         self.$element.find('footer').appendTo(
