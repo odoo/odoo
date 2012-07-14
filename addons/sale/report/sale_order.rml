@@ -257,7 +257,7 @@
       <blockTable colWidths="180.0,70.0,80.0,70.0,50.0,85.0" style="Table5">
         <tr>
           <td>
-            <para style="terp_default_9">[[ line.name ]] </para>
+            <para style="terp_default_9">[[ format(line.name) ]] </para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ ', '.join(map(lambda x: x.name, line.tax_id)) ]]</para>
@@ -273,36 +273,6 @@
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal, digits=get_digits(dp='Sale Price'), currency_obj=o.pricelist_id.currency_id) ]] </para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_Italic">[[ format(line.notes or removeParentNode('tr')) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Centre_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
           </td>
         </tr>
       </blockTable>

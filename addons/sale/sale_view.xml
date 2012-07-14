@@ -214,9 +214,9 @@
                                                 <field name="product_uos" class="oe_inline oe_no_button"/>
                                             </div>
                                             <field name="price_unit"/>
-                                            <label for="discount"/>
-                                            <div>
-                                                <field name="discount" groups="sale.group_discount_per_so_line" class="oe_inline"/> %%
+                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                            <div groups="sale.group_discount_per_so_line">
+                                                <field name="discount" class="oe_inline"/> %%
                                             </div>
                                         </group>
                                         <group>

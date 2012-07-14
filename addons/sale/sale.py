@@ -831,7 +831,7 @@ class sale_order(osv.osv):
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         return {
-            'name': line.name,
+            'name': line.name.split('\n')[0],
             'origin': order.name,
             'date_planned': date_planned,
             'product_id': line.product_id.id,
@@ -845,7 +845,7 @@ class sale_order(osv.osv):
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
-            'note': line.notes,
+            'note': '\n'.join(line.name.split('\n')[1:]),
             'property_ids': [(6, 0, [x.id for x in line.property_ids])]
         }
 
@@ -853,7 +853,7 @@ class sale_order(osv.osv):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
-            'name': line.name[:250],
+            'name': line.name.split('\n')[0][:250],
             'picking_id': picking_id,
             'product_id': line.product_id.id,
             'date': date_planned,
@@ -871,7 +871,7 @@ class sale_order(osv.osv):
             'tracking_id': False,
             'state': 'draft',
             #'state': 'waiting',
-            'note': line.notes,
+            'note': '\n'.join(line.name.split('\n')[1:]),
             'company_id': order.company_id.id,
             'price_unit': line.product_id.standard_price or 0.0
         }
@@ -887,7 +887,7 @@ class sale_order(osv.osv):
             'move_type': order.picking_policy,
             'sale_id': order.id,
             'partner_id': order.partner_shipping_id.id,
-            'note': order.note,
+            'note': '\n'.join(line.name.split('\n')[1:]),
             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
             'company_id': order.company_id.id,
         }
@@ -1129,7 +1129,6 @@ class sale_order_line(osv.osv):
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount', digits=(16, 2), readonly=True, states={'draft': [('readonly', False)]}),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
-        'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', required=True, readonly=True,
                 help='* The \'Draft\' state is set when the related sales order in draft state. \
@@ -1222,7 +1221,6 @@ class sale_order_line(osv.osv):
                 'uos_id': uos_id,
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                'note': line.notes,
                 'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
             }
 
