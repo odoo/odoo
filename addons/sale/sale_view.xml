@@ -203,20 +203,20 @@
                                             <div>
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                    name="product_uom_qty"
+                                                    name="product_uom_qty" class="oe_inline"
                                                     on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
                                             <div groups="product.group_uos">
-                                                <field name="product_uos_qty"/>
+                                                <field name="product_uos_qty" class="oe_inline"/>
                                                 <field name="product_uos" class="oe_inline oe_no_button"/>
                                             </div>
                                             <field name="price_unit"/>
                                             <label for="discount"/>
                                             <div>
-                                                <field name="discount" groups="sale.group_discount_per_so_line"/> %%
+                                                <field name="discount" groups="sale.group_discount_per_so_line" class="oe_inline"/> %%
                                             </div>
                                         </group>
                                         <group>
@@ -227,7 +227,7 @@
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <label for="delay"/>
                                             <div>
-                                                <field name="delay"/> days
+                                                <field name="delay" class="oe_inline"/> days
                                             </div>
                                             <field name="type"/>
                                             <field name="th_weight"/>
