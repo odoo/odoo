@@ -206,7 +206,7 @@ class mrp_bom(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS', help="Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."),
-        'product_qty': fields.float('Product Qty', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
+        'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
@@ -456,7 +456,7 @@ class mrp_production(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),
+        'product_uos_qty': fields.float('Product UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
