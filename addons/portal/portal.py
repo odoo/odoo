@@ -37,7 +37,7 @@ class portal(osv.osv):
         'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
             string='Group',
             help='The group corresponding to this portal'),
-        'url': fields.char('URL', size=64,
+        'url': fields.char('URL', size=256,
             help="The url where portal users can connect to the server"),
         'home_action_id': fields.many2one('ir.actions.actions',
             string='Home Action',
