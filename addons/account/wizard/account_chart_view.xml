@@ -7,12 +7,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account charts" version="7.0">
-                    <group colspan="4">
-                        <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)"/>
-                        <label align="0.7" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
-                    </group>
-                    <group>
-                        <field name="target_move"/>
+                    <group col="4">
+                        <label for="fiscalyear"/>
+                        <div> 
+                            <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)" class="oe_inline"/>
+                            <label align="0.7" string="(If you do not select Fiscal year it will take all open fiscal years)" class="oe_inline"/>
+                        </div><newline/>
+                        <field name="target_move"/><newline/>
                         <label for="period_from" string="Periods"/>
                         <div>
                             <field name="period_from" class="oe_inline"/>-

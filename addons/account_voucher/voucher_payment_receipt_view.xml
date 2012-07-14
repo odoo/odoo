@@ -179,9 +179,9 @@
                           <field name="pre_line" invisible="1"/>
                           <field name="type" invisible="1"/>
                           <field name="currency_id" invisible="1" colspan="4"/>
-                        </group>
-                    </group>
-                    <notebook>
+                       </group>
+                   </group>
+                   <notebook>
                         <page string="Payment Information">
                             <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
@@ -239,9 +239,7 @@
                                         <field name="analytic_id"
                                                groups="analytic.group_analytic_accounting"/>
                                     </group>
-	                                
                                 </group>
-                                
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
@@ -269,10 +267,10 @@
                             </field>
                         </page>
                     </notebook>
-                    </sheet>
-                    <footer>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                </sheet>
+                <footer>
+                    <field name="message_ids" widget="mail_thread"/>
+                </footer>
                 </form>
             </field>
         </record>
@@ -445,7 +443,6 @@
                     <footer>
                         <field name="message_ids" widget="mail_thread"/>
                     </footer>
-
                 </form>
             </field>
         </record>

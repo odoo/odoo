@@ -51,29 +51,28 @@
                   </header>
                   <sheet string="Accounting Voucher">
                     <div class="oe_title">
-                     <label for="number" class="oe_edit_only"/>
-                     <h1>
-                        <field name="number"   class="oe_inline"/>
-                        <span attr="{'invisible': [('type','=',False)]}" class="oe_inline"> ( </span>
-                        <field name="type" required="1"  class="oe_inline"/>
-                        <span attr="{'invisible': [('type','=',False)]}" class="oe_inline"> ) </span>
-                     </h1>
-                   </div>  
-                  <group>
-                  <group>
-                     <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                     <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
-                     <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                  </group>
-                  <group>
-                     <field name="currency_id"/>
-                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                     <field name="reference"/>
-                     <field name="name"/>
-                  </group>
-                  </group>
-                   <field name="account_id" widget="selection" invisible="True"/>
-
+	                   <label for="number" class="oe_edit_only"/>
+	                   <h1>
+	                       <field name="number"   class="oe_inline"/>
+	                       <span attr="{'invisible': [('type','=',False)]}" class="oe_inline"> ( </span>
+	                       <field name="type" required="1"  class="oe_inline"/>
+	                       <span attr="{'invisible': [('type','=',False)]}" class="oe_inline"> ) </span>
+	                   </h1>
+                    </div>  
+                    <group>
+                        <group>
+	                       <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+	                       <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
+	                       <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="reference"/>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                    <field name="account_id" widget="selection" invisible="True"/>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
                             <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
@@ -86,21 +85,21 @@
                                 </tree>
                             </field>
                             <group>
-                               <group>
-                                  <field name="narration" colspan="2" nolabel="1"  placeholder="Add an internal note"/>
-                               </group>
-                               <group class="oe_subtotal_footer oe_right" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}" >
-                                   <group>
-                                       <label for="tax_id"/>
-                                       <field name="tax_id" nolabel="1" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
-                                       <button type="object" colspan="2" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                   </group>
-                                   <group>
-                                            <field name="amount_untaxed"/>
-                                            <field name="tax_amount" readonly="1" />
-                                            <field name="amount"  class="oe_subtotal_footer_separator" readonly="1"/>
-                                   </group>
-                               </group>
+                                <group>
+                                    <field name="narration" colspan="2" nolabel="1"  placeholder="Add an internal note"/>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}" >
+                                    <group>
+                                        <label for="tax_id"/>
+                                        <field name="tax_id" nolabel="1" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
+                                        <button type="object" colspan="2" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="amount_untaxed"/>
+                                        <field name="tax_amount" readonly="1" />
+                                        <field name="amount"  class="oe_subtotal_footer_separator" readonly="1"/>
+                                    </group>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
@@ -109,26 +108,26 @@
                                 <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">
-                               <tree string="Journal Items">
-                                   <field name="move_id"/>
-                                   <field name="ref"/>
-                                   <field name="date"/>
-                                   <field name="statement_id"/>
-                                   <field name="partner_id"/>
-                                   <field name="account_id"/>
-                                   <field name="name"/>
-                                   <field name="debit"/>
-                                   <field name="credit"/>
-                                   <field name="state"/>
-                                   <field name="reconcile_id"/>
-                               </tree>
+                                <tree string="Journal Items">
+                                    <field name="move_id"/>
+                                    <field name="ref"/>
+                                    <field name="date"/>
+                                    <field name="statement_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="account_id"/>
+                                    <field name="name"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="state"/>
+                                    <field name="reconcile_id"/>
+                                </tree>
                             </field>
                         </page>
                     </notebook>
                   </sheet>
-                    <footer>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                  <footer>
+                       <field name="message_ids" widget="mail_thread"/>
+                  </footer>
                 </form>
             </field>
         </record>
