@@ -361,9 +361,17 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('customer','=',1)]</field>
             <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
+            <field name="help">
+                Click on "Create" to add a new customer in your address book.
+                &lt;p&gt;
+                A contact is either a person or a company; a person can be linked to a company as a contact of that company.
+                &lt;p&gt;
+                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            </field>
         </record>
 
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
@@ -375,7 +383,13 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">You can access all information regarding your suppliers from the supplier form: accounting data, history of emails, meetings, purchases, etc. You can uncheck the 'Suppliers' filter button in order to search in all your partners, including customers and prospects.</field>
+            <field name="help">
+                Click on "Create" to add a new supplier in your address book.
+                &lt;p&gt;
+                A supplier is either a person or a company; a person can be linked to a company as a contact of that company.
+                &lt;p&gt;
+                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            </field>
         </record>
 
         <record id="action_partner_employee_form" model="ir.actions.act_window">
