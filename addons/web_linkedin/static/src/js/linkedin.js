@@ -32,7 +32,7 @@ openerp.web_linkedin = function(instance) {
                 this.notification.appendTo(this.$element);
                 this.$element.find(".linkedin_icon").click( this.do_load_linkedin );
                 this.removeTemplate();
-                if(this.view.fields['name'].get_value()!=false){
+                if(this.get('value') != false){
                     /* if value get then display button of profile url */
                     if (this.view.fields['profile_id'].get_value() || this.view.datarecord['profile_id']) {
                         this.setTemplate(this.view.datarecord['profile_id'] ,  false );
@@ -58,7 +58,7 @@ openerp.web_linkedin = function(instance) {
                 }
             } else {
                 this.removeTemplate();
-                if(this.view.fields['name'].get_value()!=false){
+                if(this.get('value') != false){
                     var tagtr = document.createElement('tr');
                     tagtr.id = "profiletwittor-tr";
                     this.$element.append(tagtr);
