@@ -227,17 +227,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packs" version="7.0">
-                    <div groups="stock.group_tracking_lot" class="oe_button_box">
-                        <button name="action_traceability" icon="gtk-go-up" string="Upstream Traceability" type="object"/>
-                        <button name="action_traceability" icon="gtk-go-down" string="Downstream Traceability" type="object"
-                        context="{'type': 'move_history_ids'}"/>
-                    </div>
                     <group>
                         <group groups="product.group_stock_packaging" string="Pack Identification">
                             <field name="name"/>
                             <field name="serial"/>
                             <field name="date"/>
                             <field name="active"/>
+                        </group>
+                        <group groups="stock.group_tracking_lot" string="Traceability">
+                            <button name="action_traceability" icon="gtk-go-up" string="Upstream Traceability" type="object"
+                                 colspan="2"/>
+                            <button name="action_traceability" icon="gtk-go-down" string="Downstream Traceability" type="object"
+                                context="{'type': 'move_history_ids'}" colspan="2"/>
                         </group>
                     </group>
                     <field name="move_ids"/>
@@ -337,22 +338,29 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
-                    <group>
-                        <group string="Serial Number Identification">
+                    <group string="Serial Number Identification" col="3">
+                        <group>
                             <field name="product_id"/>
-                            <field name="prefix"/>
                             <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="prefix"/>
                             <field name="ref"/>
-                            <group string="Dates">
-                                <field name="date"/>
-                            </group>
+                        </group>
+                        <group class="oe_button_box">
+
+                                <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up"/>
+                                <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down"/>
+
+                        </group>
+                        <group string="Dates">
+                            <field name="date"/>
                         </group>
                         <group string="Traceability">
                             <field name="stock_available"/>
-                            <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up" colspan="2"/>
-                            <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down" colspan="2"/>
                         </group>
                     </group>
+                    
                     <notebook>
                         <page string="Revisions">
                             <field name="revisions"/>
