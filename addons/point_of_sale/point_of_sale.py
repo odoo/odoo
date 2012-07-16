@@ -549,7 +549,6 @@ class pos_order(osv.osv):
     def _default_session(self, cr, uid, context=None):
         so = self.pool.get('pos.session')
         session_ids = so.search(cr, uid, [('state','=', 'opened'), ('user_id','=',uid)], context=context)
-        print 'Default Session', session_ids
         return session_ids and session_ids[0] or False
 
     def _default_pricelist(self, cr, uid, context=None):

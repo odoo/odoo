@@ -105,12 +105,9 @@ class pos_make_payment(osv.osv_memory):
         if active_id:
             order = order_obj.browse(cr, uid, active_id, context=context)
             session = order.session_id
-        print 'Session', session, 'Active ID', active_id
         if session:
-            print 'JIDS', session.config_id.journal_ids
             for journal in session.config_id.journal_ids:
                 return journal.id
-        print 'Return False'
         return False
 
     def _default_amount(self, cr, uid, context=None):
