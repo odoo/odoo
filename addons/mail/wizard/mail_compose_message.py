@@ -103,7 +103,6 @@ class mail_compose_message(osv.TransientModel):
         if not result.get('email_from'):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result['email_from'] = current_user.user_email or False
-
         return result
 
     _columns = {
@@ -137,7 +136,8 @@ class mail_compose_message(osv.TransientModel):
             'model': model,
             'res_id': res_id,
             'email_from': user.user_email or tools.config.get('email_from', False),
-            'body_html': '',
+            'body_html': False,
+            'body_text': False,
         })
         return result
 

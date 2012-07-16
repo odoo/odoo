@@ -292,6 +292,21 @@ openerp.mail = function(session) {
         },
 
         /**
+         * Reinitialize the widget field values to the default values. The
+         * purpose is to avoid to destroy and re-build a form view. Default
+         * values are therefore given as for an onchange. */
+        reinit: function() {
+            var self = this;
+            if (! this.form_view) return;
+            // debugger
+            var call_defer = this.ds_compose.call('default_get', [['subject', 'body_text', 'body_html', 'dest_partner_ids'], this.ds_compose.get_context()]).then(
+                function (result) {
+                    self.form_view.on_processed_onchange({'value': result}, []);
+                });
+            
+        },
+
+        /**
          * Override-hack of do_action: clean the form */
         do_action: function(action, on_close) {
             // this.init_comments();
@@ -496,6 +511,8 @@ openerp.mail = function(session) {
          * in the composition form. */
         do_action: function(action, on_close) {
             this.init_comments();
+            if (this.compose_message_widget) {
+                this.compose_message_widget.reinit(); }
             return this._super(action, on_close);
         },
 
@@ -946,6 +963,8 @@ openerp.mail = function(session) {
          * in the composition form. */
         do_action: function(action, on_close) {
             this.init_and_fetch_comments();
+            if (this.compose_message_widget) {
+                this.compose_message_widget.reinit(); }
             return this._super(action, on_close);
         },
 
