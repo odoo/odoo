@@ -263,12 +263,15 @@ openerp.mail = function(session) {
          *      reply mode
          */
         init: function(parent, params) {
+            var self = this;
             this._super(parent);
             // options
             this.params = params || {};
             this.params.email_mode = params.email_mode || false;
             this.params.formatting = params.formatting || false;
             this.params.mode = params.mode || 'comment';
+            this.params.form_xml_id = params.form_xml_id || 'email_compose_message_wizard_form_chatter';
+            this.params.form_view_id = false;
             if (this.params.mode == 'reply') {
                 this.params.active_id = this.params.msg_id;
             } else {
@@ -276,19 +279,6 @@ openerp.mail = function(session) {
             }
             this.email_mode = false;
             this.formatting = false;
-            // create a context for the default_get of the compose form
-            var context = {
-                'active_model': this.params.res_model,
-                'active_id': this.params.active_id,
-                'mail.compose.message.mode': this.params.mode,
-            };
-            // create a form_view on the mail.compose.message wizard
-            this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
-            this.form_view = new session.web.FormView(this, this.ds_compose, false, {
-                action_buttons: false,
-                pager: false,
-                initial_mode: 'edit',
-                });
         },
 
         /**
@@ -303,7 +293,6 @@ openerp.mail = function(session) {
                 function (result) {
                     self.form_view.on_processed_onchange({'value': result}, []);
                 });
-            
         },
 
         /**
@@ -324,6 +313,35 @@ openerp.mail = function(session) {
                 this.session.session_id, 'res.users', 'avatar', this.session.uid);
             this.$element.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$element.find('div.oe_mail_msg_content').empty();
+            // create a context for the default_get of the compose form
+            var context = {
+                'active_model': this.params.res_model,
+                'active_id': this.params.active_id,
+                'mail.compose.message.mode': this.params.mode,
+            };
+            this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
+            // find the id of the view to display in the chatter form
+            var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
+            var deferred_form_id =data_ds.call('get_object_reference', ['mail', this.params.form_xml_id]).then( function (result) {
+                if (result) {
+                    self.params.form_view_id = result[1];
+                }
+            }).pipe(this.proxy('create_form_view'));
+            return deferred_form_id;
+        },
+
+        /**
+         * Create a FormView, then append it to the to widget DOM. */
+        create_form_view: function () {
+            var self = this;
+            // destroy previous form_view if any
+            if (this.form_view) { this.form_view.destroy(); }
+            // create the FormView
+            this.form_view = new session.web.FormView(this, this.ds_compose, this.params.form_view_id, {
+                action_buttons: false,
+                pager: false,
+                initial_mode: 'edit',
+                });
             // add the form, bind events, activate the form
             var msg_node = this.$element.find('div.oe_mail_msg_content');
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
