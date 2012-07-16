@@ -72,7 +72,6 @@
          assert move.partner_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
          #assert move.location_id.id == location_id,"Source Location is not correspond."
          #assert move.location_dest_id == output_id,"Destination Location is not correspond."
-         assert move.note == order_line.notes,"Note is not correspond"
          assert move.price_unit == order_line.product_id.standard_price or 0.0,"Price Unit is not correspond"
 -
   Now, I dispatch delivery order.
