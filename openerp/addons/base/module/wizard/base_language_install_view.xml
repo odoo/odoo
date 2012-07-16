@@ -8,7 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Load a Translation" version="7.0">
-                    <separator string="Load a Translation"/>
                     <field name="state" invisible="1"/>
                     <group states="init">
                         <field name="lang"/>
@@ -19,11 +18,11 @@
 You must change the preferences of the user and open a new menu to view the changes."/>
                     </group>
                     <footer states="init">
-                        <button name="lang_install" string="Load" type="object" icon="gtk-ok" class="oe_highlight"/> or 
-                        <button special="cancel" string="Cancel" icon="gtk-cancel" class="oe_link"/>
+                        <button name="lang_install" string="Load" type="object" class="oe_highlight"/> or 
+                        <button special="cancel" string="Cancel" class="oe_link"/>
                     </footer>
                     <footer states="done">
-                        <button special="cancel" string="Close" icon="gtk-cancel"/>
+                        <button special="cancel" string="Close"/>
                     </footer>
                 </form>
            </field>
