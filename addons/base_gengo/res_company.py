@@ -23,7 +23,7 @@ from osv import fields,osv
 
 class res_company(osv.Model):
     _name = "res.company"
-    _description = "companies"
+    _description = "Companies"
     _inherit = "res.company"
     _columns = {
            "gengo_private_key":fields.text("Gengo private key"),
@@ -33,8 +33,10 @@ class res_company(osv.Model):
                                           ('pro','Pro'),
                                           ('ultra','Ultra')],"Tier types", required=True),
            "gengo_comment":fields.text("comments"),
-           "gengo_auto_approve":fields.boolean("Active"),
-           "fields_ids":fields.many2many('ir.model.fields','fields_company_rel','field_id','model_id'),
-           
+           "gengo_auto_approve":fields.boolean("Active",help="Jobs are Automatically Approved by Gengo."),
+           "fields_ids":fields.many2many('ir.model.fields','fields_company_rel','field_id','model_id','fields'),
     }
-
+    
+    _defaults={
+        "gengo_tier":"machine",
+    }

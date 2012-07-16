@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
     'name': 'Automated Translations through Gengo API',
     'version': '0.1',
@@ -31,7 +30,8 @@ Automated Translations through Gengo API
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        'ir_translation.xml'  
+        'ir_translation.xml',
+        'res_company_view.xml'
            ],
     'demo_xml': [],
     'test': [],

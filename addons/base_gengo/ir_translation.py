@@ -26,10 +26,9 @@ class ir_translation(osv.Model):
     _description="Translation"
     _inherit="ir.translation"
     _columns = {
-        'gengo_comment':fields.text("comments", help="Comment for translators"),
+        'gengo_comment':fields.text("Comments"),
         'gengo_translation':fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
         'gengo_control':fields.boolean('Active'),
-    
     }
     
     _defaults = {
