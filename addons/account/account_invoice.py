@@ -195,7 +195,7 @@ class account_invoice(osv.osv):
         'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
         'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
-        'reference_type': fields.selection(_get_reference_type, 'Reference Type',
+        'reference_type': fields.selection(_get_reference_type, 'Payment Reference',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'comment': fields.text('Additional Information'),
 
@@ -1345,7 +1345,7 @@ class account_invoice_line(osv.osv):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.text('Description', required=True),
         'origin': fields.char('Source', size=256, help="Reference of the document that produced this invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
@@ -1357,7 +1357,6 @@ class account_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Account')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
-        'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
@@ -1430,7 +1429,8 @@ class account_invoice_line(osv.osv):
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False
-        result['note'] = res.description
+        if res.description:
+            result['name'] += '\n'+res.description
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2:
@@ -1524,7 +1524,7 @@ class account_invoice_line(osv.osv):
     def move_line_get_item(self, cr, uid, line, context=None):
         return {
             'type':'src',
-            'name': line.name[:64],
+            'name': line.name.split('\n')[0][:64],
             'price_unit':line.price_unit,
             'quantity':line.quantity,
             'price':line.price_subtotal,
