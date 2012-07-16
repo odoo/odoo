@@ -159,7 +159,7 @@ class mail_compose_message(osv.osv_memory):
                           'use_template': True})
 
         # _reopen same wizard screen with new template preselected
-        return _reopen(self, record.id, model)
+        return _reopen(self, record.id, record.res_id, record.model)
 
     # override the basic implementation 
     def render_template(self, cr, uid, template, model, res_id, context=None):
