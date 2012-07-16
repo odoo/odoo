@@ -61,6 +61,7 @@ Main features :
         'wizard/pos_session_opening.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
+        'point_of_sale_data.xml',
         'report/pos_order_report_view.xml',
         'point_of_sale_sequence.xml',
         'point_of_sale_workflow.xml',
@@ -80,7 +81,6 @@ Main features :
     ],
     'installable': True,
     'application': True,
-    'certificate' : '001156338024966477869',
     # Web client
     'js': [
             'static/lib/backbone/backbone-0.9.2.js', 

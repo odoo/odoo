@@ -22,7 +22,9 @@ class pos_session_opening(osv.osv_memory):
                 'config_id' : wizard.pos_config_id.id,
             }
             session_id = proxy.create(cr, uid, values, context=context)
+            print 'Created Session', session_id, values
             return self._open_session(session_id)
+        print wizard.pos_session_id
         return self._open_session(wizard.pos_session_id.id)
 
     def open_existing_session_cb(self, cr, uid, ids, context=None):

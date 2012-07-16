@@ -77,7 +77,7 @@ class pos_config(osv.osv):
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
-        'group_by' : fields.boolean('Group By', help="Check this if you want to group the Journal Items by Product while a Session"),
+        'group_by' : fields.boolean('Group By', help="Check this if you want to group the Journal Items by Product while closing a Session"),
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -97,6 +97,10 @@ class pos_config(osv.osv):
         return result
 
 
+    def _default_payment_journal(self, cr, uid, context=None):
+        res = self.pool.get('account.journal').search(cr, uid, [('type', 'in', ('bank','cash'))], limit=2)
+        return res or []
+
     def _default_sale_journal(self, cr, uid, context=None):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
         return res and res[0] or False
@@ -109,6 +113,7 @@ class pos_config(osv.osv):
         'state' : POS_CONFIG_STATE[0][0],
         'shop_id': _default_shop,
         'journal_id': _default_sale_journal,
+        'journal_ids': _default_payment_journal,
         'group_by' : True,
     }
 
@@ -544,6 +549,7 @@ class pos_order(osv.osv):
     def _default_session(self, cr, uid, context=None):
         so = self.pool.get('pos.session')
         session_ids = so.search(cr, uid, [('state','=', 'opened'), ('user_id','=',uid)], context=context)
+        print 'Default Session', session_ids
         return session_ids and session_ids[0] or False
 
     def _default_pricelist(self, cr, uid, context=None):
