@@ -336,6 +336,20 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.$element.add(self.$buttons).removeClass('oe_form_dirty');
         });
     },
+    /**
+     * Loads and sets up the default values for the model as the current
+     * record
+     *
+     * @return {$.Deferred}
+     */
+    load_defaults: function () {
+        var keys = _.keys(this.fields_view.fields);
+        if (keys.length) {
+            return this.dataset.default_get(keys)
+                    .pipe(this.on_record_loaded);
+        }
+        return this.on_record_loaded({});
+    },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
     },
@@ -608,12 +622,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.set({mode: "edit"});
         return $.when(this.has_been_loaded).pipe(function() {
             if (self.can_be_discarded()) {
-                var keys = _.keys(self.fields_view.fields);
-                if (keys.length) {
-                    return self.dataset.default_get(keys)
-                            .pipe(self.on_record_loaded);
-                }
-                return self.on_record_loaded({});
+                return self.load_defaults();
             }
         });
     },

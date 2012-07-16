@@ -108,7 +108,7 @@ $(document).ready(function () {
         var counter = 0;
         e.appendTo($fix)
             .pipe(function () {
-                return e.edit(null, function () {
+                return e.edit({}, function () {
                     ++counter;
                 });
             })
@@ -138,7 +138,7 @@ $(document).ready(function () {
         var counter = 0;
         e.appendTo($fix)
             .pipe(function () {
-                return e.edit(null, function () {
+                return e.edit({}, function () {
                     ++counter;
                 });
             })
@@ -171,7 +171,7 @@ $(document).ready(function () {
         var warnings = 0;
         e.appendTo($fix)
             .pipe(function () {
-                return e.edit(null, function () {
+                return e.edit({}, function () {
                     ++counter;
                 });
             })
@@ -184,6 +184,85 @@ $(document).ready(function () {
                 equal(warnings, 1, "should have been warned");
                 ok(e.isEditing(), "should have kept editing");
             })
+    });
+
+    module('list-edition', {
+        setup: function () {
+            baseSetup();
+
+            var records = {};
+            _.extend(instance.connection.responses, {
+                '/web/listview/load': function () {
+                    return {result: {
+                        type: 'tree',
+                        fields: {
+                            a: {type: 'char', string: "A"},
+                            b: {type: 'char', string: "B"},
+                            c: {type: 'char', string: "C"}
+                        },
+                        arch: {
+                            tag: 'tree',
+                            attrs: {},
+                            children: [
+                                {tag: 'field', attrs: {name: 'a'}},
+                                {tag: 'field', attrs: {name: 'b'}},
+                                {tag: 'field', attrs: {name: 'c'}}
+                            ]
+                        }
+                    }};
+                },
+                '/web/dataset/call_kw:create': function (params) {
+                    records[42] = _.extend({}, params.params.args[0]);
+                    return {result: 42};
+                },
+                '/web/dataset/call_kw:read': function (params) {
+                    var id = params.params.args[0][0];
+                    if (id in records) {
+                        return {result: [records[id]]};
+                    }
+                    return {result: []};
+                }
+            })
+        }
+    });
+    asyncTest('newrecord', 6, function () {
+        var got_defaults = false;
+        instance.connection.responses['/web/dataset/call_kw:default_get'] = function (params) {
+            var fields = params.params.args[0];
+            deepEqual(
+                fields, ['a', 'b', 'c'],
+                "should ask defaults for all fields");
+            got_defaults = true;
+            return {result: {
+                a: "qux",
+                b: "quux"
+            }};
+        };
+
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
+        var l = new instance.web.ListView({}, ds);
+        l.set_editable(true);
+
+        l.appendTo($fix)
+            .pipe(l.proxy('reload_content'))
+            .pipe(function () {
+                return l.startEdition();
+            })
+            .always(start)
+            .pipe(function () {
+                ok(got_defaults, "should have fetched default values for form");
+                return l.saveEdition();
+            })
+            .pipe(function (result) {
+                ok(result.created, "should yield newly created record");
+                equal(result.record.get('a'), "qux",
+                      "should have used default values");
+                equal(result.record.get('b'), "quux",
+                      "should have used default values");
+                ok(!result.record.get('c'),
+                    "should have no value if there was no default");
+            })
+            .fail(function (e) { ok(false, e && e.message || e); });
     });
 
     module('list-edition-events', {
@@ -220,7 +299,7 @@ $(document).ready(function () {
             });
         }
     });
-    asyncTest('edition events', function () {
+    asyncTest('edition events', 4, function () {
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
         var o = {
             counter: 0,
@@ -235,7 +314,7 @@ $(document).ready(function () {
             .pipe(function () {
                 ok(l.options.editable, "should be editable");
                 equal(o.counter, 0, "should have seen no event yet");
-                return l.startEdition();
+                return l.startEdition(l.records.get(1));
             })
             .pipe(function () {
                 ok(l.editor.isEditing(), "should be editing");

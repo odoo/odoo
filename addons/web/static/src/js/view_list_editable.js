@@ -163,7 +163,10 @@ openerp.web.list_editable = function (instance) {
          */
         startEdition: function (record) {
             var self = this;
-            if (!record) {
+            var item = false;
+            if (record) {
+                item = record.attributes;
+            } else {
                 var attrs = {id: false};
                 _(this.columns).chain()
                     .filter(function (x) { return x.tag === 'field'})
@@ -182,7 +185,7 @@ openerp.web.list_editable = function (instance) {
                     record: record.attributes,
                     cancel: false
                 }, function () {
-                    return self.editor.edit(record.attributes, function (field_name, field) {
+                    return self.editor.edit(item, function (field_name, field) {
                         var cell = cells[field_name];
                         if (!cell || field.get('effective_readonly')) {
                             // Readonly fields can just remain the list's, form's
@@ -466,11 +469,14 @@ openerp.web.list_editable = function (instance) {
             // TODO: specify sequence of edit calls
             var self = this;
             var form = self.form;
-            record = _.extend({}, record);
-            return form.on_record_loaded(record).pipe(function () {
+            var loaded = record
+                ? form.on_record_loaded(_.extend({}, record))
+                : form.load_defaults();
+
+            return loaded.pipe(function () {
                 return form.do_show({reload: false});
             }).pipe(function () {
-                self.record = record;
+                self.record = form.datarecord;
                 _(form.fields).each(function (field, name) {
                     configureField(name, field);
                 });
