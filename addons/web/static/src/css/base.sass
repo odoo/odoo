@@ -205,13 +205,7 @@ $sheet-max-width: 860px
     // Modal box
     &.ui-dialog
         display: none
-        position: fixed
         padding: 6px
-        top: 50%
-        left: 50%
-        z-index: 1050
-        width: 560px
-        margin: -150px 0 0 -280px
         //overflow: hidden
         background-color: rgba(60,60,60,0.7)
         border: 1px solid
@@ -220,6 +214,8 @@ $sheet-max-width: 860px
         @include radius(8px)
         @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
         @include background-clip()
+        .ui-dialog-content
+            padding: 0px
         .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
@@ -241,6 +237,8 @@ $sheet-max-width: 860px
             @include radius(0 0 2px 2px)
             button
                 margin-left: 8px
+            .ui-dialog-buttonset
+                float: left
         .ui-dialog-titlebar-close
             padding: 0
             .ui-icon-closethick
@@ -259,6 +257,10 @@ $sheet-max-width: 860px
                 &:hover
                     color: black
                     text-decoration: none
+
+    &.ui-dialog.oe_act_window
+        .ui-dialog-content
+            padding: 0px
 
     .modal-backdrop
         position: fixed
@@ -336,7 +338,7 @@ $sheet-max-width: 860px
             margin: 4px
     .oe_avatar
         margin: 0 16px 0 0
-        img
+        > img
             height: 50px
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
@@ -362,8 +364,26 @@ $sheet-max-width: 860px
             text-decoration: none
         .oe_star_on
             color: gold
-
-    //.oe_edit_only 
+    // }}}
+    // Tags (for many2many tags, among others) {{{
+    .oe_tag
+        border-radius: 2px
+        @include box-sizing(border)
+        border: 1px solid #9DACCC
+        background: #E2E6F0
+        color: black !important
+        padding: 0px 3px 0px 3px
+        margin: 0 2px 2px 0
+        height: 16px
+        // font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
+    .oe_tags
+        .text-wrap
+            width: 100% !important
+            textarea
+                width: 100% !important
+        .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
+            font-style: italic
+            text-decoration: none
     // }}}
     // Tooltips {{{
     &.oe_tooltip
@@ -823,7 +843,7 @@ $sheet-max-width: 860px
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include radius(4px)
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
-        .oe_menu_counter 
+        .oe_menu_counter
             float: right
             background: #8a89ba
             color: #eee
@@ -846,7 +866,7 @@ $sheet-max-width: 860px
                 color: $colour4
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
-            .oe_menu_counter 
+            .oe_menu_counter
                 background: #eee
                 color: #8a89ba
         .oe_menu_toggler:before
@@ -888,8 +908,9 @@ $sheet-max-width: 860px
         .oe_view_manager_view_kanban
             height: inherit
 
-        .oe_view_manager_header
+        table.oe_view_manager_header
             width: 100%
+            table-layout: fixed
             .oe_header_row
                 //min-height: 26px
                 //line-height: 26px
@@ -900,7 +921,6 @@ $sheet-max-width: 860px
                     padding-top: 0
             .oe_view_manager_sidebar
                 margin: 0px auto
-                width: 400px
                 text-align: center
             td
                 line-height: 26px
@@ -1033,7 +1053,7 @@ $sheet-max-width: 860px
         float: right
         padding: 1px 0
         line-height: 18px
-        width: 480px
+        width: 400px
         border: 1px solid #ababab
         background: white
         @include radius(13px)
@@ -1312,7 +1332,7 @@ $sheet-max-width: 860px
                 margin: 0 0 0 4px
                 padding: 0
 
-                    
+
     // }}}
     // Views Common {{{
     .oe_view_nocontent
@@ -1356,25 +1376,25 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
-    .oe_form_nosheet 
-        margin-left: 10px
-        margin-right: 10px
+    .oe_form_nosheet
+        margin: 20px
     .oe_form_nosheet > header
-        margin-left: -10px
-        margin-right: -10px
+        margin-top: -20px
+        margin-left: -20px
+        margin-right: -20px
     // }}}
     // FormView.custom tags and classes {{{
-    .oe_form 
+    .oe_form
         header
             position: relative
             border-bottom: 1px solid #cacaca
             @include vertical-gradient(#fcfcfc, #dedede)
             padding: 0 8px
-            line-height: 30px 
+            line-height: 30px
             ul
                 display: inline-block
                 float: right
-        footer
+        div.oe_chatter
             min-width: 650px
             max-width: $sheet-max-width
             margin: 0 auto
@@ -1387,12 +1407,12 @@ $sheet-max-width: 860px
             vertical-align: top
             margin-left: 8px
         li
-            border-right: none 
+            border-right: none
             padding: 0
             margin: 0
-            float: left 
+            float: left
             vertical-align: top
-            height: 30px 
+            height: 30px
             padding: 0 0 0 12px
             &:first-child
                 border-left: 1px solid #cacaca
@@ -1414,21 +1434,22 @@ $sheet-max-width: 860px
             padding: 0 !important
         td.oe_form_group_cell_label
             border-right: none
-        .oe_form_field
-            width: auto !important
         .oe_subtotal_footer_separator
+            width: 108px
             border-top: 1px solid #cacaca
-            font-sie: 120%
             font-weight: bold
+            font-size: 18px
         label.oe_subtotal_footer_separator
             font-weight: bold !important
             padding: 2px 8px 2px 0px !important
+        label.oe_form_label_help
+            font-weight: normal
     // no sheet in popups
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
             padding: 8px 0
-            border-bottom: 1px solid #ddd 
+            border-bottom: 1px solid #ddd
         .oe_form_sheet_width
             min-width: 650px
             max-width: $sheet-max-width
@@ -1459,8 +1480,7 @@ $sheet-max-width: 860px
             width: 100%
             margin: 4px 0 4px 0
             .oe_group_right
-                > tbody > tr > td:first-child
-                    padding-left: 18px
+                margin-left: 18px
     // }}}
     // FormView.label {{{
     .oe_form
@@ -1521,12 +1541,6 @@ $sheet-max-width: 860px
             width: 100%
         .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
             width: 500px
-        .oe_form_field_float input
-            width: 100px
-        h1 .oe_form_field_float input
-            width: 140px
-        h2 .oe_form_field_float input
-            width: 120px
         h1, h2, h3, h4, h5, h6
             margin: 0 0 4px 0
             input
@@ -1539,14 +1553,6 @@ $sheet-max-width: 860px
             line-height: 18px
             input
                 margin: 0px
-        .oe_form_field_integer
-            width: 180px
-        .oe_form_field_float
-            width: 180px
-        .oe_form_field_date
-            width: 7.5em
-        .oe_form_field_datetime
-            width: 11em
         input[type="text"], input[type="password"], input[type="file"], select
             height: 22px
             padding-top: 2px
@@ -1572,26 +1578,6 @@ $sheet-max-width: 860px
         .oe_form_field_boolean
             padding-top: 4px
             width: auto
-        .oe_form_field_many2manytags
-            .text-wrap
-                width: 100% !important
-                textarea
-                    width: 100% !important
-            .oe_form_field_many2manytags_box
-                border-radius: 2px
-                @include box-sizing(border)
-                position: relative
-                float: left
-                border: 1px solid #9DACCC
-                background: #E2E6F0
-                color: black
-                padding: 0px 3px 0px 3px
-                margin: 0 2px 2px 0
-                height: 16px
-                font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
-            .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
-                font-style: italic
-                text-decoration: none
         .oe_datepicker_container
             display: none
         .oe_datepicker_root
@@ -1636,6 +1622,16 @@ $sheet-max-width: 860px
             > div
                 position: relative
                 overflow: hidden
+    .oe_form_editable
+        .oe_form
+            .oe_form_field_integer
+                width: 7em !important
+            .oe_form_field_float
+                width: 8em !important
+            .oe_form_field_date
+                width: 7.5em !important
+            .oe_form_field_datetime
+                width: 11.5em !important
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1669,6 +1665,7 @@ $sheet-max-width: 860px
             vertical-align: top
             .oe_form_field_image_controls
                 position: absolute
+                white-space: nowrap
                 top: 1px
                 padding: 3px 0 0 0
                 margin: 0 1px
@@ -1694,8 +1691,14 @@ $sheet-max-width: 860px
     .oe_form .oe_form_field_one2many > .oe_view_manager
         .oe_list_pager_single_page
             display: none
-    .oe_form_field_one2many
+    .oe_form_field_one2many,.oe_form_field_many2many
         // TODO: oe_form_field_one2many_list?
+        .oe_list_content
+            > thead
+                border-bottom: 1px
+            > tbody
+                tr:nth-child(odd)
+                    background: transparent
         .oe_list .oe_list_edit_row_save
             background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
             &:before
@@ -1763,6 +1766,8 @@ $sheet-max-width: 860px
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px
+                    progress
+                        width: 100%
                 > td, > th
                     line-height: 18px
                     > button
@@ -1776,6 +1781,7 @@ $sheet-max-width: 860px
                         border-width: 0
                 > td.oe_number
                     text-align: right !important
+                    max-width: 100px
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)
@@ -1853,6 +1859,49 @@ $sheet-max-width: 860px
         float: right
         color: #333
     // }}}
+//Tree view
+.openerp
+    .tree_header
+        background-color: #f0f0f0
+        border-bottom: 1px solid #cacaca
+        color: #4c4c4c
+        padding: 5px
+        height: 25px
+        button
+            float: right
+            height: 27px
+            margin-right: 5px
+    .oe-treeview-table
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        th
+            padding: 10px
+            color: #4c4c4c
+            font-weight: bold
+            background-color: #f0f0f0
+            border-bottom: 2px solid #cacaca
+        .treeview-tr, .treeview-td
+            cursor: pointer
+            border-right: 1px dotted #afafb6
+            vertical-align: top
+            text-align: left
+            border-bottom: 1px solid #cfcccc
+        tr:hover
+            background-color: #e0e0f8
+        .oe-number
+            text-align: right !important
+        span
+            font-size: 90%
+            font-weight: normal
+            white-space: nowrap
+            display: block
+        .treeview-tr.oe-treeview-first
+            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
+        .oe_open .treeview-tr.oe-treeview-first
+            background-image: url(/web/static/src/img/collapse.gif)
+        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
+            margin-left: 16px
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)

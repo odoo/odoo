@@ -399,16 +399,17 @@
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-            <col width="33%"/>
-            <col width="33%"/>
-            <col width="34%"/>
+	    <col width="20%"/>
+	    <col width="25%"/>
+	    <col width="20%"/>
+	    <col width="35%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                            <span class="oe_view_title_text oe_breadcrumb_title"/>
                         </h2>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_view_search" t-opentag="true"/>
                 </td>
             </tr>
@@ -416,7 +417,7 @@
                 <td>
                         <div class="oe_view_manager_buttons"/>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_sidebar"/>
                 </td>
                 <td>
@@ -535,14 +536,16 @@
 </t>
 
 <t t-name="TreeView">
-    <select t-if="toolbar" style="width: 30%">
-    </select>
-    <table class="oe_tree_table">
+    <div class = "tree_header">
+         <select t-if="toolbar" ></select>
+         <button id = "tree_view_collapse">Collapse All</button>
+         <button id = "tree_view_expand">Expand All</button>
+     </div>
+    <table class="oe-treeview-table">
         <thead>
             <tr>
                 <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible"
-                    class="treeview-header">
+                    t-if="!field.attrs.modifiers.tree_invisible">
                     <t t-esc="fields[field.attrs.name].string" />
                 </th>
             </tr>
@@ -554,11 +557,11 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level + 1">
+        t-att-data-id="record.id" t-att-data-level="level">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
-    <t t-set="rank" t-value="'oe_tree_first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
+    <t t-set="rank" t-value="'oe-treeview-first'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + 19*(level-1) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
@@ -959,18 +962,20 @@
         </t>
     </span>
 </t>
+<!-- Collection of m2m tags -->
 <t t-name="FieldMany2ManyTags">
-    <div class="oe_form_field oe_form_field_many2manytags" t-att-style="widget.node.attrs.style">
+    <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">
             <textarea rows="1" style="width: 100%"
                 t-att-placeholder="widget.node.attrs.placeholder"></textarea>
         </t>
     </div>
 </t>
-<t t-name="FieldMany2ManyTags.box">
+<!-- Individual m2m tag element -->
+<t t-name="FieldMany2ManyTag">
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span class="oe_form_field_many2manytags_box" t-att-data-index="i">
+        <span class="oe_tag" t-att-data-index="i">
             <t t-esc="el[1]"/>
         </span>
         <t t-set="i" t-value="i + 1"/>
@@ -1467,11 +1472,11 @@
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
     </t>
     <t t-if="multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save &amp; Close</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
     </t>
     <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
 </t>

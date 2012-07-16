@@ -1052,7 +1052,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
                 }, this)));
-        this.pad_table_to(5);
+        this.pad_table_to(4);
     },
     pad_table_to: function (count) {
         if (this.records.length >= count ||
