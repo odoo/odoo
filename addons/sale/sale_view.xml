@@ -214,9 +214,9 @@
                                                 <field name="product_uos" class="oe_inline oe_no_button"/>
                                             </div>
                                             <field name="price_unit"/>
-                                            <label for="discount"/>
-                                            <div>
-                                                <field name="discount" groups="sale.group_discount_per_so_line" class="oe_inline"/> %%
+                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                            <div groups="sale.group_discount_per_so_line">
+                                                <field name="discount" class="oe_inline"/> %%
                                             </div>
                                         </group>
                                         <group>
@@ -475,7 +475,6 @@
                     <group>
                         <group>
                             <field name="product_id" readonly="1"/>
-                            <field name="name" groups="base.group_no_one"/>
                             <label name="product_uom_qty"/>
                             <div>
                                 <field name="product_uom_qty" readonly="1" class="oe_inline"/>
@@ -490,8 +489,8 @@
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
-                    <separator string="Notes" groups="base.group_sale_notes_subtotal"/>
-                    <field name="notes" groups="base.group_sale_notes_subtotal"/>
+                    <label for="name"/>
+                    <field name="name"/>
                     </sheet>
                 </form>
             </field>

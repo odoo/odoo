@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:07+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:43+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: event
 #: view:event.event:0
@@ -83,7 +83,7 @@ msgstr "Bon Jovin konsertti"
 #. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
-msgstr ""
+msgstr "Vain laskutetut ilmoittautumiset"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -169,12 +169,12 @@ msgstr "Lisää sisäinen huomautus"
 #. module: event
 #: view:event.event:0
 msgid "Confirmed events"
-msgstr ""
+msgstr "Vahvistetut tapahtumat"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
-msgstr ""
+msgstr "Tapahtuman alkupäivä"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_report_event_registration
@@ -242,7 +242,7 @@ msgstr "Heinäkuu"
 #. module: event
 #: help:event.event,register_prospect:0
 msgid "Total of Prospect Registrations"
-msgstr ""
+msgstr "Mahdollisten osallistujien kokonaismäärä"
 
 #. module: event
 #: help:event.event,mail_auto_confirm:0
@@ -250,6 +250,8 @@ msgid ""
 "Check this box if you want to use automatic confirmation emailing or "
 "reminder."
 msgstr ""
+"Valitse tämä jos haluat käyttää automaattista vahvistus tai "
+"muistutussähköpostia"
 
 #. module: event
 #: field:event.registration,ref:0
@@ -329,12 +331,12 @@ msgstr "Rekisteröinnin vahvistus"
 #. module: event
 #: view:event.event:0
 msgid "Events in New state"
-msgstr ""
+msgstr "Tapahtumat jotka ovat 'uusi' tilassa"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Confirm"
-msgstr ""
+msgstr "Hyväksy"
 
 #. module: event
 #: view:event.event:0
@@ -369,7 +371,7 @@ msgstr "Lähetä uusi sähköposti"
 #. module: event
 #: help:event.event,register_min:0
 msgid "Provide Minimum Number of Registrations"
-msgstr ""
+msgstr "Määrittele ilmoittautumisten minimimäärä"
 
 #. module: event
 #: view:event.event:0
@@ -381,7 +383,7 @@ msgstr "Sijainti"
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #. module: event
 #: field:event.event,register_current:0
@@ -412,6 +414,8 @@ msgid ""
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
 msgstr ""
+"Tämä sähköposti lähetetään kun tilaisuus vahvistetaan tai joku ilmoittautuu "
+"vahvistettuun tapahtumaan. Tämä viesti on myös tapahtuman muistutusviesti."
 
 #. module: event
 #: field:event.registration,tobe_invoiced:0
@@ -421,7 +425,7 @@ msgstr "Valmis laskutettavaksi"
 #. module: event
 #: view:event.event:0
 msgid "My Sales Team(s)"
-msgstr ""
+msgstr "Oma myyntitiimi"
 
 #. module: event
 #: code:addons/event/event.py:398
@@ -456,12 +460,12 @@ msgstr "Rekisteröidylla kumppanilla ei ole laskutusosoitetta"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in last month"
-msgstr ""
+msgstr "Viime kuussa luodut tapahtumat"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in current year"
-msgstr ""
+msgstr "Tänä vuonna luodut tapahtumat"
 
 #. module: event
 #: help:event.event,type:0
@@ -471,7 +475,7 @@ msgstr "Tapahtuman tyyppi kuten seminaari, näyttely, konferenssi, koulutus."
 #. module: event
 #: view:event.registration:0
 msgid "Confirmed registrations"
-msgstr ""
+msgstr "Vahvistetut ilmoittautumiset"
 
 #. module: event
 #: view:event.event:0
@@ -503,7 +507,7 @@ msgstr "Varoitus: Tapahtuma '%s' on saavuttanut maksimimäärän (%s)."
 #. module: event
 #: view:report.event.registration:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Edellinen kk    "
 
 #. module: event
 #: view:event.event:0
@@ -521,7 +525,7 @@ msgstr "Tapahtumien lukumäärä"
 #. module: event
 #: help:event.event,main_speaker_id:0
 msgid "Speaker who will be giving speech at the event."
-msgstr ""
+msgstr "Tilaisuuden puhuja"
 
 #. module: event
 #: help:event.event,state:0
@@ -530,6 +534,9 @@ msgid ""
 "particular dates the state is set to 'Confirmed'. If the event is over, the "
 "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
 msgstr ""
+"Jos tapahtuma luodaan, sen tila on 'luonnos'. Jos tapahtuma vahvistetaan "
+"näille päiville, tila muuttuu 'vahvistettu'. Jos tapahtuma on jo ohi, tila "
+"on 'valmis', jos tapahtuma perutaan, tila on 'peruttu'"
 
 #. module: event
 #: view:event.event:0
@@ -570,7 +577,7 @@ msgstr "Postitus"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events States"
-msgstr ""
+msgstr "Tapahtumien tilat"
 
 #. module: event
 #: view:board.board:0
@@ -586,7 +593,7 @@ msgstr "Kumppani laskutettu"
 #. module: event
 #: help:event.event,register_max:0
 msgid "Provide Maximum Number of Registrations"
-msgstr ""
+msgstr "Määrittele ilmoittautumisten maksimimäärä"
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -637,7 +644,7 @@ msgstr "Tapahtuma valmis"
 #. module: event
 #: view:event.registration:0
 msgid "Registrations in unconfirmed state"
-msgstr ""
+msgstr "Ei-vahvistetut ilmoittautumiset"
 
 #. module: event
 #: help:event.event,register_current:0
@@ -711,7 +718,7 @@ msgstr "Suljettu"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
+msgstr "Tapahtumat jotka ovat 'üusi' tilassa"
 
 #. module: event
 #: view:event.event:0
@@ -750,6 +757,8 @@ msgid ""
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
 msgstr ""
+"Tähän tapahtumaan liittyvät laskut luodaan tälle tuotteelle. Näin se "
+"mahdollistaa oletusnimen ja kirjanpitotiedot jotka haluat näille laskuille."
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -819,7 +828,7 @@ msgstr "Kieli"
 #: view:event.registration:0
 #: field:event.registration,email_cc:0
 msgid "CC"
-msgstr ""
+msgstr "Kopio"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -865,7 +874,7 @@ msgstr "Vahvistusviestin runko"
 #. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
-msgstr ""
+msgstr "Ilmoittautumiset jotka ovat vahvistettu tai valmis tilassa"
 
 #. module: event
 #: view:event.registration:0
@@ -1019,13 +1028,15 @@ msgstr "Vastaa"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in current month"
-msgstr ""
+msgstr "Tapahtumat jotka on luotu kuluvan kuukauden aikana"
 
 #. module: event
 #: help:event.event,mail_auto_registr:0
 msgid ""
 "Check this box if you want to use automatic emailing for new registration."
 msgstr ""
+"Valitse tämä jos haluat käyttää uuden ilmoittautumisen automaattista "
+"sähköpostia"
 
 #. module: event
 #: field:event.event,date_end:0
@@ -1081,7 +1092,7 @@ msgstr "Pääsylippu konferenssiin"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
 msgid "Events Type"
-msgstr ""
+msgstr "Tapahtuman tyyppi"
 
 #. module: event
 #: field:event.registration.badge,address_id:0
@@ -1181,11 +1192,13 @@ msgid ""
 "This will be the default price used as registration cost when invoicing this "
 "event. Note that you can specify a specific amount for each registration."
 msgstr ""
+"Tämä on tilaisuuden oletushinta. Huomaa että voit määritellä tietyn hinnan "
+"jokaiselle ilmoittautumiselle"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in confirm state"
-msgstr ""
+msgstr "Tapahtumat jotka ovat vahvistettu tilassa"
 
 #. module: event
 #: view:event.event:0
@@ -1207,7 +1220,7 @@ msgstr "Rekisteröinnit"
 #. module: event
 #: field:event.registration,id:0
 msgid "ID"
-msgstr ""
+msgstr "TUNNISTE (ID)"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1218,7 +1231,7 @@ msgstr "Suurin rekisteröintien määrä"
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
 
 #. module: event
 #: field:report.event.registration,date:0
