@@ -760,8 +760,8 @@
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
                                             <field name="product_qty" readonly="1"/>
-                                            <field name="product_uom" readonly="1" string="Unit of Measure"/>
-                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
+                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
                                             <field name="prodlot_id" context="{'product_id': product_id}"/>
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
