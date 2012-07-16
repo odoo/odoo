@@ -101,7 +101,7 @@ class payroll_advice(osv.osv):
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
-        'name':fields.char('Name', size=32, required=True, readonly=True, states={'draft': [('readonly', False)]},),
+        'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
         'date': fields.date('Date', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
         'state':fields.selection([
@@ -206,11 +206,8 @@ class hr_payslip_run(osv.osv):
 
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
-    _columns = {
-    }
 
-    def create_advice_run(self, cr, uid, ids, context=None):
-        res = super(hr_payslip_run, self).close_payslip_run(cr, uid, ids, context=context)
+    def create_advice(self, cr, uid, ids, context=None):
         payslip_pool = self.pool.get('hr.payslip')
         payslip_line_pool = self.pool.get('hr.payslip.line')
         advice_pool = self.pool.get('hr.payroll.advice')
@@ -252,7 +249,7 @@ class payroll_advice_line(osv.osv):
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
         'name': fields.char('Bank Account No.', size=32, required=True),
-        'employee_id': fields.many2one('hr.employee', required=True, 'Employee'),
+        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
     }
