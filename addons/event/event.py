@@ -102,7 +102,7 @@ class event_event(osv.osv):
         for self.event in self.browse(cr, uid, ids, context=context):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
-                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
+                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. Please reconsider those limits before going further.") % (self.event.name))
 
     def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
         for event in self.browse(cr, uid, ids, context=context):
