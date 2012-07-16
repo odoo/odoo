@@ -60,7 +60,7 @@ class payroll_advice_report(report_sxw.rml_parse):
 
     def get_bysal_total(self):
         return self.total_bysal
-
+        
     def get_detail(self, line_ids):
         result = []
         self.total_bysal = 0.00
@@ -69,7 +69,9 @@ class payroll_advice_report(report_sxw.rml_parse):
             res.update({
                     'name': l.employee_id.name,
                     'acc_no': l.name,
+                    'ifsc_code': l.ifsc_code,
                     'bysal': l.bysal,
+                    'debit_credit': l.debit_credit,
                     })
             self.total_bysal += l.bysal
             result.append(res) 

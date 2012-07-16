@@ -104,8 +104,7 @@ hr_employee()
 class payroll_advice(osv.osv):
     '''
     Bank Advice
-    '''
-
+    '''        
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
@@ -120,6 +119,7 @@ class payroll_advice(osv.osv):
         'number':fields.char('Number', size=16, readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Cheque Numbers', size=256),
+        'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
     }
@@ -206,8 +206,7 @@ class payroll_advice(osv.osv):
                 res.update({'bank': company.partner_id.bank_ids[0].bank.name})
         return {
             'value':res
-        }
-
+        }     
 payroll_advice()
 
 class hr_payslip_run(osv.osv):
@@ -255,16 +254,31 @@ hr_payslip_run()
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
-    '''
+    '''    
+    def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
+        res = {}
+        hr_obj = self.pool.get('hr.employee')
+        if not employee_id:
+            return {'value': res}
+        employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
+        res.update({'name': employee.bank_account_id.acc_number ,'ifsc_code': employee.bank_account_id.bank_bic})
+        return {'value': res}  
+        
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
         'name': fields.char('Bank Account No.', size=32, required=True),
+        'ifsc_code': fields.char('IFSC Code', size=32),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
+        'debit_credit': fields.char('C/D', size=8, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
     }
+    _defaults = {
+        'debit_credit': 'C',
+    }    
+    
 
 payroll_advice_line()
 
