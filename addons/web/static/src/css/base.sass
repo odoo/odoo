@@ -296,6 +296,7 @@ $sheet-max-width: 860px
         cursor: wait
     .oe_fade
         color: #888
+        font-weight: normal
     .oe_bold
         font-weight: bold
     .oe_inline
@@ -337,12 +338,15 @@ $sheet-max-width: 860px
         button
             margin: 4px
     .oe_avatar
-        margin: 0 16px 0 0
+        margin: 0 6px 15px 0
         > img
-            height: 50px
+            height: 90px
+            max-width: 100px
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
             border: none
+    .oe_avatar + div
+        margin-left: 115px
     .oe_button.oe_link
         @include reset()
         img
@@ -1467,13 +1471,15 @@ $sheet-max-width: 860px
     // }}}
     // FormView.group {{{
     .oe_form
+        .oe_form_button
+            margin: 2px
         td.oe_form_group_cell_label
             border-right: 1px solid #ddd
             padding: 2px 0px 2px 0px
             label
                 line-height: 18px
                 display: block
-                min-width: 110px
+                min-width: 120px
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 6px
         .oe_form_group
