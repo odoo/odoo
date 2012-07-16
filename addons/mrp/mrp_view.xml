@@ -655,7 +655,7 @@
                     <label for="product_qty" class="oe_edit_only"/>
                     <h2>
                         <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" class="oe_inline"/>
+                        <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
@@ -699,7 +699,7 @@
                                             <field name="product_id" />
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="location_id"  string="Source Loc."/>
+                                            <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
@@ -722,7 +722,7 @@
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
-                                           <field name="product_uom" readonly="1" string="Unit of Measure"/>
+                                           <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                            <field name="prodlot_id" context="{'product_id': product_id}"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
@@ -743,7 +743,7 @@
                                         <tree string="Products to Finish">
                                             <field name="product_id" />
                                             <field name="product_qty"/>
-                                            <field name="product_uom"  string="Unit of Measure"/>
+                                            <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.action_partial_move_server)d"
                                                 string="Partial"
