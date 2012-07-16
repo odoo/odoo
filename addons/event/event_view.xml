@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
+      <act_window
+            id="act_event_list_register_event"
+            name="Registration"
+            res_model="event.registration"
+            src_model="event.event"
+            view_mode="calendar,tree,form,graph"
+            context="{'search_default_event_id': active_id, 'default_event_id': active_id}"
+            view_type="form"/>
         <menuitem  name="Events" id="event_main_menu"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
 
@@ -17,10 +24,10 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="default_reply_to"/>
-                        <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
-                        <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                         <field name="default_registration_min"/>
+                        <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
                         <field name="default_registration_max"/>
+                        <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                     </group>
                 </form>
             </field>
@@ -89,88 +96,103 @@
             <field name="model">event.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Events" version="7.0">
-                <header>
-                    <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
-                    <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
-                    <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
-                </header>
-                <sheet>
-
-                <div class="oe_right" style="height: 200px"></div>
-                <div class="oe_title">
-                    <h1><field name="name"/></h1>
-                    <group>
-                        <group>
-                            <field name="type" on_change="onchange_event_type(type,context)"/>
-                            <field name="user_id"/>
-                            <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
-                        </group>
-                        <group>
-                            <field name="date_begin"/>
-                            <field name="date_end"/>
-                            <field name="register_min"/>
-                            <field name="register_max"/>
-                        </group>
-                    </group>
-                </div>
-
-                <notebook>
-                    <page string="Event Description">
-                        <field name="note" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Internal Data">
-                         <group class="oe_group_label_border" colspan="2" col="2">
-                            <field name="register_current"/>
-                            <field name="register_prospect"/>
-                            <field name="register_attended"/>
-                         </group> 
-                         <group class="oe_group_label_border" colspan="2" col="2">
-                            <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                            <field name="speaker_confirmed"/>
-                        </group>
-                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
-                            <tree string="Registration" editable="top">
-                                <field name="name" />
-                                <field name="email" />
-                                <field name="phone"/>
-                                <field name="nb_register" />
-                                <field name="state"/>
-                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
-                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                            </tree>
-                            <form string="Registration">
-                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
-                                <field name="name"/>
-                                <group colspan="4" col="4">
-                                <field name="email"/>
-                                <field name="phone"/>
+                <form string="Events" version="7.0">
+                    <header>
+                        <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
+                        <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
+                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div> 
+                        <div>
+                            <h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
+                            </h2>
+                            <group>
+                                <group>
+                                    <label for="address_id" string="Location Address"/>
+                                    <div>
+                                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
+                                        <field name="street" placeholder="Street..."/>
+                                        <div>
+                                             <field name="zip" class="oe_inline" placeholder="Zip"/>
+                                             <field name="city" class="oe_inline" placeholder="City"/>
+                                        </div>
+                                    </div>
                                 </group>
-                                <group colspan="4" col="4">
-                                    <field name="nb_register"/>
-                                </group>
-                                <group colspan="4" col="4">
-                                </group>
-                                    <group col="8" colspan="4">
-                                        <separator string="" colspan="4"/>
-                                        <newline/>
-                                        <field name="state" colspan="2"/>
-                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
-                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                <group>
+                                       <field name="type" on_change="onchange_event_type(type,context)"/>
+                                       <field name="register_min"/>
+                                       <field name="register_max"/>
+                                       <label for="register_current" string="Current Registrations"/>
+                                       <div>
+                                           Confirmed: <field name="register_current" class="oe_inline"/>, Unconfirmed: <field name="register_prospect" class="oe_inline"/>
+                                       </div>
+                                   </group>
+                            </group>
+                        </div>
+                        <!-- <div class="oe_right" style="height: 200px"></div> -->
+                        <notebook>
+                            <page string="Event Description">
+                                <field name="note" colspan="4" nolabel="1"/>
+                            </page>
+                            <page string="Internal Data">
+                                <group>
+                                    <group>
+                                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
+                                        <field name="speaker_confirmed"/>
                                     </group>
-                            </form>
-                            </field>
-                    </page>
-                    </notebook>
+                                    <group>
+                                        <field name="register_attended"/>
+                                    </group> 
+                                </group>
+                                <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                                    <tree string="Registration" editable="top">
+                                        <field name="name" />
+                                        <field name="email" />
+                                        <field name="phone"/>
+                                        <field name="nb_register" />
+                                        <field name="state"/>
+                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                        <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                    </tree>
+                                    <form string="Registration">
+                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
+                                        <field name="name"/>
+                                        <group colspan="4" col="4">
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                        </group>
+                                        <group colspan="4" col="4">
+                                            <field name="nb_register"/>
+                                        </group>
+                                        <group colspan="4" col="4">
+                                        </group>
+                                            <group col="8" colspan="4">
+                                                <separator string="" colspan="4"/>
+                                                <newline/>
+                                                <field name="state" colspan="2"/>
+                                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                                <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                            </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                    </footer>
-            </form>
+                    </div>
+                </form>
             </field>
         </record>
 
@@ -352,15 +374,6 @@
        </record>
 
       <act_window
-            id="act_event_list_register_event"
-            name="Registration"
-            res_model="event.registration"
-            src_model="event.event"
-            view_mode="calendar,tree,form,graph"
-            context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
-            view_type="form"/>
-
-      <act_window
             id="act_register_event_partner"
             name="Subscribe"
             res_model="event.registration"
@@ -436,48 +449,44 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
-                <header>
-                    <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
-                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
-                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
-                </header>
-                <sheet string="Registration">
-                    <group col="6" colspan="4">
-                        <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                        <field name="nb_register"/>
-                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
-                        <field name="origin"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Additional Information">
-                            <group colspan="2" col="2">
-                                <separator string="Contact Information" colspan="2"/>
+                    <header>
+                        <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
+                        <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
+                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                        <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
+                    </header>
+                    <sheet string="Registration">
+                        <label for="event_id" class="oe_edit_only"/>
+                        <h1>
+                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
                                 <field name="name"/>
-                                <field name="email"/>
                                 <field name="phone"/>
+                                <label for="email"/>
+                                <div>
+                                    <field name="email" class="oe_inline"/>
+                                    <button class="oe_inline oe_right" string="Send Email"
+                                      name="%(mail.action_email_compose_message_wizard)d"
+                                      icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
+                                </div>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
+                            <group>
+                                <field name="nb_register"/>
+                                <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+                            </group>
+                            <group groups="base.group_no_one">
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
-                                <field name="event_begin_date" />
-                                <field name="event_end_date" />
                             </group>
-                        </page>
-                        <page string="Emails">
-                            <button string="Send New Email"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
-                           </page>
-
-                    </notebook>
+                        </group>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                    </footer>
+                    </div>
                 </form>
             </field>
         </record>

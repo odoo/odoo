@@ -27,9 +27,6 @@ from tools.translate import _
 import binascii
 import time
 import tools
-from crm import wizard
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('project.issue')
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
@@ -50,6 +47,7 @@ class project_issue(base_stage, osv.osv):
     _description = "Project Issue"
     _order = "priority, create_date desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """

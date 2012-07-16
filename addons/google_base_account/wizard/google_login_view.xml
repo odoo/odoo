@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Google login"  version="7.0">
-                    <header>
-                        <button name="login" string="_Login" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="user" placeholder="user@gmail.com"/>
                         <field name="password" password="True"/>
                     </group>
+                    <footer>
+                        <button name="login" string="_Login" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
