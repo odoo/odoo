@@ -78,7 +78,7 @@ class account_invoice(osv.osv):
                     algorithm = self.pool.get('res.partner').browse(cr, uid, partner_id).out_inv_comm_algorithm
                     if not algorithm:
                         algorithm = 'random' 
-                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, partner_id, '', algorithm)['value']['reference']
+                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, algorithm, partner_id, '')['value']['reference']
         res_update = {       
             'reference_type': reference_type or 'none',
             'reference': reference,
@@ -86,7 +86,7 @@ class account_invoice(osv.osv):
         result['value'].update(res_update)
         return result                    
 #algorithm is not defined as field in any account related modules.so pass it as false argument.
-    def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, algorithm=False):
+    def generate_bbacomm(self, cr, uid, ids, type, reference_type, algorithm, partner_id, reference):
         partner_obj =  self.pool.get('res.partner')
         reference = reference or ''  
         if (type == 'out_invoice'):

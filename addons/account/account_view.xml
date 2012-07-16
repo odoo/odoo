@@ -1086,8 +1086,7 @@
 	                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
 	                                </group>
 	                            </group>
-	                            <separator string="Internal Note" colspan="4"/>
-	                            <field name="narration" colspan="4" nolabel="1"/>
+	                            <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note."/>
 	                        </page>
 	                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
 	                            <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
@@ -2631,7 +2630,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
 	                                        </form>
                                         </field>
                                     </group> 
-                                    <newline/>
                                     <group class="oe_subtotal_footer oe_right">
                                         <field name="balance_start" readonly="1" string="Total"/>
                                         <field name="total_entry_encoding"/>
@@ -2652,7 +2650,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
 		                                    </form>
                                         </field>
                                     </group>  
-	                                <newline/>
 	                                <group class="oe_subtotal_footer oe_right">
 	                                    <field name="balance_end" />
 	                                    <field name="balance_end_cash"/>

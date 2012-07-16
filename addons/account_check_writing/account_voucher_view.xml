@@ -82,35 +82,33 @@
 	                                    <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
 	                                </tree>
 	                            </field>
-	                            <group>
-	                                <group string="Internal Notes">
-	                                    <field name="narration" colspan="2" nolabel="1"/>
-	                                </group>
+	                            <group col="3">
 	                                <group>
-	                                    <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
-	                                        <separator string="Currency Options" colspan="4"/>
-	                                        <field name="is_multi_currency" invisible="1"/>
-	                                        <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
-	                                        <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
-	                                        <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
-	                                    </group>
-	                                    <group col="2">
-	                                        <separator string="Payment Options" colspan="2"/>
-	                                        <field name="writeoff_amount"/>
-	                                        <field name="payment_option" required="1"/>
-	                                        <field name="writeoff_acc_id"
-	                                               attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
-	                                               domain="[('type','=','other')]"/>
-	                                        <field name="comment"
-	                                               attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-	                                        <field name="analytic_id"
-	                                               groups="analytic.group_analytic_accounting"/>
-	                                    </group>
+	                                    <field name="narration"  placeholder="Add an internal note." nolabel="1"/>
 	                                </group>
+                                    <group  string="Currency Options" col="5" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
+                                        <field name="is_multi_currency" invisible="1"/>
+                                        <field name="payment_rate" required="1" 
+                                            on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)"/>
+                                        <field name="payment_rate_currency_id" nolabel="1" 
+                                            on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
+                                        <field name="paid_amount_in_company_currency" invisible="1"/>
+                                    </group>
+                                    <group string="Payment Options">
+                                        <field name="writeoff_amount"/>
+                                        <field name="payment_option" required="1"/>
+                                        <field name="writeoff_acc_id"
+                                               attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
+                                               domain="[('type','=','other')]"/>
+                                        <field name="comment"
+                                               attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                        <field name="analytic_id"
+                                               groups="analytic.group_analytic_accounting"/>
+                                    </group>
 	                            </group>
 	                        </page>
 	                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
-	                            <group col="4">
+	                            <group>
 	                                <field name="period_id"/>
 	                                <field name="audit"/>
 	                                <field name="number" attrs="{'readonly':[('allow_check','!=',1)]}" />
