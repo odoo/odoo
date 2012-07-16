@@ -158,25 +158,25 @@ class hr_sign_in_out(osv.osv_memory):
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
-                raise osv.except_osv(_('UserError'), _('The sign-out date must be in the past'))
+                raise osv.except_osv(_('UserError'), _('The sign-out date must be in the past.'))
             self.pool.get('hr.attendance').create(cr, uid, {'name': data['last_time'], 'action': 'sign_out',
                 'employee_id': emp_id}, context=context)
         try:
             self.pool.get('hr.employee').attendance_action_change(cr, uid, [emp_id], 'sign_in')
         except:
-            raise osv.except_osv(_('UserError'), _('A sign-in must be right after a sign-out !'))
+            raise osv.except_osv(_('UserError'), _('A sign-in must be right after a sign-out!'))
         return {'type': 'ir.actions.act_window_close'} # To do: Return Success message
 
     def sign_out(self, cr, uid, data, context=None):
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
-                raise osv.except_osv(_('UserError'), _('The Sign-in date must be in the past'))
+                raise osv.except_osv(_('UserError'), _('The sign-in date must be in the past.'))
             self.pool.get('hr.attendance').create(cr, uid, {'name':data['last_time'], 'action':'sign_in',  'employee_id':emp_id}, context=context)
         try:
             self.pool.get('hr.employee').attendance_action_change(cr, uid, [emp_id], 'sign_out')
         except:
-            raise osv.except_osv(_('UserError'), _('A sign-out must be right after a sign-in !'))
+            raise osv.except_osv(_('UserError'), _('A sign-out must be right after a sign-in!'))
         return {'type': 'ir.actions.act_window_close'} # To do: Return Success message
 
 hr_sign_in_out()

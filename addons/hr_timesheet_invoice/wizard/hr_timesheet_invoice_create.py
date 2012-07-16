@@ -99,7 +99,7 @@ class account_analytic_line(osv.osv):
             for product_id, factor_id, qty, uom in cr.fetchall():
                 product = product_obj.browse(cr, uid, product_id, context2)
                 if not product:
-                    raise osv.except_osv(_('Error'), _('At least one line has no product !'))
+                    raise osv.except_osv(_('Error'), _('At least one line has no product!'))
                 factor_name = ''
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
                 if not data.get('product', False):
@@ -123,7 +123,7 @@ class account_analytic_line(osv.osv):
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 if not account_id:
-                    raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'") % product.name)
+                    raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'.") % product.name)
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
