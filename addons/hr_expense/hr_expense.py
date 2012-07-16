@@ -163,7 +163,7 @@ class hr_expense_expense(osv.osv):
         account_journal = self.pool.get('account.journal')
         voucher_obj = self.pool.get('account.voucher')
         
-        for exp in self.browse(cr, uid, ids, context=None):
+        for exp in self.browse(cr, uid, ids, context=context):
             company_id = exp.company_id.id
             lines = []
             total = 0.0
