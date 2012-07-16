@@ -19,4 +19,13 @@
 #
 ##############################################################################
 
+import res_company
+import ir_translation
+
+
+
+
+
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

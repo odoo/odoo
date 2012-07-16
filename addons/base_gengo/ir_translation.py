@@ -19,24 +19,20 @@
 #
 ##############################################################################
 
-{
-    'name': 'Automated Translations through Gengo API',
-    'version': '0.1',
-    'category': 'Tools',
-    'description': """
-Automated Translations through Gengo API
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-        'ir_translation.xml'  
-           ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
+from osv import fields,osv
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class ir_translation(osv.Model):
+    _name = "ir.translation"
+    _description="Translation"
+    _inherit="ir.translation"
+    _columns = {
+        'gengo_comment':fields.text("comments", help="Comment for translators"),
+        'gengo_translation':fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
+        'gengo_control':fields.boolean('Active'),
+    
+    }
+    
+    _defaults = {
+        'gengo_control':False,
+    }
+

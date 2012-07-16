@@ -19,24 +19,22 @@
 #
 ##############################################################################
 
-{
-    'name': 'Automated Translations through Gengo API',
-    'version': '0.1',
-    'category': 'Tools',
-    'description': """
-Automated Translations through Gengo API
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-        'ir_translation.xml'  
-           ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
+from osv import fields,osv
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_company(osv.Model):
+    _name = "res.company"
+    _description = "companies"
+    _inherit = "res.company"
+    _columns = {
+           "gengo_private_key":fields.text("Gengo private key"),
+           "gengo_public_key":fields.text("Gengo public key"),
+           "gengo_tier":fields.selection([('machine','Machine'),
+                                          ('standard','Standard'),
+                                          ('pro','Pro'),
+                                          ('ultra','Ultra')],"Tier types", required=True),
+           "gengo_comment":fields.text("comments"),
+           "gengo_auto_approve":fields.boolean("Active"),
+           "fields_ids":fields.many2many('ir.model.fields','fields_company_rel','field_id','model_id'),
+           
+    }
+
