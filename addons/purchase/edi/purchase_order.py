@@ -35,7 +35,6 @@ PURCHASE_ORDER_LINE_EDI_STRUCT = {
     'product_uom': True,
     'price_unit': True,
     'product_qty': True,
-    'notes': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,
