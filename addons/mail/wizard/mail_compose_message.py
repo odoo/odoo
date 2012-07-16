@@ -96,8 +96,6 @@ class mail_compose_message(osv.TransientModel):
             result['model'] = active_model
         if not result.get('res_id') and active_id:
             result['res_id'] = active_id
-            # if result['model'] == 'mail.message' and not result.get('parent_id'):
-            #     result['parent_id'] = context.get('active_id')
 
         # Try to provide default email_from if not specified yet
         if not result.get('email_from'):

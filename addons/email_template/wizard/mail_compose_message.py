@@ -27,7 +27,7 @@ from tools.translate import _
 import tools
 
 
-def _reopen(self,res_id,model):
+def _reopen(self, id, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',
@@ -37,7 +37,11 @@ def _reopen(self,res_id,model):
 
             # save original model in context, otherwise
             # it will be lost on the action's context switch
-            'context': {'mail.compose.target.model': model}
+            'context': {'mail.compose.target.model': model,
+                        'active_id': res_id,
+                        'active_ids': [res_id],
+                        'active_model': model,
+                        }
     }
 
 class mail_compose_message(osv.osv_memory):
@@ -114,14 +118,16 @@ class mail_compose_message(osv.osv_memory):
     def template_toggle(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
             had_template = record.use_template
+            print had_template
             record.write({'use_template': not(had_template)})
             if had_template:
                 # equivalent to choosing an empty template
                 onchange_defaults = self.on_change_template(cr, uid, record.id, not(had_template),
                                                             False, email_from=record.email_from,
                                                             email_to=record.email_to, context=context)
+                print onchange_defaults
                 record.write(onchange_defaults['value'])
-            return _reopen(self, record.id, record.model)
+            return _reopen(self, record.id, record.res_id, record.model)
 
     def save_as_template(self, cr, uid, ids, context=None):
         if context is None:
