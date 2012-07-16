@@ -988,7 +988,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                  */
                 else if (opts.options.$buttons) {
                     var create_btn = $(opts.options.$buttons.find('.oe_list_add'));
-                    create_btn.wrap('<div>').css('margin-right','4px').addClass('oe_bounce_left oe_bounce');
+                    create_btn.wrap('<div>').css('margin-right','4px').addClass('oe_left oe_bounce');
                }
             });
     },
