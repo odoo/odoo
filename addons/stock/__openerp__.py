@@ -41,8 +41,8 @@ Dashboard for warehouse that includes:
     * Procurement in exception
     * List of Incoming Products
     * List of Outgoing Products
-    * Graph : Products to receive in delay (date < = today)
-    * Graph : Products to send in delay (date < = today)
+    * Graph : Products to receive in delay (date <= today)
+    * Graph : Products to send in delay (date <= today)
     """,
     "website" : "http://www.openerp.com",
     "images" : ["images/stock_forecast_report.png", "images/delivery_orders.jpeg", "images/inventory_analysis.jpeg","images/location.jpeg","images/moves_analysis.jpeg","images/physical_inventories.jpeg","images/warehouse_dashboard.jpeg"],

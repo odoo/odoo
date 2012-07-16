@@ -36,7 +36,7 @@ Project Management module tracks multi-level projects, tasks, work done on tasks
 It is able to render planning, order tasks.
 
 Dashboard for project management that includes:
---------------------------------------------
+-----------------------------------------------
     * List of My Open Tasks
     * Graph of My Remaining Hours by Project
     """,

@@ -26,8 +26,8 @@
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
-This module defines 'portals' to customize the access to your OpenERP database
-for external users.
+This module defines 'portals' to customize the access to your OpenERP database for external users.
+==================================================================================================
 
 A portal defines customized user menu and access rights for a group of users
 (the ones associated to that portal). It also associates user groups to the

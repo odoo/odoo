@@ -27,7 +27,7 @@
     "website" : "http://www.openerp.com",
     "depends" : ["project", "account_analytic_analysis"],
     "description": """
-        Add "Contract Data" in project view.
+Add "Contract Data" in project view.
     """,
     "init_xml" : [],
     "update_xml": ["analytic_contract_project_view.xml"],

@@ -33,7 +33,7 @@ Workflow with validation steps:
     * Quotation -> Sales order -> Invoice
 
 Create Invoice:
-------------------
+---------------
     * Invoice on Demand
     * Invoice on Delivery Order
     * Invoice Before Delivery
@@ -44,8 +44,7 @@ Partners preferences:
     * Shipping
     * Invoicing
 
-
-Products stocks and prices
+Products stocks and prices:
 --------------------------
 
 Delivery method:

@@ -28,16 +28,21 @@ Module to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================
 
 You can define your multiple levels of recall through the menu:
+
     Invoicing/Configuration/Miscellaneous/Follow-ups
 
-Once it is defined, you can automatically print recalls every day through simply clicking on the menu:
+Once it is defined, you can automatically print recalls every day through simply 
+clicking on the menu:
+
     Invoicing/Periodical Processing/Billing/Send follow-ups
 
-It will generate a PDF with all the letters according to the the
-different levels of recall defined. You can define different policies
-for different companies. You can also send mail to the customer.
+It will generate a PDF with all the letters according to the the different levels 
+of recall defined. You can define different policies for different companies. You 
+can also send mail to the customer.
 
-Note that if you want to check the follow-up level for a given partner/account entry, you can do from in the menu:
+Note that if you want to check the follow-up level for a given partner/account 
+entry, you can do from in the menu:
+
     Invoicing/Reporting/Generic Reporting/Partners/Follow-ups Sent
 
 """,

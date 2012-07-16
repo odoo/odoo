@@ -27,14 +27,14 @@
     "sequence": 19,
     'description': """
 Purchase Management module is for generating a purchase order for purchase of goods from a supplier.
-=========================================================================================
+====================================================================================================
 
 A supplier invoice is created for the particular purchase order.
 
 Dashboard for purchase management that includes:
+------------------------------------------------
     * Request for Quotations
     * Monthly Purchasess by Category
-
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

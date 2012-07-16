@@ -28,16 +28,20 @@
     "sequence": 28,
     "website": "http://www.openerp.com",
     "description": """
-This module allows you to manage leaves and leaves' requests.
+This module allows you to manage leaves and leave's requests.
 =============================================================
 
-Implements a dashboard for human resource management that includes.
+Implements a dashboard for human resource management that includes:
+-------------------------------------------------------------------
     * Leaves
 
 Note that:
-    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in
+    - A synchronisation with an internal agenda (use of the CRM module) is
+      possible: in order to automatically create a case when an holiday request
+      is accepted, you have to link the holidays status to a case section. You
+      can setup this info and your colour preferences in
                 Human Resources/Configuration/Leave Type
-    - An employee can make an ask for more off-days by making a new Allocation It will increase his total of that leave type available (if the request is accepted).
+    - An employee can make an ask for more off-days by making a new Allocation. It will increase his total of that leave type available (if the request is accepted).
     - There are two ways to print the employee's holidays:
         * The first will allow to choose employees by department and is used by clicking the menu item located in
                 Reporting/Human Resources/Leaves/Leaves by Department

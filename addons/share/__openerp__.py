@@ -35,12 +35,11 @@ It specifically adds a 'share' button that is available in the Web client to
 share any kind of OpenERP data with colleagues, customers, friends.
 
 The system will work by creating new users and groups on the fly, and by
-combining the appropriate access rights and ir.rules to ensure that the
-shared users only have access to the data that has been shared with them.
+combining the appropriate access rights and ir.rules to ensure that the shared
+users only have access to the data that has been shared with them.
 
 This is extremely useful for collaborative work, knowledge sharing,
 synchronization with other companies.
-
     """,
     'website': 'http://www.openerp.com',
     'demo_xml': ['share_demo.xml'],
