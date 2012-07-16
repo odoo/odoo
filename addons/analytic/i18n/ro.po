@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:17+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -30,7 +30,7 @@ msgstr "Nume cont"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr "Specifica suma cantitatii de numarat"
+msgstr "Specifica suma de numarat"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -40,12 +40,12 @@ msgstr "Stare"
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr "Manager financiar contabil"
+msgstr "Manager cont"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr "Închis"
+msgstr "Inchis"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -70,11 +70,11 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
-"* Cand este crest un cont, acesta este in stare 'Ciorna'. \n"
-"* Daca exista vreun partener asociat, poate fi in stare \"Deschis'.\n"
+"* Cand este crest un cont, acesta este in starea 'Ciorna'. \n"
+"* Daca exista vreun partener asociat, poate fi in starea \"Deschis'.\n"
 "* Daca exista vreun sold in asteptare, poate fi 'In asteptare'.\n"
 "* In cele din urma, daca toate tranzactiile sunt efectuate, poate fi in "
-"stare 'Inchis'. \n"
+"starea 'Inchis'. \n"
 "*Proiectul se poate afla in oricare din starile 'Sablon' sau 'Rulare'. \n"
 "   Daca este sablon, atunci putem face proiecte pe baza proiectelor sablon. "
 "Daca este in starea 'Rulare' este un proiect \n"
@@ -85,7 +85,7 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou(a)"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -130,6 +130,11 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Daca setati o companie, moneda selectata trebuie sa fie la fel cu moneda "
+"companiei. \n"
+"Puteti sterge compania, si astfel sa modificati moneda, dar numai intr-un "
+"cont analitic de tipul 'vizualizare'. Acest lucru poate fi foarte util de "
+"exemplu la consolidarea graficelor mai multor companii cu monede diferite."
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -174,7 +179,7 @@ msgstr "Ierarhie Cont"
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of time to work on the contract."
-msgstr ""
+msgstr "Stabileste limita cea mai mare a perioadei de lucru la contract."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -194,7 +199,7 @@ msgstr "Contact"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Code/Reference"
-msgstr ""
+msgstr "Cod/Referinta"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -205,7 +210,7 @@ msgstr "Anulat"
 #: code:addons/analytic/analytic.py:138
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Eroare !"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -234,12 +239,12 @@ msgstr "Data de sfarsit"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Time"
-msgstr ""
+msgstr "Timp Maxim"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Contabilitate Analitica"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -255,12 +260,12 @@ msgstr "Cont Analitic"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Nu puteti crea o linie analitica in vizualizarea contului."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
