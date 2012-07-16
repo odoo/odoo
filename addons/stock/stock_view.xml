@@ -227,18 +227,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packs" version="7.0">
+                    <div groups="stock.group_tracking_lot" class="oe_button_box">
+                        <button name="action_traceability" icon="gtk-go-up" string="Upstream Traceability" type="object"/>
+                        <button name="action_traceability" icon="gtk-go-down" string="Downstream Traceability" type="object"
+                        context="{'type': 'move_history_ids'}"/>
+                    </div>
                     <group>
                         <group groups="product.group_stock_packaging" string="Pack Identification">
                             <field name="name"/>
                             <field name="serial"/>
                             <field name="date"/>
                             <field name="active"/>
-                        </group>
-                        <group groups="stock.group_tracking_lot" string="Traceability">
-                            <button name="action_traceability" icon="gtk-go-up" string="Upstream Traceability" type="object"
-                                 colspan="2"/>
-                            <button name="action_traceability" icon="gtk-go-down" string="Downstream Traceability" type="object"
-                                context="{'type': 'move_history_ids'}" colspan="2"/>
                         </group>
                     </group>
                     <field name="move_ids"/>
@@ -338,46 +337,44 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
-                    <sheet>
-                        <group>
-                            <group string="Serial Number Identification">
-                                <field name="product_id"/>
-                                <field name="prefix"/>
-                                <field name="name"/>
-                                <field name="ref"/>
-                                <group string="Dates">
-                                    <field name="date"/>
-                                </group>
-                            </group>
-                            <group string="Traceability">
-                                <field name="stock_available"/>
-                                <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up" colspan="2"/>
-                                <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down" colspan="2"/>
+                    <group>
+                        <group string="Serial Number Identification">
+                            <field name="product_id"/>
+                            <field name="prefix"/>
+                            <field name="name"/>
+                            <field name="ref"/>
+                            <group string="Dates">
+                                <field name="date"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Revisions">
-                                <field name="revisions"/>
-                            </page>
-                            <page string="Stock Moves">
-                                <field name="move_ids">
-                                    <tree  string="Stock Moves">
-                                        <field name="picking_id" string="Reference"/>
-                                        <field name="origin"/>
-                                        <field name="product_id"/>
-                                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                        <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                        <field name="tracking_id" groups="stock.group_tracking_lot"/>
-                                        <field name="date"/>
-                                        <field name="prodlot_id"/>
-                                        <field name="location_id" groups="stock.group_locations"/>
-                                        <field name="location_dest_id" groups="stock.group_locations"/>
-                                        <field name="state"/>
-                                    </tree>
-                                 </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                        <group string="Traceability">
+                            <field name="stock_available"/>
+                            <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up" colspan="2"/>
+                            <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down" colspan="2"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Revisions">
+                            <field name="revisions"/>
+                        </page>
+                        <page string="Stock Moves">
+                            <field name="move_ids">
+                                <tree  string="Stock Moves">
+                                    <field name="picking_id" string="Reference"/>
+                                    <field name="origin"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                                    <field name="tracking_id" groups="stock.group_tracking_lot"/>
+                                    <field name="date"/>
+                                    <field name="prodlot_id"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="location_dest_id" groups="stock.group_locations"/>
+                                    <field name="state"/>
+                                </tree>
+                             </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -523,41 +520,39 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Location" version="7.0">
-                    <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-                        <label for="location_id" class="oe_edit_only"/>
-                        <h2><field name="location_id"/></h2>
-                        <group>
-                            <group string="Additional Information">
-                                <field name="usage"/>
-                                <field name="partner_id"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="icon"/>
-                                <field name="scrap_location"/>
-                                <field name="active"/>
-                            </group>
-                            <group string="Chained Locations">
-                                <field name="chained_location_type"/>
-                                <field name="chained_location_id"  attrs="{'required':[('chained_location_type','=','fixed')]}"/>
-                                <field name="chained_auto_packing"/>
-                                <field name="chained_delay"/>
-                                <field name="chained_journal_id"/>
-                                <field name="chained_picking_type"/>
-                                <field name="chained_company_id" widget="selection"/>
-                            </group>
-                            <group string="Localization">
-                                <field name="posx"/>
-                                <field name="posy"/>
-                                <field name="posz"/>
-                            </group><group string="Accounting Information">
-                                <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
-                                <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
-                            </group>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <label for="location_id" class="oe_edit_only"/>
+                    <h2><field name="location_id"/></h2>
+                    <group>
+                        <group string="Additional Information">
+                            <field name="usage"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="icon"/>
+                            <field name="scrap_location"/>
+                            <field name="active"/>
                         </group>
-                        <separator string="Additional Information"/>
-                        <field name="comment"/>
-                    </sheet>
+                        <group string="Chained Locations">
+                            <field name="chained_location_type"/>
+                            <field name="chained_location_id"  attrs="{'required':[('chained_location_type','=','fixed')]}"/>
+                            <field name="chained_auto_packing"/>
+                            <field name="chained_delay"/>
+                            <field name="chained_journal_id"/>
+                            <field name="chained_picking_type"/>
+                            <field name="chained_company_id" widget="selection"/>
+                        </group>
+                        <group string="Localization">
+                            <field name="posx"/>
+                            <field name="posy"/>
+                            <field name="posz"/>
+                        </group><group string="Accounting Information">
+                            <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
+                            <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
+                        </group>
+                    </group>
+                    <separator string="Additional Information"/>
+                    <field name="comment"/>
                 </form>
             </field>
         </record>

@@ -22,64 +22,61 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Carrier" version="7.0">
-                    <sheet>
-                        <group col="4" name="general">
-                            <field name="name"/>
-                            <field name="partner_id"/>
-                            <field name="product_id"/>
-                            <field name="active"/>
-                            <group string="Pricing Information">
-                                <group>
-                                    <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                                    <label for="free_if_more_than"/>
-                                    <div>
-                                        <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                                        <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
-                                    </div>
-                                </group>
-                            </group>
-                            <newline/>
-                            <field name="use_detailed_pricelist"/>
+                    <group col="4" name="general">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="product_id"/>
+                        <field name="active"/>
+                        <group string="Pricing Information">
+                            <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
+                            <label for="free_if_more_than"/>
+                            <div>
+                                <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
+                                <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
+                            </div>
                         </group>
-                        <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
-                            <tree string="Delivery grids">
-                                  <field name="sequence"/>
-                                  <field name="name"/>
-                            </tree>
-                            <form string="Delivery grids" version="7.0">
-                                 <group>
+                        <newline/>
+                        <field name="use_detailed_pricelist"/>
+                    </group>
+                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
+                        <tree string="Delivery grids">
+                              <field name="sequence"/>
+                              <field name="name"/>
+                        </tree>
+                        <form string="Delivery grids" version="7.0">
+                             <group>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                                <group>
+                                    <field name="active"/>
+                                    <field name="sequence"/>
+                                </group>
+                             </group>
+                             <notebook>
+                                <page string="Grid definition">
+                                   <field name="line_ids"/>
+                                </page>
+                                <page string="Destination">
                                     <group>
-                                        <field name="name"/>
-                                    </group>
-                                    <group>
-                                        <field name="active"/>
-                                        <field name="sequence"/>
-                                    </group>
-                                 </group>
-                                 <notebook>
-                                    <page string="Grid definition">
-                                       <field name="line_ids"/>
-                                    </page>
-                                    <page string="Destination">
                                         <group>
-                                            <group>
-                                                <field name="country_ids" widget="many2many_tags"/>
-                                                <field name="state_ids" widget="many2many_tags"/>
-                                            </group>
-                                            <group>
-                                                <label for="zip_from" string="Zip"/>
-                                                <div>
-                                                    <field name="zip_from" class="oe_inline"/>
-                                                    -
-                                                    <field name="zip_to" class="oe_inline"/>
-                                                </div>
-                                            </group>
+                                            <field name="country_ids" widget="many2many_tags"/>
+                                            <field name="state_ids" widget="many2many_tags"/>
                                         </group>
-                                    </page>
-                                </notebook>
-                            </form>
-                       </field>
-                    </sheet>
+                                        <group>
+                                            <label for="zip_from" string="Zip"/>
+                                            <div>
+                                                <field name="zip_from" class="oe_inline"/>
+                                                -
+                                                <field name="zip_to" class="oe_inline"/>
+                                            </div>
+                                        </group>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </form>
+                   </field>
+
                 </form>
             </field>
         </record>
@@ -170,7 +167,7 @@
                     </group>
                 </form>
             </field>
-        </record>
+        </record>delivery.carrier
         <record id="view_delivery_grid_line_tree" model="ir.ui.view">
             <field name="name">delivery.grid.line.tree</field>
             <field name="model">delivery.grid.line</field>
