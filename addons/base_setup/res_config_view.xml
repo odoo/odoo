@@ -15,23 +15,22 @@
                     <group>
                         <group string="Company Settings">
                             <field name="module_multi_company"/>
-                         </group>
-                         <group string="External Accesses">
+                            <separator string="External Accesses" colspan="2"/>
                             <field name="module_share"/>
                             <field name="module_portal"/>
-                         </group>
-                         <group>
+                        </group>
+                        <group>
                             <div>
                                 You will also find several configuration options on your company data:
                                 address for the header and footer, overdue payments texts, etc.
                             </div>
                             <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
-                         </group>
-                         <group string="Others">
-                             <label for="id" string="Outgoing Mail Servers"/>
-                             <button type="action" name="%(base.action_ir_mail_server_list)d"
-                                string="Configure" icon="gtk-execute"/>
-                         </group>
+                            <separator string="Others" colspan="2"/>
+                            <label for="id" string="Outgoing Mail Servers"/>
+                            <button type="action" name="%(base.action_ir_mail_server_list)d"
+                            string="Configure" icon="gtk-execute"/>
+                        </group>
+                        
                     </group>
                 </form>
             </field>
@@ -58,11 +57,14 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                        <group name="config_sale">
-                            <field name="module_crm" invisible="1"/>
-                            <group name="Emails" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
-                                <field name="module_plugin_thunderbird"/>
-                                <field name="module_plugin_outlook"/>
+                        <group>
+                            <group name="config_sale">
+                                <field name="module_crm" invisible="1"/>
+                                <separator string="Emails" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                                <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                                <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                            </group>
+                            <group name="config_other">
                             </group>
                         </group>
                 </form>

@@ -18,17 +18,15 @@
                             <field name="module_stock_planning"/>
                             <field name="module_mrp_subproduct"/>
                             <field name="module_mrp_repair"/>
-                        </group>
-                        <group string="Bill Of Material">
-                            <field name="group_mrp_routings"/>
-                            <field name="group_mrp_properties"/>
-                        </group>
-                        <group string="Logistics">
+                            <separator string="Logistics" colspan="2"/>
                             <field name="module_mrp_jit"/>
                             <field name="module_stock_no_autopicking"/>
                         </group>
                         <group string="Products">
                             <field name="module_product_manufacturer"/>
+                            <separator string="Bill Of Material" colspan="2"/>
+                            <field name="group_mrp_routings"/>
+                            <field name="group_mrp_properties"/>
                         </group>
                     </group>
                 </form>
