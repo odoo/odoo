@@ -36,7 +36,9 @@
 # Boston, MA  02111-1307
 # USA.
 from __future__ import with_statement
+
 from contextlib import closing
+import logging
 from random import seed, sample
 from string import ascii_letters, digits
 
@@ -188,17 +190,13 @@ class users(osv.osv):
             return False
         if db is False:
             raise RuntimeError("Cannot authenticate to False db!")
-        cr = None
+
         try:
-            cr = pooler.get_db(db).cursor()
-            return self._login(cr, db, login, password)
+            with closing(pooler.get_db(db).cursor()) as cr:
+                return self._login(cr, db, login, password)
         except Exception:
-            import logging
             logging.getLogger('netsvc').exception('Could not authenticate')
             return Exception('Access Denied')
-        finally:
-            if cr is not None:
-                cr.close()
 
     def _login(self, cr, db, login, password):
         cr.execute( 'SELECT password, id FROM res_users WHERE login=%s AND active',
@@ -247,8 +245,7 @@ class users(osv.osv):
         if (cached_pass is not None) and cached_pass == passwd:
             return True
 
-        cr = pooler.get_db(db).cursor()
-        try:
+        with closing(pooler.get_db(db).cursor()) as cr:
             cr.execute('LOCK res_users')
             if uid not in self._salt_cache.get(db, {}):
                 # If we don't have cache, we have to repeat the procedure
@@ -266,8 +263,6 @@ class users(osv.osv):
                 cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active', 
                     (int(uid), encrypt_md5(passwd, salt)))
                 res = cr.fetchone()[0]
-        finally:
-            cr.close()
 
         if not bool(res):
             raise security.ExceptionNoTb('AccessDenied')
