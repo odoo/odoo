@@ -38,29 +38,5 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="sale_margin_sale_order_tree">
-        <field name="name">sale.order.margin.view.tree</field>
-        <field name="type">tree</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_tree"/>
-        <field name="arch" type="xml">
-            <field name="state" position="after">
-                <field name="margin" groups="base.group_user"/>
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="sale_margin_sale_order_line_tree">
-        <field name="name">sale.order.margin.line.view.tree</field>
-        <field name="type">tree</field>
-        <field name="model">sale.order.line</field>
-        <field name="inherit_id" ref="sale.view_order_line_tree"/>
-        <field name="arch" type="xml">
-            <field name="price_subtotal" position="after">
-                <field name="margin" groups="base.group_user"/>
-            </field>
-        </field>
-    </record>
-
 </data>
 </openerp>

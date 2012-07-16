@@ -14,14 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:56+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:17+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:153
 #, python-format
 msgid "No Sale Pricelist Found!"
-msgstr ""
+msgstr "Nenhuma venda encontrada na lista de preços!"
 
 #. module: product_visible_discount
 #: field:product.pricelist,visible_discount:0
@@ -32,34 +32,34 @@ msgstr "Desconto Visível"
 #: code:addons/product_visible_discount/product_visible_discount.py:145
 #, python-format
 msgid "No Purchase Pricelist Found!"
-msgstr ""
+msgstr "Nenhuma compra encontrada na lista de preços!"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Linha de Factura"
+msgstr "Linha de Fatura"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_product_pricelist
 msgid "Pricelist"
-msgstr "Preçário"
+msgstr "Lista de Preços"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:145
 #, python-format
 msgid "You must first define a pricelist on the supplier form!"
-msgstr ""
+msgstr "Deve primeiro definir uma tabela de preços no formulário fornecedor!"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linha da ordem de venda"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:153
 #, python-format
 msgid "You must first define a pricelist on the customer form!"
-msgstr ""
+msgstr "Deve primeiro definir uma tabela de preços no formulário do cliente!"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista!"
@@ -79,3 +79,33 @@ msgstr ""
 #, python-format
 #~ msgid "You must first define a pricelist for Customer !"
 #~ msgstr "Primeiro, deverá definir um preçário para o cliente !"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module lets you calculate discounts on Sale Order lines and Invoice "
+#~ "lines base on the partner's pricelist.\n"
+#~ "    To this end, a new check box named \"Visible Discount\" is added to the "
+#~ "pricelist form.\n"
+#~ "    Example:\n"
+#~ "        For the product PC1 and the partner \"Asustek\": if listprice=450, "
+#~ "and the price calculated using Asustek's pricelist is 225\n"
+#~ "        If the check box is checked, we will have on the sale order line: "
+#~ "Unit price=450, Discount=50,00, Net price=225\n"
+#~ "        If the check box is unchecked, we will have on Sale Order and "
+#~ "Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Este módulo permite calcular descontos em linhas da Ordem de Venda e "
+#~ "base da lista das linhas da factura de preços do parceiro.\n"
+#~ "    Para este fim, uma nova caixa de selecção com o nome \"Desconto "
+#~ "visível\" é adicionado ao formulário Lista de Preços.\n"
+#~ "    Exemplo:\n"
+#~ "        Para o artigo PC1 e o parceiro \"Asustek\": se ListPrice = 450, e o "
+#~ "preço calculado usando a lista de preços da Asustek é de 225\n"
+#~ "        Se a opção for assinalada, teremos na linha de ordem de venda: Preço "
+#~ "unitário = 450 Desconto = 50,00, preço líquido = 225\n"
+#~ "        Se a caixa de selecção estiver desmarcada, teremos na ordem de venda "
+#~ "e linhas de factura: Preço unitário = 225 de desconto, preço = 0,00, Net = "
+#~ "225\n"
+#~ "    "
