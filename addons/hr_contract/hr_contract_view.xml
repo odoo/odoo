@@ -8,29 +8,31 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Personal Information" position="after">
-                    <page string="Miscellaneous" groups="base.group_hr_user">
-                        <group colspan="2" col="2">
-                        <separator string="Personal Info" colspan="2"/>
-                        <field name="bank_account_id"/>
-                        <field name="place_of_birth"/>
+                <data>
+                    <xpath expr="//field[@name='parent_id']" position="before">
+                        <field name="manager"/>
+                    </xpath>
+                    <xpath expr="//group[@name='active_group']" position="before">
+                        <group>
+                            <field name="vehicle"/>
+                            <field name="vehicle_distance"/>
+                        </group>
+                    </xpath>
+                    <field name="active" position="before">
+                        <field name="medic_exam" string="Medical Exam"/>
+                    </field>
+                    <field name="birthday" position="before">
                         <field name="children"/>
-                        </group>
-                        <group colspan="2" col="2">
-                        <separator string="Job Info" colspan="2"/>
-                        <field name="manager" />
-                        <field name="vehicle" />
-                        <field name="vehicle_distance" />
-                        </group>
-                        <group colspan="2" col="2">
-                        <separator string="Others Info" colspan="2"/>
-                        <field name="medic_exam" />
-                        </group>
-                    </page>
-                </page>
+                    </field>
+                    <field name="birthday" position="after">
+                        <field name="place_of_birth"/>
+                    </field>
+                    <field name="bank_account_id" position="replace">
+                        <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
+                    </field>
+                </data>
             </field>
         </record>
-
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
@@ -67,34 +69,44 @@
             <field name="arch" type="xml">
                 <form string="Contract" version="7.0">
                     <sheet>
-                    <group col="4">
-                        <field name="name" />
-                        <field name="employee_id" />
-                        <field name="job_id"/>
-                        <field name="wage"/>
-                        <field name="type_id"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Contract Reference"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="type_id"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Information" name="information">
                             <group>
-                                <group name="left_column" string="Duration">
-                                    <field name="date_start" />
-                                    <field name="date_end" />
+                                <group name="salary_and_advantages" string="Salary and Advantages">
+                                    <field name="wage"/>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2"/>
+                                </group>
+                                <group name="duration_group" string="Duration">
+                                    <label for="trial_date_start" string="Trial Period Duration"/>
+                                    <div>
+                                        <field name="trial_date_start" class="oe_inline"/> - <field name="trial_date_end" class="oe_inline"/>
+                                    </div>
+                                    <label for="date_start" string="Duration"/>
+                                    <div>
+                                        <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
+                                    </div>
                                     <field name="working_hours"/>
-                                </group>
-                                <group string="Trial Period">
-                                    <field name="trial_date_start" />
-                                    <field name="trial_date_end" />
-                                </group>
-                                <group name="right_column" string="Advantages">
-                                    <field name="advantages" nolabel="1" colspan="2"/>
                                 </group>
                             </group>
                             <separator string="Notes"/>
                             <field name="notes"/>
                         </page>
                         <page string="Work Permit">
-                            <group string="Valid for">
+                            <group col="4">
                                 <field name="visa_no"/>
                                 <field name="permit_no"/>
                                 <field name="visa_expire"/>

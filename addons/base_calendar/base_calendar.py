@@ -1031,7 +1031,7 @@ class calendar_event(osv.osv):
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-             ('confidential', 'Public for Employees')], 'Mark as', states={'done': [('readonly', True)]}),
+             ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
                                                 'Show Time As', states={'done': [('readonly', True)]}),
@@ -1051,7 +1051,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                             ('yearly', 'Yearly'),],
                             'Recurrency', states={'done': [('readonly', True)]},
                             help="Let the event automatically repeat at that interval"),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
+        'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
                         help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
