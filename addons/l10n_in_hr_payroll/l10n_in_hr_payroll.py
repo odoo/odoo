@@ -26,6 +26,7 @@ from calendar import isleap
 
 from tools.translate import _
 from osv import fields, osv
+import netsvc
 import decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
@@ -123,7 +124,6 @@ class payroll_advice(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
-
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
@@ -202,6 +202,48 @@ class payroll_advice(osv.osv):
         }
 
 payroll_advice()
+
+class hr_payslip_run(osv.osv):
+
+    _inherit = 'hr.payslip.run'
+    _description = 'Payslip Batches'
+
+    def create_advice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        payslip_pool = self.pool.get('hr.payslip')
+        payslip_line_pool = self.pool.get('hr.payslip.line')
+        advice_pool = self.pool.get('hr.payroll.advice')
+        advice_line_pool = self.pool.get('hr.payroll.advice.line')
+        users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
+        for run in self.browse(cr, uid, ids, context=context):
+            advice_data = {
+                        'company_id': users[0].company_id.id,
+                        'name': run.name,
+                        'date': run.date_end,
+                        'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
+                    }
+            advice_id = advice_pool.create(cr, uid, advice_data, context=context)
+            slip_ids = []
+            for slip_id in run.slip_ids:
+                wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'hr_verify_sheet', cr)
+                wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'process_sheet', cr)
+                slip_ids.append(slip_id.id)
+            for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+                if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
+                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
+                if line_ids:
+                    line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
+                    advice_line = {
+                            'advice_id': advice_id,
+                            'name': slip.employee_id.bank_account_id.acc_number,
+                            'employee_id': slip.employee_id.id,
+                            'bysal': line.total
+                    }
+                    advice_line_pool.create(cr, uid, advice_line, context=context)
+        return True
+
+hr_payslip_run()
 
 class payroll_advice_line(osv.osv):
     '''
