@@ -257,15 +257,18 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='sale_total']" position="after">
-                    <group width="50%%">
+                    <group style="width: 65%%">
                         <label for="carrier_id"/>
                         <div>
                             <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
-                            <button name="delivery_set" states="draft" string="Charge in Sale Order" type="object"
-                                attrs="{'invisible':[('carrier_id','=',False)]}"/>
+                            <button name="delivery_set" string="Add in Quote" type="object"
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+        		    <br/>
+                            <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
                         </div>
-                        <label string="If you do not 'Add to Sale Order', the delivery charges will be added based on the delivery order(s)." colspan="2"
-                             attrs="{'invisible':[('carrier_id','=',False)]}"/>
                     </group>
                 </xpath>
             </field>
