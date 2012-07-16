@@ -244,8 +244,8 @@
             <field name="arch" type="xml">
                 <form string="Stock Planning" version="7.0">
                     <group>
-                        <group string = "General Info">
-                            <field name="company_id" widget= "selection"
+                        <group string="General Info">
+                            <field name="company_id" widget="selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
@@ -257,25 +257,25 @@
                                          on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
                             <field name="active_uom" invisible = "True" />
                         </group>
-                        <group string = "Minimum Stock Rule Indicators">
+                        <group string="Minimum Stock Rule Indicators">
                             <field name="minimum_op"/>
                             <field name="maximum_op"/>
                         </group>
                     </group>
                     <group>
-                        <group string = "Current Period Situation">
+                        <group string="Current Period Situation">
                             <field name="stock_start"/>
                             <field name="already_out"/>
                             <field name="already_in"/>
                         </group>
-                        <group string = "Forecasts">
+                        <group string="Forecasts">
                             <field name="warehouse_forecast"/>
                             <field name="company_forecast"/>
                             <field name="confirmed_forecasts_only"/>
                         </group>
                     </group>
                     <group>
-                        <group string = "Planning and Situation for Calculated Period">
+                        <group string="Planning and Situation for Calculated Period">
                             <field name="planned_outgoing"/>
                             <field name="outgoing"/>
                             <field name="outgoing_left"/>
@@ -285,7 +285,7 @@
                             <button name="calculate_planning" string="Calculate Planning" type="object" icon="gtk-execute" colspan="2"/>
                             <field name="stock_only"/>
                         </group>
-                        <group string = "Calculated Period Simulation">
+                        <group string="Calculated Period Simulation">
                             <field name="outgoing_before"/>
                             <field name="incoming_before"/>
                             <field name="stock_simulation"/>
@@ -293,7 +293,7 @@
                             <field name="procure_to_stock"/>
                         </group>
                     </group>
-                    <group string = "Internal Supply">
+                    <group string="Internal Supply">
                         <button name="internal_supply" string="Supply from Another Warehouse" icon="gtk-convert"  type="object" colspan="2"/>
                         <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
                         <field name="stock_supply_location"/>

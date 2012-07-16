@@ -336,29 +336,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
-                    <group string="Serial Number Identification" col="3">
+                    <div class="oe_button_box">
+                        <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up"/>
+                        <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group string="Serial Number Identification">
                         <group>
                             <field name="product_id"/>
-                            <field name="name"/>
-                        </group>
-                        <group>
                             <field name="prefix"/>
                             <field name="ref"/>
                         </group>
-                        <group class="oe_button_box">
-
-                                <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up"/>
-                                <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down"/>
-
-                        </group>
-                        <group string="Dates">
+                        <group>
                             <field name="date"/>
-                        </group>
-                        <group string="Traceability">
                             <field name="stock_available"/>
                         </group>
                     </group>
-                    
                     <notebook>
                         <page string="Revisions">
                             <field name="revisions"/>
@@ -825,8 +823,7 @@
                                                 <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
                                             </div>
                                             <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
-                                         </group>
-
+                                        </group>
                                         <group>
                                             <field name="create_date" invisible="1"/>
                                             <field name="date"/>
