@@ -49,7 +49,6 @@
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="department_id"/>
-                    <field name="ref"/>
                     <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
@@ -66,46 +65,52 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet" version="7.0">
                 <header>
-                    <button name="confirm" states="draft" string="Submit to Manager" type="workflow"/>
-                    <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
-                    <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user"/>
-                    <button name="invoice" states="accepted" string="Invoice" type="object" groups="base.group_hr_user"/>
+                    <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
+                    <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
+                    <button name="invoice" states="accepted" string="Invoice" type="object" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
-                    <group col="4">
-                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
-                        <field name="name"/>
-                        <field name="ref"/>
-                        <field name="date"/>
-                        <field name="currency_id"/>
-                        <field name="department_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                    <group>
+                        <group>
+                            <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                            <field name="date"/>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_valid"/>
+                            <field name="currency_id"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Description">
                             <field name="line_ids" context="{'currency_id': currency_id}">
                                 <form string="Expense Lines" version="7.0">
-                                    <group col="6" colspan="4">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
-                                        <field name="name" colspan="4"/>
-                                        <newline/>
-                                        <field name="unit_amount"/>
-                                        <field name="unit_quantity"/>
-                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
-                                    </group>
-                                    <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
-                                        <separator string="Customer Project" colspan="2"/>
-                                        <field domain="[('type','in',['normal','contract'])]" name="analytic_account"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="References" colspan="2"/>
-                                        <field name="date_value" />
-                                        <field name="ref"/>
+                                    <group>
+                                        <group>
+                                            <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                        </group>
+                                        <group>
+                                            <field name="unit_amount"/>
+                                            <label for="unit_quantity"/>
+                                            <div>
+                                                <field name="unit_quantity" class="oe_inline"/> 
+                                                <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" class="oe_inline"/>
+                                            </div>
+                                            <field name="date_value" />
+                                        </group>
                                     </group>
                                 </form>
                             </field>
+                            <separator string="Notes"/>
+                            <field name="note" placeholder="Free Notes"/>
                         </page>
                         <page string="Other Info">
                             <group>
@@ -113,17 +118,13 @@
                                     <field name="journal_id"/>
                                     <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                                 </group>
-                                <group groups="base.group_no_one" string="Validation">
-                                    <field name="date_confirm" readonly="1"/>
-                                    <field name="date_valid" readonly="1"/>
-                                    <field name="user_valid"/>
-                                </group>
                             </group>
-                            <separator string="Notes"/>
-                            <field name="note"/>
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
                 </form>
             </field>
         </record>

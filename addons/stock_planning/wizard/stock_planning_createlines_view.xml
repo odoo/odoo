@@ -8,10 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Stock Planning Lines" version="7.0">
-                    <header>
-                        <button icon="gtk-cancel" special="cancel" string="Close"/>
-                        <button icon="gtk-ok" name="create_planning" string="Create" type="object"/>
-                    </header>
                     <group col="4">
                         <field name="period_id" widget="selection"/>
                         <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
@@ -19,6 +15,11 @@
                         <field name="forecasted_products"/>
                         <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
                     </group>
+                    <footer>
+                        <button name="create_planning" string="Create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

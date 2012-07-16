@@ -43,7 +43,8 @@ class base_config_settings(osv.osv_memory):
             'view_mode': 'form',
             'res_model': 'res.company',
             'res_id': user.company_id.id,
-         }
+            'target': 'current',
+        }
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,

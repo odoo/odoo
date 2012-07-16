@@ -7,18 +7,19 @@
             <field name="model">base.module.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Data Recording">
-                    <field name="check_date"/>
-                    <newline/>
-                    <field name="filter_cond"/>
-                    <separator string="Choose objects to record" colspan="4"/>
-                    <field name="objects" colspan="4" nolabel="1"/>
-                    <group><field name="info_yaml"/></group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
+                <form string="Data Recording" version="7.0">
+                    <group>
+                        <field name="check_date"/>
+                        <field name="filter_cond"/>
                     </group>
+                    <separator string="Choose objects to record"/>
+                    <field name="objects"/>
+                    <group><field name="info_yaml"/></group>
+                    <footer>
+                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -57,11 +58,6 @@
                 <form string="Data Recording">
                     <separator string="Result, paste this to your module's xml" colspan="4" />
                     <field name="res_text" nolabel="1"  colspan="4"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-close" string="Close" special="cancel"/>
-                    </group>
                 </form>
             </field>
          </record>

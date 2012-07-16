@@ -12,13 +12,14 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                     <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-forward" name="action_next" string="Start" type="object"/>
+                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <group string="Select Survey">
+                    <group>
                         <field name="survey_id" on_change="on_change_survey(survey_id)"/>
                     </group>
-                    <field name="note" attrs="{'readonly': [('survey_id','=',False)]}"/>
+                    <field name="note" placeholder="Add Description" attrs="{'readonly': [('survey_id','=',False)]}"/>
                 </form>
             </field>
         </record>

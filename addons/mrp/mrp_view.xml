@@ -627,7 +627,8 @@
                     <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
                     <button name="button_produce" states="ready" string="Start Production" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" type="action" class="oe_highlight"/>
-                    <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object"/>
+                    <button name="force_production" states="confirmed" string="Force Reservation" type="object" class="oe_highlight"/>
+                    <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                     <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
@@ -794,9 +795,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
-                    <field name="message_ids" widget="ThreadView"/>
-                </footer>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -956,9 +957,8 @@
                 </xpath>
                 <xpath expr="//field[@name='close_move']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
-                    <separator colspan="4" string="Properties" />
-                    <field colspan="4" name="property_ids" nolabel="1"/>
-                     </group>
+                        <field colspan="4" name="property_ids" widget="many2many_tags"/>
+                    </group>
                 </xpath>
                </data>
             </field>

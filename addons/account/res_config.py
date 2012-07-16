@@ -49,6 +49,12 @@ class account_config_settings(osv.osv_memory):
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
         'code_digits': fields.integer('# of Digits', help="No. of Digits to use for account code"),
+        'tax_calculation_rounding_method': fields.related('company_id',
+            'tax_calculation_rounding_method', type='selection', selection=[
+            ('round_per_line', 'Round per Line'),
+            ('round_globally', 'Round Globally'),
+            ], string='Tax Calculation Rounding Method',
+            help="If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default Sale Tax"),
         'purchase_tax': fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sales Tax (%)'),
@@ -99,14 +105,6 @@ class account_config_settings(osv.osv_memory):
         'module_account_followup': fields.boolean('Manage Customer Payment Follow-ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'module_account_invoice_layout': fields.boolean('Allow Notes and Subtotals',
-            help="""This provides some features to improve the layout of invoices.
-                It gives you the possibility to:
-                    * order all the lines of an invoice
-                    * add titles, comment lines, sub total lines
-                    * draw horizontal lines and put page breaks.
-                This installs the module account_invoice_layout."""),
-
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
@@ -160,6 +158,7 @@ class account_config_settings(osv.osv_memory):
             'has_chart_of_accounts': has_chart_of_accounts,
             'has_fiscal_year': bool(fiscalyear_count),
             'chart_template_id': False,
+            'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
         }
         # update journals and sequences
         for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):

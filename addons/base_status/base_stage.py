@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields
+from osv import fields, osv
 from tools.translate import _
 
 class base_stage(object):

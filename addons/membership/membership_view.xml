@@ -52,38 +52,41 @@
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Membership products">
-                  <group col="6">
-                      <field name="name"/>
-                      <field name="default_code"/>
-                      <field name="active"/>
-                      <field name="membership" invisible="1"/>
-                      <field name="membership_date_from" required="1"/>
-                      <field name="membership_date_to" required="1"/>
-                      <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook colspan="4">
-                      <page string="General">
-                        <separator string="Accounting Info" colspan="2"/>
-                        <separator string="Categorization" colspan="2"/>
-                        <field name="list_price" string="Membership Fee"/>
-                        <field name="type" />
-                        <field name="property_account_income" domain="[('type', '!=', 'view')]"/>
-                        <field name="categ_id"/>
-                        <separator string="Sale Taxes" colspan="2"/>
-                        <newline/>
-                        <field name="taxes_id" nolabel="1" colspan="4"/>
-                      </page>
-                      <page string="Description">
-                            <separator string="Description"/>
-                            <field colspan="4" name="description" nolabel="1"/>
-                            <separator string="Sale Description"/>
-                            <field colspan="4" name="description_sale" nolabel="1"/>
-                            <separator string="Purchase Description"/>
-                            <field colspan="4" name="description_purchase" nolabel="1"/>
-                      </page>
-                    </notebook>
-                </form>
+                <form string="Membership products" version="7.0">
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="default_code"/>
+                                <field name="categ_id"/>
+                                <field name="membership" invisible="1"/>
+                                <field name="company_id"
+                                    groups="base.group_multi_company"
+                                    widget="selection"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <label for="membership_date_from" string="Membership Duration"/>
+                                <div>
+                                    <field name="membership_date_from" required="1" class="oe_inline"/> - 
+                                    <field name="membership_date_to" required="1" class="oe_inline"/>
+                                </div>
+                                <field name="list_price" string="Membership Fee"/>
+                                <field
+                                    name="property_account_income"
+                                    domain="[('type', '!=', 'view')]"/>
+                                <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
+                            </group>
+                        </group>
+                        <label for="description"/>
+                        <field colspan="4" name="description" placeholder="Add a description..."/>
+                        <label for="description_sale"/>
+                        <field colspan="4" name="description_sale" placeholder="This note will be displayed on quotations..."/>
+                    </sheet>
+                 </form>
             </field>
         </record>
 
@@ -241,8 +244,11 @@
                         <group>
                             <group>
                                 <field name="free_member"/>
-                                <field colspan="4" name="membership_state"/>
-                                <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" icon="gtk-apply"/>
+                                <label for="membership_state"/>
+                                <div>
+                                    <field name="membership_state" class="oe_inline"/>
+                                    <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" class="oe_inline oe_right"/>
+                                </div>
                             </group>
                             <group>
                                 <field name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
@@ -254,7 +260,7 @@
                         <field name="member_lines" nolabel="1" colspan="4" readonly="1">
                             <tree string="Memberships">
                                 <field name="date"/>
-                                <field name="membership_id" string="Membership"/>
+                                <field name="membership_id"/>
                                 <field name="member_price"/>
                                 <field name="account_invoice_id"/>
                                 <field name="state"/>

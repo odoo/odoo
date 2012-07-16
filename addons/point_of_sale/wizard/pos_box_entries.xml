@@ -10,10 +10,13 @@
             <field name="arch" type="xml">
                 <form string="Put Money" version="7.0">
                     <header>
-                        <button name="get_in" string="Put Money" type="object" icon="gtk-apply" />
-                        <button icon="gtk-stop" special="cancel" string="Cancel" />
+                        <button name="get_in" string="Put Money" type="object" class="oe_highlight"   />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
-                    <separator string="Fill in this form if you put money in the cash register:"/>
+                    <group>
+                        <separator string="Fill in this form if you put money in the cash register:"/>
+                     </group>
                     <group col="4">
                         <field name="name"/>
                         <field name="product_id"/>

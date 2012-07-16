@@ -28,7 +28,7 @@ UID_ROOT = 1
 SHARED_DOCS_MENU = "Documents"
 SHARED_DOCS_CHILD_MENU = "Shared Documents"
 
-class share_wizard_portal(osv.osv_memory):
+class share_wizard_portal(osv.TransientModel):
     """Inherited share wizard to automatically create appropriate
        menus in the selected portal upon sharing with a portal group."""
     _inherit = "share.wizard"
@@ -116,7 +116,7 @@ class share_wizard_portal(osv.osv_memory):
         # In both cases, we call super() to create the share group, but when
         # sharing with existing groups, we will later delete it, and copy its
         # access rights and rules to the selected groups.
-        group_id = super(share_wizard_portal,self)._create_share_users_group(cr, uid, wizard_data, context=context)
+        super_result = super(share_wizard_portal,self)._create_share_users_group(cr, uid, wizard_data, context=context)
 
         # For sharing with existing groups, we don't create a share group, instead we'll
         # alter the rules of the groups so they can see the shared data
@@ -139,10 +139,10 @@ class share_wizard_portal(osv.osv_memory):
                     wizard_data.write({'result_line_ids': [(0,0,new_line)]})
 
         elif wizard_data.user_ids:
-            # must take care of existing users, by adding them to the new group, which is group_ids[0],
+            # must take care of existing users, by adding them to the new group, which is super_result[0],
             # and adding the shortcut
             selected_user_ids = [x.id for x in wizard_data.user_ids]
-            self.pool.get('res.users').write(cr, UID_ROOT, selected_user_ids, {'groups_id': [(4,group_id)]})
+            self.pool.get('res.users').write(cr, UID_ROOT, selected_user_ids, {'groups_id': [(4, super_result[0])]})
             self._setup_action_and_shortcut(cr, uid, wizard_data, selected_user_ids, make_home=False, context=context)
             # populate the result lines for existing users too
             for user in wizard_data.user_ids:
@@ -150,7 +150,7 @@ class share_wizard_portal(osv.osv_memory):
                              'newly_created': False}
                 wizard_data.write({'result_line_ids': [(0,0,new_line)]})
 
-        return group_id
+        return super_result
 
     def copy_share_group_access_and_delete(self, cr, wizard_data, share_group_id, context=None):
         # In the case of sharing with existing groups, the strategy is to copy

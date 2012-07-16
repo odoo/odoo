@@ -93,7 +93,7 @@
                     </group>
                     <group col="4">
                         <field name="ressource_parent_type_id"/>
-                        <field name="ressource_id" select="2" readonly="1"/>
+                        <field name="ressource_id" readonly="1"/>
                     </group>
                     <group col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
                         <field name="resource_find_all"/>
@@ -238,51 +238,27 @@
         <field name="model">ir.attachment</field>
         <field name="priority" eval="1"/>
         <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
-            <form string="Documents" version="7.0">
-                <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="user_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook colspan="4">
-                    <page string="Attachment">
-                        <group>
-                            <group string="Data">
-                                <field name="type"/>
-                                <newline />
-                                <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            </group>
-                            <group>
-                                <field name="res_id" invisible="True"/>
-                                <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <separator string="Related to" colspan="2"/>
-                                <field name="partner_id"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Created">
-                                <field name="create_uid" readonly="1"/>
-                                <field name="create_date" readonly="1"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Modified">
-                                <field name="write_uid" readonly="1"/>
-                                <field name="write_date" readonly="1"/>
-                            </group>
-                        </group>
-                    </page>
-                    <page string="Indexed Content - experimental" groups="base.group_no_one">
-                        <field name="index_content"/>
-                    </page>
-                    <page string="Notes">
-                        <field name="description"/>
-                    </page>
-                    </notebook>
-                </sheet>
-            </form>
+            <field name="url" position="after">
+                <field name="user_id"/>
+            </field>
+            <field name="company_id" position="before">
+                <field name="parent_id"/>
+                <field name="partner_id"/>
+            </field>
+            <xpath expr="//div[@name='creation_div']" position='after'>
+                <label for="write_uid" string="Modification"/>
+                <div>
+                    <field name="write_uid" readonly="1" class="oe_inline"/> on 
+                    <field name="write_date" readonly="1" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='description_group']" position='after'>
+                <group string="Indexed Content" colspan="4">
+                    <field name="index_content" nolabel="1"/>
+                </group>
+            </xpath>
         </field>
     </record>
 
@@ -421,7 +397,7 @@
     <act_window
         domain="[('parent_id', '=', active_id)]"
         context="{'default_parent_id': active_id}"
-    	id="zoom_directory" name="Related Documents"
+        id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
 </data>

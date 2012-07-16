@@ -2,392 +2,392 @@
 <openerp>
     <data>
 
-	<!-- Fiscal Position Templates -->
-
-	<record id="fiscal_position_template_1_fr" model="account.fiscal.position.template">
-		<field name="name">Régime Provincial</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<record id="fiscal_position_template_21_fr" model="account.fiscal.position.template">
-		<field name="name">Régime Provinces Harmonisées (12%)</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<record id="fiscal_position_template_22_fr" model="account.fiscal.position.template">
-		<field name="name">Régime Provinces Harmonisées (13%)</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<record id="fiscal_position_template_23_fr" model="account.fiscal.position.template">
-		<field name="name">Régime Provinces Harmonisées (13.5%)</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<record id="fiscal_position_template_24_fr" model="account.fiscal.position.template">
-		<field name="name">Régime Provinces Harmonisées (15%)</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<record id="fiscal_position_template_3_fr" model="account.fiscal.position.template">
-		<field name="name">Régime Provinces Non-Harmonisées</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<record id="fiscal_position_template_4_fr" model="account.fiscal.position.template">
-		<field name="name">Régime International</field>
-		<field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
-	</record>
-
-	<!--  Alberta Fiscal Position Tax Templates (default is tps) -->
-
-	<record id="fiscal_position_tax_template_21_ab_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tps_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_22_ab_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tps_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_ab_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tps_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_ab_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tps_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_ab_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tps_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  British Columbia Fiscal Position Tax Templates (default is hst12) -->
-
-	<record id="fiscal_position_tax_template_22_12c_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tvh12_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_12_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tvh12_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_12_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tvh12_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_12_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tvh12_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_12_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tvh12_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  Manitoba Fiscal Position Tax Templates (default is tpstvp_mb) -->
-
-	<record id="fiscal_position_tax_template_21_mb_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tpstvp_mb_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_22_mb_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tpstvp_mb_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_mb_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tpstvp_mb_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_mb_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tpstvp_mb_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_mb_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tpstvp_mb_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_mb_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tpstvp_mb_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  New Brunswick, Newfoundland and Labrador and Ontario Fiscal Position Tax Templates (default is hst13) -->
-
-	<record id="fiscal_position_tax_template_21_13_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tvh13_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_13_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tvh13_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_13_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tvh13_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_13_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tvh13_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_13_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tvh13_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  Nova Scotia Fiscal Position Tax Templates (default is hst15) -->
-
-	<record id="fiscal_position_tax_template_21_15_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tvh15_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_22_15_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tvh15_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_15_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tvh15_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_15_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tvh15_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_15_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tvh15_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  Prince Edward Island Fiscal Position Tax Templates (default is tpstvp_pe)-->
-
-	<record id="fiscal_position_tax_template_21_pe_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tpstvp_pe_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_22_pe_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tpstvp_pe_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_pe_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tpstvp_pe_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_pe_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tpstvp_pe_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_pe_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tpstvp_pe_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_qc_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tpstvp_pe_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  Quebec Fiscal Position Tax Templates (default is tpstvq)-->
-
-	<record id="fiscal_position_tax_template_21_qc_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tpstvq_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_22_qc_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tpstvq_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_qc_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tpstvq_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_qc_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tpstvq_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_qc_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tpstvq_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!--  Saskatchewan Fiscal Position Tax Templates (default is tpstvp_sk)-->
-
-	<record id="fiscal_position_tax_template_21_sk_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="tax_src_id" ref="tpstvp_sk_fr" />
-		<field name="tax_dest_id" ref="tvh12_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_22_sk_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="tax_src_id" ref="tpstvp_sk_fr" />
-		<field name="tax_dest_id" ref="tvh13_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_23_sk_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="tax_src_id" ref="tpstvp_sk_fr" />
-		<field name="tax_dest_id" ref="tvh135_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_24_sk_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="tax_src_id" ref="tpstvp_sk_fr" />
-		<field name="tax_dest_id" ref="tvh15_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_3_sk_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="tax_src_id" ref="tpstvp_sk_fr" />
-		<field name="tax_dest_id" ref="tps_fr" />
-	</record>
-
-	<record id="fiscal_position_tax_template_4_sk_fr" model="account.fiscal.position.tax.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="tax_src_id" ref="tpstvp_sk_fr" />
-		<field name="tax_dest_id" ref="notax_fr" />
-	</record>
-
-	<!-- Fiscal Position Account Templates - Products -->
-
-	<record id="fiscal_position_product_template_21_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="account_src_id" ref="chart411_fr" />
-		<field name="account_dest_id" ref="chart412_fr" />
-	</record>
-
-	<record id="fiscal_position_product_template_22_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="account_src_id" ref="chart411_fr" />
-		<field name="account_dest_id" ref="chart412_fr" />
-	</record>
-
-	<record id="fiscal_position_product_template_23_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="account_src_id" ref="chart411_fr" />
-		<field name="account_dest_id" ref="chart412_fr" />
-	</record>
-
-	<record id="fiscal_position_product_template_24_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="account_src_id" ref="chart411_fr" />
-		<field name="account_dest_id" ref="chart412_fr" />
-	</record>
-
-	<record id="fiscal_position_product_template_3_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="account_src_id" ref="chart411_fr" />
-		<field name="account_dest_id" ref="chart413_fr" />
-	</record>
-
-	<record id="fiscal_position_product_template_4_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="account_src_id" ref="chart411_fr" />
-		<field name="account_dest_id" ref="chart414_fr" />
-	</record>
-
-	<!-- Fiscal Position Account Templates - Charges -->
-
-	<record id="fiscal_position_charge_template_21_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_21_fr"  />
-		<field name="account_src_id" ref="chart5111_fr" />
-		<field name="account_dest_id" ref="chart5112_fr" />
-	</record>
-
-	<record id="fiscal_position_charge_template_22_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_22_fr"  />
-		<field name="account_src_id" ref="chart5111_fr" />
-		<field name="account_dest_id" ref="chart5112_fr" />
-	</record>
-
-	<record id="fiscal_position_charge_template_23_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_23_fr"  />
-		<field name="account_src_id" ref="chart5111_fr" />
-		<field name="account_dest_id" ref="chart5112_fr" />
-	</record>
-
-	<record id="fiscal_position_charge_template_24_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_24_fr"  />
-		<field name="account_src_id" ref="chart5111_fr" />
-		<field name="account_dest_id" ref="chart5112_fr" />
-	</record>
-
-	<record id="fiscal_position_charge_template_3_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_3_fr"  />
-		<field name="account_src_id" ref="chart5111_fr" />
-		<field name="account_dest_id" ref="chart5113_fr" />
-	</record>
-
-	<record id="fiscal_position_charge_template_4_fr" model="account.fiscal.position.account.template">
-		<field name="position_id" ref="fiscal_position_template_4_fr"  />
-		<field name="account_src_id" ref="chart5111_fr" />
-		<field name="account_dest_id" ref="chart5114_fr" />
-	</record>
+    <!-- Fiscal Position Templates -->
+
+    <record id="fiscal_position_template_1_fr" model="account.fiscal.position.template">
+        <field name="name">Régime Provincial</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <record id="fiscal_position_template_21_fr" model="account.fiscal.position.template">
+        <field name="name">Régime Provinces Harmonisées (12%)</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <record id="fiscal_position_template_22_fr" model="account.fiscal.position.template">
+        <field name="name">Régime Provinces Harmonisées (13%)</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <record id="fiscal_position_template_23_fr" model="account.fiscal.position.template">
+        <field name="name">Régime Provinces Harmonisées (13.5%)</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <record id="fiscal_position_template_24_fr" model="account.fiscal.position.template">
+        <field name="name">Régime Provinces Harmonisées (15%)</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <record id="fiscal_position_template_3_fr" model="account.fiscal.position.template">
+        <field name="name">Régime Provinces Non-Harmonisées</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <record id="fiscal_position_template_4_fr" model="account.fiscal.position.template">
+        <field name="name">Régime International</field>
+        <field name="chart_template_id" ref="ca_fr_chart_template_fr"/>
+    </record>
+
+    <!--  Alberta Fiscal Position Tax Templates (default is tps) -->
+
+    <record id="fiscal_position_tax_template_21_ab_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tps_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_ab_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tps_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_ab_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tps_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_ab_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tps_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_ab_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tps_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  British Columbia Fiscal Position Tax Templates (default is hst12) -->
+
+    <record id="fiscal_position_tax_template_22_12c_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tvh12_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_12_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tvh12_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_12_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tvh12_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_12_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tvh12_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_12_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tvh12_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  Manitoba Fiscal Position Tax Templates (default is tpstvp_mb) -->
+
+    <record id="fiscal_position_tax_template_21_mb_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tpstvp_mb_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_mb_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tpstvp_mb_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_mb_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tpstvp_mb_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_mb_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tpstvp_mb_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_mb_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tpstvp_mb_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_mb_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tpstvp_mb_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  New Brunswick, Newfoundland and Labrador and Ontario Fiscal Position Tax Templates (default is hst13) -->
+
+    <record id="fiscal_position_tax_template_21_13_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tvh13_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_13_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tvh13_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_13_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tvh13_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_13_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tvh13_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_13_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tvh13_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  Nova Scotia Fiscal Position Tax Templates (default is hst15) -->
+
+    <record id="fiscal_position_tax_template_21_15_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tvh15_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_15_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tvh15_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_15_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tvh15_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_15_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tvh15_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_15_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tvh15_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  Prince Edward Island Fiscal Position Tax Templates (default is tpstvp_pe)-->
+
+    <record id="fiscal_position_tax_template_21_pe_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tpstvp_pe_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_pe_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tpstvp_pe_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_pe_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tpstvp_pe_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_pe_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tpstvp_pe_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_pe_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tpstvp_pe_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_qc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tpstvp_pe_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  Quebec Fiscal Position Tax Templates (default is tpstvq)-->
+
+    <record id="fiscal_position_tax_template_21_qc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tpstvq_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_qc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tpstvq_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_qc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tpstvq_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_qc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tpstvq_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_qc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tpstvq_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!--  Saskatchewan Fiscal Position Tax Templates (default is tpstvp_sk)-->
+
+    <record id="fiscal_position_tax_template_21_sk_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="tax_src_id" ref="tpstvp_sk_fr" />
+        <field name="tax_dest_id" ref="tvh12_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_sk_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="tax_src_id" ref="tpstvp_sk_fr" />
+        <field name="tax_dest_id" ref="tvh13_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_sk_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="tax_src_id" ref="tpstvp_sk_fr" />
+        <field name="tax_dest_id" ref="tvh135_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_sk_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="tax_src_id" ref="tpstvp_sk_fr" />
+        <field name="tax_dest_id" ref="tvh15_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_sk_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="tax_src_id" ref="tpstvp_sk_fr" />
+        <field name="tax_dest_id" ref="tps_fr" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_sk_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="tax_src_id" ref="tpstvp_sk_fr" />
+        <field name="tax_dest_id" ref="notax_fr" />
+    </record>
+
+    <!-- Fiscal Position Account Templates - Products -->
+
+    <record id="fiscal_position_product_template_21_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="account_src_id" ref="chart411_fr" />
+        <field name="account_dest_id" ref="chart412_fr" />
+    </record>
+
+    <record id="fiscal_position_product_template_22_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="account_src_id" ref="chart411_fr" />
+        <field name="account_dest_id" ref="chart412_fr" />
+    </record>
+
+    <record id="fiscal_position_product_template_23_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="account_src_id" ref="chart411_fr" />
+        <field name="account_dest_id" ref="chart412_fr" />
+    </record>
+
+    <record id="fiscal_position_product_template_24_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="account_src_id" ref="chart411_fr" />
+        <field name="account_dest_id" ref="chart412_fr" />
+    </record>
+
+    <record id="fiscal_position_product_template_3_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="account_src_id" ref="chart411_fr" />
+        <field name="account_dest_id" ref="chart413_fr" />
+    </record>
+
+    <record id="fiscal_position_product_template_4_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="account_src_id" ref="chart411_fr" />
+        <field name="account_dest_id" ref="chart414_fr" />
+    </record>
+
+    <!-- Fiscal Position Account Templates - Charges -->
+
+    <record id="fiscal_position_charge_template_21_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_21_fr"  />
+        <field name="account_src_id" ref="chart5111_fr" />
+        <field name="account_dest_id" ref="chart5112_fr" />
+    </record>
+
+    <record id="fiscal_position_charge_template_22_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_22_fr"  />
+        <field name="account_src_id" ref="chart5111_fr" />
+        <field name="account_dest_id" ref="chart5112_fr" />
+    </record>
+
+    <record id="fiscal_position_charge_template_23_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_23_fr"  />
+        <field name="account_src_id" ref="chart5111_fr" />
+        <field name="account_dest_id" ref="chart5112_fr" />
+    </record>
+
+    <record id="fiscal_position_charge_template_24_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_24_fr"  />
+        <field name="account_src_id" ref="chart5111_fr" />
+        <field name="account_dest_id" ref="chart5112_fr" />
+    </record>
+
+    <record id="fiscal_position_charge_template_3_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3_fr"  />
+        <field name="account_src_id" ref="chart5111_fr" />
+        <field name="account_dest_id" ref="chart5113_fr" />
+    </record>
+
+    <record id="fiscal_position_charge_template_4_fr" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_4_fr"  />
+        <field name="account_src_id" ref="chart5111_fr" />
+        <field name="account_dest_id" ref="chart5114_fr" />
+    </record>
 
     </data>
 </openerp>    

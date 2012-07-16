@@ -53,8 +53,8 @@ Dashboard for project members that includes:
         "process/task_process.xml",
         "res_partner_view.xml",
         "report/project_report_view.xml",
-        "board_project_view.xml",
         'report/project_cumulative.xml',
+        "board_project_view.xml",
         'res_config_view.xml',
     ],
     'demo_xml': [

@@ -56,9 +56,7 @@
     <div t-name="mail.Thread" class="oe_mail oe_mail_thread">
         <div class="oe_mail_thread_action">
             <img class="oe_mail_msg_image oe_left" alt="User img"/>
-            <div class="oe_mail_msg_content">
-                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
-            </div>
+            <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
         </div>
         <div class="oe_mail_thread_display"></div>
         <div class="oe_mail_thread_more">
@@ -91,10 +89,7 @@
                     </div>
                     <div class="oe_mail_msg_body">
                         <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a>
-                        <t t-raw="record.body_head"/>
-                        <t t-if="record.body_tail"><a href="#" class="oe_mail_msg_more">... See more</a>
-                            <span class="oe_mail_msg_tail"><t t-raw="record.body_tail"/></span>
-                        </t>
+                        <t t-raw="record.body"/>
                     </div>
                     <ul class="oe_mail_msg_footer">
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>

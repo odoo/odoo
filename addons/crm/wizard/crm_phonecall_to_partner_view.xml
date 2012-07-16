@@ -9,12 +9,14 @@
           <field name="type">form</field>
           <field name="arch" type="xml">
             <form string="Create a Partner" version="7.0">
-                <header>
-                    <button name="open_create_partner" string="Create Partner" type="object" icon="gtk-ok" groups="base.group_partner_manager"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                </header>
                 <label string="Are you sure you want to create a partner based on this Phonecall ?"/>
+                <newline/>
                 <label string="You may have to verify that this partner does not exist already."/>
+                <footer>
+                    <button name="open_create_partner" string="Create Partner" type="object" groups="base.group_partner_manager" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
         </field>
        </record>
@@ -27,14 +29,15 @@
           <field name="type">form</field>
           <field name="arch" type="xml">
             <form string="Create a Partner" version="7.0">
-                <header>
-                    <button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                </header>
                 <group>
                     <field name="action"/>
                     <field name="partner_id" attrs="{'required':[('action','=','exist')],'invisible':[('action','!=','exist')]}" />
                 </group>
+                <footer>
+                    <button name="make_partner" string="Continue" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
           </field>
        </record>
@@ -49,7 +52,5 @@
             <field name="view_id" ref="view_crm_phonecall2partner_create"/>
             <field name="target">new</field>
         </record>
-        
-
      </data>
 </openerp>

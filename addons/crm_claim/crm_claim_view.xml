@@ -75,7 +75,7 @@
                     <field name="stage_id"/>
                     <field name="date_action_next"/>
                     <field name="action_next"/>
-                    <field name="categ_id" string="Type" select="1"/>
+                    <field name="categ_id" string="Type"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
@@ -91,25 +91,25 @@
                 <form version="7.0">
                 <header>
                     <span groups="base.group_user">
-                        <button name="case_open" string="Open" type="object"
-                                states="draft,pending"/>
-                        <button name="case_close" string="Done" type="object"
+                        <button name="case_open" string="Open" type="object" class="oe_highlight"
+                                states="draft,pending" />
+                        <button name="case_close" string="Done" type="object" class="oe_highlight"
                                 states="open,pending"/>
-                        <button name="case_refuse" string="Refuse" type="object"
+                        <button name="case_refuse" string="Refuse" type="object" class="oe_highlight"
                                 states="draft,open,pending"/>
                         <button name="stage_previous" string="Previous Stage" type="object"
                                 states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="stage_next" string="Next Stage" type="object"
                                 states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="case_reset" string="Reset to Draft" type="object"
+                        <button name="case_reset" string="Reset to Draft" type="object" 
                                 states="cancel,done"/>
-                        <button name="case_cancel" string="Cancel" type="object"
+                        <button name="case_cancel" string="Cancel" type="object" 
                                 states="draft,open,pending"/>
                     </span>
                     <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
-                <sheet string="Claims" layout="auto">
+                <sheet string="Claims">
                     <group>
                         <field name="name"/>
                         <field name="date"/>
@@ -168,8 +168,8 @@
                         </notebook>
                     </group>
                 </sheet>
-                <div class="oe_sheet_width">
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                <div class="oe_chatter">
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </div>
                 </form>
             </field>

@@ -8,16 +8,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Send follow-ups" version="7.0">
-                <header>
-                    <button name="do_continue" string="Continue" colspan="1" type="object" icon="gtk-ok"/>
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                </header>
                 <separator string="Send Follow-ups"/>
                 <label string ="This feature allows you to send reminders to partners with pending invoices. You can send them the default message for unpaid invoices or manually enter a message should you need to remind them of a specific information."/>
                 <group col="4">
                     <field name="followup_id"/>
                     <field name="date"/>
                 </group>
+                <footer>
+                    <button name="do_continue" string="Continue" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
@@ -77,9 +78,10 @@
             <field name="arch" type="xml">
             <form string="Send follow-ups" version="7.0">
                 <header>
-                    <button name="do_mail" string="Send Mails" colspan="1" type="object" icon="gtk-execute"/>
-                    <button name="do_print" string="Print Follow Ups" colspan="1" type="object" icon="gtk-print"/>
-                    <button special="cancel" string="Cancel" icon='gtk-cancel'/>
+                    <button name="do_mail" string="Send Mails" type="object" class="oe_highlight"/>
+                    <button name="do_print" string="Print Follow Ups" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
                 <notebook>
                     <page string="Partner Selection">
@@ -116,9 +118,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Summary" version="7.0">
-                <header>
-                    <button special="cancel" string="Ok" icon='gtk-cancel'/>
-                </header>
                 <separator string="Summary"/>
                 <field name="summary"/>
             </form>

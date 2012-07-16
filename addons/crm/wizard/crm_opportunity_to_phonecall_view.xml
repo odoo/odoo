@@ -9,13 +9,7 @@
             <field name="model">crm.opportunity2phonecall</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Schedule/Log a Call" layout="manual" version="7.0">
-                    <header>
-                        <button name="action_schedule" type="object" string="Log call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'log')]}" />
-                        <button name="action_schedule" type="object" string="Schedule Call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'schedule')]}" />
-                        or
-                        <button name="action_cancel" string="_Cancel" class="oe_link" special="cancel" />
-                    </header>
+                <form string="Schedule/Log a Call" version="7.0">
                     <group>
                         <group>
                             <field name="action"/>
@@ -34,6 +28,12 @@
                         </group>
                     </group>
                     <field name="note" placeholder="Call Description" />
+                    <footer>
+                        <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
+                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"  />
+                        or
+                        <button name="action_cancel" string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

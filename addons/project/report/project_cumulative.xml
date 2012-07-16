@@ -79,11 +79,11 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_task_history_graph"/>
             <field eval="False" name="filter"/>
-            <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>
+            <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>
         </record>
         <menuitem action="action_view_task_history_cumulative"
             id="menu_action_view_task_history_cumulative"
-            parent="project_report_task" />
+            parent="base.menu_project_report" />
 
 
         <!--<record id="action_view_task_history_burndown" model="ir.actions.act_window">-->

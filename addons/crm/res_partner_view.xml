@@ -45,25 +45,57 @@
                 </field>
         </record>
 
-    <act_window
-        id="crm_meeting_partner"
-        name="Meetings"
-        res_model="crm.meeting"
-        src_model="res.partner"
-        view_mode="calendar,tree,form,gantt"
-        context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
-    />
-    <act_window
-        id="act_res_partner_2_opportunity"
-        name="Opportunities"
-        res_model="crm.lead"
-        src_model="res.partner"
-        view_mode="kanban,tree,form,graph,calendar"
-        domain="[('type','=','opportunity')]"
-        context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
-        />
+        <!-- open meetings related to given partner -->
+        <record id="crm_meeting_partner" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="src_model">res.partner</field>
+            <field name="res_model">crm.meeting</field>
+            <field name="view_mode">calendar,tree,form,gantt</field>
+            <field name="context">{'search_default_partner_ids': active_id}</field>
+        </record>
 
-<!-- Partner kanban view inherte -->
+        <!-- open opportunities related to given partner -->
+        <record model="ir.actions.act_window" id="relate_partner_opportunities">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="context">{'search_default_partner_id': active_id,
+                'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help">
+                With opportunities you can manage and keep track of your sales pipeline by creating specific customer- or prospect-related sales documents to follow up potential sales. Information such as expected revenue, opportunity stage, expected closing date, communication history and much more can be stored. Opportunities can be connected to the email gateway: new emails may create opportunities, each of them automatically gets the history of the conversation with the customer.
+
+                You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_kanban">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_graph">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_case_graph_view_opportunity"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+
+        <!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
             <field name="name">res.partner.kanban.inherit</field>
             <field name="model">res.partner</field>
@@ -74,13 +106,13 @@
                     <field name="opportunity_count"/>
                     <field name="meeting_count"/>
                 </field>
-                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                        <a name="%(act_res_partner_2_opportunity)d" type="action">
-                            <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
-                        </a>
-                        <a name="%(crm_meeting_partner)d" type="action">
-                            <t t-if="record.meeting_count.value">Meetings(<t t-esc="record.meeting_count.value"/>)</t>
-                        </a>
+                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0" class="oe_tag">
+                        <t t-esc="record.opportunity_count.value"/> Opportunities
+                    </a>
+                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0" class="oe_tag">
+                        <t t-esc="record.meeting_count.value"/> Meetings
+                    </a>
                 </xpath>
             </field>
         </record>
@@ -95,13 +127,13 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
                         string="Schedule a Meeting"
-                        name="%(crm.crm_case_categ_meet_create_partner)d"
-                        context="{'search_default_partner_id': [active_id], 'default_duration': 4.0}"/>
+                        name="%(base_calendar.action_crm_meeting)d"
+                        context="{'search_default_partner_ids': active_id}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
-                        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}" />
-                    <button type="action" string="Create an Opportunity"
-                        name="%(crm.action_view_crm_partner2opportunity)d" />
+                        context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
+                    <button type="action" string="Opportunities"
+                        name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
                 </xpath>
             </field>
         </record>

@@ -107,7 +107,6 @@ class crm_make_sale(osv.osv_memory):
                 new_ids.append(new_id)
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_append_note(body=message)
-
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:

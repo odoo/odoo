@@ -9,15 +9,17 @@
             <field name="model">wiki.create.menu</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Create Menu">
-                     <separator string="Menu Information" colspan="4" />
-                    <field name="menu_name" />
-                    <field name="menu_parent_id" />
-                    <separator string="" colspan="4" />
-                    <label string="" colspan="2" />
-                    <button special="cancel" string="Cancel" />
-                    <button name="wiki_menu_create" string="Create Menu" type="object"/>
-             </form>
+                <form string="Create Menu" version="7.0">
+                    <group string="Menu Information">
+                        <field name="menu_name" />
+                        <field name="menu_parent_id" />
+                    </group>
+                    <footer>
+                        <button name="wiki_menu_create" string="Create Menu" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
             </field>
         </record>
 

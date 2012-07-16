@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
+    <data>
         <record model="ir.ui.view" id="email_compose_message_wizard_form">
             <field name="name">mail.compose.message.form</field>
             <field name="model">mail.compose.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Compose Email">
-                    <group col="6" colspan="4">
+                <form string="Compose Email" version="7.0">
+                    <group>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name='filter_id' invisible="context.get('active_model',False)"/>
-                        <field name="email_from" colspan="4" required="1"/>
-                        <field name="email_to" colspan="4" required="1"/>
-                        <field name="email_cc" colspan="4"/>
-                        <field name="email_bcc" colspan="4"/>
-                        <field name="reply_to" colspan="4"/>
-                        <field name="subject" colspan="4" widget="char" size="512"/>
-                        <field name="references" invisible="1"/>
-                        <field name="message_id" invisible="1"/>
+                        <field name="email_from" required="1"/>
+                        <field name="email_to" required="1"/>
+                        <field name="email_cc"/>
+                        <field name="email_bcc"/>
+                        <field name="reply_to"/>
+                        <field name="subject" widget="char" size="512"/>
+                        <field name="references"/>
+                        <field name="message_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Body">
@@ -28,11 +28,11 @@
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="4" colspan="4">
-                        <label string="" name="placeholder" colspan="1"/>
-                        <button icon="gtk-close" special="cancel" string="Cancel"/>
-                        <button icon="gtk-ok" name="send_mail" string="Send" type="object"/>
-                    </group>
+                    <footer>
+                        <button name="send_mail" string="Send" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -47,14 +47,14 @@
             <field name="target">new</field>
         </record>
 
-	    <!--  Replace the default mass-mailing wizard in base with the composition wizard -->
-	    <act_window name="Mass Mailing"
-	            res_model="mail.compose.message"
-	            src_model="res.partner"
-	            view_mode="form"
-	            target="new"
-	            key2="client_action_multi"
-	            id="base.action_partner_mass_mail"
-	            context="{'mail.compose.message.mode':'mass_mail'}"/>
-	</data>
+        <!--  Replace the default mass-mailing wizard in base with the composition wizard -->
+        <act_window name="Mass Mailing"
+                res_model="mail.compose.message"
+                src_model="res.partner"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"
+                id="base.action_partner_mass_mail"
+                context="{'mail.compose.message.mode':'mass_mail'}"/>
+    </data>
 </openerp>

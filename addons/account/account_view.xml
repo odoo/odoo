@@ -13,11 +13,11 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object"/>
-                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object"/>
+                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
+                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" nolabel="1" />
                 </header>
-                <sheet string="Fiscalyear" layout="auto">
+                <sheet string="Fiscalyear" >
                     <group>
                         <group>
                             <field name="name"/>
@@ -171,7 +171,7 @@
                 <form string="Account" version="7.0">
                     <label for="name" class="oe_edit_only" string="Account Name and Code:"/>
                     <h1>
-                        <field name="name"/> - 
+                        <field name="name"/> -
                         <field name="code"/>
                     </h1>
                     <label for="company_id"/>
@@ -592,8 +592,8 @@
             <field name="arch" type="xml">
                 <form string="Bank Statement" version="7.0">
                 <header>
-                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" />
-                    <button name="button_dummy" states="draft" string="Compute" type="object"/>
+                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="button_dummy" states="draft" string="Compute" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
@@ -909,9 +909,9 @@
                                   <field name="amount" attrs="{'readonly':[('type','in',('none', 'code', 'balance'))]}"/>
                                   <separator colspan="4" string="Accounting Information"/>
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
                                   <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
                                   <separator colspan="4" string="Tax Declaration: Invoices"/>
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -1268,11 +1268,11 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="button_validate" states="draft" string="Post" type="object"/>
+                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="posted" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
-                <sheet string="Journal Entries" layout="auto">
+                <sheet string="Journal Entries" >
                     <group col="4">
                         <field name="name" readonly="True"/>
                         <field name="ref"/>
@@ -1284,10 +1284,10 @@
                         <field name="partner_id" invisible="1"/>
                         <field name="amount" invisible="1"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Journal Items">
                             <field name="balance" invisible="1"/>
-                            <field colspan="4" name="line_id" widget="one2many_list" 
+                            <field name="line_id" widget="one2many_list"
                               on_change="onchange_line_id(line_id)"
                               context="{'balance': balance , 'journal': journal_id }">
                                 <form string="Journal Item" version="7.0">
@@ -1824,8 +1824,8 @@
                 <form string="Recurring" version="7.0">
                     <header>
                         <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
-                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
-                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
+                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific" class="oe_highlight"/>
+                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                     </header>
                     <sheet>
@@ -1983,8 +1983,7 @@
             <field name="arch" type="xml">
                 <form string="Create Account" version="7.0">
                     <header>
-                        <button icon="gtk-ok" name="action_create" string="Add" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_highlight"  />
                     </header>
                     <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
                     <field name="cparent_id"/>
@@ -2355,16 +2354,14 @@
                 <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <button name="action_skip" position="replace"/>
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <p>This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template.</p>
                     <div groups="base.group_multi_company">
                         <label for="company_id"/>
                         <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     </div>
-                    <group string="Set Your Accounting Options">
+                    <group>
                         <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <label for="chart_template_id"/>
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
@@ -2544,8 +2541,8 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object"/>
-                    <button name="button_open" states="draft" string="Open CashBox" type="object"/>
+                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
+                    <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>

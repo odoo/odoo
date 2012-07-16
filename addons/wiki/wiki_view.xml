@@ -32,12 +32,12 @@
             <field name="arch" type="xml">
                 <form string="Wiki Groups" version="7.0">
                     <group col="4" colspan="3" >
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="create_date" readonly="2"/>
                     </group>
                     <group col="2" colspan="1">
-                        <field name="method" select="1"/>
-                        <field name="home" select="1" domain="[('group_id','=',active_id)]"
+                        <field name="method"/>
+                        <field name="home" domain="[('group_id','=',active_id)]"
                             attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
                     </group>
                     <notebook colspan="4">
@@ -129,27 +129,33 @@
             <field name="arch" type="xml">
                 <form string="Wiki" version="7.0">
                     <sheet>
-                        <group col="6" colspan="4">
-                            <field name="name" select="1" colspan="6"/>
-                            <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                            <field name="parent_id" domain="[('group_id','=',group_id)]"/>
-                            <field name="section"/>                        
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                                <h1><field name="name" select="1" /></h1>
+                            <label for="group_id" class="oe_edit_only"/>
+                            <h2>
+                            <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id" domain="[('group_id','=',group_id)]"/>
+                                <field name="section"/>
+                            </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Content">
-                            <separator colspan="4" string="Page Content"/>
-                            <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
+                            <field name="text_area" nolabel="1" colspan="4" widget="text_wiki" placeholder="Wiki Content"/>
                             </page>
                         </notebook>
                         <group col="2" colspan="2" groups="base.group_no_one">
                             <separator colspan="4" string="Modification Information"/>
                             <field name="write_date" readonly="1"/>
                             <field name="minor_edit"/>
-                            <field name="review" select="1"/>
+                            <field name="review"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="4" string="Meta Information"/>
-                            <field name="tags" select="1"/>
+                            <field name="tags"/>
                             <field name="toc" groups="base.group_no_one"/>
                         </group>
                     </sheet>
@@ -234,11 +240,11 @@
             <field name="arch" type="xml">
                 <form string="Wiki History" version="7.0">
                     <sheet>
-                        <field name="wiki_id" select="1" colspan="4"/>
-                        <field name="summary" select="1" colspan="4"/>
-                        <field name="text_area" select="1" colspan="4" nolabel="1" widget="text_wiki"/>
-                        <field name="create_date" select="1" readonly="1"/>
-                        <field name="minor_edit" select="1" groups="base.group_no_one"/>
+                        <field name="wiki_id" colspan="4"/>
+                        <field name="summary" colspan="4"/>
+                        <field name="text_area" colspan="4" nolabel="1" widget="text_wiki"/>
+                        <field name="create_date" readonly="1"/>
+                        <field name="minor_edit" groups="base.group_no_one"/>
                     </sheet>
                 </form>
             </field>

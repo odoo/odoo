@@ -9,16 +9,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Periods" version="7.0">
-                    <header>
-                        <button string="Cancel" special="cancel" icon="gtk-cancel"/>
-                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Daily Periods" type="object"/>
-                        <button name="create_stock_periods" icon="gtk-dnd"  string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}"/>
-                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}"/>
-                    </header>
                     <group col="4">
                         <field name="date_start"/>
                         <field name="date_stop"/>
                     </group>
+                    <footer>
+                        <button name="create_stock_periods" string="Create Daily Periods" type="object" class="oe_highlight"/>
+                        or
+                        <button name="create_stock_periods" string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}" class="oe_highlight"/>
+                        or
+                        <button name="create_stock_periods" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

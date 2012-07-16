@@ -7,36 +7,6 @@
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
-        <!-- Employee View -->
-        <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form2</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-            <data>
-                <xpath expr="//page[@string='Personal Information']" position="after">
-                    <page string="Miscellaneous" groups="base.group_hr_user">
-                        <group colspan="2" col="2">
-                            <separator string="Personal Info" colspan="2"/>
-                            <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
-                            <field name="place_of_birth"/>
-                            <field name="children"/>
-                            <!-- <field name="basic" invisible="0"/> -->
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Job Info" colspan="2"/>
-                            <field name="manager" select="1"/>
-                            <field name="vehicle" select="1"/>
-                            <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1" string="Medical Examination"/>
-                        </group>
-                    </page>
-                </xpath>
-            </data>
-            </field>
-        </record>
-        <!-- End Employee View -->
-
         <!-- Contract View -->
         <record id="hr_contract_form_inherit" model="ir.ui.view">
             <field name="name">hr.contract.view.form.inherit</field>
@@ -45,8 +15,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//group[@name='right_column']" position="before">
-                    <separator string="Payslip Info" colspan="2"/>
+                <xpath expr="//field[@name='wage']" position="after">
                     <field name="struct_id" required="1"/>
                 </xpath>
                  <xpath expr="//field[@name='working_hours']" position="after">
@@ -105,7 +74,7 @@
             <field name="model">hr.payroll.structure</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Function">
+                <form string="Employee Function" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="code"/>
@@ -249,6 +218,12 @@
                 </tree>
             </field>
         </record>
+        
+        <act_window name="Payslip Computation Details"
+            context="{'default_slip_id': active_id,'search_default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
 
         <record id="view_hr_payslip_form" model="ir.ui.view">
             <field name="name">hr.payslip.form</field>
@@ -257,21 +232,26 @@
             <field name="arch" type="xml">
                 <form string="Payslip" version="7.0">
                 <header>
-                    <button string="Confirm" name="hr_verify_sheet" states="draft"/>
-                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object'/>
+                    <button string="Confirm" name="hr_verify_sheet" states="draft" class="oe_highlight"/>
+                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object' />
                     <button string="Set to Draft" name="draft" states="cancel"/>
-                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft"/>
+                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_highlight"/>
                     <button string="Cancel" name="cancel_sheet" states="draft,hr_check,confirm,verify"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <label for="employee_id" class="oe_edit_only"/>
-                    <h1><field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/></h1>
-                    <label for="date_from" class="oe_edit_only" string="Period"/>
-                    <h2>
-                        from <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
-                        to <field name="date_to"/>
-                    </h2>
+                    <div class="oe_right oe_button_box">
+                        <button name="%(act_payslip_lines)d" string="Payslip Computation Details" type="action"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="employee_id" class="oe_edit_only"/>
+                        <h1><field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/></h1>
+                        <label for="date_from" class="oe_edit_only" string="Period"/>
+                        <h2>
+                            From <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
+                            to <field name="date_to"/>
+                        </h2>
+                    </div>
                     <group col="4">
                         <field name="contract_id" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="number"/>
@@ -281,6 +261,7 @@
                     </group>
                     <notebook>
                         <page string="Worked Days &amp; Inputs">
+                            <separator string="Worked Days"/>
                             <field name="worked_days_line_ids">
                                 <tree string="Worked Days" editable="bottom">
                                     <field name="name"/>
@@ -302,6 +283,7 @@
                                     </group>
                                 </form>
                             </field>
+                            <separator string="Other Inputs"/>
                             <field name="input_line_ids" colspan="4" nolabel="1">
                                 <tree string="Input Data" editable="bottom">
                                     <field name="name"/>
@@ -360,14 +342,18 @@
                             </field>
                        </page>
                        <page string="Other Information">
-                            <group col="2" string="Other Information">
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="payslip_run_id" domain="[('state','=','draft')]"/>
-                                <field name="paid" readonly="1"/>
+                            <group>
+                                <group string="Miscellaneous">
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="payslip_run_id" domain="[('state','=','draft')]"/>
+                                </group>
+                                <group name="accounting" string="Accounting">
+                                    <field name="paid" readonly="1"/>
+                                </group>
                             </group>
-                            <group string="Notes">
-                            <field name="note"/>
-                            </group>
+                            <div colspan="4">
+                                <field name="note" Placeholder="Add an internal note..."/>
+                            </div>
                        </page>
                     </notebook>
                     </sheet>
@@ -413,7 +399,27 @@
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
+        <act_window name="Payslips"
+                    context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
+                    res_model="hr.payslip"
+                    src_model="hr.employee"
+                    view_id ="view_hr_payslip_tree"
+                    id="act_hr_employee_payslip_list"
+                    groups="base.group_hr_manager"/>
 
+        <!-- Employee View -->
+        <record id="payroll_hr_employee_view_form" model="ir.ui.view">
+            <field name="name">payroll.hr.employee.view.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='button_box']" position="inside">
+                        <button name="%(act_hr_employee_payslip_list)d" string="Payslips" type="action"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
         <!-- Salary Category-->
         <record id="hr_salary_rule_category_form" model="ir.ui.view">
             <field name="name">hr.salary.rule.category.form</field>
@@ -508,8 +514,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                    <field name="name" />
+                    <field name="company_id"  groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -596,7 +602,7 @@
                     <h2><field name="category_id"/></h2>
 
                     <group col="4">
-                       <field name="code" select="1"/>
+                       <field name="code"/>
                        <field name="sequence" />
                        <field name="active"/>
                        <field name="appears_on_payslip"/>
@@ -724,18 +730,26 @@
             <field name="arch" type="xml">
                 <form string="Payslips Batches" version="7.0">
                 <header>
-                    <button name="close_payslip_run" type="object" string="Close" states="draft"/>
-                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" />
-                    <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
+                    <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_highlight"/>
+                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_highlight"/>
+                    <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <group col="4">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
                         <field name="name"/>
-                        <field name="credit_note"/>
-                        <field name="date_start"/>
+                    </h1>
+                    <h2>
+                        Period from 
+                        <field name="date_start"/> 
+                        to 
                         <field name="date_end"/>
+                    </h2>
+                    <group col="4">
+                        <field name="credit_note"/>
                     </group>
+                    <separator string="Payslips"/>
                     <field name="slip_ids"/>
                 </sheet>
                 </form>
@@ -763,18 +777,18 @@
             groups="base.group_hr_manager"/>
 
         <act_window name="Payslip Computation Details"
-        	domain="[('slip_id', '=', active_id)]"
-        	context="{'default_slip_id': active_id}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.payslip"
-        	id="act_payslip_lines"/>
+            domain="[('slip_id', '=', active_id)]"
+            context="{'default_slip_id': active_id}"
+            res_model="hr.payslip.line"
+            src_model="hr.payslip"
+            id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
-        	domain="[('register_id', '=', active_id)]"
-        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
-        	res_model="hr.payslip.line"
-        	src_model="hr.contribution.register"
-        	id="act_contribution_reg_payslip_lines"/>
+            domain="[('register_id', '=', active_id)]"
+            context="{'default_register_id': active_id, 'search_default_register_id': 1}"
+            res_model="hr.payslip.line"
+            src_model="hr.contribution.register"
+            id="act_contribution_reg_payslip_lines"/>
 
     </data>
 </openerp>

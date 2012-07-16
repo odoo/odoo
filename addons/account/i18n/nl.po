@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-06-20 16:17+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-06-28 12:47+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-22 04:36+0000\n"
-"X-Generator: Launchpad (build 15461)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:52+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -218,7 +218,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
-msgstr "Belasting templates"
+msgstr "Belasting sjablonen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -260,7 +260,9 @@ msgstr "Belgische overzichten"
 #: code:addons/account/account_move_line.py:1200
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
-msgstr "Er kunnen geen boekingen worden aangepast die zijn afgesloten"
+msgstr ""
+"Er kunnen geen wijzigingen worden aangebracht in een dagboek dat al is "
+"afgesloten."
 
 #. module: account
 #: help:account.account,user_type:0
@@ -384,7 +386,7 @@ msgid ""
 msgstr ""
 "Dit formulier wordt gebruikt door boekhouders voor het invoeren van grote "
 "hoeveelheden boekingen in OpenERP. De journaalposten worden aangemaakt door "
-"OpenERP als er gebruik wordt gemaakt van bankafschriften, kassasystemen of "
+"OpenERP als er gebruik wordt gemaakt van bankafschriften, Kasregisters of "
 "klant/leverancier-betalingen."
 
 #. module: account
@@ -573,7 +575,7 @@ msgstr "Creditering factuur"
 #. module: account
 #: report:account.overdue:0
 msgid "Li."
-msgstr "Li."
+msgstr "Bt."
 
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
@@ -916,7 +918,7 @@ msgstr "Berekening"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: refund invoice and reconcile"
-msgstr "Annuleer: factuur crediteren en afletteren"
+msgstr "Factuur annuleren: factuur crediteren en afletteren"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -1151,13 +1153,13 @@ msgstr "Toepasbaarheidsopties"
 #. module: account
 #: report:account.partner.balance:0
 msgid "In dispute"
-msgstr "Geschil"
+msgstr "Wordt betwist"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
-msgstr "Kassasystemen"
+msgstr "Kasregisters"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -1724,8 +1726,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
-"Annuleer factuur: Genereert een creditfactuur, valideert en lettert af om de "
-"huidige factuur te annuleren."
+"Factuur annuleren: Genereert een creditfactuur, valideert en lettert af om "
+"de huidige factuur te annuleren."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -2374,7 +2376,7 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
-"Er is geen default krediet rekening beschikbaar \n"
+"Er is geen standaard credit rekening beschikbaar \n"
 "voor journaal \"%s\""
 
 #. module: account
@@ -2711,7 +2713,7 @@ msgstr "Afletteren bank"
 #. module: account
 #: report:account.invoice:0
 msgid "Disc.(%)"
-msgstr "Korting. (%)"
+msgstr "Krt. (%)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -2969,8 +2971,8 @@ msgid ""
 "You can not delete an invoice which is open or paid. We suggest you to "
 "refund it instead."
 msgstr ""
-"Een factuur die open of betaald is kan u niet verwijderen. In plaats daarvan "
-"stellen we voor dat u ze terugbetaald."
+"Een factuur die open of betaald is kunt u niet verwijderen. In plaats "
+"daarvan kunt u een creditfactuur maken.."
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -3836,7 +3838,7 @@ msgstr "Mutaties"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft Refund"
-msgstr "Maak een concept terugbetaling"
+msgstr "Crediteer factuur: Maak een concept credit factuur"
 
 #. module: account
 #: view:account.state.open:0
@@ -4486,6 +4488,10 @@ msgid ""
 "you want to generate accounts of this template only when loading its child "
 "template."
 msgstr ""
+"Vink deze optie uit indien u niet wilt dat dit sjabloon actief wordt "
+"gebruikt in de wizard, welke het grootboekrekeningschema genereerd van "
+"sjablonen. Gebruik dit alleen indien u rekeningen wilt genereren van dit "
+"sjabloon bij het laden van het onderliggende sjaboon."
 
 #. module: account
 #: view:account.use.model:0
@@ -4578,7 +4584,7 @@ msgstr "Journaalposten boeken"
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
-msgstr "Afgebroken"
+msgstr "Geannuleerd"
 
 #. module: account
 #: help:account.bank.statement,balance_end_cash:0
@@ -4711,7 +4717,7 @@ msgstr "Opbrengsten rekening op product sjabloon"
 #: code:addons/account/account.py:3120
 #, python-format
 msgid "MISC"
-msgstr "DIV"
+msgstr "MEM"
 
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
@@ -5312,7 +5318,7 @@ msgstr "Sjabloon belasting fiscale positie"
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr "Maak verwijderen boekingen mogelijk"
+msgstr "Maak het annuleren boekingen mogelijk"
 
 #. module: account
 #: field:account.tax.code,sign:0
@@ -5748,7 +5754,7 @@ msgstr "Aanmaakdatum"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Kostenplaatsen"
+msgstr "Kostenplaats dagboeken"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -6896,7 +6902,7 @@ msgstr ""
 #: view:account.move:0
 #: field:account.move,to_check:0
 msgid "To Review"
-msgstr "Na te kijken"
+msgstr "Ter controle"
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -8376,8 +8382,8 @@ msgid ""
 "Modify Invoice: Cancels the current invoice and creates a new copy of it "
 "ready for editing."
 msgstr ""
-"Wijzig factuur: Annuleert de huidige facturen en maak een kopie aan, gereed "
-"voor bewerken."
+"Wijzig factuur: Annuleert de huidige factuur en maakt een kopie aan waarop u "
+"wijzigingen kunt maken."
 
 #. module: account
 #: field:account.automatic.reconcile,period_id:0
@@ -8561,8 +8567,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"U kunt deze optie aanvinken om deze boeking te markeren als een geschil met "
-"de geassocieerde partner"
+"U kunt deze optie aanvinken om deze boeking te markeren als deze boeking "
+"wordt betwist door uw klant."
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -9379,7 +9385,7 @@ msgstr "Belastingrubriek sjabloon"
 #. module: account
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
-msgstr "Document: Boekhoudkundige klantverklaring"
+msgstr "Document: Rekeningoverzicht klant"
 
 #. module: account
 #: field:account.account.type,report_type:0
@@ -10733,7 +10739,8 @@ msgstr "November"
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: refund invoice, reconcile and create a new draft invoice"
 msgstr ""
-"Bewerken: Crediteer factuur, afletteren en maak een nieuwe concept factuur"
+"Wijzig factuur: Annuleert de huidige factuur en maakt een kopie aan waarop u "
+"wijzigingen kunt maken."
 
 #. module: account
 #: help:account.invoice.line,account_id:0

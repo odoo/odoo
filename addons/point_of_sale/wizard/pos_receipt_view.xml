@@ -10,11 +10,14 @@
               <field name="type">form</field>
               <field name="arch" type="xml">
                 <form string="Receipt :" version="7.0">
-                    <header>
-                      <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                      <button name="print_report" string="Print Receipt" type="object" icon="gtk-print" />
-                    </header>
-                    <label string="Print the Receipt of the Sale"/>
+                    <group>
+                        <label string="Print the Receipt of the Sale"/>
+                    </group>    
+                    <footer>
+                      <button name="print_report" string="Print Receipt" type="object" class="oe_highlight"  />
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />  
+                    </footer>
                 </form>
               </field>
         </record>

@@ -19,9 +19,10 @@
                 </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
-                        <button name="set_pending" string="Pending" type="object" states="open"/>
-                        <button name="set_close" string="Close" type="object" states="open,pending" class="oe_highlight"/>
-                        <button name="set_open" string="Re-open Project" type="object" states="draft,cancelled,close,pending" class="oe_highlight"/>
+                        <button name="set_pending" string="Pending" type="object" states="open" />
+                        <button name="set_close" string="Close" type="object" states="open,pending" />
+                        <button name="set_open" string="Re-open project" type="object" states="pending,close" />
+                        <button name="set_open" string="Re-open project" type="object" states="cancelled,draft"/>
                         <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                         <field name="state" readonly="1" widget="statusbar"
                             statusbar_visible="open,pending,close" statusbar_colors='{"pending":"red", "template":"blue"}'/>
@@ -52,7 +53,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" select="1" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -76,7 +77,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" select="1" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -122,7 +123,7 @@
 
         <!-- Menus -->
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

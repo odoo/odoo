@@ -8,13 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Search Payment lines" version="7.0">
-                <header>
-                    <button name="search_entries" string="Search" colspan="1" type="object" icon="gtk-execute"/>
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                </header>
                 <group>
                     <field name="duedate" />
                 </group>
+                <footer>
+                    <button name="search_entries" string="Search" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
@@ -25,12 +26,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Search Payment lines" version="7.0">
-                    <header>
-                        <button name="create_payment" string="_Add to payment order" colspan="1" type="object" icon="gtk-execute"/>
-                        <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    </header>
-                    <separator string="Entries"/>
-                    <field name="entries"/>
+                    <group string="Entries">
+                        <field name="entries"/>
+                    </group>
+                    <footer>
+                        <button name="create_payment" string="_Add to payment order" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

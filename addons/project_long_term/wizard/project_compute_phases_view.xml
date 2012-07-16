@@ -8,13 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                   <form string="Schedule Phases" version="7.0">
-                      <header>
-                          <button icon="gtk-ok" name="check_selection" string="C_ompute" type="object"/>
-                      </header>
                       <group>
                           <field name="target_project"/>
                           <field name="project_id" attrs="{'invisible':[('target_project','=','all')], 'required':[('target_project','!=','all')]}"/>
                       </group>
+                      <footer>
+                          <button name="check_selection" string="C_ompute" type="object" class="oe_highlight"/>
+                          or
+                         <button string="Cancel" class="oe_link" special="cancel" />
+                      </footer>
                   </form>
             </field>
         </record>

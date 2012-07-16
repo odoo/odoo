@@ -6,20 +6,22 @@
             <field name="model">hr.sign.in.out</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sign in / Sign out">
-                    <separator colspan="4" string="Sign in / Sign out"/>
-                    <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
-                    <newline/>
+                <form string="Sign in / Sign out" version="7.0">
+                    <group>
+                        <separator colspan="4" string="Sign in / Sign out"/>
+                        <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
+                        <newline/>
+                    </group>
                     <group colspan="4" >
                     <field name="name" />
                     <field name="state" />
                     </group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-jump-to-ltr" string="Sign in" name="si_check" type="object"/>
-                        <button icon="terp-gtk-jump-to-rtl" string="Sign out" name="so_check" type="object"/>
-                   </group>
+                    <footer>
+                        <button string="Sign in" name="si_check" type="object" class="oe_highlight"/>
+                        <button string="Sign out" name="so_check" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>
@@ -29,11 +31,8 @@
             <field name="model">hr.sign.in.out</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sign in / Sign out">
+                <form string="Sign in / Sign out" version="7.0">
                     <separator string="Sign-out Entry Must Follow Sign-in." colspan="4" />
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Ok"/>
-                   </group>
                </form>
             </field>
         </record>
@@ -56,17 +55,17 @@
             <field name="model">hr.sign.in.out.ask</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="hr.sign.out.ask">
+                <form string="hr.sign.out.ask" version="7.0">
+                    <header>
+                        <button string="Sign in" name="sign_in" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group colspan="4" >
                     <separator string="You did not sign out the last time. Please enter the date and time you signed out." colspan="4" />
                     <field name="name" />
                     <field name="last_time" string="Your last sign out" />
                     </group>
-                    <separator colspan="4" />
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-back" string="Sign in" name="sign_in" type="object"/>
-                   </group>
                </form>
             </field>
         </record>
@@ -76,17 +75,17 @@
             <field name="model">hr.sign.in.out.ask</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="hr.sign.in.out.ask">
+                <form string="hr.sign.in.out.ask" version="7.0">
+                    <header>
+                        <button string="Sign out" name="sign_out" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group colspan="4" >
                     <separator string="You did not sign in the last time. Please enter the date and time you signed in." colspan="4" />
                     <field name="name" />
                     <field name="last_time" string="Your last sign in" />
                     </group>
-                    <separator colspan="4" />
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-back" string="Sign out" name="sign_out" type="object"/>
-                   </group>
                </form>
             </field>
         </record>

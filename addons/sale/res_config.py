@@ -75,9 +75,6 @@ class sale_configuration(osv.osv_memory):
         'group_multiple_shops': fields.boolean("Manage Multiple Shops",
             implied_group='stock.group_locations',
             help="This allows to configure and use multiple shops."),
-        'module_sale_layout': fields.boolean("Notes & Subtotals per Line",
-            help="""Allows to format sale order lines using notes, separators, titles and subtotals.
-                This installs the module sale_layout."""),
         'module_warning': fields.boolean("Alerts by Products or Customers",
             help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
