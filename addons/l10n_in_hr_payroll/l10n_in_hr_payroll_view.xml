@@ -13,6 +13,7 @@
                  <group col="2" colspan="2" name="right_column">
                     <separator colspan="2" string="Allowance"/>
                         <field name="driver_salay"/>
+                        <field name="city_type"/>
                  </group>
                  <group col="2" colspan="2" name="left_column">
                     <separator colspan="2" string="Deduction"/>
@@ -24,7 +25,7 @@
             </data>
             </field>
         </record>
-        
+
         <record id="hr_employee_form_in_inherit" model="ir.ui.view">
             <field name="name">hr.employee.form.inherit</field>
             <field name="model">hr.employee</field>
@@ -69,7 +70,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_hr_bank_advice_form" model="ir.ui.view">
             <field name="name">hr.payroll.advice.form</field>
             <field name="model">hr.payroll.advice</field>
@@ -154,7 +155,7 @@
             <field name="view_id" ref="view_hr_bank_advice_tree"/>
             <field name="search_view_id" ref="view_hr_payroll_advice_filter"/>
         </record>
-        
+
         <menuitem
             action="action_view_hr_bank_advice_tree"
             id="hr_menu_payment_advice"

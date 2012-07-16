@@ -39,19 +39,26 @@ class hr_contract(osv.osv):
 
     _inherit = 'hr.contract'
     _description = 'HR Contract'
-    
+
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
         'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
         'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
+        'city_type': fields.selection([
+            ('metro', 'Metro'),
+            ('non-metro', 'Non Metro'),
+            ], 'Type of City'),
+    }
+    _defaults = {
+        'city_type': 'non-metro',
     }
 
 hr_contract()
 
 class hr_employee(osv.osv):
     '''
-    Employee's Join date allows to compute total working 
+    Employee's Join date allows to compute total working
     experience of Employee and it is used to calculate Gratuity rule.
     '''
 
@@ -86,12 +93,12 @@ class hr_employee(osv.osv):
             else:
                 res[employee.id] = 0.0
         return res
-    
+
     _columns = {
         'join_date': fields.date('Join Date', help="Joining date of employee"),
         'number_of_year': fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience"),
         }
-    
+
 hr_employee()
 
 class payroll_advice(osv.osv):
@@ -116,7 +123,7 @@ class payroll_advice(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
     }
-    
+
     _defaults = {
         'date': lambda * a: time.strftime('%Y-%m-%d'),
         'state': lambda * a: 'draft',
@@ -128,7 +135,7 @@ class payroll_advice(osv.osv):
 
     def compute_advice(self, cr, uid, ids, context=None):
         """
-        Advice - Create Advice lines in Payment Advice and 
+        Advice - Create Advice lines in Payment Advice and
         compute Advice lines.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -282,7 +289,7 @@ class res_company(osv.osv):
     }
     _defaults = {
         'dearness_allowance': True,
-    }    
+    }
 
 res_company()
 

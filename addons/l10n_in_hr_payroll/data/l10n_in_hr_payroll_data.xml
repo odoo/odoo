@@ -13,35 +13,14 @@
             <field name="sequence" eval="13"/>
         </record>
 
-        <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
-            <field name="code">HRAM</field>
+        <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
+            <field name="code">HRAMN</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50)</field>
+            <field name="amount_python_compute">result=payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50) if (contract.city_type=='metro') else payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40) if (contract.city_type=='non-metro') else 0.00</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">House Rent Allowance for metro city</field>
+            <field name="name">House Rent Allowance for metro and nonmetro city</field>
             <field name="sequence" eval="51"/>
-            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
-Income tax exemption for HRA will be least of following:
-    1. The actual amount of HRA received as a part of salary.
-    2. 40% (if living in non-metro area).
-    3. Rent paid minus 10% of (basic salary+DA).
-            </field>
         </record>
-
-        <record id="hr_salary_rule_houserentallowancenonmetro" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40)</field>
-            <field name="code">HRANM</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">House Rent Allowance for non metro city</field>
-            <field name="sequence" eval="52"/>
-            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
-Income tax exemption for HRA will be least of following:
-    1. The actual amount of HRA received as a part of salary.
-    2. 50% (if living in metro area) of (basic salary+Dearness allowance (DA)).
-    3. Rent paid minus 10% of (basic salary+DA).
-             </field>
-         </record>
 
         <record id="hr_salary_trans_allownce" model="hr.salary.rule">
             <field name="code">TCA</field>
@@ -121,7 +100,7 @@ Income tax exemption for HRA will be least of following:
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="28"/>
-            <field name="note">Generally arrears are fully taxable, but employee may claim exemption u/s 89(1). 
+            <field name="note">Generally arrears are fully taxable, but employee may claim exemption u/s 89(1).
 One would need to compute income tax on the arrears if it would have been received in actual year.
 Now difference of income tax between payment year and actual year would be allowed for deduction.</field>
         </record>
@@ -134,8 +113,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_select">code</field>
              <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 15 * employee.number_of_year / worked_days.WORK100.number_of_days) or (contract.wage * 15 * employee.number_of_year / worked_days.WORK100.number_of_days)</field>
             <field name="sequence" eval="57"/>
-            <field name="note">Covered under the Payment of Gratuity Act, 1971: 
-(Last drawn monthly basic salary + dearness allowance)/26 x 15 days x 
+            <field name="note">Covered under the Payment of Gratuity Act, 1971:
+(Last drawn monthly basic salary + dearness allowance)/26 x 15 days x
 number of years of service (date of joining – date of retirement/leaving job)</field>
         </record>
 
@@ -328,12 +307,12 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="code">CPT</field>
             <field name="name">Deduction for Company Provided Transport</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="condition_select">none</field>			
+            <field name="condition_select">none</field>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="165"/>
         </record>
-        
+
          <record id="hr_salary_rule_food_coupon_ded" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="-20" name="amount_fix"/>
@@ -367,7 +346,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="code">DLA</field>
             <field name="name">Deduction Towards Leave Availed</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="condition_select">none</field>			
+            <field name="condition_select">none</field>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="180"/>
