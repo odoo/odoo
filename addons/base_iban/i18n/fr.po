@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 04:58+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:39+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -31,17 +31,17 @@ msgstr ""
 #: code:addons/base_iban/base_iban.py:139
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it"
-msgstr ""
+msgstr "Cet IBAN est incorrect, vérifiez-le s'il vous plaît."
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr ""
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bank_bic"
-msgstr ""
+msgstr "bank_bic"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -69,7 +69,7 @@ msgstr "country_id"
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s"
-msgstr ""
+msgstr "L'IBAN semble incorrect. La saisie doit être de la forme : %s"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -80,7 +80,7 @@ msgstr "IBAN"
 #: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "L'IBAN est incorrect, il doit commencer par le code pays"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
@@ -90,7 +90,7 @@ msgstr "No IBAN du compte"
 #. module: base_iban
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "Le numéro du RIB et/ou IBAN n'est (ne sont) pas correct(s)."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue"

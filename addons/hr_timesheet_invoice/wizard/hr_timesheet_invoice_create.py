@@ -159,7 +159,7 @@ class account_analytic_line(osv.osv):
                         details.append(line['name'])
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
-                curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
+                curr_line['name'] += "\n".join(map(lambda x: unicode(x) or '',note))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
                 cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
 
