@@ -82,17 +82,12 @@
                     <h1>
                         <field name="name" string="Project Name"/>
                     </h1>
-                    <label for="parent_id" class="oe_edit_only" string="Parent Project"/>
-                    <h2>
-                        <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
-                    </h2>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="analytic_account_id" invisible="1" required="0"/>
-                            <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                             <field name="privacy_visibility"/>
+                            <field name="analytic_account_id" invisible="1" required="0"/>
                         </group>
                         <group>
                             <table>
@@ -139,6 +134,7 @@
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                     <field name="currency_id" groups="base.group_multi_company" required="1"/>
+                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                 </group>
                             </group>
                         </page>
@@ -147,9 +143,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -404,11 +400,9 @@
                                     states="cancel,done"/>
                             -->
                             <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                    states="done" context="{'button_reactivate':True}" class="oe_highlight"/>
-                             <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                    states="cancelled" context="{'button_reactivate':True}"/>
+                                    states="cancelled,done" context="{'button_reactivate':True}"/>
                             <button name="action_close" string="Done" type="object"
-                                    states="draft,open,pending"/>
+                                    states="draft,open,pending" class="oe_highlight"/>
                             <button name="do_pending" string="Pending" type="object"
                                     states="open"/>
                             <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
@@ -417,7 +411,7 @@
                                     states="draft,open,pending"/>
                             <button name="stage_previous" string="Previous Stage" type="object"
                                     states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                            <button name="stage_next" string="Next Stage" type="object"
+                            <button name="stage_next" string="Next Stage" type="object" class="oe_highlight"
                                     states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         </span>
                         <field name="stage_id" widget="statusbar"/>
@@ -427,23 +421,16 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <label for="project_id" class="oe_edit_only"/>
-                    <h2>
-                        <field name="project_id"  on_change="onchange_project(project_id)"/>
-                    </h2>
                     <group>
                         <group>
+                            <field name="project_id"  on_change="onchange_project(project_id)"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
                             <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                            <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"
-                                groups="project.group_time_work_estimation_tasks"
-                                on_change="onchange_planned(planned_hours, effective_hours)"/>
                             <field name="progress" widget="progressbar"
-                                groups="project.group_time_work_estimation_tasks"
-                                invisible="1"/>
+                                groups="project.group_time_work_estimation_tasks"/>
                         </group>
                     </group>
                     <notebook>
@@ -457,14 +444,15 @@
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                            <group>
+                             <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
                                 <field name="effective_hours" widget="float_time"/>
                                 <label for="remaining_hours" string="Remaining" groups="project.group_time_work_estimation_tasks"/>
                                 <div>
-                                    <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" target="new" states="open,pending" icon="gtk-edit"/>
-                                    <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" groups="project.group_time_work_estimation_tasks"/>
+                                    <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','in',('done','cancelled'))]}" groups="project.group_time_work_estimation_tasks"/>
                                 </div>
                                 <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
+                             </group>
                             </group>
                             <div class="oe_clear"/>
                         </page>
@@ -490,14 +478,17 @@
                                 <field name="priority" groups="base.group_user"/>
                                 <field name="sequence"/>
                                 <field name="partner_id"/>
+                                <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"
+                                    groups="project.group_time_work_estimation_tasks"
+                                    on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                         </page>
                     </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                    </div>
                 </form>
             </field>
         </record>
