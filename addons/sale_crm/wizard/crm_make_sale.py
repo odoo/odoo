@@ -85,7 +85,7 @@ class crm_make_sale(osv.osv_memory):
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Data Insufficient!'), _('Customer has no addresses defined!'))
+                    raise osv.except_osv(_('Data Insufficient!'), _('No address defined for customer!'))
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),

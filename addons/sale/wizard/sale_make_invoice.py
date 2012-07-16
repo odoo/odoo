@@ -39,7 +39,7 @@ class sale_make_invoice(osv.osv_memory):
         record_id = context and context.get('active_id', False)
         order = self.pool.get('sale.order').browse(cr, uid, record_id, context=context)
         if order.state == 'draft':
-            raise osv.except_osv(_('Warning !'),'You can not create invoice when sales order is not confirmed.')
+            raise osv.except_osv(_('Warning !'),'You cannot create invoice when sales order is not confirmed.')
         return False
 
     def make_invoices(self, cr, uid, ids, context=None):
