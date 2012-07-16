@@ -99,7 +99,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled Leads can not be converted into Opportunity"))
+                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled Leads cannot be converted into Opportunity."))
         return False
 
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):

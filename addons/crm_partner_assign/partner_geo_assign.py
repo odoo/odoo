@@ -34,7 +34,7 @@ def geo_find(addr):
         xml = urllib.urlopen(url).read()
     except Exception, e:
         raise osv.except_osv(_('Network error'),
-                             _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
+                             _('Cannot contact geolocation servers, please make sure you have a working internet connection (%s).') % e)
 
     if '<error>' in xml:
         return None
