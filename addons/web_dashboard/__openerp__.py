@@ -1,10 +1,7 @@
 {
     "name": "Web Dashboard",
     "category": "Hidden",
-    "description":
-        """
-        OpenERP Web Dashboard view.
-        """,
+    "description":"""OpenERP Web Dashboard view.""",
     "version": "2.0",
     "depends": ['web'],
     "js": [
