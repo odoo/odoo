@@ -42,82 +42,83 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
-                  <header>
-                      <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
-                      <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
-                      <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
-                      <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
-                      <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                  </header>
-                  <sheet string="Accounting Voucher">
-                    <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
-                        <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="type" required="1"/>
-                        <field name="name" colspan="2"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="reference"/>
-                        <field name="account_id" widget="selection" invisible="True"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Voucher Entry">
-                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
-                                <tree string="Voucher Items" editable="bottom">
-                                    <field name="account_id"/>
-                                    <field name="name"/>
-                                    <field name="amount" sum="Total Amount"/>
-                                    <field name="type"/>
-                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                                </tree>
-                            </field>
-                            <group col="3">
-                                <group string="Internal Notes">
-                                    <field name="narration" colspan="2" nolabel="1"/>
-                                </group>
-                                <group string="Other Information">
-                                    <field name="number"/>
-                                    <field name="currency_id"/>
-                                </group>
-                                <group col="4" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
-                                    <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
-                                    <field name="tax_amount" nolabel="1"/>
-                                    <button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
-                            <group col="4">
-                                <field name="period_id"/>
-                                <field name="audit"/>
-                            </group>
-                            <field name="move_ids" readonly="1">
-                               <tree string="Journal Items">
-                                   <field name="move_id"/>
-                                   <field name="ref"/>
-                                   <field name="date"/>
-                                   <field name="statement_id"/>
-                                   <field name="partner_id"/>
-                                   <field name="account_id"/>
-                                   <field name="name"/>
-                                   <field name="debit"/>
-                                   <field name="credit"/>
-                                   <field name="state"/>
-                                   <field name="reconcile_id"/>
-                               </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                  </sheet>
-                  <div class="oe_chatter">
-                      <field name="message_ids" widget="mail_thread"/>
-                  </div>
+                    <header>
+                        <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
+                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                    </header>
+                    <sheet string="Accounting Voucher">
+                        <group col="6" colspan="4">
+	                        <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+	                        <field name="payment_rate_currency_id" invisible="1"/>
+	                        <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
+	                        <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+	                        <field name="type" required="1"/>
+	                        <field name="name" colspan="2"/>
+	                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+	                        <field name="reference"/>
+	                        <field name="account_id" widget="selection" invisible="True"/>
+                        </group>
+	                    <notebook colspan="4">
+	                        <page string="Voucher Entry">
+	                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
+	                                <tree string="Voucher Items" editable="bottom">
+	                                    <field name="account_id"/>
+	                                    <field name="name"/>
+	                                    <field name="amount" sum="Total Amount"/>
+	                                    <field name="type"/>
+	                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+	                                </tree>
+	                            </field>
+	                            <group col="3">
+	                                <group string="Internal Notes">
+	                                    <field name="narration" colspan="2" nolabel="1"/>
+	                                </group>
+	                                <group string="Other Information">
+	                                    <field name="number"/>
+	                                    <field name="currency_id"/>
+	                                </group>
+	                                <group col="4" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
+	                                    <separator string="Total" colspan="4"/>
+	                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
+	                                    <field name="tax_amount" nolabel="1"/>
+	                                    <button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+	                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+	                                </group>
+	                            </group>
+	                        </page>
+	                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
+	                            <group col="4">
+	                                <field name="period_id"/>
+	                                <field name="audit"/>
+	                            </group>
+	                            <field name="move_ids" readonly="1">
+	                                <tree string="Journal Items">
+	                                    <field name="move_id"/>
+	                                    <field name="ref"/>
+	                                    <field name="date"/>
+	                                    <field name="statement_id"/>
+	                                    <field name="partner_id"/>
+	                                    <field name="account_id"/>
+	                                    <field name="name"/>
+	                                    <field name="debit"/>
+	                                    <field name="credit"/>
+	                                    <field name="state"/>
+	                                    <field name="reconcile_id"/>
+	                                </tree>
+	                            </field>
+	                        </page>
+	                    </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
-
+        
         <record id="view_voucher_filter" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
@@ -209,11 +210,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-              <field name="currency" invisible="1" position="after">
-                <button name="%(action_view_account_statement_from_invoice_lines)d"
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-execute"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
-              </field>
+                </xpath>
             </field>
         </record>
 

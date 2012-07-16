@@ -64,7 +64,7 @@ class account_invoice(osv.osv):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):       
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         result = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
             date_invoice, payment_term, partner_bank_id, company_id)
 #        reference_type = self.default_get(cr, uid, ['reference_type'])['reference_type']
@@ -78,15 +78,15 @@ class account_invoice(osv.osv):
                     algorithm = self.pool.get('res.partner').browse(cr, uid, partner_id).out_inv_comm_algorithm
                     if not algorithm:
                         algorithm = 'random' 
-                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, algorithm, partner_id, '')['value']['reference']
+                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, partner_id, '', algorithm)['value']['reference']
         res_update = {       
             'reference_type': reference_type or 'none',
             'reference': reference,
         }
         result['value'].update(res_update)
         return result                    
-
-    def generate_bbacomm(self, cr, uid, ids, type, reference_type, algorithm, partner_id, reference):
+#algorithm is not defined as field in any account related modules.so pass it as false argument.
+    def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, algorithm=False):
         partner_obj =  self.pool.get('res.partner')
         reference = reference or ''  
         if (type == 'out_invoice'):

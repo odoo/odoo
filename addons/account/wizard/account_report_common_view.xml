@@ -20,13 +20,13 @@
                         <group col="4">
                             <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
                         </group>
-                        <group string="Dates" col="4">
-                            <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
-                            <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
+                        <group string="Dates"  attrs="{'invisible':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" col="4" >
+                            <field name="date_from"  colspan="4"/>
+                            <field name="date_to"    colspan="4"/>
                         </group>
-                        <group string="Periods" col="4">
-                            <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
-                            <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+                        <group string="Periods" attrs="{'invisible':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" col="4">
+                            <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]"   colspan="4"/>
+                            <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]"  colspan="4"/>
                         </group>
                     </page>
                     <page string="Journals" name="journal_ids">

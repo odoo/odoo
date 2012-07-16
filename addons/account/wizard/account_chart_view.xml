@@ -7,13 +7,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account charts" version="7.0">
-                    <group colspan="4">
-                        <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)"/>
+                    <group>
+                        <label for="fiscalyear"/>
+                        <div> 
+                            <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)" class="oe_inline"/>
+                            <label align="0.7" string="(If you do not select Fiscal year it will take all open fiscal years)" class="oe_inline"/>
+                        </div>
                         <field name="target_move"/>
-                        <label align="0.7" colspan="4" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
-                        <separator string="Periods" colspan="4"/>
-                        <field name="period_from"/>
-                        <field name="period_to"/>
+                        <label for="period_from" string="Periods"/>
+                        <div>
+                            <field name="period_from" class="oe_inline"/>-
+                            <field name="period_to" class="oe_inline"/>
+                        </div>
                     </group>
                     <footer>
                         <button string="Open Charts" name="account_chart_open_window" type="object" class="oe_highlight"/>
@@ -25,7 +30,7 @@
         </record>
 
         <record id="action_account_chart" model="ir.actions.act_window">
-            <field name="name">Chart of Accounts</field>
+            <field name="name">Select an Accounting Setup</field>
             <field name="res_model">account.chart</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -36,6 +41,7 @@
 
         <menuitem icon="STOCK_INDENT" action="action_account_chart"
             id="menu_action_account_tree2"
+            name="Chart of Accounts"
             parent="account.menu_finance_charts" />
     </data>
 </openerp>

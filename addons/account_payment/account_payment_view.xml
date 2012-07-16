@@ -112,16 +112,20 @@
                     <button name="cancel" states="draft,open" string="Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
-                <sheet string="Payment order" >
-                    <group col="4">
-                      <field name="reference"/>
-                      <field name="mode" widget='selection'/>
-                      <field name="user_id"/>
-                      <field name="date_prefered"/>
-                      <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
-                      <field name="company_id" widget='selection' groups="base.group_multi_company"/>
-                      <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
-                          type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                <sheet string="Payment order">
+                    <group>
+                        <group>
+                            <field name="reference"/>
+                            <field name="user_id"/>
+                            <field name="mode"/>
+                            <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
+                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                        </group>
+                        <group>
+                            <field name="date_prefered"/>
+                            <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
+                            <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                        </group>
                     </group>
                     <field name="line_ids" context="{'order_id': active_id or False}" >
                         <form string="Payment Line" version="7.0">
@@ -330,9 +334,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <field name="journal_id" position="after">
-                    <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import payment lines" type="action" icon="gtk-execute"/>
-                </field>
+	            <xpath expr="//div[@name='import_buttons']" position="inside">
+	                <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import Payment Lines" type="action" icon="gtk-execute"/>
+	            </xpath>
             </field>
         </record>
 
