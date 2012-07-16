@@ -56,7 +56,7 @@
   !record {model: stock.sale.forecast.createlines, id: stock_sale_forecast_createlines_0}:
     company_id: base.main_company
     period_id: stock_period_03
-    product_categ_id: product.product_category_9
+    product_categ_id: product.product_category_4
     warehouse_id: stock.warehouse0
 -
   Performing an osv_memory action create_forecast on module stock.sale.forecast.createlines
@@ -68,7 +68,7 @@
       })
 
 -
-  I create stock.period.createlines for the first week of august.
+  I create stock.period.createlines for the first week of August.
 -
   !record {model: stock.period.createlines, id: stock_period_createlines_week01}:
     date_start: !eval "'%s-08-01' %(datetime.now().year)"
@@ -84,7 +84,7 @@
       "tz": False, "active_id": ref("stock_planning.menu_stock_period_creatlines"),
       })
 -
-  I create stock.period.createlines for the month of august - september
+  I create stock.period.createlines for the month of August - September
 -
   !record {model: stock.period.createlines, id: stock_period_createlines_month01}:
     date_start: !eval "'%s-08-01' %(datetime.now().year)"
@@ -101,7 +101,7 @@
       })
 
 -
-  I create stock.period.createlines for the Day of august 
+  I create stock.period.createlines for the Day of August 
 -
   !record {model: stock.period.createlines, id: stock_period_createlines_day01}:
     date_start: !eval "'%s-08-01' %(datetime.now().year)"
@@ -127,45 +127,45 @@
       })
 
 -
-  I create a sale order for PC1-Basic PC and PC3-Medium PC.
+  I create a sale order for PC and Laptop.
 -
   !record {model: sale.order, id: sale_order_so0}:
     date_order: !eval time.strftime('%Y-07-20')
     invoice_quantity: order
     name: TESTSO006
     order_line:
-      - name: '[PC1] Basic PC'
-        price_unit: 450.0
-        product_uom: product.product_uom_unit
-        product_uom_qty: 13.0
-        state: draft
-        delay: 2.0
-        product_id: product.product_product_3
-        product_uos_qty: 13.0
-        th_weight: 0.0
-        type: make_to_stock
-      - name: '[PC3] Medium PC'
-        price_unit: 900.0
+      - name: '[PC200] PC Assemble + 2GB RAM'
+        price_unit: 750.0
         product_uom: product.product_uom_unit
         product_uom_qty: 5.0
         state: draft
-        delay: 3.0
-        product_id: product.product_product_5
+        delay: 2.0
+        product_id: product.product_product_4
         product_uos_qty: 5.0
         th_weight: 0.0
         type: make_to_stock
+      - name: '[LAP-E5] Laptop E5023'
+        price_unit: 2950.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 12.0
+        state: draft
+        delay: 3.0
+        product_id: product.product_product_25
+        product_uos_qty: 12.0
+        th_weight: 0.0
+        type: make_to_stock
     order_policy: manual
-    partner_id: base.res_partner_12
-    partner_invoice_id: base.res_partner_address_22
-    partner_shipping_id: base.res_partner_address_22
+    partner_id: base.res_partner_7
+    partner_invoice_id: base.res_partner_address_13
+    partner_shipping_id: base.res_partner_address_13
     picking_policy: direct
     pricelist_id: product.list0
     shop_id: sale.sale_shop_1
 -
-  Now I want to calculate sales history for both the products PC1-Basic PC and PC3-Medium PC and forecast the quantity.
+  Now I want to calculate sales history for both the products PC and Laptop and forecast the quantity.
 -
   !python {model: stock.sale.forecast}: |
-    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_3'))])
+    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_4'))])
     write_dict = {'product_qty': 30.0,
     'analyzed_period1_id': ref("stock_period_03"),
     'analyzed_user_id': ref("base.user_root"),
@@ -178,7 +178,7 @@
     self.action_validate(cr, uid, forecast_ids, context)
 
 -
-  Now I applying onchange and unlink forecast record for the product PC3
+  Now I applying onchange and unlink forecast record for the product PC.
 -
   !python {model: stock.sale.forecast}: |
     forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_5'))])
@@ -191,7 +191,7 @@
     self.product_amt_change(cr, uid, forecast_ids, 5.0, ref('product.product_uom_unit'), ref('product.product_product_20'))
     self.product_amt_change(cr, uid, forecast_ids, 5.0, ref('product.product_uom_unit'), ref('product.product_product_20'))
     self._to_default_uom_factor(cr, uid, ref('product.product_product_20'), ref('product.product_uom_unit'), {})
-    self.onchange_company(cr, uid, forecast_ids, ref('stock.res_partner_2'))
+    self.onchange_company(cr, uid, forecast_ids, ref('base.res_partner_2'))
 
 -
   I create Master procurement schedule for the third week of July.
@@ -199,7 +199,7 @@
   !record {model: stock.planning.createlines, id: stock_planning_createlines_0}:
     company_id: base.main_company
     period_id: stock_period_03
-    product_categ_id: product.product_category_9
+    product_categ_id: product.product_category_4
     warehouse_id: stock.warehouse0
 
 -
@@ -216,7 +216,7 @@
   Performing an osv_memory action create_planning on module stock.planning.createlines
 -
   !python {model: stock.planning.createlines}: |
-    self.onchange_company(cr, uid, ref("stock_planning_createlines_0"), ref('stock.res_partner_2'))
+    self.onchange_company(cr, uid, ref("stock_planning_createlines_0"), ref('base.res_partner_2'))
     self.create_planning(cr, uid, [ref("stock_planning_createlines_0")], {"lang":
       "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning_createlines")],
       "active_id": ref("stock_planning.menu_stock_planning_createlines"), "department_id":
@@ -227,7 +227,7 @@
   !python {model: stock.planning}: |
     planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_3')),('period_id','=',ref('stock_period_03'))])
     self.write(cr, uid, planning_ids, {'to_procure': 30.0,'planned_outgoing': 40.0,'supply_warehouse_id': ref("stock_warehouse_0")})
-    self.onchange_company(cr, uid, planning_ids, ref('stock.res_partner_2'))
+    self.onchange_company(cr, uid, planning_ids, ref('base.res_partner_2'))
     self.onchange_uom(cr, uid, planning_ids, ref('product.product_uom_unit'), ref('product.product_product_3'),ref('product.product_uom_unit'), False, False)
     self.product_id_change(cr, uid, planning_ids, ref('product.product_product_20'))
     context = {"lang": "en_US", "tz": False, "active_model": "ir.ui.menu", 
