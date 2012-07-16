@@ -57,14 +57,11 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                        <group>
-                            <group name="config_sale">
-                                <field name="module_crm" invisible="1"/>
-                                <separator string="Emails" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                                <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                                <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                            </group>
-                            <group name="config_other">
+                        <group name="config_sale">
+                            <field name="module_crm" invisible="1"/>
+                            <group name="Emails" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
+                                <field name="module_plugin_thunderbird"/>
+                                <field name="module_plugin_outlook"/>
                             </group>
                         </group>
                 </form>
