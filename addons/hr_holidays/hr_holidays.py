@@ -267,7 +267,7 @@ class hr_holidays(osv.osv):
                 meeting_obj = self.pool.get('crm.meeting')
                 meeting_vals = {
                     'name': record.name,
-                    'categ_id': record.holiday_status_id.categ_id.id,
+                    'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
                     'user_id': record.user_id.id,
