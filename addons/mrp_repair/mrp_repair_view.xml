@@ -173,13 +173,13 @@
                         </field>
                     </page>
                     <page string="Extra Info">
-                        <group col="4">
-                            <group col="2">
+                        <group>
+                            <group>
                                 <field name="picking_id"/>
                                 <field name="invoice_id"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
-                            <group col="2">
+                            <group>
                                 <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
                             </group>
                         </group>
