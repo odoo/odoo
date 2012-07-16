@@ -7,15 +7,16 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <group name="right_column" position="inside">
-                    <separator string="Recruitment" colspan="2"/>
-                    <field name="module_document_ftp"/>
-                    <label for="fetchmail_applicants"/>
-                    <div>
-                        <field name="fetchmail_applicants"/>
-                        <button name="configure_fetchmail_applicants" type="object" string="Configure" icon="gtk-go-forward"
-                            attrs="{'invisible': [('fetchmail_applicants','=',False)]}"/>
-                    </div>
+                <group name="hr_grp" position="inside">
+                    <group string="Recruitment">
+                        <field name="module_document_ftp"/>
+                        <label for="fetchmail_applicants"/>
+                        <div>
+                            <field name="fetchmail_applicants"/>
+                            <button name="configure_fetchmail_applicants" type="object" string="Configure" icon="gtk-go-forward"
+                                attrs="{'invisible': [('fetchmail_applicants','=',False)]}"/>
+                        </div>
+                    </group>
                 </group>
             </field>
         </record>

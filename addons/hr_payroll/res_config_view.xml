@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <!-- put after the element <div><field name="module_hr_payroll" class="oe_inline"/> ...</div> -->
-                <xpath expr="//group[@name='left_column']" position="inside">
+                <xpath expr="//group[@name='add_feature']" position="inside">
                     <field name="module_hr_payroll_account"/>
                 </xpath>
             </field>
