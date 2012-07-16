@@ -8,11 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Translation" version="7.0">
-                    <header>
-                        <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <separator string="Import Translation" colspan="2"/>
                         <label nolabel="1" string="If you need another language than the official ones available, you can import a language pack from here. Other OpenERP languages than the official ones can be found on launchpad." colspan="2"/>
@@ -23,6 +18,11 @@
                             <field name="overwrite"/>
                         </group>
                     </group>
+                    <footer>
+                        <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
