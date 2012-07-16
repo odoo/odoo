@@ -1547,7 +1547,7 @@
                 <tree string="Journal Entry Model Line" editable="bottom">
                     <field name="sequence"/>
                     <field name="name"/>
-                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'), ('company_id', '=', parent.company_id)]"/>
+                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit"/>
@@ -1567,7 +1567,7 @@
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="sequence"/>
-                        <field name="account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation'), ('company_id', '=', parent.company_id)]"/>
+                        <field name="account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="partner_id"/>
                         <field name="debit"/>
