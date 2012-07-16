@@ -135,6 +135,15 @@ class users(osv.osv):
     # agi - 022108
     # Add handlers for 'input_pw' field.
 
+    def init(self, cr):
+        cr.execute("SELECT id, password FROM res_users "
+                   "WHERE active=true AND password NOT LIKE '$%' "
+                    "FOR UPDATE")
+        for id, password in cr.fetchall():
+            cr.execute("UPDATE res_users SET password=%s WHERE id=%s",
+                       (encrypt_md5(password, gen_salt()), id))
+
+
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
@@ -196,12 +205,6 @@ class users(osv.osv):
             # Return early if no one has a login name like that.
             return False
     
-        stored_pw = self.maybe_encrypt(cr, stored_pw, id)
-        
-        if not stored_pw:
-            # means couldn't encrypt or user is not active!
-            return False
-
         # Calculate an encrypted password from the user-provided
         # password.
         obj = pooler.get_pool(db).get('res.users')
@@ -270,29 +273,6 @@ class users(osv.osv):
             else:
                 self._uid_cache[db] = {uid: passwd}
         return bool(res)
-    
-    def maybe_encrypt(self, cr, pw, id):
-        """ Return the password 'pw', making sure it is encrypted.
-        
-        If the password 'pw' is not encrypted, then encrypt all active passwords
-        in the db. Returns the (possibly newly) encrypted password for 'id'.
-        """
-
-        if not pw.startswith(magic_md5):
-            cr.execute("SELECT id, password FROM res_users " \
-                "WHERE active=true AND password NOT LIKE '$%'")
-            # Note that we skip all passwords like $.., in anticipation for
-            # more than md5 magic prefixes.
-            res = cr.fetchall()
-            for i, p in res:
-                encrypted = encrypt_md5(p, gen_salt())
-                cr.execute('UPDATE res_users SET password=%s where id=%s',
-                        (encrypted, i))
-                if i == id:
-                    encrypted_res = encrypted
-            cr.commit()
-            return encrypted_res
-        return pw
 
 users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
