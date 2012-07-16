@@ -2367,3 +2367,22 @@ div.ui-widget-overlay {
   filter: alpha(opacity=30);
   opacity: 0.3;
 }
+
+.openerp .oe_bounce {
+  -moz-animation:bounce .40s linear;  
+  -webkit-animation:bounce .40s linear; 
+}
+
+@-moz-keyframes bounce {
+    0%{ -moz-transform:scale(0); opacity:0;}
+    50%{ -moz-transform:scale(1.3); opacity:0.4; }
+    75%{ -moz-transform:scale(0.9); opacity:0.7;}
+    100%{ -moz-transform:scale(1); opacity:1;}
+}
+
+@-webkit-keyframes bounce {
+    0%{ -webkit-transform:scale(0); opacity:0;}
+    50%{ -webkit-transform:scale(1.3); opacity:0.4;}
+    75%{ -webkit-transform:scale(0.9); opacity:0.7;}
+    100%{ -webkit-transform:scale(1); opacity:1;}
+}
