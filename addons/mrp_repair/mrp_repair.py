@@ -569,34 +569,43 @@ class mrp_repair(osv.osv):
         return repair_id
     
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Repair has been <b>created</b>."), context=context)
+        for repair in self.browse(cr, uid, ids, context):
+            message = _("Repair Order for <em>%s</em> has been <b>created</b>." % (repair.product_id.name))
+            self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
     
     def set_start_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair has been <b>Started</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        for repair in self.browse(cr, uid, ids, context):
+            message = _("Repair Order for <em>%s</em> has been <b>started</b>." % (repair.product_id.name))
+            self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
     
     def set_toinvoiced_send_note(self, cr, uid, ids, context=None):
-        for repair in self.browse(cr,uid,ids,context):
-            message = _("Invoice is created with <b>%s<b> reference.") % (repair.invoice_id.origin)
-            return self.message_append_note(cr, uid, ids, body=message, context=context)
+        for repair in self.browse(cr, uid, ids, context):
+            message = _("Draft Invoice of %s %s <b>waiting for validation</b>.") % (repair.invoice_id.amount_total, repair.invoice_id.currency_id.symbol)
+            self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
     
     def set_confirm_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair order has been <b>Confirmed</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        for repair in self.browse(cr, uid, ids, context):
+            message = _( "Repair Order for <em>%s</em> has been <b>accepted</b>." % (repair.product_id.name))
+            self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
     
     def set_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Repair has been <b>cancelled</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
     
     def set_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair is now <b>Ready</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        message = _("Repair Order is now <b>ready</b> to repair.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
     def set_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Repair is now <b>Done</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
-
-
+        message = _("Repair Order is <b>closed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
 mrp_repair()
 
@@ -686,7 +695,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal',digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
-        'product_uom_qty': fields.float('Quantity', digits=(16,2), required=True),
+        'product_uom_qty': fields.float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number',domain="[('product_id','=',product_id)]"),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
