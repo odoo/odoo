@@ -571,25 +571,25 @@ class mrp_repair(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for repair in self.browse(cr, uid, ids, context):
             message = _("Repair Order for <em>%s</em> has been <b>created</b>." % (repair.product_id.name))
-            self.message_append_note(cr, uid, ids, body=message, context=context)
+            self.message_append_note(cr, uid, [repair.id], body=message, context=context)
         return True
     
     def set_start_send_note(self, cr, uid, ids, context=None):
         for repair in self.browse(cr, uid, ids, context):
             message = _("Repair Order for <em>%s</em> has been <b>started</b>." % (repair.product_id.name))
-            self.message_append_note(cr, uid, ids, body=message, context=context)
+            self.message_append_note(cr, uid, [repair.id], body=message, context=context)
         return True
     
     def set_toinvoiced_send_note(self, cr, uid, ids, context=None):
         for repair in self.browse(cr, uid, ids, context):
             message = _("Draft Invoice of %s %s <b>waiting for validation</b>.") % (repair.invoice_id.amount_total, repair.invoice_id.currency_id.symbol)
-            self.message_append_note(cr, uid, ids, body=message, context=context)
+            self.message_append_note(cr, uid, [repair.id], body=message, context=context)
         return True
     
     def set_confirm_send_note(self, cr, uid, ids, context=None):
         for repair in self.browse(cr, uid, ids, context):
             message = _( "Repair Order for <em>%s</em> has been <b>accepted</b>." % (repair.product_id.name))
-            self.message_append_note(cr, uid, ids, body=message, context=context)
+            self.message_append_note(cr, uid, [repair.id], body=message, context=context)
         return True
     
     def set_cancel_send_note(self, cr, uid, ids, context=None):
