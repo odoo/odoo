@@ -107,10 +107,10 @@
             <field name="search_view_id" ref="view_mrp_property_search"/>
             <field name="help">
                 The Properties in OpenERP are used to select the right bill of materials for manufacturing
-            a product when you have different ways of building the same product.
-            You can assign several properties to each bill of materials.
-            When a salesperson creates a sale order, they can relate it to several properties
-            and OpenERP will automatically select the BoM to use according the needs.
+                a product when you have different ways of building the same product.
+                You can assign several properties to each bill of materials.
+                When a salesperson creates a sale order, they can relate it to several properties
+                and OpenERP will automatically select the BoM to use according the needs.
             </field>
         </record>
         <menuitem name="Master Bill of Materials"
@@ -121,13 +121,13 @@
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            groups="product.group_mrp_properties,product.group_mrp_properties"
+            groups="product.group_mrp_properties"
             parent="menu_mrp_configuration"
             sequence="30" />
         <menuitem
             action="mrp_property_group_action"
             parent="menu_mrp_configuration"
-            groups="base.group_no_one"
+            groups="base.group_no_one,product.group_mrp_properties"
             id="menu_mrp_property_group_action"
             sequence="35" />
 
@@ -693,8 +693,7 @@
                                 </group>
                             </group>
                             <group>
-                                <group>
-                                    <separator string="Products to Consume"/>
+                                <group string="Products to Consume">
                                     <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
                                         <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                             <field name="product_id" />
@@ -718,8 +717,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group>
-                                    <separator string="Consumed Product"/>
+                                <group string="Consumed Product">
                                     <field name="move_lines2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
@@ -740,8 +738,7 @@
                         </page>
                         <page string="Finished Products">
                             <group>
-                                <group>
-                                    <separator string="Products to Produce"/>
+                                <group string="Products to Produce">
                                     <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
                                         <tree string="Products to Finish">
                                             <field name="product_id" />
@@ -759,8 +756,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group>
-                                    <separator string="Produced Products"/>
+                                <group string="Produced Products">
                                     <field name="move_created_ids2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
@@ -883,7 +879,7 @@
                 Click here to create a new Manufacturing Order.
                 &lt;p&gt;
                 To process the production, do not forget to create a Bill of Material.
-                Manufacturing orders can be automatically generated based on procurement    rules specified on the product
+                Manufacturing orders can be automatically generated based on procurement    rules specified on the product.
             </field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action"
@@ -1003,14 +999,14 @@
                 <page string="Procurement &amp; Locations" position="inside">
                     <separator string="Bill of Materials"/>
                     <field name="bom_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
-                    <tree string="Bill of Materials">
-                    <field name="name" string="Component Name"/>
-                    <field name="bom_id"/>
-                    <field name="product_qty" string="Quantity of Product"/>
-                    <field name="type"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    </tree>
+                        <tree string="Bill of Materials">
+                            <field name="name" string="Component Name"/>
+                            <field name="bom_id"/>
+                            <field name="product_qty" string="Quantity of Product"/>
+                            <field name="type"/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </tree>
                     </field>
                 </page>
             </field>
