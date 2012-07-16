@@ -36,11 +36,11 @@
 -
     I confirm the sale order
 -
-    !workflow {model: sale.order, ref: order, action: order_confirm}
+    !workflow {model: sale.order, ref: order1, action: order_confirm}
 -
     I check if the sale order is confirmed
 -
-    !assert {model: sale.order, id: order}:
+    !assert {model: sale.order, id: order1}:
          - state == 'manual'
 -
     I check if a registration is created
