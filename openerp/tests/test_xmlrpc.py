@@ -73,7 +73,7 @@ class test_xmlrpc(common.RpcCase):
 
     def test_xmlrpc_61_translation_load(self):
         """ Try a load translation service like web. """
-        messages = self.proxy.translation_61.load(DB, ['base', 'web'], ['ru_RU'], 'web')
+        messages = self.proxy.translation_61.load(DB, ['base', 'web'], ['en_US'], 'web')
         assert messages
 
 if __name__ == '__main__':
