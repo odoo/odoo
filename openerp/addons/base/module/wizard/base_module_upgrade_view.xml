@@ -13,16 +13,13 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <div><label string="Your system will be updated."/></div>
-                    <div><label string="Note that this operation might take a few minutes."/></div>
-                    <separator string="Modules to Update"/>
                     <field name="module_info"/>
                 </form>
             </field>
         </record>
 
         <record id="action_view_base_module_upgrade" model="ir.actions.act_window">
-            <field name="name">Module Upgrade</field>
+            <field name="name">Apply Schedule Upgrade</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.module.upgrade</field>
             <field name="view_type">form</field>
@@ -44,14 +41,12 @@
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Apply Scheduled Upgrades" version="7.0">
+                <form string="Apply Schedule Upgrade" version="7.0">
                     <header>
                         <button name="config" string="Start configuration" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <div><label string="The selected modules have been updated / installed !"/></div>
-                    <div><label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/></div>
                 </form>
             </field>
         </record>

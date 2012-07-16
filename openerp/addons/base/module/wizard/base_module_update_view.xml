@@ -8,37 +8,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Update Module List" version="7.0">
+                    <field name="state" invisible="1"/>
                     <header>
-                        <button name="update_module" string="Update" type="object" states="init" class="oe_highlight"/>
-                        <label string="or" states="init"/>
-                        <button name="action_module_open" string="Open Modules" type="object" states="done" class="oe_highlight"/>
-                        <label string="or" states="done"/>
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <div states="init">
+                            <button name="update_module" string="Update" type="object" icon="gtk-ok" class="oe_highlight"/> or 
+                            <button special="cancel" string="Cancel" icon="gtk-cancel" class="oe_link"/>
+                        </div>
+                        <div states="done">
+                            <button name="action_module_open" string="Open Modules" type="object" icon="gtk-go-forward" class="oe_highlight"/> or 
+                            <button special="cancel" string="Close" icon="gtk-ok" class="oe_link"/>
+                        </div>
                     </header>
-                    <group col="8">
-                        <group colspan="3">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="This wizard will scan all module repositories on the server side to detect newly added modules as well as any change to existing modules."/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string="Please be patient, as this operation may take a few seconds..."/>
-                            <field name="state" invisible="1"/>
-                        </group>
-                        <separator orientation="vertical" rowspan="15"/>
-                        <group colspan="4">
-                            <separator string="Module Update Result" colspan="4"/>
-                            <group states="init" colspan="4">
-                                <label string="Click on Update below to start the process..." colspan="4"/>
-                            </group>
-                            <group states="done" colspan="4">
-                                <field name="update" colspan="4"/>
-                                <field name="add" colspan="4"/>
-                            </group>
+                    <group>
+                        <group states="done" colspan="4">
+                            <field name="update" colspan="4"/>
+                            <field name="add" colspan="4"/>
                         </group>
                     </group>
                 </form>
             </field>
-        </record>
+        </record>        
 
         <record id="action_view_base_module_update" model="ir.actions.act_window">
             <field name="name">Module Update</field>

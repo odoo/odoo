@@ -8,22 +8,15 @@
             <field name="arch" type="xml">
                 <form string="Synchronize Terms" version="7.0">
                     <header>
-                        <button name="act_update" string="Update" type="object" class="oe_highlight"/>
+                        <button icon="gtk-ok" name="act_update" string="Update" type="object"  class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button icon="gtk-cancel" name="act_cancel" class="oe_link" special="cancel" string="Cancel" type="object"/>
                     </header>
-                    <group col="8">
-                        <group colspan="3">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="This wizard will detect new terms to translate in the application, so that you can then add translations manually or perform a complete export (as a template for a new language example)."/>
+                    <sheet>
+                        <group>
+                            <field name="lang"/>
                         </group>
-                        <separator orientation="vertical" rowspan="15"/>
-                        <group colspan="4">
-                            <separator string="Synchronize Translation" colspan="4"/>
-                            <field name="lang" colspan="4"/>
-                        </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
