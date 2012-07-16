@@ -61,8 +61,7 @@
                     </group>
 
                     <group>
-                        <group name="account_config">
-                            <separator string="Accounting Configuration" colspan="2"/>
+                        <group name="account_config" string="Accounting Configuration">
                             <field name="default_sale_tax" domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
                                 attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
                             <field name="module_account_accountant"/>
@@ -73,7 +72,8 @@
                             <field name="tax_calculation_rounding_method"/>
                             <field name="module_account_asset"/>
                             <field name="module_account_budget"/>
-                            <separator string="Customer Invoices" colspan="2"/>
+                        </group>
+                        <group name="customer_inv_grp" string="Customer Invoices">
                             <label for="sale_sequence_next"/>
                             <group>
                                 <field name="sale_sequence_prefix" class="oe_inline" nolabel="1"
@@ -91,8 +91,7 @@
                             <field name="group_proforma_invoices"/>
                             <separator name="analytic_accounting" invisible="1" string="Analytic Accounting"/>
                         </group>
-                        <group name="other_cofing">
-                            <separator string="Supplier Invoices" colspan="2"/>
+                        <group name="supplier_inv_grp" string="Supplier Invoices">
                              <label for="purchase_sequence_next"/>
                             <group>
                                 <field name="purchase_sequence_prefix" class="oe_inline" nolabel="1"
@@ -107,9 +106,9 @@
                                   attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}" nolabel="1"/>
                             </group>
                             <field name="module_account_payment"/>
-                            <separator string="Electronic Payments" colspan="2"/>
+                            <separator string="Electronic Payments"/>
                             <field name="paypal_account" placeholder="sales@openerp.com"/>
-                            <separator string="Bank &amp; Cash" colspan="2"/>
+                            <separator string="Bank &amp; Cash"/>
                             <label for="id" string="Configure Bank Accounts"/>
                             <button name="%(action_bank_tree)d" string="Configure Bank Accounts" icon="gtk-go-forward" type="action"/>
                             <field name="company_footer"/>
