@@ -147,25 +147,23 @@
                                 <field name="state" invisible="True"/>
                             </tree>
                             <form string="Products" version="7.0">
-                                <sheet>
+                                <group>
                                     <group>
-                                        <group>
-                                            <field domain="[('usage','=','internal')]" name="location_id"/>
-                                            <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
-                                        </group>
-                                        <group>
-                                            <label for="product_qty"/>
-                                            <div>
-                                                <field name="product_qty" class="oe_inline"/>
-                                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                                            </div>
-                                            <field name="prod_lot_id" groups="stock.group_production_lot"/>
-                                            <button name="%(stock.action_view_stock_inventory_line_split)d"
-                                            string="Split inventory lines" groups="stock.group_inventory_valuation"
-                                            type="action" icon="terp-stock_effects-object-colorize"/>
-                                        </group>
+                                        <field domain="[('usage','=','internal')]" name="location_id"/>
+                                        <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                     </group>
-                                </sheet>
+                                    <group>
+                                        <label for="product_qty"/>
+                                        <div>
+                                            <field name="product_qty" class="oe_inline"/>
+                                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                        </div>
+                                        <field name="prod_lot_id" groups="stock.group_production_lot"/>
+                                        <button name="%(stock.action_view_stock_inventory_line_split)d"
+                                        string="Split inventory lines" groups="stock.group_inventory_valuation"
+                                        type="action" icon="terp-stock_effects-object-colorize"/>
+                                    </group>
+                                </group>
                             </form>
                         </field>
                     </page>
@@ -750,7 +748,7 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
-                        <span attrs="{'invisible': [('origin','=',False)]}">-</span>
+                        <span attrs="{'invisible': [('origin','=',False)]}"> - </span>
                         <field name="origin" placeholder="PO0032" class="oe_inline"/>
                     </h1>
                     <label for="partner_id" class="oe_edit_only"/>
