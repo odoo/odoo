@@ -278,7 +278,7 @@ class mail_message(osv.Model):
         """Overridden to avoid duplicating fields that are unique to each email"""
         if default is None:
             default = {}
-        self.check(cr, uid, ids, 'read', context=context)
+        self.check(cr, uid, [id], 'read', context=context)
         default.update(message_id=False,original=False,headers=False)
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
     
