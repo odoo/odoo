@@ -72,6 +72,7 @@ class RpcCase(unittest2.TestCase):
         self.proxy.common_61 = xmlrpclib.ServerProxy(url_61 + 'common')
         self.proxy.db_61 = xmlrpclib.ServerProxy(url_61 + 'db')
         self.proxy.model_61 = xmlrpclib.ServerProxy(url_61 + 'model/' + DB)
+        self.proxy.translation_61 = xmlrpclib.ServerProxy(url_61 + 'translation')
 
     @classmethod
     def generate_database_name(cls):
