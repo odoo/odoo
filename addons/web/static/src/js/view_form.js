@@ -802,13 +802,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
     },
     get_fields_values: function(blacklist) {
-    	blacklist = blacklist || [];
+        blacklist = blacklist || [];
         var values = {};
         var ids = this.get_selected_ids();
         values["id"] = ids.length > 0 ? ids[0] : false;
         _.each(this.fields, function(value_, key) {
-        	if (_.include(blacklist, key))
-        		return;
+            if (_.include(blacklist, key))
+                return;
             var val = value_.get_value();
             values[key] = val;
         });
@@ -1186,8 +1186,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 row_cols = cols;
             } else if (tagName==='group') {
                 // When <group> <group/><group/> </group>, we need a spacing between the two groups
-                $child.addClass('oe_group_right')
-
+                $td.addClass('oe_group_right')
             }
             row_cols -= colspan;
 
@@ -1587,7 +1586,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
             parent: {}
         });
         if (a_dataset.parent_view) {
-        	fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
+            fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
         }
         return fields_values;
     },
@@ -3084,30 +3083,30 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     save_any_view: function() {
         if (this.doing_on_change)
             return false;
-    	return this.session.synchronized_mode(_.bind(function() {
-	        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-	            this.viewmanager.views[this.viewmanager.active_view] &&
-	            this.viewmanager.views[this.viewmanager.active_view].controller) {
-	            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-	            if (this.viewmanager.active_view === "form") {
-	                if (!view.is_initialized.isResolved()) {
-	                    return false;
-	                }
-	                var res = $.when(view.do_save());
-	                if (!res.isResolved() && !res.isRejected()) {
-	                    console.warn("Asynchronous get_value() is not supported in form view.");
-	                }
-	                return res;
-	            } else if (this.viewmanager.active_view === "list") {
-	                var res = $.when(view.ensure_saved());
-	                if (!res.isResolved() && !res.isRejected()) {
-	                    console.warn("Asynchronous get_value() is not supported in list view.");
-	                }
-	                return res;
-	            }
-	        }
-	        return false;
-	    }, this));
+        return this.session.synchronized_mode(_.bind(function() {
+            if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+                this.viewmanager.views[this.viewmanager.active_view] &&
+                this.viewmanager.views[this.viewmanager.active_view].controller) {
+                var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+                if (this.viewmanager.active_view === "form") {
+                    if (!view.is_initialized.isResolved()) {
+                        return false;
+                    }
+                    var res = $.when(view.do_save());
+                    if (!res.isResolved() && !res.isRejected()) {
+                        console.warn("Asynchronous get_value() is not supported in form view.");
+                    }
+                    return res;
+                } else if (this.viewmanager.active_view === "list") {
+                    var res = $.when(view.ensure_saved());
+                    if (!res.isResolved() && !res.isRejected()) {
+                        console.warn("Asynchronous get_value() is not supported in list view.");
+                    }
+                    return res;
+                }
+            }
+            return false;
+        }, this));
     },
     is_syntax_valid: function() {
         if (!this.viewmanager.views[this.viewmanager.active_view])
@@ -3869,7 +3868,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         this.renderElement();
         new instance.web.Dialog(this, {
             min_width: '800px',
-	    dialogClass: 'oe_act_window',
+        dialogClass: 'oe_act_window',
             close: function() {
                 self.check_exit(true);
             },
