@@ -135,7 +135,6 @@ class hr_expense_expense(osv.osv):
         return True
 
     def receipt(self, cr, uid, ids, context=None):
-        if not ids: return []
         mod_obj = self.pool.get('ir.model.data')
         wkf_service = netsvc.LocalService("workflow")
         
@@ -144,14 +143,12 @@ class hr_expense_expense(osv.osv):
             wkf_service.trg_validate(uid, 'hr.expense.expense', id, 'receipt', cr)
             voucher_ids.append(self.browse(cr, uid, id, context=context).voucher_id.id)
         res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
-        res_id = res and res[1] or False
         return {
             'name': _('Expense Receipt'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.voucher',
-            'views': [(res_id, 'form')],
-            'view_id': res_id,
+            'view_id': [res and res[1] or False],
             'type': 'ir.actions.act_window',
             'target': 'new',
             'nodestroy': True,
