@@ -13,8 +13,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group>
-                        <group>
-                            <separator string="Purchase Order" colspan="2"/>
+                        <group string="Purchase Order">
                             <field name="group_purchase_pricelist"/>
                             <field name="group_uom"/>
                             <field name="group_purchase_delivery_address"/>
@@ -23,8 +22,7 @@
                             <field name="module_warning"/>
                             <field name="module_purchase_analytic_plans"/>
                         </group>
-			<group>
-                            <separator string="Invoicing" colspan="2"/>
+                        <group string="Invoicing">
                             <field name="default_invoice_method" class="oe_inline"/>
                             <field name="decimal_precision" class="oe_inline"/>
                         </group>

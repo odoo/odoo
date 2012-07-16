@@ -14,27 +14,27 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group>
-                        <group>
-                            <separator string="Traceability" colspan="2"/>
-                            <field name="group_stock_production_lot"/>
-                            <field name="group_stock_tracking_lot"/>
-                            <field name="module_product_expiry"
-                                attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
-                             <separator string="Logistics" colspan="2"/>
-                             <field name="group_stock_multiple_locations"/>
-                             <field name="module_stock_invoice_directly"/>
-                             <field name="module_stock_location"/>
-                             <field name="decimal_precision" class="oe_inline"/>
+                        <group string="Logistics">
+                            <field name="group_stock_multiple_locations"/>
+                            <field name="module_stock_invoice_directly"/>
+                            <field name="module_stock_location"/>
+                            <field name="decimal_precision" class="oe_inline"/>
                         </group>
-                        <group>
-                            <separator string="Partners" colspan="2"/>
-                            <field name="module_claim_from_delivery"/>
-                            <separator string="Products" colspan="2"/>
+                        <group string="Products">
                             <field name="group_stock_packaging"/>
                             <field name="group_uom"/>
                             <field name="group_uos"/>
                             <field name="group_stock_inventory_valuation" class="oe_inline"/>
                             <field name="group_product_variant"/>
+                        </group>
+                        <group string="Partners">
+                            <field name="module_claim_from_delivery"/>
+                        </group>
+                        <group string="Traceability">
+                            <field name="group_stock_production_lot"/>
+                            <field name="group_stock_tracking_lot"/>
+                            <field name="module_product_expiry"
+                                attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
                         </group>
                     </group>
                 </form>
