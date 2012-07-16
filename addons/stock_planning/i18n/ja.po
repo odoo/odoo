@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-07-04 02:25+0000\n"
+"PO-Revision-Date: 2012-07-04 23:38+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-04 04:38+0000\n"
-"X-Generator: Launchpad (build 15544)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:20+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -453,7 +453,7 @@ msgstr "調達履歴"
 msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units from default category or from second category (UoS category)."
-msgstr "在庫計算の数量を表示するため使用する単位。デフォルト分類から、または第2分類（単位分類）から単位を使うことができます。"
+msgstr "在庫計算の数量を表示するため使用する単位。デフォルト分類から、または第2分類（販売単位分類）から単位を使うことができます。"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -541,7 +541,7 @@ msgstr "この会社の期間5"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "製品単位"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
@@ -619,7 +619,7 @@ msgstr "倉庫 "
 msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
-msgstr "在庫計算の数量を示すために使用される単位。デフォルト分類から、または第2分類（単位の分類）から単位を使用することができます。"
+msgstr "在庫計算の数量を示すために使用される単位。デフォルト分類から、または第2分類（販売単位分類）から単位を使用することができます。"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -709,7 +709,7 @@ msgstr "在庫計画行の作成"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "General Info"
-msgstr ""
+msgstr "一般情報"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
@@ -744,14 +744,14 @@ msgstr "在庫供給場所"
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "計画期間の終了日"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
 msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
-msgstr ""
+msgstr "選択した倉庫と期間の全ての製品が任意の予測を持つための計画を作成するにはこのボックスをチェックします。製品分類項目は無視されます。"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:632
@@ -759,19 +759,19 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:702
 #, python-format
 msgid "MPS(%s) %s"
-msgstr ""
+msgstr "MPS（%s）%s"
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
 msgid "Already In"
-msgstr ""
+msgstr "既入庫"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom_categ:0
 #: field:stock.planning,product_uos_categ:0
 #: field:stock.sale.forecast,product_uom_categ:0
 msgid "Product UoM Category"
-msgstr ""
+msgstr "製品単位分類"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_sale_forecast_form
@@ -798,6 +798,10 @@ msgid ""
 "can trigger the procurement of what is missing to reach your desired "
 "quantities"
 msgstr ""
+"マスタ調達スケジュールは倉庫の補充のための主な操縦者になることができ、または自動MRPスケジューリング（最小在庫ルール他）を補完します。\n"
+"各MPS行は現在と未来の在庫レベルを基本として、計画された在庫移動と同様、与えられた倉庫の中の与えられた在庫期間のために、与えられた製品の入庫と出庫の前も"
+"って計算された概観を与えます。予測数量は手動で変更することができます。そしてシミュレート結果の在庫数量に満足したなら、希望の数量に到達しないものの調達のき"
+"っかけとすることができます。"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:685
@@ -834,48 +838,48 @@ msgstr ""
 #: field:stock.sale.forecast,period_id:0
 #: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "期間"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr ""
+msgstr "製品販売単位分類"
 
 #. module: stock_planning
 #: field:stock.planning,active_uom:0
 #: field:stock.sale.forecast,active_uom:0
 msgid "Active UoM"
-msgstr ""
+msgstr "アクティブな単位"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr ""
+msgstr "在庫計画の検索"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy Last Forecast"
-msgstr ""
+msgstr "最終予測のコピー"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "この予測に関連する製品の表示"
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
 msgid "Periods"
-msgstr ""
+msgstr "期間"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
 msgid "Create Stock Periods"
-msgstr ""
+msgstr "在庫期間の作成"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -883,7 +887,7 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -895,47 +899,47 @@ msgstr "検証済"
 #: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
-msgstr ""
+msgstr "開く"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr ""
+msgstr "最終在庫と受注予測から数量をコピー"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr ""
+msgstr "この部門の期間1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr ""
+msgstr "この部門の期間3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr ""
+msgstr "この部門の期間2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr ""
+msgstr "この部門の期間5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr ""
+msgstr "この部門の期間4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr ""
+msgstr "この倉庫の期間2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr ""
+msgstr "この倉庫の期間3"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -944,38 +948,39 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warehouse' with Supply Warehouse."
 msgstr ""
+"供給倉庫の在庫場所から供給する場合はチェックします。チェックしない場合は供給倉庫の出力場所から供給されます。供給倉庫の他の倉庫場所から供給で使用されます。"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr ""
+msgstr "担当"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Default UOM"
-msgstr ""
+msgstr "デフォルト単位"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
 msgid "This Warehouse Period4"
-msgstr ""
+msgstr "この倉庫の期間4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_warehouse:0
 msgid "This Warehouse Period5"
-msgstr ""
+msgstr "この倉庫の期間5"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr ""
+msgstr "現在"
 
 #. module: stock_planning
 #: help:stock.planning,supply_warehouse_id:0
 msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
-msgstr ""
+msgstr "倉庫は、他の倉庫からの供給によって作成された、供給集荷移動の元として使用されます。"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -993,12 +998,12 @@ msgstr "この予測がどの倉庫に関連するかを表示します。在庫
 #: code:addons/stock_planning/stock_planning.py:661
 #, python-format
 msgid "%s Procurement (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s 調達 (%s, %s) %s %s \n"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
 msgid "Per Company"
-msgstr ""
+msgstr "会社毎"
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1006,42 +1011,42 @@ msgid ""
 "Enter quantity which (by your plan) should come in. Change this value and "
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
-msgstr ""
+msgstr "入庫すべき（計画による）数量を入力します。この値を変更し、在庫シミュレーションを観察します。この値は確認済入庫以上である必要があります。"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr ""
+msgstr "この会社の期間4"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "計画が関連する期間"
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr ""
+msgstr "既出庫"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "この計画が作成される対象の製品"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Warehouse :"
-msgstr ""
+msgstr "倉庫毎："
 
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr ""
+msgstr "調達履歴"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr ""
+msgstr "開始期間の開始日"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
@@ -1051,48 +1056,48 @@ msgstr ""
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock Periods"
-msgstr ""
+msgstr "在庫期間"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock"
-msgstr ""
+msgstr "在庫"
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
-msgstr ""
+msgstr "計算された期間の全ての確認済入庫移動の数量"
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr ""
+msgstr "終了日"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr ""
+msgstr "命令書なし"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "この予測が関連する期間を表示"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
 msgid "UoM"
-msgstr ""
+msgstr "単位"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed Periods"
-msgstr ""
+msgstr "閉鎖済期間"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1100,7 +1105,7 @@ msgstr ""
 #: view:stock.sale.forecast:0
 #: field:stock.sale.forecast,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "製品"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
@@ -1113,13 +1118,13 @@ msgstr "受注予測"
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "製品分類"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:672
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "元の倉庫を指定する必要があります。"
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
@@ -1136,7 +1141,7 @@ msgstr "承認"
 msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
-msgstr "この計画の期間。申請は期間の開始時に作成されます。"
+msgstr "この計画の期間。命令書は期間の開始時に作成されます。"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:631
@@ -1188,6 +1193,8 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"計画された入庫数量のために残された数量。これは計画入庫と確認済入庫の間の計算された差です。現在の期間のために、既入庫も計算されます。この値は不足数量のため"
+"に調達を生成するのに使用されます。"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -1195,7 +1202,7 @@ msgid ""
 "Quantity expected to go out in selected period besides Confirmed Out. As a "
 "difference between Planned Out and Confirmed Out. For current period Already "
 "Out is also calculated"
-msgstr ""
+msgstr "確認済出庫とは別に選択された期間に出庫すると期待される数量。計画出庫と確認済出庫の差です。現在期間の既出庫もまた計算されます。"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1209,3 +1216,5 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"このウィザードは一度に複数の予測行を作成するのを手助けします。それが作成された後、あなたは予測数量を埋める必要があります。同じ選択に対して同じものが存在す"
+"る場合、ウィザードは行を重複させません。"

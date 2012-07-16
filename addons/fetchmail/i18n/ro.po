@@ -14,28 +14,29 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:11+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:18+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "Confirmat"
+msgstr "Confirmat(a)"
 
 #. module: fetchmail
 #: field:fetchmail.server,server:0
 msgid "Server Name"
-msgstr ""
+msgstr "Numele Serverului"
 
 #. module: fetchmail
 #: field:fetchmail.server,script:0
 msgid "Script"
-msgstr ""
+msgstr "Script"
 
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
+"Defineste ordinea procesarii, valorile mai mici inseamna prioritate mai mare"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -43,11 +44,13 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
+"Legaturile sunt codificate cu SSL/TLS printr-un port dedicat (implicit: "
+"IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
 msgid "Keep Attachments"
-msgstr ""
+msgstr "Pastrati Atasamentele"
 
 #. module: fetchmail
 #: help:fetchmail.server,original:0
@@ -56,6 +59,9 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
+"Daca o copie completa a fiecarui e-mail original ar trebui pastrata pentru "
+"referinta si atasata fiecarui mesaj procesat. De obicei, acest lucru va "
+"dubla dimensiunea bazei d-voastra de date de mesaje."
 
 #. module: fetchmail
 #: field:fetchmail.server,priority:0
@@ -75,13 +81,13 @@ msgstr "POP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Fetch Now"
-msgstr ""
+msgstr "Aduceti acum"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr ""
+msgstr "Servere Primire E-mail-uri"
 
 #. module: fetchmail
 #: field:fetchmail.server,port:0
@@ -96,12 +102,12 @@ msgstr "Servere POP/IMAP"
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "Local Server"
-msgstr ""
+msgstr "Server Local"
 
 #. module: fetchmail
 #: field:fetchmail.server,user:0
 msgid "Username"
-msgstr ""
+msgstr "Nume de utilizator"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
@@ -111,7 +117,7 @@ msgstr "Server POP/IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "Reinitializare Confirmare"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -121,12 +127,12 @@ msgstr "SSL"
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_message
 msgid "Email Message"
-msgstr ""
+msgstr "Mesaj E-mail"
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
 msgid "Last Fetch Date"
-msgstr ""
+msgstr "Data ultimei primiri"
 
 #. module: fetchmail
 #: help:fetchmail.server,action_id:0
@@ -134,6 +140,9 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
+"Actiune optionala personalizata a serverului care va fi declansata pentru "
+"fiecare e-mail primit, in inregistrarea care a fost creata sau actualizata "
+"de catre acest e-mail"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -143,7 +152,7 @@ msgstr "# de email-uri"
 #. module: fetchmail
 #: field:fetchmail.server,original:0
 msgid "Keep Original"
-msgstr ""
+msgstr "Pastreaza Originalul"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:155
@@ -152,33 +161,35 @@ msgid ""
 "Here is what we got instead:\n"
 " %s"
 msgstr ""
+"Iata ce am primit in schimb:\n"
+" %s"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
-msgstr ""
+msgstr "Configurare"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Server Primire E-mail-uri"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:155
 #, python-format
 msgid "Connection test failed!"
-msgstr ""
+msgstr "Testul de conexiune a esuat!"
 
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr ""
+msgstr "Nume gazda sau IP a(l) serverului de e-mail"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type IMAP."
-msgstr ""
+msgstr "Tip de server IMAP."
 
 #. module: fetchmail
 #: field:fetchmail.server,name:0
@@ -188,22 +199,22 @@ msgstr "Nume"
 #. module: fetchmail
 #: field:fetchmail.server,is_ssl:0
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Test & Confirm"
-msgstr ""
+msgstr "Testeaza & Confirma"
 
 #. module: fetchmail
 #: field:fetchmail.server,action_id:0
 msgid "Server Action"
-msgstr ""
+msgstr "Actiune server"
 
 #. module: fetchmail
 #: field:mail.message,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr ""
+msgstr "Server Intrare E-mail-uri"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -214,12 +225,12 @@ msgstr "Mesaje"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "Cauta Servere Primire E-mail-uri"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: fetchmail
 #: help:fetchmail.server,attach:0
@@ -227,6 +238,8 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
+"Daca ar trebui descarcate atasamentele. Daca nu este activat, e-mail-urilor "
+"primite li se vor indeparta orice atasamente inainte de a fi procesate."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -246,17 +259,17 @@ msgstr "IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type POP."
-msgstr ""
+msgstr "Tipul de server POP."
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
 msgid "Password"
-msgstr "Parolă"
+msgstr "Parola"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Actions to Perform on Incoming Mails"
-msgstr ""
+msgstr "Actiuni de eEfectuat la E-mail-urile Primite"
 
 #. module: fetchmail
 #: field:fetchmail.server,type:0
@@ -266,27 +279,27 @@ msgstr "Tip de server"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Login Information"
-msgstr "Informații autentificare"
+msgstr "Informatii de autentificare"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server Information"
-msgstr "Informații despre server"
+msgstr "Informatii Server"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "If SSL required."
-msgstr ""
+msgstr "Daca SSL este necesar."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Advanced"
-msgstr ""
+msgstr "Avansat(e)"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server & Login"
-msgstr "Server & Login (Server si autentificare)"
+msgstr "Server si Autentificare"
 
 #. module: fetchmail
 #: help:fetchmail.server,object_id:0
@@ -295,11 +308,15 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
+"Proceseaza fiecare e-mail primit ca parte a unei conversatii care corespunde "
+"acestui tip de document. Aceasta va crea documente noi pentru conversatiile "
+"noi, sau va atasa e-mail-uri de continuare conversatiilor existente "
+"(documente)."
 
 #. module: fetchmail
 #: field:fetchmail.server,object_id:0
 msgid "Create a New Record"
-msgstr ""
+msgstr "Creeaza o Inregistrare Noua"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -314,7 +331,7 @@ msgstr "Server POP"
 #. module: fetchmail
 #: view:mail.message:0
 msgid "Mail Server"
-msgstr "Server de mail"
+msgstr "Server de e-mail"
 
 #~ msgid "User Name"
 #~ msgstr "Nume utilizator"
@@ -428,3 +445,6 @@ msgstr "Server de mail"
 
 #~ msgid "Fetch Emails"
 #~ msgstr "Aduceti email-uri"
+
+#~ msgid "Advanced options"
+#~ msgstr "Optiuni avansate"

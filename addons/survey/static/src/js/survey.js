@@ -2,10 +2,6 @@ openerp.survey = function (instance) {
     var QWeb = instance.web.qweb,
     _t = instance.web._t;
     instance.web.ViewManagerAction = instance.web.ViewManagerAction.extend({
-        init: function(parent, action) {
-            this._super.apply(this,arguments);
-            console.log('hello');
-        },
         on_mode_switch: function (view_type, no_store, options) {
             var self = this;
             return $.when(this._super.apply(this, arguments)).then(function () {

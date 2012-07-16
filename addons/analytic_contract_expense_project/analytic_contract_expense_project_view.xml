@@ -15,13 +15,13 @@
                         </td><td>
                             <field name="charge_expenses"/>
                         </td><td>
-                            <field class="oe_form_inline" name="est_expenses" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
+                            <field class="oe_inline" name="est_expenses" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
-                            <field class="oe_form_inline" name="expense_invoiced" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
+                            <field class="oe_inline" name="expense_invoiced" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
-                            <field class="oe_form_inline" name="remaining_expense" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
+                            <field class="oe_inline" name="remaining_expense" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
-                            <field class="oe_form_inline" name="expense_to_invoice" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
+                            <field class="oe_inline" name="expense_to_invoice" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
                             <button name="open_hr_expense" string="All Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                             <button name="hr_to_invoice_expense" string="Expenses to Invoice" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
