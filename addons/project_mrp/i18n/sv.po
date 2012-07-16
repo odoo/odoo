@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:35+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:04+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: project_mrp
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Orderreferensen måste vara unik per bolag!"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -29,17 +29,17 @@ msgstr "For each product, on type service and on order"
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr ""
+msgstr "Anskaffningsaktivitet"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Kundorder"
 
 #. module: project_mrp
 #: field:procurement.order,sale_line_id:0
 msgid "Sale order line"
-msgstr ""
+msgstr "Orderrad"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -54,7 +54,7 @@ msgstr "if product type is 'service' then it creates the task."
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+msgstr "Fel ! Aktivitetens slutdatum måste komma efter startdatumet"
 
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
@@ -64,17 +64,17 @@ msgstr "Sale Order Task"
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fel: felaktig EAN-kod"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_procurement_order
@@ -103,7 +103,7 @@ msgstr "Order Task"
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Fel ! Du kan inte skapa rekursiva aktiviteter."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -114,6 +114,8 @@ msgstr "Create Task"
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
+"Om anskaffningsmetoden är Tillverka på order och försörjningsmetoden är "
+"framställa"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
@@ -123,7 +125,7 @@ msgstr "In case you sell services on sale order"
 #. module: project_mrp
 #: field:project.task,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Orderrad"
 
 #~ msgid "If procure method is Make to order and supply method is produce"
 #~ msgstr "If procure method is Make to order and supply method is produce"
