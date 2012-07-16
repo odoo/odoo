@@ -909,9 +909,9 @@
                                   <field name="amount" attrs="{'readonly':[('type','in',('none', 'code', 'balance'))]}"/>
                                   <separator colspan="4" string="Accounting Information"/>
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
                                   <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
                                   <separator colspan="4" string="Tax Declaration: Invoices"/>
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -2357,12 +2357,11 @@
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <p>This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template.</p>
                     <div groups="base.group_multi_company">
                         <label for="company_id"/>
                         <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     </div>
-                    <group string="Set Your Accounting Options">
+                    <group>
                         <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <label for="chart_template_id"/>
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>

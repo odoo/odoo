@@ -1,3 +1,40 @@
+/* ------------------------------ */
+/* Group Form                     */
+/* ------------------------------ */
+
+/* Resize sheet width */ 
+.openerp .oe_form_sheetbg.openerp_mail_group_sheet {
+  min-height: 0px;
+  max-height: none;
+}
+ 
+.openerp .oe_form_sheetbg.openerp_mail_group_sheet .oe_form_sheet {
+  min-height: 0px;
+  max-height: none;
+  padding: 0px 18px;
+  max-width: 80%;
+}
+
+/* Resize footer width */
+.openerp .oe_form div.oe_mail_group_footer {
+  max-width: 80%;
+}
+
+/* Resize group logo */
+.openerp .oe_form_sheetbg.openerp_mail_group_sheet .oe_form_field_image > img {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+/* Resize group description */
+.openerp .oe_form_sheetbg.openerp_mail_group_sheet .oe_form_field_text > textarea {
+  height: 40px;
+}
+
+/* ------------------------------ */
+/* Group Kanban                   */
+/* ------------------------------ */
+
 .oe_group_vignette {
   padding: 8px 0;
   min-height: 100px;
@@ -70,10 +107,4 @@
 
 .oe_group_details li {
   margin: 2px 0;
-}
-
-.oe_group_description {
-}
-
-.oe_kanban_record div.true {
 }
