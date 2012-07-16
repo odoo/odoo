@@ -9,7 +9,15 @@
             <field name="arch" type="xml">
                 <form string="Update Module List" version="7.0">
                     <field name="state" invisible="1"/>
-                    <header>
+                    <separator string="Module Update Result"/>
+                    <group states="init">
+                        <label string="Click on Update below to start the process..." />
+                    </group>
+                    <group states="done" >
+                        <field name="update"/>
+                        <field name="add" />
+                    </group>
+                    <footer>
                         <div states="init">
                             <button name="update_module" string="Update" type="object" icon="gtk-ok" class="oe_highlight"/> or 
                             <button special="cancel" string="Cancel" icon="gtk-cancel" class="oe_link"/>
@@ -18,13 +26,7 @@
                             <button name="action_module_open" string="Open Modules" type="object" icon="gtk-go-forward" class="oe_highlight"/> or 
                             <button special="cancel" string="Close" icon="gtk-ok" class="oe_link"/>
                         </div>
-                    </header>
-                    <group>
-                        <group states="done" colspan="4">
-                            <field name="update" colspan="4"/>
-                            <field name="add" colspan="4"/>
-                        </group>
-                    </group>
+                    </footer>
                 </form>
             </field>
         </record>        

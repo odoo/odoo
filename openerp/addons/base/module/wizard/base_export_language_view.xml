@@ -8,30 +8,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Export Translations" version="7.0">
-                    <field invisible="1" name="state"/>
-                    <header states="choose">
-                        <button icon="gtk-ok" name="act_getfile" string="_Export" type="object" class="oe_highlight"/> or 
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="_Cancel" type="object" class="oe_link"/>
-                    </header>
-                    <sheet>
-                        <group colspan="4">
-                            <group states="choose">
-                                <field name="lang"/>
-                                <field name="format" required="1"/>
-                                <field height="200" name="modules" nolabel="1" colspan="4"/>
-                            </group>
-                            <group colspan="4" states="get" string="Export done">
-                                <field name="name" invisible="1" colspan="4"/>
-                                <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
-                                <field height="80" name="advice" nolabel="1" colspan="4"/>
-                            </group>
-                        </group>
-                        <group colspan="8" col="8" states="get">
-                            <separator string="" colspan="8"/>
-                            <label colspan="7" width="220"/>
-                            <button icon="gtk-close" name="act_destroy" special="cancel" string="_Close" type="object"/>
-                        </group>
-                    </sheet>
+                    <group colspan="4" states="choose">
+                        <separator colspan="4" string="Export Translation"/>
+                        <field name="lang"/>
+                        <field name="format" required="1"/>
+                        <field name="modules" nolabel="1"/>
+                        <field invisible="1" name="state"/>
+                    </group>
+                    <group colspan="4" states="get">
+                        <separator string="Export done" colspan="4"/>
+                        <field name="name" invisible="1" colspan="4"/>
+                        <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
+                        <field height="80" name="advice" nolabel="1" colspan="4"/>
+                    </group>
+                    <footer states="choose">
+                        <button name="act_getfile" string="_Export" type="object" class="oe_highlight"/> or 
+                        <button name="act_cancel" special="cancel" string="_Cancel" type="object" class="oe_link"/>
+                    </footer>
+                    <footer states="get">
+                        <button name="act_cancel" special="cancel" string="_Close" type="object"/>
+                    </footer>
                 </form>
             </field>
         </record>

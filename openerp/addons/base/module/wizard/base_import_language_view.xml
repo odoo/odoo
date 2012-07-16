@@ -8,17 +8,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Translation" version="7.0">
-                    <header>
-                        <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="name"/>
                         <field name="code" string="Code" placeholder="en_US"/>
                         <field name="data"/>
                         <field name="overwrite"/>
                     </group>
+                    <footer>
+                        <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
