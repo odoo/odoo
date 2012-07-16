@@ -35,9 +35,11 @@
 # 59 Temple Place - Suite 330
 # Boston, MA  02111-1307
 # USA.
-
+from __future__ import with_statement
+from contextlib import closing
 from random import seed, sample
 from string import ascii_letters, digits
+
 from osv import fields,osv
 import pooler
 from tools.translate import _
@@ -136,13 +138,16 @@ class users(osv.osv):
     # Add handlers for 'input_pw' field.
 
     def init(self, cr):
-        cr.execute("SELECT id, password FROM res_users "
-                   "WHERE active=true AND password NOT LIKE '$%' "
-                    "FOR UPDATE")
-        for id, password in cr.fetchall():
-            cr.execute("UPDATE res_users SET password=%s WHERE id=%s",
-                       (encrypt_md5(password, gen_salt()), id))
+        with closing(pooler.get_db(cr.dbname).cursor()) as cr:
+            cr.execute('LOCK res_users')
+            cr.execute("SELECT id, password FROM res_users "
+                       "WHERE active=true AND password NOT LIKE '$%' ")
 
+            cr.executemany("UPDATE res_users SET password=%s WHERE id=%s",
+                ((encrypt_md5(password, gen_salt()), id)
+                 for id, password in cr.fetchall()))
+
+            cr.commit()
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
@@ -244,6 +249,7 @@ class users(osv.osv):
 
         cr = pooler.get_db(db).cursor()
         try:
+            cr.execute('LOCK res_users')
             if uid not in self._salt_cache.get(db, {}):
                 # If we don't have cache, we have to repeat the procedure
                 # through the login function.
