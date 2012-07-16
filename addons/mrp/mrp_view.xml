@@ -405,7 +405,6 @@
                             <field name="property_ids" widget="many2many_tags" />
                         </page>
                     </notebook>
-                    <newline/>
                 </form>
             </field>
         </record>
@@ -685,7 +684,7 @@
                         <page string="Consumed Products">
                             <group>
                                 <group groups="stock.group_locations">
-                                    <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
+                                    <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
                                 </group>
                                 <group>
                                     <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
@@ -808,9 +807,9 @@
                         <page string="Extra Information">
                             <group>
                                 <group>
-                                <field name="priority"/>
-                                <field name="date_start"/>
-                                <field name="date_finished"/>
+                                    <field name="priority"/>
+                                    <field name="date_start"/>
+                                    <field name="date_finished"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -879,7 +878,7 @@
                 Click here to create a new Manufacturing Order.
                 &lt;p&gt;
                 To process the production, do not forget to create a Bill of Material.
-                Manufacturing orders can be automatically generated based on procurement    rules specified on the product.
+                Manufacturing orders can be automatically generated based on procurement rules specified on the product.
             </field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action"
