@@ -292,6 +292,13 @@ openerp.mail = function(session) {
         },
 
         /**
+         * Override-hack of do_action: clean the form */
+        do_action: function(action, on_close) {
+            // this.init_comments();
+            return this._super(action, on_close);
+        },
+
+        /**
          * Widget start function
          * - builds and initializes the form view */
         start: function() {
@@ -357,7 +364,6 @@ openerp.mail = function(session) {
             // calls onchange
             var call_defer = this.ds_compose.call('onchange_formatting', [[], this.formatting, this.params.res_model, this.params.res_id]).then(
                 function (result) {
-                    console.log(result);
                     self.form_view.on_processed_onchange(result, []);
                 });
             // update context of datasetsearch
@@ -376,7 +382,6 @@ openerp.mail = function(session) {
             // calls onchange
             var call_defer = this.ds_compose.call('onchange_email_mode', [[], this.email_mode, this.params.res_model, this.params.res_id]).then(
                 function (result) {
-                    console.log(result);
                     self.form_view.on_processed_onchange(result, []);
                 });
             // update context of datasetsearch
@@ -483,6 +488,15 @@ openerp.mail = function(session) {
                 var compose_done = this.instantiate_composition_form();
             }
             return display_done && compose_done;
+        },
+
+        /**
+         * Override-hack of do_action: automatically reload the chatter.
+         * Normally it should be called only when clicking on 'Post/Send'
+         * in the composition form. */
+        do_action: function(action, on_close) {
+            this.init_comments();
+            return this._super(action, on_close);
         },
 
         instantiate_composition_form: function(mode, email_mode, formatting, msg_id) {
@@ -925,8 +939,17 @@ openerp.mail = function(session) {
             var comments_ready = this.init_and_fetch_comments(this.params.limit, 0);
             return (search_view_ready && comments_ready && compose_done);
         },
-        
-        stop: function () {
+
+        /**
+         * Override-hack of do_action: automatically reload the chatter.
+         * Normally it should be called only when clicking on 'Post/Send'
+         * in the composition form. */
+        do_action: function(action, on_close) {
+            this.init_and_fetch_comments();
+            return this._super(action, on_close);
+        },
+
+        destroy: function () {
             this._super.apply(this, arguments);
         },
 
