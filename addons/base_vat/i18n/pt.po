@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:49+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:141
@@ -23,31 +23,33 @@ msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
+"O número do IVA deve ser inválido.\n"
+"Nota: o formato esperado é %s"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "O nome da empresa deve ser único!"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Erro! Não pode criar membros recursivos."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "Verifique o VIES IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Empresas"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Erro! Não pode criar empresas recursivas."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -55,13 +57,13 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
-"Marque esta caixa se o terceiro for sujeito a IVA. Será utilizado na "
+"Marque esta caixa se o parceiro for sujeito a IVA. Será utilizado na "
 "declaração do IVA."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr "Terceiro"
+msgstr "Parceiro"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -69,6 +71,9 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
+"Se estiver marcado, os números Parceiros  do IVA serão totalmente validados "
+"contra o serviço UE VIES e não através de uma validação de formato simples "
+"(verificação)."
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0

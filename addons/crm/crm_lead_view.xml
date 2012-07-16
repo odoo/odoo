@@ -212,9 +212,9 @@
                     </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
         </record>
@@ -520,7 +520,7 @@
                                 <div>
                                     <field name="street" placeholder="Street..."/>
                                     <field name="street2"/>
-                                    <div>
+                                    <div class="address_format">
                                         <field name="city" placeholder="City" style="width: 40%%"/>
                                         <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
                                         <field name="zip" placeholder="ZIP" style="width: 34%%"/>
@@ -564,9 +564,9 @@
                     </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
     </record>

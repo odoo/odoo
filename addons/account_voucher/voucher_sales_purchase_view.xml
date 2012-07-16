@@ -88,30 +88,17 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet string="Sales Receipt" >
-                    <div class="oe_title">
-                        <label for="number" class="oe_edit_only" /> 
-                        <h1>
-                            <field name="number" readonly="0" />
-                        </h1>
-                    </div>
+                    <h1><label for="number" string="Sales Receipt "/><field name="number" class="oe_inline"/></h1>
                     <group>
                         <group>
-                            <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
-                            <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
-                            <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
-                            <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                            <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="currency_id"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
-                            <field name="name" colspan="2"/>
-                            <field name="account_id"
-                                 attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                  domain="[('type','=','liquidity')]"/>
-                            <field name="reference"
-                                 attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                            />
+                            <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                            <field name="name"/>
                             <field name="paid" invisible="1"/>
                         </group>
                         <field name="type" invisible="True"/>
@@ -126,27 +113,32 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <group>
-                                <group>
-                                      <field name="narration" placeholder="Add a internal note." nolabel="1" />
-                                </group>
+			                <group>
+                                <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <group>
-                                        <label for="tax_id"/>
-                                        <field name="tax_id"
-                                           on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
-                                           widget="selection"
-                                           nolabel="1"
-                                           domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
-                                        <button type="object" colspan="2" name="compute_tax" icon="terp-stock_format-scientific" string="Compute Tax" class="oe_inline oe_left" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    </group>
-                                    <group>
-                                            <field name="amount_untaxed"/>
-                                            <field name="tax_amount" readonly="1" />
-                                            <field name="amount"  class="oe_subtotal_footer_separator" readonly="1"/>
-                                    </group>
+                                    <field name="tax_id" 
+                                        on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
+                                        widget="selection"
+                                        domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
+                                    <div>
+                                        <label for="tax_amount"/>
+                                        <button type="object" class="oe_link oe_edit_only"
+                                            name="compute_tax" string="(update)"
+                                            attrs="{'invisible': [('state','!=','draft')]}"/>
+			                        </div>
+                                    <field name="tax_amount" nolabel="1"/>
+                                    <field name="amount" class="oe_subtotal_footer_separator" />
                                 </group>
-                            </group>
+			                    <group>
+                                    <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
+                                    <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                                    <field name="account_id"
+                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
+                                          domain="[('type','=','liquidity')]"/>
+                                    <field name="reference"
+                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
+                                </group>
+			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
@@ -170,10 +162,10 @@
                             </field>
                         </page>
                     </notebook>
-                </sheet>
-                <footer>
-                    <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -317,9 +309,9 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                    </div>
                 </form>
             </field>
         </record>
