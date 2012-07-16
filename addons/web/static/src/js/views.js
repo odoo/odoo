@@ -114,7 +114,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 }
             }
         }
-        return titles.join(' / ');
+        return titles.join(' <span class="oe_fade">/</span> ');
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
