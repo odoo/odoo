@@ -137,7 +137,7 @@ class mail_compose_message(osv.TransientModel):
             'model': model,
             'res_id': res_id,
             'email_from': user.user_email or tools.config.get('email_from', False),
-            'body_html': '<br />---<br />' + tools.ustr(user.signature or ''),
+            'body_html': '',
         })
         return result
 
@@ -200,8 +200,9 @@ class mail_compose_message(osv.TransientModel):
         sent_date = _('On %(date)s, ') % {'date': message_data.date} if message_data.date else ''
         sender = _('%(sender_name)s wrote:') % {'sender_name': tools.ustr(message_data.email_from or _('You'))}
         body_text = message_data.body_text or ''
+        body_html = message_data.body_html or ''
         quoted_body_text = '> %s' % tools.ustr(body_text.replace('\n', "\n> ") or '')
-        quoted_body_html = '> %s' % tools.ustr(body_text.replace('\n', "<br />&gt; ") or '')
+        quoted_body_html = '\n<blockquote>%s</blockquote>' % (body_html),
         reply_body_text = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_text, current_user.signature)
         reply_body_html = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_html, current_user.signature)
         # form dest_partner_ids
