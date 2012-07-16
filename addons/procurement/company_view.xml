@@ -10,7 +10,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
-                    <group name="logistics_grp" string="Logistics"/>
+                    <group name="logistics_grp" string="Logistics">
                         <field name="schedule_range"/>
                     </group>
                 </xpath>
