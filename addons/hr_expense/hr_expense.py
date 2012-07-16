@@ -220,6 +220,7 @@ class hr_expense_expense(osv.osv):
         '''
         This function returns an action that display existing receipt of given expense ids.
         '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
         voucher_id = self.browse(cr, uid, ids[0], context=context).voucher_id.id
         res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
         result = {
