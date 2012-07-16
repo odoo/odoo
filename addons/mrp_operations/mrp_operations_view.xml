@@ -9,7 +9,7 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='workcenter_lines']/form//field[@name='name']" position="before">
-            <header colspan="8">
+                <header colspan="8">
                    <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
                    <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
                    <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
@@ -17,7 +17,7 @@
                    <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
                    <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
                    <field name="state" widget="statusbar"/>
-            </header>
+                </header>
            </xpath>
         </field>
     </record>
