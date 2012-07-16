@@ -178,7 +178,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action)) {
+        if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);
@@ -220,7 +220,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         if (action.target === 'new') {
             if (this.dialog === null) {
-                this.dialog = new instance.web.Dialog(this, { width: '80%' });
+                // These buttons will be overwrited by <footer> if any
+                this.dialog = new instance.web.Dialog(this, {
+                    buttons: { "Close": function() { $(this).dialog("close"); }},
+		    dialogClass: 'oe_act_window'
+                });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
             } else {
@@ -403,6 +407,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     } else {
                         container.hide();
                         controller.do_hide();
+                    }
+		    // put the <footer> in the dialog's buttonpane
+                    if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
+                        self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
+                        self.$element.find('footer').appendTo(
+                            self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonpane')
+                        );
                     }
                 }
             });
@@ -1252,7 +1263,7 @@ instance.web.View = instance.web.Widget.extend({
             args.push(context);
             return dataset.call_button(action_data.name, args, handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
+            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
         }

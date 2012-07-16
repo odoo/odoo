@@ -1494,10 +1494,6 @@ class Binary(openerpweb.Controller):
 
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"
-    
-    action_mapping = {
-        "ir.actions.act_url": "ir.actions.url",
-    }
 
     # For most actions, the type attribute and the model name are the same, but
     # there are exceptions. This dict is used to remap action type attributes
@@ -1511,6 +1507,17 @@ class Action(openerpweb.Controller):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
+
+        try:
+            action_id = int(action_id)
+        except ValueError:
+            try:
+                module, xmlid = action_id.split('.', 1)
+                model, action_id = req.session.model('ir.model.data').get_object_reference(module, xmlid)
+                assert model.startswith('ir.actions.')
+            except Exception:
+                action_id = 0   # force failed read
+
         base_action = Actions.read([action_id], ['type'], context)
         if base_action:
             ctx = {}
