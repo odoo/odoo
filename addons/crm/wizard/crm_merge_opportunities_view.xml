@@ -10,11 +10,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Merge Opportunities" version="7.0">
-                    <header>
-                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <separator string="Select Opportunities"/>
                     <field name="opportunity_ids">
                         <tree>
@@ -24,6 +19,11 @@
                             <field name="section_id" />
                         </tree>
                     </field>
+                    <footer>
+                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

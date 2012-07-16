@@ -7,13 +7,36 @@
             <field name="model">caldav.browse</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Browse Caldav" >
-                    <group colspan="4" width="700" height="500">
-                        <separator string="Browse Caldav" colspan="4"/>
-                        <field name="url" colspan="4" />
-                        <separator string="Description" colspan="4"/>
-                        <field name="description"  colspan="4"  nolabel="1"/>
-                    </group>
+                <form string="Browse Caldav" version="7.0">
+                    <sheet>
+                        <group>
+                            <separator string="Browse Caldav" colspan="4"/>
+                            <field name="url" colspan="2" />
+                            <separator string="Help" colspan="4"/>
+                            <group colspan="4"><div>
+                                1. Webdav server that provides remote access to calendar<br/>
+                                2. Synchronisation of calendar using WebDAV<br/>
+                                3. Customize calendar event and todo attribute with any of OpenERP model<br/>
+                                4. Provides iCal Import/Export functionality
+                           <br/></div></group>
+                           <group colspan="4"><div>
+                           To access Calendars using CalDAV clients, point them to:
+        http://<i>HOSTNAME</i>:<i>PORT</i>/webdav/<i>DATABASE_NAME</i>/calendars/users/<i>USERNAME</i>/c</div></group>
+                            <group colspan="4"><div>
+                            To access OpenERP Calendar using WebCal to remote site use the URL like:
+        http://<i>HOSTNAME</i>:<i>PORT</i>/webdav/<i>DATABASE_NAME</i>/Calendars/<i>CALENDAR_NAME</i>.ics</div></group>
+                            <group colspan="4"><div>
+                            <i>
+        HOSTNAME: Host on which OpenERP server(With webdav) is running<br/>
+        PORT : Port on which OpenERP server is running (By Default : 8069)<br/>
+        DATABASE_NAME: Name of database on which OpenERP Calendar is created</i>
+        </div></group>
+                            
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button special="cancel" string="_Close" icon="gtk-close"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -29,12 +52,11 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <label string="Configure your openerp hostname. For example : " colspan="4"></label>
-                    <newline/>
-                    <label string="database.my.openerp.com  or companyserver.com" colspan="4"/>
-                    <newline/>
-                    <separator colspan="4"/>
-                    <field name="host_name"  colspan="4" width="250" />
+                    <sheet>
+                        <group>
+                            <field name="host_name"  colspan="2" width="250" placeholder="For example : database.my.openerp.com or companyserver.com"/>
+                        </group>
+                    </sheet>
                </form>
             </field>
         </record>
@@ -50,11 +72,14 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
-                    <separator string="" colspan="4"/>
-                    <field name="service"  colspan="4" width="250" readonly="1"/>
-                    <field name="collection"  colspan="4" width="250" invisible="1" />
-                    <field name="calendar"  colspan="4" width="250" domain="[('collection_id','=', collection)]" readonly="1"/>
-                    <field name="device"  colspan="4" width="250" />
+                    <sheet>
+                        <group>
+                            <field name="service" readonly="1"/>
+                            <field name="collection" invisible="1" />
+                            <field name="calendar"  domain="[('collection_id','=', collection)]" readonly="1"/>
+                            <field name="device"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

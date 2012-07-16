@@ -266,93 +266,6 @@ number of years of service (date of joining – date of retirement/leaving job)<
              <field name="note">Rs. 900 per month (non taxable)</field>
         </record>
 
-        <record id="hr_salary_rule_Gift_nr" model="hr.salary.rule">
-            <field name="code">GFNR</field>
-            <field name="name">Gifts From Non-Relatives</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="41"/>
-            <field name="note">Gift is from non relatives person worth more than Rs.50000, 
-one is liable to pay the tax what ever he received excess of the limit or Rs 50,000.</field>
-        </record>
-
-        <record id="hr_salary_rule_Gift_r" model="hr.salary.rule">
-            <field name="code">GFR</field>
-            <field name="name">Gifts From Relatives</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="42"/>
-            <field name="note"> gift is from relaives whould be non taxable with no limits.</field>
-        </record>
-
-        <record id="hr_salary_rule_agricultural" model="hr.salary.rule">
-            <field name="code">AI</field>
-            <field name="name">Agricultural Income</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="44"/>
-        </record>
-
-        <record id="hr_salary_rule_hri" model="hr.salary.rule">
-            <field name="code">HRI</field>
-            <field name="name">House Rent Income</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.house_rent_income</field>
-            <field name="condition_select">none</field>
-            <field name="sequence" eval="45"/>
-            <field name="note">Income from house property.30% of the rental income can be reduced as a standard deduction.</field>
-        </record>
-
-        <record id="hr_salary_rule_saving_bank" model="hr.salary.rule">
-            <field name="code">SBAI</field>
-            <field name="name">Saving Bank Account Interest</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.saving_bank_account</field>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.saving_bank_account)</field>
-            <field name="sequence" eval="46"/>
-        </record>
-
-        <record id="hr_salary_rule_Other" model="hr.salary.rule">
-            <field name="code">OTI</field>
-            <field name="name">Other Income</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.other_income)</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.other_income</field>
-            <field name="note">Bank account/NSC/Post Office/SCSS interest</field>
-            <field name="sequence" eval="47"/>
-        </record>
-
-        <record id="hr_salary_rule_st_gains" model="hr.salary.rule">
-            <field name="code">STG</field>
-            <field name="name">Short Term Gains from Share Trading/Equity MFs</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.short_term_gain</field>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.short_term_gain)</field>
-            <field name="sequence" eval="48"/>
-            <field name="note">If stocks/equity mutual funds are sold before one year, 15% tax would be payable on such gains. STT should have been on transaction.</field>
-        </record>
-
-        <record id="hr_salary_rule_lt_gains" model="hr.salary.rule">
-            <field name="code">LTG</field>
-            <field name="name">Long Term Gains from Share Trading/Equity MFs</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.long_term_gain</field>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.long_term_gain)</field>
-            <field name="sequence" eval="49"/>
-            <field name="note">If stocks/equity mutual funds are kept for more than a year before sale,it would be long term gains and such gains would be fully exempt from income tax. Securities transaction tax (STT) must have been paid on transactions for availing this exemption.</field>
-        </record>
 
         <!--hr salary rules for Deductions -->
 
@@ -373,12 +286,10 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="name">Professional Tax</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.professional_tax)</field>
+            <field name="condition_python">result = contract.wage &gt;= 3000 </field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.professional_tax)</field>
+            <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt;= 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt;= 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999)) else -0</field>
             <field eval="145" name="sequence"/>
-            <field eval="False" name="appears_on_payslip"/>
-            <field name="note">Professional tax for company should be paid on or before 30th sept,The amount is Rs.2000 per year.There is no payment form to be filled.</field>
         </record>
 
         <record id="hr_payslip_rule_epf" model="hr.salary.rule">
@@ -417,10 +328,9 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="code">CPT</field>
             <field name="name">Deduction for Company Provided Transport</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.company_transport)</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.company_transport)</field>
+            <field name="condition_select">none</field>			
+            <field name="amount_select">fix</field>
+            <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="165"/>
         </record>
         
@@ -457,10 +367,9 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="code">DLA</field>
             <field name="name">Deduction Towards Leave Availed</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.leave_avail_dedution)</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.leave_avail_dedution)</field>
+            <field name="condition_select">none</field>			
+            <field name="amount_select">fix</field>
+            <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="180"/>
         </record>
 

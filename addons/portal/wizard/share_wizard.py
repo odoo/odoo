@@ -28,7 +28,7 @@ UID_ROOT = 1
 SHARED_DOCS_MENU = "Documents"
 SHARED_DOCS_CHILD_MENU = "Shared Documents"
 
-class share_wizard_portal(osv.osv_memory):
+class share_wizard_portal(osv.TransientModel):
     """Inherited share wizard to automatically create appropriate
        menus in the selected portal upon sharing with a portal group."""
     _inherit = "share.wizard"

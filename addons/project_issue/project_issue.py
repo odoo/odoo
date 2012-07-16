@@ -27,9 +27,6 @@ from tools.translate import _
 import binascii
 import time
 import tools
-from crm import wizard
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('project.issue')
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
@@ -50,6 +47,7 @@ class project_issue(base_stage, osv.osv):
     _description = "Project Issue"
     _order = "priority, create_date desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
@@ -467,87 +465,68 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically called when new email message arrives"""
-        if context is None:
-            context = {}
-        subject = msg.get('subject') or _('No Title')
-        body = msg.get('body_text')
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        if context is None: context = {}
+        context['state_to'] = 'draft'
+
+        custom_values.update({
+            'name':  msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'description': body,
             'user_id': False,
-        }
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg_from))
-        context.update({'state_to' : 'draft'})
+        })
+        if  msg.get('priority'):
+            custom_values['priority'] =  msg.get('priority')
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
 
-        if custom_values and isinstance(custom_values, dict):
-            vals.update(custom_values)
-
-        res_id = self.create(cr, uid, vals, context)
-        self.message_append_dict(cr, uid, [res_id], msg, context=context)
+        res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         self.convert_to_bug(cr, uid, [res_id], context=context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
-        if vals is None:
-            vals = {}
-
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
+        if update_vals is None: update_vals = {}
 
-        vals.update({
-            'description': msg['body_text']
-        })
-        if msg.get('priority', False):
-            vals['priority'] = msg.get('priority')
-
+        # Update doc values according to the message
+        update_vals['description'] = msg.get('body_text', '')
+        if msg.get('priority'):
+            update_vals['priority'] = msg.get('priority')
+        # Parse 'body_text' to find values to update
         maps = {
             'cost': 'planned_cost',
             'revenue': 'planned_revenue',
-            'probability': 'probability'
+            'probability': 'probability',
         }
-
-        # Reassign the 'open' state to the case if this one is in pending or done
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.state in ('pending', 'done'):
-                self.case_set(cr, uid, ids, 'open', {}, context=context)
-
-        vls = { }
-        for line in msg['body_text'].split('\n'):
+        for line in msg.get('body_text', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
+                update_vals[key] = res.group(2).lower()
 
-        vals.update(vls)
-        res = self.write(cr, uid, ids, vals)
-        self.message_append_dict(cr, uid, ids, msg, context=context)
-        return res
+        return super(project_issue, self).message_update(cr, uid, ids, update_vals=update_vals, context=context)
     
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
     
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-    
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        """ Override to add responsible user. """
+        user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
