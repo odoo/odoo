@@ -772,7 +772,7 @@
     <table border="0" cellpadding="0" cellspacing="0" t-attf-class="oe_form_group #{classnames}"/>
 </t>
 <t t-name="FormRenderingNotebook">
-    <div>
+    <div class="oe_clear">
         <ul t-attf-class="oe_notebook #{classnames}">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
                 <a t-attf-href="##{page.id}">
