@@ -2184,6 +2184,10 @@
 .openerp .oe_list_content td:first-child:after, .openerp .oe_list_content th:first-child:after {
   border-width: 0;
 }
+.openerp .oe_list_content td.oe_number {
+  text-align: right !important;
+  max-width: 100px;
+}
 .openerp .oe_list_content > thead {
   border-bottom: 2px solid #cacaca;
   background: #eeeeee;
@@ -2235,9 +2239,6 @@
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell progress {
   width: 100%;
 }
-.openerp .oe_list_content > tbody > tr > td, .openerp .oe_list_content > tbody > tr > th {
-  line-height: 18px;
-}
 .openerp .oe_list_content > tbody > tr > td > button, .openerp .oe_list_content > tbody > tr > th > button {
   border: none;
   background: transparent;
@@ -2251,10 +2252,6 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_checkbox:first-child:after, .openerp .oe_list_content > tbody > tr th.oe_list_checkbox:first-child:after {
   border-width: 0;
-}
-.openerp .oe_list_content > tbody > tr > td.oe_number {
-  text-align: right !important;
-  max-width: 100px;
 }
 .openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;

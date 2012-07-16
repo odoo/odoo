@@ -1731,6 +1731,9 @@ $sheet-max-width: 860px
         td:first-child, th:first-child
             &:after
                 border-width: 0
+        td.oe_number
+            text-align: right !important
+            max-width: 100px
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
@@ -1769,7 +1772,6 @@ $sheet-max-width: 860px
                     progress
                         width: 100%
                 > td, > th
-                    line-height: 18px
                     > button
                         border: none
                         background: transparent
@@ -1779,9 +1781,6 @@ $sheet-max-width: 860px
                     width: 17px
                     &:after
                         border-width: 0
-                > td.oe_number
-                    text-align: right !important
-                    max-width: 100px
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)
