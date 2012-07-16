@@ -32,8 +32,6 @@ class crm_meeting(osv.Model):
     """ Model for CRM meetings """
     _inherit = 'crm.meeting'
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]},
-                        select=True, groups='base.group_sale_salesman', help='Sales team to which Case belongs to.'),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
     }
