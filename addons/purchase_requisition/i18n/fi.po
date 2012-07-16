@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:25+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: purchase_requisition
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -64,7 +64,7 @@ msgstr "Tila"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Purchase Requisition in negociation"
-msgstr ""
+msgstr "Ostotilauspyyntö neuvottelussa"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -75,7 +75,7 @@ msgstr "Toimittaja"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -99,7 +99,7 @@ msgstr "Pyynnön päivä"
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr "Ostotilaus pyyntö"
+msgstr "Ostotilauspyyntö"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
@@ -109,7 +109,7 @@ msgstr "Ostotilauspyynnön rivi"
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "Ostotilaukset joilla pyyntöjä"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -134,12 +134,14 @@ msgid ""
 "Check this box so that requisitions generates purchase requisitions instead "
 "of directly requests for quotations."
 msgstr ""
+"Valitse tämä kohta jos haluat että pyynnöt luovat ostotilausehdotuksia eikä "
+"tarjouspyyntöjä."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:136
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varoitus"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -181,12 +183,12 @@ msgstr "Palauta luonnokseksi"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Current Purchase Requisition"
-msgstr ""
+msgstr "Nykyinen ostotilauspyyntö"
 
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
 msgid "User"
-msgstr ""
+msgstr "Käyttäjä"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
@@ -216,7 +218,7 @@ msgstr "Määrä"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "Kohdistamaton pyyntö"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -303,7 +305,7 @@ msgstr "Pyynnön tyyppi"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "New Purchase Requisition"
-msgstr ""
+msgstr "Uusi ostotilauspyyntö"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -338,7 +340,7 @@ msgstr "Ostotilauspyynnön kumppani"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Start"
-msgstr ""
+msgstr "Käynnistä"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -395,12 +397,12 @@ msgstr "Ostotilauspyyntö (poissulkeva)"
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
 msgid "Manager"
-msgstr ""
+msgstr "Päällikkö"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Virhe: Väärä EAN-koodi"
+msgstr "Virhe: Virheellinen EAN-koodi"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -411,7 +413,7 @@ msgstr "Valmis"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Peruuta"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
