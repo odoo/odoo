@@ -155,20 +155,21 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
-                        <label for="project_id" class="oe_edit_only"/>
-                        <h2>
-                            <field name="project_id" on_change="onchange_project(project_id)" colspan="3"/>
-                        </h2>
                     </div>
                     <group>
-                    <label for="date_start" string="Duration"/>
-                    <div>
-                        <div>
-                            <field name="duration" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline"/>
-                        </div>
-                        <field name="date_start" class="oe_inline"/><label string=" - " class="oe_inline"/><field name="date_end" class="oe_inline"/>
-                    </div>
+                        <group>
+                            <label for="date_start" string="Duration"/>
+                            <div>
+                                <div>
+                                    <field name="duration" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline"/>
+                                </div>
+                                <field name="date_start" class="oe_inline"/><label string=" - " class="oe_inline"/><field name="date_end" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="project_id" on_change="onchange_project(project_id)"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Planning of Users">
@@ -211,10 +212,9 @@
                                 </group>
                                 <group>
                                     <field name="sequence"/>
+                                     <field name="user_force_ids" widget="many2many_tags"/>
                                 </group>
                             </group>
-                           <separator string="Force Assigned Users"/>
-                           <field name="user_force_ids" widget="many2many_tags" />
                            <separator string="Previous Phases"/>
                            <field name="previous_phase_ids"/>
                            <separator string="Next Phases"/>
@@ -327,7 +327,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='effective_hours']" position="after">
+                <xpath expr="//field[@name='user_id']" position="after">
                     <field name="phase_id" context="{'default_project_id' : project_id}"/>
                 </xpath>
             </field>

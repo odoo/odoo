@@ -140,9 +140,10 @@
                             name="%(act_crm_opportunity_crm_phonecall_new)d"
                             string="Phone Calls" />
                     </div>
-
-                    <label for="name" class="oe_edit_only" string="Lead Description"/>
-                    <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    </div>
                     <group>
                         <group>
                             <field name="user_id" />
@@ -212,9 +213,9 @@
                     </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
         </record>
@@ -316,7 +317,7 @@
                                     <t t-if="record.date_action.raw_value"> : </t>
                                     <field name="title_action"/>
                                 </div>
-                                <div class="oe_right">
+                                <div class="oe_kanban_bottom_right">
                                     <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
                                     <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
                                     <!--
@@ -468,7 +469,7 @@
                         <h2>
                             <field name="planned_revenue" class="oe_inline"/>
                             <field name="company_currency" class="oe_inline"/> at 
-                            <field name="probability" class="oe_inline"/> %% success rate
+                            <field name="probability" class="oe_inline"/>%% success rate
                         </h2>
                     </div>
                     <group>
@@ -520,11 +521,11 @@
                                 <div>
                                     <field name="street" placeholder="Street..."/>
                                     <field name="street2"/>
-                                    <div>
-                                        <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                        <field name="city" class="oe_inline" placeholder="City"/>
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
-                                    <field name="state_id" placeholder="State"/>
                                     <field name="country_id" placeholder="Country"/>
                                 </div>
                             </group>
@@ -532,8 +533,8 @@
                             <group>
                                 <label for="contact_name" />
                                 <div>
-                                    <field name="contact_name" class="oe_inline"/>,
-                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                                    <field name="contact_name" class="oe_inline"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
                                 </div>
                                 <field name="function" />
                                 <field name="mobile"/>
@@ -564,9 +565,9 @@
                     </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
     </record>

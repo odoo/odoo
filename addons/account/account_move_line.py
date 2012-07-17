@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import sys
 import time
 from datetime import datetime
 from operator import itemgetter
@@ -1003,37 +1004,32 @@ class account_move_line(osv.osv):
         if context.get('view_mode', False):
             return result
         fld = []
-        fields = {}
         flds = []
-        title = _("Accounting Entries") #self.view_header_get(cr, uid, view_id, view_type, context)
+        title = _("Accounting Entries")  # self.view_header_get(cr, uid, view_id, view_type, context)
 
-        ids = journal_pool.search(cr, uid, [])
+        ids = journal_pool.search(cr, uid, [], context=context)
         journals = journal_pool.browse(cr, uid, ids, context=context)
-        all_journal = [None]
-        common_fields = {}
-        total = len(journals)
         for journal in journals:
-            all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
-                # sometimes, it's possible that a defined column is not loaded (the module containing 
+                # sometimes, it's possible that a defined column is not loaded (the module containing
                 # this field is not loaded) when we make an update.
-                if field.name not in self._columns:
+                if field.field not in self._columns:
                     continue
 
-                if not field.field in fields:
-                    fields[field.field] = [journal.id]
+                if not field.field in flds:
                     fld.append((field.field, field.sequence))
                     flds.append(field.field)
-                    common_fields[field.field] = 1
-                else:
-                    fields.get(field.field).append(journal.id)
-                    common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3))
-        fld.append(('journal_id', 10))
-        flds.append('period_id')
-        flds.append('journal_id')
-        fields['period_id'] = all_journal
-        fields['journal_id'] = all_journal
+
+        default_columns = {
+            'period_id': 3,
+            'journal_id': 10,
+            'state': sys.maxint,
+        }
+        for d in default_columns:
+            if d not in flds:
+                fld.append((d, default_columns[d]))
+                flds.append(d)
+
         fld = sorted(fld, key=itemgetter(1))
         widths = {
             'statement_id': 50,
@@ -1047,10 +1043,7 @@ class account_move_line(osv.osv):
                                  colors="red:state=='draft';black:state=='valid'")
         fields_get = self.fields_get(cr, uid, flds, context)
         for field, _seq in fld:
-            if common_fields.get(field) == total:
-                fields.get(field).append(None)
-            # if field=='state':
-            #     state = 'colors="red:state==\'draft\'"'
+            # TODO add string to element
             f = etree.SubElement(document, 'field', name=field)
 
             if field == 'debit':

@@ -8,7 +8,6 @@
             sequence="40" />
 
         <act_window
-            domain="[('applicant_id', '=', active_id)]"
             id="act_hr_applicant_to_meeting"
             name="Meetings"
             res_model="crm.meeting"
@@ -16,18 +15,6 @@
             view_mode="tree,form,calendar,graph"
             view_type="form"/>
 
-    # ------------------------------------------------------
-    # Job Categories
-    # ------------------------------------------------------
-
-    <record id="hr_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Applicant Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context" eval="{'object_id': ref('model_hr_applicant')}"/>
-    </record>
     # ------------------------------------------------------
     # Stage
     # ------------------------------------------------------
@@ -203,9 +190,9 @@
                 <separator string="Application Summary"/>
                 <field name="description" placeholder="Feedback of interviews..."/>
             </sheet>
-            <footer>
+            <div class="oe_chatter">
                 <field name="message_ids" widget="mail_thread"/>
-            </footer>
+            </div>
           </form>
         </field>
     </record>
@@ -516,24 +503,6 @@
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_source_action"
             sequence="10" groups="base.group_no_one"/>
-
-    <record model="ir.ui.view" id="crm_meeting_form_view">
-        <field name="name">CRM - Meetings Form</field>
-        <field name="model">crm.meeting</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>
-        <field name="arch" type="xml">
-            <field name="partner_id" position="before">
-                <field name="applicant_id" attrs="{'invisible': [('categ_id','!=',%(hr_recruitment.categ_meet_interview)d)]}"/>
-            </field>
-            <field name="partner_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('categ_id','=',%(hr_recruitment.categ_meet_interview)d)]}</attribute>
-            </field>
-            <field name="section_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('categ_id','=',%(hr_recruitment.categ_meet_interview)d)]}</attribute>
-            </field>
-        </field>
-    </record>
 
     </data>
 </openerp>
