@@ -826,11 +826,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <group string="Project Management">
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="project_grp" string="Projects">
                         <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
                     </group>
-                </page>
+                </xpath>
             </field>
         </record>
 

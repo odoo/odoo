@@ -250,13 +250,13 @@ class hr_employee(osv.osv):
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
-    def _get_photo(self, cr, uid, context=None):
+    def _default_get_photo(self, cr, uid, context=None):
         photo_path = addons.get_module_resource('hr','images','photo.png')
         return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
 
     _defaults = {
         'active': 1,
-        'photo': _get_photo,
+        'photo': _default_get_photo,
         'marital': 'single',
         'color': 0,
     }
