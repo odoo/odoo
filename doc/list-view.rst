@@ -122,7 +122,7 @@ view, on top of implementing the :js:class:`EditorDelegate` protocol:
 Interaction Methods
 +++++++++++++++++++
 
-.. js:function:: openerp.web.ListView.ensureSaved
+.. js:function:: openerp.web.ListView.ensure_saved
 
     Attempts to resolve the pending edition, if any, by saving the
     edited row's current state.
@@ -131,7 +131,7 @@ Interaction Methods
               rejected if a pending edition could not be saved
               (e.g. validation failure)
 
-.. js:function:: openerp.web.ListView.startEdition([record])
+.. js:function:: openerp.web.ListView.start_edition([record])
 
     Starts editing the provided record inline, through an overlay form
     view of editable fields in the record.
@@ -145,7 +145,7 @@ Interaction Methods
     :type record: :js:class:`~openerp.web.list.Record`
     :returns: delegate to the form used for the edition
 
-.. js:function:: openerp.web.ListView.saveEdition
+.. js:function:: openerp.web.ListView.save_edition
 
     Resolves the pending edition.
 
@@ -155,7 +155,7 @@ Interaction Methods
               updated) and ``record`` the reloaded record having been
               edited.
 
-.. js:function:: openerp.web.ListView.cancelEdition
+.. js:function:: openerp.web.ListView.cancel_edition
 
     Cancels pending edition, cleans up the list view in case of
     creation (removes the empty record being created).
@@ -163,7 +163,7 @@ Interaction Methods
 Utility Methods
 +++++++++++++++
 
-.. js:function:: openerp.web.ListView.getCellsFor(row)
+.. js:function:: openerp.web.ListView.get_cells_for(row)
 
     Extracts the cells from a listview row, and puts them in a
     {fieldname: cell} mapping for analysis and manipulation.
@@ -171,7 +171,7 @@ Utility Methods
     :param jQuery row:
     :rtype: Object
 
-.. js:function:: openerp.web.ListView.withEvent(event_name, event, action[, args][, trigger_params])
+.. js:function:: openerp.web.ListView.with_event(event_name, event, action[, args][, trigger_params])
 
     Executes ``action`` in the context of the view's editor,
     bracketing it with cancellable event signals.
@@ -193,7 +193,7 @@ Utility Methods
 Behavioral Customizations
 +++++++++++++++++++++++++
 
-.. js:function:: openerp.web.ListView.handleOnWrite(record)
+.. js:function:: openerp.web.ListView.handle_onwrite(record)
 
     Implements the handling of the ``onwrite`` listview attribute:
     calls the RPC methods specified by ``@onwrite``, and if that
@@ -287,7 +287,7 @@ formview, delegating instead to its
     :type parent: :js:class:`~openerp.web.Widget`
     :param EditorOptions options:
 
-    .. js:function:: openerp.web.list.Editor.isEditing
+    .. js:function:: openerp.web.list.Editor.is_editing
 
         Indicates whether the editor is currently in the process of
         providing edition for a field.
@@ -356,7 +356,7 @@ formview, delegating instead to its
         The dataset passed to the form view to synchronize the form
         view and the outer widget.
 
-    .. js:function:: EditorDelegate.editionView(editor)
+    .. js:function:: EditorDelegate.edition_view(editor)
 
         Called by the :js:class:`~openerp.web.list.Editor` object to
         get a form view (JSON) to pass along to the form view it
@@ -371,7 +371,7 @@ formview, delegating instead to its
         :returns: form view
         :rtype: Object
 
-    .. js:function:: EditorDelegate.isPrependOnCreate
+    .. js:function:: EditorDelegate.prepends_on_create
 
         By default, the :js:class:`~openerp.web.list.Editor` will
         append the ids of newly created records to the
@@ -395,21 +395,18 @@ Changes from 6.1
     :js:func:`~openerp.web.ListView.List.row_clicked` is still
     overridden.
 
-  * A new method ``getRowFor(record) -> jQuery(tr) | null`` has been
+  * A new method ``get_row_for(record) -> jQuery(tr) | null`` has been
     added to both ListView.List and ListView.Group, it can be called
     from the list view to get the table row matching a record (if such
     a row exists).
 
-* ``ListView#ensure_saved`` has been re-capitalized to
-  :js:func:`~openerp.web.ListView.ensureSaved`
-
 * :js:func:`~openerp.web.ListView.do_button_action`'s core behavior
   has been split away to
-  :js:func:`~openerp.web.ListView.handleButton`. This allows bypassing
+  :js:func:`~openerp.web.ListView.handle_button`. This allows bypassing
   overrides of :js:func:`~openerp.web.ListView.do_button_action` in a
   parent class.
 
-  Ideally, :js:func:`~openerp.web.ListView.handleButton` should not be
+  Ideally, :js:func:`~openerp.web.ListView.handle_button` should not be
   overridden.
 
 * Modifiers handling has been improved (all modifiers information

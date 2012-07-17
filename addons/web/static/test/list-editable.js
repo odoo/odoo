@@ -73,7 +73,7 @@ $(document).ready(function () {
     asyncTest('base-state', 2, function () {
         var e = new instance.web.list.Editor({
             dataset: {},
-            editionView: function () {
+            edition_view: function () {
                 return makeFormView();
             }
         });
@@ -81,7 +81,7 @@ $(document).ready(function () {
             .always(start)
             .fail(function (error) { ok(false, error && error.message); })
             .done(function () {
-                ok(!e.isEditing(), "should not be editing");
+                ok(!e.is_editing(), "should not be editing");
                 ok(e.form instanceof instance.web.FormView,
                    "should use default form type");
             });
@@ -100,8 +100,8 @@ $(document).ready(function () {
         };
         var e = new instance.web.list.Editor({
             dataset: new instance.web.DataSetSearch(),
-            isPrependOnCreate: function () { return false; },
-            editionView: function () {
+            prepends_on_create: function () { return false; },
+            edition_view: function () {
                 return makeFormView([ field('a'), field('b'), field('c') ]);
             }
         });
@@ -113,14 +113,14 @@ $(document).ready(function () {
                 });
             })
             .pipe(function (form) {
-                ok(e.isEditing(), "should be editing");
+                ok(e.is_editing(), "should be editing");
                 equal(counter, 3, "should have configured all fields");
                 return e.save();
             })
             .always(start)
             .fail(function (error) { ok(false, error && error.message); })
             .done(function (record) {
-                ok(!e.isEditing(), "should have stopped editing");
+                ok(!e.is_editing(), "should have stopped editing");
                 equal(record.id, 42, "should have newly created id");
             })
     });
@@ -130,8 +130,8 @@ $(document).ready(function () {
         };
         var e = new instance.web.list.Editor({
             dataset: new instance.web.DataSetSearch(),
-            isPrependOnCreate: function () { return false; },
-            editionView: function () {
+            prepends_on_create: function () { return false; },
+            edition_view: function () {
                 return makeFormView([ field('a'), field('b'), field('c') ]);
             }
         });
@@ -148,7 +148,7 @@ $(document).ready(function () {
             .always(start)
             .fail(function (error) { ok(false, error && error.message); })
             .done(function (record) {
-                ok(!e.isEditing(), "should have stopped editing");
+                ok(!e.is_editing(), "should have stopped editing");
                 ok(!record.id, "should have no id");
             })
     });
@@ -161,8 +161,8 @@ $(document).ready(function () {
                 warnings++;
             },
             dataset: new instance.web.DataSetSearch(),
-            isPrependOnCreate: function () { return false; },
-            editionView: function () {
+            prepends_on_create: function () { return false; },
+            edition_view: function () {
                 return makeFormView([
                     field('a', {required: true}), field('b'), field('c') ]);
             }
@@ -182,7 +182,7 @@ $(document).ready(function () {
             .done(function () { ok(false, "cancel should not succeed"); })
             .fail(function () {
                 equal(warnings, 1, "should have been warned");
-                ok(e.isEditing(), "should have kept editing");
+                ok(e.is_editing(), "should have kept editing");
             })
     });
 
@@ -246,12 +246,12 @@ $(document).ready(function () {
         l.appendTo($fix)
             .pipe(l.proxy('reload_content'))
             .pipe(function () {
-                return l.startEdition();
+                return l.start_edition();
             })
             .always(start)
             .pipe(function () {
                 ok(got_defaults, "should have fetched default values for form");
-                return l.saveEdition();
+                return l.save_edition();
             })
             .pipe(function (result) {
                 ok(result.created, "should yield newly created record");
@@ -314,10 +314,10 @@ $(document).ready(function () {
             .pipe(function () {
                 ok(l.options.editable, "should be editable");
                 equal(o.counter, 0, "should have seen no event yet");
-                return l.startEdition(l.records.get(1));
+                return l.start_edition(l.records.get(1));
             })
             .pipe(function () {
-                ok(l.editor.isEditing(), "should be editing");
+                ok(l.editor.is_editing(), "should be editing");
                 equal(o.counter, 2, "should have seen two edition events");
             })
             .fail(function (e) { ok(false, e && e.message); });
@@ -339,11 +339,11 @@ $(document).ready(function () {
             .always(start)
             .pipe(function () {
                 ok(l.options.editable, "should be editable");
-                return l.startEdition();
+                return l.start_edition();
             })
             // cancelling an event rejects the deferred
             .pipe($.Deferred().reject(), function () {
-                ok(!l.editor.isEditing(), "should not be editing");
+                ok(!l.editor.is_editing(), "should not be editing");
                 ok(!edit_after, "should not have fired the edit:after event");
                 return $.when();
             })

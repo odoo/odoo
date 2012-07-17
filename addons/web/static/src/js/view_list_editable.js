@@ -12,11 +12,11 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
 
-            this.editor = this.makeEditor();
+            this.editor = this.make_editor();
             // Stores records of {field, cell}, allows for re-rendering fields
             // depending on cell state during and after resize events
             this.fields_for_resize = [];
-            instance.web.bus.on('resize', this, this.resizeFields);
+            instance.web.bus.on('resize', this, this.resize_fields);
 
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
@@ -39,7 +39,7 @@ openerp.web.list_editable = function (instance) {
             });
         },
         destroy: function () {
-            instance.web.bus.off('resize', this, this.resizeFields);
+            instance.web.bus.off('resize', this, this.resize_fields);
             this._super();
         },
         /**
@@ -86,7 +86,7 @@ openerp.web.list_editable = function (instance) {
             if (this.options.editable) {
                 this.$element.find('table:first').show();
                 this.$element.find('.oe_view_nocontent').remove();
-                this.startEdition();
+                this.start_edition();
             } else {
                 this._super();
             }
@@ -103,24 +103,24 @@ openerp.web.list_editable = function (instance) {
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
                     .off('click', '.oe_list_save')
-                    .on('click', '.oe_list_save', this.proxy('saveEdition'))
+                    .on('click', '.oe_list_save', this.proxy('save_edition'))
                     .off('click', '.oe_list_discard')
                     .on('click', '.oe_list_discard', function (e) {
                         e.preventDefault();
-                        self.cancelEdition();
+                        self.cancel_edition();
                     });
                 this.$element
                     .off('click', 'tbody td:not(.oe_list_field_cell)')
                     .on('click', 'tbody td:not(.oe_list_field_cell)', function () {
-                        if (!self.editor.isEditing()) {
-                            self.startEdition();
+                        if (!self.editor.is_editing()) {
+                            self.start_edition();
                         }
                     });
                 // Editor is not restartable due to formview not being
                 // restartable
-                this.editor = this.makeEditor();
+                this.editor = this.make_editor();
                 var editor_ready = this.editor.prependTo(this.$element)
-                    .then(this.proxy('setupEvents'));
+                    .then(this.proxy('setup_events'));
 
                 return $.when(result, editor_ready);
             }
@@ -132,13 +132,13 @@ openerp.web.list_editable = function (instance) {
          *
          * @return {instance.web.list.Editor}
          */
-        makeEditor: function () {
+        make_editor: function () {
             return new instance.web.list.Editor(this);
         },
         do_button_action: function () {
             var self = this, args = arguments;
-            this.ensureSaved().then(function () {
-                self.handleButton.apply(self, args);
+            this.ensure_saved().then(function () {
+                self.handle_button.apply(self, args);
             });
         },
         /**
@@ -149,11 +149,11 @@ openerp.web.list_editable = function (instance) {
          *
          * @returns {$.Deferred}
          */
-        ensureSaved: function () {
-            if (!this.editor.isEditing()) {
+        ensure_saved: function () {
+            if (!this.editor.is_editing()) {
                 return $.when();
             }
-            return this.saveEdition();
+            return this.save_edition();
         },
         /**
          * Set up the edition of a record of the list view "inline"
@@ -161,7 +161,7 @@ openerp.web.list_editable = function (instance) {
          * @param {instance.web.list.Record} [record] record to edit, leave empty to create a new record
          * @return {jQuery.Deferred}
          */
-        startEdition: function (record) {
+        start_edition: function (record) {
             var self = this;
             var item = false;
             if (record) {
@@ -174,14 +174,14 @@ openerp.web.list_editable = function (instance) {
                     .each(function (field) { attrs[field] = false; });
                 record = new instance.web.list.Record(attrs);
                 this.records.add(record, {
-                    at: this.isPrependOnCreate() ? 0 : null});
+                    at: this.prepends_on_create() ? 0 : null});
             }
-            var $recordRow = this.groups.getRowFor(record);
-            var cells = this.getCellsFor($recordRow);
+            var $recordRow = this.groups.get_row_for(record);
+            var cells = this.get_cells_for($recordRow);
 
-            return this.ensureSaved().pipe(function () {
+            return this.ensure_saved().pipe(function () {
                 self.fields_for_resize.splice(0, self.fields_for_resize.length);
-                return self.withEvent('edit', {
+                return self.with_event('edit', {
                     record: record.attributes,
                     cancel: false
                 }, function () {
@@ -197,13 +197,13 @@ openerp.web.list_editable = function (instance) {
                         self.fields_for_resize.push({field: field, cell: cell});
                     }).pipe(function () {
                         $recordRow.addClass('oe_edition');
-                        self.resizeFields();
+                        self.resize_fields();
                         return record.attributes;
                     });
                 });
             });
         },
-        getCellsFor: function ($row) {
+        get_cells_for: function ($row) {
             var cells = {};
             $row.children('td').each(function (index, el) {
                 cells[el.getAttribute('data-field')] = el
@@ -214,11 +214,11 @@ openerp.web.list_editable = function (instance) {
          * If currently editing a row, resizes all registered form fields based
          * on the corresponding row cell
          */
-        resizeFields: function () {
-            if (!this.editor.isEditing()) { return; }
+        resize_fields: function () {
+            if (!this.editor.is_editing()) { return; }
             for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
                 var item = this.fields_for_resize[i];
-                this.resizeField(item.field, item.cell);
+                this.resize_field(item.field, item.cell);
             }
         },
         /**
@@ -228,7 +228,7 @@ openerp.web.list_editable = function (instance) {
          * @param {instance.web.form.AbstractField} field
          * @param {jQuery} cell
          */
-        resizeField: function (field, cell) {
+        resize_field: function (field, cell) {
             var $cell = $(cell);
             var position = $cell.position();
 
@@ -242,9 +242,9 @@ openerp.web.list_editable = function (instance) {
         /**
          * @return {jQuery.Deferred}
          */
-        saveEdition: function () {
+        save_edition: function () {
             var self = this;
-            return this.withEvent('save', {
+            return this.with_event('save', {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
@@ -262,7 +262,7 @@ openerp.web.list_editable = function (instance) {
                     // onwrite callback could be altering & reloading the
                     // record which has *just* been saved, so first perform all
                     // onwrites then do a final reload of the record
-                    return self.handleOnWrite(record)
+                    return self.handle_onwrite(record)
                         .pipe(function () {
                             return self.reload_record(record); })
                         .pipe(function () {
@@ -273,9 +273,9 @@ openerp.web.list_editable = function (instance) {
         /**
          * @return {jQuery.Deferred}
          */
-        cancelEdition: function () {
+        cancel_edition: function () {
             var self = this;
-            return this.withEvent('cancel', {
+            return this.with_event('cancel', {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
@@ -310,7 +310,7 @@ openerp.web.list_editable = function (instance) {
          * @param {Array} [trigger_params] supplementary arguments provided to the ``:after`` sub-event, before anything fetched by the ``action`` function
          * @return {jQuery.Deferred}
          */
-        withEvent: function (event_name, event, action) {
+        with_event: function (event_name, event, action) {
             var self = this;
             event = event || {};
             this.trigger(event_name + ':before', event);
@@ -324,7 +324,7 @@ openerp.web.list_editable = function (instance) {
                         .concat(_.toArray(arguments)));
             });
         },
-        editionView: function (editor) {
+        edition_view: function (editor) {
             var view = $.extend(true, {}, this.fields_view);
             view.arch.tag = 'form';
             _.extend(view.arch.attrs, {
@@ -341,7 +341,7 @@ openerp.web.list_editable = function (instance) {
             });
             return view;
         },
-        handleOnWrite: function (source_record) {
+        handle_onwrite: function (source_record) {
             var self = this;
             var on_write_callback = self.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return $.when(); }
@@ -349,10 +349,10 @@ openerp.web.list_editable = function (instance) {
                 .pipe(function (ids) {
                     return $.when.apply(
                         null, _(ids).map(
-                            _.bind(self.handleOnWriteRecord, self, source_record)));
+                            _.bind(self.handle_onwrite_record, self, source_record)));
                 });
         },
-        handleOnWriteRecord: function (id, source_record) {
+        handle_onwrite_record: function (id, source_record) {
             var record = this.records.get(id);
             if (!record) {
                 // insert after the source record
@@ -363,10 +363,10 @@ openerp.web.list_editable = function (instance) {
             }
             return this.reload_record(record);
         },
-        isPrependOnCreate: function () {
+        prepends_on_create: function () {
             return this.options.editable === 'top';
         },
-        setupEvents: function () {
+        setup_events: function () {
             var self = this;
             this.editor.$element.on('keyup', function (e) {
                 var key = _($.ui.keyCode).chain()
@@ -380,19 +380,19 @@ openerp.web.list_editable = function (instance) {
             });
         },
         keyup_ENTER: function () {
-            if (!this.editor.isEditing()) { return; }
+            if (!this.editor.is_editing()) { return; }
             var self = this;
-            return this.saveEdition().pipe(function (saveInfo) {
+            return this.save_edition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
-                    return self.startEdition();
+                    return self.start_edition();
                 }
-                return self.startEdition(
+                return self.start_edition(
                     self.records.succ(saveInfo.record, {wraparound: true}));
             });
         },
         keyup_ESCAPE: function () {
-            if (!this.editor.isEditing()) { return; }
-            return this.cancelEdition();
+            if (!this.editor.is_editing()) { return; }
+            return this.cancel_edition();
         }
     });
 
@@ -429,32 +429,32 @@ openerp.web.list_editable = function (instance) {
         start: function () {
             var self = this;
             var _super = this._super();
-            this.form.embedded_view = this._validateView(
-                    this.delegate.editionView(this));
+            this.form.embedded_view = this._validate_view(
+                    this.delegate.edition_view(this));
             var form_ready = this.form.appendTo(this.$element).then(
                 self.form.proxy('do_hide'));
             return $.when(_super, form_ready);
         },
-        _validateView: function (edition_view) {
+        _validate_view: function (edition_view) {
             if (!edition_view) {
-                throw new Error("editor delegate's #editionView must return "
+                throw new Error("editor delegate's #edition_view must return "
                               + "a view descriptor");
             }
             var arch = edition_view.arch;
             if (!(arch && arch.children instanceof Array)) {
-                throw new Error("Editor delegate's #editionView must have a" +
+                throw new Error("Editor delegate's #edition_view must have a" +
                                 " non-empty arch")
             }
             if (!(arch.tag === "form")) {
-                throw new Error("Editor delegate's #editionView must have a" +
+                throw new Error("Editor delegate's #edition_view must have a" +
                                 " 'form' root node");
             }
             if (!(arch.attrs && arch.attrs.version === "7.0")) {
-                throw new Error("Editor delegate's #editionView must be a" +
+                throw new Error("Editor delegate's #edition_view must be a" +
                                 " version 7 view");
             }
             if (!/\boe_form_container\b/.test(arch.attrs['class'])) {
-                throw new Error("Editor delegate's #editionView must have the" +
+                throw new Error("Editor delegate's #edition_view must have the" +
                                 " class 'oe_form_container' on its root" +
                                 " element");
             }
@@ -462,7 +462,7 @@ openerp.web.list_editable = function (instance) {
             return edition_view;
         },
 
-        isEditing: function () {
+        is_editing: function () {
             return !!this.record;
         },
         edit: function (record, configureField) {
@@ -496,7 +496,7 @@ openerp.web.list_editable = function (instance) {
         save: function () {
             var self = this;
             return this.form
-                .do_save(null, this.delegate.isPrependOnCreate())
+                .do_save(null, this.delegate.prepends_on_create())
                 .pipe(function (result) {
                     var created = result.created && !self.record.id;
                     if (created) {
@@ -519,9 +519,9 @@ openerp.web.list_editable = function (instance) {
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
         passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
-        getRowFor: function (record) {
+        get_row_for: function (record) {
             return _(this.children).chain()
-                .invoke('getRowFor', record)
+                .invoke('get_row_for', record)
                 .compact()
                 .first()
                 .value();
@@ -534,7 +534,7 @@ openerp.web.list_editable = function (instance) {
                 return this._super.apply(this, arguments);
             }
             var record_id = $(event.currentTarget).data('id');
-            this.view.startEdition(record_id ? this.records.get(record_id) : null);
+            this.view.start_edition(record_id ? this.records.get(record_id) : null);
         },
         /**
          * If a row mapping to the record (@data-id matching the record's id or
@@ -544,7 +544,7 @@ openerp.web.list_editable = function (instance) {
          * @param {Record} record the record to get a row for
          * @return {jQuery|null}
          */
-        getRowFor: function (record) {
+        get_row_for: function (record) {
             var id;
             var $row = this.$current.children('[data-id=' + record.get('id') + ']');
             if ($row.length) {

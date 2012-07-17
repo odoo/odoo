@@ -3122,7 +3122,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 	                }
 	                return res;
 	            } else if (this.viewmanager.active_view === "list") {
-	                var res = $.when(view.ensureSaved());
+	                var res = $.when(view.ensure_saved());
 	                if (!res.isResolved() && !res.isRejected()) {
 	                    console.warn("Asynchronous get_value() is not supported in list view.");
 	                }
@@ -3209,22 +3209,22 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this._super(parent, dataset, view_id, _.extend(options || {}, {
             ListType: instance.web.form.One2ManyList
         }));
-        this.on('edit:before', this, this.proxy('_beforeEdit'));
-        this.on('save:before cancel:before', this, this.proxy('_beforeUnEdit'));
+        this.on('edit:before', this, this.proxy('_before_edit'));
+        this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
 
         this.records
-            .bind('add', this.proxy("changedRecords"))
-            .bind('edit', this.proxy("changedRecords"))
-            .bind('remove', this.proxy("changedRecords"));
+            .bind('add', this.proxy("changed_records"))
+            .bind('edit', this.proxy("changed_records"))
+            .bind('remove', this.proxy("changed_records"));
     },
     start: function () {
         var ret = this._super();
         this.$element
             .off('mousedown.handleButtons')
-            .on('mousedown.handleButtons', 'table button', this.proxy('_buttonDown'));
+            .on('mousedown.handleButtons', 'table button', this.proxy('_button_down'));
         return ret;
     },
-    changedRecords: function () {
+    changed_records: function () {
         this.o2m.trigger_on_change();
     },
     is_valid: function () {
@@ -3308,21 +3308,21 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
         var parent_form = this.o2m.view;
         var self = this;
-        this.ensureSaved().pipe(function () {
+        this.ensure_saved().pipe(function () {
             return parent_form.do_save();
         }).then(function () {
-            self.handleButton(name, id, callback);
+            self.handle_button(name, id, callback);
         });
     },
 
-    _beforeEdit: function () {
+    _before_edit: function () {
         this.__ignore_blur = false;
-        this.editor.form.on('blurred', this, this._onFormBlur);
+        this.editor.form.on('blurred', this, this._on_form_blur);
     },
-    _beforeUnEdit: function () {
-        this.editor.form.off('blurred', this, this._onFormBlur);
+    _before_unedit: function () {
+        this.editor.form.off('blurred', this, this._on_form_blur);
     },
-    _buttonDown: function () {
+    _button_down: function () {
         // If a button is clicked (usually some sort of action button), it's
         // the button's responsibility to ensure the editable list is in the
         // correct state -> ignore form blurring
@@ -3332,12 +3332,12 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
      * Handles blurring of the nested form (saves the currently edited row),
      * unless the flag to ignore the event is set to ``true``
      */
-    _onFormBlur: function () {
+    _on_form_blur: function () {
         if (this.__ignore_blur) {
             this.__ignore_blur = false;
             return;
         }
-        this.saveEdition();
+        this.save_edition();
     },
     keyup_ENTER: function () {
         // blurring caused by hitting the [Return] key, should skip the
