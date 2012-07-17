@@ -65,6 +65,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             this.auto_hide(false);
             this.$element.bind('mousewheel',function(event,delta){
                 self.scroll(delta*self.wheel_step);
+                return false;
             });
             this.$element.bind('click',function(event){
                 var vpos = event.pageY - self.$element.offset().top;
