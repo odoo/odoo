@@ -4,13 +4,9 @@ instance.web.form.FieldEtherpad = instance.web.form.AbstractField.extend(_.exten
     template: 'FieldEtherpad',
     initialize_content: function() {
         this.$textarea = undefined;         
-        this.$element.find('span').text('Fullscreen');
-        this.$element.find('span').click(_.bind(function(ev){
-            this.$element.find('span').toggleClass('etherpad_zoom_head');
-            var iszoom = this.$element.find('span').hasClass('etherpad_zoom_head');
-            this.$element.find('span').text((iszoom?'Back to Task':this.field.string));
-            this.$element.find('div').toggleClass('etherpad_zoom');
-            $("body").toggleClass('etherpad_body');            
+        this.$element.find('div.oe_etherpad_head').click(_.bind(function(ev){
+            this.$element.toggleClass('oe_etherpad_fullscreen').toggleClass('oe_etherpad_normal');
+
             },this));            
         },
         set_value: function(value_) {
@@ -21,7 +17,7 @@ instance.web.form.FieldEtherpad = instance.web.form.AbstractField.extend(_.exten
             var show_value = instance.web.format_value(this.get('value'), this, '');                        
             if (!this.get("effective_readonly")) {                
                 var pad_username = this.session.username;
-                this.$element.find('div').html('<iframe width="100%" height="100%" frameborder="0"  src="'+show_value.split('\n')[0]+'?showChat=false&showLineNumbers=false&userName='+pad_username+'"></iframe>');
+                this.$element.find('div.oe_etherpad_default').html('<iframe width="100%" height="100%" frameborder="0"  src="'+show_value.split('\n')[0]+'?showChat=false&showLineNumbers=false&userName='+pad_username+'"></iframe>');
             } else {
                 if(this.get('value') != false)
                 {

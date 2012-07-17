@@ -1,29 +1,32 @@
-.etherpad_head{
+.oe_etherpad_head{
     width: 100%;
     display: block;
     padding-left:3px;
     cursor:pointer;
 }
-.etherpad_zoom_head{
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 15px; 
+.oe_etherpad_fullscreen div.oe_etherpad_head .oe_normal {
+    display: none;
 }
-.etherpad_zoom{
+.oe_etherpad_normal div.oe_etherpad_head .oe_fullscreen {
+    display: none;
+}
+.oe_etherpad_fullscreen {
     position: fixed;
+    top: 0px;
     left: 0px;
-    top: 15px;
     width: 100%;
-    height: 100% !important;
+    height: 100%;
+    background-color: white;
     z-index:10001 !important;
-    background-color:white;
 }
 .etherpad_default{  
     width: 100%;
     height: 450px;
 }
+.oe_etherpad_fullscreen .etherpad_default{  
+    height: 100%
+}
+
 .etherpad_body{
     overflow:hidden;
 }
@@ -49,7 +52,6 @@
 .etherpad_readonly .indent li{
     list-style-type: none !important;
 }
-
 
 .etherpad_readonly{ 
     font-family: arial, sans-serif;
