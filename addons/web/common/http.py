@@ -557,10 +557,15 @@ class Root(object):
         return None
     
 class SuperSharedDataMiddleware(werkzeug.wsgi.SharedDataMiddleware):
+    """Redefine SharedDataMiddleware to better handle the cache = False directive.
+    Also desactivate 304 Not Modified headers only when the referer has 'debug' in its
+    arguments.
+    """
     def __call__(self, environ, start_response):
         import os
         import mimetypes
         import werkzeug.http
+        import urlparse
         # sanitize the path for non unix systems
         cleaned_path = environ.get('PATH_INFO', '').strip('/')
         for sep in os.sep, os.altsep:
@@ -602,7 +607,11 @@ class SuperSharedDataMiddleware(werkzeug.wsgi.SharedDataMiddleware):
         else:
             headers.append(('Cache-Control', 'no-cache'))
             
-        if not modified:
+        referer = environ.get('HTTP_REFERER', '')
+        parsed = urlparse.urlparse(referer)
+        debug = not urlparse.parse_qs(parsed.query).has_key('debug')
+        # it's important to put it at the end
+        if not debug and not modified:
             f.close()
             start_response('304 Not Modified', headers)
             return []
