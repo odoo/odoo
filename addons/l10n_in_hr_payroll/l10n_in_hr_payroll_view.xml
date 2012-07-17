@@ -48,6 +48,9 @@
             <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
             <field name="arch" type="xml">
             <data>
+                <xpath expr="//field[@name='credit_note']" position="after">
+                    <field name="payment_advice"/>
+                </xpath>
                  <xpath expr="//button[@string='Set to Draft']" position="after">
                     <button name="create_advice" string="Create Advice" type="object" states="close" />
                  </xpath>

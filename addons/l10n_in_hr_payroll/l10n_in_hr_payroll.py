@@ -104,7 +104,7 @@ hr_employee()
 class payroll_advice(osv.osv):
     '''
     Bank Advice
-    '''        
+    '''
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
@@ -206,13 +206,24 @@ class payroll_advice(osv.osv):
                 res.update({'bank': company.partner_id.bank_ids[0].bank.name})
         return {
             'value':res
-        }     
+        }
 payroll_advice()
 
 class hr_payslip_run(osv.osv):
 
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
+    _columns = {
+        'payment_advice': fields.boolean('Payment Advice', help="If True,indicates that Payment Advice exists.", readonly=True),
+    }
+
+    _defaults = {
+        'payment_advice': False,
+    }
+
+    def draft_payslip_run(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'payment_advice': False}, context=context)
+        return super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
 
     def create_advice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -247,6 +258,10 @@ class hr_payslip_run(osv.osv):
                             'bysal': line.total
                     }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
+            if run.payment_advice == False:
+                self.write(cr, uid, ids, {'payment_advice' : True})
+            else:
+                raise osv.except_osv(_('Error !'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
         return True
 
 hr_payslip_run()
@@ -254,7 +269,7 @@ hr_payslip_run()
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
-    '''    
+    '''
     def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
         res = {}
         hr_obj = self.pool.get('hr.employee')
@@ -262,8 +277,8 @@ class payroll_advice_line(osv.osv):
             return {'value': res}
         employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
         res.update({'name': employee.bank_account_id.acc_number ,'ifsc_code': employee.bank_account_id.bank_bic})
-        return {'value': res}  
-        
+        return {'value': res}
+
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
@@ -277,8 +292,8 @@ class payroll_advice_line(osv.osv):
     }
     _defaults = {
         'debit_credit': 'C',
-    }    
-    
+    }
+
 
 payroll_advice_line()
 
