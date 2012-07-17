@@ -9,8 +9,10 @@
             <field name="arch" type="xml">
                 <notebook colspan="4" position="inside">
                     <page string="OpenID">
-                        <field name="openid_url"/>
-                        <field name="openid_email"/>
+                        <group>
+                            <field name="openid_url"/>
+                            <field name="openid_email"/>
+                        </group>
                     </page>
                 </notebook>
             </field>
