@@ -4,7 +4,7 @@ instance.web.form.FieldEtherpad = instance.web.form.AbstractField.extend(_.exten
     template: 'FieldEtherpad',
     initialize_content: function() {
         this.$textarea = undefined;         
-        this.$element.find('span').text(this.field.string);
+        this.$element.find('span').text('Fullscreen');
         this.$element.find('span').click(_.bind(function(ev){
             this.$element.find('span').toggleClass('etherpad_zoom_head');
             var iszoom = this.$element.find('span').hasClass('etherpad_zoom_head');
