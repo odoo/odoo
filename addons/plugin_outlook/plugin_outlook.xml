@@ -52,14 +52,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <field name="module_plugin_outlook" version="7.0" position="replace">
-                    <label for="module_plugin_outlook"/>
-                    <div>
-                        <field name="module_plugin_outlook"/>
+                <div name="module_plugin_outlook" version="7.0" position="replace">
+                        <div><field name="module_plugin_outlook" class="oe_inline"/>
+                        <label for="module_plugin_outlook"/>
                         <button name="%(action_outlook_installer)d" type="action" string="Configure" icon="gtk-execute"
-                            attrs="{'invisible': [('module_plugin_outlook','=',False)]}"/>
-                    </div>
-                </field>
+                            attrs="{'invisible': [('module_plugin_outlook','=',False)]}" class="oe_link"/></div>
+                </div>
             </field>
         </record>
 

@@ -8,26 +8,53 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <separator string="Emails" version="7.0" position="after">
-                    <label for="fetchmail_lead"/>
+                <group name="On Mail Client" version="7.0" position="after">
+                    <group>
+                    <label for="id" string="On Mail Server"/>
                     <div>
-                        <field name="fetchmail_lead"/>
+                        <div name="fetchmail_lead"><field name="fetchmail_lead" class="oe_inline"/>
+                        <label for="fetchmail_lead"/>
                         <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
-                            attrs="{'invisible': [('fetchmail_lead','=',False)]}"/>
+                            attrs="{'invisible': [('fetchmail_lead','=',False)]}" class="oe_link"/>
+                        </div>
                     </div>
-                </separator>
+                    </group>
+                </group>
                 <group name="config_other" version="7.0" position="inside">
                     <separator string="Import and Synchronize Data from an Other Application" colspan="2"/>
-                    <field name="module_import_sugarcrm"/>
-                    <field name="module_crm_caldav"/>
-                    <field name="module_import_google"/>
-                    <separator string="Customer Form" colspan="2"/>
-                    <field name="module_google_map"/>
+                    <group>
+                    <label for="id" string="Import From"/>
+                    <div>
+                        <div><field name="module_import_sugarcrm"/>
+                        <label for="module_import_sugarcrm" string="SugarCRM"/></div>
+                    </div>
+                    </group>
+                    <group>
+                    <label for="id" string="Synchronize with"/>
+                    <div>
+                    <div><field name="module_import_google"/>
+                    <label for="module_import_google" string="Google (Contact and Calendar)"/></div>
+                    <div><field name="module_crm_caldav"/>
+                    <label for="module_crm_caldav" string="Application with Caldav protocol"/></div>
+                    </div>
+                    </group>
                 </group>
-                <group name="config_sale" position="inside">
-                    <separator string="Documents and Wiki" colspan="2"/>
-                        <field name="module_wiki_sale_faq"/>
-                </group>
+            </field>
+        </record>
+        <record id="view_config_sale" model="ir.ui.view">
+            <field name="name">Sales Application</field>
+            <field name="model">sale.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_sales_config"/>
+            <field name="arch" type="xml">
+                <div name="module_sale_journal" version="7.0" position="after">
+                     <div><field name="module_google_map"/>
+                    <label for="module_google_map" string="Add google maps on customer"/></div>
+                </div>
+                <div name="module_sale_margin" version="7.0" position="after">
+                    <div><field name="module_wiki_sale_faq"/>
+                        <label for="module_wiki_sale_faq" string="Share information with sales FAQ"/></div>
+                </div>
             </field>
         </record>
 
