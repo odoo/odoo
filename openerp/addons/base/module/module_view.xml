@@ -78,7 +78,8 @@
                         <div class="oe_module_desc">
                           <h4><a type="edit"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
-                             <field name="name"/><br/>
+                             <field name="summary"/>
+                             <field name="name" groups="base.group_no_one"/><br/>
                           </p>
                           <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
                           <button t-if="installed" disabled="disabled">Installed</button>
