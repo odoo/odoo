@@ -16,10 +16,6 @@
     -->
     <record id="group_anonymous" model="res.groups">
         <field name="name">Anonymous Group</field>
-    </record>
-
-    <!-- Insert the anonymous user in its group -->
-    <record id="portal" model="res.portal">
         <field name="users" eval="[(4,ref('anonymous_user'))]"/>
     </record>
   </data>
