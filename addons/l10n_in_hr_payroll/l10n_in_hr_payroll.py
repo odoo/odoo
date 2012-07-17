@@ -214,15 +214,11 @@ class hr_payslip_run(osv.osv):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
     _columns = {
-        'payment_advice': fields.boolean('Payment Advice', help="If True,indicates that Payment Advice exists.", readonly=True),
-    }
-
-    _defaults = {
-        'payment_advice': False,
+        'available_advice': fields.boolean('Made Payment Order?', help="If tick,indicates that Payment Advice exists.", readonly=True),
     }
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'payment_advice': False}, context=context)
+        self.write(cr, uid, ids, {'available_advice': False}, context=context)
         return super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
 
     def create_advice(self, cr, uid, ids, context=None):
@@ -233,6 +229,8 @@ class hr_payslip_run(osv.osv):
         advice_line_pool = self.pool.get('hr.payroll.advice.line')
         users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
         for run in self.browse(cr, uid, ids, context=context):
+            if run.available_advice:
+                raise osv.except_osv(_('Error !'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
             advice_data = {
                         'company_id': users[0].company_id.id,
                         'name': run.name,
@@ -258,10 +256,7 @@ class hr_payslip_run(osv.osv):
                             'bysal': line.total
                     }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
-            if run.payment_advice == False:
-                self.write(cr, uid, ids, {'payment_advice' : True})
-            else:
-                raise osv.except_osv(_('Error !'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
+        self.write(cr, uid, ids, {'available_advice' : True})
         return True
 
 hr_payslip_run()
