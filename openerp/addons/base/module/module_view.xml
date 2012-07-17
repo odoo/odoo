@@ -43,7 +43,7 @@
                 <search string="Search modules">
                     <group col='10' colspan='4'>
                         <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
-                        <field name="description" string="Keywords"/>
+                        <field name="description" string="Keywords" filter_domain="['|', ('description', 'ilike', self), ('summary', 'ilike', self)]"/>
                         <separator orientation="vertical"/>
                         <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                         <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
