@@ -41,9 +41,10 @@ class account_bank_statement(osv.osv):
     def button_confirm_bank(self, cr, uid, ids, context=None):
         super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
-            cr.execute("UPDATE account_bank_statement_line  \
-                SET state='confirm' WHERE id in %s ",
-                (tuple([x.id for x in st.line_ids]),))
+            if st.line_ids:
+                cr.execute("UPDATE account_bank_statement_line  \
+                    SET state='confirm' WHERE id in %s ",
+                    (tuple([x.id for x in st.line_ids]),))
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
