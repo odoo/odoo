@@ -98,15 +98,15 @@
                     <separator string="Register a Contract"/>
                     <group states="draft">
                         <label string="Please enter the serial key provided in your contract document:" colspan="2"/>
-                        <field name="name">
+                        <field name="name"/>
                     </group>
                     <group states="finished">
                         <label string="Publisher warranty contract successfully registered!" colspan="4"/>
                     </group>
                     <footer>
-                        <button name="action_validate" string="Register" type="object" states="draft" class="oe_highlight"  />
+                        <button name="action_validate" string="Register" type="object" states="draft" class="oe_highlight"/>
                         <label string="or" states="draft"/>
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
