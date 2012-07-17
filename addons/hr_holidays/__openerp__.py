@@ -26,6 +26,7 @@
     "author": "OpenERP SA",
     "category": "Human Resources",
     "sequence": 28,
+    "summary": "Allocation and Leaves Request, Reporting by Department",
     "website": "http://www.openerp.com",
     "description": """
 This module allows you to manage leaves and leaves' requests.

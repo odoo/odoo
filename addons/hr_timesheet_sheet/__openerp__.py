@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 16,
+    "summary": "Attendance, Activities, Timing",
     'description': """
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
