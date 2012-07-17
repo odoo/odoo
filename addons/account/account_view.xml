@@ -921,15 +921,15 @@
             <field name="arch" type="xml">
                 <form string="Account Tax" version="7.0">
                     <group>
-			<group>
+                        <group>
                             <field name="name"/>
                             <field name="description"/>
-			<group>
-			</group>
+                        </group>
+                        <group>
                             <field name="type_tax_use"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             <field name="active"/>
-			</group>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Tax Definition">
