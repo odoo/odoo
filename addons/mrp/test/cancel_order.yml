@@ -1,25 +1,27 @@
 -
-  I first confirm order for shirt.
+  I first confirm order for PC Assemble + 2GB RAM.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_shirt}
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_pc_assemble_twogbram}
 -
   In order to cancel the production order, I first cancel its picking.
 -
   !function {model: stock.picking, name: action_cancel}:
     - model: mrp.production
-      eval: "[obj(ref('mrp_production_shirt')).picking_id.id]"
+      eval: "[obj(ref('mrp_production_pc_assemble_twogbram')).picking_id.id]"
 -
   Now I cancel the production order.
 -
-  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_shirt}
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"), context=context)
+    order.action_cancel(context=context)
 -
   Now I check that the production order is cancelled.
 -
-  !assert {model: mrp.production, id: mrp_production_shirt}:
+  !assert {model: mrp.production, id: mrp_production_pc_assemble_twogbram}:
     - state == 'cancel'
 -
   I remove cancelled production order.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_shirt"), context=context)
+    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"), context=context)
     self.unlink(cr, uid, [order.id])

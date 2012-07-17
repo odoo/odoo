@@ -1,27 +1,12 @@
 -
-  In order to test process of production order, I create Bill of material of Shelf 100cm.
+  I create Production Order of PC Assemble + 2GB RAM to produce 5.0 Unit.
 -
-  !record {model: mrp.bom, id: mrp_bom_defaultbomforshelfofcm0}:
-    product_id: product.product_product_shelfofcm0
--
-  !record {model: mrp.bom, id: mrp_bom_assemblysection1}:
-    routing_id: mrp.mrp_routing_0
--
-  !record {model: mrp.bom, id: mrp_bom_rearpanelarm1}:
-    routing_id: mrp.mrp_routing_0
--
-  I create Production Order of Shelf 100cm to produce 5.0 Dozen Unit.
--
-  !record {model: mrp.production, id: mrp_production_shelf100cm}:
+  !record {model: mrp.production, id: mrp_production_pc_assemble_twogbram}:
+    product_id: product.product_product_4
+    product_qty: 5.0
     location_src_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_output
-    product_id: product.product_product_shelfofcm0
-    bom_id: mrp_bom_defaultbomforshelfofcm0
+    bom_id: mrp_bom_24
     routing_id: mrp.mrp_routing_1
-    product_uom: product.product_uom_dozen
-    product_qty: 5.0
--
-  !record {model: mrp.workcenter, id: mrp_workcenter_0}:
-    product_id: product.product_assembly
-
-
+    
+    
