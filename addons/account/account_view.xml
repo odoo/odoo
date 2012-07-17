@@ -169,41 +169,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account" version="7.0">
-                    <label for="name" class="oe_edit_only" string="Account Name and Code:"/>
+                    <label for="code" class="oe_edit_only" string="Account Code and Name"/>
                     <h1>
-                        <field name="name"/> -
-                        <field name="code"/>
+                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> - 
+                        <field name="name" class="oe_inline" placeholder="Account name"/>
                     </h1>
-                    <label for="company_id"/>
-                    <h2>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </h2>
                     <group>
                         <group>
                             <field name="parent_id"/>
                             <field name="type"/>
                             <field name="user_type"/>
                             <field name="active"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
-                            <field name="credit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
-                            <field name="balance" invisible="context.get('config_invisible', True)"/>
+                            <field name="debit" attrs="{'readonly':[('type','=','view')]}"/>
+                            <field name="credit" attrs="{'readonly':[('type','=','view')]}"/>
+                            <field name="balance"/>
                         </group>
                         <group>
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
+                            <field name="reconcile"/>
                             <field name="child_consol_ids"
-                                attrs="{'readonly':[('type','!=','consolidation')]}"
+                                attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
-                        <group string="Currency">
+                        <group>
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
                         </group>
-                        <group string="Reconcile">
-                            <field name="reconcile"/>
-                        </group>
                     </group>
+                    <label for="note"/>
                     <field name="note"/>
                 </form>
             </field>
@@ -624,15 +620,21 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="date" on_change="onchange_date(date, company_id)"/>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
-                            <field name="period_id"/>
+                            <label for="date" string="Date / Period"/>
+                            <div>
+                                <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
+                                <field name="period_id" class="oe_inline"/>
+                            </div>
+                            <field name="name"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group><group>
-                            <field name="balance_start"/>
+                            <label for="balance_start"/>
+                            <div>
+                                <field name="balance_start" class="oe_inline"/>
+                                <field name="currency" class="oe_inline"/>
+                            </div>
                             <field name="balance_end_real"/>
-                            <field name="currency" invisible="1"/>
                         </group>
                     </group>
 
@@ -918,47 +920,68 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Tax" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="description"/>
-                        <field name="type_tax_use"/>
-                        <field name="price_include"/>
-                        <field name="active"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <group>
+			<group>
+                            <field name="name"/>
+                            <field name="description"/>
+			<group>
+			</group>
+                            <field name="type_tax_use"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active"/>
+			</group>
                     </group>
                     <notebook>
                         <page string="Tax Definition">
-                            <group col="4">
-                                  <field name="type"/>
-                                  <field name="amount" attrs="{'readonly':[('type','in',('none', 'code', 'balance'))]}"/>
-                                  <separator colspan="4" string="Accounting Information"/>
+                        <group>
+                            <group string="Tax Computation">
+                                <label for="type"/>
+                                <div>
+                                    <field name="type"/>
+                                    <field name="amount" class="oe_inline"
+                                        attrs="{'invisible':[('type','in',('none', 'code', 'balance'))]}"/>
+                                    <label string="%%" attrs="{'invisible':[('type','&lt;&gt;','percent')]}"/>
+                                </div>
+                                <field name="python_compute" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                                <field name="python_compute_inv" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                                <field name="price_include"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="sequence"/>
+                                <field name="include_base_amount"/>
+                                <field name="child_depend"/>
+                            </group>
+                            <group string="Invoices">
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                                   <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
-                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
-                                  <separator colspan="4" string="Tax Declaration: Invoices"/>
+
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
                                   <field name="tax_code_id"/>
                                   <field name="tax_sign"/>
-                                  <separator colspan="4" string="Tax Declaration: Credit Notes"/>
+
+                            </group>
+                            <group string="Refunds">
+                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>
                                   <field name="ref_tax_code_id"/>
                                   <field name="ref_tax_sign"/>
-                                  <separator colspan="4" string="Children Definition"/>
-                                  <field name="child_depend"/>
-                                  <field name="sequence"/>
-                                  <field name="include_base_amount"/>
-                                  <field colspan="4" name="child_ids">
+                            </group>
+                            <group string="Children/Sub Taxes" colspan="2">
+                                <field name="child_depend" class="oe_inline"/>
+                                <field name="child_ids" nolabel="1" colspan="2">
                                       <tree string="Account Tax">
                                           <field name="sequence"/>
                                           <field name="name"/>
                                           <field name="price_include"/>
                                           <field name="description"/>
                                      </tree>
-                                 </field>
+                                </field>
                             </group>
+                        </group>
                         </page>
                         <page string="Special Computation">
                             <group col="4">
@@ -967,10 +990,6 @@
                                 <field name="domain"/>
                                 <separator colspan="4" string="Applicable Code (if type=code)"/>
                                 <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
-                                <separator colspan="2" string="Compute Code"/>
-                                <separator colspan="2" string="Reverse Compute Code"/>
-                                <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
-                                <field colspan="2" name="python_compute_inv" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
                             </group>
                         </page>
                     </notebook>

@@ -83,11 +83,22 @@
     <t t-name="CategoryButton">
         <li class='category-button'>
             <div class="category-img">
-                <img t-att-src="'data:image/gif;base64,'+ category.category_image_small" />
+                <t t-if="category.category_image_small">
+                    <img t-att-src="'data:image/gif;base64,'+ category.category_image_small" />
+                </t>
+                <t t-if="!category.category_image_small">
+                    <img src="/point_of_sale/static/src/img/default_category_photo.png" />
+                </t>
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
             </div>
+        </li>
+    </t>
+
+    <t t-name="CategorySimpleButton">
+        <li class='category-simple-button'>
+            <t t-esc="category.name"/>
         </li>
     </t>
 

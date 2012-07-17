@@ -99,14 +99,15 @@ class pos_make_payment(osv.osv_memory):
     def _default_journal(self, cr, uid, context=None):
         if not context:
             context = {}
-        pos_session_id = context.get('pos_session_id', False) or False
-
-        if isinstance(pos_session_id, (long, int)):
-            session = self.pool.get('pos.session').browse(cr, uid, pos_session_id, context=context)
+        session = False
+        order_obj = self.pool.get('pos.order')
+        active_id = context and context.get('active_id', False)
+        if active_id:
+            order = order_obj.browse(cr, uid, active_id, context=context)
+            session = order.session_id
+        if session:
             for journal in session.config_id.journal_ids:
-                if journal.type == 'cash':
-                    return journal.id
-
+                return journal.id
         return False
 
     def _default_amount(self, cr, uid, context=None):

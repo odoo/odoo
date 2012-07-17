@@ -417,9 +417,26 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function(){
             var self = this;
             this._super();
+
+            var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
+            console.log('barfoo');
+         
             _.each(this.subcategories, function(category){
-                var button = QWeb.render('CategoryButton',{category:category});
-                button = _.str.trim(button);
+                if(category.category_image_small){
+                    console.log("Image:",category.category_image_small);
+                    hasimages = true;
+                }else{
+                    console.log('NoImage:',category.category_image_small);
+                }
+            });
+
+            _.each(this.subcategories, function(category){
+                if(hasimages){
+                    var button = QWeb.render('CategoryButton',{category:category});
+                }else{
+                    var button = QWeb.render('CategorySimpleButton',{category:category});
+                }
+                button = _.str.trim(button);    // we remove whitespace between buttons to fix spacing
 
                 $(button).appendTo(this.$('.category-list')).click(function(event){
                     var id = category.id;
