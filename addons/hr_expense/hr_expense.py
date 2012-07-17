@@ -67,7 +67,7 @@ class hr_expense_expense(osv.osv):
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True),
-        'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is receipted."),
+        'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', select=True, help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
@@ -86,11 +86,10 @@ class hr_expense_expense(osv.osv):
             ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
-            ('receipted', 'Waiting Reimbursement'),
-            ('paid', 'Reimbursed')
+            ('done', 'Done'),
             ],
             'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Waiting Reimbursement\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
@@ -128,10 +127,6 @@ class hr_expense_expense(osv.osv):
 
     def expense_canceled(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'cancelled'})
-        return True
-
-    def expense_paid(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'paid'})
         return True
 
     def action_receipt_create(self, cr, uid, ids, context=None):
@@ -192,7 +187,7 @@ class hr_expense_expense(osv.osv):
                     account_journal.write(cr, uid, [journal.id], {'analytic_journal_id': analytic_journal_ids[0]}, context=context)
             voucher_id = voucher_obj.create(cr, uid, voucher, context=context)
             wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'proforma_voucher', cr)
-            self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'}, context=context)
+            self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'done'}, context=context)
         return True
     
     def action_view_receipt(self, cr, uid, ids, context=None):

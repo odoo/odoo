@@ -7,7 +7,7 @@
         <field name="model">hr.expense.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','receipted','paid');gray:state == 'cancelled'" string="Expenses Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'" string="Expenses Analysis">
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -23,7 +23,6 @@
                 <field name="state" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="no_of_products" sum="# of Products"/>
-                <field name="receipted" sum="Total Receipted Lines"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay_confirm"/>
@@ -56,8 +55,6 @@
                       help = "Confirm Expenses"/>
                     <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
                       help = "Approved Expenses"/>
-                    <filter string="Receipted" icon="terp-dolar" domain="[('state','in', ('receipted', 'paid'))]"
-                      help = "Receipted Expenses"/>
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>

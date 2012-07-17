@@ -34,7 +34,6 @@ The whole workflow is implemented:
     * Confirmation of the sheet by the employee
     * Validation by his manager
     * Validation by the accountant and receipt creation
-    * Payment of the receipt to the employee
 
 This module also uses the analytic accounting and is compatible with
 the invoice on timesheet module so that you will be able to automatically
