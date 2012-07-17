@@ -59,20 +59,18 @@
                     <h1>
                         <field name="name" class="oe_inline"/>
                         <label string="-" attrs="{'invisible':[('origin','=',False)]}"/>
-                        <field name="origin"  class="oe_inline"/>
+                        <field name="origin" class="oe_inline"/>
                     </h1>
-                    <label for="message" class="oe_edit_only"/>
-                    <h2>
-                        <field name="message"/>
-                    </h2>
                     <group>
                         <group>
                             <field name="date_planned"/>
                             <field name="procure_method"/>
                             <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="message"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
-                        <group/>
                     </group>
                     <notebook>
                     <page string="Procurement Details">
@@ -84,10 +82,10 @@
                                     <field name="product_qty" class="oe_inline"/>
                                     <field name="product_uom" class="oe_inline"/>
                                 </div>
-                                <label for="product_uos_qty" string="Quentity UoS" groups="product.group_uos"/>
-                                <div>
-                                    <field name="product_uos_qty" groups="product.group_uos" class="oe_inline"/>
-                                    <field name="product_uos"  groups="product.group_uos" class="oe_inline"/>
+                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                <div groups="product.group_uos">
+                                    <field name="product_uos_qty" class="oe_inline"/>
+                                    <field name="product_uos" class="oe_inline"/>
                                 </div>
                             </group>
                             <group>
@@ -96,7 +94,7 @@
                         </group>
                     </page>
                     <page string="Extra Information">
-                        <group string="Details">
+                        <group>
                             <field name="move_id"/>
                             <field name="date_close"/>
                             <field name="close_move"/>

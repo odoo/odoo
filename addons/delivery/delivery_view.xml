@@ -22,11 +22,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Carrier" version="7.0">
-                    <group col="4" name="general">
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                        <field name="product_id"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="general">
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
                         <field name="active"/>
+                        </group>
+                    </group>
+                    <group col="4">
                         <group string="Pricing Information">
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                             <label for="free_if_more_than"/>
@@ -76,7 +87,6 @@
                             </notebook>
                         </form>
                    </field>
-
                 </form>
             </field>
         </record>
@@ -152,18 +162,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines" version="7.0">
-                    <field colspan="4" name="name"/>
-                    <div>
-                        <label string="condition" for="type"/>
-                        <field name="type" class="oe_inline"/>
-                        <field name="operator" class="oe_inline"/>
-                        <field name="max_value" class="oe_inline"/>
-                    </div>
-                    <group col="4">
-                        <field name="list_price"/>
-                        <field name="standard_price"/>
-                        <field name="price_type"/>
-                        <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="type" string="Condition"/>
+                            <div>
+                                <field name="type" class="oe_inline"/>
+                                <field name="operator" class="oe_inline"/>
+                                <field name="max_value" class="oe_inline"/>
+                            </div>
+                            <label for="price_type"/>
+                            <div>
+                                <field name="price_type" class="oe_inline"/>
+                                <label string=" in Function of " class="oe_inline" attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="list_price"/>
+                            <field name="standard_price"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -242,23 +262,10 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <field name="picking_id" position="after">
+                <xpath expr="//group[@name='main_grp']" position="inside">
                     <field name="weight"/>
                     <field name="weight_net"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_move_reception_picking_withweight_form" model="ir.ui.view">
-            <field name="name">stock.move.reception.packing.form.weight</field>
-            <field name="type">form</field>
-            <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
-            <field name="arch" type="xml">
-                <field name="picking_id">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
@@ -276,7 +283,7 @@
                             <button name="delivery_set" string="Add in Quote" type="object"
                                 class="oe_edit_only"
                                 attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
-        		    <br/>
+                            <br/>
                             <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
                                 class="oe_edit_only"
                                 attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
