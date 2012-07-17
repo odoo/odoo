@@ -229,7 +229,7 @@ class mail_thread(osv.Model):
         return ret_dict
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        type='email', subtype=None, email_date=None, parent_id=False,
+                        type='email', email_date=None, parent_id=False,
                         content_subtype='plain', state=None,
                         partner_ids=None, email_from=False, email_to=False,
                         email_cc=None, email_bcc=None, reply_to=None,
@@ -256,7 +256,6 @@ class mail_thread(osv.Model):
             :param body_html: html contents of the mail or log message
             :param type: type of message: 'email', 'comment', 'notification';
                 email by default
-            :param subtype: subtype of message, such as 'create' or 'cancel'
             :param email_date: email date string if different from now, in
                 server timezone
             :param parent_id: id of the parent message (threaded messaging model)
@@ -336,7 +335,6 @@ class mail_thread(osv.Model):
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
                 'type': type,
-                'subtype': subtype,
                 'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
@@ -388,7 +386,6 @@ class mail_thread(osv.Model):
                             body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
                             type = msg_dict.get('type', 'email'),
-                            subtype = msg_dict.get('subtype'),
                             content_subtype = msg_dict.get('content_subtype'),
                             state = msg_dict.get('state'),
                             partner_ids = msg_dict.get('partner_ids'),
@@ -851,7 +848,7 @@ class mail_thread(osv.Model):
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
 
     def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False,
-                            type='notification', content_subtype='html', subtype=None, context=None):
+                            type='notification', content_subtype='html', context=None):
         if type in ['notification', 'comment']:
             subject = None
         if content_subtype == 'html':
@@ -861,7 +858,7 @@ class mail_thread(osv.Model):
             body_html = body
             body_text = body
         return self.message_append(cr, uid, ids, subject, body_html, body_text,
-                                    type, subtype, parent_id=parent_id,
+                                    type, parent_id=parent_id,
                                     content_subtype=content_subtype, context=context)
 
     #------------------------------------------------------
