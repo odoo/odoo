@@ -238,7 +238,7 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('In order to delete a purchase order, it must be cancelled first.'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a purchase order, You must cancel it first.'))
 
         # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
@@ -428,7 +428,7 @@ class purchase_order(osv.osv):
             journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
-                    _('No purchase journal is defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+                    _('Define purchase journal for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
 
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
@@ -438,7 +438,7 @@ class purchase_order(osv.osv):
                     if not acc_id:
                         acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
                     if not acc_id:
-                        raise osv.except_osv(_('Error !'), _('No expense account is defined for this company: "%s" (id:%d)') % (po_line.product_id.name, po_line.product_id.id,))
+                        raise osv.except_osv(_('Error !'), _('Define expense account for this company: "%s" (id:%d)') % (po_line.product_id.name, po_line.product_id.id,))
                 else:
                     acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
                 fpos = order.fiscal_position or False
@@ -496,14 +496,14 @@ class purchase_order(osv.osv):
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
-                        _('First cancelled all receptions related to this purchase order.'))
+                        _('First cancel all receptions related to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
-                        _('First cancelled all receptions related to this purchase order.'))
+                        _('First cancel all receptions related to this purchase order.'))
                 if inv:
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
@@ -886,9 +886,9 @@ class purchase_order_line(osv.osv):
 
         # - check for the presence of partner_id and pricelist_id
         if not pricelist_id:
-            raise osv.except_osv(_('No Pricelist !'), _('Before choosing a product,\n select a price list for a supplier in the purchase form.'))
+            raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
         if not partner_id:
-            raise osv.except_osv(_('No Partner!'), _('Before choosing a product.\n select a partner in purchase order.'))
+            raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
 
         # - determine name and notes based on product in partner lang.
         lang = res_partner.browse(cr, uid, partner_id).lang
