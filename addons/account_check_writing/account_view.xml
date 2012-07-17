@@ -31,11 +31,9 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <separator string="Default Check Layout" colspan="4"/>
+                <xpath expr="//group[@name='account_grp']" position="inside">
                     <field name="check_layout"/>
-                    <newline/>
-                </page>
+                </xpath>
             </field>
        </record>
     </data>
