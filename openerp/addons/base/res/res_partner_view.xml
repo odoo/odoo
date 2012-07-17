@@ -101,10 +101,7 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="photo" widget='image' class="oe_avatar oe_right" height="70"/>
-                    <div class="oe_right oe_button_box" name="buttons">
-
-                    </div>
+                    <field name="photo" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name" string="Customer Name"/> 
@@ -113,8 +110,9 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
                     </div>
+                    <div class="oe_right oe_button_box" name="buttons"> </div>
 
                     <group>
                         <group>

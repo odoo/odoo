@@ -80,6 +80,7 @@ class module_category(osv.osv):
 
 class module(osv.osv):
     _name = "ir.module.module"
+    _rec_name = "shortdesc"
     _description = "Module"
 
     @classmethod
@@ -177,6 +178,7 @@ class module(osv.osv):
         'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Module Name', size=256, readonly=True, translate=True),
+        'summary': fields.char('Summary', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
@@ -454,7 +456,7 @@ class module(osv.osv):
                     to_install.extend(ids2)
 
         self.button_install(cr, uid, to_install, context=context)
-        return dict(ACTION_DICT, name=_('Upgrade'))
+        return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})

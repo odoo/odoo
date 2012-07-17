@@ -81,14 +81,10 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <div class="oe_right">
-                            <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)" class="oe_avatar"/>
-                        </div>
+                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <label for="company_id" class="oe_edit_only"/>
-                            <h2><field name="company_id" context="{'user_preference': 0}"/></h2>
                         </div>
                         <group>
                             <group>
@@ -96,6 +92,7 @@
                                 <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
                             </group>
                             <group>
+                                <field name="company_id" context="{'user_preference': 0}"/>
                                 <field name="active"/>
                             </group>
                         </group>
@@ -119,12 +116,12 @@
                                 </group>
                             </page>
                             <page string="Access Rights">
-                                <group col="4">
-                                <field name="groups_id"/>
+                                <group string="Allowed Companies" groups="base.group_multi_company">
+                                    <field name="company_ids" nolabel="1" widget="many2many_tags"/>
                                 </group>
-                            </page>
-                            <page string="Allowed Companies" groups="base.group_multi_company">
-                                <field name="company_ids"/>
+                                <group col="4">
+                                    <field name="groups_id"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
@@ -194,24 +191,21 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                   <sheet>
-                    <div class="oe_right oe_avatar">
-                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)"/>
-                    </div>
+                <sheet>
+                    <field name="avatar" widget='image' on_change="onchange_avatar(avatar)" class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1" class="oe_edit_only oe_inline"/>
-                            (<field name="login" readonly="1" class="oe_edit_only oe_inline"/>)
+                            <field name="name" readonly="1"/>
                         </h1>
-                        <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                         <h2>
-                            <field name="company_id" widget="selection" readonly="0"
-                                groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                            <field name="login" readonly="1"/>
                         </h2>
                     </div>
                     <group col="4" name="preferences" string="Preferences">
                         <field name="context_lang" readonly="0"/>
                         <field name="context_tz" readonly="0"/>
+                        <field name="company_id" widget="selection" readonly="0"
+                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                     </group>
                     <group string="Email Preferences">
                         <field name="user_email" widget="email" readonly="0"/>
