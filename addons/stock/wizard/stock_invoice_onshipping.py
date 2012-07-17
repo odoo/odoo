@@ -109,7 +109,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         action_model = False
         action = {}
         if not invoice_ids:
-            raise osv.except_osv(_('Error'), _('No Invoices were created'))
+            raise osv.except_osv(_('Error'), _('No Invoices were created.'))
         if inv_type == "out_invoice":
             action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree1")
         elif inv_type == "in_invoice":

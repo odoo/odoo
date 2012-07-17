@@ -516,7 +516,7 @@ class stock_tracking(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, context=None):
-        raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
+        raise osv.except_osv(_('Error'), _('You cannot remove a lot line.'))
 
     def action_traceability(self, cr, uid, ids, context={}):
         """ It traces the information of a product
@@ -762,7 +762,7 @@ class stock_picking(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if not pick.move_lines:
-                raise osv.except_osv(_('Error !'),_('You can not process picking without stock moves'))
+                raise osv.except_osv(_('Error !'),_('You cannot process picking without stock moves.'))
             wf_service.trg_validate(uid, 'stock.picking', pick.id,
                 'button_confirm', cr)
         return True
@@ -2166,22 +2166,22 @@ class stock_move(osv.osv):
         journal_id = accounts['stock_journal']
 
         if acc_dest == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Valuation account on category of this product are same.'))
+            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
 
         if acc_src == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Valuation account on category of this product are same.'))
+            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
 
         if not acc_src:
-            raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('Define stock input account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not acc_dest:
-            raise osv.except_osv(_('Error!'),  _('There is no stock output account defined for this product or its category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('Define stock output account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not journal_id:
-            raise osv.except_osv(_('Error!'), _('There is no journal defined on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('Define journal on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         if not acc_valuation:
-            raise osv.except_osv(_('Error!'), _('There is no inventory Valuation account defined on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('Define inventory valuation account on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         return journal_id, acc_src, acc_dest, acc_valuation
 
@@ -2387,7 +2387,7 @@ class stock_move(osv.osv):
         """
         #quantity should in MOVE UOM
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
+            raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
@@ -2431,7 +2431,7 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
 
         res = []
 
@@ -2492,12 +2492,12 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             if move_qty <= 0:
-                raise osv.except_osv(_('Error!'), _('Can not consume a move with negative or zero quantity !'))
+                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move.product_qty
             quantity_rest -= quantity
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
