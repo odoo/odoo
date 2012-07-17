@@ -6,6 +6,32 @@ openerp.mail = function(session) {
 
     /**
      * ------------------------------------------------------------
+     * FormView
+     * ------------------------------------------------------------
+     * 
+     * Override of formview do_action method, to catch all return action about
+     * mail.compose.message. The purpose is to bind 'Send by e-mail' buttons
+     * and redirect them to the Chatter.
+     */
+
+    session.web.FormView = session.web.FormView.extend({
+
+        do_action: function(action, on_close) {
+            if (action.res_model == 'mail.compose.message') {
+                var record_thread = this.fields.message_ids;
+                var thread = record_thread.thread;
+                thread.instantiate_composition_form('comment', true, false, 0, action.context);
+                return false;
+            }
+            else {
+                return this._super(action, on_close);
+            }
+        },
+    });
+
+
+    /**
+     * ------------------------------------------------------------
      * ChatterUtils
      * ------------------------------------------------------------
      * 
@@ -267,6 +293,7 @@ openerp.mail = function(session) {
             this._super(parent);
             // options
             this.params = params || {};
+            this.params.context = params.context || {};
             this.params.email_mode = params.email_mode || false;
             this.params.formatting = params.formatting || false;
             this.params.mode = params.mode || 'comment';
@@ -314,11 +341,13 @@ openerp.mail = function(session) {
             this.$element.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$element.find('div.oe_mail_msg_content').empty();
             // create a context for the default_get of the compose form
-            var context = {
+            var widget_context = {
                 'active_model': this.params.res_model,
                 'active_id': this.params.active_id,
                 'mail.compose.message.mode': this.params.mode,
             };
+            var context = _.extend({}, this.params.context, widget_context);
+            // console.log(context);
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
             var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
@@ -534,14 +563,15 @@ openerp.mail = function(session) {
             return this._super(action, on_close);
         },
 
-        instantiate_composition_form: function(mode, email_mode, formatting, msg_id) {
+        instantiate_composition_form: function(mode, email_mode, formatting, msg_id, context) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
                 'extended_mode': false, 'uid': this.params.uid, 'res_model': this.params.res_model,
                 'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id,
-                'email_mode': email_mode || false, 'formatting': formatting || false });
+                'email_mode': email_mode || false, 'formatting': formatting || false,
+                'context': context || false } );
             var composition_node = this.$element.find('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
