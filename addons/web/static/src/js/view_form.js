@@ -1916,7 +1916,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
      */
     delay_focus: function($elem) {
         setTimeout(function() {
-            $elem.focus();
+            $elem[0].focus();
         }, 50);
     },
     /**
