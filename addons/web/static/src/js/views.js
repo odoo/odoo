@@ -657,32 +657,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         this.$element.find('.oe_debug_view').change(this.on_debug_changed);
         this.$element.addClass("oe_view_manager_" + (this.action.target || 'current'));
-
-        if (this.action.help && !this.flags.low_profile) {
-            var Users = new instance.web.DataSet(self, 'res.users'),
-                $tips = this.$element.find('.oe_view_manager_menu_tips');
-            $tips.delegate('blockquote button', 'click', function() {
-                var $this = $(this);
-                //noinspection FallthroughInSwitchStatementJS
-                switch ($this.attr('name')) {
-                case 'disable':
-                    Users.write(self.session.uid, {menu_tips:false});
-                case 'hide':
-                    $this.closest('blockquote').hide();
-                    self.session.hidden_menutips[self.action.id] = true;
-                }
-            });
-            if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips']).then(function(users) {
-                    var user = users[0];
-                    if (!(user && user.id === self.session.uid)) {
-                        return;
-                    }
-                    $tips.find('blockquote').toggle(user.menu_tips);
-                });
-            }
-        }
-
         return manager_ready;
     },
     on_debug_changed: function (evt) {
