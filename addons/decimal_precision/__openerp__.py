@@ -31,7 +31,6 @@ The decimal precision is configured per company.
     "version": "0.1",
     "depends": ["base"],
     "category" : "Hidden/Dependency",
-    'complexity': "easy",
     "init_xml": [],
     "update_xml": [
         'decimal_precision_view.xml',

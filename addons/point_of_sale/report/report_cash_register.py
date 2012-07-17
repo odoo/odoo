@@ -34,7 +34,7 @@ class report_cash_register(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'state': fields.selection([('draft', 'Quotation'),('open','Open'),('confirm', 'Confirmed')],'State'),
+        'state': fields.selection([('draft', 'Quotation'),('open','Open'),('confirm', 'Confirmed')],'Status'),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'balance_start': fields.float('Opening Balance'),
         'balance_end_real': fields.float('Closing Balance'),

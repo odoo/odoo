@@ -7,12 +7,14 @@
             <field name="model">account.voucher.unreconcile</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-             <form string="Unreconciliation">
-                <separator colspan="4" string="Unreconciliation Transactions" />
-                <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable" colspan="2"/>
-                <separator colspan="4"/>
-                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                <button name="trans_unrec" default_focus="1" string="Unreconcile" type="object" icon="gtk-ok"/>
+             <form string="Unreconciliation" version="7.0">
+                <separator string="Unreconciliation Transactions" />
+                <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"/>
+                <footer>
+                    <button name="trans_unrec" default_focus="1" string="Unreconcile" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
              </form>
             </field>
         </record>
@@ -24,14 +26,6 @@
             <field name="view_id" ref="view_account_voucher_unreconcile"/>
             <field name="target">new</field>
         </record>
-        
-<!--    <act_window name="Unreconcile entries"            -->
-<!--            res_model="account.voucher.unreconcile"-->
-<!--            src_model="account.voucher"-->
-<!--            view_mode="form"-->
-<!--            target="new"        -->
-<!--            key2="client_action_multi"    -->
-<!--            id="action_view_account_voucher_unreconcile"/>-->
-     
+
      </data>
 </openerp>

@@ -25,6 +25,7 @@ import logging
 from osv import fields, osv
 from PIL import Image
 import StringIO
+_logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
 
@@ -93,24 +94,27 @@ class hr_job(osv.osv):
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Expected Employees', help='Required number of employees in total for that job.',
+        'expected_employees': fields.function(_no_of_employee, string='Total Employees',
+            help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees", help='Number of employees with that job.',
+        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees",
+            help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected in Recruitment'),
-        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
+        'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
+        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'),('old', 'Old'),('recruit', 'In Recruitement')], 'State', readonly=True, required=True),
+        'state': fields.selection([('open', 'In Position'), ('recruit', 'In Recruitement')], 'Status', readonly=True, required=True,
+            help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
         'expected_employees': 1,
@@ -127,10 +131,6 @@ class hr_job(osv.osv):
         if context is None:
             context = {}
         return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
-
-    def job_old(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'old', 'no_of_recruitment': 0})
-        return True
 
     def job_recruitement(self, cr, uid, ids, *args):
         for job in self.browse(cr, uid, ids):
@@ -191,7 +191,7 @@ class hr_employee(osv.osv):
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
-        'work_email': fields.char('Work E-mail', size=240),
+        'work_email': fields.char('Work Email', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
@@ -209,6 +209,7 @@ class hr_employee(osv.osv):
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
+        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -304,9 +305,13 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
 
         return user_id
+
+    _columns = {
+        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
+        }
 
 res_users()
 

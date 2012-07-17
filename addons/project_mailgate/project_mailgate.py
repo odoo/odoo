@@ -19,41 +19,36 @@
 #
 ##############################################################################
 
+import binascii
 from osv import fields, osv
 from tools.translate import _
 import tools
-import binascii
-
 
 class project_tasks(osv.osv):
-    _name = "project.task"
-    _inherit = ['mail.thread','project.task']
-
-    _columns = {
-         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
-    }
+    _inherit = 'project.task'
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        res_id = super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        subject = msg.get('subject')
-        body = msg.get('body_text')
-        msg_from = msg.get('from')
-        data = {
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
             'name': subject,
-            'description': body,
             'planned_hours': 0.0,
-        }
-        data.update(self.message_partner_by_email(cr, uid, msg_from))
-        self.write(cr, uid, [res_id], data, context)
-        return res_id
-
-    def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
-        data.update({
-            'description': msg['body_text'],
+            'subject': msg.get('subject'),
         })
-        act = 'do_'+default_act
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
+        return super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
-        maps = { 
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the task according to the email.
+        """
+        if update_vals is None: update_vals = {}
+        act = False
+        maps = {
             'cost':'planned_hours',
         }
         for line in msg['body_text'].split('\n'):
@@ -64,17 +59,15 @@ class project_tasks(osv.osv):
                 field = maps.get(match)
                 if field:
                     try:
-                        data[field] = float(res.group(2).lower())
+                        update_vals[field] = float(res.group(2).lower())
                     except (ValueError, TypeError):
                         pass
                 elif match.lower() == 'state' \
                         and res.group(2).lower() in ['cancel','close','draft','open','pending']:
                     act = 'do_%s' % res.group(2).lower()
-
-        self.write(cr, uid, ids, data, context=context)
-        getattr(self,act)(cr, uid, ids, context=context)
-        self.message_append_dict(cr, uid, [res_id], msg, context=context)
-        return True
+        if act:
+            getattr(self,act)(cr, uid, ids, context=context)
+        return super(project_tasks,self).message_update(cr, uid, msg, update_vals=update_vals, context=context)
 
     def message_thread_followers(self, cr, uid, ids, context=None):
         followers = super(project_tasks,self).message_thread_followers(cr, uid, ids, context=context)
@@ -84,37 +77,5 @@ class project_tasks(osv.osv):
             followers[task.id] = filter(None, task_followers)
         return followers
 
-    def do_draft(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_draft(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Draft'), context=context)
-        return res
 
-    def do_open(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_open(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Open'), context=context)
-        return res
-
-    def do_pending(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_pending(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Pending'), context=context)
-        return res
-
-    def do_close(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_close(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        for task in tasks:
-            if task.state == 'done':
-                self.message_append(cr, uid, tasks, _('Done'), context=context)
-        return res
-
-    def do_cancel(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_cancel(cr, uid, ids, context=context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Cancel'), context=context)
-        return res
-
-project_tasks()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

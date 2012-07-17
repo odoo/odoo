@@ -7,20 +7,16 @@
             <field name="model">pos.make.payment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Add payment :">
-                <group colspan="4" col="4" >
-                    <group colspan="4">
-                        <field name="journal"/>
-                        <field name="amount" />
-                        <field name="payment_name"/>
-                    </group>
-                    <newline/>
-                    <separator colspan="4"/>
-                    <group colspan="2"/>
-                    <group colspan="2">
-                        <button icon="gtk-stop" special="cancel" string="Cancel"/>
-                        <button name="check" string="Make Payment" colspan="1" type="object" icon="gtk-apply"/>
-                    </group>
+            <form string="Add payment :" version="7.0">
+                <header>
+                    <button name="check" string="Make Payment" type="object"  class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </header>
+                <group col="4">
+                    <field name="journal"/>
+                    <field name="amount" />
+                    <field name="payment_name"/>
                 </group>
             </form>
             </field>

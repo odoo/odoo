@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	    <!--
-	    Work Order Report
-	    -->
+        <!--
+        Work Order Report
+        -->
 
         <record id="view_report_mrp_workorder_tree" model="ir.ui.view">
             <field name="name">mrp.workorder.tree</field>
@@ -47,24 +47,12 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                        <filter icon="terp-go-year" string="Year"
-                                name="year"
-                                domain="[('year','=',time.strftime('%%Y'))]"
-                                help="Work orders made during current year"/>
+                        <field name="date"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-month" string="Month"
-                                name="month"
-                                domain="[('month','=',time.strftime('%%m'))]"
-                                help="Work orders made during current month"/>
-                        <filter icon="terp-go-week"
-                                string="Month -1"
-                                domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
-                                help="Work orders during last month"/>
-                      <separator orientation="vertical"/>
                         <filter string="Current" icon="terp-check" domain="[('state','not in',('draft','cancel','done'))]"/>
                         <filter icon="terp-check" string="Started" domain="[('state','=','startworking')]"/>
                         <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]"/>
-                      <separator orientation="vertical"/>
+                        <separator orientation="vertical"/>
                         <field name="product_id" />
                         <field name="workcenter_id"/>
                    </group>
@@ -75,7 +63,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Planned Day"/>
                         <separator orientation="vertical"/>

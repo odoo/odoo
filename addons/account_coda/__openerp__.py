@@ -24,7 +24,6 @@
     "version": '2.1',
     "author": 'Noviat',
     "category": 'Accounting & Finance',
-    "complexity": "normal",
     "description": '''
 Module to import CODA bank statements.
 ======================================

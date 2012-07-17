@@ -48,7 +48,7 @@ class ir_model_fields_anonymization(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'field_name': fields.char('Field Name', size=128, required=True),
         'field_id': fields.many2one('ir.model.fields', 'Field', ondelete='set null'),
-        'state': fields.selection(selection=FIELD_STATES, String='State', required=True, readonly=True),
+        'state': fields.selection(selection=FIELD_STATES, String='Status', required=True, readonly=True),
     }
 
     _sql_constraints = [
@@ -209,7 +209,7 @@ class ir_model_fields_anonymization_history(osv.osv):
     _columns = {
         'date': fields.datetime('Date', required=True, readonly=True),
         'field_ids': fields.many2many('ir.model.fields.anonymization', 'anonymized_field_to_history_rel', 'field_id', 'history_id', 'Fields', readonly=True),
-        'state': fields.selection(selection=ANONYMIZATION_HISTORY_STATE, string='State', required=True, readonly=True),
+        'state': fields.selection(selection=ANONYMIZATION_HISTORY_STATE, string='Status', required=True, readonly=True),
         'direction': fields.selection(selection=ANONYMIZATION_DIRECTION, string='Direction', required=True, readonly=True),
         'msg': fields.text('Message', readonly=True),
         'filepath': fields.char(string='File path', size=256, readonly=True),
@@ -243,7 +243,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import'),
-        'state': fields.function(_get_state, string='State', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
+        'state': fields.function(_get_state, string='Status', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
         'msg': fields.text(string='Message'),
     }
 
@@ -289,6 +289,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
+        
+        if context is None:
+            context = {}
+        
         step = context.get('step', 'new_window')
 
         res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)

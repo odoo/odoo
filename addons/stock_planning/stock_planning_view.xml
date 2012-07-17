@@ -12,17 +12,20 @@
             <field name="model">stock.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock Periods">
-                    <field name="name" colspan="2"/>
-                    <newline/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <separator string="State" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <field name="state" select="1" readonly="1"/>
-                        <button name="button_open" string="Open" icon="gtk-ok" states="draft" type="object"/>
-                        <button name="button_close" string="Close" icon="gtk-stop" states="open" type="object"/>
-                    </group>
+                <form version="7.0">
+                    <header>
+                        <button name="button_open" string="Open" states="draft" type="object"/>
+                        <button name="button_close" string="Close" states="open" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                    </header>
+                    <sheet string="Stock Periods">
+                        <group col="4">
+                            <field name="name"/>
+                            <newline/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -36,7 +39,7 @@
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -47,12 +50,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Periods">
-                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
-                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
+                    <field name="name" string="Stock Periods"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
+                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
                 </search>
             </field>
         </record>
@@ -78,10 +82,15 @@
             <field name="model">stock.sale.forecast</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock and Sales Forecast">
-                    <group colspan = "4" col = "4">
+                <form version="7.0">
+                <header>
+                    <button name="action_validate" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Stock and Sales Forecast">
+                    <group colspan = "4" col = "4" class="oe_header">
                         <group colspan = "2" col="2" >
-                            <field name="company_id" select="1"
+                            <field name="company_id"
                                         groups="base.group_multi_company"
                                         widget="selection"
                                         on_change="onchange_company(company_id)"/>
@@ -99,10 +108,6 @@
                             <field name="user_id"/>
                             <field name="product_amt" on_change="product_amt_change(product_amt, product_uom, product_id)" />
                             <field name="product_qty"  />
-                            <field name="state"/>
-                            <label string = ""/>
-                            <button name="action_validate" icon="gtk-apply" string="Approve" states="draft" type="object" colspan = "1"/>
-
                         </group>
                     </group>
                     <separator colspan ="4" string="Sales History"/>
@@ -147,6 +152,7 @@
                         <button name="calculate_sales_history" icon="gtk-execute"
                                 string="Calculate Sales History" type="object" colspan = "1" states="draft" />
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -193,6 +199,7 @@
             <field name="arch" type="xml">
                 <search string="Search  Sales Forecast">
                     <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
+                    <separator orientation="vertical"/>
                     <field name="company_id"/>
                     <field name="warehouse_id" />
                     <field name="period_id" />
@@ -204,7 +211,7 @@
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string='Default UoM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                     </group>
               </search>
             </field>
@@ -239,7 +246,7 @@
                     <group colspan="4" col="7">
                         <group colspan ="3" col="2">
                             <separator colspan ="2" string = "General Info"/>
-                            <field name="company_id" select = "1" widget= "selection"
+                            <field name="company_id" widget="selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
@@ -299,6 +306,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
                     <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
+                    <separator orientation="vertical"/>
                     <field name="company_id" widget="selection"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>

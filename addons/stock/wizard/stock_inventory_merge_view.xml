@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
-	
-		<record id="name_form" model="ir.ui.view">
-		        <field name="name">stock.inventory.merge.form</field>
-		        <field name="model">stock.inventory.merge</field>
-		        <field name="type">form</field>
-		        <field name="arch" type="xml">
-					<form string="Merge Inventories">
-				    	<separator colspan="4" string="Merge Inventories" />
-				    	<label string="Do you want to merge theses inventories?"/>
-				 <separator colspan="4"/>
-    				<group colspan="4" col="6">
-					<button special="cancel" string="_Cancel" icon='gtk-cancel'/>
-					<button name="do_merge" string="Yes" type="object" icon="gtk-apply"/>
-					</group>			
-				</form>
-			</field>
-		</record>
-		 <act_window name="Merge inventories"		    
-			res_model="stock.inventory.merge"
-			src_model="stock.inventory"
-			view_mode="form"
+    <data>
+
+        <record id="name_form" model="ir.ui.view">
+            <field name="name">stock.inventory.merge.form</field>
+            <field name="model">stock.inventory.merge</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Merge Inventories" version="7.0">
+                    <separator string="Merge Inventories" />
+                    <label string="Do you want to merge theses inventories?"/>
+                    <footer>
+                        <button name="do_merge" string="Yes" type="object" icon="gtk-apply" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <act_window name="Merge inventories"
+            res_model="stock.inventory.merge"
+            src_model="stock.inventory"
+            view_mode="form"
                         multi="True"
-			target="new"        
-			key2="client_action_multi"    
-			id="action_view_stock_merge_inventories"/>	
-		
-	</data>
+            target="new"
+            key2="client_action_multi"
+            id="action_view_stock_merge_inventories"/>
+
+    </data>
 </openerp>

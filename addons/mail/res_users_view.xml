@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
             <data>
-                <field name="menu_tips" position="after">
+                <field name="context_tz" position="after">
                     <field name="notification_email_pref" readonly="0"/>
                 </field>
             </data>
@@ -23,12 +23,12 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
             <data>
-                <field name="menu_tips" position="after">
+                <field name="context_tz" position="after">
                     <field name="notification_email_pref"/>
                 </field>
                 <xpath expr="/form/sheet" position="after">
-                    <div class="oe_form_sheet_width">
-                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    <div class="oe_bottom">
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     </div>
                 </xpath>
             </data>

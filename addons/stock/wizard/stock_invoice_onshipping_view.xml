@@ -6,16 +6,17 @@
             <field name="model">stock.invoice.onshipping</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Create invoice">
-                    <separator colspan="4" string="Create Invoice" />
-                    <field name="journal_id"/>
-                    <newline/>
-                    <field name="group"/>
-                    <newline/>
-                    <field name="invoice_date" />
-                    <separator string="" colspan="4" />
-                    <button special="cancel" string="_Cancel" icon='gtk-cancel'/>
-                    <button name="open_invoice" string="Create" type="object" icon="terp-gtk-go-back-rtl"/>
+              <form string="Create invoice" version="7.0">
+                  <group string="Create Invoice">
+                      <field name="journal_id"/>
+                      <field name="group"/>
+                      <field name="invoice_date" />
+                  </group>
+                  <footer>
+                      <button name="open_invoice" string="Create" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel"/>
+                  </footer>
              </form>
             </field>
         </record>
@@ -23,7 +24,7 @@
 
         <act_window name="Create invoice"
             res_model="stock.invoice.onshipping"
-            src_model="stock.picking"
+            src_model="stock.picking.out"
             key2="client_action_multi"
             multi="True"
             view_mode="form"

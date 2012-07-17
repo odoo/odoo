@@ -26,18 +26,36 @@ class hr_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_hr_timesheet_sheet': fields.boolean('Manage Timesheets and Attendances',
+        'module_hr_timesheet_sheet': fields.boolean('Timesheet Validation by Manager',
             help ="""This installs the module hr_timesheet_sheet."""),
-        'module_hr_holidays': fields.boolean('Manage Holidays',
+        'module_hr_attendance': fields.boolean('Track Attendances',
+            help ="""This installs the module hr_attendance."""),
+        'module_hr_timesheet': fields.boolean('Manage Timesheets',
+            help ="""This installs the module hr_timesheet."""),
+        'module_hr_holidays': fields.boolean('Leaves & Holidays',
             help ="""This installs the module hr_holidays."""),
-        'module_hr_expense': fields.boolean('Manage Employees Expenses',
+        'module_hr_expense': fields.boolean('Expenses',
             help ="""This installs the module hr_expense."""),
-        'module_hr_recruitment': fields.boolean('Manage Recruitment Process',
+        'module_hr_recruitment': fields.boolean('Recruitment',
             help ="""This installs the module hr_recruitment."""),
-        'module_hr_contract': fields.boolean('Manage Employees Contracts',
+        'module_hr_contract': fields.boolean('Employees Contracts',
             help ="""This installs the module hr_contract."""),
-        'module_hr_evaluation': fields.boolean('Manage Appraisals Process',
+        'module_hr_evaluation': fields.boolean('Periodic Appraisals',
             help ="""This installs the module hr_evaluation."""),
+        'module_hr_payroll': fields.boolean('Payroll',
+            help ="""This installs the module hr_payroll."""),
     }
+
+    def onchange_hr_timesheet(self, cr, uid, ids, timesheet, context=None):
+        """ module_hr_timesheet implies module_hr_attendance """
+        if timesheet:
+            return {'value': {'module_hr_attendance': True}}
+        return {}
+
+    def onchange_hr_attendance(self, cr, uid, ids, attendance, context=None):
+        """ module_hr_timesheet implies module_hr_attendance """
+        if not attendance:
+            return {'value': {'module_hr_timesheet': False}}
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,34 +7,32 @@
             <field name="model">partner.vat.intra</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner VAT intra">
-                    <group width="450">
-                        <separator string="Intracom VAT Declaration" colspan="4"/>
-                        <notebook colspan="4">
-                            <page string="General Information">
-                                <newline/>
+                <form string="Partner VAT intra" version="7.0">
+                    <group>
+                        <separator string="Intracom VAT Declaration"/>
+                    </group>   
+                    <notebook colspan="4">
+                        <page string="General Information">
+                            <group>
                                 <field name="period_code"/>
-                                <newline/>
                                 <field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
-                                <newline/>
                                 <field name="mand_id"/>
-                                <newline/>
-                                <separator string="Periods" colspan="4"/>
-                                <field name="period_ids" nolabel="1" colspan="4" height="200"/>
-                                <group colspan="4">
-                                    <separator string="Comments" colspan="4"/>
-                                    <field colspan="4" name="comments" nolabel="1"/>
-                                </group>
-                            </page>
-                            <page string="European Countries">
-                                <field name="country_ids" colspan="4" nolabel="1"/>
-                            </page>
-                        </notebook>
-                        <separator colspan="4"/><label/>
-                        <button special="cancel" string="_Close" icon="gtk-cancel"/>
-                        <button name="preview" string="_Preview" type="object" icon="gtk-print"/>
-                        <button name="create_xml" string="Create _XML" type="object" icon="gtk-execute"/>
-                    </group>
+                            </group>
+                            <separator string="Periods"/>
+                            <field name="period_ids"/>
+                            <separator string="Comments"/>
+                            <field name="comments"/>
+                        </page>
+                        <page string="European Countries">
+                            <field name="country_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="create_xml" string="Create _XML" type="object" class="oe_highlight"/>
+                        <button name="preview" string="_Preview" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -44,16 +42,11 @@
             <field name="model">partner.vat.intra</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Save XML">
-                    <group width="450">
-                        <separator colspan="2" string="Note: "/><newline/>
-                        <label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
-                        <field name="name" colspan="4"/>
-                        <newline/>
-                        <field name="file_save" colspan="4" filename="name"/>
-                        <newline/>
-                        <button special="cancel" string="Close" icon="gtk-cancel" colspan="4"/>
-                    </group>
+                <form string="Save XML" version="7.0">
+                    <separator string="Note: "/>
+                    <label string="Save the File with '.xml' extension."/>
+                    <field name="name"/>
+                    <field name="file_save" filename="name"/>
                 </form>
             </field>
         </record>

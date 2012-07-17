@@ -1,0 +1,82 @@
+<openerp>
+    <data>
+
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="General Settings" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Company Settings">
+                        <group>
+                            <field name="module_multi_company"/>
+                        </group>
+                        <group>
+                            <div>
+                                You will also find several configuration options on your company data:
+                                address for the header and footer, overdue payments texts, etc.
+                            </div>
+                            <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
+                        </group>
+                    </group>
+                    <group string="External Accesses">
+                        <field name="module_share"/>
+                        <field name="module_portal"/>
+                    </group>
+                    <group string="Others">
+                        <label for="id" string="Outgoing Mail Servers"/>
+                        <button type="action" name="%(base.action_ir_mail_server_list)d"
+                            string="Configure" icon="gtk-execute"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_general_configuration" model="ir.actions.act_window">
+            <field name="name">General Settings</field>
+            <field name="res_model">base.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+        <menuitem id="menu_general_configuration" parent="base.menu_config"
+            sequence="100" action="action_general_configuration"/>
+
+        <!-- Sale config wizard -->
+        <record id="view_sale_config_settings" model="ir.ui.view">
+            <field name="name">sale settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure Sales" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <field name="module_crm" invisible="1"/>
+                    <group name="config_sale"/>
+                    <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
+                        <field name="module_plugin_thunderbird"/>
+                        <field name="module_plugin_outlook"/>
+                    </group>
+                    <group name="config_crm"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sale_config" model="ir.actions.act_window">
+            <field name="name">Configure Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.config.settings</field>
+            <field name="view_id" ref="view_sale_config_settings"/>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+    </data>
+</openerp>

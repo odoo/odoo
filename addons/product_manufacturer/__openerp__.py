@@ -22,7 +22,6 @@
     "version" : "1.0",
     "author" : "OpenERP SA",
     'category': 'Purchase Management',
-    'complexity': "easy",
     "depends" : ["stock"],
     "init_xml" : [],
     "demo_xml" : [],

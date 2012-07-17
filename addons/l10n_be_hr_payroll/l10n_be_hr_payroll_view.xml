@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
         <record id="hr_contract_form_l10n_be_inherit" model="ir.ui.view">
             <field name="name">hr.contract.form.inherit</field>
             <field name="model">hr.contract</field>
@@ -10,23 +9,17 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page[@name='information']/group[@name='right_column']/field[@name='struct_id']" position="after">
+                 <xpath expr="//field[@name='struct_id']" position="after">
                     <field name="travel_reimbursement_amount"/>
                     <field name="car_company_amount"/>
+                    <field name="car_employee_deduction"/>
                     <field name="misc_onss_deduction"/>
                     <field name="meal_voucher_amount"/>
+                    <field name="meal_voucher_employee_deduction"/>
                     <field name="misc_advantage_amount"/>
-                    <separator string="Miscellaneous" colspan="2"/>
                     <field name="additional_net_amount"/>
                     <field name="retained_net_amount"/>
-                 </xpath>
-                 <xpath expr="/form/notebook/page/group/field[@name='trial_date_end']" position="after">
-                    <group colspan="2" col="2">
-                        <separator string="by Worker" colspan="2"/>
-                        <field name="insurance_employee_deduction"/>
-                        <field name="meal_voucher_employee_deduction"/>
-                        <field name="car_employee_deduction"/>
-                    </group>
+                    <field name="insurance_employee_deduction"/>
                  </xpath>
             </data>
             </field>
@@ -51,23 +44,19 @@
             <field name="priority">30</field>
             <field name="arch" type="xml">
             <data>
-                <!-- <xpath expr="/form/notebook/page/group/field[@name='birthday']" position="after">
-                    <field name="marital" required="True"/>
-                </xpath> -->
-                <xpath expr="/form/notebook/page/group/field[@name='gender']" position="before">
+                <xpath expr="//field[@name='gender']" position="before">
                     <field name="resident_bool" eval="False"/> 
                 </xpath>
-                <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
+                <xpath expr="//field[@name='marital']" position="after">
                     <field name="spouse_fiscal_status" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
                     <field name="disabled_spouse_bool" attrs="{'invisible':[('marital','!=','married')]}" colspan="1"/>
                 </xpath>
-                <xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
+                <xpath expr="//field[@name='children']" position="after">
                     <field name="disabled_children_bool"/>
                     <field name="disabled_children_number" attrs="{'invisible':[('disabled_children_bool','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
                 </xpath>
             </data>
             </field>
         </record>
-        
     </data>
 </openerp>

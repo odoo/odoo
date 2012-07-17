@@ -3,7 +3,6 @@
     'name': 'Collaborative Pads',
     'version': '2.0',
     "category": "Project Management",
-    'complexity': "easy",
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.
 ===================================================================

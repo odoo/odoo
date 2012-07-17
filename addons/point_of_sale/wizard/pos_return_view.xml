@@ -6,9 +6,12 @@
             <field name="model">pos.return</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Return lines">
-                    <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                    <button icon='gtk-ok' name= "create_returns" string="Return Products" type="object"/>
+                <form string="Return lines" version="7.0">
+                    <footer>
+                        <button name= "create_returns" string="Return Products" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                  </form>
             </field>
         </record>
@@ -39,10 +42,12 @@
             <field name="model">pos.return.memory</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
-                    <field name="product_id" />
-                    <field name="quantity" />
-                    <field name="line_id" invisible="1"/>
+                <form version="7.0">
+                    <group col="4">
+                        <field name="product_id" />
+                        <field name="quantity" />
+                        <field name="line_id" invisible="1"/>
+                    </group>
                  </form>
             </field>
         </record>   

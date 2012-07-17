@@ -8,15 +8,14 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" colspan="4"/>
+                <group col="4">
+                    <field name="name" colspan="4"/>
                     <field name="type"/>
-                    <newline/>
                     <field name="user_id"/>
                     <field name="online"/>
                     <field name="readonly"/>
                 </group>
-                <group colspan="2" attrs="{'invisible':[('type','in',['db', 'db64'])]}">
+                <group attrs="{'invisible':[('type','in',['db', 'db64'])]}">
                     <field name="path"/>
                 </group>
             </form>
@@ -40,8 +39,8 @@
             <field name="model">document.storage</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Document storage">
-                    <field name="name" />
+                <search string="Search Document Storage">
+                    <field name="name" string="Document Storage"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
@@ -70,17 +69,20 @@
         <field name="model">document.directory</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Directories" col="4">
-                <field name="name" select="1" colspan="4"/>
-                <field name="parent_id"/>
-                <field name="storage_id" widget="selection" />
-                <field name="user_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+            <form string="Directories" col="4" version="7.0">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="storage_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
                 <notebook colspan="4">
                 <page string="Definition">
-                    <separator string="Directory Type" colspan="4"/>
-                    <field name="type"/>
-                    <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
+                    <group string="Directory Type" colspan="4">
+                        <field name="type"/>
+                    </group>
+                    <group col="4" attrs="{'invisible': [('type','!=','ressource')]}">
                         <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
                             attrs="{'required': [('type','=','ressource')] }"/>
                         <newline/>
@@ -89,11 +91,11 @@
                         <newline/>
                         <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     </group>
-                    <group colspan="4" col="4">
+                    <group col="4">
                         <field name="ressource_parent_type_id"/>
-                        <field name="ressource_id" select="2" readonly="1"/>
+                        <field name="ressource_id" readonly="1"/>
                     </group>
-                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
+                    <group col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
                         <field name="resource_find_all"/>
                     </group>
 
@@ -102,14 +104,16 @@
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
                     <field name="content_ids" nolabel="1" colspan="4" >
                         <form string="Contents">
-                            <field name="name"/>
-                            <field name="sequence"/>
-                            <field name="prefix"/>
-                            <field name="suffix"/>
-                            <field name="extension"/>
-                            <field name="include_name"/>
-                            <separator string="PDF Report" colspan="4"/>
-                            <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            <group col="4">
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="prefix"/>
+                                <field name="suffix"/>
+                                <field name="extension"/>
+                                <field name="include_name"/>
+                                <separator string="PDF Report" colspan="4"/>
+                                <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            </group>
                         </form>
                         <tree string="Contents">
                             <field name="sequence" string="Seq."/>
@@ -127,8 +131,10 @@
                             <field name="expr"/>
                         </tree>
                         <form string="Fields">
-                            <field name="field"/>
-                            <field name="expr"/>
+                            <group col="4">
+                                <field name="field"/>
+                                <field name="expr"/>
+                            </group>
                         </form>
                     </field>
                 </page>
@@ -165,13 +171,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document Directory">
+                    <field name="name" string="Document Directory"/>
+                    <separator orientation="vertical"/>
                     <filter string="Static" domain="[('type','=','directory')]"/>
                     <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
                     <separator orientation="vertical"/>
-                    <field name="name" />
-                    <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
+                    <field name="user_id" />
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
@@ -231,58 +238,27 @@
         <field name="model">ir.attachment</field>
         <field name="priority" eval="1"/>
         <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
-            <form string="Documents">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" colspan="4" />
-                    <field name="parent_id"/>
-                    <newline/>
-                    <field name="user_id"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+            <field name="url" position="after">
+                <field name="user_id"/>
+            </field>
+            <field name="company_id" position="before">
+                <field name="parent_id"/>
+                <field name="partner_id"/>
+            </field>
+            <xpath expr="//div[@name='creation_div']" position='after'>
+                <label for="write_uid" string="Modification"/>
+                <div>
+                    <field name="write_uid" readonly="1" class="oe_inline"/> on 
+                    <field name="write_date" readonly="1" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='description_group']" position='after'>
+                <group string="Indexed Content" colspan="4">
+                    <field name="index_content" nolabel="1"/>
                 </group>
-                <notebook colspan="4">
-                <page string="Attachment">
-                    <group col="2" colspan="2">
-                        <separator string="Data" colspan="2"/>
-                        <field name="type"/>
-                        <newline />
-                        <group col="2" colspan="2" attrs="{'invisible':[('type','=','url')]}">
-                            <field name="datas" filename="datas_fname"/>
-                            <field name="datas_fname" select="1"/>
-                        </group>
-                        <group col="2" colspan="2" attrs="{'invisible':[('type','=','binary')]}">
-                            <field name="url" widget="url"/>
-                        </group>
-                    </group>
-                    <group col="2" colspan="2">
-                    <field name="res_id" invisible="True"/>
-                        <group col="2" colspan="2" attrs="{'invisible': [('res_id','=',0)]}">
-                            <separator string="Attached to" colspan="2"/>
-                            <field name="res_model" readonly="True" invisible="True"/>
-                            <field name="res_name" readonly="1"/>
-                        </group>
-                        <separator string="Related to" colspan="2"/>
-                            <field name="partner_id"/>
-                    </group>
-                    <group col="2" colspan="2" groups="base.group_no_one">
-                        <separator string="Created" colspan="2"/>
-                        <field name="create_uid" readonly="1"/>
-                        <field name="create_date" readonly="1"/>
-                    </group>
-                    <group col="2" colspan="2" groups="base.group_no_one">
-                        <separator string="Modified" colspan="2"/>
-                        <field name="write_uid" readonly="1"/>
-                        <field name="write_date" readonly="1"/>
-                    </group>
-                </page>
-                <page string="Indexed Content - experimental" groups="base.group_no_one">
-                    <field name="index_content" colspan="4" nolabel="1"/>
-                </page>
-                <page string="Notes">
-                    <field colspan="4" name="description" nolabel="1"/>
-                </page>
-                </notebook>
-            </form>
+            </xpath>
         </field>
     </record>
 
@@ -292,15 +268,18 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
-                <field name="create_uid" position="replace">
-                    <field name="user_id">
-                            <filter icon="terp-personal"
-                                domain="[('user_id','=',uid)]"
-                                help="Filter on my documents" />
-                        </field>
+                <xpath expr="//filter[@name='my_documents_filter']" position="replace">
+                    <filter name="my_documents_filter" 
+                            string="My Document(s)"
+                            icon="terp-personal"
+                            domain="[('user_id','=',uid)]"
+                            help="Filter on my documents"/>
+                </xpath>
+                <xpath expr="//field[@name='create_uid']" position="replace">
+                    <field name="user_id"/>
                     <field name="parent_id" />
                     <field name="index_content"/>
-                </field>
+                </xpath>
             </field>
     </record>
 
@@ -418,7 +397,7 @@
     <act_window
         domain="[('parent_id', '=', active_id)]"
         context="{'default_parent_id': active_id}"
-    	id="zoom_directory" name="Related Documents"
+        id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
 </data>

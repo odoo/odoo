@@ -195,7 +195,7 @@ class account_invoice(osv.osv):
         'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
         'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
-        'reference_type': fields.selection(_get_reference_type, 'Reference Type',
+        'reference_type': fields.selection(_get_reference_type, 'Payment Reference',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'comment': fields.text('Additional Information'),
 
@@ -205,13 +205,14 @@ class account_invoice(osv.osv):
             ('proforma2','Pro-forma'),
             ('open','Open'),
             ('paid','Paid'),
-            ('cancel','Cancelled')
+            ('cancel','Cancelled'),
             ],'State', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
             \n* The \'Paid\' state is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled. \
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
+        'sent': fields.boolean('Sent', readonly=True, help="It indicates that the invoice has been sent."),
         'date_invoice': fields.date('Invoice Date', readonly=True, states={'draft':[('readonly',False)]}, select=True, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, select=True,
             help="If you use payment terms, the due date will be computed automatically at the generation "\
@@ -273,7 +274,7 @@ class account_invoice(osv.osv):
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {
@@ -286,6 +287,7 @@ class account_invoice(osv.osv):
         'check_total': 0.0,
         'internal_number': False,
         'user_id': lambda s, cr, u, c: u,
+        'sent': False,
     }
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
@@ -365,6 +367,47 @@ class account_invoice(osv.osv):
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
                 raise orm.except_orm(_('Unknown Error'), str(e))
+
+    def invoice_print(self, cr, uid, ids, context=None):
+        '''
+        This function prints the invoice and mark it as sent, so that we can see more easily the next step of the workflow
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        self.write(cr, uid, ids, {'sent': True}, context=context)
+        datas = {
+             'ids': ids,
+             'model': 'account.invoice',
+             'form': self.read(cr, uid, ids[0], context=context)
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.invoice',
+            'datas': datas,
+            'nodestroy' : True
+        }
+
+    def action_invoice_sent(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi invoice template message loaded by default
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        template = mod_obj.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')
+        template_id = template and template[1] or False
+        res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
+        res_id = res and res[1] or False
+        ctx = dict(context, active_model='account.invoice', active_id=ids[0])
+        ctx.update({'mail.compose.template_id': template_id})
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.compose.message',
+                'views': [(res_id, 'form')],
+                'view_id': res_id,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': ctx,
+                'nodestroy': True,
+        }
 
     def confirm_paid(self, cr, uid, ids, context=None):
         if context is None:
@@ -604,6 +647,7 @@ class account_invoice(osv.osv):
             'move_name':False,
             'internal_number': False,
             'period_id': False,
+            'sent': False,
         })
         if 'date_invoice' not in default:
             default.update({
@@ -712,7 +756,7 @@ class account_invoice(osv.osv):
             for tax in inv.tax_line:
                 if tax.manual:
                     continue
-                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
+                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id, tax.account_analytic_id.id)
                 tax_key.append(key)
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning !'), _('Global taxes defined, but they are not in invoice lines !'))
@@ -938,7 +982,6 @@ class account_invoice(osv.osv):
     
     def invoice_validate(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        self.invoice_validate_send_note(cr, uid, ids, context=context)
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -1002,7 +1045,7 @@ class account_invoice(osv.osv):
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _("Invoice  '%s' is validated.") % name
-                self.log(cr, uid, inv_id, message, context=ctx)
+                self.message_append_note(cr, uid, [inv_id], body=message, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1232,7 +1275,7 @@ class account_invoice(osv.osv):
             # TODO: use currency's formatting function
             msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)
-            self.log(cr, uid, inv_id,  msg)
+            self.message_append_note(cr, uid, [inv_id], body=msg, context=context)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
@@ -1256,10 +1299,6 @@ class account_invoice(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
             
-    def invoice_validate_send_note(self, cr, uid, ids, context=None):
-         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>validated</b>.") % (self._get_document_type(obj.type)), context=context)
-    
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
          for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
@@ -1306,8 +1345,8 @@ class account_invoice_line(osv.osv):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
-        'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),
+        'name': fields.text('Description', required=True),
+        'origin': fields.char('Source', size=256, help="Reference of the document that produced this invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
@@ -1318,7 +1357,6 @@ class account_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Account')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
-        'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
@@ -1391,7 +1429,8 @@ class account_invoice_line(osv.osv):
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False
-        result['note'] = res.description
+        if res.description:
+            result['name'] += '\n'+res.description
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2:
@@ -1485,7 +1524,7 @@ class account_invoice_line(osv.osv):
     def move_line_get_item(self, cr, uid, line, context=None):
         return {
             'type':'src',
-            'name': line.name[:64],
+            'name': line.name.split('\n')[0][:64],
             'price_unit':line.price_unit,
             'quantity':line.quantity,
             'price':line.price_subtotal,
@@ -1539,6 +1578,7 @@ class account_invoice_tax(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'base': fields.float('Base', digits_compute=dp.get_precision('Account')),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'manual': fields.boolean('Manual'),
@@ -1609,14 +1649,16 @@ class account_invoice_tax(osv.osv):
                     val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['account_id'] = tax['account_collected_id'] or line.account_id.id
+                    val['account_analytic_id'] = tax['account_analytic_collected_id']
                 else:
                     val['base_code_id'] = tax['ref_base_code_id']
                     val['tax_code_id'] = tax['ref_tax_code_id']
                     val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
+                    val['account_analytic_id'] = tax['account_analytic_paid_id']
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
                 if not key in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -1648,7 +1690,8 @@ class account_invoice_tax(osv.osv):
                 'price': t['amount'] or 0.0,
                 'account_id': t['account_id'],
                 'tax_code_id': t['tax_code_id'],
-                'tax_amount': t['tax_amount']
+                'tax_amount': t['tax_amount'],
+                'account_analytic_id': t['account_analytic_id'],
             })
         return res
 
@@ -1669,4 +1712,14 @@ class res_partner(osv.osv):
 
 res_partner()
 
+class mail_message(osv.osv):
+    _name = 'mail.message'
+    _inherit = 'mail.message'
+
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        if message.model == 'account.invoice':
+            self.pool.get('account.invoice').write(cr, uid, [message.res_id], {'sent':True}, context=context)
+        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+
+mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

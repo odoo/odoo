@@ -12,7 +12,7 @@
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="name"/>
-                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1}"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
@@ -26,32 +26,38 @@
             <field name="model">hr.analytic.timesheet</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet Lines">
-                    <group colspan="4" col="6">
-                    <field name="name"/>
-                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1" select="1"/>
-                    <field name="date" select="1" on_change="on_change_date(date)"/>
+                <form string="Timesheet Lines" version="7.0">
+                    <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
+                        </group>
+                        <group>
+                            <field name="date" on_change="on_change_date(date)"/>
+                        </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Information">
-                            <group colspan="2" col="2">
-                                <separator string="Product" colspan="2"/>
+                        <group>
+                            <group string="Product">
                                 <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
-                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
+                                <label string="Quantity" for="unit_amount"/>
+                                <div>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
+                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
+                                </div>
                             </group>
-                            <group colspan="2" col="2">
-                                <separator string="Accounting" colspan="2"/>
+                            <group string="Accounting">
                                 <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1"/>
                                 <field name="amount"/>
                                 <field name="general_account_id"/>
                                 <field name="journal_id"/>
                             </group>
-                            <group colspan="2" col="2">
-                                <separator string="Invoicing" colspan="2"/>
-                            </group>
+                        </group>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -63,11 +69,10 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group>
-                        <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
+                        <field name="date"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
                         <field name="account_id"/>
-                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -81,6 +86,21 @@
                 </search>
             </field>
 
+        </record>
+        
+        <record id="account_analytic_account_timesheet_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.invoice.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_timesheets"/>
+                </xpath>
+            </field>
         </record>
 
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
@@ -101,17 +121,20 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Categories" position="after">
+                <page string="Personal Information" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
-                        <field name="product_id" domain="[('type','=','service')]"/>
-                        <field name="journal_id" widget="selection"/>
-                        <field name="uom_id" invisible="1"/>
+                        <group>
+                            <group col="2">
+                                <field name="product_id" domain="[('type','=','service')]"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </group>
                     </page>
                 </page>
             </field>
         </record>
 
-        <menuitem id="menu_hr_timesheet_reports" parent="base.menu_hr_reports" sequence="5" name="Timesheet"/>
+        <menuitem id="menu_hr_timesheet_reports" parent="hr.menu_hr_reporting" sequence="5" name="Timesheet"/>
 
 
     </data>

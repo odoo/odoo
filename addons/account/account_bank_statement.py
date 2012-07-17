@@ -127,6 +127,7 @@ class account_bank_statement(osv.osv):
     _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}, select=True),
@@ -153,7 +154,7 @@ class account_bank_statement(osv.osv):
         'state': fields.selection([('draft', 'New'),
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
-                                   'State', required=True, readonly="1",
+                                   'Status', required=True, readonly="1",
                                    help='When new statement is created the state will be \'Draft\'.\n'
                                         'And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, string='Currency',
@@ -364,7 +365,7 @@ class account_bank_statement(osv.osv):
                     'name': st_number,
                     'balance_end_real': st.balance_end
             }, context=context)
-            self.log(cr, uid, st.id, _('Statement %s is confirmed, journal items are created.') % (st_number,))
+            self.message_append_note(cr, uid, [st.id], body=_('Statement %s is confirmed, journal items are created.') % (st_number,), context=context)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):

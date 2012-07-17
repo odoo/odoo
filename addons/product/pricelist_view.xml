@@ -12,14 +12,16 @@
             <field name="model">product.pricelist.version</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Pricelist Version">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
-                    <field colspan="4" name="pricelist_id" select="1"/>
-                    <field name="date_start" select="1"/>
-                    <field name="date_end" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field colspan="4" name="items_id" nolabel="1" widget="one2many_list"/>
+                <form string="Pricelist Version" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field colspan="4" name="pricelist_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <field name="items_id"/>
                 </form>
             </field>
         </record>
@@ -56,10 +58,10 @@
             <field name="arch" type="xml">
                 <tree string="Products Listprices Items">
                     <field name="sequence"/>
-                    <field colspan="4" name="name" select="1"/>
+                    <field colspan="4" name="name"/>
                     <field name="product_id"/>
-                    <field name="product_tmpl_id" select="1" groups="product.group_product_variant"/>
-                    <field name="categ_id" select="1"/>
+                    <field name="product_tmpl_id" groups="product.group_product_variant"/>
+                    <field name="categ_id"/>
                     <field name="min_quantity"/>
                     <field name="base"/>
                 </tree>
@@ -71,20 +73,22 @@
             <field name="model">product.pricelist.item</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Listprices Items">
-                    <separator colspan="4" string="Rules Test Match"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
-                    <field name="product_tmpl_id" select="1" groups="product.group_product_variant"/>
-                    <field name="categ_id" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="min_quantity"/>
-                    <field name="sequence"/>
-                    <separator colspan="4" string="Price Computation"/>
+                <form string="Products Listprices Items" version="7.0">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field colspan="4" name="name"/></h1>
 
-                    <field name="base"/>
-                    <field name="base_pricelist_id" attrs="{'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
+                    <group col="4">
+                        <field name="product_id" on_change="product_id_change(product_id)"/>
+                        <field name="product_tmpl_id" groups="product.group_product_variant"/>
+                        <field name="categ_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="min_quantity"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group col="4" string="Price Computation">
+                        <field name="base"/>
+                        <field name="base_pricelist_id" attrs="{'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
+                    </group>
                     <group col="6" colspan="5">
                         <label string="New Price ="/>
                         <label string="Base Price"/>
@@ -108,9 +112,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Products Price Search">
-                    <field name="name" />
-                    <field name="type"/>
+                    <field name="name" string="Products Price"/>
+                    <separator orientation="vertical"/>
                     <field name="currency_id"/>
+                    <field name="type"/>
                     <field name="active" />
                 </search>
             </field>
@@ -135,19 +140,26 @@
             <field name="model">product.pricelist</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Price List">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="currency_id" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field colspan="4" name="version_id" nolabel="1">
-                        <form string="Pricelist Version">
-                            <field name="name" select="1"/>
-                            <field name="active"/>
-                            <field name="date_start" select="1"/>
-                            <field name="date_end" select="1"/>
-                            <field colspan="4" name="items_id" nolabel="1" widget="one2many_list"/>
+                <form string="Products Price List" version="7.0">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group col="4">
+                        <field name="active"/>
+                        <field name="type"/>
+                        <field name="currency_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <field name="version_id">
+                        <form string="Pricelist Version" version="7.0">
+                            <group col="4">
+                                <field name="name"/>
+                                <field name="active"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                            </group>
+                            <field name="items_id"/>
                         </form>
                         <tree string="Pricelist Version">
                             <field name="name"/>
@@ -181,18 +193,20 @@
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
-            parent="base.menu_base_config" sequence="20"/>
+            parent="base.menu_base_config" sequence="20" groups="product.group_sale_pricelist"/>
 
         <record id="product_price_type_view" model="ir.ui.view">
             <field name="name">product.price.type.form</field>
             <field name="model">product.price.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Price Type">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="field"/>
-                    <field name="currency_id" select="1"/>
+                <form string="Products Price Type" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="field"/>
+                        <field name="currency_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -208,30 +222,6 @@
         <menuitem
             action="product_price_type_action" id="menu_product_price_type"
             parent="product.menu_product_pricelist_main" sequence="4" groups="base.group_no_one"/>
-
-        <!-- Moved to extra module 'sale_pricelist_type_menu':
-        <record id="product_pricelist_type_view" model="ir.ui.view">
-            <field name="name">product.pricelist.type.form</field>
-            <field name="model">product.pricelist.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Pricelist Type">
-                    <field name="name" select="1"/>
-                    <field name="key"/>
-                </form>
-            </field>
-        </record>
-        <record id="product_pricelist_type_action" model="ir.actions.act_window">
-            <field name="name">Pricelists Types</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.pricelist.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-	<menuitem
-	    action="product_pricelist_type_action" id="menu_product_pricelist_type_action2"
-	    parent="product.menu_product_pricelist_main" sequence="2"/>-->
 
     </data>
 </openerp>

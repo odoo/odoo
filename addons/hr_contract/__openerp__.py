@@ -24,7 +24,6 @@
     'name': "Employee Contracts",
     'version': '1.0',
     'category': 'Human Resources',
-    'complexity': "easy",
     'description': """
 Add all information on the employee form to manage contracts.
 =============================================================

@@ -10,7 +10,9 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
-                    <field name="po_lead"/>
+                    <group>
+                        <field name="po_lead"/>
+                    </group>
                 </page>
             </field>
         </record>

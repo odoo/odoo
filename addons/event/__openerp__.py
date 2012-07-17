@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -24,7 +25,6 @@
     'name': 'Events Organisation',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Organization and management of Events.
 ======================================
@@ -39,7 +39,7 @@ Note that:
         Association / Configuration / Types of Events
 """,
     'author': 'OpenERP SA',
-    'depends': ['email_template'],
+    'depends': ['base_setup', 'board', 'email_template', 'google_map'],
     'init_xml': [],
     'update_xml': [
         'security/event_security.xml',
@@ -51,7 +51,7 @@ Note that:
         'res_partner_view.xml',
         'email_template.xml',
     ],
-    'demo_xml': ['event_demo.xml'],
+    'demo_xml': ['event_demo.yml'],
     'test': ['test/process/event_draft2done.yml'],
     'css': ['static/src/css/event.css'],
     'installable': True,

@@ -106,7 +106,6 @@ class stock_picking(osv.osv):
                 'invoiced': True,
                 'invoice_lines': [(4, invoice_line_id)],
             })
-            invoice_line_obj.write(cursor, user, [invoice_line_id], {'note':  move_line.purchase_line_id.notes,})
         return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
@@ -126,4 +125,13 @@ class stock_partial_picking(osv.osv_memory):
                     'currency': move.picking_id.purchase_id.pricelist_id.currency_id.id}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
+# Redefinition of the new field in order to update the model stock.picking.in in the orm
+# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
+#        the bug is fixed
+class stock_picking_in(osv.osv):
+    _inherit = 'stock.picking.in'
+    _columns = {
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
+            ondelete='set null', select=True),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

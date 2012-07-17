@@ -39,7 +39,7 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
-logger = logging.getLogger('fetchmail')
+_logger = logging.getLogger(__name__)
 
 class fetchmail_server(osv.osv):
     """Incoming POP/IMAP mail server account"""
@@ -53,7 +53,7 @@ class fetchmail_server(osv.osv):
         'state':fields.selection([
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
-        ], 'State', select=True, readonly=True),
+        ], 'Status', select=True, readonly=True),
         'server' : fields.char('Server Name', size=256, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
         'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
@@ -151,7 +151,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                 connection = server.connect()
                 server.write({'state':'done'})
             except Exception, e:
-                logger.exception("Failed to connect to %s server %s", server.type, server.name)
+                _logger.exception("Failed to connect to %s server %s", server.type, server.name)
                 raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
@@ -177,7 +177,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
         mail_thread = self.pool.get('mail.thread')
         action_pool = self.pool.get('ir.actions.server')
         for server in self.browse(cr, uid, ids, context=context):
-            logger.info('start checking for new emails on %s server %s', server.type, server.name)
+            _logger.info('start checking for new emails on %s server %s', server.type, server.name)
             context.update({'fetchmail_server_id': server.id, 'server_type': server.type})
             count = 0
             imap_server = False
@@ -198,9 +198,9 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                             imap_server.store(num, '+FLAGS', '\\Seen')
                             cr.commit()
                         count += 1
-                    logger.info("fetched/processed %s email(s) on %s server %s", count, server.type, server.name)
+                    _logger.info("fetched/processed %s email(s) on %s server %s", count, server.type, server.name)
                 except Exception, e:
-                    logger.exception("Failed to fetch mail from %s server %s", server.type, server.name)
+                    _logger.exception("Failed to fetch mail from %s server %s", server.type, server.name)
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -222,9 +222,9 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
                         pop_server.dele(num)
                         cr.commit()
-                    logger.info("fetched/processed %s email(s) on %s server %s", numMsgs, server.type, server.name)
+                    _logger.info("fetched/processed %s email(s) on %s server %s", numMsgs, server.type, server.name)
                 except Exception, e:
-                    logger.exception("Failed to fetch mail from %s server %s", server.type, server.name)
+                    _logger.exception("Failed to fetch mail from %s server %s", server.type, server.name)
                 finally:
                     if pop_server:
                         pop_server.quit()

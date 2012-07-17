@@ -20,7 +20,7 @@
         <menuitem id="base.next_id_64" name="Sales"
             parent="base.menu_reporting" sequence="1" />
 
-		<menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>			
+        <menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>
 
 
         <!-- crm.case.channel -->
@@ -30,8 +30,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Channels">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                    <field name="name"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -40,9 +40,11 @@
             <field name="model">crm.case.channel</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Channel">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                <form string="Channel" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -63,38 +65,39 @@
             <field name="model">crm.case.section</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Team">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="2"/>
-                        <field name="parent_id" select="2"/>
-                        <field name="code" select="1"/>
-                        <newline/>
-                        <field name="user_id" select="2"/>
-                        <field name="resource_calendar_id" select="2"/>
-                        <field name="active" select="2"/>
+                <form string="Sales Team" version="7.0">
+                    <group>
+                        <group>
+                            <field name="name" colspan="2"/>
+                            <field name="parent_id"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="resource_calendar_id"/>
+                            <field name="active"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
-                            <group col="2" colspan="1">
-                                <separator string="Mail Gateway" colspan="2"/>
-                                <field name="reply_to" select="2"/>
+                            <group col="4">
+                                <group>
+                                    <field name="reply_to"/>
+                                </group>
+                                <group>
+                                    <field name="change_responsible"/>
+                                    <field name="allow_unlink"/>
+                                </group>
                             </group>
-                            <group col="2" colspan="1">
-                                <separator string="Configuration" colspan="2"/>
-                                <field name="allow_unlink" select="2"/>
-                                <field name="change_responsible"/>
-                            </group>
-                            <group col="1" colspan="4">
-                                <separator string="Team Members" colspan="4"/>
-                                <field name="member_ids" nolabel="1" colspan="4"   height="250"/>
-                            </group>
+                            <separator string="Team Members"/>
+                            <field name="member_ids"/>
                         </page>
                         <page string="Stages">
-                            <separator string="Select Stages for this Sales Team" colspan="4"/>
-                            <field name="stage_ids" colspan="4" nolabel="1"/>
+                            <separator string="Select Stages for this Sales Team"/>
+                            <field name="stage_ids"/>
                         </page>
                         <page string="Notes">
-                            <field name="note" select="1" colspan="4" nolabel="1"/>
+                            <field name="note"/>
                         </page>
                     </notebook>
                 </form>
@@ -110,9 +113,9 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Sales Team">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -143,6 +146,8 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
+                    <field name="state"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -155,17 +160,20 @@
             <field name="type">form</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Stage">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
+                <form string="Stage" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="state" string="Related State" />
                         <field name="probability"/>
+                        <field name="type"/>
                         <field name="on_change"/>
-                        <field name="case_default"/>
                         <field name="sequence"/>
+                        <field name="case_default"/>
+                        <field name="fold"/>
                     </group>
-                    <separator string="Requirements" colspan="4"/>
-                    <field name="requirements" nolabel="1" colspan="4"/>
-                    <field name="section_ids" invisible="1" colspan="4"/>
+                    <separator string="Requirements"/>
+                    <field name="requirements" nolabel="1"/>
+                    <field name="section_ids" invisible="1"/>
                 </form>
             </field>
         </record>
@@ -187,10 +195,12 @@
             <field name="model">crm.case.categ</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Case Category">
-                    <field name="name" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="object_id"  invisible="1" />
+                <form string="Case Category" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                        <field name="object_id"  invisible="1" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -230,9 +240,11 @@
             <field name="model">crm.case.resource.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Campaign">
-                    <field name="name" select="1"/>
-                    <field name="section_id"/>
+                <form string="Campaign" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -283,15 +295,16 @@
             <field name="model">crm.segmentation.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation Lines">
-                    <field colspan="4" name="name" select="1"/>
-                    <group col="2" colspan="4">
-                        <field name="expr_name"/>
-                        <field name="expr_operator"/>
-                        <field name="expr_value"/>
+                <form string="Partner Segmentation Lines" version="7.0">
+                    <group col="4">
+                        <field colspan="4" name="name"/>
+                        <group col="2" colspan="4">
+                            <field name="expr_name"/>
+                            <field name="expr_operator"/>
+                            <field name="expr_value"/>
+                        </group>
+                        <field name="operator"/>
                     </group>
-                    <newline/>
-                    <field name="operator"/>
                 </form>
             </field>
         </record>
@@ -303,29 +316,8 @@
             <field name="model">crm.segmentation</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="categ_id"/>
-                        <field name="exclusif"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Sales Purchase">
-                            <field name="sales_purchase_active"/>
-                            <separator colspan="4" string="State of Mind Computation"/>
-                            <field name="som_interval"/>
-                            <field name="som_interval_max"/>
-                            <field name="som_interval_decrease"/>
-                            <field name="som_interval_default"/>
-                            <separator colspan="4" string="Segmentation Test"/>
-                            <field colspan="4" name="segmentation_line" widget="one2many_list" nolabel="1"/>
-                        </page>
-                        <page string="Description">
-                               <field colspan="4" name="description" nolabel="1"/>
-                           </page>
-                    </notebook>
-                    <field name="state"/>
-                    <group col="3" colspan="2">
+                <form string="Partner Segmentation" version="7.0">
+                    <header>
                         <button name="process_start"
                             states="not running"
                             string="Compute Segmentation" type="object"
@@ -336,7 +328,25 @@
                         <button name="process_continue" states="running"
                             string="Continue Process" type="object"
                             icon="gtk-go-forward" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="categ_id"/>
+                        <field name="exclusif"/>
                     </group>
+                    <notebook>
+                       <page string="Sales Purchase">
+                           <group>
+                               <field name="sales_purchase_active"/>
+                           </group>
+                           <separator string="Segmentation Test"/>
+                           <field name="segmentation_line" widget="one2many_list"/>
+                       </page>
+                       <page string="Description">
+                           <field name="description"/>
+                       </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -375,32 +385,6 @@
             id="menu_crm_segmentation-act"
             groups="base.group_no_one" sequence="15"
             parent="base.menu_base_config" />
-
-        <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
-            <field name="name">view.users.form.crm.modif.inherited1</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
-                    <field name="context_section_id" completion="1"
-                        readonly="0"/>
-                </group>
-            </field>
-        </record>
-
-        <record id="view_users_form_simple_modif_inherited2" model="ir.ui.view">
-                <field name="name">view.users.form.crm.modif.inherited2</field>
-                <field name="model">res.users</field>
-                <field name="type">form</field>
-                <field name="inherit_id" ref="base.view_users_form"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <group name="default_filters" position="inside">
-                        <field name="context_section_id" completion="1"/>
-                    </group>
-                </field>
-        </record>
 
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>

@@ -24,7 +24,6 @@
     'name': 'Contracts Management',
     'version': '1.1',
     'category': 'Sales Management',
-    'complexity': "normal",
     'description': """
 This module is for modifying account analytic view to show important data to project manager of services companies.
 ===================================================================================================================

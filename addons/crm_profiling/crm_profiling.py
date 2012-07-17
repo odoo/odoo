@@ -116,7 +116,7 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
     ok =  []
     cr.execute('''
         select r.category_id
-        from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)
+        from res_partner_res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)
         where r.partner_id = %s and (s.exclusif = false or s.exclusif is null)
         ''', (pid,))
     for x in cr.fetchall():
@@ -249,7 +249,7 @@ class crm_segmentation(osv.osv):
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel where \
+                    cr.execute('delete from res_partner_res_partner_category_rel where \
                             category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']
@@ -281,7 +281,7 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
+                cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True

@@ -3,26 +3,26 @@
     <data>
 
             
-	    <!-- Phonecall to meeting view -->
+        <!-- Phonecall to meeting view -->
 
         <record model="ir.ui.view" id="phonecall2phonecall2meeting_view">
             <field name="name">crm.phonecall2meeting.form</field>
             <field name="model">crm.phonecall2meeting</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Convert To Meeting">
-                	<label string="Are you sure to schedule a Meeting for this Phonecall?" colspan="4"/>
-                	<newline/>
-                	<separator colspan="4" string=""/>
-                	<button name="action_cancel" string="_Cancel"
-                		icon="gtk-cancel" special="cancel" />
-                	<button name="action_make_meeting" type="object"
-                		string="_Schedule" icon="gtk-go-forward" />
+                <form string="Convert To Meeting" version="7.0">
+                    <label string="Are you sure to schedule a Meeting for this Phonecall?"/>
+                    <footer>
+                        <button name="action_make_meeting" type="object"
+                            string="_Schedule" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
 
-	    <!-- Phonecall to meeting action -->
+        <!-- Phonecall to meeting action -->
 
         <record model="ir.actions.act_window" id="phonecall2meeting_act">
             <field name="name">Convert To Meeting</field>

@@ -53,7 +53,7 @@
              <field name="view_mode">form</field>
              <field name="view_id" ref="accounting_report_view"/>
              <field name="target">new</field>
-             <field name="context"></field>
+             <field name="context">{}</field>
              <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_profitandloss0')}"/>
         </record>
         <menuitem icon="STOCK_PRINT" name="Profit And Loss" action="action_account_report_pl" id="menu_account_report_pl" parent="final_accounting_reports"/>

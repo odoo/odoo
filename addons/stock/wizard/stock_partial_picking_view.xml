@@ -9,33 +9,33 @@
             <field name="target">new</field>
         </record>
 
+        <!-- this view of stock.partial.picking wizard is dedicated to internal picking. The fields_view_get is ovveridden in order to change the label of the process button and the separator. -->
         <record id="stock_partial_picking_form" model="ir.ui.view">
             <field name="name">stock.partial.picking.form</field>
             <field name="model">stock.partial.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
+                <form version="7.0">
                     <field name="hide_tracking" invisible="1"/>
-                    <separator colspan="4" string="Products"/>
-                    <field name="move_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" context="{'hide_tracking': hide_tracking}">
+                    <separator string="Transfer Products" name="product_separator"/>
+                    <field name="move_ids" context="{'hide_tracking': hide_tracking}">
                         <tree editable="bottom" string="Product Moves">
                             <field name="product_id" />
                             <field name="quantity" />
-                            <field name="product_uom" />
+                            <field name="product_uom" groups="product.group_uom"/>
                             <field name="tracking" invisible="1"/>
-                            <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True)]}"/>
+                            <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True)]}" groups="stock.group_production_lot"/>
                             <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                             <field name="update_cost" invisible="1"/>
                             <field name="cost"  invisible="1"/>
                             <field name="currency"  invisible="1"/>
                         </tree>
                     </field>
-                    <separator string="" colspan="4" />
-                    <label string="" colspan="2"/>
-                    <group col="2" colspan="2">
-                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
-                        <button name="do_partial" string="_Validate" colspan="1" type="object" icon="gtk-go-forward" />
-                    </group>
+                    <footer>
+                        <button name="do_partial" string="_Transfer" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -63,17 +63,19 @@
             <field name="model">stock.partial.picking.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
-                    <field name="product_id" />
-                    <field name="quantity" />
-                    <field name="product_uom" />
-                    <field name="location_id" />
-                    <field name="location_dest_id" />
-                    <field name="tracking" invisible="1"/>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
-                    <field name="update_cost" invisible="1"/>
-                    <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
-                    <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                <form version="7.0">
+                    <group col="4">
+                        <field name="product_id" />
+                        <field name="quantity" />
+                        <field name="product_uom" />
+                        <field name="location_id" />
+                        <field name="location_dest_id" />
+                        <field name="tracking" invisible="1"/>
+                        <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
+                        <field name="update_cost" invisible="1"/>
+                        <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                        <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                    </group>
                  </form>
             </field>
         </record>

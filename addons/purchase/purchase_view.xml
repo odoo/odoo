@@ -24,10 +24,6 @@
             action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
             parent="menu_purchase_config_pricelist" sequence="10" />
 
-        <!--<menuitem
-            action="product.product_pricelist_type_action" id="menu_purchase_product_pricelist_type"
-            parent="menu_purchase_config_pricelist" sequence="2"/>-->
-
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
             parent="menu_purchase_config_purchase" sequence="30" groups="base.group_no_one"/>
@@ -56,10 +52,10 @@
             action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
             parent="purchase.menu_purchase_partner_cat" groups="base.group_no_one"/>
 
-     <!--supplier menu-->
+    <!--supplier menu-->
     <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
-            parent="menu_procurement_management"
-            action="base.action_partner_supplier_form" sequence="15"/>
+        parent="menu_procurement_management"
+        action="base.action_partner_supplier_form" sequence="15"/>
 
           <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
@@ -69,11 +65,12 @@
       <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
             parent="menu_procurement_management_inventory" sequence="11"/>
 
-     <!--Invoice control-->
-     <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
-          parent="base.menu_purchase_root" sequence="6"/>
+    <!--Invoice control-->
+    <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
+        parent="base.menu_purchase_root" sequence="6"/>
 
     <record id="action_invoice_pending" model="ir.actions.act_window">
+        <field name="name">Based on Draft Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
@@ -81,10 +78,14 @@
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-            <field name="help">Use this menu to control the invoices to be received from your supplier. OpenERP pregenerates draft invoices from your purchase orders or receptions, according to your settings. Once you receive a supplier invoice, you can match it with the draft invoice and validate it.</field>
+            <field name="help">
+                Use this menu to control the invoices to be received from your supplier.
+                OpenERP generates draft invoices from your purchase orders or receptions, according to your settings.
+                Once you receive a supplier invoice, you can match it with the draft invoice and validate it.
+            </field>
     </record>
 
-     <menuitem name="Based on draft invoices"
+     <menuitem name="Based on Draft Invoices"
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
           parent="menu_procurement_management_invoice"
@@ -99,6 +100,43 @@
 
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
           parent="menu_procurement_management_product"/>
+
+        <!-- Purchase order Read/Unread actions -->
+        <record id="actions_server_purchase_order_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_purchase_order_unread" model="ir.values">
+            <field name="name">action_purchase_order_unread</field>
+            <field name="action_id" ref="actions_server_purchase_order_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_purchase_order_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_purchase_order" />
+            <field name="model">purchase.order</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_purchase_order_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_purchase_order_read" model="ir.values">
+            <field name="name">action_purchase_order_read</field>
+            <field name="action_id" ref="actions_server_purchase_order_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_purchase_order_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_purchase_order" />
+            <field name="model">purchase.order</field>
+            <field name="key2">client_action_multi</field>
+        </record>
 
        <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
@@ -130,24 +168,46 @@
             <field name="model">purchase.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order">
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="date_order"/>
-                        <field name="invoiced"/>
-                        <newline/>
-                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="partner_ref"/>
-                        <field name="shipped"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Purchase Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
+                <form string="Purchase Order" version="7.0">
+                <header>
+                    <button name="purchase_confirm" states="draft,sent" string="Confirm Quotation" class="oe_highlight"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
+                    <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
+                    <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
+                    <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
+                    <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
+                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" class="oe_highlight"/>
+                    <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight"/>
+                    <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
+                    <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
+                    <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
+                    <button name="purchase_cancel" states="draft,confirmed,wait_auth,sent" string="Cancel"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"/>
+                            <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist"/>
-                            <field name="origin"/>
-                            <newline/>
-                            <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
+                        </group>
+                        <group>
+                            <field name="date_order"/>
+                            <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
+                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Purchase Order">
+                            <field name="order_line">
                                 <tree string="Purchase Order Lines">
                                     <field name="date_planned"/>
                                     <field name="name"/>
@@ -156,54 +216,46 @@
                                     <field name="price_unit"/>
                                     <field name="price_subtotal"/>
                                 </tree>
-                                <!-- default form view -->
                             </field>
-                            <group col="7" colspan="4">
-                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
-                                <field name="amount_total" sum="Total amount"/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+				    <label for="amount_total"/>
+                                    <button name="button_dummy" 
+				    	states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+			        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
-                            <group col="11" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
-                                <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
-                                <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved" icon="gtk-go-forward"/>
-                                <button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
-                            </group>
+                            <div class="oe_clear"/>
+                            <label for="notes"/>
+                            <field name="notes"/>
                         </page>
                         <page string="Delivery &amp; Invoicing">
-                            <group colspan="2" col="2">
-                                <separator string="Delivery" colspan="2"/>
-                                <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
-                                <field name="minimum_planned_date"/>
-                                <field name="location_id"/>
+                            <group>
+                                <group>
+                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
+                                    <field name="minimum_planned_date"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="shipped" groups="base.group_no_one"/>
+                                </group>
+                                <group>
+                                    <field name="invoice_method"/>
+                                    <field name="invoiced"/>
+                                    <field name="fiscal_position"/>
+				    <!-- we do not need these fields anymore, the information is in open chatter -->
+                                    <field name="validator" groups="base.group_no_one"/>
+                                    <field name="date_approve" groups="base.group_no_one"/>
+                                </group>
                             </group>
-                            <group colspan="2" col="2">
-                                <separator string="Invoice Control" colspan="2"/>
-                                <field name="invoice_method"/>
-                                <field name="fiscal_position" widget="selection"/>
-                            </group>
-                            <newline/>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Purchase Control" colspan="4"/>
-                                <field name="validator"/>
-                                <field name="date_approve"/>
-                            </group>
-                            <separator string="Invoices" colspan="4"/>
-                            <newline/>
-                            <field name="invoice_ids" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
-                        </page>
-                        <page string="Notes">
-                            <field colspan="4" name="notes" nolabel="1"/>
+                            <separator string="Invoices"/>
+                            <field name="invoice_ids" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
                         </page>
                     </notebook>
-                   <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                   <field name="message_ids" widget="mail_thread"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -215,28 +267,26 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                  <group>
-                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
-                    <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase order which are in draft state"/>
+                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" help="Approved purchase order"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase order which are in the exception state"/>
+                    <separator orientation="vertical"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By...">
+                <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                     <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                     <separator orientation="vertical"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
-
                 </group>
               </search>
             </field>
@@ -249,30 +299,31 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                  <group>
-                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
-                    <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('draft','wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]"  help="Approved purchase orders"/>
-                    <filter icon="terp-accessories-archiver+" string="Done" domain="[('state','=','done')]" help="Purchase orders which are in done state."/>
+                    <field name="name" string="Reference"/>
                     <separator orientation="vertical"/>
+                    <filter icon="terp-mail-message-new"
+                        string="Inbox" help="Unread messages"
+                        name="needaction_pending"
+                        domain="[('needaction_pending','=',True)]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase orders which are in draft state"/>
+                    <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]" help="Approved purchase orders"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
-                    <separator orientation="vertical"/>
-                    <field name="name" string="Reference"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By...">
+                <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                     <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                     <separator orientation="vertical"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
-
                 </group>
               </search>
             </field>
@@ -301,66 +352,70 @@
         </record>
 
         <record id="purchase_rfq" model="ir.actions.act_window">
-            <field name="name">Requests for Quotation</field>
+            <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="search_view_id" ref="view_request_for_quotation_filter"/>
-            <field name="help">You can create a request for quotation when you want to buy products to a supplier but the purchase is not confirmed yet. Use also this menu to review requests for quotation created automatically based on your logistic rules (minimum stock, MTO, etc). You can convert the request for quotation into a purchase order once the order is confirmed. If you use the extended interface (from user's preferences), you can select the way to control your supplier invoices: based on the order, based on the receptions or manual encoding.</field>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
+            <field name="help">
+                Create a request for quotation when you want to buy products from a supplier.
+                You can also use this menu to review requests for quotation created automatically
+                (based on logistic rules, like minimum stock, MTO, etc.)
+                &lt;p&gt;
+                Once confirmed, a request for quotation becomes a purchase order.
+                In the Purchase Settings, you can select the way to control supplier invoicing:
+                based on the order, based on receptions, or manual.
+            </field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
             parent="menu_procurement_management"
-            sequence="6"/>
+            sequence="0"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="context">{'search_default_approved': 1,'search_default_create_uid':uid}</field>
+            <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">Use this menu to search within your purchase orders by references, supplier, products, etc. For each purchase order, you can track the products received, and control the supplier invoices.</field>
         </record>
-        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" />
-
+        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" sequence="6"/>
 
         <record id="purchase_order_line_form" model="ir.ui.view">
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line">
-                    <notebook colspan="4">
-                        <page string="Order Line">
-                            <field name="product_id" colspan="4" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" required="1"/>
-                            <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                            <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                            <field colspan="4" name="name"/>
-                            <field name="date_planned" widget="date"/>
-                            <field name="price_unit"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
-                            <group colspan="4" col="4">
-                                <separator colspan="4" string="Taxes"/>
-                                <field colspan="4" nolabel="1" name="taxes_id"
-                                    domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                <form string="Purchase Order Line" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)" class="oe_inline"/>
+                                </div>
+                                <field name="price_unit"/>
                             </group>
+                            <group>
+                                <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                                <field name="date_planned" widget="date"/>
+                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                        </group>
+                        <notebook>
+                        <page string="Notes">
+                            <field name="name"/>
+                        </page><page string="Invoices and Receptions">
+                            <field name="invoice_lines"/>
+                            <field name="move_ids"/>
                         </page>
-                        <page string="Invoicing">
-                            <separator colspan="4" string="Manual Invoices"/>
-                            <field name="invoiced"/>
-                            <newline/>
-                            <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
-                        </page>
-                           <page string="Notes">
-                            <field colspan="4" name="notes" nolabel="1"/>
-                        </page>
-                        <page string="History">
-                               <separator colspan="4" string="Stock Moves"/>
-                               <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
-                        </page>
-                    </notebook>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -391,39 +446,41 @@
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line">
-                    <notebook colspan="4">
-                        <page string="Order Line">
-                               <separator colspan="4" string="General Information"/>
-                             <field name="order_id"/>
-                            <field name="product_id" readonly="1" />
-                            <field name="product_qty" readonly="1" />
-                            <field name="product_uom" readonly="1" groups="product.group_uom"/>
-                            <field colspan="4" name="name"/>
-                            <field name="date_planned" widget="date"  readonly="1"/>
-                            <field name="price_unit"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                            <group colspan="4" col="4">
-                                <separator colspan="4" string="Taxes"/>
-                                <field colspan="4" nolabel="1" name="taxes_id"
-                                    domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                <form string="Purchase Order Line" version="7.0">
+                    <sheet>
+                        <label for="order_id" class="oe_edit_only"/>
+                        <h1>
+                            <field name="order_id" class="oe_inline"/>
+                            <label string="," attrs="{'invisible':[('date_order','=',False)]}"/>
+                            <field name="date_order" class="oe_inline"/>
+                        </h1>
+                        <label for="partner_id" class="oe_edit_only"/>
+                        <h2><field name="partner_id"/></h2>
+                        <group>
+                            <group>
+                                <field name="product_id" readonly="1"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" readonly="1" class="oe_inline"/>
+                                    <field name="product_uom" readonly="1" groups="product.group_uom" class="oe_inline"/>
+                                </div>
+                                <field name="price_unit"/>
                             </group>
-                        </page>
-                        <page string="Invoicing">
-                            <separator colspan="4" string="Manual Invoices"/>
-                            <field name="invoiced"/>
-                            <newline/>
-                            <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
-                        </page>
-                         <page string="Notes">
-                            <field colspan="4" name="notes" nolabel="1"/>
-                        </page>
-                        <page string="History">
-                               <separator colspan="4" string="Stock Moves"/>
-                               <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
-                        </page>
-                    </notebook>
+                            <group>
+                                <field name="taxes_id" widget="many2many_tags"
+                                    domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                                <field name="date_planned" widget="date" readonly="1"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                <field name="invoiced"/>
+                            </group>
+                        </group>
+                        <field name="name"/>
+                        <separator string="Manual Invoices"/>
+                        <field name="invoice_lines"/>
+                        <separator string="Stock Moves"/>
+                        <field name="move_ids"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -433,20 +490,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                        <group>
+                    <group>
                         <field name="order_id"/>
                         <field name="product_id"/>
-                        <field name="partner_id"  string="Supplier"/>
-                        </group>
-                        <newline/>
-                        <group expand="0" string="Group By...">
+                        <field name="partner_id" string="Supplier"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
-                        </group>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
+                    </group>
                </search>
             </field>
         </record>
@@ -469,14 +526,18 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Based on Purchase Order lines</field>
+            <field name="name">Based on Purchase Order Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">If you set the Invoicing Control on a purchase order as "Based on Purchase Order lines", you can track here all the purchase order lines for which you have not yet received the supplier invoice. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
+            <field name="help">
+                Here you can track all the lines of purchase orders where the invoicing is "Based on Purchase Order Lines",
+                and for which you have not received a supplier invoice yet.
+                You can generate a draft supplier invoice based on the lines from this list.
+            </field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -506,7 +567,7 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='close_move']" position="before">
+                <xpath expr="//field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
                 </xpath>
             </field>

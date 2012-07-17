@@ -59,15 +59,16 @@ class survey(osv.osv):
                      help="Set to one if survey is answerable only once"),
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
-        'state': fields.selection([('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
+        'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
         'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
-        'send_response': fields.boolean('E-mail Notification on Answer'),
+        'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
+        'color': fields.integer('Color Index'),
         'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
@@ -142,6 +143,17 @@ class survey(osv.osv):
                 'nodestroy':True,
             }
         return report
+    
+    def fill_survey(self, cr, uid, ids, context=None):
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'survey_id': ids[0]}
+        }
+
 survey()
 
 class survey_history(osv.osv):
@@ -166,7 +178,7 @@ class survey_page(osv.osv):
     _columns = {
         'title': fields.char('Page Title', size=128, required=1),
         'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
-        'question_ids': fields.one2many('survey.question', 'page_id', 'Question'),
+        'question_ids': fields.one2many('survey.question', 'page_id', 'Questions'),
         'sequence': fields.integer('Page Nr'),
         'note': fields.text('Description'),
     }
@@ -699,10 +711,10 @@ class survey_request(osv.osv):
     _columns = {
         'date_deadline': fields.date("Deadline date"),
         'user_id': fields.many2one("res.users", "User"),
-        'email': fields.char("E-mail", size=64),
+        'email': fields.char("Email", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response': fields.many2one('survey.response', 'Answer'),
-        'state': fields.selection([('draft','Draft'),('waiting_answer', 'Waiting Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
+        'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
     }
     _defaults = {
         'state': lambda * a: 'draft',

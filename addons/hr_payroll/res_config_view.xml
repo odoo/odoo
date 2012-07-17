@@ -7,10 +7,10 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <group name="config_payroll" position="after">
-                    <separator string="Account Payroll" colspan="4"/>
+                <!-- put after the element <div><field name="module_hr_payroll" class="oe_inline"/> ...</div> -->
+                <xpath expr="//field[@name='module_hr_payroll']/.." position="after">
                     <field name="module_hr_payroll_account"/>
-                </group>
+                </xpath>
             </field>
         </record>
     </data>

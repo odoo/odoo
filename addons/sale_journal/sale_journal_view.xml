@@ -7,14 +7,14 @@
             <field name="model">sale_journal.invoice.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invoice Type">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="invoicing_method" select="1"/>
-                        <field name="active" select="1"/>
+                <form string="Invoice Type" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="invoicing_method"/>
+                        <field name="active"/>
                     </group>
-                    <separator string="Notes" colspan="4"/>
-                    <field name="note" colspan="4" nolabel="1"/>
+                    <separator string="Notes"/>
+                    <field name="note"/>
                 </form>
             </field>
         </record>
@@ -97,7 +97,7 @@
             <field name="inherit_id" ref="stock.vpicktree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
@@ -109,7 +109,7 @@
             <field name="inherit_id" ref="stock.view_picking_in_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
@@ -121,7 +121,7 @@
             <field name="inherit_id" ref="stock.view_picking_in_tree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
@@ -133,7 +133,7 @@
             <field name="inherit_id" ref="stock.view_picking_out_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
@@ -145,7 +145,7 @@
             <field name="inherit_id" ref="stock.view_picking_out_tree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>

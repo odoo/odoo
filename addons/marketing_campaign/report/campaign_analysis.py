@@ -68,7 +68,7 @@ class campaign_analysis(osv.osv):
         'count' : fields.integer('# of Actions', readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
+                                   ('cancelled', 'Cancelled')], 'Status', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')

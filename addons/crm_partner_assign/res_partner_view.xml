@@ -9,9 +9,11 @@
             <field name="model">res.partner.activation</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Activation">
-                    <field name="name" />
-                    <field name="sequence" />
+                <form string="Activation" version="7.0">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="sequence" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -54,9 +56,9 @@
         <field name="model">res.partner.grade</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Partner Grade">
-                <group col="6" colspan="4">
-                    <field name="name" select="1"/>
+            <form string="Partner Grade" version="7.0">
+                <group col="4">
+                    <field name="name"/>
                     <field name="sequence"/>
                     <field name="active"/>
                 </group>

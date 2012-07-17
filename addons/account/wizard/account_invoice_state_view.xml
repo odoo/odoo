@@ -6,13 +6,14 @@
             <field name="model">account.invoice.confirm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Confirm Draft Invoices">
-                <separator string="Confirm Draft Invoices" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Close"/>
-                        <button icon="terp-camera_test" string="Confirm Invoices" name="invoice_confirm" type="object" default_focus="1"/>
-                   </group>
-            </form>
+                <form string="Confirm Draft Invoices" version="7.0">
+                    <separator string="Confirm Draft Invoices"/>
+                    <footer>
+                        <button string="Confirm Invoices" name="invoice_confirm" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 
@@ -27,13 +28,14 @@
             <field name="model">account.invoice.cancel</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Cancel Selected Invoices">
-                <separator string="Cancel Selected Invoices" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" string="Cancel Invoices" name="invoice_cancel" type="object" default_focus="1"/>
-                        <button icon="terp-dialog-close" special="cancel" string="Close"/>
-                   </group>
-            </form>
+                <form string="Cancel Selected Invoices" version="7.0">
+                    <separator string="Cancel Selected Invoices"/>
+                    <footer>
+                        <button string="Cancel Invoices" name="invoice_cancel" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 

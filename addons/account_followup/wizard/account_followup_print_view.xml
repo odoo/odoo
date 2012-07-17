@@ -7,24 +7,24 @@
             <field name="model">account.followup.print</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Send followups">
-                <separator string="Send Follow-Ups" colspan="4"/>
-                <label string ="This feature allows you to send reminders to partners with pending invoices. You can send them the default message for unpaid invoices or manually enter a message should you need to remind them of a specific information." colspan="4" nolabel="1"/>
-                <group col="4" colspan="6">
+            <form string="Send follow-ups" version="7.0">
+                <separator string="Send Follow-ups"/>
+                <label string ="This feature allows you to send reminders to partners with pending invoices. You can send them the default message for unpaid invoices or manually enter a message should you need to remind them of a specific information."/>
+                <group col="4">
                     <field name="followup_id"/>
                     <field name="date"/>
                 </group>
-                <separator colspan="4"/>
-                <group col="2" colspan="4">
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_continue" string="Continue" colspan="1" type="object" icon="gtk-ok"/>
-                </group>
+                <footer>
+                    <button name="do_continue" string="Continue" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
 
         <record id="action_account_followup_print" model="ir.actions.act_window">
-            <field name="name">Send followups</field>
+            <field name="name">Send follow-ups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.followup.print</field>
             <field name="view_type">form</field>
@@ -37,21 +37,22 @@
                   parent="account.menu_finance_periodical_processing_billing"
                   sequence="10"/>
 
-           <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
+        <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.search</field>
             <field name="model">account_followup.stat.by.partner</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Partner to Remind">
-                   <filter string="Balance > 0" domain="[('balance','&gt;',0)]" icon="terp-dolar" name="balance_positive"/>
-                   <separator orientation="vertical"/>
-                   <field name="partner_id"/>
-                   <field name="max_followup_id"/>
-                   <field name="date_followup"/>
-                   <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_followup"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Balance > 0" domain="[('balance','&gt;',0)]" icon="terp-dolar" name="balance_positive"/>
+                    <separator orientation="vertical"/>
+                    <field name="partner_id"/>
+                    <field name="max_followup_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
-           </record>
+        </record>
 
        <!-- Screen2 -->
            <record id="account_followup_stat_by_partner_tree" model="ir.ui.view">
@@ -75,38 +76,38 @@
             <field name="model">account.followup.print.all</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Send followups">
-                <group col="4" colspan="6">
-                        <notebook>
-                            <page string="Partner Selection">
-                                <separator string="Select Partners to Remind" colspan="4"/>
-                                <field name="partner_ids" colspan="4" nolabel="1" context="{'search_default_balance_positive': 1}" domain="[('company_id','=',context.get('company_id',False))]"/>
-                            </page>
-                            <page string="Email Settings">
-                                <field name="email_conf" colspan="4"/>
-                                <field name="partner_lang" colspan="4"/>
-                                <field name="test_print" colspan="4"/>
-                                <field name="email_subject" colspan="4"/>
-                                <separator string="Email Body" colspan="4" />
-                                <field name="email_body" colspan="4" nolabel="1"/>
-                                <separator string="Legend" colspan="4"/>
-                                <label string="%%(partner_name)s: Partner name" colspan="2"/>
-                                <label string="%%(user_signature)s: User name" colspan="2"/>
-                                <label string="%%(followup_amount)s: Total Amount Due" colspan="2"/>
-                                <label string="%%(date)s: Current Date" colspan="2"/>
-                                <label string="%%(company_name)s: User's Company name" colspan="2"/>
-                                <label string="%%(company_currency)s: User's Company Currency" colspan="2"/>
-                                <label string="%%(heading)s: Move line header" colspan="2"/>
-                                <label string="%%(line)s: Ledger Posting lines" colspan="2"/>
-                            </page>
-                        </notebook>
-                </group>
-                <separator colspan="4"/>
-                <group>
-                    <button special="cancel" string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_print" string="Print Follow Ups" colspan="1" type="object" icon="gtk-print"/>
-                    <button name="do_mail" string="Send Mails" colspan="1" type="object" icon="gtk-execute"/>
-                </group>
+            <form string="Send follow-ups" version="7.0">
+                <header>
+                    <button name="do_mail" string="Send Mails" type="object" class="oe_highlight"/>
+                    <button name="do_print" string="Print Follow Ups" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </header>
+                <notebook>
+                    <page string="Partner Selection">
+                        <field name="partner_ids" context="{'search_default_balance_positive': 1}" domain="[('company_id','=',context.get('company_id',False))]"/>
+                    </page>
+                    <page string="Email Settings">
+                        <group col="4">
+                            <field name="email_conf" colspan="4"/>
+                            <field name="partner_lang" colspan="4"/>
+                            <field name="test_print" colspan="4"/>
+                            <field name="email_subject" colspan="4"/>
+                            <separator string="Email Body" colspan="4" />
+                            <field name="email_body" colspan="4" nolabel="1"/>
+                        </group>
+                        <group string="Legend">
+                            <label string="%%(partner_name)s: Partner name"/>
+                            <label string="%%(user_signature)s: User name"/>
+                            <label string="%%(followup_amount)s: Total Amount Due"/>
+                            <label string="%%(date)s: Current Date"/>
+                            <label string="%%(company_name)s: User's Company name"/>
+                            <label string="%%(company_currency)s: User's Company Currency"/>
+                            <label string="%%(heading)s: Move line header"/>
+                            <label string="%%(line)s: Ledger Posting lines"/>
+                        </group>
+                    </page>
+                </notebook>
             </form>
             </field>
         </record>
@@ -116,21 +117,15 @@
             <field name="model">account.followup.print.all</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Summary">
-                <group col="4" colspan="6">
-                    <separator string="Summary" colspan="4"/>
-                    <field name="summary" height="300" width="800" nolabel="1"/>
-                </group>
-                <separator colspan="4"/>
-                <group>
-                    <button special="cancel" string="Ok" icon='gtk-cancel'/>
-                </group>
+            <form string="Summary" version="7.0">
+                <separator string="Summary"/>
+                <field name="summary"/>
             </form>
             </field>
         </record>
 
         <record id="action_account_followup_print_all" model="ir.actions.act_window">
-            <field name="name">Send followups</field>
+            <field name="name">Send follow-ups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.followup.print.all</field>
             <field name="view_type">form</field>

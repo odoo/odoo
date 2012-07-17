@@ -7,19 +7,14 @@
             <field name="model">pos.confirm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Post All Orders">
-                <separator string="Generate Journal Entries" colspan="4"/>
-                <label string="Generate all sale journal entries for non invoiced orders linked to a closed cash register or statement." colspan="4" align="0.0"/>
-                <newline/>
-                <separator colspan="4"/>
-                <group colspan="4" col="4">
-                    <group colspan="2" col="2">
-                    <button icon='gtk-cancel' special="cancel"
-                        string="Cancel" />
-                    <button name="action_confirm" string="Generate Entries"
-                        colspan="1" type="object" icon="gtk-ok"/>
-                    </group>
-                </group>
+                <form string="Post All Orders" version="7.0">
+                    <header>
+                        <button name="action_confirm" string="Generate Entries" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <separator string="Generate Journal Entries"/>
+                    <label string="Generate all sale journal entries for non invoiced orders linked to a closed cash register or statement."/>
                 </form>
             </field>
         </record>

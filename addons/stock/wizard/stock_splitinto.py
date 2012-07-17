@@ -27,7 +27,7 @@ class stock_split_into(osv.osv_memory):
     _name = "stock.split.into"
     _description = "Split into"
     _columns = {
-        'quantity': fields.float('Quantity',digits_compute=dp.get_precision('Product UoM')),
+        'quantity': fields.float('Quantity',digits_compute=dp.get_precision('Product Unit of Measure')),
     }
     _defaults = {
         'quantity': lambda *x: 0,

@@ -884,7 +884,7 @@ openerp.point_of_sale = function(db) {
      */
     var CategoryWidget = db.web.OldWidget.extend({
         start: function() {
-            this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
+            this.$element.find(".oe_pos_categories_list a").click(_.bind(this.changeCategory, this));
         },
         template_fct: qweb_template('pos-category-template'),
         renderElement: function() {
@@ -1009,7 +1009,7 @@ openerp.point_of_sale = function(db) {
         },
         start: function() {
             $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
-            $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
+            $('.oe_back_to_products', this.$element).click(_.bind(this.back, this));
         },
         back: function() {
             this.shop.get('selectedOrder').set({"step": "products"});

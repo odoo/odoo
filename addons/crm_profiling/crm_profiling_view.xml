@@ -31,8 +31,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
           <tree string="Questionnaires">
-            <field name="name" select="1" colspan="4"/>
-            <field name="description" select="1" colspan="4"/>
+            <field name="name" colspan="4"/>
+            <field name="description" colspan="4"/>
             <field name="questions_ids" colspan="4" nolabel="1"/>
           </tree>
         </field>
@@ -46,13 +46,13 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
           <form string="Questionnaires">
-            <field name="name" select="1" />
+            <field name="name"/>
             <newline/>
             <separator string="Questions List" colspan="4"/>
             <field name="questions_ids" colspan="4" nolabel="1"/>
             <newline/>
             <separator string="Description" colspan="4"/>
-            <field name="description" colspan="4" select="1" nolabel="1"/>
+            <field name="description" colspan="4" nolabel="1"/>
           </form>
         </field>
     </record>
@@ -65,8 +65,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
           <tree string="Answers">
-            <field name="question_id" select="1"/>
-            <field name="name" select="1"/>
+            <field name="question_id"/>
+            <field name="name"/>
           </tree>
         </field>
     </record>
@@ -79,8 +79,8 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
           <form string="Answers">
-            <field name="question_id" select="1"/>
-            <field name="name" select="1"/>
+            <field name="question_id"/>
+            <field name="name"/>
           </form>
         </field>
     </record>
@@ -93,7 +93,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
           <tree string="Questions">
-            <field name="name" select="1" colspan="4"/>
+            <field name="name" colspan="4"/>
             <field name="answers_ids" colspan="4" nolabel="1"/>
           </tree>
         </field>
@@ -108,15 +108,15 @@
         <field name="arch" type="xml">
           <form string="Questions">
             <newline/>
-            <field name="name" select="1" />
+            <field name="name"/>
             <newline/>
             <separator string="Avalaible Answers" colspan="4"/>
             <field name="answers_ids" colspan="4" nolabel="1">
               <tree string="Answers" editable="bottom">
-                <field name="name" select="1"/>
+                <field name="name"/>
               </tree>
               <form string="Answers">
-                <field name="name" select="1"/>
+                <field name="name"/>
               </form>
             </field>
           </form>
@@ -153,7 +153,7 @@
                 <notebook>
                 <page string="Segmentation">
                     <separator string="Segmentation Description" colspan="4"/>
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="exclusif"/>
                     <newline/>
                     <field name="categ_id" colspan="2"/>
@@ -172,11 +172,6 @@
                 </page>
                 <page string="Sales Purchase">
                     <field name="sales_purchase_active"/>
-                    <separator string="State of Mind Computation" colspan="4"/>
-                    <field name="som_interval"/>
-                    <field name="som_interval_max"/>
-                    <field name="som_interval_decrease"/>
-                    <field name="som_interval_default"/>
                     <separator string="Segmentation Test" colspan="4"/>
                     <field name="segmentation_line" widget="one2many_list" colspan="4"/>
                 </page>

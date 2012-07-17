@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="base.view_country_form"/>
             <field name="arch" type="xml">
                 <field name="code" position="after">
-                    <field name="intrastat" select="1"/>
+                    <field name="intrastat"/>
                 </field>
             </field>
         </record>
@@ -53,9 +53,11 @@
             <field name="model">report.intrastat.code</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Intrastat code">
-                    <field name="name" select="1"/>
-                    <field name="description" select="1"/>
+                <form string="Intrastat Code" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -98,13 +100,9 @@
             <field name="arch" type="xml">
                 <search string="Intrastat Data">
                     <group>
-                        <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
-                        <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="month"/>
-                        <field name="code"/>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Intrastat Data"/>
                         <field name="intrastat_id"/>
+                        <field name="month"/>
                         <field name="type"/>
                     </group>
                 </search>

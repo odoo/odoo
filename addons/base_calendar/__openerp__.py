@@ -22,8 +22,7 @@
 {
     "name": "Calendar Layer",
     "version": "1.0",
-    "depends": ["base", "mail"],
-    'complexity': "easy",
+    "depends": ["base", "base_status", "mail"],
     'description': """
 This is a full-featured calendar system.
 ========================================
@@ -47,7 +46,8 @@ If you need to manage your meetings, you should install the CRM module.
         'security/calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/base_calendar_invite_attendee_view.xml',
-        'base_calendar_view.xml'
+        'base_calendar_view.xml',
+        'crm_meeting_view.xml',
     ],
     "test" : ['test/base_calendar_test.yml'],
     "installable": True,

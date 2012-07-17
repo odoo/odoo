@@ -27,8 +27,8 @@ class stock_inventory_line_split(osv.osv_memory):
     _description = "Split inventory lines"
 
     _columns = {
-        'line_ids': fields.one2many('stock.inventory.line.split.lines', 'wizard_id', 'Production Lots'),
-        'line_exist_ids': fields.one2many('stock.inventory.line.split.lines', 'wizard_exist_id', 'Production Lots'),
+        'line_ids': fields.one2many('stock.inventory.line.split.lines', 'wizard_id', 'Serial Numbers'),
+        'line_exist_ids': fields.one2many('stock.inventory.line.split.lines', 'wizard_exist_id', 'Serial Numbers'),
      }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -46,7 +46,7 @@ class stock_inventory_line_split(osv.osv_memory):
         return res
 
     def split(self, cr, uid, ids, line_ids, context=None):
-        """ To split stock inventory lines according to production lot.
+        """ To split stock inventory lines according to serial numbers.
 
         :param line_ids: the ID or list of IDs of inventory lines we want to split
         """

@@ -24,7 +24,6 @@
     'name': 'Invoice Picking Directly',
     'version': '1.0',
     "category" : "Warehouse Management",
-    'complexity': "easy",
     'description': """
 Invoice Wizard for Delivery.
 ============================

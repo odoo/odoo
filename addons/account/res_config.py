@@ -36,20 +36,25 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
-
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='Chart of Accounts for this Company'),
+            string='This Company Has its Own Chart of Accounts',
+            help="""Check this box if this company is a legal entity."""),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
-            string='Main currency', help="Main currency of the company."),
+            string='Default Company Currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal Account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
+            string='Paypal Account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Bank Accounts on Reports', help="Bank accounts as printed on footer of reports."),
+            string='Bank Accounts on Reports', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure  these bank accounts through the above button \"Configure Bank Accounts\"."),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
         'code_digits': fields.integer('# of Digits', help="No. of Digits to use for account code"),
-        'seq_journal': fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
+        'tax_calculation_rounding_method': fields.related('company_id',
+            'tax_calculation_rounding_method', type='selection', selection=[
+            ('round_per_line', 'Round per Line'),
+            ('round_globally', 'Round Globally'),
+            ], string='Tax Calculation Rounding Method',
+            help="If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default Sale Tax"),
         'purchase_tax': fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sales Tax (%)'),
@@ -65,31 +70,31 @@ class account_config_settings(osv.osv_memory):
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice Sequence'),
         'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Invoice Number'),
         'sale_refund_journal_id': fields.many2one('account.journal', 'Sale Refund Journal'),
-        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Refund Sequence'),
-        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Refund Number'),
+        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit Note Sequence'),
+        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Credit Note Number'),
         'purchase_journal_id': fields.many2one('account.journal', 'Purchase Journal'),
         'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Invoice Sequence'),
         'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Invoice Number'),
         'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase Refund Journal'),
-        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Refund Sequence'),
-        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Refund Number'),
+        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Credit Note Sequence'),
+        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Credit Note Number'),
 
-        'module_account_check_writing': fields.boolean('Support Check Writings',
+        'module_account_check_writing': fields.boolean('Check Writing',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('Accountant Features',
-            help="""This allows you to access all the accounting features, like the journal items and the chart of accounts.
-                This installs the module account_accountant."""),
+            help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
         'module_account_asset': fields.boolean('Assets Management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
-                This installs the module account_asset."""),
-        'module_account_budget': fields.boolean('Budgets Management',
+                This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments,
+                but not accounting (Journal Items, Chart of Accounts, ...)"""),
+        'module_account_budget': fields.boolean('Budget Management',
             help="""This allows accountants to manage analytic and crossovered budgets.
                 Once the master budgets and the budgets are defined,
                 the project managers can set the planned amount on each analytic account.
                 This installs the module account_budget."""),
-        'module_account_payment': fields.boolean('Supplier Payment Orders',
+        'module_account_payment': fields.boolean('Manage Payment Orders',
             help="""This allows you to create and manage your payment orders, with purposes to
                     * serve as base for an easy plug-in of various automated payment mechanisms, and
                     * provide a more efficient way to manage invoice payments.
@@ -97,30 +102,18 @@ class account_config_settings(osv.osv_memory):
         'module_account_voucher': fields.boolean('Manage Customer Payments',
             help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
                 This installs the module account_voucher."""),
-        'module_account_followup': fields.boolean('Customer Follow-Ups',
+        'module_account_followup': fields.boolean('Manage Customer Payment Follow-ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'module_account_analytic_plans': fields.boolean('Support Multiple Analytic Plans',
-            help="""This allows to use several analytic plans, according to the general journal.
-                This installs the module account_analytic_plans."""),
-        'module_account_analytic_default': fields.boolean('Rules for Analytic Assignation',
-            help="""Set default values for your analytic accounts.
-                Allows to automatically select analytic accounts based on criteria like product, partner, user, company, date.
-                This installs the module account_analytic_default."""),
-        'module_account_invoice_layout': fields.boolean('Allow notes and subtotals',
-            help="""This provides some features to improve the layout of invoices.
-                It gives you the possibility to:
-                    * order all the lines of an invoice
-                    * add titles, comment lines, sub total lines
-                    * draw horizontal lines and put page breaks.
-                This installs the module account_invoice_layout."""),
-
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
-
-        'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
-        'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
+        'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax',
+            help="This sale tax will be assigned by default on new products."),
+        'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax',
+            help="This purchase tax will be assigned by default on new products."),
+        'decimal_precision': fields.integer('Decimal Precision on Journal Entries',
+            help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR."""),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -134,7 +127,6 @@ class account_config_settings(osv.osv_memory):
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
-        'seq_journal': True,
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
@@ -166,6 +158,7 @@ class account_config_settings(osv.osv_memory):
             'has_chart_of_accounts': has_chart_of_accounts,
             'has_fiscal_year': bool(fiscalyear_count),
             'chart_template_id': False,
+            'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
         }
         # update journals and sequences
         for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
@@ -243,7 +236,6 @@ class account_config_settings(osv.osv_memory):
                 'company_id': config.company_id.id,
                 'chart_template_id': config.chart_template_id.id,
                 'code_digits': config.code_digits or 6,
-                'seq_journal': config.seq_journal,
                 'sale_tax': config.sale_tax.id,
                 'purchase_tax': config.purchase_tax.id,
                 'sale_tax_rate': config.sale_tax_rate,
@@ -278,5 +270,14 @@ class account_config_settings(osv.osv_memory):
                     fiscalyear.create_period(cr, uid, [fiscalyear_id])
                 elif config.period == '3months':
                     fiscalyear.create_period3(cr, uid, [fiscalyear_id])
+
+    def get_default_dp(self, cr, uid, fields, context=None):
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        return {'decimal_precision': dp.digits}
+
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        dp.write({'digits': config.decimal_precision})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

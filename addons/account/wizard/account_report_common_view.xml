@@ -7,32 +7,37 @@
             <field name="model">account.common.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Report Options">
-                  <label nolabel="1" string=""/>
-                  <newline/>
+            <form string="Report Options" version="7.0">
+                <label string=""/>  <!-- binding for inherited views -->
+                <group col="4">
                    <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
                    <field name="company_id" invisible="1"/>
                    <field name="fiscalyear_id" domain="[('company_id','=',company_id)]"/>
                    <field name="target_move"/>
-                       <notebook tabpos="up" colspan="4">
-                            <page string="Filters" name="filters">
-                                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
-                                    <separator string="Dates" colspan="4"/>
-                                    <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
-                                    <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
-                                    <separator string="Periods"  colspan="4"/>
-                                    <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
-                                    <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
-                            </page>
-                            <page string="Journals" name="journal_ids">
-                                <field name="journal_ids" colspan="4" nolabel="1"/>
-                            </page>
-                        </notebook>
-                    <separator colspan="4"/>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
-                        <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2" default_focus="1" />
-                    </group>
+                </group>
+                <notebook tabpos="up" colspan="4">
+                    <page string="Filters" name="filters">
+                        <group col="4">
+                            <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
+                        </group>
+                        <group string="Dates" col="4">
+                            <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
+                            <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
+                        </group>
+                        <group string="Periods" col="4">
+                            <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+                            <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+                        </group>
+                    </page>
+                    <page string="Journals" name="journal_ids">
+                        <field name="journal_ids"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    or 
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

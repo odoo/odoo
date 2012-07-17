@@ -3,14 +3,8 @@
 -
   I add delivery cost in Sale order.
 -
-  !python {model: delivery.sale.order}: |
-    context.update({'active_ids': [ref("sale.order")]})
--
-  !record {model: delivery.sale.order, id: sale_delivery_carrier}:
-    {}
--
-  !python {model: delivery.sale.order}: |
-    self.delivery_set(cr, uid, [ref('sale_delivery_carrier')], context=context)
+  !python {model: sale.order}: |
+    self.delivery_set(cr, uid, [ref("sale.order")], context=context)
 -
   I check sale order after added delivery cost.
 -
@@ -35,7 +29,7 @@
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
 -
   I print a Delivery Order report.
-- 
+-
   !python {model: stock.picking}: |
     import netsvc, tools, os
     sale = self.pool.get('sale.order')
@@ -47,14 +41,8 @@
 -
   I add free delivery cost in Sale order.
 -
-  !python {model: delivery.sale.order}: |
-    context.update({'active_ids': [ref("sale.order2")]})
--
-  !record {model: delivery.sale.order, id: sale_delivery_carrier}:
-    {}
--
-  !python {model: delivery.sale.order}: |
-    self.delivery_set(cr, uid, [ref('sale_delivery_carrier')], context=context)
+  !python {model: sale.order}: |
+    self.delivery_set(cr, uid, [ref("sale.order2")], context=context)
 -
   I check sale order after added delivery cost.
 -

@@ -223,7 +223,7 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True,
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True,
                                   help="When an asset is created, the state is 'Draft'.\n" \
                                        "If the asset is confirmed, the state goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
                                        "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that state."),

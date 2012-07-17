@@ -24,7 +24,6 @@
     'name': 'Customer Profiling',
     'version': '1.3',
     'category': 'Marketing',
-    'complexity': "easy",
     'description': """
 This module allows users to perform segmentation within partners.
 =================================================================

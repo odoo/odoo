@@ -6,13 +6,16 @@
             <field name="model">hr.attendance.week</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Print Attendance Report Weekly">
-                <field name="init_date"/>
-                <field name="end_date"/>
-                <newline/>
-                <separator colspan="4"/>
-                <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                <button name="print_report" string="Print" type="object"  icon="gtk-print"/>
+            <form string="Print Attendance Report Weekly" version="7.0">
+                <group>
+                    <field name="init_date"/>
+                    <field name="end_date"/>
+                </group>    
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>
@@ -35,5 +38,5 @@
             <field name="model">hr.employee</field>
         </record>
         
-	</data>
+    </data>
 </openerp>

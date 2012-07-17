@@ -24,7 +24,6 @@
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
     "sequence": 10,
-    'complexity': "normal",
     "description": """
 Accounting Access Rights.
 =========================
@@ -37,7 +36,7 @@ user rights to Demo user.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    "depends" : ["account"],
+    "depends" : ["account_voucher"],
     'update_xml': [
         'security/account_security.xml',
         'account_accountant_data.xml'

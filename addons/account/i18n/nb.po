@@ -14,14 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:51+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:54+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account
 #: view:account.invoice.report:0
 #: view:analytic.entries.report:0
 msgid "last month"
-msgstr ""
+msgstr "forrige måned"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -181,11 +181,6 @@ msgstr "Kontokilde"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Alle analytiske registreringer"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Fakturaer Opprettet innefor de siste 15 dager"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -541,7 +536,7 @@ msgstr "Velg kontoplan"
 #. module: account
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Firmanavn må være unikt !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -686,18 +681,6 @@ msgstr "Journalperiode"
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "For å avstemme oppføringene bør firma være det samme for alle oppføringer"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Debitorkonti"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1662,11 +1645,6 @@ msgstr "Separate journalsekvenser"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Ansvarlig"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Salg pr kontotype"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2718,13 +2696,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Salg pr. konto"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr ""
@@ -3111,8 +3082,8 @@ msgstr "Kontoplanmal"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Opprett kontoplan fra mal"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6252,11 +6223,6 @@ msgid "Supplier Refund"
 msgstr "Kreditnota"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Konsoll"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Posteringslinjer"
@@ -6800,11 +6766,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Inntektskonto"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr ""
@@ -7018,7 +6979,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -10502,6 +10463,9 @@ msgstr ""
 #~ msgid "Negative"
 #~ msgstr "Negativ"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Fakturaer Opprettet innefor de siste 15 dager"
+
 #, python-format
 #~ msgid ""
 #~ "No period defined for this date: %s !\n"
@@ -10544,6 +10508,10 @@ msgstr ""
 
 #~ msgid "Calculated Balance"
 #~ msgstr "Kalkulert balanse"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Debitorkonti"
 
 #~ msgid "Due date Computation"
 #~ msgstr "Forfallsdato beregning"
@@ -10588,6 +10556,9 @@ msgstr ""
 #~ msgid "Go to next partner"
 #~ msgstr "Gå til neste partner"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Salg pr kontotype"
+
 #~ msgid "Include initial balances"
 #~ msgstr "Include initial balances"
 
@@ -10617,6 +10588,9 @@ msgstr ""
 #~ "Check this if the user is allowed to reconcile entries in this account."
 #~ msgstr "Kryss av hvis bruker skal kunne avstemme posteringer på denne konto."
 
+#~ msgid "Sales by Account"
+#~ msgstr "Salg pr. konto"
+
 #~ msgid "Tax codes"
 #~ msgstr "Avgiftskoder"
 
@@ -10627,6 +10601,9 @@ msgstr ""
 
 #~ msgid "Reference Number"
 #~ msgstr "Referansenummer"
+
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Opprett kontoplan fra mal"
 
 #~ msgid "Accounting Chart Configuration"
 #~ msgstr "Kontokonfigurasjon"
@@ -10765,11 +10742,17 @@ msgstr ""
 #~ msgid "Refund Type"
 #~ msgstr "Kredittype"
 
+#~ msgid "Dashboard"
+#~ msgstr "Konsoll"
+
 #~ msgid "Generate Your Accounting Chart from a Chart Template"
 #~ msgstr "Opprett kontoplanen din fra en kontoplanmal"
 
 #~ msgid "Account Profit And Loss Report"
 #~ msgstr "Resultatrapport"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Inntektskonto"
 
 #~ msgid "9"
 #~ msgstr "9"

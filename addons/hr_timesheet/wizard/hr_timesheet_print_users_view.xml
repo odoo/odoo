@@ -2,31 +2,34 @@
 <openerp>
     <data>
 
-		<!-- Print Employees Timesheets -->
-    	<record id="view_hr_timesheet_users" model="ir.ui.view">
+        <!-- Print Employees Timesheets -->
+        <record id="view_hr_timesheet_users" model="ir.ui.view">
             <field name="name">hr.analytical.timesheet.users.form</field>
             <field name="model">hr.analytical.timesheet.users</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<form string="Monthly Employees Timesheet">
-					<group height="260" width="460">
-						<group colspan="4">
-							<field name="month"/>
-							<field name="year"/>
-                            <separator string="Employees" colspan="4"/>
-							<field name="employee_ids" colspan="4" nolabel="1"/>
-						</group>
-						<separator colspan="4"/>
-						<group colspan="4">
-							<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-							<button icon="gtk-print" string="Print" name="print_report" type="object"/>
-						</group>
-					</group>
-				</form>
+                <form string="Monthly Employees Timesheet" version="7.0">
+                    <sheet>
+                        <group>
+                             <label for="month" string="Period"/>
+                             <div>
+                                <field name="month" class="oe_inline"/>
+                                <field name="year" class="oe_inline"/>
+                            </div> 
+                        </group>
+                        <group string="Employees">
+                            <field name="employee_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 
-		<record id="action_hr_timesheet_users" model="ir.actions.act_window">
+        <record id="action_hr_timesheet_users" model="ir.actions.act_window">
             <field name="name">Employees Timesheet</field>
             <field name="res_model">hr.analytical.timesheet.users</field>
             <field name="view_type">form</field>
@@ -36,10 +39,9 @@
         </record>
 
         <menuitem action="action_hr_timesheet_users"
-        	id="menu_hr_timesheet_users"
-        	parent="menu_hr_timesheet_reports"
-        	groups="base.group_hr_manager" sequence="3" icon="STOCK_PRINT"/>
-
+            id="menu_hr_timesheet_users"
+            parent="hr.menu_hr_reporting_timesheet"
+            groups="base.group_hr_manager" sequence="2" icon="STOCK_PRINT"/>
 
      </data>
 </openerp>

@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
     <!--Board menu create wizard  -->
-    
-  		<record id="view_board_menu_create" model="ir.ui.view">
+
+        <record id="view_board_menu_create" model="ir.ui.view">
             <field name="name">board.menu.create.form</field>
             <field name="model">board.menu.create</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create Menu For Dashboard">
-                	<group colspan="4" >
-                		 <separator string="Menu Information" colspan="4"/>
-              			 <field name="menu_name"/>
-              			 <field name="menu_parent_id"/>
+                <form string="Create Menu For Dashboard" version="7.0">
+                    <group colspan="4" string="Menu Information">
+                        <field name="menu_name"/>
+                        <field name="menu_parent_id"/>
                     </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel"
-                    		string="Cancel" />
-                    	<button icon="gtk-save" string="Create Menu"
-                    		name="board_menu_create" type="object" />
-                    </group>
+                    <footer>
+                        <button string="Create Menu" name="board_menu_create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
-  		</record>
-  		
+        </record>
+
   <!-- Action for Board Menu create wizard. -->
-  
+
         <record id="action_board_menu_create" model="ir.actions.act_window">
             <field name="name">Create Board Menu</field>
             <field name="res_model">board.menu.create</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_board_menu_create"/> 
+           <field name="view_id" ref="view_board_menu_create"/>
            <field name="target">new</field>
         </record>
-        
+
     </data>
 </openerp>

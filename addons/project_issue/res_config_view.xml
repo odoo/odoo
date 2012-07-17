@@ -8,16 +8,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_config_settings"/>
             <field name="arch" type="xml">
-                <group name="support" position="after">
-                    <field name="fetchmail_issue"/>
-                    <group colspan="2" attrs="{'invisible': [('fetchmail_issue','=',False)]}">
-                        <field name="issue_server" attrs="{'required': [('fetchmail_issue','=',True)]}"/>
-                        <field name="issue_type" on_change="onchange_fetchmail('issue', issue_type, issue_is_ssl)" attrs="{'required': [('fetchmail_issue','=',True)]}"/>
-                        <field name="issue_port" attrs="{'required': [('fetchmail_issue','=',True)]}"/>
-                        <field name="issue_is_ssl" on_change="onchange_fetchmail('issue', issue_type, issue_is_ssl)"/>
-                        <field name="issue_user" attrs="{'required': [('fetchmail_issue','=',True)]}"/>
-                        <field name="issue_password" password="True" attrs="{'required': [('fetchmail_issue','=',True)]}"/>
-                    </group>
+                <group name="support" position="inside">
+                    <label for="fetchmail_issue"/>
+                    <div>
+                        <field name="fetchmail_issue"/>
+                        <button name="configure_fetchmail_issue" type="object" string="Configure" icon="gtk-go-forward"
+                            attrs="{'invisible': [('fetchmail_issue','=',False)]}"/>
+                    </div>
                 </group>
             </field>
         </record>

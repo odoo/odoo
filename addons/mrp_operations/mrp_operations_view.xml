@@ -3,24 +3,24 @@
 <data>
 
     <record id="mrp_production_form_inherit_view" model="ir.ui.view">
-	    <field name="name">mrp.production.form.inherit</field>
-	    <field name="model">mrp.production</field>
-	    <field name="type">form</field>
-	    <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
-	    <field name="arch" type="xml">
-	       <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/form/field[@name='hour']" position="after">
-	           <group colspan="8" col="8">
-	               <separator colspan="8"/>
+        <field name="name">mrp.production.form.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='workcenter_lines']/form//field[@name='hour']" position="after">
+               <group colspan="8" col="8">
+                   <separator colspan="8"/>
                    <field name="state"/>
-	               <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
+                   <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
                    <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
-	               <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
-	               <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
-	               <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
-	               <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
+                   <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
+                   <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
+                   <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+                   <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
                </group>
-	       </xpath>
-	    </field>
+           </xpath>
+        </field>
     </record>
 
     <record id="mrp_production_form_inherit_view2" model="ir.ui.view">
@@ -29,7 +29,7 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
-           <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
+           <xpath expr="//field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
                 <field name="state"/>
                 <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
                 <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
@@ -57,10 +57,6 @@
                 <field name="cycle"/>
                 <field name="hour"/>
                 <field name="state" />
-                <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
-                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
-                <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
-                <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
             </tree>
         </field>
     </record>
@@ -71,54 +67,53 @@
         <field name="type">form</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <form string="Work Orders">
-                <group col="6" colspan="4">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="workcenter_id" select="1" widget="selection"/>
+            <form version="7.0">
+            <header>
+                <button name="button_start_working" string="Start" states="draft" class="oe_highlight"/>
+                <button name="button_resume" string="Resume" states="pause" class="oe_highlight"/>
+                <button name="button_done" string="Finished" states="startworking" class="oe_highlight"/>
+                <button name="button_pause" string="Pending" states="startworking"/>
+                <button name="button_draft" string="Set Draft" states="cancel"/>
+                <button name="button_cancel" string="Cancel" states="draft,startworking"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,startworking"/>
+            </header>
+            <sheet string="Work Orders">
+                <group col="4">
+                    <field colspan="4" name="name"/>
+                    <field name="workcenter_id" widget="selection"/>
                     <field name="production_id"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
                 </group>
-                <notebook colspan="4">
+                <notebook>
                 <page string="Information">
-                    <group colspan="2" col="2">
-                        <separator string="Planned Date" colspan="2"/>
-                        <field name="date_planned"/>
-                        <field name="date_planned_end"/>
-                    </group>
+                    <group>
+                        <group string="Planned Date">
+                            <field name="date_planned"/>
+                            <field name="date_planned_end"/>
+                        </group>
 
-                    <group colspan="2" col="2">
-                        <separator string="Duration" colspan="2"/>
-                        <field name="cycle"/>
-                        <field name="hour" widget="float_time"/>
-                    </group>
-
-                    <group colspan="2" col="2">
-                        <separator string="Real" colspan="2"/>
-                        <field name="date_start" readonly="1"/>
-                        <field name="date_finished" readonly="1"/>
-                        <field name="delay" widget="float_time"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Product to Produce" colspan="2"/>
-                        <field name="product"/>
-                        <field name="qty"/>
-                        <field name="uom" widget="selection"/>
-                    </group>
-
-                    <separator string="" colspan="4"/>
-                    <group colspan="8" col="8">
-                        <field name="state"/>
-                        <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
-                        <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
-                        <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
-                        <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
-                        <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
-                        <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
+                        <group string="Duration">
+                            <field name="cycle"/>
+                            <field name="hour" widget="float_time"/>
+                        </group>
+                        <group string="Real" >
+                            <field name="date_start" readonly="1"/>
+                            <field name="date_finished" readonly="1"/>
+                            <field name="delay" widget="float_time"/>
+                        </group>
+                        <group string="Product to Produce">
+                            <field name="product"/>
+                            <field name="qty"/>
+                            <field name="uom" widget="selection"/>
+                        </group>
                     </group>
                 </page>
                 </notebook>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -128,31 +123,32 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-            <search string="Search Work Orders">
-                        <group>
-	                       <filter icon="terp-document-new" string="Draft"
-	                           domain="[('state','=','draft')]"/>
-	                       <filter icon="terp-check" string="In Progress" name="Current"
-	                           domain="[('state','=','startworking')]"/>
-	                       <filter icon="terp-gtk-media-pause" string="Pending"
-	                           domain="[('state','=','pause')]"/>
-	                       <separator orientation="vertical"/>
-	                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-	                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-	                           help="Production started late" />
-	                       <separator orientation="vertical"/>
-	                		<field name="name"/>
-	                		<field name="workcenter_id" widget="selection"/>
-	                		<field name="production_id" />
-	                		<field name="state" />
-	                		<field name="date_planned"/>
-	                	</group>
-                	<newline/>
+                <search string="Search Work Orders">
+                    <group>
+                        <field name="name" string="Work Orders"/>
+                        <separator orientation="vertical"/>
+                        <field name="date_planned"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-document-new" string="Draft"
+                            domain="[('state','=','draft')]"/>
+                        <filter icon="terp-check" string="In Progress" name="Current"
+                            domain="[('state','=','startworking')]"/>
+                        <filter icon="terp-gtk-media-pause" string="Pending"
+                            domain="[('state','=','pause')]"/>
+                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
+                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                            help="Production started late"/>
+                        <separator orientation="vertical"/>
+                        <field name="workcenter_id" widget="selection"/>
+                        <field name="production_id"/>
+                        <field name="state"/>
+                    </group>
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
@@ -280,9 +276,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Production Operation Code">
-                <field name="name" select="1"/>
-                <field name="code" select="1"/>
-                <field name="start_stop" select="1"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="start_stop"/>
             </tree>
         </field>
     </record>
@@ -291,10 +287,12 @@
         <field name="model">mrp_operations.operation.code</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Production Operation Code">
-                <field name="name" select="1"/>
-                <field name="code" select="1"/>
-                <field name="start_stop" select="1"/>
+            <form string="Production Operation Code" version="7.0">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="start_stop"/>
+                </group>
             </form>
         </field>
     </record>

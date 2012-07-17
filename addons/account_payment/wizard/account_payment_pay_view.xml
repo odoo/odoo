@@ -7,27 +7,27 @@
              <field name="model">account.payment.make.payment</field>
              <field name="type">form</field>
              <field name="arch" type="xml">
-				<form string="Make Payment">
-					<separator string="Are you sure you want to make payment?"/>
-					<newline/>
-					<group  colspan="2" col="4">
-						<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-						<button name="launch_wizard" string="Yes" type="object" icon="gtk-ok" default_focus="1"/>
-	 				</group>
-				</form>
-			</field>
-		</record>
+                <form string="Make Payment" version="7.0">
+                    <separator string="Are you sure you want to make payment?"/>
+                    <footer>
+                        <button name="launch_wizard" string="Yes" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
-		<record id="action_account_payment_make_payment" model="ir.actions.act_window">
-			<field name="name">Make Payment</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.payment.make.payment</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="account_payment_make_payment_view"/>
-			<field name="target">new</field>
-		</record>
+        <record id="action_account_payment_make_payment" model="ir.actions.act_window">
+            <field name="name">Make Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.payment.make.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_payment_make_payment_view"/>
+            <field name="target">new</field>
+        </record>
 
 
-	</data>
+    </data>
 </openerp>

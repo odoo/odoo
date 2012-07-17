@@ -6,7 +6,7 @@
             <field name="model">account.chart</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Account charts">
+                <form string="Account charts" version="7.0">
                     <group colspan="4">
                         <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)"/>
                         <field name="target_move"/>
@@ -15,11 +15,11 @@
                         <field name="period_from"/>
                         <field name="period_to"/>
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="Open Charts" name="account_chart_open_window" type="object"/>
-                    </group>
+                    <footer>
+                        <button string="Open Charts" name="account_chart_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
