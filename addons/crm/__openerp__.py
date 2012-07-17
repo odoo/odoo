@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     "sequence": 2,
+    "summary": "Agenda, Lead, Opportunities",
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================

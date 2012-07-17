@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -24,6 +25,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 24,
+    "summary": "Job Description, Recruitment Process",
     'description': """
 Manages job positions and the recruitment process.
 ==================================================

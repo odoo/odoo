@@ -25,6 +25,7 @@
     "author": "OpenERP SA",
     "category": "Human Resources",
     "website": "http://www.openerp.com",
+    "summary": "Top-Down and Bottom-Up Evaluation",
     "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
     "depends": ["hr","base_calendar","survey"],
     "description": """
