@@ -37,11 +37,12 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 delete(action.attrs.width);
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
-                self.rpc('/web/action/load', {
-                    action_id: parseInt(action.attrs.name, 10)
-                }, function(result) {
-                    self.on_load_action(result, column_index + '_' + action_index, action.attrs);
-                });
+                var action_id = _.str.toNumber(action.attrs.name);
+                if (!_.isNaN(action_id)) {
+                    self.rpc('/web/action/load', {action_id: action_id}, function(result) {
+                        self.on_load_action(result, column_index + '_' + action_index, action.attrs);
+                    });
+                }
             });
         });
     },
