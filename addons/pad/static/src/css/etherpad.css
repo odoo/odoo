@@ -1,0 +1,71 @@
+.etherpad_head{
+    width: 99.7%;
+    display: block;
+    border-radius: 3px 3px 0px 0px;
+    background: -webkit-linear-gradient( #F7F7F7, #F1F1F1 80%);
+    padding-left:3px;
+    cursor:pointer;
+}
+.etherpad_zoom_head{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 15px; 
+}
+.etherpad_zoom{
+    position: fixed;
+    left: 0px;
+    top: 15px;
+    width: 100%;
+    height: 98% !important;
+    z-index:10001 !important;
+    background-color:white;
+}
+.etherpad_default{  
+    width: 100%;
+    height: 450px;
+}
+.etherpad_body{
+    overflow:hidden;
+}
+
+.etherpad_readonly{
+    width: 97.2%;
+    height: 450px;
+    padding:7px 7px 10px 10px;    
+    overflow:auto;    
+}
+.etherpad_readonly ul,.etherpad_readonly ol{
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px !important;
+}
+.etherpad_readonly ul li{  
+    list-style-type: disc;
+}
+.etherpad_readonly ol li{  
+    list-style-type: decimal;
+}
+.etherpad_readonly .indent li{
+    list-style-type: none !important;
+}
+
+
+.etherpad_readonly{ 
+    font-family: arial, sans-serif;
+    font-size: 13px;
+    line-height: 17px; 
+}
+
+.etherpad_readonly ul.indent { list-style-type: none !important; }
+.etherpad_readonly ol li{ list-style-type: decimal !important; }
+.etherpad_readonly ol ol li{ list-style-type: lower-latin !important; }
+.etherpad_readonly ol ol ol li{ list-style-type: lower-roman !important; }
+.etherpad_readonly ol ol ol ol li{ list-style-type: decimal !important; }
+.etherpad_readonly ol ol ol ol ol li{ list-style-type: lower-latin !important; }
+.etherpad_readonly ol ol ol ol ol ol li{ list-style-type: lower-roman !important; }
+.etherpad_readonly ol ol ol ol ol ol ol li{ list-style-type: decimal !important; }
+.etherpad_readonly ol ol ol ol ol ol ol ol li{ list-style-type: lower-latin !important; }
