@@ -2,16 +2,16 @@
 <openerp>
     <data>
 
-        <menuitem
+        <menuitem name="Project"
             icon="terp-project" id="base.menu_main_pm"
-            name="Project" sequence="10"
+            sequence="90"
             groups="group_project_manager,group_project_user"
             web_icon="images/project.png"
             web_icon_hover="images/project-hover.png"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-        
+
         <act_window
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
             id="act_project_project_2_project_task_all"
@@ -157,7 +157,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group>
-                       <field name="complete_name" string="Project Name"/> 
+                       <field name="complete_name" string="Project Name"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-mail-message-new"
                            string="Inbox" help="Unread messages"
@@ -545,7 +545,7 @@
                                                     ,[5, (hours gte 5 and hours lt 10)]
                                                     ,[10, (hours gte 10)]
                                                 ]"/>
-                                                <t t-foreach="times" t-as="time"><a 
+                                                <t t-foreach="times" t-as="time"><a
                                                     t-if="!time[1]" t-attf-data-name="set_remaining_time_#{time[0]}" type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a><b
                                                     t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b></t>
                                                 <a name="do_open" states="draft" string="Validate planned time" type="object" class="oe_kanban_button oe_kanban_button_active">!</a>
@@ -652,7 +652,7 @@
                         <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
                         <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
                         <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" 
+                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]"
                             help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="project_id"/>
@@ -675,7 +675,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="analytic_account_inherited_form" model="ir.ui.view">
             <field name="name">account.analytic.account.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -827,5 +827,6 @@
 
       <!--     User Form-->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+
     </data>
 </openerp>

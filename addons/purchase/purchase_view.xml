@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3"
+       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="40"
            groups="group_purchase_manager,group_purchase_user"
            web_icon="images/purchases.png"
            web_icon_hover="images/purchases-hover.png"/>
@@ -222,7 +222,7 @@
                                 <field name="amount_tax"/>
                                 <div class="oe_subtotal_footer_separator oe_inline">
 				    <label for="amount_total"/>
-                                    <button name="button_dummy" 
+                                    <button name="button_dummy"
 				    	states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                 </div>
 			        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>

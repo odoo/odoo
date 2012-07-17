@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
         <menuitem name="PoS Backend" id="menu_point_root" sequence="20"
             icon="terp-partner"
             groups="group_pos_manager"
@@ -8,7 +9,7 @@
             web_icon_hover="images/pos-hover.png"/>
 
         <record id="categ_others" model="pos.category">
-          <field name="name">Others</field>
+            <field name="name">Others</field>
         </record>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
@@ -16,7 +17,7 @@
             <field name="model">pos.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Orders" version="7.0"> 
+                <form string="Point of Sale Orders" version="7.0">
                     <div class="oe_form_topbar">
                         <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                         <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
@@ -27,7 +28,7 @@
                                 <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                             </div>
                     </div>
-                    <sheet> 
+                    <sheet>
                     <group col="4" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
@@ -748,10 +749,15 @@
             <field name="tag">pos.ui</field>
         </record>
 
+        <!--
+            right now it's not possible to directly call a client action
+            from a menuitem, so we can't use this shortcut element and
+            use an explicit record element instead
+        -->
         <record id="menu_point_root_touchscreen" model="ir.ui.menu">
-          <field name="name">Point of Sale</field>
-          <field name="sequence" eval="21"/>
-          <field name="action" ref="action_pos_pos"/>
+            <field name="name">Point of Sale</field>
+            <field name="sequence">160</field>
+            <field name="action" ref="action_pos_pos"/>
         </record>
 
         <!-- use menuitem to add web_icon and web_icon_hover above -->
@@ -842,12 +848,12 @@
         </record>
 
 
-        <act_window 
-            id="act_pos_config_sessions" 
+        <act_window
+            id="act_pos_config_sessions"
             name="Sessions"
             src_model="pos.config"
             res_model="pos.session"
-            domain="[('config_id', '=', active_id)]" />         
+            domain="[('config_id', '=', active_id)]" />
 
         <record model="ir.actions.act_window" id="action_pos_config_pos">
             <field name="name">Point of Sales</field>
@@ -864,8 +870,8 @@
             id="menu_pos_config_pos"
             groups="group_pos_manager"/>
 
-        <act_window 
-            id="act_pos_session_orders" 
+        <act_window
+            id="act_pos_session_orders"
             name="Orders"
             src_model="pos.session"
             res_model="pos.order"
@@ -878,10 +884,10 @@
             <field name="model">pos.session</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Point of Sale Session" version="7.0">  
+                <form string="Point of Sale Session" version="7.0">
                     <header>
-                        <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" /> 
-                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened" /> 
+                        <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" />
+                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened" />
                         <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control,opened" />
 
                         <div class="oe_right">

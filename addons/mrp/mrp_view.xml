@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="8"
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
+            groups="group_mrp_user,group_mrp_manager" sequence="60"
             web_icon="images/manufacturing.png"
             web_icon_hover="images/manufacturing-hover.png"/>
 
@@ -336,7 +336,7 @@
                     <sheet>
                         <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
                         <h1>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>: 
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>:
                             <field name="product_qty" class="oe_inline"/>
                             <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                         </h1>
