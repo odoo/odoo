@@ -135,7 +135,6 @@ class hr_expense_expense(osv.osv):
         return True
 
     def action_receipt_create(self, cr, uid, ids, context=None):
-        res = False
         property_obj = self.pool.get('ir.property')
         sequence_obj = self.pool.get('ir.sequence')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
@@ -194,8 +193,7 @@ class hr_expense_expense(osv.osv):
             voucher_id = voucher_obj.create(cr, uid, voucher, context=context)
             wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'proforma_voucher', cr)
             self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'}, context=context)
-            res = voucher_id
-        return res
+        return True
     
     def action_view_receipt(self, cr, uid, ids, context=None):
         '''
