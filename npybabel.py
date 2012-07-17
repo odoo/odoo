@@ -93,9 +93,10 @@ def extract_qweb(fileobj, keywords, comment_tags, options):
     :rtype: ``iterator``
     """
     result = []
-    def handle_text(text, lineno):
+    def handle_text(text, lineno, name=None):
         text = (text or "").strip()
-        if len(text) > 1: # Avoid mono-char tokens like ':' ',' etc.
+        if len(text) > 1 or name in ['accesskey']: 
+            # Avoid mono-char tokens like ':' ',' etc but keep accesskeys
             result.append((lineno, None, text, [TRANSLATION_FLAG_COMMENT]))
 
     # not using elementTree.iterparse because we need to skip sub-trees in case
@@ -106,10 +107,10 @@ def extract_qweb(fileobj, keywords, comment_tags, options):
             if "t-js" not in el.attrib and \
                     not ("t-jquery" in el.attrib and "t-operation" not in el.attrib) and \
                     not ("t-translation" in el.attrib and el.attrib["t-translation"].strip() == "off"):
-                handle_text(el.text, el.sourceline)
-                for att in ('title', 'alt', 'label', 'placeholder'):
+                handle_text(el.text, el.sourceline, el.tag)
+                for att in ('title', 'alt', 'label', 'placeholder', 'accesskey'):
                     if att in el.attrib:
-                        handle_text(el.attrib[att], el.sourceline)
+                        handle_text(el.attrib[att], el.sourceline, att)
                 iter_elements(el)
             handle_text(el.tail, el.sourceline)
 
