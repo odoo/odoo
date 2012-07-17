@@ -12,8 +12,8 @@
             <field name="partner_id" eval="ref('base.res_partner_agrolait')"/>
         </record>
 
+        <!-- Add the demo user to the portal -->
         <record id="portal" model="res.portal">
-            <field name="name">My company's portal</field>
             <field name="users" eval="[(4,ref('portal_demo_user'))]"/>
         </record>
 
