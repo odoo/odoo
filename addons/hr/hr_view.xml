@@ -21,9 +21,6 @@
                 <form string="Employee" version="7.0">
                     <sheet>
                         <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>    
-                        <div class="oe_right oe_button_box" name="button_box">
-                            <!-- Put here related buttons -->
-                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -37,6 +34,9 @@
                             <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                             <label for="category_ids" class="oe_edit_only"/>
                             <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
                         </div>
                         <group colspan="4" col="4">
                             <field name="work_email" widget="email" />
