@@ -676,6 +676,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.build_widgets();
 
+                self.screen_selector.set_default_screen();
+
+                self.pos.barcode_reader.connect();
+
                 instance.webclient.set_content_full_screen(true);
 
                 if (!self.pos.get('pos_session')) {
@@ -700,6 +704,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
         },
 
+        
+        // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
+        // startup screen, etc, override this method.
         build_widgets: function() {
 
             // --------  Screens ---------
@@ -788,9 +795,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 default_mode: this.pos.use_selfcheckout ?  'client' : 'cashier',
             });
 
-            this.screen_selector.set_default_screen();
-
-            this.pos.barcode_reader.connect();
         },
 
         //FIXME this method is probably not at the right place ... 
