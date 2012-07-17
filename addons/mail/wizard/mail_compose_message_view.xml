@@ -44,14 +44,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0" >
-                    <group col="4">
-                        <field name="subject" colspan="4" nolabel="1" placeholder="Subject..."
+                    <group>
+                        <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
                                 class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
-                        <field name="body_text" colspan="4" nolabel="1" placeholder="What are you working on ?"
+                        <field name="body_text" colspan="2" nolabel="1" placeholder="What are you working on ?"
                                 class="oe_mail_compose_message_body_text"/>
-                        <field name="body_html" colspan="4" nolabel="1" placeholder="What are you working on HTML ?"
+                        <field name="body_html" colspan="2" nolabel="1" placeholder="What are you working on HTML ?"
                                 class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible" widget="text_html"/>
-                        <field name="dest_partner_ids" colspan="4" nolabel="1" widget="many2many_tags"
+                        <field name="dest_partner_ids" colspan="2" nolabel="1" widget="many2many_tags"
                                 placeholder="Add contacts to notify..."
                                 class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
                         <div>

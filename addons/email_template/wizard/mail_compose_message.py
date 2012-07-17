@@ -114,20 +114,30 @@ class mail_compose_message(osv.osv_memory):
 
         return {'value': values}
 
-
     def template_toggle(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
-            had_template = record.use_template
-            print had_template
-            record.write({'use_template': not(had_template)})
-            if had_template:
+            values = {}
+            use_template = record.use_template
+            print 'template_toggle: use_template: %d' % (use_template)
+            # update use_template value
+
+            # simulate an on_change on use_template
+            values.update(self.onchange_use_template(cr, uid, ids, not use_template, context=context)['value'])
+            print 'template_toggle: values %s' % (str(values))
+            record.write(values)
+            
+            return False
+
+    def onchange_use_template(self, cr, uid, ids, use_template, context=None):
+        values = {'use_template': use_template}
+        for record in self.browse(cr, uid, ids, context=context):
+            if not use_template:
                 # equivalent to choosing an empty template
-                onchange_defaults = self.on_change_template(cr, uid, record.id, not(had_template),
-                                                            False, email_from=record.email_from,
-                                                            email_to=record.email_to, context=context)
-                print onchange_defaults
-                record.write(onchange_defaults['value'])
-            return _reopen(self, record.id, record.res_id, record.model)
+                onchange_template_values = self.on_change_template(cr, uid, record.id, use_template,
+                    False, email_from=record.email_from, email_to=record.email_to, context=context)
+                values.update(onchange_template_values['value'])
+            print 'onchange_use_template: values %s' % (str(values))
+        return {'value': values}
 
     def save_as_template(self, cr, uid, ids, context=None):
         if context is None:
