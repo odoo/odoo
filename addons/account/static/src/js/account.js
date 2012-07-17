@@ -16,20 +16,23 @@ instance.account.extend_actionmanager = instance.web.ActionManager.include({
             };
         }
         if (action.target === 'new') {
-            if (this.dialog == null) {
-                this.dialog = new instance.web.Dialog(this, { width: '80%' });
+            if (this.dialog === null) {
+                // These buttons will be overwrited by <footer> if any
+                this.dialog = new instance.web.Dialog(this, {
+                    buttons: { "Close": function() { $(this).dialog("close"); }},
+            dialogClass: 'oe_act_window'
+                });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
             } else {
-                this.dialog_viewmanager.destroy();
+                this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this, action);
-            this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog_widget = new instance.web.ViewManagerAction(this, action);
+            this.dialog_widget.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            this.content_stop();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
@@ -37,14 +40,16 @@ instance.account.extend_actionmanager = instance.web.ActionManager.include({
             }
             this.inner_action = action;
             if (action.extended_form_view_id){
-                this.inner_viewmanager = new instance.account.extend_viewmanager(this, action);
+                var inner_widget = this.inner_widget = new instance.account.extend_viewmanager(this, action);
             }else{
-                this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
+                var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
             }
-            this.inner_viewmanager.appendTo(this.$element);
+            inner_widget.add_breadcrumb();
+            this.inner_widget.appendTo(this.$element);
         }
-    },
+    }
     })
+    
     
 instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
     init: function(parent, action) {
