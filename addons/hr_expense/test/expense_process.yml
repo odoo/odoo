@@ -20,13 +20,13 @@
   I make Receipt for the expense.
 -
   !python {model: hr.expense.expense}: |
-    self.receipt(cr, uid, [ref('sep_expenses')])
+    self.action_receipt_create(cr, uid, [ref('sep_expenses')])
 -
   I check receipt details.
 -
   !python {model: hr.expense.expense}: |
     sep_expenses = self.browse(cr, uid, ref("sep_expenses"), context=context)
-    assert sep_expenses.state == 'receipted', "Expense should be in 'Receipted' state."
+    assert sep_expenses.state == 'receipted', "Expense should be in 'Waiting Reimbursement' state."
     assert sep_expenses.voucher_id.name == sep_expenses.name,"Receipt name is not correspond with expense name."
     assert sep_expenses.voucher_id.type == 'purchase', "Receipt type is not purchase receipt."
     assert sep_expenses.voucher_id.amount == sep_expenses.amount,"Receipt total amount is not correspond with expense total."

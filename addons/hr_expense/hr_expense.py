@@ -86,11 +86,11 @@ class hr_expense_expense(osv.osv):
             ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
-            ('receipted', 'Receipted'),
+            ('receipted', 'Waiting Reimbursement'),
             ('paid', 'Reimbursed')
             ],
             'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Receipted\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Waiting Reimbursement\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
@@ -134,27 +134,6 @@ class hr_expense_expense(osv.osv):
         self.write(cr, uid, ids, {'state':'paid'})
         return True
 
-    def receipt(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        wkf_service = netsvc.LocalService("workflow")
-        
-        voucher_ids = []
-        for id in ids:
-            wkf_service.trg_validate(uid, 'hr.expense.expense', id, 'receipt', cr)
-            voucher_ids.append(self.browse(cr, uid, id, context=context).voucher_id.id)
-        res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
-        return {
-            'name': _('Expense Receipt'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.voucher',
-            'view_id': [res and res[1] or False],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'nodestroy': True,
-            'res_id': voucher_ids and voucher_ids[0] or False,
-        }
-
     def action_receipt_create(self, cr, uid, ids, context=None):
         res = False
         property_obj = self.pool.get('ir.property')
@@ -162,6 +141,7 @@ class hr_expense_expense(osv.osv):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         account_journal = self.pool.get('account.journal')
         voucher_obj = self.pool.get('account.voucher')
+        wkf_service = netsvc.LocalService("workflow")
         
         for exp in self.browse(cr, uid, ids, context=context):
             company_id = exp.company_id.id
@@ -212,6 +192,7 @@ class hr_expense_expense(osv.osv):
                 if analytic_journal_ids:
                     account_journal.write(cr, uid, [journal.id], {'analytic_journal_id': analytic_journal_ids[0]}, context=context)
             voucher_id = voucher_obj.create(cr, uid, voucher, context=context)
+            wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'proforma_voucher', cr)
             self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'receipted'}, context=context)
             res = voucher_id
         return res
