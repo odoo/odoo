@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="menu_reporting" name="Reporting" sequence="90" groups="base.group_user"/>
+
+        <menuitem id="menu_reporting" name="Reporting" sequence="170" groups="base.group_user"/>
             <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_reporting" sequence="0"/>
             <menuitem id="menu_reporting_config" name="Configuration" parent="menu_reporting" sequence="100" groups="base.group_system"/>
-        <menuitem id="menu_administration" name="Settings" sequence="100"/>
+
+        <menuitem id="menu_administration" name="Settings" sequence="180"/>
             <menuitem id="menu_management" name="Modules" parent="menu_administration" sequence="0"/>
             <menuitem id="menu_config" name="Configuration" parent="menu_administration" sequence="1"/>
             <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
@@ -12,11 +14,13 @@
             <menuitem id="menu_translation" name="Translations" parent="menu_administration" sequence="7"/>
                 <menuitem id="menu_translation_app" name="Application Terms" parent="menu_translation" sequence="4" groups="base.group_no_one"/>
                 <menuitem id="menu_translation_export" name="Import / Export" parent="menu_translation" sequence="3" groups="base.group_no_one"/>
+
             <menuitem id="menu_custom" name="Technical" parent="menu_administration" sequence="110" groups="base.group_no_one"/>
                 <menuitem id="next_id_2" name="User Interface" parent="menu_custom"/>
                 <menuitem id="menu_email" name="Email" parent="menu_custom" sequence="1"/>
                 <menuitem id="menu_security" name="Security" parent="menu_custom" sequence="25"/>
                 <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" sequence="24"/>
                 <menuitem id="next_id_4" name="Low Level Objects" parent="menu_custom" sequence="30"/>
+
     </data>
 </openerp>
