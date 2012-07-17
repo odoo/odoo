@@ -245,7 +245,7 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,months_xml,date_xml, ustr(emp_xml))
+        ''' % (header_xml,months_xml,ustr(''.join(date_xml)), ustr(emp_xml))
 
         return xml
 
