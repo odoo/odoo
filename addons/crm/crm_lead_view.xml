@@ -2,6 +2,43 @@
 <openerp>
     <data>
 
+        <!-- Read/Unread actions -->
+        <record id="actions_server_crm_lead_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_crm_lead_unread" model="ir.values">
+            <field name="name">action_crm_lead_unread</field>
+            <field name="action_id" ref="actions_server_crm_lead_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_lead_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_crm_lead" />
+            <field name="model">crm.lead</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_crm_lead_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_crm_lead_read" model="ir.values">
+            <field name="name">action_crm_lead_read</field>
+            <field name="action_id" ref="actions_server_crm_lead_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_lead_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_crm_lead" />
+            <field name="model">crm.lead</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
         <!--
             CRM CASE STAGE
             -->
@@ -134,10 +171,13 @@
                             </div>
                         </group>
                         <group>
-                            <field name="contact_name" />
+                            <label for="contact_name" />
+                            <div>
+                                <field name="contact_name" class="oe_inline"/>,
+                                <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                            </div>
                             <field name="email_from" widget="email"/>
                             <field name="function" />
-                            <field domain="[('domain', '=', 'contact')]" name="title"/>
                             <field name="phone"/>
                             <field name="mobile"/>
                             <field name="fax"/>
@@ -172,8 +212,8 @@
                     </page>
                     </notebook>
                 </sheet>
-                <div class="oe_bottom">
-                    <field name="message_ids" widget="ThreadView"/>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>
@@ -185,8 +225,7 @@
             <field name="model">crm.lead</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree string="Leads" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel', 'done')">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
@@ -202,6 +241,7 @@
                     <field name="referred" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
                     <field name="subjects" invisible="1"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -235,6 +275,8 @@
                 <field name="user_email"/>
                 <field name="user_id"/>
                 <field name="partner_address_email"/>
+                <field name="message_summary"/>
+                <field name="needaction_pending"/>
                 <templates>
                     <t t-name="lead_details">
                         <ul class="oe_kanban_tooltip">
@@ -247,7 +289,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                <span class="oe_e">i</span>
+                                <span class="oe_e">í</span>
                                 <ul class="oe_dropdown_menu">
                                     <li><a type="edit" >Edit...</a></li>
                                     <li><a type="delete">Delete</a></li>
@@ -269,18 +311,14 @@
                                     <field name="partner_id"/>
                                 </div>
                                 <div style="padding-left: 0.5em">
-                                    <i>
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                        <span t-attf-class="#{red || ''}">
-                                            <field name="date_action"/>
-                                        </span>
-                                        <t t-if="record.date_action.raw_value"> : </t>
-                                        <field name="title_action"/>
-                                    </i>
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                    <t t-if="record.date_action.raw_value"> : </t>
+                                    <field name="title_action"/>
                                 </div>
-                                <div class="oe_right">
-                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                <div class="oe_kanban_bottom_right">
+                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
                                     <!--
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
                                     <span t-attf-class="oe_kanban_status #{red}"> </span>
@@ -288,6 +326,8 @@
                                     <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
+                                    <t t-if="record.needaction_pending.raw_value"><span class="oe_kanban_mail_new">New</span></t>
+                                    <t t-raw="record.message_summary.raw_value"/>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -313,6 +353,10 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
+                <filter icon="terp-mail-message-new"
+                    string="Inbox" help="Unread messages"
+                    name="needaction_pending"
+                    domain="[('needaction_pending','=',True)]"/>
                 <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <!-- subjects is not set as store=True so, it is placed outside filter_domain-->
                 <field name="subjects"/>     
@@ -327,10 +371,6 @@
                     string="Open"
                     name="open"
                     domain="[('state','=','open')]"/>
-                <filter icon="terp-gtk-media-pause"
-                    string="Pending"
-                    name="pending"
-                    domain="[('state','=','pending')]"/>
                 <filter string="Unassigned Leads"
                         icon="terp-personal-"
                         domain="[('user_id','=', False)]"
@@ -424,12 +464,11 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
-
                         <label for="planned_revenue" class="oe_edit_only"/>
                         <h2>
                             <field name="planned_revenue" class="oe_inline"/>
-                            <field name="company_currency" class="oe_edit_only oe_inline"/> at 
-                            <field name="probability" class="oe_inline"/> %% success rate
+                            <field name="company_currency" class="oe_inline"/> at 
+                            <field name="probability" class="oe_inline"/>%% success rate
                         </h2>
                     </div>
                     <group>
@@ -481,19 +520,22 @@
                                 <div>
                                     <field name="street" placeholder="Street..."/>
                                     <field name="street2"/>
-                                    <div>
-                                        <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                        <field name="city" class="oe_inline" placeholder="City"/>
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
-                                    <field name="state_id" placeholder="State"/>
                                     <field name="country_id" placeholder="Country"/>
                                 </div>
                             </group>
 
                             <group>
-                                <field name="contact_name" />
+                                <label for="contact_name" />
+                                <div>
+                                    <field name="contact_name" class="oe_inline"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
+                                </div>
                                 <field name="function" />
-                                <field domain="[('domain', '=', 'contact')]" name="title"/>
                                 <field name="mobile"/>
                                 <field name="fax"/>
                             </group>
@@ -522,9 +564,9 @@
                     </page>
                     </notebook>
                 </sheet>
-                <footer>
-                    <field name="message_ids" widget="ThreadView"/>
-                </footer>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -535,8 +577,7 @@
             <field name="model">crm.lead</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name" string="Opportunity"/>
@@ -555,6 +596,7 @@
                     <field name="priority" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -567,21 +609,21 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
+                <filter icon="terp-mail-message-new"
+                    string="Inbox" help="Unread messages"
+                    name="needaction_pending"
+                    domain="[('needaction_pending','=',True)]"/>
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-check"
-                    string="New"  help="New Opportunities"
+                    string="New" help="New Opportunities"
                     name="new"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
-                    string="Open"  help="Open Opportunities"
+                    string="Open" help="Open Opportunities"
                     name="open"
                     domain="[('state','=','open')]"/>
-                <filter icon="terp-gtk-media-pause"
-                    string="Pending"  help="Pending Opportunities"
-                    name="pending"
-                    domain="[('state','=','pending')]"/>
                 <filter string="Unassigned Opportunities"
                         icon="terp-personal-"
                         domain="[('user_id','=', False)]"

@@ -129,16 +129,22 @@
             <field name="arch" type="xml">
                 <form string="Wiki" version="7.0">
                     <sheet>
-                        <group col="6" colspan="4">
-                            <field name="name" colspan="6"/>
-                            <field name="group_id" string="Topic" on_change="onchange_group_id(group_id, text_area)"/>
-                            <field name="parent_id" domain="[('group_id','=',group_id)]"/>
-                            <field name="section"/>                        
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                                <h1><field name="name" select="1" /></h1>
+                            <label for="group_id" class="oe_edit_only"/>
+                            <h2>
+                            <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id" domain="[('group_id','=',group_id)]"/>
+                                <field name="section"/>
+                            </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Content">
-                            <separator colspan="4" string="Page Content"/>
-                            <field name="text_area" nolabel="1" colspan="4" widget="text_wiki"/>
+                            <field name="text_area" nolabel="1" colspan="4" widget="text_wiki" placeholder="Wiki Content"/>
                             </page>
                         </notebook>
                         <group col="2" colspan="2" groups="base.group_no_one">

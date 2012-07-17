@@ -8,11 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Crossovered Analytic" version="7.0">
-                <header>
-                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
-                </header>
                 <group col="4">
                     <field name="date1"/>
                     <field name="date2"/>
@@ -21,6 +16,11 @@
                 </group><group string="Analytic Journal">
                     <field name="journal_ids" colspan="2" nolabel="1"/>
                 </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>

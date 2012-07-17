@@ -12,20 +12,13 @@
                  <xpath expr="//field[@name='struct_id']" position="after">
                  <group col="2" colspan="2" name="right_column">
                     <separator colspan="2" string="Allowance"/>
-                        <field name="house_rent_income"/>
-                        <field name="saving_bank_account"/>
-                        <field name="other_income"/>
-                        <field name="short_term_gain"/>
-                        <field name="long_term_gain"/>
                         <field name="driver_salay"/>
+                        <field name="city_type"/>
                  </group>
                  <group col="2" colspan="2" name="left_column">
                     <separator colspan="2" string="Deduction"/>
                         <field name="tds"/>
-                        <field name="professional_tax"/>
                         <field name="voluntary_provident_fund"/>
-                        <field name="company_transport"/>
-                        <field name="leave_avail_dedution"/>
                         <field name="medical_insurance"/>
                  </group>
                  </xpath>
@@ -43,6 +36,20 @@
                  <xpath expr="//field[@name='job_id']" position="after">
                     <field name="join_date"/>
                     <field name="number_of_year"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//button[@string='Set to Draft']" position="after">
+                    <button name="create_advice" string="Create Advice" type="object" states="close" />
                  </xpath>
             </data>
             </field>
@@ -93,9 +100,11 @@
                             <page string="Payment Lines">
                                 <field name="line_ids" colspan="4" nolabel="1">
                                     <tree string="Payment Lines" editable="bottom">
-                                        <field name="employee_id"/>
+                                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                                         <field name="name"/>
+                                        <field name="ifsc_code"/>
                                         <field name="bysal"/>
+                                        <field name="debit_credit"/>
                                     </tree>
                                 </field>
                             </page>
@@ -103,6 +112,8 @@
                                 <group colspan="4" col="6">
                                 <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
                                 <field name="chaque_nos"/>
+                                <newline/>
+                                <field name="neft"/>
                                 </group>
                                 <separator colspan="4" string="Letter Details"/>
                                 <field name="note" colspan="4" nolabel="1"/>

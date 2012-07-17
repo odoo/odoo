@@ -9,16 +9,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Monthly Employee Timesheet" version="7.0">
-                    <header>
-                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group colspan="4">
                         <field name="month"/>
                         <field name="year"/>
                         <field name="employee_id" colspan="3"/>
                     </group>
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -34,39 +34,8 @@
 
         <menuitem action="action_hr_timesheet_employee"
             id="menu_hr_timesheet_employee"
-            parent="menu_hr_reporting_timesheet"
+            parent="hr.menu_hr_reporting"
             sequence="2" icon="STOCK_PRINT"/>
-
-
-      <!-- Print My Timesheet -->
-      <record id="view_hr_timesheet_my" model="ir.ui.view">
-            <field name="name">hr.analytical.timesheet.my.form</field>
-            <field name="model">hr.analytical.timesheet.employee</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Print My Timesheet" version="7.0">
-                    <header>
-                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <group colspan="4">
-                    <separator string="This wizard will print monthly timesheet" colspan="4"/>
-                        <field name="month"/>
-                        <field name="year"/>
-                    </group>
-               </form>
-            </field>
-        </record>
-
-        <record id="action_hr_timesheet_my" model="ir.actions.act_window">
-            <field name="name">My Timesheet</field>
-            <field name="res_model">hr.analytical.timesheet.employee</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_hr_timesheet_my"/>
-           <field name="target">new</field>
-        </record>
 
     </data>
 </openerp>

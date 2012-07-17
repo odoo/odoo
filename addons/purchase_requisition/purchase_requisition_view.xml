@@ -8,7 +8,7 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
-            <field name="shipped" position="after">
+            <field name="validator" position="before">
                 <field name="requisition_id"/>
             </field>
         </field>
@@ -41,12 +41,13 @@
             </header>
             <sheet>
                 <div class="oe_edit_only">
-                    <label for="name" class="oe_inline"/>,
+                    <label for="name" class="oe_inline"/>
                     <label for="origin" class="oe_inline"/>
                 </div>
                 <h1>
-                    <field name="name" class="oe_inline"/>,
-                    <field name="origin" class="oe_inline"/>
+                    <field name="name" class="oe_inline"/>
+                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
+                    <field name="origin" class="oe_inline" placeholder="PO0025"/>
                 </h1>
                 <group>
                     <group>
@@ -103,9 +104,9 @@
                     </page>
                 </notebook>
             </sheet>
-            <footer>
-                  <field name="message_ids" widget="ThreadView"/>
-            </footer> 
+            <div class="oe_chatter">
+                  <field name="message_ids" widget="mail_thread"/>
+            </div> 
             </form>
         </field>
     </record>

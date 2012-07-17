@@ -26,6 +26,7 @@ from calendar import isleap
 
 from tools.translate import _
 from osv import fields, osv
+import netsvc
 import decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
@@ -38,27 +39,26 @@ class hr_contract(osv.osv):
 
     _inherit = 'hr.contract'
     _description = 'HR Contract'
-    
+
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
-        'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll'), help="Income from house property"),
-        'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll'), help="Saving income for bank account"),
-        'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'), help="Other income of employee"),
-        'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are sold before one year"),
-        'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll'), help="Stocks/equity mutual funds are kept for more than a year"),
         'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver"),
-        'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll'), help="Professional tax deducted from salary"),
-        'leave_avail_dedution': fields.float('Leave Availed Deduction ', digits_compute=dp.get_precision('Payroll'), help="Deduction for emergency leave of employee"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
         'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
-        'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'), help="Deduction for company provided transport"),
+        'city_type': fields.selection([
+            ('metro', 'Metro'),
+            ('non-metro', 'Non Metro'),
+            ], 'Type of City'),
+    }
+    _defaults = {
+        'city_type': 'non-metro',
     }
 
 hr_contract()
 
 class hr_employee(osv.osv):
     '''
-    Employee's Join date allows to compute total working 
+    Employee's Join date allows to compute total working
     experience of Employee and it is used to calculate Gratuity rule.
     '''
 
@@ -93,19 +93,18 @@ class hr_employee(osv.osv):
             else:
                 res[employee.id] = 0.0
         return res
-    
+
     _columns = {
         'join_date': fields.date('Join Date', help="Joining date of employee"),
         'number_of_year': fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience"),
         }
-    
+
 hr_employee()
 
 class payroll_advice(osv.osv):
     '''
     Bank Advice
-    '''
-
+    '''        
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
@@ -120,10 +119,11 @@ class payroll_advice(osv.osv):
         'number':fields.char('Number', size=16, readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Cheque Numbers', size=256),
+        'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
     }
-    
+
     _defaults = {
         'date': lambda * a: time.strftime('%Y-%m-%d'),
         'state': lambda * a: 'draft',
@@ -131,12 +131,11 @@ class payroll_advice(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
-
     }
 
     def compute_advice(self, cr, uid, ids, context=None):
         """
-        Advice - Create Advice lines in Payment Advice and 
+        Advice - Create Advice lines in Payment Advice and
         compute Advice lines.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -207,23 +206,79 @@ class payroll_advice(osv.osv):
                 res.update({'bank': company.partner_id.bank_ids[0].bank.name})
         return {
             'value':res
-        }
-
+        }     
 payroll_advice()
+
+class hr_payslip_run(osv.osv):
+
+    _inherit = 'hr.payslip.run'
+    _description = 'Payslip Batches'
+
+    def create_advice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        payslip_pool = self.pool.get('hr.payslip')
+        payslip_line_pool = self.pool.get('hr.payslip.line')
+        advice_pool = self.pool.get('hr.payroll.advice')
+        advice_line_pool = self.pool.get('hr.payroll.advice.line')
+        users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
+        for run in self.browse(cr, uid, ids, context=context):
+            advice_data = {
+                        'company_id': users[0].company_id.id,
+                        'name': run.name,
+                        'date': run.date_end,
+                        'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
+                    }
+            advice_id = advice_pool.create(cr, uid, advice_data, context=context)
+            slip_ids = []
+            for slip_id in run.slip_ids:
+                wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'hr_verify_sheet', cr)
+                wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'process_sheet', cr)
+                slip_ids.append(slip_id.id)
+            for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+                if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
+                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
+                if line_ids:
+                    line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
+                    advice_line = {
+                            'advice_id': advice_id,
+                            'name': slip.employee_id.bank_account_id.acc_number,
+                            'employee_id': slip.employee_id.id,
+                            'bysal': line.total
+                    }
+                    advice_line_pool.create(cr, uid, advice_line, context=context)
+        return True
+
+hr_payslip_run()
 
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
-    '''
+    '''    
+    def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
+        res = {}
+        hr_obj = self.pool.get('hr.employee')
+        if not employee_id:
+            return {'value': res}
+        employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
+        res.update({'name': employee.bank_account_id.acc_number ,'ifsc_code': employee.bank_account_id.bank_bic})
+        return {'value': res}  
+        
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
         'name': fields.char('Bank Account No.', size=32, required=True),
+        'ifsc_code': fields.char('IFSC Code', size=32),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
+        'debit_credit': fields.char('C/D', size=8, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
     }
+    _defaults = {
+        'debit_credit': 'C',
+    }    
+    
 
 payroll_advice_line()
 
@@ -248,7 +303,7 @@ class res_company(osv.osv):
     }
     _defaults = {
         'dearness_allowance': True,
-    }    
+    }
 
 res_company()
 

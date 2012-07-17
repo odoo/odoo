@@ -7,17 +7,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="View Stock of Products" version="7.0">
-                    <header>
-                        <button name="action_open_window" string="Open Product" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <separator string="Stock Location Analysis"/>
                     <group>
                         <field name="from_date"/>
                         <field name="to_date"/>
                     </group>
                     <label string="(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to filter all resources of the day for the 'From' date and 23:59:59 for the 'To' date)"/>
+                    <footer>
+                        <button name="action_open_window" string="Open Product" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
