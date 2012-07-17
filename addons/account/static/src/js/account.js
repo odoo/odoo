@@ -192,6 +192,7 @@ instance.account.set_selection = instance.web.ListView.List.include({
     render: function(){
         this._super()
         self = this
+        // To Do: Create method on addons which give ids which have to default selected OR create tag like "colors" on tree
         if (this.options.action && this.options.action.extended_form_view_id){
             this.$current.find('th.oe_list_record_selector input')
             .closest('tr').each(function () {
