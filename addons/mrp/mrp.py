@@ -22,6 +22,7 @@
 from datetime import datetime
 from osv import osv, fields
 import decimal_precision as dp
+from tools import float_compare
 from tools.translate import _
 import netsvc
 import time
@@ -727,8 +728,7 @@ class mrp_production(osv.osv):
                 if raw_product:
                     # qtys we have to consume
                     qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
-
-                    if qty > qty_avail:
+                    if float_compare(qty, qty_avail, precision_rounding=scheduled.product_id.uom_id.rounding) == 1:
                         # if qtys we have to consume is more than qtys available to consume
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
