@@ -101,6 +101,11 @@ class email_template(osv.osv):
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
         return {'value':{'model': mod_name}}
 
+    def name_get(self, cr, uid, ids, context=None):
+        """ Override name_get of mail.message: return directly the template
+            name, and not the generated name from mail.message.common."""
+        return [(record.id, record.name) for record in self.browse(cr, uid, ids, context=context)]
+
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id': fields.many2one('ir.model', 'Related document model'),
