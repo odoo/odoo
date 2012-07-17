@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                <div name="fetchmail_lead" position="after">
                         <div><field name="fetchmail_claim" class="oe_inline"/>
-                        <label for="fetchmail_claim"/>
+                        Create<label for="fetchmail_claim" string="Claims"/>from Incoming Mails
                         <button type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-go-forward"
                             attrs="{'invisible': [('fetchmail_claim','=',False)]}" class="oe_link"/></div>
                 </div>

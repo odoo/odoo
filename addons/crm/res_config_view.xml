@@ -13,7 +13,7 @@
                     <label for="id" string="On Mail Server"/>
                     <div>
                         <div name="fetchmail_lead"><field name="fetchmail_lead" class="oe_inline"/>
-                        <label for="fetchmail_lead"/>
+                        Create<label for="fetchmail_lead" string="Leads"/>from Incoming Mails
                         <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
                             attrs="{'invisible': [('fetchmail_lead','=',False)]}" class="oe_link"/>
                         </div>
@@ -25,17 +25,16 @@
                     <group>
                     <label for="id" string="Import From"/>
                     <div>
-                        <div><field name="module_import_sugarcrm"/>
-                        <label for="module_import_sugarcrm" string="SugarCRM"/></div>
+                        <div><field name="module_import_sugarcrm"/>SugarCRM</div>
                     </div>
                     </group>
                     <group>
                     <label for="id" string="Synchronize with"/>
                     <div>
                     <div><field name="module_import_google"/>
-                    <label for="module_import_google" string="Google (Contact and Calendar)"/></div>
+                    <label for="module_import_google" string="Google"/>(Contact and Calendar)</div>
                     <div><field name="module_crm_caldav"/>
-                    <label for="module_crm_caldav" string="Application with Caldav protocol"/></div>
+                    Application with<label for="module_crm_caldav" string="Caldav"/>Protocol</div>
                     </div>
                     </group>
                 </group>
@@ -48,12 +47,11 @@
             <field name="inherit_id" ref="sale.view_sales_config"/>
             <field name="arch" type="xml">
                 <div name="module_sale_journal" version="7.0" position="after">
-                     <div><field name="module_google_map"/>
-                    <label for="module_google_map" string="Add google maps on customer"/></div>
+                     <div><field name="module_google_map"/>Add Google Maps on Customer</div>
                 </div>
                 <div name="module_sale_margin" version="7.0" position="after">
                     <div><field name="module_wiki_sale_faq"/>
-                        <label for="module_wiki_sale_faq" string="Share information with sales FAQ"/></div>
+                        Share Information with<label for="module_wiki_sale_faq" string="Sales FAQ"/></div>
                 </div>
             </field>
         </record>

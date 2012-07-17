@@ -15,24 +15,27 @@
                         <label for="id" string="Invoicing Process"/>
                         <div>
                             <div><field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
-                            <label for="group_invoice_so_lines" string="genrate invoices based on the sale order"/></div>
+                            Genrate Invoices<label for="group_invoice_so_lines" string="Based On The Sale Order"/></div>
                             <div><field name="group_invoice_deli_orders" class="oe_inline" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
-                            <label for="group_invoice_deli_orders" string="genrate invoices after and based on delivery orders"/></div>
+                            Genrate Invoices After and<label for="group_invoice_deli_orders" string="Based on Delivery Orders"/></div>
                             <div><field name="task_work" class="oe_inline" on_change="onchange_task_work(task_work)"/>
-                            <label for="task_work" string="prepare invoices based on task's activities"/></div>
+                            Prepare Invoices<label for="task_work" string="Based On Task's Activities"/></div>
                             <div><field name="timesheet" class="oe_inline" on_change="onchange_timesheet(timesheet)"/>
-                            <label for="timesheet" string="prepare invoices based on timesheets"/></div>
+                            Prepare Invoices<label for="timesheet" string="Based On Timesheets"/></div>
                         </div>    
                     </group> 
                     <group>
                         <label for="id" string="Default Process"/>
                         <div>
                             <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
-                                <field name="default_order_policy" string="the default invocing method is" />
+                                The<label for="default_order_policy" string="Default"/>Invocing method is
+                                <field name="default_order_policy"/>
                             </div>
                             <div attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"><field name="module_delivery" class="oe_inline"/>
-                            <label for="module_delivery" string="allow adding shipping cost"/></div>
-                            <div attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"><field name="time_unit" string="the default working time unit for service is " domain="[('category_id.name','=','Working Time')]"/>
+                            Allow Adding Shipping Costs</div>
+                            <div attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}">
+                                The Default<label for="time_unit" string="Working Time Unit"/>For Service is
+                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]"/>
                             </div>
                         </div>
                     </group>
@@ -45,23 +48,23 @@
                         <label for="id" string="Customer Features"/>
                         <div>
                             <div><field name="group_sale_delivery_address" class="oe_inline"/>
-                            <label for="group_sale_delivery_address"/></div>
+                            Allow a<label for="group_sale_delivery_address" string="Different Address"/>For Delivery and Invoicing</div>
                             <div><field name="group_sale_pricelist" class="oe_inline"/>
-                            <label for="group_sale_pricelist" string="use pricelists to adapt your price per customers"/></div>
-                            <div><field name="module_warning" class="oe_inline"/>
-                            <label for="module_warning" string="allow configuring alert by customer or products"/></div>
+                            <label for="group_sale_pricelist" string="Use Pricelists"/>to Adapt your Price Per Customers</div>
                             <div name="module_sale_journal"><field name="module_sale_journal" class="oe_inline"/>
-                            <label for="module_sale_journal" string="allow batch invoicing through journals"/></div>
+                            Allow Batch<label for="module_sale_journal" string="Invoicing through Journals"/></div>
+                            <div><field name="module_warning" class="oe_inline"/>
+                            Allow Configuring<label for="module_warning" string="alert"/>by Customer or Products</div>
                         </div>
                     </group>
                     <group>
                         <label for="id" string="Product Features"/>
                         <div>
                             <div><field name="group_uom" class="oe_inline"/>
-                            <label for="group_uom" /></div>
+                            Allow Different<label for="group_uom" string="Units of Measure"/></div>
                             <div><field name="group_discount_per_so_line" class="oe_inline"/>
-                            <label for="group_discount_per_so_line" string="Allow setting a discount on the sale order lines" /></div>
-                            <div><label for="decimal_precision" string="What's the decimal precision on prices:"/>
+                            Allow Setting a<label for="group_discount_per_so_line" string="discount"/>on the Sale Order Lines</div>
+                            <div>What's the decimal precision on prices:
                             <field name="decimal_precision" class="oe_inline"/></div>
                         </div>
                     </group>
@@ -69,11 +72,11 @@
                         <label for="id" string="Sale Features"/>
                         <div>
                             <div><field name="group_multiple_shops" class="oe_inline"/>
-                            <label for="group_multiple_shops" /></div>
+                            Manage<label for="group_multiple_shops" string="Multiple Shops"/></div>
                             <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"><field name="default_picking_policy" class="oe_inline"/>
-                            <label for="default_picking_policy" /></div>
+                            Configure Per Order if yoy<label for="default_picking_policy" string="Deliver in One Pack or each Product"/>when Available</div>
                             <div name="module_sale_margin"><field name="module_sale_margin" class="oe_inline"/>
-                            <label for="module_sale_margin" /></div>
+                            <label for="module_sale_margin" string="Display Margins"/>on Sale Orders</div>
                         </div>
                     </group>
                     <separator string="Contracts Management" colspan="2"/>
@@ -82,9 +85,9 @@
                         <label for="id" string="Contract Feature"/>
                         <div>
                             <div><field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)" class="oe_inline"/>
-                            <label for="module_account_analytic_analysis" string="Use contract management"/></div>
+                            Use Contract Management</div>
                             <div attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"><field name="module_analytic_user_function" class="oe_inline"/>
-                            <label for="module_analytic_user_function"/></div>
+                            Assign User Roles per Contract</div>
                         </div>
                     </group>
                 </group>
