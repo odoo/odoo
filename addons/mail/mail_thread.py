@@ -179,22 +179,11 @@ class mail_thread(osv.Model):
     
     def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
         subscription_obj = self.pool.get('mail.subscription')
-        hide_obj = self.pool.get('mail.subscription.hide')
         # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
         # get subscribers
         user_sub_ids = self.message_get_subscribers(cr, uid, thread_ids, context=context)
-        
-        # get hiden subscriptions
-        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', thread_ids), ('user_id', 'in', user_sub_ids)], context=context)
-        hide_ids = hide_obj.search(cr, uid, [('subscription_id', 'in', subscription_ids), ('subtype', '=', new_msg_vals.get('subtype'))], context=context)
-        if hide_ids:
-            hiden_subscriptions = hide_obj.browse(cr, uid, hide_ids, context=context)
-            hiden_user_ids = [hiden_subscription.subscription_id.user_id.id for hiden_subscription in hiden_subscriptions]
-            notif_user_ids = [user_id for user_id in user_sub_ids if not user_id in hiden_user_ids]
-        else:
-            notif_user_ids = user_sub_ids
         
         # add users requested via parsing message (@login)
         notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
@@ -943,22 +932,6 @@ class mail_thread(osv.Model):
         if not to_delete_sub_ids:
             return False
         return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
-
-    def message_subscription_hide(self, cr, uid, ids, subtype=None, context=None):
-        """Hide notifications, allowing to tune the messages displayed on
-           the Wall.
-           :param subtype: a mail.message subtype. If None, it is means the
-                           user wants to hide all notifications coming from
-                           the document.
-        """
-        subscription_obj = self.pool.get('mail.subscription')
-        subscription_hide_obj = self.pool.get('mail.subscription.hide')
-        # find the related subscriptions
-        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', uid)], context=context)
-        # hide it
-        for subscription_id in subscription_ids:
-            subscription_hide_obj.create(cr, uid, {'subscription_id': subscription_id, 'subtype': subtype}, context=context)
-        return True
 
     #------------------------------------------------------
     # Notification API
