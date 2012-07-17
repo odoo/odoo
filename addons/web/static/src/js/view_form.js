@@ -1212,12 +1212,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                     $child = $td.children(':first');
                 switch ($child[0].tagName.toLowerCase()) {
                     case 'separator':
-                        if ($child.attr('orientation') === 'vertical') {
-                            $td.addClass('oe_vertical_separator').attr('width', '1');
-                            $td.empty();
-                            row_cols-= $td.attr('colspan') || 1;
-                            total--;
-                        }
                         break;
                     case 'label':
                         if ($child.attr('for')) {
