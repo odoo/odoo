@@ -85,14 +85,15 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
+                            <label for="login" class="oe_edit_only"/>
+                            <h2><field name="login"/></h2>
                         </div>
                         <group>
                             <group>
-                                <field name="login"/>
                                 <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
+                                <field name="company_id" context="{'user_preference': 0}"/>
                             </group>
                             <group>
-                                <field name="company_id" context="{'user_preference': 0}"/>
                                 <field name="active"/>
                             </group>
                         </group>
@@ -103,7 +104,6 @@
                                     <group name="preferences">
                                         <field name="context_lang"/>
                                         <field name="context_tz"/>
-                                        <field name="menu_tips"/>
                                     </group>
                                     <group groups="base.group_no_one">
                                         <field name="action_id"/>
