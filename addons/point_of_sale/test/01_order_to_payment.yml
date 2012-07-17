@@ -32,6 +32,26 @@
   !record {model: product.product, id: product.product_product_4}:
     taxes_id: [account_tax_05_incl]
 -
+  I create a new session
+-
+  !record {model: pos.session, id: pos_order_session0}:
+    user_id: 1
+    config_id: point_of_sale.pos_config_main
+-
+  I open a new PoS Session wizard
+-
+  !record {model: pos.session.opening, id: pos_order_session_wizard0}:
+    pos_config_id: point_of_sale.pos_config_main
+- 
+  I click on create a new session button
+- 
+  !python {model: pos.session.opening}: |
+    self.open_existing_session_cb(cr, uid, [ref('pos_order_session_wizard0')])
+-
+  I open the session after having counted the money
+- 
+  !workflow {model: pos.session, action: open, ref: pos_order_session0}
+-
   I create a PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PC2 at 300 EUR. (Tax Excl)
 -
   !record {model: pos.order, id: pos_order_pos0}:
