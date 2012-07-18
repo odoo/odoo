@@ -4,24 +4,35 @@
 
          <!-- Create a transporter -->
 
-        <record id="delivery_partner" model="res.partner">
+        <record id="res_partner_23" model="res.partner">
             <field name="name">The Poste</field>
+            <field name="is_company">1</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="city">Manchester</field>
+            <field name="zip">06040</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
+            <field name="street">3958 Maxwell Street</field>
         </record>
+
         <!-- Create a service product -->
 
-        <record id="delivery_product" model="product.product">
+        <record id="product_product_delivery" model="product.product">
             <field name="name">Delivery by Poste</field>
             <field name="default_code">Delivery</field>
             <field name="type">service</field>
-            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="standard_price">10.0</field>
+            <field name="list_price">10.0</field>
         </record>
 
         <!-- Carrier -->
 
         <record id="delivery_carrier" model="delivery.carrier">
             <field name="name">The Poste</field>
-            <field name="partner_id" ref="delivery_partner"/>
-            <field name="product_id" ref="delivery_product"/>
+            <field name="partner_id" ref="res_partner_23"/>
+            <field name="product_id" ref="product_product_delivery"/>
         </record>
 
         <record id="free_delivery_carrier" model="delivery.carrier">
@@ -29,20 +40,20 @@
             <field name="normal_price">10</field>
             <field name="free_if_more_than">True</field>
             <field name="amount">1000</field>
-            <field name="partner_id" ref="delivery_partner"/>
-            <field name="product_id" ref="delivery_product"/>
+            <field name="partner_id" ref="res_partner_23"/>
+            <field name="product_id" ref="product_product_delivery"/>
         </record>
 
         <record id="normal_delivery_carrier" model="delivery.carrier">
-            <field name="name">normal delivery charges</field>
+            <field name="name">Normal Delivery Charges</field>
             <field name="normal_price">10</field>
-            <field name="partner_id" ref="delivery_partner"/>
-            <field name="product_id" ref="delivery_product"/>
+            <field name="partner_id" ref="res_partner_23"/>
+            <field name="product_id" ref="product_product_delivery"/>
         </record>
-        <record id="sale.order" model="sale.order">
+        <record id="sale.sale_order_6" model="sale.order">
             <field name="carrier_id" ref="normal_delivery_carrier"/>
         </record>
-        <record id="sale.order2" model="sale.order">
+        <record id="sale.sale_order_2" model="sale.order">
             <field name="carrier_id" ref="free_delivery_carrier"/>
         </record>
 

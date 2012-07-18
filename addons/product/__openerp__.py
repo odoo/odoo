@@ -25,9 +25,9 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     'category': 'Sales Management',
-    "depends" : ["base", "process", "decimal_precision"],
+    "depends" : ["base", "mail", "process", "decimal_precision"],
     "init_xml" : [],
-    "demo_xml" : ["product_demo.xml"],
+    "demo_xml" : ["product_demo.xml", "product_image_demo.xml"],
     "description": """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================

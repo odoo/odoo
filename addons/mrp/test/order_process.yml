@@ -2,13 +2,13 @@
   I compute the production order.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"), context=context)
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
     order.action_compute(context=context)
 -
   I check production lines after compute.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"), context=context)
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
     assert len(order.product_lines) == 5, "Production lines are not generated proper."
 -
   Now I check workcenter lines.
@@ -17,17 +17,17 @@
     from tools import float_compare
     def assert_equals(value1, value2, msg, float_compare=float_compare):
         assert float_compare(value1, value2, precision_digits=2) == 0, msg
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"), context=context)
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
     assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
 -
   I confirm the Production Order.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_pc_assemble_twogbram}
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_test1}
 -
   I check details of Produce Move of Production Order to trace Final Product.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.state == 'confirmed', "Production order should be confirmed."
     assert order.move_created_ids, "Trace Record is not created for Final Product."
     move = order.move_created_ids[0]
@@ -63,7 +63,7 @@
 -
   !python {model: mrp.production}: |
     procurement = self.pool.get('procurement.order')
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.picking_id, 'Internal Shipment should be created!'
 
     routing_loc = None
@@ -107,7 +107,7 @@
   I change production qty with 3 PC Assemble + 2GB RAM.
 -
   !python {model: change.production.qty}: |
-    context.update({'active_id': ref('mrp_production_pc_assemble_twogbram')})
+    context.update({'active_id': ref('mrp_production_test1')})
 -
   !record {model: change.production.qty, id: mrp_production_qty}:
     product_qty: 3.0
@@ -118,7 +118,7 @@
   I check qty after changed in production order.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.product_qty == 3, "Qty is not changed in order."
     move = order.move_created_ids[0]
     assert move.product_qty == order.product_qty, "Qty is not changed in move line."
@@ -131,23 +131,23 @@
   The production order is Waiting Goods, I forcefully done internal shipment.
 -
   !python {model: mrp.production}: |
-    self.force_production(cr, uid, [ref("mrp_production_pc_assemble_twogbram")])
+    self.force_production(cr, uid, [ref("mrp_production_test1")])
 -
   I check that production order in ready state after forcefully done internal shipment.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.state == 'ready', 'Production order should be in Ready State.'
     assert order.picking_id.state == 'done', 'Internal shipment should be done.'
 -
   Now I start production.
 -
-  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_pc_assemble_twogbram}
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_test1}
 -
   I check that production order in production state after start production.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.state == 'in_production', 'Production order should be in production State.'
 -
   I consume raw materials and put one material in scrap location due to waste it.
@@ -155,7 +155,7 @@
   !python {model: mrp.production}: |
     scrap_location_ids = self.pool.get('stock.location').search(cr, uid, [('scrap_location','=',True)])
     scrap_location_id = scrap_location_ids[0]
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     for move in order.move_lines:
         move.action_consume(move.product_qty)
         if move.product_id.id == ref("product.product_product_6"):
@@ -164,7 +164,7 @@
   I produce product.
 -
   !python {model: mrp.product.produce}: |
-    context.update({'active_id': ref('mrp_production_pc_assemble_twogbram')})
+    context.update({'active_id': ref('mrp_production_test1')})
 -
   !record {model: mrp.product.produce, id: mrp_product_produce1}:
     mode: 'consume_produce'
@@ -175,13 +175,13 @@
   I check production order after produced.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.state == 'done', "Production order should be closed."
 -
   I check Total Costs at End of Production.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     account_analytic_line = self.pool.get('account.analytic.line')
     def rounding(f, r):
         import math
@@ -215,7 +215,7 @@
 -
   !python {model: mrp.production}: |
     import netsvc, tools, os
-    order = self.browse(cr, uid, ref("mrp_production_pc_assemble_twogbram"))
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
     (data, format) = netsvc.LocalService('report.bom.structure').create(cr, uid, [order.bom_id.id], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-bom_structure_report.'+format), 'wb+').write(data)
@@ -224,7 +224,7 @@
 -
   !python {model: mrp.production}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref("mrp_production_pc_assemble_twogbram")], {}, {})
+    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref("mrp_production_test1")], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)
 -
