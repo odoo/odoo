@@ -327,7 +327,7 @@ class account_move_line(osv.osv):
 
         if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
             data['account_id'] = account.id
-            # Propose the price VAT excluded, the VAT will be added when confirming line
+            # Propose the price TAX excluded, the TAX will be added when confirming line
             if account.tax_ids:
                 taxes = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, account.tax_ids)
                 tax = tax_obj.browse(cr, uid, taxes)
@@ -1347,7 +1347,7 @@ class account_move_line(osv.osv):
                     }
                     if data['tax_code_id']:
                         self.create(cr, uid, data, context)
-                #create the VAT movement
+                #create the TAX movement
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),

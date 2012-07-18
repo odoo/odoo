@@ -125,7 +125,7 @@
 
 <record id="a_input_vat" model="account.account.template">
     <field name="code">1510</field>
-    <field name="name">Input VAT</field>
+    <field name="name">Input TAX</field>
     <field name="parent_id" ref="a_assets"/>
     <field name="type">other</field>
     <field name="user_type" ref="acc_type_other"/>
@@ -187,7 +187,7 @@
 
 <record id="a_output_vat" model="account.account.template">
     <field name="code">2310</field>
-    <field name="name">Output VAT</field>
+    <field name="name">Output TAX</field>
     <field name="parent_id" ref="a_liabilities"/>
     <field name="type">other</field>
     <field name="user_type" ref="acc_type_other"/>
@@ -333,7 +333,7 @@
     <field name="parent_id" ref="tc_root"/>
 </record>
 
-<!-- VAT -->
+<!-- TAX -->
 
 <record id="tc_base_vat" model="account.tax.code.template">
     <field name="name">Value Added Tax</field>
@@ -341,13 +341,13 @@
 </record>
 
 <record id="tc_base_output" model="account.tax.code.template">
-    <field name="name">Output VAT</field>
+    <field name="name">Output TAX</field>
     <field name="code">PP30_4</field>
     <field name="parent_id" ref="tc_base_vat"/>
 </record>
 
 <record id="tc_base_input" model="account.tax.code.template">
-    <field name="name">Input VAT</field>
+    <field name="name">Input TAX</field>
     <field name="code">PP30_6</field>
     <field name="parent_id" ref="tc_base_vat"/>
 </record>
@@ -397,7 +397,7 @@
 
 <!-- TAXES TO BE PAID -->
 
-<!-- VAT -->
+<!-- TAX -->
 
 <record id="tc_tax" model="account.tax.code.template">
     <field name="name">Taxes to be paid</field>
@@ -410,13 +410,13 @@
 </record>
 
 <record id="tc_tax_vat_output" model="account.tax.code.template">
-    <field name="name">Output VAT</field>
+    <field name="name">Output TAX</field>
     <field name="code">PP30_5</field>
     <field name="parent_id" ref="tc_tax_vat"/>
 </record>
 
 <record id="tc_tax_vat_input" model="account.tax.code.template">
-    <field name="name">Input VAT</field>
+    <field name="name">Input TAX</field>
     <field name="code">PP30_7</field>
     <field name="parent_id" ref="tc_tax_vat"/>
     <field name="sign" eval="-1"/>
@@ -485,7 +485,7 @@
 
 <record id="tax_input_vat" model="account.tax.template">
     <field name="chart_template_id" ref="chart"/>
-    <field name="name">Input VAT</field>
+    <field name="name">Input TAX</field>
     <field name="type">percent</field>
     <field name="amount" eval="0.07"/>
     <field name="account_collected_id" ref="a_input_vat"/>
@@ -497,7 +497,7 @@
 
 <record id="tax_output_vat" model="account.tax.template">
     <field name="chart_template_id" ref="chart"/>
-    <field name="name">Output VAT</field>
+    <field name="name">Output TAX</field>
     <field name="type">percent</field>
     <field name="amount" eval="0.07"/>
     <field name="account_collected_id" ref="a_output_vat"/>

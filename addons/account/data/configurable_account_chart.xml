@@ -385,8 +385,8 @@
             <field name="complete_tax_set" eval="False"/>
         </record>
 
-         <!-- VAT Codes -->
-        <!-- Purchases + Output VAT -->
+         <!-- TAX Codes -->
+        <!-- Purchases + Output TAX -->
 
         <record id="otaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
@@ -444,7 +444,7 @@
             <field name="type_tax_use">purchase</field>
         </record>
 
-        <!-- Sales + Input VAT -->
+        <!-- Sales + Input TAX -->
 
         <record id="itaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
