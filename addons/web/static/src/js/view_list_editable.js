@@ -368,19 +368,19 @@ openerp.web.list_editable = function (instance) {
         },
         setup_events: function () {
             var self = this;
-            this.editor.$element.on('keyup', function (e) {
+            this.editor.$element.on('keyup keydown', function (e) {
+                if (!self.editor.is_editing()) { return; }
                 var key = _($.ui.keyCode).chain()
                     .map(function (v, k) { return {name: k, code: v}; })
                     .find(function (o) { return o.code === e.which; })
                     .value();
                 if (!key) { return; }
-                var method = 'keyup_' + key.name;
+                var method = e.type + '_' + key.name;
                 if (!(method in self)) { return; }
                 self[method](e);
             });
         },
         keyup_ENTER: function () {
-            if (!this.editor.is_editing()) { return; }
             var self = this;
             return this.save_edition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
@@ -391,8 +391,58 @@ openerp.web.list_editable = function (instance) {
             });
         },
         keyup_ESCAPE: function () {
-            if (!this.editor.is_editing()) { return; }
             return this.cancel_edition();
+        },
+        _text_selection_range: function (el) {
+            if (el.selectionStart !== undefined) {
+                return {
+                    start: el.selectionStart,
+                    end: el.selectionEnd
+                };
+            } else if(document.body.createTextRange) {
+                throw new Error("Implement text range handling for MSIE");
+                var sel = document.body.createTextRange();
+                if (sel.parentElement() === el) {
+
+                }
+            }
+        },
+        _text_cursor: function (el) {
+            var selection = this._text_selection_range(el);
+            if (selection.start !== selection.end) {
+                return null;
+            }
+            return selection.start;
+        },
+        keydown_UP: function (e) {
+            if (!this.editor.is_editing('edit')) { return; }
+            // FIXME: assumes editable widgets are input-type elements
+            var index = this._text_cursor(e.target);
+            // If selecting or not at the start of the input
+            if (index === null || index !== 0) { return; }
+
+            var self = this;
+            e.preventDefault();
+            return this.save_edition().pipe(function (saveInfo) {
+                // Should not happen when creating, ignore saveInfo.created
+                return self.start_edition(
+                    self.records.pred(saveInfo.record, {wraparound: true}));
+            });
+        },
+        keydown_DOWN: function (e) {
+            if (!this.editor.is_editing('edit')) { return; }
+            // FIXME: assumes editable widgets are input-type elements
+            var index = this._text_cursor(e.target);
+            // If selecting or not at the end of the input
+            if (index === null || index !== e.target.value.length) { return; }
+
+            var self = this;
+            e.preventDefault();
+            return this.save_edition().pipe(function (saveInfo) {
+                // Should not happen when creating, ignore saveInfo.created
+                return self.start_edition(
+                    self.records.succ(saveInfo.record, {wraparound: true}));
+            });
         }
     });
 
@@ -462,8 +512,23 @@ openerp.web.list_editable = function (instance) {
             return edition_view;
         },
 
-        is_editing: function () {
-            return !!this.record;
+        /**
+         *
+         * @param {String} [state] either ``new`` or ``edit``
+         * @return {Boolean}
+         */
+        is_editing: function (state) {
+            if (!this.record) {
+                return false;
+            }
+            switch(state) {
+            case null: case undefined:
+                return true;
+            case 'new': return !this.record.id;
+            case 'edit': return !!this.record.id;
+            }
+            throw new Error("is_editing's state filter must be either `new` or" +
+                            " `edit` if provided");
         },
         edit: function (record, configureField) {
             // TODO: specify sequence of edit calls

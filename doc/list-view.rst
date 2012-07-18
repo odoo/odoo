@@ -287,11 +287,20 @@ formview, delegating instead to its
     :type parent: :js:class:`~openerp.web.Widget`
     :param EditorOptions options:
 
-    .. js:function:: openerp.web.list.Editor.is_editing
+    .. js:function:: openerp.web.list.Editor.is_editing([record_state])
 
         Indicates whether the editor is currently in the process of
-        providing edition for a field.
+        providing edition for a record.
 
+        Can be filtered by the state of the record being edited
+        (whether it's a record being *created* or a record being
+        *altered*), in which case it asserts both that an edition is
+        underway and that the record being edited respectively does
+        not yet exist in the database or already exists there.
+
+        :param record_state: state of the record being edited.
+                             Either ``"new"`` or ``"edit"``.
+        :type record_state: String
         :rtype: Boolean
 
     .. js:function:: openerp.web.list.Editor.edit(record, configureField)
