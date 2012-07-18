@@ -119,16 +119,15 @@
                     <sheet string="Budget">
                         <group>
                             <group>
-                                <field name="name" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </group>
                             <group>
-                                <field name="code" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="code" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <label for="date_from" string="Duration"/>
                                 <div>
-                                    <field name="date_from" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                    <span  attrs="{'invisible':[('date_to','=',False)]}" class="oe_inline"> - </span> 
+                                    <field name="date_from" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> - 
                                     <field name="date_to" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1"/>
                                 </div>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -156,8 +155,7 @@
                                                 <field name="planned_amount"/>
                                                 <label for="date_from" string="Duration"/>
                                                 <div>
-                                                    <field name="date_from" class="oe_inline"/>
-                                                    <span  attrs="{'invisible':[('date_to','=',False)]}" class="oe_inline"> - </span>
+                                                    <field name="date_from" class="oe_inline"/> - 
                                                     <field name="date_to" class="oe_inline"/>
                                                 </div>
                                             </group>
