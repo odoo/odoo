@@ -3955,6 +3955,7 @@
             <field name="code">4a</field>
             <field name="parent_id" ref="btw_code_vanuit_buitenland"/>
             <field name="name">Leveringen uit landen buiten de EU (invoer) (BTW)</field>
+            <field name="sign" eval="-1" />
         </record>
         <record id="btw_code_4b" model="account.tax.code.template">
             <field name="code">4b</field>
@@ -4458,7 +4459,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
                         <record id="btw_E1_1" model="account.tax.template">
                             <field name="chart_template_id" ref="l10nnl_chart_template"/>
                             <field name="name">Inkopen import buiten EU laag(1)</field>
-                            <field eval="1.00" name="amount"/>
+                            <field eval="-1.00" name="amount"/>
                             <field name="type">percent</field>
                             <field name="parent_id" ref="btw_E1"/>
                             <field name="account_collected_id" ref="vat_payable6"/>
@@ -4470,7 +4471,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
                         <record id="btw_E1_2" model="account.tax.template">
                             <field name="chart_template_id" ref="l10nnl_chart_template"/>
                             <field name="name">Inkopen import buiten EU laag(2)</field>
-                            <field eval="-1.00" name="amount"/>
+                            <field eval="1.00" name="amount"/>
                             <field name="type">percent</field>
                             <field name="parent_id" ref="btw_E1"/>
                             <field name="account_collected_id" ref="vat_refund6"/>
@@ -4493,7 +4494,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
                         <record id="btw_E2_1" model="account.tax.template">
                             <field name="chart_template_id" ref="l10nnl_chart_template"/>
                             <field name="name">Inkopen import buiten EU hoog(1)</field>
-                            <field eval="1.00" name="amount"/>
+                            <field eval="-1.00" name="amount"/>
                             <field name="type">percent</field>
                             <field name="parent_id" ref="btw_E2"/>
                             <field name="account_collected_id" ref="vat_payable19"/>
@@ -4505,7 +4506,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
                         <record id="btw_E2_2" model="account.tax.template">
                             <field name="chart_template_id" ref="l10nnl_chart_template"/>
                             <field name="name">Inkopen import buiten EU hoog(2)</field>
-                            <field eval="-1.00" name="amount"/>
+                            <field eval="1.00" name="amount"/>
                             <field name="type">percent</field>
                             <field name="parent_id" ref="btw_E2"/>
                             <field name="account_collected_id" ref="vat_refund19"/>
@@ -4528,7 +4529,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
                         <record id="btw_E_overig_1" model="account.tax.template">
                             <field name="chart_template_id" ref="l10nnl_chart_template"/>
                             <field name="name">Inkopen import buiten EU overig(1)</field>
-                            <field eval="1.00" name="amount"/>
+                            <field eval="-1.00" name="amount"/>
                             <field name="type">percent</field>
                             <field name="parent_id" ref="btw_E_overig"/>
                             <field name="account_collected_id" ref="vat_payable19"/>
@@ -4540,7 +4541,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
                         <record id="btw_E_overig_2" model="account.tax.template">
                             <field name="chart_template_id" ref="l10nnl_chart_template"/>
                             <field name="name">Inkopen import buiten EU overig(2)</field>
-                            <field eval="-1.00" name="amount"/>
+                            <field eval="1.00" name="amount"/>
                             <field name="type">percent</field>
                             <field name="parent_id" ref="btw_E_overig"/>
                             <field name="account_collected_id" ref="vat_refund19"/>
