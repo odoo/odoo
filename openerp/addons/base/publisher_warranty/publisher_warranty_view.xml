@@ -94,32 +94,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Register a Contract" version="7.0">
-                    <header>
-                        <button name="action_validate" string="Register" type="object" states="draft" class="oe_highlight"  />
-                        <label string="or" states="draft"/>
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <group colspan="4" col="8">
-                        <group colspan="1">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="This wizard helps you register a publisher warranty contract in your OpenERP system. After the contract has been registered, you will be able to send issues directly to OpenERP."/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string=""/>
-                            <field name="state" invisible="1"/>
-                        </group>
-                        <separator orientation="vertical" rowspan="12" colspan="1"/>
-                        <group colspan="6">
-                            <separator string="Register a Contract" colspan="4"/>
-                            <group states="draft" colspan="4">
-                                <label string="Please enter the serial key provided in your contract document:" colspan="4"/>
-                                <field name="name" colspan="4"/>
-                            </group>
-                            <group states="finished" colspan="4">
-                                <label string="Publisher warranty contract successfully registered!" colspan="4"/>
-                            </group>
-                        </group>
+                    <field name="state" invisible="1"/>
+                    <separator string="Register a Contract"/>
+                    <group states="draft">
+                        <label string="Please enter the serial key provided in your contract document:" colspan="2"/>
+                        <field name="name"/>
                     </group>
+                    <group states="finished">
+                        <label string="Publisher warranty contract successfully registered!" colspan="4"/>
+                    </group>
+                    <footer>
+                        <button name="action_validate" string="Register" type="object" states="draft" class="oe_highlight"/>
+                        <label string="or" states="draft"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

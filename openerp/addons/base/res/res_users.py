@@ -231,7 +231,6 @@ class users(osv.osv):
             help="The user's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
-        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Latest Connection', readonly=True),
     }
 
@@ -336,11 +335,10 @@ class users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'menu_tips': False
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
