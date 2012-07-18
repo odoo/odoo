@@ -43,7 +43,7 @@ class document_davdir(osv.osv):
         elif dbro.type == 'ressource':
             return nodes.node_res_dir
         else:
-            raise ValueError("dir node for %s type", dbro.type)
+            raise ValueError("Directory node for %s type", dbro.type)
 
     def _prepare_context(self, cr, uid, nctx, context=None):
         nctx.node_file_class = nodes.node_file

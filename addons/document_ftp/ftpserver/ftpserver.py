@@ -308,7 +308,7 @@ class DummyAuthorizer:
             raise AuthorizerError('No such directory: "%s"' %homedir)
         for p in perm:
             if p not in 'elradfmw':
-                raise AuthorizerError('No such permission "%s"' %p)
+                raise AuthorizerError('No such permission: "%s"' %p)
         for p in perm:
             if (p in self.write_perms) and (username == 'anonymous'):
                 warnings.warn("write permissions assigned to anonymous user.",
@@ -638,7 +638,7 @@ class DTPHandler(asyncore.dispatcher):
         elif type == 'i':
             self.data_wrapper = lambda x: x
         else:
-            raise TypeError, "Unsupported type"
+            raise TypeError, "Unsupported type!"
         self.receive = True
 
     def get_transmitted_bytes(self):
@@ -823,7 +823,7 @@ class FileProducer:
         elif type == 'i':
             self.data_wrapper = lambda x: x
         else:
-            raise TypeError, "Unsupported type"
+            raise TypeError, "Unsupported type!"
 
     def more(self):
         """Attempt a chunk of data of size self.buffer_size."""
@@ -2554,7 +2554,7 @@ class FTPHandler(asynchat.async_chat):
             else:
                 datacr = self.get_crdata2(line)
                 if not datacr:
-                    raise IOError(errno.ENOENT, "%s is not retrievable" %line)
+                    raise IOError(errno.ENOENT, "%s is not retrievable." %line)
 
                 lmt = self.try_as_current_user(self.fs.getmtime, (datacr,), line=line)
             lmt = time.strftime("%Y%m%d%H%M%S", time.localtime(lmt))

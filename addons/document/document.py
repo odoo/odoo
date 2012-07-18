@@ -61,7 +61,7 @@ class document_file(osv.osv):
             return False
 
         if ids is not None:
-            raise NotImplementedError("Ids is just there by convention! Don't use it yet, please.")
+            raise NotImplementedError("Ids is just there by convention,please donot use it yet.")
 
         cr.execute("UPDATE ir_attachment " \
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \

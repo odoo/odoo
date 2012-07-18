@@ -98,7 +98,7 @@ class BoundStream2(object):
 
     def read(self, size=-1):
         if not self._stream:
-            raise IOError(errno.EBADF, "read() without stream")
+            raise IOError(errno.EBADF, "read() without stream.")
         
         if self._rem_length == 0:
             return ''
@@ -136,25 +136,25 @@ class BoundStream2(object):
         """
         if whence == os.SEEK_SET:
             if pos < 0 or pos > self._length:
-                raise IOError(errno.EINVAL,"Cannot seek")
+                raise IOError(errno.EINVAL,"Cannot seek!")
             self._stream.seek(pos - self._offset)
             self._rem_length = self._length - pos
         elif whence == os.SEEK_CUR:
             if pos > 0:
                 if pos > self._rem_length:
-                    raise IOError(errno.EINVAL,"Cannot seek past end")
+                    raise IOError(errno.EINVAL,"Cannot seek past end!")
                 elif pos < 0:
                     oldpos = self.tell()
                     if oldpos + pos < 0:
-                        raise IOError(errno.EINVAL,"Cannot seek before start")
+                        raise IOError(errno.EINVAL,"Cannot seek before start!")
                 self._stream.seek(pos, os.SEEK_CUR)
                 self._rem_length -= pos
         elif whence == os.SEEK_END:
             if pos > 0:
-                raise IOError(errno.EINVAL,"Cannot seek past end")
+                raise IOError(errno.EINVAL,"Cannot seek past end!")
             else:
                 if self._length + pos < 0:
-                    raise IOError(errno.EINVAL,"Cannot seek before start")
+                    raise IOError(errno.EINVAL,"Cannot seek before start!")
             newpos = self._offset + self._length + pos
             self._stream.seek(newpos, os.SEEK_SET)
             self._rem_length = 0 - pos
@@ -206,7 +206,7 @@ class openerp_dav_handler(dav_interface):
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
             # see par 9.3.1 of rfc
-            raise DAV_Error(403, str(e) or 'Not supported at this path')
+            raise DAV_Error(403, str(e) or 'Not supported at this path.')
         except EnvironmentError, err:
             if cr: cr.close()
             import traceback
@@ -218,7 +218,7 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
-            raise default_exc("Operation failed")
+            raise default_exc("Operation failed.")
 
     def _get_dav_lockdiscovery(self, uri):
         """ We raise that so that the node API is used """
@@ -434,7 +434,7 @@ class openerp_dav_handler(dav_interface):
         except DAV_Error:
             raise
         except Exception, e:
-            self.parent.log_error("cannot get_children: "+ str(e))
+            self.parent.log_error("Cannot get_children: "+ str(e))
             raise
         finally:
             if cr: cr.close()
@@ -500,10 +500,10 @@ class openerp_dav_handler(dav_interface):
                     assert start >= 0
                     if end and end < start:
                         self.parent.log_error("Invalid range for data: %s-%s" %(start, end))
-                        raise DAV_Error(416, "Invalid range for data")
+                        raise DAV_Error(416, "Invalid range for data.")
                     if end:
                         if end >= res.size():
-                            raise DAV_Error(416, "Requested data exceeds available size")
+                            raise DAV_Error(416, "Requested data exceeds available size.")
                         length = (end + 1) - start
                     else:
                         length = res.size() - start
@@ -661,7 +661,7 @@ class openerp_dav_handler(dav_interface):
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not uri2[-1]:
             if cr: cr.close()
-            raise DAV_Error(409, "Cannot create nameless collection")
+            raise DAV_Error(409, "Cannot create nameless collection.")
         if not dbname:
             if cr: cr.close()
             raise DAV_Error, 409
@@ -672,7 +672,7 @@ class openerp_dav_handler(dav_interface):
         nc = node.child(cr, uri2[-1])
         if nc:
             cr.close()
-            raise DAV_Error(405, "Path already exists")
+            raise DAV_Error(405, "Path already exists.")
         self._try_function(node.create_child_collection, (cr, uri2[-1]),
                     "create col %s" % uri2[-1], cr=cr)
         cr.commit()
@@ -698,14 +698,14 @@ class openerp_dav_handler(dav_interface):
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
             if not dir_node:
                 cr.close()
-                raise DAV_NotFound('Parent folder not found')
+                raise DAV_NotFound('Parent folder not found.')
 
             newchild = self._try_function(dir_node.create_child, (cr, objname, data),
                     "create %s" % objname, cr=cr)
             if not newchild:
                 cr.commit()
                 cr.close()
-                raise DAV_Error(400, "Failed to create resource")
+                raise DAV_Error(400, "Failed to create resource.")
             
             uparts=urlparse.urlparse(uri)
             fileloc = '/'.join(newchild.full_path())
@@ -937,7 +937,7 @@ class openerp_dav_handler(dav_interface):
         except AttributeError:
             # perhaps the node doesn't support locks
             cr.close()
-            raise DAV_Error(400, 'No locks for this resource')
+            raise DAV_Error(400, 'No locks for this resource.')
 
         res = self._try_function(node_fn, (cr, token), "unlock %s" % uri, cr=cr)
         cr.commit()
@@ -966,7 +966,7 @@ class openerp_dav_handler(dav_interface):
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
             if not dir_node:
                 cr.close()
-                raise DAV_NotFound('Parent folder not found')
+                raise DAV_NotFound('Parent folder not found.')
 
             # We create a new node (file) but with empty data=None,
             # as in RFC4918 p. 9.10.4
@@ -975,7 +975,7 @@ class openerp_dav_handler(dav_interface):
             if not node:
                 cr.commit()
                 cr.close()
-                raise DAV_Error(400, "Failed to create resource")
+                raise DAV_Error(400, "Failed to create resource.")
             
             created = True
 
@@ -984,7 +984,7 @@ class openerp_dav_handler(dav_interface):
         except AttributeError:
             # perhaps the node doesn't support locks
             cr.close()
-            raise DAV_Error(400, 'No locks for this resource')
+            raise DAV_Error(400, 'No locks for this resource.')
 
         # Obtain the lock on the node
         lres, pid, token = self._try_function(node_fn, (cr, lock_data), "lock %s" % objname, cr=cr)
@@ -992,7 +992,7 @@ class openerp_dav_handler(dav_interface):
         if not lres:
             cr.commit()
             cr.close()
-            raise DAV_Error(423, "Resource already locked")
+            raise DAV_Error(423, "Resource already locked.")
         
         assert isinstance(lres, list), 'lres: %s' % repr(lres)
         
