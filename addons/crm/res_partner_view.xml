@@ -123,6 +123,7 @@
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="10">
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
