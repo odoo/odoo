@@ -417,6 +417,20 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class DisableCacheMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def start_wrapped(status, headers):
+            debug = environ.get('HTTP_REFERER', '').find('debug') != -1
+            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and k=='Cache-Control'))] 
+            if debug:
+                filtered_headers.append(('Cache-Control', 'no-cache'))
+            print headers
+            print filtered_headers
+            start_response(status, filtered_headers)
+        return self.app(environ, start_wrapped)
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
 
@@ -452,8 +466,8 @@ class Root(object):
 
         static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
-            self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
-                self.dispatch, static_dirs, cache=False)
+            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
