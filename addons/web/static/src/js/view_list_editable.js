@@ -380,15 +380,28 @@ openerp.web.list_editable = function (instance) {
                 self[method](e);
             });
         },
-        keyup_ENTER: function () {
+        /**
+         * Saves the current record, and goes to the next one (creation or
+         * edition)
+         *
+         * @private
+         * @param {String} [next_record='succ'] method to call on the records collection to get the next record to edit
+         * @return {*}
+         */
+        _next: function (next_record) {
+            next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
                 return self.start_edition(
-                    self.records.succ(saveInfo.record, {wraparound: true}));
+                    self.records[next_record](
+                        saveInfo.record, {wraparound: true}));
             });
+        },
+        keyup_ENTER: function () {
+            return this._next();
         },
         keyup_ESCAPE: function () {
             return this.cancel_edition();
@@ -415,34 +428,38 @@ openerp.web.list_editable = function (instance) {
             return selection.start;
         },
         keydown_UP: function (e) {
-            if (!this.editor.is_editing('edit')) { return; }
+            if (!this.editor.is_editing('edit')) { return $.when(); }
             // FIXME: assumes editable widgets are input-type elements
             var index = this._text_cursor(e.target);
             // If selecting or not at the start of the input
-            if (index === null || index !== 0) { return; }
+            if (index === null || index !== 0) { return $.when(); }
 
-            var self = this;
             e.preventDefault();
-            return this.save_edition().pipe(function (saveInfo) {
-                // Should not happen when creating, ignore saveInfo.created
-                return self.start_edition(
-                    self.records.pred(saveInfo.record, {wraparound: true}));
-            });
+            return this._next('pred');
         },
         keydown_DOWN: function (e) {
-            if (!this.editor.is_editing('edit')) { return; }
+            if (!this.editor.is_editing('edit')) { return $.when(); }
             // FIXME: assumes editable widgets are input-type elements
             var index = this._text_cursor(e.target);
             // If selecting or not at the end of the input
-            if (index === null || index !== e.target.value.length) { return; }
+            if (index === null || index !== e.target.value.length) { return $.when(); }
 
-            var self = this;
             e.preventDefault();
-            return this.save_edition().pipe(function (saveInfo) {
-                // Should not happen when creating, ignore saveInfo.created
-                return self.start_edition(
-                    self.records.succ(saveInfo.record, {wraparound: true}));
-            });
+            return this._next();
+        },
+        keydown_TAB: function (e) {
+            var form = this.editor.form;
+            var last_field = _(form.fields_order).chain()
+                .map(function (name) { return form.fields[name]; })
+                .filter(function (field) { return field.$element.is(':visible'); })
+                .last()
+                .value();
+            // tabbed from last field in form
+            if (last_field && last_field.$element.has(e.target).length) {
+                e.preventDefault();
+                return this._next();
+            }
+            return $.when();
         }
     });
 
