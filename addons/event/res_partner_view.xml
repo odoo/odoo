@@ -13,13 +13,13 @@
                 <field name="supplier" position="after">
                     <field name="speaker"/>
                 </field>
-                <xpath expr="//page[@string='History']" position="attributes">
+                <xpath expr="//page[@name='History']" position="attributes">
                    <attribute name="invisible">False</attribute>
                 </xpath>
-                <xpath expr="//group[@string='Event']" position="attributes">
+                <xpath expr="//group[@name='Event']" position="attributes">
                    <attribute name="invisible">False</attribute>
                 </xpath>
-                <xpath expr="//group[@string='Registration']" position="attributes">
+                <xpath expr="//group[@name='Registration']" position="attributes">
                    <attribute name="invisible">False</attribute>
                 </xpath>
             </field>
@@ -30,7 +30,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <group string="Event" position="inside">
+                <group name="Event" position="inside">
                     <field name="event_ids" colspan="4" nolabel="1">
                         <tree string="Events">
                             <field name="name" string="Event"/>
@@ -38,7 +38,7 @@
                         </tree>
                     </field>
                    </group>
-                   <group string="Registration" position="inside">
+                   <group name="Registration" position="inside">
                     <field name="event_registration_ids" colspan="4" nolabel="1">
                         <tree string="Events Registration">
                             <field name="event_begin_date" string="Date"/>

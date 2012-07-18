@@ -254,10 +254,10 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='History']" position="attributes">
+                <xpath expr="//page[@name='History']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
-                <xpath expr="//group[@string='Claim']" position="attributes">
+                <xpath expr="//group[@name='Claim']" position="attributes">
                    <attribute name="invisible">False</attribute>
                 </xpath>
             </field>
@@ -270,7 +270,7 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//group[@string='Claim']" position="inside">
+                    <xpath expr="//group[@name='Claim']" position="inside">
                         <field name="claims_ids" colspan="4" nolabel="1">
                             <tree string="Partners Claim" editable="bottom">
                                 <field name="name"/>
