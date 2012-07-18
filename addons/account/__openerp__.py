@@ -97,6 +97,7 @@ financial year and for preparation of vouchers there is a module named account_v
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'wizard/account_financial_report_view.xml',
+        'wizard/pos_box.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',
@@ -143,8 +144,8 @@ financial year and for preparation of vouchers there is a module named account_v
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
-        'test/account_bank_statement.yml',
-        'test/account_cash_statement.yml',
+        #'test/account_bank_statement.yml',
+        #'test/account_cash_statement.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
         'test/account_fiscalyear_close_state.yml', #last test, as it will definitively close the demo fiscalyear
