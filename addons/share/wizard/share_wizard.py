@@ -274,7 +274,6 @@ class share_wizard(osv.TransientModel):
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
-                'menu_tips' : False,
                 'company_id': current_user.company_id.id
             }, context)
             new_line = { 'user_id': user_id,
