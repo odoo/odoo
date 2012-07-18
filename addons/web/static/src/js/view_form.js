@@ -2739,10 +2739,20 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
         } else {
-            str = _.escape(str).split("\n").join("<br />");
+            var lines = _.escape(str).split("\n");
+            var link = "";
+            var follow = "";
+            if (! this.get_definition_options().highlight_first_line) {
+                link = lines.join("<br />");
+            } else {
+                link = lines[0];
+                follow = _.rest(lines).join("<br />");
+                if (follow)
+                    link += "<br />";
+            }
             this.$element.find('a')
                  .unbind('click')
-                 .html(str)
+                 .html(link)
                  .click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
@@ -2754,6 +2764,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     });
                     return false;
                  });
+            $(".oe_form_m2o_follow").html(follow);
         }
     },
     set_value: function(value_) {
