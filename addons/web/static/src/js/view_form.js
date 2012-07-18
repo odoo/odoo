@@ -3331,13 +3331,20 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     /**
      * Handles blurring of the nested form (saves the currently edited row),
      * unless the flag to ignore the event is set to ``true``
+     *
+     * Makes the internal form go away
      */
     _on_form_blur: function () {
         if (this.__ignore_blur) {
             this.__ignore_blur = false;
             return;
         }
-        this.save_edition();
+        // FIXME: why isn't there an API for this?
+        if (this.editor.form.$element.hasClass('oe_form_dirty')) {
+            this.save_edition();
+            return;
+        }
+        this.cancel_edition();
     },
     keyup_ENTER: function () {
         // blurring caused by hitting the [Return] key, should skip the
