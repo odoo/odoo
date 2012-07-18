@@ -32,6 +32,8 @@
     'depends': [],
     'init_xml': [
         'base_data.xml',
+        'currency_data.xml',
+        'country_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
         'res/res_security.xml',
