@@ -1,6 +1,5 @@
 <openerp>
     <data>
-
         <record id="view_purchase_configuration" model="ir.ui.view">
             <field name="name">purchase settings</field>
             <field name="model">purchase.config.settings</field>
@@ -13,20 +12,53 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group>
-                        <group>
-                            <separator string="Purchase Order" colspan="2"/>
-                            <field name="group_purchase_pricelist"/>
-                            <field name="group_uom"/>
-                            <field name="group_purchase_delivery_address"/>
-                            <field name="module_purchase_double_validation"/>
-                            <field name="module_purchase_requisition"/>
-                            <field name="module_warning"/>
-                            <field name="module_purchase_analytic_plans"/>
-                        </group>
-			<group>
-                            <separator string="Invoicing" colspan="2"/>
-                            <field name="default_invoice_method" class="oe_inline"/>
-                            <field name="decimal_precision" class="oe_inline"/>
+                        <separator string="Purchase Order" colspan="2"/>
+                        <group colspan="2">
+                            <label for="id" string="Purchase Order Setting"/>   
+                            <div>
+                                <div>
+                                    <field name="group_purchase_pricelist" class="oe_inline"/>
+                                    Pricelist Per<label for="group_purchase_pricelist" string="Supplier"/>
+                                </div>    
+                                <div>
+                                    <field name="group_uom" class="oe_inline"/>
+                                    Manage Different <label for="group_uom" string="Units of Measure"/>For Products 
+                                </div>                   
+                                <div>
+                                    <field name="group_purchase_delivery_address" class="oe_inline"/>
+                                     Allow Different Addresses for <label for="group_purchase_delivery_address" string="Delivery and Invoice"/>
+                                </div>    
+                                <div>
+                                    <field name="module_purchase_double_validation" class="oe_inline"/>
+                                    Two Levels of<label for="module_purchase_double_validation" string="Approval"/>
+                                </div>     
+                                <div>
+                                    <field name="module_purchase_requisition" class="oe_inline"/>
+                                    Manage<label for="module_purchase_requisition" string="Purchase Requisitions"/>
+                                </div>
+                                <div>    
+                                    <field name="module_warning" class="oe_inline"/>
+                                    Alert By<label for="module_warning" string="Products or Supplier"/>
+                                </div>
+                                <div>
+                                    <field name="module_purchase_analytic_plans" class="oe_inline"/>
+                                    Use<label for="module_purchase_analytic_plans" string="Multiple Analytic Accounts"/>On Purchases
+                                </div>
+                            </div>    
+			            </group>
+			            <separator string="Invoicing" colspan="2"/>
+			            <group colspan="2">
+                            <label for="id" string="Invoicing Setting"/>   
+                            <div>
+                                <div>
+                                    Default <label for="default_invoice_method" string="Invoicing Control"/>Method
+                                    <field name="default_invoice_method" class="oe_inline"/>
+                                </div>
+                                <div>
+                                     <label for="decimal_precision " string="Decimal"/>Precision
+                                     <field name="decimal_precision" class="oe_inline"/>
+                                </div>
+                            </div>            
                         </group>
                     </group>
                 </form>
