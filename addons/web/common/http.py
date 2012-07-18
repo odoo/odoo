@@ -426,8 +426,6 @@ class DisableCacheMiddleware(object):
             filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and k=='Cache-Control'))] 
             if debug:
                 filtered_headers.append(('Cache-Control', 'no-cache'))
-            print headers
-            print filtered_headers
             start_response(status, filtered_headers)
         return self.app(environ, start_wrapped)
 
