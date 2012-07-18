@@ -10,7 +10,7 @@
   I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Quentin Paolino"
 -
   !record {model: hr.employee, id: hr.employee_qdp}:
-    product_id: product.product_consultant
+    product_id: product.product_product_0
     journal_id: hr_timesheet.analytic_journal
 -
   I create my current timesheet for employee "Quentin Paolinon".
@@ -66,13 +66,13 @@
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
-      - account_id: account.analytic_sednacom
+      - account_id: account.analytic_agrolait
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         user_id: base.user_qdp
         unit_amount: 6.00
         amount: -90.00
-        product_id: product.product_consultant
+        product_id: product.product_product_0
         general_account_id: account.a_expense
         journal_id: hr_timesheet.analytic_journal
 -
@@ -93,13 +93,13 @@
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
-      - account_id: account.analytic_sednacom
+      - account_id: account.analytic_agrolait
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         unit_amount: 2.00
         user_id: base.user_qdp
         amount: -90.00
-        product_id: product.product_consultant
+        product_id: product.product_product_0
         general_account_id: account.a_expense
         journal_id: hr_timesheet.analytic_journal
 -

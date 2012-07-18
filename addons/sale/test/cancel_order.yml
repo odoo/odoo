@@ -4,37 +4,37 @@
   Now I cancel Quotation.
 -
   !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order7")])
+    self.action_cancel(cr, uid, [ref("sale_order_8")])
 -
   I check state of Quotation after cancelled.
 -
-  !assert {model: sale.order, id: order7, string: sale order should be in cancel state}:
+  !assert {model: sale.order, id: sale_order_8, string: sale order should be in cancel state}:
     - state == 'cancel'
 -
   I set cancelled quotation to draft.
 -
   !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order7")])
+    self.action_cancel_draft(cr, uid, [ref("sale_order_8")])
 -
   I confirm order.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: order7}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
 -
   I send delivery in two shipments, so I am doing a partial delivery order.
 -
   !python {model: stock.picking}: |
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale_order_8"))])
     first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
       first_move = first_picking.move_lines[0]
-      values = {'move%s'%(first_move.id): {'product_qty': 5, 'product_uom':ref('product.product_uom_unit')}}
+      values = {'move%s'%(first_move.id): {'product_qty': 2, 'product_uom':ref('product.product_uom_unit')}}
       first_picking.do_partial(values, context=context)
 -
   Now I cancel latest shipment.
 -
   !python {model: stock.picking}: |
     import netsvc
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale_order_8"))])
     last_delivery_order_id = delivery_orders[0]
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
@@ -47,42 +47,42 @@
 -
   I check order status in "Ship Exception".
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be in shipping exception}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in shipping exception}:
     - state == "shipping_except"
 -
   Now I regenerate shipment.
 -
-  !workflow {model: sale.order, action: ship_recreate, ref: order7}
+  !workflow {model: sale.order, action: ship_recreate, ref: sale_order_8}
 -
   I check state of order in 'To Invoice'.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be In Progress state}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be In Progress state}:
     - state == 'manual'
 -
   I make invoice for order.
 -
-  !workflow {model: sale.order, action: manual_invoice, ref: order7}
+  !workflow {model: sale.order, action: manual_invoice, ref: sale_order_8}
 -
   To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
     import netsvc
-    invoice_ids = self.browse(cr, uid, ref("order7")).invoice_ids
+    invoice_ids = self.browse(cr, uid, ref("sale_order_8")).invoice_ids
     wf_service = netsvc.LocalService("workflow")
     first_invoice_id = invoice_ids[0]
     wf_service.trg_validate(uid, 'account.invoice', first_invoice_id.id, 'invoice_cancel', cr)
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be in Invoice Exception state}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Invoice Exception state}:
     - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
 -
   Then I click on the Ignore Exception button.
 -
-  !workflow {model: sale.order, action: invoice_corrected, ref: order7}
+  !workflow {model: sale.order, action: invoice_corrected, ref: sale_order_8}
 
 -
   I check state of order in 'In Progress'.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be In progress state}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be In progress state}:
     - state == 'progress'
