@@ -104,7 +104,7 @@ hr_employee()
 class payroll_advice(osv.osv):
     '''
     Bank Advice
-    '''        
+    '''
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
@@ -206,13 +206,20 @@ class payroll_advice(osv.osv):
                 res.update({'bank': company.partner_id.bank_ids[0].bank.name})
         return {
             'value':res
-        }     
+        }
 payroll_advice()
 
 class hr_payslip_run(osv.osv):
 
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
+    _columns = {
+        'available_advice': fields.boolean('Made Payment Advice?', help="If this box is checked which means that Payment Advice exists", readonly=False),
+    }
+
+    def draft_payslip_run(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'available_advice': False}, context=context)
+        return super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
 
     def create_advice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -222,6 +229,8 @@ class hr_payslip_run(osv.osv):
         advice_line_pool = self.pool.get('hr.payroll.advice.line')
         users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
         for run in self.browse(cr, uid, ids, context=context):
+            if run.available_advice:
+                raise osv.except_osv(_('Error !'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
             advice_data = {
                         'company_id': users[0].company_id.id,
                         'name': run.name,
@@ -234,6 +243,7 @@ class hr_payslip_run(osv.osv):
                 wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'hr_verify_sheet', cr)
                 wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'process_sheet', cr)
                 slip_ids.append(slip_id.id)
+                
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
@@ -247,23 +257,23 @@ class hr_payslip_run(osv.osv):
                             'bysal': line.total
                     }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
-        return True
+        return self.write(cr, uid, ids, {'available_advice' : True})
 
 hr_payslip_run()
 
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
-    '''    
+    '''
     def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
         res = {}
         hr_obj = self.pool.get('hr.employee')
         if not employee_id:
             return {'value': res}
         employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
-        res.update({'name': employee.bank_account_id.acc_number ,'ifsc_code': employee.bank_account_id.bank_bic})
-        return {'value': res}  
-        
+        res.update({'name': employee.bank_account_id.acc_number , 'ifsc_code': employee.bank_account_id.bank_bic})
+        return {'value': res}
+
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
     _columns = {
@@ -277,8 +287,7 @@ class payroll_advice_line(osv.osv):
     }
     _defaults = {
         'debit_credit': 'C',
-    }    
-    
+    }
 
 payroll_advice_line()
 
@@ -286,9 +295,8 @@ class hr_payslip(osv.osv):
     '''
     Employee Pay Slip
     '''
-
     _inherit = 'hr.payslip'
-    _description = 'Pay Slip'
+    _description = 'Pay Slips'
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice')
     }
