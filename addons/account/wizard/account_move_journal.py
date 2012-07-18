@@ -107,9 +107,9 @@ class account_move_journal(osv.osv_memory):
             <form string="Standard entries" version="7.0">
                 <group>
                     <field name="target_move"/>
-                    <label string="%s"/>
-                    <label  string="%s"/>
                 </group>
+                %s: <label string="%s"/>
+                %s: <label string="%s"/>
                 <footer>
                     <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight"/>
                     or
