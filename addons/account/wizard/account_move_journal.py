@@ -115,7 +115,7 @@ class account_move_journal(osv.osv_memory):
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </footer>
-            </form>""" % (journal_string, period_string, open_string)
+            </form>""" % (_('Journal'), journal_string, _('Period'), period_string, open_string)
     
             view = etree.fromstring(view.encode('utf8'))
             xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
