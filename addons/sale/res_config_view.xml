@@ -29,13 +29,13 @@
                         <div>
                             <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
                                 The<label for="default_order_policy" string="Default"/>Invocing method is
-                                <field name="default_order_policy"/>
+                                <field name="default_order_policy" class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"><field name="module_delivery" class="oe_inline"/>
                             Allow Adding Shipping Costs</div>
                             <div attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}">
                                 The Default<label for="time_unit" string="Working Time Unit"/>For Service is
-                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]"/>
+                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
                             </div>
                         </div>
                     </group>
@@ -51,9 +51,9 @@
                             Allow a<label for="group_sale_delivery_address" string="Different Address"/>For Delivery and Invoicing</div>
                             <div><field name="group_sale_pricelist" class="oe_inline"/>
                             <label for="group_sale_pricelist" string="Use Pricelists"/>to Adapt your Price Per Customers</div>
-                            <div name="module_sale_journal"><field name="module_sale_journal" class="oe_inline"/>
+                            <div><field name="module_sale_journal" class="oe_inline"/>
                             Allow Batch<label for="module_sale_journal" string="Invoicing through Journals"/></div>
-                            <div><field name="module_warning" class="oe_inline"/>
+                            <div name="module_warning"><field name="module_warning" class="oe_inline"/>
                             Allow Configuring<label for="module_warning" string="alert"/>by Customer or Products</div>
                         </div>
                     </group>
@@ -80,7 +80,7 @@
                         </div>
                     </group>
                     <separator string="Contracts Management" colspan="2"/>
-                    <div>Use contract to be able to manage your services with multiple invoicing as part of the same contract with your customer</div>
+                    <div style="color:grey">Use contract to be able to manage your services with multiple invoicing as part of the same contract with your customer</div>
                     <group>
                         <label for="id" string="Contract Feature"/>
                         <div>
