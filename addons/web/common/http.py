@@ -417,6 +417,18 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class DisableCacheMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def start_wrapped(status, headers):
+            debug = environ.get('HTTP_REFERER', '').find('debug') != -1
+            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and k=='Cache-Control'))] 
+            if debug:
+                filtered_headers.append(('Cache-Control', 'no-cache'))
+            start_response(status, filtered_headers)
+        return self.app(environ, start_wrapped)
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
 
@@ -452,8 +464,8 @@ class Root(object):
 
         static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
-            self.dispatch = SuperSharedDataMiddleware(
-                self.dispatch, static_dirs, cache=False)
+            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
@@ -555,75 +567,6 @@ class Root(object):
                         return m
                 ps, _slash, meth = ps.rpartition('/')
         return None
-    
-class SuperSharedDataMiddleware(werkzeug.wsgi.SharedDataMiddleware):
-    """Redefine SharedDataMiddleware to better handle the cache = False directive.
-    Also desactivate 304 Not Modified headers only when the referer has 'debug' in its
-    arguments.
-    """
-    def __call__(self, environ, start_response):
-        import os
-        import mimetypes
-        import werkzeug.http
-        import urlparse
-        # sanitize the path for non unix systems
-        cleaned_path = environ.get('PATH_INFO', '').strip('/')
-        for sep in os.sep, os.altsep:
-            if sep and sep != '/':
-                cleaned_path = cleaned_path.replace(sep, '/')
-        path = '/'.join([''] + [x for x in cleaned_path.split('/')
-                                if x and x != '..'])
-        file_loader = None
-        for search_path, loader in self.exports.iteritems():
-            if search_path == path:
-                real_filename, file_loader = loader(None)
-                if file_loader is not None:
-                    break
-            if not search_path.endswith('/'):
-                search_path += '/'
-            if path.startswith(search_path):
-                real_filename, file_loader = loader(path[len(search_path):])
-                if file_loader is not None:
-                    break
-        if file_loader is None or not self.is_allowed(real_filename):
-            return self.app(environ, start_response)
-
-        guessed_type = mimetypes.guess_type(real_filename)
-        mime_type = guessed_type[0] or self.fallback_mimetype
-        f, mtime, file_size = file_loader()
-        
-        etag = self.generate_etag(mtime, file_size, real_filename)
-        modified = werkzeug.http.is_resource_modified(environ, etag, last_modified=mtime)
-        
-        headers = [('Date', werkzeug.http.http_date())]
-        if self.cache:
-            timeout = self.cache_timeout
-            headers += [
-                ('Etag', '"%s"' % etag),
-                ('Cache-Control', 'max-age=%d, public' % timeout)
-            ]
-            if modified:
-                headers.append(('Expires', werkzeug.http.http_date(time() + timeout)))
-        else:
-            headers.append(('Cache-Control', 'no-cache'))
-            
-        referer = environ.get('HTTP_REFERER', '')
-        parsed = urlparse.urlparse(referer)
-        debug = not urlparse.parse_qs(parsed.query).has_key('debug')
-        # it's important to put it at the end
-        if not debug and not modified:
-            f.close()
-            start_response('304 Not Modified', headers)
-            return []
-
-        headers.extend((
-            ('Content-Type', mime_type),
-            ('Content-Length', str(file_size)),
-            ('Last-Modified', werkzeug.http.http_date(mtime))
-        ))
-        start_response('200 OK', headers)
-        return werkzeug.wsgi.wrap_file(environ, f)
-
 
 class LibException(Exception):
     """ Base of all client lib exceptions """
