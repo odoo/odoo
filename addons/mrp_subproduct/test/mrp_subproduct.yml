@@ -5,11 +5,11 @@
   I add a sub product in Bill of material for product Cabinet.
 -
   !record {model: mrp.bom, id: mrp_bom_arm1}:
-    product_id: product.product_product_arm
+    product_id: product.product_product_28
     name: ARM100 + Subproduct
     product_uom: product.product_uom_unit
     sub_products:
-      - product_id: product.product_product_woodentable0
+      - product_id: product.product_product_33
         product_uom: product.product_uom_unit
         product_qty: 2.0
         subproduct_type: fixed
@@ -17,7 +17,7 @@
   I create a production order for Cabinet.
 -
   !record {model: mrp.production, id: mrp_production_mo0}:
-    product_id: product.product_product_arm
+    product_id: product.product_product_28
     product_qty: 10.0
     product_uom: product.product_uom_unit
     bom_id: mrp_bom_arm1
@@ -42,7 +42,7 @@
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
-    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_woodentable0'))])
+    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_33'))])
     assert move_ids, 'No moves are created !'
 -
   I want to start the production so I force the reservation of products.
@@ -70,6 +70,6 @@
   I see that stock moves of Cabinet including Wooden Table are done now.
 -
   !python {model: stock.move}: |
-    move_ids = self.search(cr, uid, [('product_id','in',[ref("product.product_product_arm"),ref("product.product_product_sidepanel0")])])
+    move_ids = self.search(cr, uid, [('product_id','in',[ref("product.product_product_28"),ref("product.product_product_41")])])
     moves = self.browse(cr, uid, move_ids)
     assert all(move.state == 'done' for move in moves), 'Moves are not done!'

@@ -14,7 +14,7 @@
         <record id="project_phase_1" model="project.phase">
             <field eval="[(6, 0, [])]" name="previous_phase_ids"/>
             <field name="name">Collect Requirement and Make SRS</field>
-            <field name="product_uom" ref="product.uom_day"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
             <field eval="1" name="sequence"/>
             <field name="duration">30</field>
             <field name="constraint_date_start" eval="time.strftime('%Y-%m-01 10:00:00')"></field>
@@ -26,7 +26,7 @@
         <record id="project_phase_2" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_1')])]" name="previous_phase_ids"/>
             <field name="name">Design Model</field>
-            <field name="product_uom" ref="product.uom_day"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
             <field eval="2" name="sequence"/>
             <field name="duration">20</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
@@ -36,7 +36,7 @@
         <record id="project_phase_3" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_2')])]" name="previous_phase_ids"/>
             <field name="name">Planning and compute Risk analysis, Time chart </field>
-            <field name="product_uom" ref="product.uom_day"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
             <field eval="3" name="sequence"/>
             <field name="duration">20</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
@@ -46,7 +46,7 @@
         <record id="project_phase_4" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_3')])]" name="previous_phase_ids"/>
             <field name="name">Development and Integration</field>
-            <field name="product_uom" ref="product.uom_day"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
             <field eval="4" name="sequence"/>
             <field name="duration">90</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
@@ -55,7 +55,7 @@
         <record id="project_phase_5" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_4')])]" name="previous_phase_ids"/>
             <field name="name">Review and Testing</field>
-            <field name="product_uom" ref="product.uom_day"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
             <field eval="5" name="sequence"/>
             <field name="duration">30</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
@@ -64,7 +64,7 @@
         <record id="project_phase_6" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_5')])]" name="previous_phase_ids"/>
             <field name="name">Deployement and Training</field>
-            <field name="product_uom" ref="product.uom_day"/>
+            <field name="product_uom" ref="product.product_uom_day"/>
             <field eval="6" name="sequence"/>
             <field name="duration">10</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>

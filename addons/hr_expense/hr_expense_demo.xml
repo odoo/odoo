@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <record id="hr.employee_mit" model="hr.employee">
-            <field name="address_home_id" ref="base.res_partner_address_1"/>
+            <field name="address_home_id" ref="base.res_partner_address_5"/>
         </record>
 
         <record id="car_travel" model="product.product">
@@ -66,7 +66,7 @@
         <record id="hotel_bill_sep" model="hr.expense.line">
             <field name="name">Hotel Expenses - Thymbra</field>
             <field name="date_value" eval="time.strftime('%Y-09-20')"/>
-            <field name="analytic_account" ref="account.analytic_thymbra"/>
+            <field name="analytic_account" ref="account.analytic_nebula"/>
             <field name="product_id" ref="hotel_rent"/>
             <field name="expense_id" ref="sep_expenses"/>
             <field eval="400.0" name="unit_amount"/>
@@ -77,7 +77,7 @@
         <record id="car_travel_sep" model="hr.expense.line">
                 <field name="name">Bruxelles - Paris</field>
                 <field name="date_value" eval="time.strftime('%Y-09-15')"/>
-                <field name="analytic_account" ref="account.analytic_thymbra"/>
+                <field name="analytic_account" ref="account.analytic_nebula"/>
                 <field name="product_id" ref="car_travel"/>
                 <field name="expense_id" ref="sep_expenses"/>
                 <field eval="0.30" name="unit_amount"/>

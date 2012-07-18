@@ -55,10 +55,10 @@
         name: '[PC1] Basic PC'
         price_unit: 1000.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
 -
   I validate the invoice.
 -
@@ -88,7 +88,7 @@
     company_id: base.main_company
     journal_id: bank_journal_USD1
     name: 'payment: Case EUR/USD'
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_5
     date: !eval time.strftime("%Y-02-01")
     payment_option: 'with_writeoff'
