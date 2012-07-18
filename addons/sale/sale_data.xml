@@ -26,5 +26,31 @@
 
         <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
+            
+        <record id="message_welcome_sale" model="mail.message">
+            <field name="subject">Module sale installed!</field>
+            <field name="type">comment</field>
+            <field name="subtype">html</field>
+            <field name="body_text">Welcome to OpenERP
+                Second Line
+            </field>
+            <field name="body_html" type="xml">
+                <h2>OpenERP Sale module just installed!</h2>
+                <p>
+                    You can click on the top menu <b>Sales</b> to manage your
+                    customers, your quotations and sales orders.
+                </p>
+                <p>
+                    If you need to manage your sales pipeline (leads,
+                    opportunities, phonecalls), you can install the CRM module
+                    from the <b>Settings</b> top menu.
+                </p>
+            </field>
+        </record>
+        <record id="message_welcome_sale_root" model="mail.notification">
+            <field name="user_id" ref="base.user_root"/>
+            <field name="message_id" ref="message_welcome_sale"/>
+        </record>
+
     </data>
 </openerp>
