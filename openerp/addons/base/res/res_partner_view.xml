@@ -101,10 +101,7 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="photo" widget='image' class="oe_avatar oe_right" height="70"/>
-                    <div class="oe_right oe_button_box" name="buttons">
-
-                    </div>
+                    <field name="photo" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name" string="Customer Name"/> 
@@ -113,55 +110,22 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div attrs="{'invisible': [('is_company','=', True)]}">
-                                        <label for="parent_id" class="oe_edit_only"/>
-                            
-                                    </div>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                    <label for="function" class="oe_edit_only"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h2 attrs="{'invisible': [('is_company','=', True)]}">
-                                        
-                                        <field name="parent_id" nolabel="1"
-                                            domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                            class="oe_inline"
-                                            on_change="onchange_address(use_parent_address, parent_id)"/>
-                                        
-                                    </h2>
-                                </td>
-                                <td>
-                                    <h2>
-                                        <label string="," class="oe_inline" attrs="{'invisible': ['|', ('parent_id', '=', False), ('function', '=', False)]}"/>
-                                    </h2>
-                                </td>
-                                <td>
-                                    <h2>
-                                        <field nolabel="1" name="function" class="oe_inline"/>
-                                    </h2>
-                                </td>
-                            </tr>
-                        </table>
-                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
                     </div>
+                    <div class="oe_right oe_button_box" name="buttons"> </div>
 
                     <group>
                         <group>
+                            <field name="parent_id"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
+                                attrs="{'invisible': [('is_company','=', True)]}"
+                                on_change="onchange_address(use_parent_address, parent_id)"/>, 
                             <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
                             <div attrs="{'invisible': [('parent_id','=', False)]}">
                                 <field class="oe_inline"
                                     name="type"/>
-                                <label for="use_parent_address"/>
-                                <field name="use_parent_address"
-                                    class="oe_inline"
+                                <label for="use_parent_address" class="oe_edit_only"/>
+                                <field name="use_parent_address" class="oe_edit_only oe_inline"
                                     on_change="onchange_address(use_parent_address, parent_id)"/>
                             </div>
 
@@ -169,21 +133,24 @@
                             <div>
                                 <field name="street" placeholder="Street..."/>
                                 <field name="street2"/>
-                                <div>
-                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                    <field name="city" class="oe_inline" placeholder="City"/>
+                                <div class="address_format">
+                                    <field name="city" placeholder="City" style="width: 40%%"/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                    <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
-                                <field name="state_id" placeholder="State"/>
-                                <field name="country_id" placeholder="Country"/>
+                                <field name="country_id" placeholder="Country" class="oe_no_button"/>
                             </div>
-                            <field name="website" widget="url" placeholder="www.openerp.com"/>
+                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                         </group>
                         <group>
-                            <field name="phone" placeholder="+32.81.81.37.00"/>
+                            <field name="function" placeholder="e.g. Sales Director"
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
                             <field name="email" widget="email"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]" attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="title" domain="[('domain', '=', 'contact')]"
+                                class="oe_no_button" attrs="{'invisible': [('is_company','=', True)]}"/>
                         </group>
                     </group>
 
@@ -402,9 +369,17 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('customer','=',1)]</field>
             <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
+            <field name="help">
+                Click on "Create" to add a new customer in your address book.
+                &lt;p&gt;
+                A contact is either a person or a company; a person can be linked to a company as a contact of that company.
+                &lt;p&gt;
+                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            </field>
         </record>
 
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
@@ -416,7 +391,13 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">You can access all information regarding your suppliers from the supplier form: accounting data, history of emails, meetings, purchases, etc. You can uncheck the 'Suppliers' filter button in order to search in all your partners, including customers and prospects.</field>
+            <field name="help">
+                Click on "Create" to add a new supplier in your address book.
+                &lt;p&gt;
+                A supplier is either a person or a company; a person can be linked to a company as a contact of that company.
+                &lt;p&gt;
+                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            </field>
         </record>
 
         <record id="action_partner_employee_form" model="ir.actions.act_window">

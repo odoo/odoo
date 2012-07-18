@@ -9,21 +9,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Bindings" version="7.0">
-                  <sheet>
                     <group>
-                        <group string="Action Binding">
+                        <group>
                             <field name="name"/>
                             <field name="model_id" on_change="onchange_object_id(model_id)"/>
                             <field name="model"/>
                             <field name="res_id"/>
                             <field name="key2"/>
                         </group>
-                        <group string="Action">
+                        <group>
                             <field name="action_id" on_change="onchange_action_id(action_id)"/>
                             <field name="value_unpickle" colspan="4" string="Action Reference"/>
                         </group>
                     </group>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -34,24 +32,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User-defined Defaults" version="7.0">
-                   <sheet>
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
                     <group>
-                        <group string="Model">
-                            <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                        <group>
+                            <field name="name"/>
                             <field name="model"/>
-                            <field name="key2" string="Condition"/>
-                        </group>
-                        <group string="Default Value">
+                            <field name="model_id" on_change="onchange_object_id(model_id)"/>
                             <field name="value_unpickle" nolabel="1"/>
                         </group>
-                        <group string="Default Value Scope">
+                        <group>
+                            <field name="key2" string="Condition"/>
                             <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                   </sheet> 
                 </form>
             </field>
         </record>
@@ -288,13 +281,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action" version="7.0">
-                  <sheet>
                     <group>
                         <field name="name"/>
                         <field name="type"/>
                         <field name="usage"/>
                     </group>
-                   </sheet>
                 </form>
             </field>
         </record>
@@ -341,17 +332,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report" version="7.0">
-                  <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="usage"/>
-
-                        <field name="report_name"/>
-                        <field name="report_type"/>
-                        <field name="report_file"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="report_name"/>
+                            <field name="model"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="report_type"/>
+                            <field name="report_file"/>
+                        </group>
                     </group>
-
                     <notebook>
                         <page string="Other Configuration">
                             <group>
@@ -376,7 +368,6 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
-                   </sheet>
                 </form>
             </field>
         </record>
@@ -445,14 +436,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open a Window" version="7.0">
-                  <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="res_model"/>
-                        <field name="type" readonly="1"/>
-                        <field name="src_model"/>
-                        <field name="usage"/>
-                        <field name="target"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="res_model" string="Object"/>
+                            <field name="src_model" string="Source Object"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="type" readonly="1"/>
+                            <field name="target"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="General Settings">
@@ -496,7 +490,6 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -756,34 +749,34 @@
             <field name="arch" type="xml">
                 <form string="Attachments" version="7.0">
                    <sheet>
-                    <group col="4">
-                        <field name="name" />
-                        <field name="type"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook>
-                    <page string="Attachment">
-                        <group>
-                            <group attrs="{'invisible':[('type','=','url')]}" string="Data">
-                                <field name="datas" filename="datas_fname"/>
-                                <field name="datas_fname"/>
-                                <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            </group>
-                            <group>
-                                <field name="res_model"/>
-                                <field name="res_id"/>
-                                <field name="res_name"/>
-                            </group>
-                            <group groups="base.group_no_one">
-                                <field name="create_uid"/>
-                                <field name="create_date"/>
-                            </group>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group string="Data">
+                            <field name="type"/>
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                         </group>
-                    </page>
-                    <page string="Notes">
-                        <field name="description"/>
-                    </page>
-                    </notebook>
+                        <group string="Attached To">
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="res_name"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                        <group groups="base.group_no_one" string="History">
+                            <label for="create_uid" string="Creation"/>
+                            <div name="creation_div">
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group name="description_group" string="Description" colspan="4">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </group>
                   </sheet>
                 </form>
             </field>
@@ -858,12 +851,16 @@
             <field name="arch" type="xml">
                 <form string="Model Description" version="7.0">
                   <sheet>
-                    <group col="6">
-                        <field name="name"/>
-                        <field name="model"/>
-                        <field name="osv_memory"/>
-                        <field name="state"/>
-                        <field name="modules" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="osv_memory"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="modules"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Fields">
@@ -980,38 +977,37 @@
             <field name="arch" type="xml">
                 <form string="Fields" version="7.0">
                   <sheet>
-                    <group colspan="4" col="6">
-                        <field name="name" />
-                        <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
-                        <field name="field_description"/>
-                        <field name="state"/>
+                    <group>
+                        <group>
+                            <field name="name" string="Field Name"/>
+                            <field name="field_description"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                            <field name="modules"/>
+                        </group>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Properties">
-                            <group>
-                                <field name="ttype"/>
-                                <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                    <group>
+                        <group>
+                            <field name="ttype"/>
+                            <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
-                                <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
-                                <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
-                                <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
-                                <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
-                                <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
-                            </group>
-
-                            <group>
-                                <field name="required"/>
-                                <field name="readonly"/>
-                                <field name="select_level"/>
-                                <field name="translate"/>
-                                <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
-                                <field name="modules"/>
-                            </group>
-                        </page>
-                        <page string="Security">
-                            <field name="groups"/>
-                        </page>
-                    </notebook>
+                            <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
+                            <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
+                            <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
+                            <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
+                            <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
+                            <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
+                        </group>
+                        <group>
+                            <field name="required"/>
+                            <field name="readonly"/>
+                            <field name="select_level"/>
+                            <field name="translate"/>
+                        </group>
+                    </group>
+                    <field name="groups" invisible="1"/>
                   </sheet>  
                 </form>
             </field>
@@ -1694,13 +1690,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action" version="7.0">
-                  <sheet> 
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="model_id"/>
-                        <field name="state"/>
-                        <field name="sequence"/>
-                        <field name="condition"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="condition"/>
+                            <field name="sequence"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
@@ -1771,7 +1770,6 @@
                         </page>
                     </notebook>
                     <field name="type" readonly="1"/>
-                  </sheet>  
                 </form>
             </field>
         </record>
@@ -1849,6 +1847,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Config Wizard Steps" version="7.0">
+                  <header>
+                        <button name="action_launch"
+                            states="open" string="Launch"
+                            type="object" icon="gtk-execute" class="oe_highlight" 
+                            help="Launch Configuration Wizard"/>
+                        <button name="action_open" states="done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" statusbar_colors='{"open":"red","done":"blue"}'/>
+                  </header>
                   <sheet>
                     <group col="4">
                         <field name="action_id"/>
@@ -1858,16 +1866,6 @@
                     </group>
                     <group string="Groups">
                         <field name="groups_id" nolabel="1" colspan="4"/>
-                    </group>
-                    <group col="4">
-                        <field name="state" readonly="1"/>
-                        <button name="action_launch"
-                            states="open" string="Launch"
-                            type="object" icon="gtk-execute"
-                            help="Launch Configuration Wizard"/>
-                        <button name="action_open" states="done"
-                            string="Set as Todo" type="object"
-                            icon="gtk-convert"/>
                     </group>
                   </sheet>
                 </form>
