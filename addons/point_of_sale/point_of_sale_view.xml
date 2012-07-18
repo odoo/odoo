@@ -2,11 +2,14 @@
 <openerp>
     <data>
 
-        <menuitem name="PoS Backend" id="menu_point_root" sequence="20"
+        <!-- Top menu item -->
+        <menuitem name="PoS Backend"
+            id="menu_point_root"
             icon="terp-partner"
-            groups="group_pos_manager"
             web_icon="images/pos.png"
-            web_icon_hover="images/pos-hover.png"/>
+            web_icon_hover="images/pos-hover.png"
+            groups="group_pos_manager"
+            sequence="140"/>
 
         <record id="categ_others" model="pos.category">
             <field name="name">Others</field>
@@ -749,6 +752,7 @@
             <field name="tag">pos.ui</field>
         </record>
 
+        <!-- Top menu item -->
         <!--
             right now it's not possible to directly call a client action
             from a menuitem, so we can't use this shortcut element and
@@ -756,7 +760,7 @@
         -->
         <record id="menu_point_root_touchscreen" model="ir.ui.menu">
             <field name="name">Point of Sale</field>
-            <field name="sequence">160</field>
+            <field name="sequence">150</field>
             <field name="action" ref="action_pos_pos"/>
         </record>
 

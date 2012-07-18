@@ -1,6 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="30" groups="base.group_sale_salesman,base.group_sale_manager"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            icon="terp-partner"
+            groups="base.group_sale_salesman,base.group_sale_manager"
+            sequence="30"/>
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
 
