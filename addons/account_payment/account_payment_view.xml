@@ -113,13 +113,18 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
                 <sheet string="Payment order">
+                    <div class="oe_button_box">
+                        <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
+                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="reference" class="oe_edit_only"/>
+                        <h1><field name="reference"/></h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="reference"/>
                             <field name="user_id"/>
                             <field name="mode"/>
-                            <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
-                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                         </group>
                         <group>
                             <field name="date_prefered"/>
@@ -181,8 +186,6 @@
                             <field name="amount" sum="Total in Company Currency" invisible="1"/>
                         </tree>
                     </field>
-                    <field name="date_created"/>
-                    <field name="date_done"/>
                     </sheet>
                 </form>
             </field>

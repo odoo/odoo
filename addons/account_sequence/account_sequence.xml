@@ -44,7 +44,7 @@
             <field name="inherit_id" ref="account.view_account_move_filter"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='name']" position="before">
+                <xpath expr="//field[@name='name']" position="after">
                     <field name="internal_sequence_number"/>
                 </xpath>
             </data>
