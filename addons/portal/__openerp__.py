@@ -22,7 +22,7 @@
 {
     'name' : "Portal",
     'version' : "1.0",
-    'depends' : ["base", "share"],
+    'depends' : ["base", "share", "anonymous"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
