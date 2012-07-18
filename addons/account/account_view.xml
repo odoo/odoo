@@ -627,13 +627,8 @@
                     </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1>
-                        <field name="name" class="oe_inline"/>-
-                        <field name="period_id" class="oe_inline"/>
+                        <field name="name" class="oe_inline"/>
                     </h1>
-                    <label for="journal_id" class="oe_edit_only"/>
-                    <h2>
-                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>                        
-                    </h2>
                     <group>
                         <group>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
@@ -642,7 +637,6 @@
                                 <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
                                 <field name="period_id" class="oe_inline"/>
                             </div>
-                            <field name="name"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group><group>
                             <label for="balance_start"/>
@@ -1130,7 +1124,7 @@
 	                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
 	                                </group>
 	                            </group>
-	                            <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note."/>
+	                            <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
 	                        </page>
 	                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
 	                            <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
@@ -1441,7 +1435,7 @@
                                     <field name="reconcile_partial_id"/>
                                 </tree>
                             </field>
-                            <field name="narration" colspan="4" placeholder="Add an internal note." nolabel="1" height="50"/>
+                            <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
                         </page>
                     </notebook>
                     </sheet>
