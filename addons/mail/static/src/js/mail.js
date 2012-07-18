@@ -18,6 +18,8 @@ openerp.mail = function(session) {
 
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message') {
+                console.log(this);
+                // debugger
                 var record_thread = this.fields.message_ids;
                 var thread = record_thread.thread;
                 thread.instantiate_composition_form('comment', true, false, 0, action.context);
@@ -390,6 +392,9 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
+            this.$element.find('button.oe_form_button').click(function (event) {
+                event.preventDefault();
+            });
             // event: click on 'Send an Email' link that toggles the form for
             // sending an email (partner_ids)
             this.$element.find('a.oe_mail_compose_message_email').click(function (event) {

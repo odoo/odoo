@@ -27,23 +27,6 @@ from tools.translate import _
 import tools
 
 
-def _reopen(self, id, res_id, model):
-    return {'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'res_id': res_id,
-            'res_model': self._name,
-            'target': 'new',
-
-            # save original model in context, otherwise
-            # it will be lost on the action's context switch
-            'context': {'mail.compose.target.model': model,
-                        'active_id': res_id,
-                        'active_ids': [res_id],
-                        'active_model': model,
-                        }
-    }
-
 class mail_compose_message(osv.osv_memory):
     _inherit = 'mail.compose.message'
 
@@ -169,7 +152,7 @@ class mail_compose_message(osv.osv_memory):
                           'use_template': True})
 
         # _reopen same wizard screen with new template preselected
-        return _reopen(self, record.id, record.res_id, record.model)
+        return False
 
     # override the basic implementation 
     def render_template(self, cr, uid, template, model, res_id, context=None):
