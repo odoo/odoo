@@ -45,9 +45,10 @@ class payment_advice_report(osv.osv):
         'number':fields.char('Number', size=16, readonly=True),
         'bysal': fields.float('By Salary', readonly=True),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True,),
-        'cheque_nos':fields.char('Cheque Numbers', size=256),
-
+        'company_id':fields.many2one('res.company', 'Company', readonly=True),
+        'cheque_nos':fields.char('Cheque Numbers', size=256, readonly=True),
+        'neft': fields.boolean('NEFT Transaction', readonly=True),
+        'ifsc_code': fields.char('IFSC Code', size=32, readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'payment_advice_report')
@@ -62,18 +63,20 @@ class payment_advice_report(osv.osv):
                     p.number,
                     p.company_id,
                     p.bank_id,
-                    l.employee_id,
                     p.chaque_nos as cheque_nos,
+                    p.neft,
+                    l.employee_id,
+                    l.ifsc_code,
                     to_char(p.date, 'YYYY') as year,
                     to_char(p.date, 'MM') as month,
                     to_char(p.date, 'YYYY-MM-DD') as day,
                     1 as nbr
                 from
-                    hr_payroll_advice as p, hr_payroll_advice_line as l
-                where
-                    (p.id=l.advice_id)
+                    hr_payroll_advice as p
+                    left join hr_payroll_advice_line as l on (p.id=l.advice_id)
                 group by
-                    p.number,p.name,p.date,p.state,p.company_id,p.bank_id,p.chaque_nos,l.employee_id,l.advice_id,l.bysal
+                    p.number,p.name,p.date,p.state,p.company_id,p.bank_id,p.chaque_nos,p.neft,
+                    l.employee_id,l.advice_id,l.bysal,l.ifsc_code
             )
         """)
 payment_advice_report()

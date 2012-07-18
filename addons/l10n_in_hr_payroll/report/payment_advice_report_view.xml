@@ -22,6 +22,8 @@
                 <field name="month" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="cheque_nos" invisible="1"/>
+                <field name="neft" invisible="1"/>
+                <field name="ifsc_code" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -37,7 +39,10 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Payment Advices which are in draft state"/>
                     <filter icon="terp-check" string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Payment Advices which are confirmed"/>
                     <separator orientation="vertical"/>
+                    <filter icon="terp-camera_test" string="NEFT" domain="[('neft','=',True)]"/>
+                    <separator orientation="vertical"/>
                     <field name="date"/>
+                    <separator orientation="vertical"/>
                     <field name="number"/>
                     <field name="name"/>
                     <field name="employee_id"/>
@@ -45,7 +50,9 @@
                 </group>
                 <newline/>
                  <group expand="0" string="Extended Filters...">
+                    <field name="ifsc_code"/>
                     <field name="bank_id" widget="selection"/>
+                    <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
