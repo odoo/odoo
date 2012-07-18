@@ -162,14 +162,14 @@ class survey_question_wiz(osv.osv_memory):
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
                     if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
-                        etree.SubElement(xml_header_group, 'button', {'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_right"})
+                        etree.SubElement(xml_header_group, 'button', {'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_right oe_highlight"})
                     elif context.has_key('active') and context.get('active', False) and int(page_number) + 1 == total_pages and context.has_key('response_id'):
-                        etree.SubElement(xml_header_group, 'button', {'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
+                        etree.SubElement(xml_header_group, 'button', {'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right oe_highlight"})
                     elif context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages:
-                        etree.SubElement(xml_header_group, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right"})
+                        etree.SubElement(xml_header_group, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right oe_highlight"})
                     else:
-                        etree.SubElement(xml_header_group, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right"})
-                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right oe_survey_title_page"})
+                        etree.SubElement(xml_header_group, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right oe_highlight"})
+                    etree.SubElement(xml_header_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_right1 oe_survey_title_page"})
 
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
@@ -397,7 +397,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     # mark the survey request as done; call 'survey_req_done' on its actual model
                     survey_req_obj = self.pool.get(context.get('active_model'))
-                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'):
+                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'): 
                         survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
 
                     if sur_rec.send_response:
@@ -427,10 +427,12 @@ class survey_question_wiz(osv.osv_memory):
                             mail_message.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attachments=attachments, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
+                    xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
+
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
                     etree.SubElement(xml_form, 'newline')
-                    etree.SubElement(xml_form, 'button', {'icon': "gtk-go-forward", 'special':"cancel",'string':"OK",'colspan':"2"})
+                    etree.SubElement(xml_header, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = {}
@@ -484,7 +486,6 @@ class survey_question_wiz(osv.osv_memory):
                 value[field] = tot_per
         response_obj = self.pool.get('survey.response')
         surv_name_wiz = self.pool.get('survey.name.wiz')
-
         if context.has_key('response_id') and context.get('response_id') and int(context['response_id'][0]) > 0:
             data = super(survey_question_wiz, self).default_get(cr, uid, fields_list, context)
             response_ans = response_obj.browse(cr, uid, context['response_id'][context['response_no']])
@@ -531,11 +532,11 @@ class survey_question_wiz(osv.osv_memory):
                                     value[field] = ans.answer
 
         else:
+            
             if not context.has_key('sur_name_id'):
                 return value
             if context.has_key('active') and context.get('active',False):
                 return value
-            
             sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))
             ans_list = []
 
@@ -543,7 +544,6 @@ class survey_question_wiz(osv.osv_memory):
                 for field in fields_list:
                     if field in list(val):
                         value[field] = val[field]
-
         return value
 
     def create(self, cr, uid, vals, context=None):
