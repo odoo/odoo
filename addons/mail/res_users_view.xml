@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
             <data>
-                <field name="context_tz" position="after">
+                <field name="user_email" position="before">
                     <field name="notification_email_pref" readonly="0"/>
                 </field>
             </data>
@@ -23,7 +23,7 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
             <data>
-                <field name="context_tz" position="after">
+                <field name="user_email" position="before">
                     <field name="notification_email_pref"/>
                 </field>
                 <xpath expr="/form/sheet" position="after">
