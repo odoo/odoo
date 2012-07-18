@@ -268,11 +268,11 @@ class payroll_advice_line(osv.osv):
     _description = 'Bank Advice Lines'
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
-        'name': fields.char('Bank Account No.', size=32, required=True),
-        'ifsc_code': fields.char('IFSC Code', size=32),
+        'name': fields.char('Bank Account No.', size=25, required=True),
+        'ifsc_code': fields.char('IFSC Code', size=16),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
-        'debit_credit': fields.char('C/D', size=8, required=False),
+        'debit_credit': fields.char('C/D', size=3, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
     }
     _defaults = {
