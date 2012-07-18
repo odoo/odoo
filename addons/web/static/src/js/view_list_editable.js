@@ -352,7 +352,7 @@ openerp.web.list_editable = function (instance) {
                             _.bind(self.handle_onwrite_record, self, source_record)));
                 });
         },
-        handle_onwrite_record: function (id, source_record) {
+        handle_onwrite_record: function (source_record, id) {
             var record = this.records.get(id);
             if (!record) {
                 // insert after the source record
