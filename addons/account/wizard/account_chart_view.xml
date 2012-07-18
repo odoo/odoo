@@ -16,7 +16,7 @@
                         <field name="target_move"/>
                         <label for="period_from" string="Periods"/>
                         <div>
-                            <field name="period_from" class="oe_inline"/>-
+                            <field name="period_from" class="oe_inline"/> - 
                             <field name="period_to" class="oe_inline"/>
                         </div>
                     </group>
@@ -30,7 +30,7 @@
         </record>
 
         <record id="action_account_chart" model="ir.actions.act_window">
-            <field name="name">Select an Accounting Setup</field>
+            <field name="name">Chart of Accounts</field>
             <field name="res_model">account.chart</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -41,7 +41,6 @@
 
         <menuitem icon="STOCK_INDENT" action="action_account_chart"
             id="menu_action_account_tree2"
-            name="Chart of Accounts"
             parent="account.menu_finance_charts" />
     </data>
 </openerp>

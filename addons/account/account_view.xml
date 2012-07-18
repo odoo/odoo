@@ -2603,20 +2603,21 @@ action = pool.get('res.config').next(cr, uid, [], context)
                 </header>
                 <sheet string="Statement">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name" class="oe_inline"/>-<field name="period_id" class="oe_inline"/></h1>
+                    <h1><field name="name" class="oe_inline"/></h1>
                     <label for="journal_id" class="oe_edit_only"/>
                     <h2>
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>	
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                     </h2>
                     <group>
                         <group>
                             <field name="user_id" readonly="1" string="Responsible"/>
                             <field name="total_entry_encoding"/>
-                            <field name='company_id' widget="selection" groups="base.group_multi_company" />     
+                            <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
                         <group>
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
+                            <field name="period_id" class="oe_inline"/>
                             <field name="currency" invisible="1"/>
                         </group>
                     </group>

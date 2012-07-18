@@ -26,7 +26,7 @@
                         </group>
                         <group string="Periods" attrs="{'invisible':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}">
                             <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]"/>
-                            <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]"  />
+                            <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]"/>
                         </group>
                     </page>
                     <page string="Journals" name="journal_ids">
