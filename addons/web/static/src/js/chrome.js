@@ -857,31 +857,17 @@ instance.web.UserMenu =  instance.web.Widget.extend({
 });
 
 instance.web.Client = instance.web.Widget.extend({
-    name: 'Client',
-    init: function(parent, origin) {
+    init: function(parent) {
         if (instance.webclient) {
             throw new Error('Only one client per instance'); 
         }
         instance.client = instance.webclient = this;
         this._super(parent);
-        this._origin = origin;
     },
 
     start: function() {
-        var self = this;
-        return this.session.session_bind(this._origin).pipe(function() {
-            // now that we are bound, we can render the real template
-            var $e = undefined;
-            try {
-                $e = $(QWeb.render(self.name, {}));
-            } catch (e) {}
-            if ($e) {
-                self.$element.append($e);
-            }
-
-            self.bind_events();
-            return self.show_common();
-        });
+        this.bind_events();
+        this.show_common();
     },
 
     bind_events: function() {
@@ -928,7 +914,7 @@ instance.web.Client = instance.web.Widget.extend({
 });
 
 instance.web.WebClient = instance.web.Client.extend({
-    name: 'WebClient',
+    template: 'WebClient',
     init: function(parent) {
         this._super(parent);
         this._current_state = null;
@@ -947,8 +933,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     start: function() {
         var self = this;
-        return this._super().pipe(function() {
-            self.$element.addClass("openerp openerp_webclient_container");
+        return $.when(this._super()).pipe(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
@@ -964,17 +949,16 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_common: function() {
         var self = this;
-        return $.when(this._super()).pipe(function() {
-            window.onerror = function (message, file, line) {
-                self.crashmanager.on_traceback({
-                    type: _t("Client Error"),
-                    message: message,
-                    data: {debug: file + ':' + line}
-                });
-            };
-            self.login = new instance.web.Login(self);
-            self.login.on("login",self,self.show_application);
-        });
+        this._super();
+        window.onerror = function (message, file, line) {
+            self.crashmanager.on_traceback({
+                type: _t("Client Error"),
+                message: message,
+                data: {debug: file + ':' + line}
+            });
+        };
+        self.login = new instance.web.Login(self);
+        self.login.on("login",self,self.show_application);
     },
     show_login: function() {
         var self = this;
@@ -1097,9 +1081,9 @@ instance.web.WebClient = instance.web.Client.extend({
 });
 
 instance.web.EmbeddedClient = instance.web.Client.extend({
-    name: 'EmbedClient',
-    init: function(parent, origin, dbname, login, key, action_id, options) {
-        this._super(parent, origin);
+    template: 'EmbedClient',
+    init: function(parent, dbname, login, key, action_id, options) {
+        this._super(parent);
 
         this.dbname = dbname;
         this.login = login;
@@ -1110,6 +1094,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).pipe(function() {
+            return instance.connection.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
             return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
                 var action = result.result;
                 action.flags = _.extend({
@@ -1120,22 +1105,14 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
                     //pager : false
                 }, self.options, action.flags || {});
 
-                self.am.do_action(action);
+                self.action_manager.do_action(action);
+            });
             });
         });
     },
-
-    show_common: function() {
-        var self = this;
-        return $.when(this._super()).pipe(function() {
-            self.am = self.action_manager;
-            return instance.connection.session_authenticate(self.dbname, self.login, self.key, true);
-        });
-
-    },
 });
 
-instance.web.embed = function (origin, dbname, login, key, action, options) {
+instance.web.embed = function (dbname, login, key, action, options) {
     $('head').append($('<link>', {
         'rel': 'stylesheet',
         'type': 'text/css',
@@ -1146,7 +1123,7 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    var client = new instance.web.EmbeddedClient(null, origin, dbname, login, key, action, options);
+    var client = new instance.web.EmbeddedClient(null, dbname, login, key, action, options);
     client.insertAfter(currentScript);
 };
 

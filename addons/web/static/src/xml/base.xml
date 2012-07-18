@@ -371,6 +371,7 @@
 </t>
 
 <t t-name="WebClient">
+    <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
             <td colspan="2" class="oe_topbar">
@@ -394,10 +395,13 @@
             </td>
         </tr>
     </table>
+    </div>
 </t>
 
 <t t-name="EmbedClient">
-    <div class="oe_application"></div>
+    <div class="openerp">
+        <div class="oe_application"></div>
+    </div>
 </t>
 
 <t t-name="ViewManager">
