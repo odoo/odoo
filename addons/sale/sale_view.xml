@@ -146,10 +146,10 @@
                             <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                             <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                             <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent" class="oe_highlight"/>
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent"/>
                             <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_highlight"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent" class="oe_highlight"/>
-                            <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent"/>
+                            <button name="action_button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
