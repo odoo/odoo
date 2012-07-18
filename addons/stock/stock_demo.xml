@@ -182,11 +182,19 @@
 
         <!--        Child Company 1-->
         <record id="res_partner_company_1" model="res.partner">
+            <field name="name">Computech Systems</field>
             <field eval="1" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
             <field eval="1" name="active"/>
-            <field name="name">Computech Systems</field>
+            <field name="street">90 Streets Avenue</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
+            <field name="zip">60610</field>
+            <field name="city">Chicago</field>
+            <field name="email">info@computech.com</field>
+            <field name="phone">+1 312 349 3030</field>
+            <field name="website">www.computech.com</field>
         </record>
 
         <record id="res_partner_address_41" model="res.partner">
@@ -204,11 +212,19 @@
 
         <!--        Child Company 2-->
         <record id="res_partner_company_2" model="res.partner">
+            <field name="name">SoftSys Technologies</field>
             <field eval="1" name="customer"/>
             <field eval="1" name="supplier"/>
             <field eval="1" name="active"/>
             <field name="is_company">1</field>
-            <field name="name">SoftSys Technologies</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','us')]"/>
+            <field name="street">82-85 Academy Avenue</field>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
+            <field name="zip">60610</field>
+            <field name="city">Chicago</field>
+            <field name="email">info@softsys.com</field>
+            <field name="phone">+1 312 349 2020</field>
+            <field name="website">www.softsys.com</field>
         </record>
 
         <record id="res_partner_address_40" model="res.partner">
