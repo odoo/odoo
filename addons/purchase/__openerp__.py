@@ -25,7 +25,7 @@
     'version': '1.1',
     'category': 'Purchase Management',
     "sequence": 19,
-    "summary": "Request for Quotation, Invoicing Control",
+    "summary": "Requests for Quotation, Invoicing Control",
     'description': """
 Purchase module is for generating a purchase order for purchase of goods from a supplier.
 =========================================================================================
