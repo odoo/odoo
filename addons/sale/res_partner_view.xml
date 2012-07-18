@@ -1,7 +1,24 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-       <!-- Partner kanban view inherte -->
+        <record id="act_res_partner_2_sale_order" model="ir.actions.act_window">
+            <field name="name">Quotations and Sales</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
+            <field name="help">
+                This customer has no quotation or sale order.
+                Click here to create a new quotation.
+                &lt;p&gt;
+                The "Quotation" is the first step of the Sales flow.  Manage your sales from quotation to invoice.
+                &lt;p&gt;
+                You will be able to sell products (manage deliveries) as well as services (create projects).
+            </field>
+        </record>
+
+        <!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
             <field name="name">res.partner.kanban.saleorder.inherit</field>
             <field name="model">res.partner</field>
@@ -18,6 +35,22 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="res_partner_view_buttons" model="ir.ui.view">
+            <field name="name">res.partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="20">
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="%(sale.act_res_partner_2_sale_order)d" type="action"
+                        string="Quotations and Sales"
+                        groups="base.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
 
