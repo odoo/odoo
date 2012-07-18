@@ -49,7 +49,8 @@ Indian Payroll Salary Rules.
          'data/hr.salary.rule.csv',
          'security/ir.model.access.csv',
          'l10n_in_hr_payroll_report.xml',
-         'l10n_in_hr_payroll_sequence.xml'
+         'l10n_in_hr_payroll_sequence.xml',
+         'wizard/salary_rule_bymonth.xml'
      ],
     'demo_xml': ['l10n_in_hr_payroll_demo.xml'],
     'installable': True

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_salary_rule_month" model="ir.ui.view">
+            <field name="name">Salary rule monthly</field>
+            <field name="model">salary.rule.month</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Print Salary Rule Monthly" version="7.0">
+                <header>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </header>
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="employee_ids"  nolabel="1" colspan="4"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_salary_rule_month" model="ir.actions.act_window">
+            <field name="name">Salary rule monthly</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">salary.rule.month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <record model="ir.values" id="hr_attendance_week_values">
+            <field name="model_id" ref="hr_payroll.model_hr_salary_rule_category" />
+            <field name="name">Salary rule monthly</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_salary_rule_month'))" />
+            <field name="key">action</field>
+            <field name="model">salary.rule.month</field>
+        </record>
+        
+        <menuitem
+            name="Report"
+            parent="hr.menu_hr_root"
+            id="menu_monthly_salary_rule_report" sequence="50"
+           />
+
+        <menuitem
+            name="Monthly salary rule report"
+            parent="menu_monthly_salary_rule_report"
+            action="action_salary_rule_month"
+            id="menu_monthly_salary_rule"
+           />
+    </data>
+</openerp>

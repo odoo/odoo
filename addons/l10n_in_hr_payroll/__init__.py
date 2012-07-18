@@ -21,5 +21,6 @@
 
 import l10n_in_hr_payroll
 import report
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

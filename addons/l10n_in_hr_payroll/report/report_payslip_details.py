@@ -25,6 +25,7 @@ from hr_payroll import report
 class payslip_details_report_in(report.report_payslip_details.payslip_details_report):
 
     def __init__(self, cr, uid, name, context):
+        print "initttttttttttttttttttt"
         super(payslip_details_report_in, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_details_by_rule_category': self.get_details_by_rule_category,
