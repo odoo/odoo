@@ -2,12 +2,19 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="60"
+        <!-- Top menu item -->
+        <menuitem name="Manufacturing"
+            id="base.menu_mrp_root"
+            icon="terp-mrp"
             web_icon="images/manufacturing.png"
-            web_icon_hover="images/manufacturing-hover.png"/>
+            web_icon_hover="images/manufacturing-hover.png"
+            groups="group_mrp_user,group_mrp_manager"
+            sequence="60"/>
 
-        <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
+        <menuitem name="Manufacturing"
+            id="menu_mrp_manufacturing"
+            parent="base.menu_mrp_root"
+            sequence="1"/>
 
         <menuitem name="Master Data"
             id="menu_mrp_bom"

@@ -11,7 +11,7 @@
                     <field name="purchase_line_id" colspan="2" />
                 </xpath>
             </field>
-        </record>      
+        </record>
         <record id="stock_picking_inherit_purchase" model="ir.ui.view">
             <field name="name">Picking list</field>
             <field name="model">stock.picking</field>
@@ -35,7 +35,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <!-- Picking to Invoice -->
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
@@ -86,7 +86,7 @@
             <field name="context">{'search_default_purchase_id': active_id,'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
         </record>
-        
+
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
             <field name="name">Purchase Picking Inherited</field>
             <field name="model">purchase.order</field>
@@ -102,7 +102,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">Based on Incoming Shipments</field>
             <field name="res_model">stock.picking</field>

@@ -1,13 +1,19 @@
 <openerp>
-<data>
-    <menuitem name="Knowledge" icon="terp-stock" id="knowledge.menu_document"
-              sequence="130" groups="base.group_system,base.group_document_user"
-              web_icon="images/knowledge.png"
-              web_icon_hover="images/knowledge-hover.png"/>
-    <menuitem name="Configuration" id="knowledge.menu_document_configuration" parent="knowledge.menu_document" sequence="50"/>
+    <data>
 
-    <menuitem id="knowledge.menu_document2" name="Collaborative Content"
-       parent="knowledge.menu_document" />
+        <!-- Top menu item -->
+        <menuitem name="Knowledge"
+            id="knowledge.menu_document"
+            icon="terp-stock"
+            web_icon="images/knowledge.png"
+            web_icon_hover="images/knowledge-hover.png"
+            groups="base.group_system,base.group_document_user"
+            sequence="130"/>
 
-</data>
+        <menuitem name="Configuration" id="knowledge.menu_document_configuration" parent="knowledge.menu_document" sequence="50"/>
+
+        <menuitem id="knowledge.menu_document2" name="Collaborative Content"
+           parent="knowledge.menu_document"/>
+
+    </data>
 </openerp>

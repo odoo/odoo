@@ -2,11 +2,13 @@
 <openerp>
     <data>
 
-        <!-- toplevel menu -->
-        <menuitem id="mail_feeds_main" name="Feeds" sequence="10"
-            web_icon="static/src/img/feeds.png"
-            web_icon_hover="static/src/img/feeds-hover.png"
-            groups="base.group_user"/>
+        <!-- Top menu item -->
+        <menuitem name="Feeds"
+          id="mail_feeds_main"
+          web_icon="static/src/img/feeds.png"
+          web_icon_hover="static/src/img/feeds-hover.png"
+          groups="base.group_user"
+          sequence="10"/>
 
         <!-- left-side menu: Feeds !-->
         <menuitem id="mail_feeds" name="Feeds" parent="mail_feeds_main"/>
@@ -22,5 +24,6 @@
           <field name="action" ref="action_mail_my_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
+
     </data>
 </openerp>
