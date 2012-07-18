@@ -318,13 +318,16 @@ class account_asset_asset(osv.osv):
         return asset_id
     
     def open_entries(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({'search_default_asset_id': ids, 'default_asset_id': ids})
         return {
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'context':{'search_default_asset_id': ids, 'default_asset_id': ids},
+            'context': context,
         }
 
 account_asset_asset()
