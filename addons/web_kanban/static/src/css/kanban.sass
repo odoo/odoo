@@ -21,7 +21,8 @@
 
 .openerp .oe_kanban_view
     // KanbanView {{{
-    background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
+    //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
+    background: url(/web/static/src/img/form_sheetbg.png)
     height: inherit
     .ui-sortable-placeholder
         border: 1px dotted black
@@ -214,12 +215,14 @@
         text-align: center
     .oe_kanban_grouped .oe_kanban_show_more .oe_button
         width: 100%
-    .oe_kanban_ungrouped .oe_kanban_record
-        float: left
-        padding: 2px
-        box-sizing: border-box
-        -moz-box-sizing: border-box
-        -webkit-box-sizing: border-box
+    .oe_kanban_ungrouped
+        background: white
+        .oe_kanban_record
+            float: left
+            padding: 2px
+            box-sizing: border-box
+            -moz-box-sizing: border-box
+            -webkit-box-sizing: border-box
     .oe_kanban_action_button
         height: 22px
         margin: 0
@@ -333,14 +336,18 @@
         float: right
         position: relative
         top: 2px
+
+    .oe_kanban_project_times li
+        float: left
        
     .oe_kanban_status
+        position: relative
+        top: 4px
         display: inline-block
         height: 12px
         width: 12px
-        margin: 4px auto
         @include radius(6px)
-        @include box-shadow(0 1px 3px rgba(0,0,0,0.6))
+        @include radial-gradient((#eee 0%, #ccc 40%, #bbb 100%))
     .oe_kanban_status_green
         background: green
         @include radial-gradient((#55dd55 0%, #44aa44 40%, #339933 100%))

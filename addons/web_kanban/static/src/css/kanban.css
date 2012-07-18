@@ -1,6 +1,5 @@
-@charset "utf-8";
 .openerp .oe_kanban_view {
-  background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==);
+  background: url(/web/static/src/img/form_sheetbg.png);
   height: inherit;
 }
 .openerp .oe_kanban_view .ui-sortable-placeholder {
@@ -239,6 +238,9 @@
 .openerp .oe_kanban_view .oe_kanban_grouped .oe_kanban_show_more .oe_button {
   width: 100%;
 }
+.openerp .oe_kanban_view .oe_kanban_ungrouped {
+  background: white;
+}
 .openerp .oe_kanban_view .oe_kanban_ungrouped .oe_kanban_record {
   float: left;
   padding: 2px;
@@ -399,17 +401,23 @@
   position: relative;
   top: 2px;
 }
+.openerp .oe_kanban_view .oe_kanban_project_times li {
+  float: left;
+}
 .openerp .oe_kanban_view .oe_kanban_status {
+  position: relative;
+  top: 4px;
   display: inline-block;
   height: 12px;
   width: 12px;
-  margin: 4px auto;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  background-position: center center;
+  background-image: -webkit-radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: -moz-radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: -ms-radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
 }
 .openerp .oe_kanban_view .oe_kanban_status_green {
   background: green;
