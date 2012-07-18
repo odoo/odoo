@@ -15,7 +15,7 @@
                     <field name="period_id" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="audit"/>
+                    <field name="audit" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -111,9 +111,9 @@
                         </page>
                     </notebook>
                   </sheet>
-                    <footer>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                  <div class="oe_chatter">
+                      <field name="message_ids" widget="mail_thread"/>
+                  </div>
                 </form>
             </field>
         </record>
@@ -272,8 +272,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
-                      <field name="income_currency_exchange_account_id" colspan="2"/>
-                      <field name="expense_currency_exchange_account_id" colspan="2"/>
+                      <field name="income_currency_exchange_account_id"/>
+                      <field name="expense_currency_exchange_account_id"/>
                 </field>
             </field>
         </record>

@@ -8,7 +8,6 @@
             sequence="40" />
 
         <act_window
-            domain="[('applicant_id', '=', active_id)]"
             id="act_hr_applicant_to_meeting"
             name="Meetings"
             res_model="crm.meeting"
@@ -189,9 +188,9 @@
                 <separator string="Application Summary"/>
                 <field name="description" placeholder="Feedback of interviews..."/>
             </sheet>
-            <footer>
+            <div class="oe_chatter">
                 <field name="message_ids" widget="mail_thread"/>
-            </footer>
+            </div>
           </form>
         </field>
     </record>
@@ -502,18 +501,6 @@
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_source_action"
             sequence="10" groups="base.group_no_one"/>
-
-    <record model="ir.ui.view" id="view_crm_meeting_form">
-        <field name="name">CRM - Meetings Form</field>
-        <field name="model">crm.meeting</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="base_calendar.view_crm_meeting_form"/>
-        <field name="arch" type="xml">
-            <field name="partner_id" position="before">
-                <field name="applicant_id" attrs="{'invisible': [('categ_id','!=',%(hr_recruitment.categ_meet_interview)d)]}"/>
-            </field>
-        </field>
-    </record>
 
     </data>
 </openerp>

@@ -294,13 +294,11 @@ class hr_applicant(base_stage, osv.Model):
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
-            'default_applicant_id': applicant.id,
-            'default_partner_id': applicant.partner_id and applicant.partner_id.id or False,
+            'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
             'default_user_id': uid,
-            'default_email_from': applicant.email_from,
             'default_state': 'open',
             'default_name': applicant.name,
-            'default_categ_id': category.id,
+            'default_categ_ids': category and [category.id] or False,
         }
         return res
 
@@ -529,12 +527,5 @@ class hr_job(osv.osv):
                 'context' : context,
                 'nodestroy':True,
             }
-
-
-class crm_meeting(osv.osv):
-    _inherit = 'crm.meeting'
-    _columns = {
-        'applicant_id': fields.many2one('hr.applicant','Applicant'),
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

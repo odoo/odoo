@@ -40,7 +40,7 @@ openerp.anonymous = function(instance) {
                 var am = p.action_manager;
                 p.$element.find('.oe_leftbar').hide();
                 am.do_action({type:'ir.actions.client', tag:'login'});
-                am.client_widget.on('login', p, p.restart);
+                am.inner_widget.on('login', p, p.restart);
             });
         }
     });
