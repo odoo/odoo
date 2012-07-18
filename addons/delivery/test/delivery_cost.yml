@@ -9,7 +9,7 @@
   I check sale order after added delivery cost.
 -
   !python {model: sale.order.line}: |
-    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.sale_order_6')), ('product_id','=', ref('delivery_product'))])
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.sale_order_6')), ('product_id','=', ref('product_product_delivery'))])
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
     assert line_data.price_subtotal == 10, "Delivey cost is not correspond."
@@ -47,7 +47,7 @@
   I check sale order after added delivery cost.
 -
   !python {model: sale.order.line}: |
-    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.sale_order_2')), ('product_id','=', ref('delivery_product'))])
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.sale_order_2')), ('product_id','=', ref('product_product_delivery'))])
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
     assert line_data.price_subtotal == 0, "Delivey cost is not correspond."
