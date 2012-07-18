@@ -359,6 +359,9 @@
 .openerp .oe_kanban_view .oe_kanban_card .oe_dropdown_kanban {
   margin-top: 4px;
 }
+.openerp .oe_kanban_view .oe_kanban_card .oe_dropdown_kanban .oe_kanban_project_times li {
+  float: left;
+}
 .openerp .oe_kanban_view .oe_kanban_star {
   float: left;
   position: inline-block;
@@ -400,9 +403,6 @@
   float: right;
   position: relative;
   top: 2px;
-}
-.openerp .oe_kanban_view .oe_kanban_project_times li {
-  float: left;
 }
 .openerp .oe_kanban_view .oe_kanban_status {
   position: relative;
@@ -471,29 +471,24 @@
   visibility: hidden;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker {
-  padding: 3px 6px;
   white-space: nowrap;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker li {
   float: left;
+  margin: 0;
+  padding: 0;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker li a {
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: 1px solid white;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker li a:hover {
   border: 1px solid gray !important;
 }
 .openerp .oe_kanban_view .oe_kanban_colorpicker li:first-child a {
-  margin-top: 1px;
-  height: 16px;
   border: 1px solid #cccccc;
-}
-.openerp .oe_kanban_view .oe_kanban_colorpicker li:first-child a:hover {
-  margin-top: 0px;
-  height: 18px;
 }
 .openerp .oe_kanban_view .oe_kanban_color_0 {
   background-color: white;

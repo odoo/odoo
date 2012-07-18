@@ -307,6 +307,10 @@
             text-decoration: none
         .oe_dropdown_kanban
             margin-top: 4px
+            .oe_kanban_project_times
+                li
+                    float: left
+       
     .oe_kanban_star
         float: left
         position: inline-block
@@ -337,9 +341,6 @@
         position: relative
         top: 2px
 
-    .oe_kanban_project_times li
-        float: left
-       
     .oe_kanban_status
         position: relative
         top: 4px
@@ -387,24 +388,20 @@
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker
-        padding: 3px 6px
         white-space: nowrap
     .oe_kanban_colorpicker li
         float: left
+        margin: 0
+        padding: 0
         a
             display: inline-block
-            width: 18px
-            height: 18px
+            width: 16px
+            height: 16px
             border: 1px solid white
         a:hover
             border: 1px solid gray !important
     .oe_kanban_colorpicker li:first-child a
-        margin-top: 1px
-        height: 16px
         border: 1px solid #ccc
-        &:hover
-            margin-top: 0px
-            height: 18px
     // }}}
     // KanbanColors {{{
     .oe_kanban_color_0
