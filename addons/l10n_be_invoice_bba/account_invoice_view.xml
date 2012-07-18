@@ -12,7 +12,7 @@
         <field name="payment_term" position="after">
           <group col="4" colspan="2">
               <field name="reference_type" nolabel="1"  size="0" attrs="{'readonly':[('state','!=','draft')]}"
-                 on_change="generate_bbacomm(type,reference_type, partner_id.out_inv_comm_algorithm, partner_id,reference)" colspan="1"/>
+                 on_change="generate_bbacomm(type,reference_type, partner_id,reference, context)" colspan="1"/>
               <field name="reference" nolabel="1"  colspan="3" attrs="{'readonly':[('state','!=','draft')]}"/>
           </group>
         </field>
