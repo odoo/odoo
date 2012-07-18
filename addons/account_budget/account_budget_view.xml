@@ -117,9 +117,14 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                     </header>
                     <sheet string="Budget">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
-                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </group>
@@ -153,15 +158,15 @@
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                                 <field name="general_budget_id"/>
                                                 <field name="planned_amount"/>
+                                            </group>
+                                            <group>
                                                 <label for="date_from" string="Duration"/>
                                                 <div>
                                                     <field name="date_from" class="oe_inline"/> - 
                                                     <field name="date_to" class="oe_inline"/>
                                                 </div>
-                                            </group>
-                                            <group>
-                                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                                 <field name="paid_date"/>
+                                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                             </group>
                                         </group>
                                     </form>
