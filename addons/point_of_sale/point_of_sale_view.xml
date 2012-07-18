@@ -5,9 +5,6 @@
         <!-- Top menu item -->
         <menuitem name="PoS Backend"
             id="menu_point_root"
-            icon="terp-partner"
-            web_icon="images/pos.png"
-            web_icon_hover="images/pos-hover.png"
             groups="group_pos_manager"
             sequence="140"/>
 
@@ -760,13 +757,10 @@
         -->
         <record id="menu_point_root_touchscreen" model="ir.ui.menu">
             <field name="name">Point of Sale</field>
-            <field name="sequence">150</field>
             <field name="action" ref="action_pos_pos"/>
+            <field name="groups_id" eval="[(6, 0, [ref('point_of_sale.group_pos_manager'), ref('point_of_sale.group_pos_user')])]"/>
+            <field name="sequence">150</field>
         </record>
-
-        <!-- use menuitem to add web_icon and web_icon_hover above -->
-        <menuitem id="menu_point_root_touchscreen"
-            web_icon="images/pos.png" web_icon_hover="images/pos-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
         <record model="ir.ui.view" id="view_pos_config_form">
             <field name="name">pos.config.form.view</field>
