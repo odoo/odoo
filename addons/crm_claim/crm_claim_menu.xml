@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem
-            icon="terp-project" id="base.menu_main_pm"
-            name="Project" sequence="10"
-            groups="base.group_sale_salesman"
+
+        <!-- Top menu item -->
+        <menuitem name="Project"
+            id="base.menu_main_pm"
+            icon="terp-project"
             web_icon="images/project.png"
-            web_icon_hover="images/project-hover.png"/>
+            web_icon_hover="images/project-hover.png"
+            groups="base.group_sale_salesman"
+            sequence="90"/>
 
         <menuitem id="base.menu_aftersale" name="After-Sale Services"
             groups="base.group_sale_salesman"
             parent="base.menu_main_pm" sequence="2" />
 
         <!-- Claims Menu -->
-
         <record model="ir.actions.act_window" id="crm_case_categ_claim0">
             <field name="name">Claims</field>
             <field name="res_model">crm.claim</field>
@@ -51,13 +53,9 @@
             parent="base.menu_aftersale" action="crm_case_categ_claim0" sequence="1"/>
 
         <!-- Claim Stages -->
-        <menuitem
-            icon="terp-project" id="base.menu_main_pm"
-            name="Project" sequence="10"/>
-        
-        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
         <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1"/>
         <menuitem id="menu_claim_stage_view" name="Claim Stages" action="crm_claim_stage_act" parent="base.menu_project_config_project" sequence="20"/>
+        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
     </data>
 </openerp>
