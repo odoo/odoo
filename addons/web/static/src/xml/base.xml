@@ -657,9 +657,8 @@
         <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
-            t-att-data-field="column.id">
-            <t t-raw="render_cell(record, column)"/>
-        </td>
+            t-att-data-field="column.id"
+            ><t t-raw="render_cell(record, column)"/></td>
     </t>
     <td t-if="options.deletable" class='oe_list_record_delete' width="1">
         <button type="button" name="delete" class="oe_i">d</button>
