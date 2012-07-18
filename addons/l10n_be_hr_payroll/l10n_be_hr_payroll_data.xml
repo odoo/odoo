@@ -18,10 +18,12 @@
         <field name="partner_id" ref="res_partner_pp"/>
     </record>
     <record id="res_partner_meal_vouchers" model="res.partner">
-        <field name="name">Restaurant Tickets Organism</field>
+        <field name="name">Meal Voucher Supplier</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
     <record id="contrib_register_meal_vouchers" model="hr.contribution.register">
-        <field name="name">Restaurant Tickets Organism</field>
+        <field name="name">Meal Voucher Supplier</field>
         <field name="partner_id" ref="res_partner_meal_vouchers"/>
     </record>
 
