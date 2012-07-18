@@ -31,6 +31,12 @@ openerp.web.list_editable = function (instance) {
                 }
             });
 
+            this.records.bind('remove', function () {
+                if (self.editor.is_editing()) {
+                    self.cancel_edition();
+                }
+            });
+
             this.on('edit:after', this, function () {
                 self.$element.add(self.$buttons).addClass('oe_editing');
             });
@@ -282,7 +288,12 @@ openerp.web.list_editable = function (instance) {
             }, function () {
                 return this.editor.cancel().pipe(function (attrs) {
                     if (attrs.id) {
-                        return self.reload_record(self.records.get(attrs.id));
+                        var record = self.records.get(attrs.id);
+                        if (!record) {
+                            // Record removed by third party during edition
+                            return
+                        }
+                        return self.reload_record(record);
                     }
                     var to_delete = self.records.find(function (r) {
                         return !r.get('id');
