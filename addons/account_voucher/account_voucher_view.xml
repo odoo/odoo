@@ -52,6 +52,7 @@
                   <sheet string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="payment_rate_currency_id" invisible="1"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
