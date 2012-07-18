@@ -85,7 +85,7 @@ class account_invoice(osv.osv):
         }
         result['value'].update(res_update)
         return result                    
-#algorithm is not defined as field in any account related modules.so pass it as false argument.
+
     def generate_bbacomm(self, cr, uid, ids, type, reference_type, algorithm, partner_id, reference):
         partner_obj =  self.pool.get('res.partner')
         reference = reference or ''  
