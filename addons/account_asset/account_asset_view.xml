@@ -70,7 +70,7 @@
             </search>
         </field>
     </record>
-    
+
     <!--
         Asset
      -->
@@ -145,7 +145,7 @@
                                     <field name="parent_state" invisible="1"/>
                                     <button name="create_move" attrs="{'invisible':['|',('move_check','!=',False),('parent_state','!=','open')]}" icon="gtk-execute" string="Create Move" type="object"/>
                                 </tree>
-                                <form string="Depriciation Lines"> 
+                                <form string="Depreciation Lines"> 
                                     <group>
                                         <group>
                                             <field name="asset_id" invisible="1"/>
@@ -184,7 +184,7 @@
             </form>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_account_asset_asset_tree">
         <field name="name">account.asset.asset.tree</field>
         <field name="model">account.asset.asset</field>
