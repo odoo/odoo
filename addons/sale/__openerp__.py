@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Sales Management',
     "sequence": 14,
-    "summary": "Quotation, Sales, Invoicing",
+    "summary": "Quotations, Sales, Invoicing",
     'description': """
 The base module to manage quotations and sales orders.
 ======================================================
