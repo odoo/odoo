@@ -113,7 +113,7 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-			    <group>
+			                <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="tax_id" 
@@ -127,10 +127,10 @@
                                         <button type="object" class="oe_link oe_edit_only"
                                             name="compute_tax" string="(update)"
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
-			            </div>
+			                        </div>
                                     <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>                                    
-			        <group>
+			                    <group>
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
                                     <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                                     <field name="account_id"
@@ -139,7 +139,7 @@
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
                                 </group>
-			    </group>
+			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
