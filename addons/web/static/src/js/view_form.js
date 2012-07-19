@@ -865,6 +865,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                             return option[0] === value;
                         })[1];
                     break;
+                case 'many2one':
+                    displayed = field.get_displayed();
+                    break;
                 }
 
                 return {
@@ -2780,6 +2783,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.inhibit_on_change = true;
         this._super(value_);
         this.inhibit_on_change = false;
+    },
+    get_displayed: function() {
+        return this.display_value["" + this.get("value")];
     },
     add_id: function(id) {
         this.display_value = {};
