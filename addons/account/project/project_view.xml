@@ -118,6 +118,7 @@
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
             <field name="type">form</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry" version="7.0">
                     <group>
@@ -385,7 +386,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="currency" position="after">
+                <field name="type" position="after">
                     <field name="analytic_journal_id"/>
                 </field>
             </field>
