@@ -1,10 +1,8 @@
 #-*- coding:utf-8 -*-
-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    d$
+#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +20,9 @@
 ##############################################################################
 
 import datetime
-from report import report_sxw
 import time
+
+from report import report_sxw
 import pooler
 
 class report_salary_rule_bymonth(report_sxw.rml_parse):
@@ -42,7 +41,7 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
         self.mnths_tol = []
         self.total=0.0
 
-    def get_periods(self,form):
+    def get_periods(self, form):
 #       Get start year-month-date and end year-month-date
         fy = int(form['start_date'][0:4])
         ly = int(form['end_date'][0:4])
@@ -55,7 +54,7 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
 
 #       Get name of the months from integer
         mnth_name = []
-        for count in range(0,no_months):
+        for count in range(0, no_months):
             m = datetime.date(cy, cm, 1).strftime('%b')
             mnth_name.append(m)
             self.mnths.append(str(cm)+'-'+str(cy))
@@ -63,18 +62,18 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
                 cm = 0
                 cy = ly
             cm = cm +1
-        for c in range(0,(12-no_months)):
+        for c in range(0, (12-no_months)):
             mnth_name.append('None')
             self.mnths.append('None')
         return [mnth_name]
 
-    def get_employee(self,form):
+    def get_employee(self, form):
         ls1=[]
         ls = []
-        tol_mnths=['Total',0,0,0,0,0,0,0,0,0,0,0,0]
+        tol_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp = pooler.get_pool(self.cr.dbname).get('hr.employee')
         emp_ids = form['employee_ids']
-        empll  = emp.browse(self.cr,self.uid, emp_ids)
+        empll  = emp.browse(self.cr, self.uid, emp_ids)
         cnt = 1
         for emp_id in empll:
             ls1.append(emp_id.name)
@@ -91,7 +90,6 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
                             where (pl.code = 'NET')  and p.employee_id  = '''+str(emp_id.id)+''' \
                             and to_char(date_to,'mm-yyyy') like '%'''+mnth+'''%'
                             group by r.name, p.date_to,emp.id''')
-#                    self.cr.execute(query)
                     sal = self.cr.fetchall()
                     if sal:
                         ls1.append(sal[0][0])
@@ -116,7 +114,7 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
 
     def get_total(self):
         for item in self.mnths_tol:
-            for count in range(1,len(item)):
+            for count in range(1, len(item)):
               if item[count] == '':
                   continue
               self.total += item[count]

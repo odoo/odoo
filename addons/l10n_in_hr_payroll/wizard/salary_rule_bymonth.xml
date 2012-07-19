@@ -29,27 +29,19 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
-        <record model="ir.values" id="hr_attendance_week_values">
-            <field name="model_id" ref="hr_payroll.model_hr_salary_rule_category" />
-            <field name="name">Salary rule monthly</field>
-            <field name="key2">client_print_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_salary_rule_month'))" />
-            <field name="key">action</field>
-            <field name="model">salary.rule.month</field>
-        </record>
-        
+
         <menuitem
-            name="Report"
+            name="Reporting"
             parent="hr.menu_hr_root"
             id="menu_monthly_salary_rule_report" sequence="50"
            />
 
         <menuitem
-            name="Monthly salary rule report"
+            name="Monthly Salary Rule Report"
             parent="menu_monthly_salary_rule_report"
             action="action_salary_rule_month"
             id="menu_monthly_salary_rule"
            />
+
     </data>
 </openerp>
