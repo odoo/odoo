@@ -154,7 +154,7 @@
                     </group>
 
                     <notebook colspan="4">
-                        <page string="Contacts">
+                        <page string="Contacts" attrs="{'invisible': [('is_company','=',False)]}">
                             <field name="child_ids" context="{'default_parent_id': active_id}" mode="kanban">
                                 <kanban>
                                     <field name="color"/>
