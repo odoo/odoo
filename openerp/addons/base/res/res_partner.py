@@ -303,8 +303,8 @@ class res_partner(osv.osv):
         return res
 
     def name_create(self, cr, uid, name, context=None):
-        """ Overrider of orm's name_create method for partners. The purpose is
-            to handle some basic syntaxic tricks to create partners using the
+        """ Override of orm's name_create method for partners. The purpose is
+            to handle some basic formats to create partners using the
             name_create.
             Supported syntax:
             - 'info@mail.com': create a partner with name info@mail.com, and
