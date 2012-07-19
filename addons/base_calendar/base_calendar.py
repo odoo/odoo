@@ -1034,7 +1034,7 @@ class calendar_event(osv.osv):
              ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
-                                                'Show Time As', states={'done': [('readonly', True)]}),
+                                                'Show Time as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([('tentative', 'Tentative'),
                         ('cancelled', 'Cancelled'),

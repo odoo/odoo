@@ -9,7 +9,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='Accounting']/field[@name='bank_ids']/form/field[@name='acc_number']" position="before">
+                    <xpath expr="//field[@name='bank_ids']/form/field[@name='acc_number']" position="before">
                         <newline />
                         <field name="bank_code" />
                         <field name="office" />
@@ -17,7 +17,7 @@
                         <field name="key" />
                         <newline />
                     </xpath>
-                    <xpath expr="//page[@string='Accounting']/field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                    <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
                         <field name="rib_acc_number"/>
                     </xpath>
                 </data>

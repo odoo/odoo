@@ -3,9 +3,9 @@
     <data>
 
          <!--  Partners inherited form -->
-        <!-- TOFIX: set sequence into group instead of fix group in base.view_parter_form -->
-        <record id="view_speaker_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.speaker.info.inherit</field>
+
+       <record id="view_event_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.event.info.inherit</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
@@ -14,43 +14,31 @@
                     <field name="speaker"/>
                 </field>
                 <xpath expr="//page[@name='page_history']" position="attributes">
-                   <attribute name="invisible">False</attribute>
+                    <attribute name="invisible">False</attribute>
                 </xpath>
-                <xpath expr="//group[@name='grp_event']" position="attributes">
-                   <attribute name="invisible">False</attribute>
+                <xpath expr="//page[@name='page_history']" position="inside">
+                    <group name="grp_event" string="Event">
+                        <field name="event_ids" colspan="4" nolabel="1">
+                            <tree string="Events">
+                                <field name="name" string="Event"/>
+                                <field name="main_speaker_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group name="grp_registration" string="Registration">
+                        <field name="event_registration_ids" colspan="4" nolabel="1">
+                            <tree string="Events Registration">
+                                <field name="event_begin_date" string="Date"/>
+                                <field name="event_id" />
+                                <field name="nb_register"/>
+                                <field name="state"/>
+                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                                <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                            </tree>
+                        </field>
+                    </group>
                 </xpath>
-                <xpath expr="//group[@name='grp_registration']" position="attributes">
-                   <attribute name="invisible">False</attribute>
-                </xpath>
-            </field>
-       </record>
-       <record id="view_event_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.event.info.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <group name="grp_event" position="inside">
-                    <field name="event_ids" colspan="4" nolabel="1">
-                        <tree string="Events">
-                            <field name="name" string="Event"/>
-                            <field name="main_speaker_id"/>
-                        </tree>
-                    </field>
-                   </group>
-                   <group name="grp_registration" position="inside">
-                    <field name="event_registration_ids" colspan="4" nolabel="1">
-                        <tree string="Events Registration">
-                            <field name="event_begin_date" string="Date"/>
-                            <field name="event_id" />
-                            <field name="nb_register"/>
-                            <field name="state"/>
-                            <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                            <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
-                            <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                        </tree>
-                    </field>
-               </group>
             </field>
        </record>
 
