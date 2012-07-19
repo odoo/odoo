@@ -36,7 +36,7 @@ class mail_group(osv.osv):
     A mail_group is a collection of users sharing messages in a discussion
     group. Group users are users that follow the mail group, using the
     subscription/follow mechanism of OpenSocial. A mail group has nothing
-    in common wih res.users.group.
+    in common with res.users.group.
     Additional information on fields:
         - ``member_ids``: user member of the groups are calculated with
           ``message_get_subscribers`` method from mail.thread
@@ -110,37 +110,33 @@ class mail_group(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'responsible_id': fields.many2one('res.users', string='Responsible',
-                            ondelete='set null', required=True, select=1,
-                            help="Responsible of the group that has all rights on the record."),
+            ondelete='set null', required=True, select=1,
+            help="Responsible of the group that has all rights on the record."),
         'public': fields.boolean('Visible by non members', help='This group is visible by non members. \
-                            Invisible groups can add members through the invite button.'),
-        'models': fields.many2many('ir.model', rel='mail_group_ir_model_rel',
-                            id1='mail_group_id', id2='model_id',
-                            string='Linked models', help='Linked models'),
-        'groups': fields.many2many('res.groups', rel='mail_group_res_group_rel',
-                            id1='mail_group_id', id2='groups_id',
-                            string='Linked groups', help='Linked groups'),
-        'push_to_groups': fields.boolean('Push to groups', 
-                            help="When posting a comment on this mail_group, \
-                            the message is pushed to the users beloging to \
-                            the linked user groups."),
-        'photo_big': fields.binary('Full-size photo', help='Field holding \
-                            the full-sized PIL-supported and base64 encoded \
-                            version of the group image. The photo field is \
-                            used as an interface for this field.'),
-        'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Photo', type="binary",
+            Invisible groups can add members through the invite button.'),
+        'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
+            id1='mail_group_id', id2='groups_id', string='Linked groups',
+            help="Members of those groups will automatically added as followers. "\
+                    "Note that they will be able to manage their subscription manually "\
+                    "if necessary."),
+        'photo_big': fields.binary('Full-size photo',
+            help='Field holding the full-sized PIL-supported and base64 encoded "\
+                    version of the group image. The photo field is used as an "\
+                    interface for this field.'),
+        'photo': fields.function(_get_photo, fnct_inv=_set_photo,
+            string='Photo', type="binary",
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
-            }, help='Field holding the automatically resized (128x128) PIL-supported and base64 encoded version of the group image.'),
+            },
+            help='Field holding the automatically resized (128x128) PIL-supported and base64 encoded version of the group image.'),
         'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
-                            type='many2many', relation='res.users',
-                            string='Group members', multi='get_member_ids'),
+            type='many2many', relation='res.users', string='Group members', multi='get_member_ids'),
         'member_count': fields.function(get_member_ids, type='integer',
-                            string='Member count', multi='get_member_ids'),
+            string='Member count', multi='get_member_ids'),
         'is_subscriber': fields.function(get_member_ids, type='boolean',
-                            string='Joined', multi='get_member_ids'),
+            string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
-                            string='Messages count for last month'),
+            string='Messages count for last month'),
     }
 
     _defaults = {
@@ -148,57 +144,30 @@ class mail_group(osv.osv):
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'photo': _get_default_photo,
     }
-    
-    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, new_msg_vals, context=None):
-        """ Overrider OpenChatter message_create_get_notification_user_ids
-            method. The purpose is to add to the subscribers users that 
-            belong to the res.groups linked to the mail.group through the 
-            groups field. The fields push_to_groups allows to control this 
-            feature.
-        """
-        notif_user_ids = super(mail_group, self).message_create_get_notification_user_ids(cr, uid, thread_ids, new_msg_vals, context=context)
-        for thread in self.browse(cr, uid, thread_ids, context=context):
-            if not thread.push_to_groups or not thread.groups:
-                continue
-            for group in thread.groups:
-                for user in group.users:
-                    notif_user_ids.append(user.id)
-        return list(set(notif_user_ids))
-        
-    def message_load(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, count=False, context=None):
-        """ Override OpenChatter message_load method.
-            if models attribute is set: search all messages from that model
-            else: as usual
-        """
-        all_msg_ids = []
-        message_obj = self.pool.get('mail.message')
-        for group in self.browse(cr, uid, ids, context=context):
-            # call super to have default message ids
-            group_msg_ids = super(mail_group, self).message_load(cr, uid, ids, fetch_ancestors, ancestor_ids, limit, offset, domain, False, True, context)
-            group_domain = ['&', ('model', '=', self._name), ('id', 'in', group_msg_ids)]
-            # if no linked domain: go on
-            if not group.models:
-                search_domain = group_domain
-            # add message ids linked to group models
-            else:
-                model_list = []
-                for model in group.models:
-                    model_list.append(model.model)
-                search_domain = [('|')] + group_domain
-                search_domain += [('model', 'in', model_list)]
-            # perform the search
-            msg_ids = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
-            if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
-            all_msg_ids += msg_ids
-        if count:
-            return len(all_msg_ids)
-        else:
-            return message_obj.read(cr, uid, all_msg_ids, context=context)
-    
+
+    def create(self, cr, uid, vals, context=None):
+        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
+        if vals.get('group_ids'):
+            user_goup_ids = vals.get('group_ids')[0][2]
+            res_groups_obj = self.pool.get('res.groups')
+            user_ids = []
+            for group in res_groups_obj.browse(cr, uid, user_goup_ids, context=None):
+                user_ids += [user.id for user in group.users]
+            self.message_subscribe(cr, uid, [mail_group_id], user_ids, context=context)
+        return mail_group_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('group_ids'):
+            user_goup_ids = vals.get('group_ids')[0][2]
+            res_groups_obj = self.pool.get('res.groups')
+            user_ids = []
+            for group in res_groups_obj.browse(cr, uid, user_goup_ids, context=None):
+                user_ids += [user.id for user in group.users]
+            self.message_subscribe(cr, uid, ids, user_ids, context=context)
+        return super(mail_group, self).write(cr, uid, ids, vals, context=context)
+
     def action_group_join(self, cr, uid, ids, context=None):
         return self.message_subscribe(cr, uid, ids, context=context)
     
     def action_group_leave(self, cr, uid, ids, context=None):
         return self.message_unsubscribe(cr, uid, ids, context=context)
-    

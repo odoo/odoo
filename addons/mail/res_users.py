@@ -80,3 +80,41 @@ class res_users(osv.osv):
                 custom_domain += ['|']
             custom_domain += ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
         return ['|'] + initial_domain + custom_domain
+
+class res_users_mail_group(osv.osv):
+    """ Update of res.groups class
+        - if adding/removing users from a group, check mail.groups linked to
+          this user group, and subscribe / unsubscribe them from the discussion
+          group. This is done by overriding the write method.
+    """
+    _name = 'res.users'
+    _inherit = ['res.users', 'mail.thread']
+
+    def write(self, cr, uid, ids, vals, context=None):
+        write_res = super(res_users_mail_group, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('groups_id'):
+            # form: {'groups_id': [(3, 10), (3, 3), (4, 10), (4, 3)]}
+            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
+            mail_group_obj = self.pool.get('mail.group')
+            mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', user_group_ids)], context=context)
+            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, ids, context=context)
+        return write_res
+        
+
+class res_groups_mail_group(osv.osv):
+    """ Update of res.groups class
+        - if adding/removing users from a group, check mail.groups linked to
+          this user group, and subscribe / unsubscribe them from the discussion
+          group. This is done by overriding the write method.
+    """
+    _name = 'res.groups'
+    _inherit = 'res.groups'
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('users'):
+            # form: {'users': [(6, 0, [ids]}
+            user_ids = vals['users'][0][2]
+            mail_group_obj = self.pool.get('mail.group')
+            mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', ids)], context=context)
+            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, user_ids, context=context)
+        return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
