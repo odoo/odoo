@@ -11,8 +11,7 @@
                     <form position="attributes">
                         <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
-                    <xpath expr="//button[@string='Install Modules']" position="replace"/>
-                    <xpath expr="//button[@string='Cancel']" position="replace"/>
+                    <xpath expr="//footer" position="replace"/>
                     <xpath expr="//separator[@string='title']" position="after" version="7.0">
                         <group>
                             <field name="plugin32" widget="url"/>
