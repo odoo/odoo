@@ -99,7 +99,7 @@ class account_move_journal(osv.osv_memory):
     
             period = False
             if period_id:
-                period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
+                period = period_pool.browse(cr, uid, [period_id], context=None)[0]['name']
                 period_string = _("Period: %s") % tools.ustr(period)
     
             open_string = _("Open")
