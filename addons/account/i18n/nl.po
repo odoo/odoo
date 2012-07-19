@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-07-16 11:42+0000\n"
+"PO-Revision-Date: 2012-07-18 13:40+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-17 05:14+0000\n"
-"X-Generator: Launchpad (build 15627)\n"
+"X-Launchpad-Export-Date: 2012-07-19 05:01+0000\n"
+"X-Generator: Launchpad (build 15637)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -761,7 +761,7 @@ msgstr "Vandaag afgeletterde relaties"
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Sale journal in this year"
-msgstr "Verkoop journaal in dit jaar"
+msgstr "Verkoopboek in dit jaar"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -869,7 +869,7 @@ msgstr "Automatisch afletteren"
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "J.C./Move name"
-msgstr "J.C./Verplaats naam"
+msgstr "Dagboek code / Mutatienaam"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -1116,7 +1116,7 @@ msgstr "Weeknummer"
 #. module: account
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
-msgstr "Landschap modus"
+msgstr "Liggend afdrukken"
 
 #. module: account
 #: code:addons/account/account.py:645
@@ -1369,7 +1369,7 @@ msgstr "Concept abonnement"
 #: model:ir.model,name:account.model_account_account
 #: field:report.account.sales,account_id:0
 msgid "Account"
-msgstr "Grootboekrek."
+msgstr "Rekening"
 
 #. module: account
 #: field:account.tax,include_base_amount:0
@@ -1431,7 +1431,7 @@ msgstr "Belastingsjabloon zoeken"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "Letter boekingen af"
+msgstr "Afletteren boekingen"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1686,7 +1686,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "Date/Code"
-msgstr "Datum/code"
+msgstr "Datum"
 
 #. module: account
 #: field:account.analytic.line,general_account_id:0
@@ -1951,7 +1951,7 @@ msgstr "Kostenplaatsen"
 #, python-format
 msgid "Please verify that an account is defined in the journal."
 msgstr ""
-"Controleer alstublieft of een grootboekrekening is opgegeven in het journaal"
+"Controleer alstublieft of een grootboekrekening is opgegeven in het dagboek"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -2507,9 +2507,9 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
-"Kan geen journaal van het type %s vinden voor dit bedrijf.\n"
-"U kunt een journaal creëren in het menu:\n"
-"Configuratie\\Financieel boekhouden\\Rekeningen\\Journalen"
+"Kan geen dagboek van het type %s vinden voor dit bedrijf.\n"
+"U kunt een dagboek aanmaken in het menu:\n"
+"Instellingen\\ Financiële administratie\\Overige dagboeken"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -2917,7 +2917,7 @@ msgstr "Klanten"
 #: report:account.analytic.account.journal:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "Period to"
-msgstr "Periode tot"
+msgstr "Periode t/m"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -3314,7 +3314,7 @@ msgstr ""
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
-msgstr "Geen Eindejaars-journaal gedefinieerd voor het fiscale jaar"
+msgstr "Geen Eindejaars-dagboek gedefinieerd voor het fiscale jaar"
 
 #. module: account
 #: view:account.tax:0
@@ -3443,7 +3443,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Boekingen niet vereffenen"
+msgstr "Afletteren ongedaan maken"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
@@ -3934,7 +3934,7 @@ msgstr "Standaard invoer"
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr "Journaal voor kostenplaats boekingen"
+msgstr "Dagboek voor kostenplaats boekingen"
 
 #. module: account
 #: constraint:account.aged.trial.balance:0
@@ -4051,7 +4051,7 @@ msgstr "Bevestig"
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
-msgstr "Kostenstaat"
+msgstr "Kostenplaats kosten"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -4102,7 +4102,7 @@ msgstr "30 Dagen einde van de maand"
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_balance
 msgid "Analytic Balance"
-msgstr "Kostenplaats balans"
+msgstr "Kostenplaatsbalans (kostenplaats-rekening)"
 
 #. module: account
 #: help:account.account,active:0
@@ -4481,7 +4481,7 @@ msgstr "Kan zichtbaar zijn?"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr "Rekening journaal selectie"
+msgstr "Rekening dagboek  selectie"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4718,7 +4718,7 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accounting fields anymore."
 msgstr ""
-"Alle concept boekingen in dit journaal en periode worden gecontroleerd. Dit "
+"Alle concept boekingen in dit dagboek en periode worden gecontroleerd. Dit "
 "betekent dat u de boekingsvelden niet meer kunt wijzigen."
 
 #. module: account
@@ -5084,7 +5084,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.balance:0
 msgid "Analytic Balance -"
-msgstr "Kostenplaats saldo -"
+msgstr "Kostenplaats balans -"
 
 #. module: account
 #: report:account.account.balance:0
@@ -5227,7 +5227,7 @@ msgstr "Maand"
 #. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "Volgende relatie voor vereffening"
+msgstr "Volgende relatie om af te letteren"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -6457,7 +6457,7 @@ msgstr "Afletteren: Ga naar de volgende relatie"
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
 msgid "Inverted Analytic Balance"
-msgstr "Omgekeerde kostenplaats balans"
+msgstr "Kostenplaatsbalans (rekening-kostenplaats)"
 
 #. module: account
 #: field:account.tax.template,applicable_type:0
@@ -8287,7 +8287,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
 msgid "Inverted Analytic Balance -"
-msgstr "Geïnverteerde kostenplaatsbalans -"
+msgstr "Omgekeerde kostenplaatsbalans -"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -8387,7 +8387,7 @@ msgstr "Proforma"
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "J.C. /Move name"
-msgstr "J.C. /Mutatienaam"
+msgstr "Dagboek code / Mutatienaam"
 
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
@@ -8618,7 +8618,7 @@ msgstr "Letter deels af"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr "Geïnverteerde kostenplaats balans"
+msgstr "Kostenplaatsbalans (rekening-kostenplaats)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -9606,7 +9606,7 @@ msgstr ""
 #. module: account
 #: view:analytic.entries.report:0
 msgid "Analytic Entries of last 365 days"
-msgstr "Kostenplaatsboekingen over ed afgelopen 365 dagen"
+msgstr "Kostenplaatsboekingen over de afgelopen 365 dagen"
 
 #. module: account
 #: report:account.central.journal:0
@@ -9699,7 +9699,7 @@ msgstr "Verdeling"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr "Kostenplaats balans"
+msgstr "Kostenplaatsbalans (kostenplaats-rekening)"
 
 #. module: account
 #: code:addons/account/account.py:412
@@ -10428,7 +10428,7 @@ msgstr "Lege rekeningen? "
 #. module: account
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr "De gekozen journaal en periode moeten behoren tot hetzelfde bedrijf."
+msgstr "Het gekozen dagboek en periode moeten behoren tot hetzelfde bedrijf."
 
 #. module: account
 #: view:account.invoice:0
@@ -10988,7 +10988,7 @@ msgstr "Daboekregels bevestigen"
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
 #: model:ir.actions.report.xml,name:account.account_analytic_account_quantity_cost_ledger
 msgid "Cost Ledger (Only quantities)"
-msgstr "Kostenadministratie (Alleen aantallen)"
+msgstr "Kostenplaats kosten (alleen aantallen)"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
