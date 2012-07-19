@@ -124,27 +124,33 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="date"/>
-                            <label for="unit_amount"/>
-                                <group class="oe_inline">
-                                    <field name="unit_amount" nolabel="1"/>
-                                    <field name="product_uom_id" nolabel="1" />
-                                </group>
-                            <field name="amount"/>
-                        </group>
-                        <group>
                             <field name="account_id"/>
                             <field name="journal_id"/>
-                            <field name="product_id"/>
                         </group>
                         <group>
+                            <field name="date"/>
                             <field name="ref"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
+                        <group string="Amount">
+                            <field name="amount"/>
+                            <label for="amount_currency"/>
+                            <div>
+                                <field name="amount_currency" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group string="Product Information">
+                            <field name="product_id"/>
+                            <label for="unit_amount"/>
+                            <div>
+                                <field name="unit_amount" class="oe_inline"/>
+                                <field name="product_uom_id" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group string="General Accounting">
                             <field name="general_account_id"/>
                             <field name="move_id" readonly="1"/>
-                            <field name="amount_currency" class="oe_inline"/>
                         </group>
                     </group>
                 </form>
