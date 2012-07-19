@@ -37,25 +37,21 @@
                     Application with<label for="module_crm_caldav" string="Caldav"/>Protocol</div>
                     </div>
                     </group>
+                    <separator string="Customer Form"/>
+                    <div>
+                        <div><field name="module_google_map"/>Add Google Maps on Customer</div>
+                    </div>
+                </group>
+                <group name="config_sale" position="inside">
+                    <separator string="Documents and Wiki" colspan="2"/>
+                        <div>
+                            <div><field name="module_wiki_sale_faq"/>
+                            Share Information with<label for="module_wiki_sale_faq" string="Sales FAQ"/></div>
+                        </div>
                 </group>
             </field>
         </record>
-        <record id="view_config_sale" model="ir.ui.view">
-            <field name="name">Sales Application</field>
-            <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="sale.view_sales_config"/>
-            <field name="arch" type="xml">
-                <div name="module_warning" version="7.0" position="after">
-                     <div><field name="module_google_map"/>Add Google Maps on Customer</div>
-                </div>
-                <div name="module_sale_margin" version="7.0" position="after">
-                    <div><field name="module_wiki_sale_faq"/>
-                        Share Information with<label for="module_wiki_sale_faq" string="Sales FAQ"/></div>
-                </div>
-            </field>
-        </record>
-
+        
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
             sequence="1" action="base_setup.action_sale_config"/>
 
