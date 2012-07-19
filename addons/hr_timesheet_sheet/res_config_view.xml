@@ -7,10 +7,16 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_hr_timesheet_sheet" position="after">
-                    <field name="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}"/>
-                    <field name="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}"/>
-                </field>
+                <xpath expr="//div[@name='hr_timesheet']" position="after">
+                    <div>
+                        <label for="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)]}"/>
+                        <field name="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}" class="oe_inline"/>
+                    </div>
+                    <div>
+                        <label for="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)]}"/>
+                        <field name="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}" class="oe_inline"/>
+                    </div>
+                </xpath>
             </field>
         </record>
     </data>
