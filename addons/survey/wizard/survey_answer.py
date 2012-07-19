@@ -32,7 +32,6 @@ from tools import to_xml
 from tools.translate import _
 import addons
 from tools.safe_eval import safe_eval
-import ast
 
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
@@ -597,9 +596,9 @@ class survey_question_wiz(osv.osv_memory):
                     self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
                     self.pool.get(context.get('object',False)).survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
                 else:
-                    self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
-        sur_name_read['store_ans'] = ast.literal_eval(sur_name_read['store_ans'])
-        if sur_name_read['store_ans'] and type(sur_name_read['store_ans']) == dict:
+                    self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})        
+        if sur_name_read['store_ans'] and type(safe_eval(sur_name_read['store_ans'])) == dict:
+            sur_name_read['store_ans'] = safe_eval(sur_name_read['store_ans'])
             for key,val in sur_name_read['store_ans'].items():
                 for field in vals:
                     if field.split('_')[0] == val['question_id']:
