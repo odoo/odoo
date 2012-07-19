@@ -322,7 +322,6 @@ class res_partner(osv.osv):
         contact_regex_res = contact_regex.findall(name)
         email_regex_res = email_regex.findall(name)
         if contact_regex_res:
-            print contact_regex_res
             name = contact_regex_res[0][0].rstrip(' ') # remove extra spaces on the right
             email = contact_regex_res[0][1]
             rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
