@@ -131,7 +131,7 @@ Interaction Methods
               rejected if a pending edition could not be saved
               (e.g. validation failure)
 
-.. js:function:: openerp.web.ListView.start_edition([record])
+.. js:function:: openerp.web.ListView.start_edition([record][, options])
 
     Starts editing the provided record inline, through an overlay form
     view of editable fields in the record.
@@ -142,7 +142,9 @@ Interaction Methods
     This method resolves any pending edition when invoked, before
     starting a new edition.
 
+    :param record: record to edit, or null to create a new record
     :type record: :js:class:`~openerp.web.list.Record`
+    :param EditOptions options:
     :returns: delegate to the form used for the edition
 
 .. js:function:: openerp.web.ListView.save_edition
@@ -303,7 +305,7 @@ formview, delegating instead to its
         :type record_state: String
         :rtype: Boolean
 
-    .. js:function:: openerp.web.list.Editor.edit(record, configureField)
+    .. js:function:: openerp.web.list.Editor.edit(record, configureField[, options])
 
         Loads the provided record into the internal form view and
         displays the form view.
@@ -320,6 +322,7 @@ formview, delegating instead to its
                                method do some last-minute
                                configuration of form fields.
         :type configureField: Function<String, openerp.web.form.Field>
+        :param EditOptions options:
         :returns: jQuery delegate to the form object
 
     .. js:function:: openerp.web.list.Editor.save
@@ -390,6 +393,21 @@ formview, delegating instead to its
         :returns: whether new records should be prepended to the
                   dataset (instead of appended)
         :rtype: Boolean
+
+
+.. js:class:: EditOptions
+
+    Options object optionally passed into a method starting an edition
+    to configure its setup and behavior
+
+    .. js:attribute:: focus_field
+
+        Name of the field to set focus on after setting up the edition
+        of the record.
+
+        If this option is not provided, or the requested field can not
+        be focused (invisible, readonly or not in the view), the first
+        visible non-readonly field is focused.
 
 Changes from 6.1
 ----------------

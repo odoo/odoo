@@ -165,9 +165,11 @@ openerp.web.list_editable = function (instance) {
          * Set up the edition of a record of the list view "inline"
          *
          * @param {instance.web.list.Record} [record] record to edit, leave empty to create a new record
+         * @param {Object} [options]
+         * @param {String} [options.focus_field] field to focus at start of edition
          * @return {jQuery.Deferred}
          */
-        start_edition: function (record) {
+        start_edition: function (record, options) {
             var self = this;
             var item = false;
             if (record) {
@@ -194,14 +196,14 @@ openerp.web.list_editable = function (instance) {
                     return self.editor.edit(item, function (field_name, field) {
                         var cell = cells[field_name];
                         if (!cell || field.get('effective_readonly')) {
-                            // Readonly fields can just remain the list's, form's
-                            // usually don't have backgrounds &al
+                            // Readonly fields can just remain the list's,
+                            // form's usually don't have backgrounds &al
                             field.set({invisible: true});
                             return;
                         }
 
                         self.fields_for_resize.push({field: field, cell: cell});
-                    }).pipe(function () {
+                    }, options).pipe(function () {
                         $recordRow.addClass('oe_edition');
                         self.resize_fields();
                         return record.attributes;
@@ -558,7 +560,33 @@ openerp.web.list_editable = function (instance) {
             throw new Error("is_editing's state filter must be either `new` or" +
                             " `edit` if provided");
         },
-        edit: function (record, configureField) {
+        _focus_setup: function (focus_field) {
+            var form = this.form;
+
+            var field;
+            // If a field to focus was specified
+            if (focus_field
+                    // Is actually in the form
+                    && (field = form.fields[focus_field])
+                    // And is visible
+                    && field.$element.is(':visible')) {
+                // focus it
+                field.focus();
+                return;
+            }
+
+            _(form.fields_order).detect(function (name) {
+                // look for first visible field in fields_order, focus it
+                var field = form.fields[name];
+                if (!field.$element.is(':visible')) {
+                    return false;
+                }
+                field.focus();
+                // Stop as soon as a field got focused
+                return true;
+            });
+        },
+        edit: function (record, configureField, options) {
             // TODO: specify sequence of edit calls
             var self = this;
             var form = self.form;
@@ -573,16 +601,7 @@ openerp.web.list_editable = function (instance) {
                 _(form.fields).each(function (field, name) {
                     configureField(name, field);
                 });
-                // TODO: actually focus clicked field (if editable)
-                _(form.fields_order).detect(function (name) {
-                    // look for first visible field in fields_order, focus it
-                    var field = form.fields[name];
-                    if (!field.$element.is(':visible')) {
-                        return false;
-                    }
-                    field.focus();
-                    return true;
-                });
+                self._focus_setup(options && options.focus_field);
                 return form;
             });
         },
@@ -627,7 +646,10 @@ openerp.web.list_editable = function (instance) {
                 return this._super.apply(this, arguments);
             }
             var record_id = $(event.currentTarget).data('id');
-            this.view.start_edition(record_id ? this.records.get(record_id) : null);
+            this.view.start_edition(
+                record_id ? this.records.get(record_id) : null, {
+                focus_field: $(event.target).data('field')
+            });
         },
         /**
          * If a row mapping to the record (@data-id matching the record's id or
