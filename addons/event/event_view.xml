@@ -324,35 +324,30 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
+                    <field name="name" string="Events"/>
+                    <field name="type"/>
+                    <field name="user_id"/>
                     <filter icon="terp-mail-message-new"
                         string="Inbox" help="Unread messages"
                         name="needaction_pending"
                         domain="[('needaction_pending','=',True)]"/>
-                    <separator orientation="vertical"/>
-                    <group>
-                        <field name="name" string="Events"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
-                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
-                        <filter icon="terp-personal"
+                    <separator/>
+                    <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <separator/>
+                    <filter icon="terp-personal"
                               string="My Events"
                                 help="My Events"
                               domain="[('user_id','=',uid)]"/>
-                        <filter icon="terp-go-today" string="Upcoming"
+                    <separator/>
+                    <filter icon="terp-go-today" string="Upcoming"
                                 name="upcoming"
                                 domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
                                 help="Upcoming events from today" />
-                        <separator orientation="vertical"/>
-                        <field name="type" widget="selection"/>
-                        <field name="user_id" widget="selection"/>
-                    </group>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Starting Date" icon="terp-go-month"
                             domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
@@ -525,34 +520,28 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event Registration">
-                    <group>
-                        <filter icon="terp-mail-message-new"
+                    <field name="name" string="Participant"
+                            filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
+                    <field name="event_id"/>
+                    <field name="user_id"/>
+                    <filter icon="terp-mail-message-new"
                             string="Inbox" help="Unread messages"
                             name="needaction_pending"
                             domain="[('needaction_pending','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name" string="Participant"
-                            filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
-                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
-                        <filter icon="terp-personal"
+                    <separator/>
+                    <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
+                    <separator/>
+                    <filter icon="terp-personal"
                               string="My Registrations"
                                 help="My Registrations"
                               domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="event_id" widget="selection"/>
-                        <field name="user_id"/>
-                    </group>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                    </group>
-
                 </search>
             </field>
         </record>
