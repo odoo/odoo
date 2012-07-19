@@ -26,7 +26,7 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_claim_from_delivery': fields.boolean("Allow Claims on Delivery Orders",
+        'module_claim_from_delivery': fields.boolean("Claims on Delivery Orders",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
         'module_stock_invoice_directly': fields.boolean("Invoice Directly from the Picking",
@@ -46,14 +46,14 @@ class stock_config_settings(osv.osv_memory):
                 manage product manufacturing chains, manage default locations per product,
                 define routes within your warehouse according to business needs, etc.
                 This installs the module stock_location."""),
-        'group_uom': fields.boolean("Manage Different Units of Measure for Products",
+        'group_uom': fields.boolean("Different Units of Measure for Products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("Manage Secondary Unit of Measure (for Sale)",
+        'group_uos': fields.boolean("Secondary Unit of Measure (for Sale)",
             implied_group='product.group_uos',
             help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
                 For instance, you can sell pieces of meat that you invoice based on their weight."""),
-        'group_stock_packaging': fields.boolean("Manage Product Packaging",
+        'group_stock_packaging': fields.boolean("Product Packaging",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
         'group_stock_production_lot': fields.boolean("Serial Numbers on Products",
@@ -63,14 +63,14 @@ class stock_config_settings(osv.osv_memory):
         'group_stock_tracking_lot': fields.boolean("Serial Numbers on Logistic Units (Pallets)",
             implied_group='stock.group_tracking_lot',
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_inventory_valuation': fields.boolean("Generate Accounting Entries per Stock Movement",
+        'group_stock_inventory_valuation': fields.boolean("Accounting Entries per Stock Movement",
             implied_group='stock.group_inventory_valuation',
             help="""Allows to configure inventory valuations on products and product categories."""),
-        'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
+        'group_stock_multiple_locations': fields.boolean("Multiple Locations and Warehouses",
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
-        'group_product_variant': fields.boolean("Support Multiple Variants per Product",
+        'group_product_variant': fields.boolean("Multiple Variants per Product",
             implied_group='product.group_product_variant',
             help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),                
         'decimal_precision': fields.integer('Decimal Precision on Weights', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
