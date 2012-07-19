@@ -25,7 +25,7 @@
     elif procurement.sale_line_id:
         account = procurement.sale_line_id.order_id.project_id
         assert (not project and not account) or project.analytic_account_id == account, "Project does not correspond."
-    planned_hours = procurement.product_qty
+    planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
     assert task.planned_hours == planned_hours, 'Planned Hours do not correspond.'
     assert datetime.strptime(task.date_deadline, '%Y-%m-%d') == datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S'), 'Deadline does not correspond.'
     if procurement.product_id.product_manager:
