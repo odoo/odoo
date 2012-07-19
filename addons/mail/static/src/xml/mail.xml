@@ -5,7 +5,7 @@
         wall main template
         Template used to display the communication history in the wall.
         -->
-    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_global">
+    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
         <table class="oe_view_manager_header">
           <colgroup>
             <col width="33%"/>
@@ -13,7 +13,7 @@
             <col width="34%"/>
           </colgroup>
           <tbody>
-            <tr class="oe_header_row">
+            <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">All Feeds</span>
