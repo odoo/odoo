@@ -214,18 +214,24 @@
                                 <group>
                                     <field name="user_id" />
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="supplier"/>
+                                </group>
+                                <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
                                     <field name="date"/>
                                 </group>
                                 <group>
-                                    <field name="customer"/>
-                                    <field name="supplier"/>
                                     <field name="active"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="History" invisible="True"></page>
+                        <!-- The History page becomes visible as soon as there is something to display inside -->
+                        <page string="History" name="page_history" invisible="True">
+                        </page>
                         <page string="Internal Notes">
                             <field name="comment" placeholder="Internal notes about this customer..."/>
                         </page>
