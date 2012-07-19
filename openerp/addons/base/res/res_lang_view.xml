@@ -108,15 +108,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Languages">
-                     <group>
-                        <field name="name"
-                            filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
-                            string="Language"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Translatable" icon="terp-tools" domain="[('translatable','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="direction"/>
-                    </group>
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]" string="Language"/>
+                    <field name="direction"/>
+                    <filter string="Translatable" icon="terp-tools" domain="[('translatable','=',True)]"/>
                 </search>
             </field>
         </record>
