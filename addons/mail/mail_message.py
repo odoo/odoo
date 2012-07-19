@@ -279,7 +279,7 @@ class mail_message(osv.Model):
         if default is None:
             default = {}
         self.check(cr, uid, [id], 'read', context=context)
-        default.update(message_id=False,original=False,headers=False)
+        default.update(message_id=False, original=False, headers=False)
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -291,38 +291,45 @@ class mail_message(osv.Model):
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False,
-                             email_cc=None, email_bcc=None, reply_to=False, attachments=None, partner_ids=None,
+                             email_cc=None, email_bcc=None, reply_to=False, partner_ids=None, attachments=None,
                              message_id=False, references=False, res_id=False, content_subtype='plain',
                              headers=None, mail_server_id=False, auto_delete=False, context=None):
-        """Schedule sending a new email message, to be sent the next time the mail scheduler runs, or
-           the next time :meth:`process_email_queue` is called explicitly.
+        """ Schedule sending a new email message, to be sent the next time the
+            mail scheduler runs, or the next time :meth:`process_email_queue` is
+            called explicitly.
 
-           :param string email_from: sender email address
-           :param list email_to: list of recipient addresses (to be joined with commas) 
-           :param string subject: email subject (no pre-encoding/quoting necessary)
-           :param string body: email body, according to the ``content_subtype`` 
-                               (by default, plaintext). If html content_subtype is used, the message will be automatically converted
-                               to plaintext and wrapped in multipart/alternative.
-           :param list email_cc: optional list of string values for CC header (to be joined with commas)
-           :param list email_bcc: optional list of string values for BCC header (to be joined with commas)
-           :param string model: optional model name of the document this mail is related to (this will also
-                                be used to generate a tracking id, used to match any response related to the
-                                same document)
-           :param int res_id: optional resource identifier this mail is related to (this will also
-                              be used to generate a tracking id, used to match any response related to the
-                              same document)
-           :param string reply_to: optional value of Reply-To header
-           :param string content_subtype: optional mime content_subtype for the text body (usually 'plain' or 'html'),
-                                       must match the format of the ``body`` parameter. Default is 'plain',
-                                       making the content part of the mail "text/plain".
-           :param dict attachments: map of filename to filecontents, where filecontents is a string
-                                    containing the bytes of the attachment
-           :param dict headers: optional map of headers to set on the outgoing mail (may override the
-                                other headers, including Subject, Reply-To, Message-Id, etc.)
-           :param int mail_server_id: optional id of the preferred outgoing mail server for this mail
-           :param bool auto_delete: optional flag to turn on auto-deletion of the message after it has been
-                                    successfully sent (default to False)
-
+            :param string email_from: sender email address
+            :param list email_to: list of recipient addresses (to be joined with commas) 
+            :param string subject: email subject (no pre-encoding/quoting necessary)
+            :param string body: email body, according to the ``content_subtype`` 
+                (by default, plaintext). If html content_subtype is used, the
+                message will be automatically converted to plaintext and wrapped
+                in multipart/alternative.
+            :param list email_cc: optional list of string values for CC header
+                (to be joined with commas)
+            :param list email_bcc: optional list of string values for BCC header
+                (to be joined with commas)
+            :param string model: optional model name of the document this mail
+                is related to (this will also be used to generate a tracking id,
+                used to match any response related to the same document)
+            :param int res_id: optional resource identifier this mail is related
+                to (this will also be used to generate a tracking id, used to
+                match any response related to the same document)
+            :param string reply_to: optional value of Reply-To header
+            :param partner_ids: destination partner_ids
+            :param string content_subtype: optional mime content_subtype for
+                the text body (usually 'plain' or 'html'), must match the format
+                of the ``body`` parameter. Default is 'plain', making the content
+                part of the mail "text/plain".
+            :param dict attachments: map of filename to filecontents, where
+                filecontents is a string containing the bytes of the attachment
+            :param dict headers: optional map of headers to set on the outgoing
+                mail (may override the other headers, including Subject,
+                Reply-To, Message-Id, etc.)
+            :param int mail_server_id: optional id of the preferred outgoing
+                mail server for this mail
+            :param bool auto_delete: optional flag to turn on auto-deletion of
+                the message after it has been successfully sent (default to False)
         """
         if context is None:
             context = {}
@@ -336,7 +343,7 @@ class mail_message(osv.Model):
                 param = [param]
         msg_vals = {
                 'subject': subject,
-                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'date': fields.datetime.now(),
                 'user_id': uid,
                 'model': model,
                 'res_id': res_id,
@@ -621,7 +628,6 @@ class mail_message(osv.Model):
                 for partner in message.partner_ids:
                     partner_ids_email_to += '%s ' % (partner.email or '')
                 message_email_to = '%s %s' % (partner_ids_email_to, message.email_to or '')
-                print message_email_to
 
                 # build an RFC2822 email.message.Message object adn send it
                 # without queuing
@@ -644,9 +650,9 @@ class mail_message(osv.Model):
                                                 mail_server_id=message.mail_server_id.id,
                                                 context=context)
                 if res:
-                    message.write({'state':'sent', 'message_id': res})
+                    message.write({'state':'sent', 'message_id': res, 'email_to': message_email_to})
                 else:
-                    message.write({'state':'exception'})
+                    message.write({'state':'exception', 'email_to': message_email_to})
                 message.refresh()
                 if message.state == 'sent':
                     self._postprocess_sent_message(cr, uid, message, context=context)
