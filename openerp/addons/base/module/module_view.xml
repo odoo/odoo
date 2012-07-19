@@ -41,21 +41,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <group col='10' colspan='4'>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
-                        <field name="description" string="Keywords"/>
-                        <separator orientation="vertical"/>
-                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
-                        <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
-                        <separator orientation="vertical"/>
-                        <field name="category_id"/>
-                        <newline/>
-                        <group expand="0" string="Group By...">
-                            <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
-                            <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
-                        </group>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
+                    <field name="description" string="Keywords"/>
+                    <field name="category_id"/>
+                    <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                    <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>
