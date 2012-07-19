@@ -2318,7 +2318,7 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
                         "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
         });
         this.$cleditor = this.$textarea.cleditor()[0];
-        // call super now, because cleditor seems to reset the disable attr
+        // call super now, because cleditor resets the disable attr
         this._super.apply(this, arguments);
         if (this.$textarea.attr('disabled') == 'disabled') {
             this.$textarea.cleditor()[0].disable(true);
@@ -2334,16 +2334,11 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
     },
 
     render_value: function() {
-        var show_value = instance.web.format_value(this.get('value'), this, '');
-        this.$textarea.val(show_value);
-        if (show_value && this.view.options.resize_textareas) {
-            this.do_resize(this.view.options.resize_textareas);
-        }
+        this._super.apply(this, arguments);
         this.$cleditor.updateFrame();
     },
 
     get_value: function() {
-        // cleditor.updateTextArea();
         var value = this.$cleditor.$area.val();
         return value;
     },
