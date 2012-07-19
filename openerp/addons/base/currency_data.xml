@@ -640,7 +640,7 @@
 
         <record id="AFN" model="res.currency">
             <field name="name">AFN</field>
-            <field name="symbol">Afghani</field>
+            <field name="symbol">Af,Afs</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -926,7 +926,7 @@
         
         <record id="CDF" model="res.currency">
             <field name="name">CDF</field>
-            <field name="symbol">FC</field>
+            <field name="symbol">Fr</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1002,9 +1002,9 @@
             <field name="rate">48.09</field>
         </record>
         
+		<!-- East Timor -->
         <record id="TPE" model="res.currency">
             <field name="name">TPE</field>
-            <field name="symbol">$</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1017,7 +1017,7 @@
         
         <record id="ECS" model="res.currency">
             <field name="name">ECS</field>
-            <field name="symbol">$</field>
+            <field name="symbol">S/.</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1025,7 +1025,7 @@
         <record id="rateECS" model="res.currency.rate">
             <field name="currency_id" ref="ECS" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.00</field>
+            <field name="rate">30,707.5</field>
         </record>
         
         <record id="EGP" model="res.currency">
@@ -1155,7 +1155,7 @@
         <record id="rateQTQ" model="res.currency.rate">
             <field name="currency_id" ref="QTQ" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">10.27</field>
+            <field name="rate">0.0000</field>
         </record>
         
         <record id="GGP" model="res.currency">
@@ -1168,7 +1168,7 @@
         <record id="rateGGP" model="res.currency.rate">
             <field name="currency_id" ref="GGP" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.786</field>
+            <field name="rate">0.00000</field>
         </record>
         
         <record id="GNF" model="res.currency">
@@ -1186,7 +1186,6 @@
         
         <record id="GWP" model="res.currency">
             <field name="name">GWP</field>
-            <field name="symbol">CFA</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1194,7 +1193,7 @@
         <record id="rateGWP" model="res.currency.rate">
             <field name="currency_id" ref="GWP" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">657.89</field>
+            <field name="rate">0.000000</field>
         </record>
         
         <record id="GYD" model="res.currency">
@@ -1303,7 +1302,7 @@
         
         <record id="KZT" model="res.currency">
             <field name="name">KZT</field>
-            <field name="symbol">Т</field>
+            <field name="symbol">лв</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1316,7 +1315,7 @@
         
         <record id="KES" model="res.currency">
             <field name="name">KES</field>
-            <field name="symbol">Sh</field>
+            <field name="symbol">KSh</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1342,7 +1341,7 @@
         
         <record id="KGS" model="res.currency">
             <field name="name">KGS</field>
-            <field name="symbol">KGS</field>
+            <field name="symbol">лв</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1351,19 +1350,6 @@
             <field name="currency_id" ref="KGS" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
             <field name="rate">57.93</field>
-        </record>
-        
-        <record id="LAK" model="res.currency">
-            <field name="name">LAK</field>
-            <field name="symbol">₭</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="rateLAK" model="res.currency.rate">
-            <field name="currency_id" ref="LAK" />
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">9847.72</field>
         </record>
         
         <record id="LAK" model="res.currency">
@@ -1407,7 +1393,7 @@
         
         <record id="LRD" model="res.currency">
             <field name="name">LRD</field>
-            <field name="symbol"> $ </field>
+            <field name="symbol">L$</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1433,7 +1419,7 @@
         
         <record id="MOP" model="res.currency">
             <field name="name">MOP</field>
-            <field name="symbol">P</field>
+            <field name="symbol">MOP$</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1459,7 +1445,6 @@
         
         <record id="MGA" model="res.currency">
             <field name="name">MGA</field>
-            <field name="symbol">MGA</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1484,8 +1469,8 @@
         </record>
         
         <record id="MVR" model="res.currency">
-            <field name="name">MVK</field>
-            <field name="symbol"> ރ. </field>
+            <field name="name">MVR</field>
+            <field name="symbol">.ރ</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1545,7 +1530,7 @@
         <record id="rateMAD" model="res.currency.rate">
             <field name="currency_id" ref="MAD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">10.99</field>
+            <field name="rate">10.9962499</field>
         </record>
         
         <record id="BND" model="res.currency">
@@ -1563,7 +1548,7 @@
         
         <record id="MZN" model="res.currency">
             <field name="name">MZN</field>
-            <field name="symbol">MZN</field>
+            <field name="symbol">MT</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1662,7 +1647,7 @@
         <record id="rateKPW" model="res.currency.rate">
             <field name="currency_id" ref="KPW" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">165.64</field>
+            <field name="rate">1105.24376765</field>
         </record>
         
         <record id="NOK" model="res.currency">
@@ -1688,7 +1673,7 @@
         <record id="rateZWD" model="res.currency.rate">
             <field name="currency_id" ref="ZWD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.154336833379</field>
+            <field name="rate">460.93</field>
         </record>		
 
         <record id="ZMK" model="res.currency">
@@ -1701,7 +1686,7 @@
         <record id="rateZMK" model="res.currency.rate">
             <field name="currency_id" ref="ZMK" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0113636364</field>
+            <field name="rate">6022.54902</field>
         </record>
 
         <record id="YER" model="res.currency">
@@ -1714,20 +1699,7 @@
         <record id="rateYER" model="res.currency.rate">
             <field name="currency_id" ref="YER" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.255957635</field>
-        </record>
-
-        <record id="MAD" model="res.currency">
-            <field name="name">MAD</field>
-            <field name="symbol">د.م.</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="rateMAD" model="res.currency.rate">
-            <field name="currency_id" ref="MAD" />
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">6.15583628</field>
+            <field name="rate">264.784483</field>
         </record>
 
         <record id="VND" model="res.currency">
@@ -1740,7 +1712,7 @@
         <record id="rateVND" model="res.currency.rate">
             <field name="currency_id" ref="VND" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0026478376</field>
+            <field name="rate">25595.8333</field>
         </record>
 
         <record id="VUB" model="res.currency">
@@ -1753,7 +1725,7 @@
         <record id="rateVUB" model="res.currency.rate">
             <field name="currency_id" ref="VUB" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">1.69638129</field>
+            <field name="rate">0.00000</field>
         </record>
 
         <record id="EUR" model="res.currency">
@@ -1766,7 +1738,7 @@
         <record id="rateEUR" model="res.currency.rate">
             <field name="currency_id" ref="EUR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">67.7680936</field>
+            <field name="rate">1.0</field>
         </record>
 
         <record id="VUV" model="res.currency">
@@ -1779,7 +1751,7 @@
         <record id="rateVUV" model="res.currency.rate">
             <field name="currency_id" ref="VUV" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.5941</field>
+            <field name="rate">114.024315363</field>
         </record>		
 
         <record id="UZS" model="res.currency">
@@ -1792,7 +1764,7 @@
         <record id="rateUZS" model="res.currency.rate">
             <field name="currency_id" ref="UZS" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0291262136</field>
+            <field name="rate">2331.3093</field>
         </record>
 
         <record id="UYP" model="res.currency">
@@ -1818,7 +1790,7 @@
         <record id="rateAED" model="res.currency.rate">
             <field name="currency_id" ref="AED" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">15.0189762</field>
+            <field name="rate">4.51253195</field>
         </record>
 
         <record id="UAG" model="res.currency">
@@ -1831,7 +1803,7 @@
         <record id="rateUAG" model="res.currency.rate">
             <field name="currency_id" ref="UAG" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">6.81740953</field>
+            <field name="rate">0.000000</field>
         </record>
 
         <record id="UGS" model="res.currency">
@@ -1961,7 +1933,7 @@
         <record id="rateTZS" model="res.currency.rate">
             <field name="currency_id" ref="TZS" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0346191889</field>
+            <field name="rate">1947.06815</field>
         </record>		
 
         <record id="TJR" model="res.currency">
@@ -1986,7 +1958,7 @@
         <record id="rateTWD" model="res.currency.rate">
             <field name="currency_id" ref="TWD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">1.8341576</field>
+            <field name="rate">36.8329536</field>
         </record>		
 
         <record id="SYP" model="res.currency">
@@ -1998,7 +1970,7 @@
         <record id="rateSYP" model="res.currency.rate">
             <field name="currency_id" ref="SYP" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.86162</field>
+            <field name="rate">78.8338</field>
         </record>		
 
         <record id="CHF" model="res.currency">
@@ -2011,7 +1983,7 @@
         <record id="rateCHF" model="res.currency.rate">
             <field name="currency_id" ref="CHF" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">56.2737663</field>
+            <field name="rate">1.20095404</field>
         </record>
 
         <record id="SEK" model="res.currency">
@@ -2024,7 +1996,7 @@
         <record id="rateSEK" model="res.currency.rate">
             <field name="currency_id" ref="SEK" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">7.84097154</field>
+            <field name="rate">8.52206122</field>
         </record>	
 
         <record id="SZL" model="res.currency">
@@ -2037,7 +2009,7 @@
         <record id="rateSZL" model="res.currency.rate">
             <field name="currency_id" ref="SZL" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">6.7162</field>
+            <field name="rate">10.07</field>
         </record>
 		
         <record id="NOK" model="res.currency">
@@ -2050,7 +2022,7 @@
         <record id="rateNOK" model="res.currency.rate">
             <field name="currency_id" ref="NOK" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">9.02747555</field>
+            <field name="rate">7.47900598</field>
         </record>
 		
         <record id="SRG" model="res.currency">
@@ -2063,7 +2035,7 @@
         <record id="rateSRG" model="res.currency.rate">
             <field name="currency_id" ref="SRG" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">43.5566546</field>
+            <field name="rate">3,980.29</field>
         </record>
 		
         <record id="SDD" model="res.currency">
@@ -2075,7 +2047,7 @@
         <record id="rateSDD" model="res.currency.rate">
             <field name="currency_id" ref="SDD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">43.5566546</field>
+            <field name="rate">544.44</field>
         </record>
 		
         <record id="LKR" model="res.currency">
@@ -2088,7 +2060,7 @@
         <record id="rateLKR" model="res.currency.rate">
             <field name="currency_id" ref="LKR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.410704473</field>
+            <field name="rate">163.552526</field>
         </record>		
 
         <record id="SSP" model="res.currency">
@@ -2113,7 +2085,7 @@
         <record id="rateGBP" model="res.currency.rate">
             <field name="currency_id" ref="GBP" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">85.8445983</field>
+            <field name="rate"> 0.784221994</field>
         </record>					
 
         <record id="ZAR" model="res.currency">
@@ -2126,7 +2098,7 @@
         <record id="rateZAR" model="res.currency.rate">
             <field name="currency_id" ref="ZAR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">6.71485878</field>
+            <field name="rate">10.0171906</field>
         </record>
 
         <record id="SOD" model="res.currency">
@@ -2139,7 +2111,7 @@
         <record id="rateSOD" model="res.currency.rate">
             <field name="currency_id" ref="SOD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0339</field>
+            <field name="rate">0.00000</field>
         </record>
 
         <record id="SBD" model="res.currency">
@@ -2152,7 +2124,7 @@
         <record id="rateSBD" model="res.currency.rate">
             <field name="currency_id" ref="SBD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">7.80427</field>
+            <field name="rate">8.6605</field>
         </record>
 
         <record id="SLL" model="res.currency">
@@ -2165,7 +2137,7 @@
         <record id="rateSLL" model="res.currency.rate">
             <field name="currency_id" ref="SLL" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0125838004</field>
+            <field name="rate">5320.43478</field>
         </record>
 
         <record id="SCR" model="res.currency">
@@ -2178,7 +2150,7 @@
         <record id="rateSCR" model="res.currency.rate">
             <field name="currency_id" ref="SCR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">3.723</field>
+            <field name="rate">18.2587287</field>
         </record>
 
         <record id="RSD" model="res.currency">
@@ -2191,7 +2163,7 @@
         <record id="rateRSD" model="res.currency.rate">
             <field name="currency_id" ref="RSD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.577920651</field>
+            <field name="rate">117.381295</field>
         </record>
 
         <record id="SAR" model="res.currency">
@@ -2204,10 +2176,9 @@
         <record id="rateSAR" model="res.currency.rate">
             <field name="currency_id" ref="SAR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">14.6532586</field>
+            <field name="rate">4.58898972</field>
         </record>	
 
-        <!--  Sao Tome and Principe -->
         <record id="STD" model="res.currency">
             <field name="name">STD</field>
             <field name="symbol">Db</field>			
@@ -2218,7 +2189,7 @@
         <record id="rateSTD" model="res.currency.rate">
             <field name="currency_id" ref="STD" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0028</field>
+            <field name="rate">24,105.86</field>
         </record>	
 
         <record id="ITL" model="res.currency">
@@ -2231,7 +2202,7 @@
         <record id="rateITL" model="res.currency.rate">
             <field name="currency_id" ref="ITL" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.03</field>
+            <field name="rate">1,936.27</field>
         </record>
 
         <record id="WST" model="res.currency">
@@ -2244,7 +2215,7 @@
         <record id="rateWST" model="res.currency.rate">
             <field name="currency_id" ref="WST" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">23.4662</field>
+            <field name="rate">2.8628</field>
         </record>						
 
         <record id="SHP" model="res.currency">
@@ -2257,7 +2228,7 @@
         <record id="rateSHP" model="res.currency.rate">
             <field name="currency_id" ref="SHP" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">86.17</field>
+            <field name="rate">0.7856</field>
         </record>
 
         <record id="RWF" model="res.currency">
@@ -2270,7 +2241,7 @@
         <record id="rateRWF" model="res.currency.rate">
             <field name="currency_id" ref="RWF" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0897</field>
+            <field name="rate">752.57</field>
         </record>		
 
         <record id="RUR" model="res.currency">
@@ -2283,7 +2254,7 @@
         <record id="rateRUR" model="res.currency.rate">
             <field name="currency_id" ref="RUR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">1.69666996</field>
+            <field name="rate">39.6622695</field>
         </record>
 
         <record id="ROL" model="res.currency">
@@ -2296,7 +2267,7 @@
         <record id="rateROL" model="res.currency.rate">
             <field name="currency_id" ref="ROL" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.00148271</field>
+            <field name="rate">45,638.59</field>
         </record>
 
         <record id="QAR" model="res.currency">
@@ -2309,7 +2280,7 @@
         <record id="rateQAR" model="res.currency.rate">
             <field name="currency_id" ref="QAR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">15.0939664</field>
+            <field name="rate">4.45500218</field>
         </record>
 
         <record id="PLZ" model="res.currency">
@@ -2322,7 +2293,7 @@
         <record id="ratePLZ" model="res.currency.rate">
             <field name="currency_id" ref="PLZ" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">16.1412243</field>
+            <field name="rate">4.17281888</field>
         </record>
 
         <record id="PEN" model="res.currency">
@@ -2335,7 +2306,7 @@
         <record id="ratePEN" model="res.currency.rate">
             <field name="currency_id" ref="PEN" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">20.9297725</field>
+            <field name="rate">3.20731573</field>
         </record>	
 
         <record id="PYG" model="res.currency">
@@ -2347,7 +2318,7 @@
         <record id="ratePYG" model="res.currency.rate">
             <field name="currency_id" ref="PYG" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.0121991428</field>
+            <field name="rate">5343.66812</field>
         </record>					
 
         <record id="PGK" model="res.currency">
@@ -2360,7 +2331,7 @@
         <record id="ratePGK" model="res.currency.rate">
             <field name="currency_id" ref="PGK" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">25.827014</field>
+            <field name="rate">2.5903895</field>
         </record>		
 
         <record id="PAB" model="res.currency">
@@ -2373,7 +2344,7 @@
         <record id="ratePAB" model="res.currency.rate">
             <field name="currency_id" ref="PAB" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">49.1639</field>
+            <field name="rate">1.2234</field>
         </record>
 
         <record id="PKR" model="res.currency">
@@ -2386,7 +2357,7 @@
         <record id="ratePKR" model="res.currency.rate">
             <field name="currency_id" ref="PKR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">0.582096934</field>
+            <field name="rate">115.97432</field>
         </record>	
 
         <record id="OMR" model="res.currency">
@@ -2399,8 +2370,71 @@
         <record id="rateOMR" model="res.currency.rate">
             <field name="currency_id" ref="OMR" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
-            <field name="rate">142.733817</field>
-        </record>				
+            <field name="rate">0.472921728</field>
+        </record>
+
+        <record id="CVE" model="res.currency">
+            <field name="name">CVE</field>
+            <field name="symbol">$,Esc</field>			
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateCVE" model="res.currency.rate">
+            <field name="currency_id" ref="CVE" />
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+            <field name="rate">0.61</field>
+        </record>						
+
+        <record id="SKK" model="res.currency">
+            <field name="name">SKK</field>
+            <field name="symbol">Sk</field>			
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateSKK" model="res.currency.rate">
+            <field name="currency_id" ref="SKK" />
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+            <field name="rate">30.1263029</field>
+        </record>
+
+        <record id="SIT" model="res.currency">
+            <field name="name">SIT</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateSIT" model="res.currency.rate">
+            <field name="currency_id" ref="SIT" />
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+            <field name="rate">239.64</field>
+        </record>
+
+        <record id="YUM" model="res.currency">
+            <field name="name">YUM</field>
+            <field name="symbol">din.,дин.</field>			
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateYUM" model="res.currency.rate">
+            <field name="currency_id" ref="YUM" />
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+            <field name="rate">0.00000</field>
+        </record>		
+
+        <record id="ZRN" model="res.currency">
+            <field name="name">ZRN</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateZRN" model="res.currency.rate">
+            <field name="currency_id" ref="ZRN" />
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+            <field name="rate">1128220.81</field>
+        </record>		
 		
     </data>
 </openerp>
