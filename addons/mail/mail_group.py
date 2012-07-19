@@ -145,25 +145,28 @@ class mail_group(osv.osv):
         'photo': _get_default_photo,
     }
 
+    def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):
+        print group_ids_command
+        # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+        user_group_ids = [command[1] for command in group_ids_command if command[0] == 4]
+        user_group_ids += [id for command in group_ids_command if command[0] == 6 for id in command[2]]
+        # retrieve the user member of those groups
+        user_ids = []
+        res_groups_obj = self.pool.get('res.groups')
+        for group in res_groups_obj.browse(cr, uid, user_group_ids, context=context):
+            user_ids += [user.id for user in group.users]
+        # subscribe the users
+        return self.message_subscribe(cr, uid, ids, user_ids, context=context)
+
     def create(self, cr, uid, vals, context=None):
         mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
         if vals.get('group_ids'):
-            user_goup_ids = vals.get('group_ids')[0][2]
-            res_groups_obj = self.pool.get('res.groups')
-            user_ids = []
-            for group in res_groups_obj.browse(cr, uid, user_goup_ids, context=None):
-                user_ids += [user.id for user in group.users]
-            self.message_subscribe(cr, uid, [mail_group_id], user_ids, context=context)
+            self._subscribe_user_with_group_m2m_command(cr, uid, [mail_group_id], vals.get('group_ids'), context=context)
         return mail_group_id
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('group_ids'):
-            user_goup_ids = vals.get('group_ids')[0][2]
-            res_groups_obj = self.pool.get('res.groups')
-            user_ids = []
-            for group in res_groups_obj.browse(cr, uid, user_goup_ids, context=None):
-                user_ids += [user.id for user in group.users]
-            self.message_subscribe(cr, uid, ids, user_ids, context=context)
+            self._subscribe_user_with_group_m2m_command(cr, uid, ids, vals.get('group_ids'), context=context)
         return super(mail_group, self).write(cr, uid, ids, vals, context=context)
 
     def action_group_join(self, cr, uid, ids, context=None):
