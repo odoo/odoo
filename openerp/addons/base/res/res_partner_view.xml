@@ -229,13 +229,8 @@
                                 </group>
                             </group>
                         </page>
-                        <!-- FIX group to add fields in proper sequence order in history page but it's not good solution. we have to add sequence attribute in group element.-->
+                        <!-- The History page becomes visible as soon as there is something to display inside -->
                         <page string="History" name="page_history" invisible="True">
-                            <group name="grp_task" string="Tasks" invisible="True"></group> <!-- this group will be visible after install project module -->
-                            <group name="grp_claim" string="Claim" invisible="True"></group> <!-- this group will be visible after install crm_claim module -->
-                            <group name="grp_event" string="Event" invisible="True"></group> <!-- this group will be visible after install event module -->
-                            <group name="grp_registration" string="Registration" invisible="True"></group> <!-- this group will be visible after install event module -->
-                            <group name="grp_campaign" string="Campaign" invisible="True"></group> <!-- this group will be visible after install marketing_campaign module -->
                         </page>
                         <page string="Internal Notes">
                             <field name="comment" placeholder="Internal notes about this customer..."/>
