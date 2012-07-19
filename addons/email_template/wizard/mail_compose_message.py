@@ -88,6 +88,13 @@ class mail_compose_message(osv.osv_memory):
                 values = self.pool.get('email.template').read(cr, uid, template_id, self.fields_get_keys(cr, uid), context)
                 report_xml_pool = self.pool.get('ir.actions.report.xml')
                 template = self.pool.get('email.template').get_email_template(cr, uid, template_id, res_id, context)
+                values['email_from'] = self.render_template(cr, uid, template.email_from, template.model, res_id, context)
+                values['email_to'] = self.render_template(cr, uid, template.email_to, template.model, res_id, context)
+                values['email_cc'] = self.render_template(cr, uid, template.email_cc, template.model, res_id, context)
+                values['email_bcc'] = self.render_template(cr, uid, template.email_bcc, template.model, res_id, context)
+                values['reply_to'] = self.render_template(cr, uid, template.reply_to, template.model, res_id, context)
+                values['subject'] = self.render_template(cr, uid, template.subject, template.model, res_id, context)
+                values['body_text'] = self.render_template(cr, uid, template.body_text, template.model, res_id, context) or ''                
                 
                 values['attachments'] = False
                 attachments = {}
