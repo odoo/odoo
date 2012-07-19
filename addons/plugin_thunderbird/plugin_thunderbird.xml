@@ -11,10 +11,7 @@
                     <form position="attributes">
                         <attribute name="string">Install Thunderbird Plug-In</attribute>
                     </form>
-                     <separator string="title" position="before">
-                        <label string="This plug-in allows you to link your email to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."/>
-                    </separator>
-                    <xpath expr="//header" position="replace"/>
+                    <xpath expr="//footer" position="replace"/>
                     <xpath expr="//separator[@string='title']" position="after">
                         <group>
                             <field name="thunderbird" invisible="1"/>
@@ -35,7 +32,7 @@
                         </ul>
                     </xpath>
                     <separator string="title" position="attributes">
-                         <attribute name="string">Install Thunderbird Plug-In</attribute>
+                        <attribute name="string"></attribute>
                     </separator>
                 </data>
             </field>

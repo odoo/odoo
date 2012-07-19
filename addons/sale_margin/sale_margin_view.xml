@@ -8,8 +8,13 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_total']" position="inside">
-                <field name="margin"/>
+            <xpath expr="//group[@name='sale_margin_grp']" position="inside">
+                <group>
+                    <label for="margin"/>
+                    <div>
+                        <field name="margin"/>
+                    </div>
+                </group>
             </xpath>
         </field>
     </record>
