@@ -156,11 +156,11 @@
 }
 
 .point-of-sale #rightheader button {
-    color: black;
-    height:29px;
-    margin:2px;
+    color: #273072;
+    height:27px;
+    margin:3px;
     margin-right:0px;
-    border: 1px solid black;
+    border: 1px solid #353A7E;
     background: #7f82ac;
     background: -webkit-gradient(linear, left top, left bottom, from(#b2b3d7), to(#7f82ac));
     background: -moz-linear-gradient(#b2b3d7, #7f82ac);
@@ -185,6 +185,33 @@
 }
 .point-of-sale li.selected-order button {
     font-weight: 900;
+}
+
+/*  c) The session buttons */
+
+.point-of-sale #rightheader .header-button{
+    float:right;
+    height:32px;
+    padding-left:10px;
+    padding-right:10px;
+    border-right:  1px solid #3a3a3a;
+    border-left:  1px solid #3a3a3a;
+    color:#DDD;
+    line-height:32px;
+    text-align:center;
+    cursor: pointer;
+
+    -webkit-transition-property: background;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+.point-of-sale #rightheader .header-button:last-child{
+    border-left:  1px solid #3a3a3a;
+}
+.point-of-sale #rightheader .header-button:hover{
+    background: rgba(0,0,0,0.2);
+    text-shadow: #000 0px 0px 3px;
+    color:#EEE;
 }
 
 /*  c) The notifications indicator */
@@ -234,7 +261,8 @@
     left:0;
     width:440px;
     top:0px;
-    bottom:105px;
+    /*bottom:105px;*/
+    bottom:0;
     border-right: solid 1px #CECBCB;
     background-color: white;
 }
@@ -318,7 +346,8 @@
 .point-of-sale #rightpane {
     position: absolute;
     top: 0;
-    bottom: 105px;
+    /*bottom: 105px;*/
+    bottom:0;
     left: 440px;
     right: 0;
     vertical-align: top;
