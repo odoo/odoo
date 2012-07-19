@@ -21,7 +21,7 @@
          *
          * @param {Array} modules list of modules to initialize
          */
-        init: function(modules, origin) {
+        init: function(modules) {
             // By default only web will be loaded, the rest will be by loaded
             // by openerp.web.Session on the first session_authenticate
             modules = _.union(['web'], modules || []);
@@ -39,9 +39,6 @@
             for(var i=0; i < modules.length; i++) {
                 openerp[modules[i]](new_instance,new_instance[modules[i]]);
             }
-            new_instance.connection.synchronized_mode(function() {
-                new_instance.connection.session_bind(origin);
-            });
             return new_instance;
         }
     };

@@ -857,17 +857,24 @@ instance.web.UserMenu =  instance.web.Widget.extend({
 });
 
 instance.web.Client = instance.web.Widget.extend({
-    init: function(parent) {
+    init: function(parent, origin) {
         if (instance.webclient) {
             throw new Error('Only one client per instance'); 
         }
         instance.client = instance.webclient = this;
         this._super(parent);
+        this._origin = origin
     },
 
     start: function() {
-        this.bind_events();
-        this.show_common();
+        var self = this;
+        return instance.connection.session_bind(this.origin).then(function() {
+            var $e = $(QWeb.render(self._template, {}));
+            self.$element.replaceWith($e);
+            self.$element = $e;
+            self.bind_events();
+            self.show_common();
+        });
     },
 
     bind_events: function() {
@@ -914,7 +921,7 @@ instance.web.Client = instance.web.Widget.extend({
 });
 
 instance.web.WebClient = instance.web.Client.extend({
-    template: 'WebClient',
+    _template: 'WebClient',
     init: function(parent) {
         this._super(parent);
         this._current_state = null;
@@ -1081,9 +1088,9 @@ instance.web.WebClient = instance.web.Client.extend({
 });
 
 instance.web.EmbeddedClient = instance.web.Client.extend({
-    template: 'EmbedClient',
-    init: function(parent, dbname, login, key, action_id, options) {
-        this._super(parent);
+    _template: 'EmbedClient',
+    init: function(parent, origin, dbname, login, key, action_id, options) {
+        this._super(parent, origin);
 
         this.dbname = dbname;
         this.login = login;
@@ -1095,24 +1102,24 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         var self = this;
         return $.when(this._super()).pipe(function() {
             return instance.connection.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
-            return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
-                var action = result.result;
-                action.flags = _.extend({
-                    //views_switcher : false,
-                    search_view : false,
-                    action_buttons : false,
-                    sidebar : false
-                    //pager : false
-                }, self.options, action.flags || {});
+                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
+                    var action = result.result;
+                    action.flags = _.extend({
+                        //views_switcher : false,
+                        search_view : false,
+                        action_buttons : false,
+                        sidebar : false
+                        //pager : false
+                    }, self.options, action.flags || {});
 
-                self.action_manager.do_action(action);
-            });
+                    self.action_manager.do_action(action);
+                });
             });
         });
     },
 });
 
-instance.web.embed = function (dbname, login, key, action, options) {
+instance.web.embed = function (origin, dbname, login, key, action, options) {
     $('head').append($('<link>', {
         'rel': 'stylesheet',
         'type': 'text/css',
@@ -1123,7 +1130,7 @@ instance.web.embed = function (dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    var client = new instance.web.EmbeddedClient(null, dbname, login, key, action, options);
+    var client = new instance.web.EmbeddedClient(null, origin, dbname, login, key, action, options);
     client.insertAfter(currentScript);
 };
 
