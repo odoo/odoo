@@ -80,6 +80,7 @@ class module_category(osv.osv):
 
 class module(osv.osv):
     _name = "ir.module.module"
+    _rec_name = "shortdesc"
     _description = "Module"
 
     @classmethod
@@ -177,6 +178,7 @@ class module(osv.osv):
         'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Module Name', size=256, readonly=True, translate=True),
+        'summary': fields.char('Summary', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
@@ -361,8 +363,9 @@ class module(osv.osv):
         if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
             return config
 
-        # reload the client
-        menu_ids = self.root_menus(cr,uid,ids,context)
+        # reload the client; open the first available root menu
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
@@ -454,7 +457,7 @@ class module(osv.osv):
                     to_install.extend(ids2)
 
         self.button_install(cr, uid, to_install, context=context)
-        return dict(ACTION_DICT, name=_('Upgrade'))
+        return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
@@ -646,29 +649,6 @@ class module(osv.osv):
                 if not val:
                     _logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
-
-    def root_menus(self, cr, uid, ids, context=None):
-        """ Return root menu ids the menus created by the modules whose ids are
-        provided.
-
-        :param list[int] ids: modules to get menus from
-        """
-        values = self.read(cr, uid, ids, ['name'], context=context)
-        module_names = [i['name'] for i in values]
-
-        ids = self.pool.get('ir.model.data').search(cr, uid, [ ('model', '=', 'ir.ui.menu'), ('module', 'in', module_names) ], context=context)
-        values = self.pool.get('ir.model.data').read(cr, uid, ids, ['res_id'], context=context)
-        all_menu_ids = [i['res_id'] for i in values]
-
-        root_menu_ids = []
-        for menu in self.pool.get('ir.ui.menu').browse(cr, uid, all_menu_ids, context=context):
-            while menu.parent_id:
-                menu = menu.parent_id
-            if not menu.id in root_menu_ids:
-                root_menu_ids.append((menu.sequence,menu.id))
-        root_menu_ids.sort()
-        root_menu_ids = [i[1] for i in root_menu_ids]
-        return root_menu_ids
 
 class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"

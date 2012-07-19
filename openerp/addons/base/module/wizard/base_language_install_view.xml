@@ -8,33 +8,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Load a Translation" version="7.0">
-                    <header>
-                        <button name="lang_install" string="Load" type="object" states="init" class="oe_highlight"/>
-                        <label string="or" states="init"/>
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
-                    <group colspan="4" col="8">
-                        <group colspan="1">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="This wizard helps you add a new language to your OpenERP system. After loading a new language it becomes available as default interface language for users and partners."/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string="Please be patient, this operation may take a few minutes (depending on the number of modules currently installed)..."/>
-                            <field name="state" invisible="1"/>
-                        </group>
-                        <separator orientation="vertical" colspan="1" rowspan="12"/>
-                        <group colspan="6">
-                            <separator string="Load a Translation" colspan="4"/>
-                            <group states="init" colspan="4">
-                                <field name="lang" colspan="4"/>
-                                <field name="overwrite" colspan="4" groups="base.group_no_one"/>
-                            </group>
-                            <group states="done" colspan="4">
-                                <label string="The selected language has been successfully installed.
-You must change the preferences of the user and open a new menu to view the changes." colspan="4"/>
-                            </group>
-                        </group>
+                    <field name="state" invisible="1"/>
+                    <group states="init">
+                        <field name="lang"/>
+                        <field name="overwrite" groups="base.group_no_one"/>
                     </group>
+                    <group states="done" colspan="4">
+                        <label string="The selected language has been successfully installed.
+You must change the preferences of the user and open a new menu to view the changes."/>
+                    </group>
+                    <footer states="init">
+                        <button name="lang_install" string="Load" type="object" class="oe_highlight"/> or 
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
+                    <footer states="done">
+                        <button special="cancel" string="Close"/>
+                    </footer>
                 </form>
            </field>
         </record>
@@ -49,10 +38,10 @@ You must change the preferences of the user and open a new menu to view the chan
         </record>
 
         <menuitem
-        name="Load a Translation"
-        action="action_view_base_language_install"
-        id="menu_view_base_language_install"
-        parent="menu_translation" sequence="2"/>
+            name="Load a Translation"
+            action="action_view_base_language_install"
+            id="menu_view_base_language_install"
+            parent="menu_translation" sequence="2"/>
     </data>
 </openerp>
 
