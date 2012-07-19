@@ -514,7 +514,8 @@ class mrp_production(osv.osv):
             'move_created_ids' : [],
             'move_created_ids2' : [],
             'product_lines' : [],
-            'picking_id': False
+            'move_prod_id' : False,
+            'picking_id' : False
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
