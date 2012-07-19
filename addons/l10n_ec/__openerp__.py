@@ -27,7 +27,7 @@ This is the base module to manage the accounting chart for Ecuador in OpenERP.
 
 Accounting chart and localization for Ecuador.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Gnuthink Co.Ltd.',
     'depends': [
                 'account',
                 'base_vat',
