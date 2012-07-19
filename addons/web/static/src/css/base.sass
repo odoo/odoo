@@ -735,11 +735,12 @@ $sheet-max-width: 860px
             @include background-clip()
             li
                 float: none
+                padding: 3px 12px
                 a
                     color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
+                &:hover
+                    @include vertical-gradient(#292929, #191919)
+                    @include box-shadow(none)
 
     // }}}
     // Webclient.leftbar {{{
