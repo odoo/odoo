@@ -21,7 +21,7 @@
             </field>
         </record>
 
-        <record id="action_salary_rule_month" model="ir.actions.act_window">
+        <record id="action_yearly_salary_rule" model="ir.actions.act_window">
             <field name="name">Salary rule monthly</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">salary.rule.month</field>
@@ -33,14 +33,14 @@
         <menuitem
             name="Reporting"
             parent="hr.menu_hr_root"
-            id="menu_monthly_salary_rule_report" sequence="50"
+            id="menu_yearly_salary_rule_report" sequence="50"
            />
 
         <menuitem
-            name="Monthly Salary Rule Report"
-            parent="menu_monthly_salary_rule_report"
-            action="action_salary_rule_month"
-            id="menu_monthly_salary_rule"
+            name="Yearly Salary Rule Report"
+            parent="menu_yearly_salary_rule_report"
+            action="action_yearly_salary_rule"
+            id="menu_yearly_salary_rule"
            />
 
     </data>
