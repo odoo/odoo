@@ -15,11 +15,8 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
-
         do_action: function(action, on_close) {
-            if (action.res_model == 'mail.compose.message') {
-                console.log(this);
-                // debugger
+            if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids) {
                 var record_thread = this.fields.message_ids;
                 var thread = record_thread.thread;
                 thread.instantiate_composition_form('comment', true, false, 0, action.context);
@@ -55,26 +52,23 @@ openerp.mail = function(session) {
         */
         //var mail_msg_struct = {}; // TODO: USE IT OR NOT :)
 
-        do_bind_chatter_events: function(widget) {
-            // event: click on an internal link
-            widget.$element.delegate('a.oe_mail_oe_internal_link', 'click', function (event) {
+        /* generic chatter events binding */
+        bind_events: function(widget) {
+            // event: click on an internal link to a document: model, login
+            widget.$element.delegate('a.oe_mail_internal_link', 'click', function (event) {
                 event.preventDefault();
                 // lazy implementation: fetch data and try to redirect
                 if (! event.srcElement.dataset.resModel) return false;
                 else var res_model = event.srcElement.dataset.resModel;
                 var res_login = event.srcElement.dataset.resLogin;
-                var res_id = event.srcElement.dataset.resId;
-                if ((! res_login) && (! res_id)) return false;
-                if (! res_id) {
-                    var ds = new session.web.DataSet(widget, res_model);
-                    var defer = ds.call('search', [[['login', '=', res_login]]]).then(function (records) {
-                        if (records[0]) {
-                            widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
-                        }
-                        else return false;
-                    });
-                }
-                else widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
+                if (! res_login) return false;
+                var ds = new session.web.DataSet(widget, res_model);
+                var defer = ds.call('search', [[['login', '=', res_login]]]).pipe(function (records) {
+                    if (records[0]) {
+                        widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
+                    }
+                    else return false;
+                });
             });
         },
 
@@ -92,19 +86,19 @@ openerp.mail = function(session) {
         * Add records to comments_structure array
         * @param {Array} records records from mail.message sorted by date desc
         * @returns {Object} cs comments_structure: dict
-        *                      cs.model_to_root_ids = {model: [root_ids], }
-        *                      cs.new_root_ids = [new_root_ids]
-        *                      cs.root_ids = [root_ids]
-        *                      cs.msgs = {record.id: record,}
-        *                      cs.tree_struct = {record.id: {
-        *                          'level': record_level in hierarchy, 0 is root,
-        *                          'msg_nbr': number of childs,
-        *                          'direct_childs': [msg_ids],
-        *                          'all_childs': [msg_ids],
-        *                          'for_thread_msgs': [records],
-        *                          'ancestors': [msg_ids], } }
+        *       cs.model_to_root_ids = {model: [root_ids], }
+        *       cs.new_root_ids = [new_root_ids]
+        *       cs.root_ids = [root_ids]
+        *       cs.msgs = {record.id: record,}
+        *       cs.tree_struct = {record.id: {
+        *           'level': record_level in hierarchy, 0 is root,
+        *           'msg_nbr': number of childs,
+        *           'direct_childs': [msg_ids],
+        *           'all_childs': [msg_ids],
+        *           'for_thread_msgs': [records],
+        *           'ancestors': [msg_ids], } }
         */
-        sort_comments: function(cs, records, parent_id) {
+        records_struct_add_records: function(cs, records, parent_id) {
             var cur_iter = 0; var max_iter = 10; var modif = true;
             while ( modif && (cur_iter++) < max_iter) {
                 modif = false;
@@ -138,6 +132,14 @@ openerp.mail = function(session) {
                     }
                 });
             }
+            return cs;
+        },
+
+        /* copy cs.new_root_ids into cs.root_ids */
+        records_struct_update_after_display: function(cs) {
+            // update TODO
+            cs['root_ids'] = _.union(cs['root_ids'], cs['new_root_ids']);
+            cs['new_root_ids'] = [];
             return cs;
         },
 
@@ -349,7 +351,6 @@ openerp.mail = function(session) {
                 'mail.compose.message.mode': this.params.mode,
             };
             var context = _.extend({}, this.params.context, widget_context);
-            // console.log(context);
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
             var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
@@ -456,10 +457,10 @@ openerp.mail = function(session) {
             // update 'Post' button -> 'Send'
             // update 'Send an Email' link -> 'Post a comment'
             if (this.email_mode) {
-                this.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Send</span>');
+                this.$element.find('button.oe_mail_compose_message_button_send').html('<span>Send</span>');
                 this.$element.find('a.oe_mail_compose_message_email').html('Comment');
             } else {
-                this.$element.find('button.oe_form_button').html('<img width="16" height="16" src="http://localhost:8069/web/static/src/img/icons/gtk-ok.png"><span>Post</span>');
+                this.$element.find('button.oe_mail_compose_message_button_send').html('<span>Post</span>');
                 this.$element.find('a.oe_mail_compose_message_email').html('Send an Email');
             }
             // toggle display
@@ -468,7 +469,7 @@ openerp.mail = function(session) {
 
         /**
          * Update the values of the composition form; with possible different
-           values for body_text and body_html. */
+         * values for body_text and body_html. */
         set_body_value: function(body_text, body_html) {
             this.form_view.fields.body_text.set_value(body_text);
             this.form_view.fields.body_html.set_value(body_html);
@@ -522,7 +523,7 @@ openerp.mail = function(session) {
             this.params.is_wall = this.params.is_wall || (this.params.records != undefined) || false;
             this.params.msg_more_limit = this.params.msg_more_limit || 150;
             this.params.limit = this.params.limit || 100;
-            this.params.limit = 3; // tmp for testing
+            // this.params.limit = 3; // tmp for testing
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             // datasets and internal vars
@@ -597,7 +598,7 @@ openerp.mail = function(session) {
         bind_events: function() {
             var self = this;
             // generic events from Chatter Mixin
-            mail.ChatterUtils.do_bind_chatter_events(this);
+            mail.ChatterUtils.bind_events(this);
             // event: click on 'more' at bottom of thread
             this.$element.find('button.oe_mail_button_more').click(function () {
                 self.do_more();
@@ -681,8 +682,9 @@ openerp.mail = function(session) {
             var defer = this.ds.call('message_read', [[this.params.res_id], (this.params.thread_level > 0), (this.comments_structure['root_ids']),
                                     (limit+1) || (this.params.limit+1), offset||this.params.offset, domain||undefined ]).then(function (records) {
                 if (records.length <= self.params.limit) self.display.show_more = false;
-                else { self.display.show_more = true; records.pop(); }
-                
+                // else { self.display.show_more = true; records.pop(); }
+                // else { self.display.show_more = true; records.splice(0, 1); }
+                else { self.display.show_more = true; }
                 self.display_comments(records);
                 // TODO: move to customize display
                 if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
@@ -704,10 +706,8 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
-
-            // sort comments
-            mail.ChatterUtils.sort_comments(this.comments_structure, records, this.params.parent_id);
-
+            // sort the records
+            mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, this.params.parent_id);
             //build attachments download urls and compute time-relative from dates
             for (var k in records) {
                 records[k].timerelative = $.timeago(records[k].date);
@@ -718,7 +718,6 @@ openerp.mail = function(session) {
                     }
                 }
             }
-
             _(records).each(function (record) {
                 var sub_msgs = [];
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
@@ -740,6 +739,7 @@ openerp.mail = function(session) {
                     self.display_comment(record);
                 }
             });
+            mail.ChatterUtils.records_struct_update_after_display(this.comments_structure);
             // update offset for "More" buttons
             if (this.params.thread_level == 0) this.params.offset += records.length;
         },
@@ -783,14 +783,14 @@ openerp.mail = function(session) {
             var comment_node = this.$element.find('textarea');
             var body_text = comment_node.val();
             comment_node.val('');
-            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply', body_text, this.params.parent_id, 'comment', 'html', 'comment']).then(
+            return this.ds.call('message_append_note', [[this.params.res_id], '', body_text, this.params.parent_id, 'comment', 'plain']).then(
                 this.proxy('init_comments'));
         },
         
         /**
          * Create a domain to fetch new comments according to
          * comment already present in comments_structure
-         * @param {Object} comments_structure (see sort_comments)
+         * @param {Object} comments_structure (see chatter utils)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
         get_fetch_domain: function (comments_structure) {
@@ -855,7 +855,7 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            mail.ChatterUtils.do_bind_chatter_events(this);
+            mail.ChatterUtils.bind_events(this);
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
             if (! this.params.see_subscribers_options) {
                 this.$element.find('button.oe_mail_button_followers').hide(); }
@@ -962,7 +962,7 @@ openerp.mail = function(session) {
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
          * @param {Number} [params.search_view_id=false] search view id for messages
-         * @var {Array} comments_structure see sort_comments
+         * @var {Array} comments_structure (see chatter utils)
          */
         init: function (parent, params) {
             this._super(parent);
@@ -1112,7 +1112,7 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             var self = this;
             this.do_update_show_more(records.length >= self.params.limit);
-            mail.ChatterUtils.sort_comments(this.comments_structure, records, false);
+            mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, false);
             _(this.comments_structure['new_root_ids']).each(function (root_id) {
                 var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
                 var model_name = self.comments_structure.msgs[root_id]['model'];

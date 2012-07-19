@@ -498,15 +498,13 @@ class mail_thread(osv.Model):
         message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
             limit, offset, domain, context=context)
         messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
-        
+
         """ Retrieve all attachments names """
         map_id_to_name = dict((attachment_id, '') for message in messages for attachment_id in message['attachment_ids'])
-        print map_id_to_name
         map_id_to_name = {}
         for msg in messages:
             for attach_id in msg["attachment_ids"]:
                 map_id_to_name[attach_id] = '' # use empty string as a placeholder
-        print map_id_to_name
 
         ids = map_id_to_name.keys()
         names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
