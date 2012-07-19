@@ -99,6 +99,6 @@ Main features :
         'static/src/css/keyboard.css'
     ],
     'qweb': ['static/src/xml/pos.xml'],
-    'auto_install': True,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
