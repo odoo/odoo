@@ -9,7 +9,7 @@ instance.web.form = {};
 /**
  * Interface implemented by the form view or any other object
  * able to provide the features necessary for the fields to work.
- * 
+ *
  * Properties:
  *     - display_invalid_fields : if true, all fields where is_valid() return true should
  *     be displayed as invalid.
@@ -287,10 +287,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_record_loaded: function(record) {
         var self = this, set_values = [];
         if (!record) {
+            this.set({ 'title' : undefined });
             this.do_warn("Form", "The record could not be found in the database.", true);
             return $.Deferred().reject();
         }
         this.datarecord = record;
+        this.set({ 'title' : record.id ? record.name : "New record" });
 
         if (this.qweb) {
             this.kill_current_form();
@@ -524,7 +526,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-        	instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+            instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
                 title:result.warning.title,
                 modal: true,
                 buttons: [
@@ -800,13 +802,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
     },
     get_fields_values: function(blacklist) {
-    	blacklist = blacklist || [];
+        blacklist = blacklist || [];
         var values = {};
         var ids = this.get_selected_ids();
         values["id"] = ids.length > 0 ? ids[0] : false;
         _.each(this.fields, function(value_, key) {
-        	if (_.include(blacklist, key))
-        		return;
+            if (_.include(blacklist, key))
+                return;
             var val = value_.get_value();
             values[key] = val;
         });
@@ -862,6 +864,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     displayed = _(field.values).find(function (option) {
                             return option[0] === value;
                         })[1];
+                    break;
+                case 'many2one':
+                    displayed = field.get_displayed();
                     break;
                 }
 
@@ -953,7 +958,7 @@ instance.web.form.FormRenderingEngineInterface = instance.web.Class.extend({
 
 /**
  * Default rendering engine for the form view.
- * 
+ *
  * It is necessary to set the view using set_view() before usage.
  */
 instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInterface.extend({
@@ -1184,8 +1189,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 row_cols = cols;
             } else if (tagName==='group') {
                 // When <group> <group/><group/> </group>, we need a spacing between the two groups
-                $child.addClass('oe_group_right')
-
+                $td.addClass('oe_group_right')
             }
             row_cols -= colspan;
 
@@ -1211,12 +1215,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                     $child = $td.children(':first');
                 switch ($child[0].tagName.toLowerCase()) {
                     case 'separator':
-                        if ($child.attr('orientation') === 'vertical') {
-                            $td.addClass('oe_vertical_separator').attr('width', '1');
-                            $td.empty();
-                            row_cols-= $td.attr('colspan') || 1;
-                            total--;
-                        }
                         break;
                     case 'label':
                         if ($child.attr('for')) {
@@ -1276,7 +1274,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             page_attrs.__page = $new_page;
             page_attrs.__ic = ic;
             pages.push(page_attrs);
-            
+
             $new_page.children().each(function() {
                 self.process($(this));
             });
@@ -1302,7 +1300,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 }
             });
         });
-                
+
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
@@ -1585,7 +1583,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
             parent: {}
         });
         if (a_dataset.parent_view) {
-        	fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
+            fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
         }
         return fields_values;
     },
@@ -1603,7 +1601,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         if (! v_context) {
             v_context = (this.field || {}).context || {};
         }
-        
+
         if (v_context.__ref || true) { //TODO: remove true
             var fields_values = this._build_eval_context(blacklist);
             v_context = new instance.web.CompoundContext(v_context).set_eval_context(fields_values);
@@ -1711,14 +1709,14 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
 
 /**
  * Interface to be implemented by fields.
- * 
+ *
  * Properties:
  *     - readonly: boolean. If set to true the field should appear in readonly mode.
  *     - force_readonly: boolean, When it is true, the field should always appear
  *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
  *     - changed_value: triggered to inform the view to check on_changes
- * 
+ *
  */
 instance.web.form.FieldInterface = {
     /**
@@ -1729,14 +1727,14 @@ instance.web.form.FieldInterface = {
     init: function(field_manager, node) {},
     /**
      * Called by the form view to indicate the value of the field.
-     * 
+     *
      * set_value() may return an object that can be passed to $.when() that represents the moment when
      * the field has finished all operations necessary before the user can effectively use the widget.
-     * 
+     *
      * Multiple calls to set_value() can occur at any time and must be handled correctly by the implementation,
      * regardless of any asynchronous operation currently running and the status of any promise that a
      * previous call to set_value() could have returned.
-     * 
+     *
      * set_value() must be able, at any moment, to handle the syntax returned by the "read" method of the
      * osv class in the OpenERP server as well as the syntax used by the set_value() (see below). It must
      * also be able to handle any other format commonly used in the _defaults key on the models in the addons
@@ -1746,16 +1744,16 @@ instance.web.form.FieldInterface = {
     set_value: function(value_) {},
     /**
      * Get the current value of the widget.
-     * 
+     *
      * Must always return a syntaxically correct value to be passed to the "write" method of the osv class in
      * the OpenERP server, although it is not assumed to respect the constraints applied to the field.
      * For example if the field is marqued as "required", a call to get_value() can return false.
-     * 
+     *
      * get_value() can also be called *before* a call to set_value() and, in that case, is supposed to
      * return a defaut value according to the type of field.
-     * 
+     *
      * This method is always assumed to perform synchronously, it can not return a promise.
-     * 
+     *
      * If there was no user interaction to modify the value of the field, it is always assumed that
      * get_value() return the same semantic value than the one passed in the last call to set_value(),
      * altough the syntax can be different. This can be the case for type of fields that have a different
@@ -1785,14 +1783,14 @@ instance.web.form.FieldInterface = {
 
 /**
  * Abstract class for classes implementing FieldInterface.
- * 
+ *
  * Properties:
  *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
  *      the values of the "readonly" property and the "force_readonly" property on the field manager.
  *     - value: useful property to hold the value of the field. By default, set_value() and get_value()
  *     set and retrieve the value property. Changing the value property also triggers automatically
  *     a 'changed_value' event that inform the view to trigger on_changes.
- * 
+ *
  */
 instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.web.form.FieldInterface, {
     /**
@@ -1811,7 +1809,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.string = this.node.attrs.string || this.field.string || this.name;
         this.set({'value': false});
         this.set({required: this.modifiers['required'] === true});
-        
+
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
         // "force_readonly"
         this.set({"readonly": this.modifiers['readonly'] === true});
@@ -1821,7 +1819,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.on("change:readonly", this, test_effective_readonly);
         this.on("change:force_readonly", this, test_effective_readonly);
         _.bind(test_effective_readonly, this)();
-        
+
         this.on("change:value", this, function() {
             if (! this._inhibit_on_change)
                 this.trigger('changed_value');
@@ -2003,7 +2001,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
 });
 
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
-    
+
 });
 
 instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
@@ -2454,7 +2452,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         } else {
             var self = this;
             var option = _(this.values)
-                .detect(function (record) { return record[0] === self.get('value'); }); 
+                .detect(function (record) { return record[0] === self.get('value'); });
             this.$element.text(option ? option[1] : this.values[0][1]);
         }
     },
@@ -2633,7 +2631,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     render_editable: function() {
         var self = this;
         this.$input = this.$element.find("input");
-        
+
         self.$input.tipsy({
             title: function() {
                 return "No element was selected, you should create or select one from the dropdown list.";
@@ -2641,10 +2639,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             trigger:'manual',
             fade: true,
         });
-        
+
         this.$drop_down = this.$element.find(".oe_m2o_drop_down_button");
         this.$follow_button = $(".oe_m2o_cm_button", this.$element);
-        
+
         this.$follow_button.click(function() {
             if (!self.get('value')) {
                 self.focus();
@@ -2802,10 +2800,20 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
         } else {
-            str = _.escape(str).split("\n").join("<br />");
+            var lines = _.escape(str).split("\n");
+            var link = "";
+            var follow = "";
+            if (! this.get_definition_options().highlight_first_line) {
+                link = lines.join("<br />");
+            } else {
+                link = lines[0];
+                follow = _.rest(lines).join("<br />");
+                if (follow)
+                    link += "<br />";
+            }
             this.$element.find('a')
                  .unbind('click')
-                 .html(str)
+                 .html(link)
                  .click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
@@ -2817,6 +2825,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     });
                     return false;
                  });
+            $(".oe_form_m2o_follow").html(follow);
         }
     },
     set_value: function(value_) {
@@ -2832,6 +2841,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.inhibit_on_change = true;
         this._super(value_);
         this.inhibit_on_change = false;
+    },
+    get_displayed: function() {
+        return this.display_value["" + this.get("value")];
     },
     add_id: function(id) {
         this.display_value = {};
@@ -2938,7 +2950,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     load_views: function() {
         var self = this;
-        
+
         var modes = this.node.attrs.mode;
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
@@ -3140,30 +3152,30 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     save_any_view: function() {
         if (this.doing_on_change)
             return false;
-    	return this.session.synchronized_mode(_.bind(function() {
-	        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-	            this.viewmanager.views[this.viewmanager.active_view] &&
-	            this.viewmanager.views[this.viewmanager.active_view].controller) {
-	            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-	            if (this.viewmanager.active_view === "form") {
-	                if (!view.is_initialized.isResolved()) {
-	                    return false;
-	                }
-	                var res = $.when(view.do_save());
-	                if (!res.isResolved() && !res.isRejected()) {
-	                    console.warn("Asynchronous get_value() is not supported in form view.");
-	                }
-	                return res;
-	            } else if (this.viewmanager.active_view === "list") {
-	                var res = $.when(view.ensure_saved());
-	                if (!res.isResolved() && !res.isRejected()) {
-	                    console.warn("Asynchronous get_value() is not supported in list view.");
-	                }
-	                return res;
-	            }
-	        }
-	        return false;
-	    }, this));
+        return this.session.synchronized_mode(_.bind(function() {
+            if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+                this.viewmanager.views[this.viewmanager.active_view] &&
+                this.viewmanager.views[this.viewmanager.active_view].controller) {
+                var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+                if (this.viewmanager.active_view === "form") {
+                    if (!view.is_initialized.isResolved()) {
+                        return false;
+                    }
+                    var res = $.when(view.do_save());
+                    if (!res.isResolved() && !res.isRejected()) {
+                        console.warn("Asynchronous get_value() is not supported in form view.");
+                    }
+                    return res;
+                } else if (this.viewmanager.active_view === "list") {
+                    var res = $.when(view.ensure_saved());
+                    if (!res.isResolved() && !res.isRejected()) {
+                        console.warn("Asynchronous get_value() is not supported in list view.");
+                    }
+                    return res;
+                }
+            }
+            return false;
+        }, this));
     },
     is_syntax_valid: function() {
         if (!this.viewmanager.views[this.viewmanager.active_view])
@@ -3520,7 +3532,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 $("textarea", self.$element).css("padding-left", "3px");
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
-                self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
+                self.$element.html(QWeb.render("FieldMany2ManyTag", {elements: data}));
             }
         };
         if (! self.get('values') || self.get('values').length > 0) {
@@ -3692,7 +3704,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         this.dataset.on_unlink.add_last(function(ids) {
             self.dataset_changed();
         });
-        
+
         this.is_setted.then(function() {
             self.load_view();
         });
@@ -3808,7 +3820,7 @@ instance.web.form.Many2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 });
 instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
     template: 'Many2ManyKanban.quick_create',
-    
+
     /**
      * close_btn: If true, the widget will display a "Close" button able to trigger
      * a "close" event.
@@ -3924,8 +3936,8 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         var self = this;
         this.renderElement();
         new instance.web.Dialog(this, {
-            width: '90%',
             min_width: '800px',
+        dialogClass: 'oe_act_window',
             close: function() {
                 self.check_exit(true);
             },
@@ -4501,7 +4513,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             this.selection = [];
             // get fold information from widget
             var fold = ((this.node.attrs || {}).statusbar_fold || true);
-            // build final domain: if fold option required, add the 
+            // build final domain: if fold option required, add the
             if (fold == true) {
                 var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]]);
             } else {
@@ -4533,7 +4545,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
-        
+
         if (shown.length == 0) {
             this.to_show = this.selection;
         } else {

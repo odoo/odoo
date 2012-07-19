@@ -399,16 +399,17 @@
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-            <col width="33%"/>
-            <col width="33%"/>
-            <col width="34%"/>
+	    <col width="20%"/>
+	    <col width="25%"/>
+	    <col width="20%"/>
+	    <col width="35%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                            <span class="oe_view_title_text oe_breadcrumb_title"/>
                         </h2>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_view_search" t-opentag="true"/>
                 </td>
             </tr>
@@ -416,7 +417,7 @@
                 <td>
                         <div class="oe_view_manager_buttons"/>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_sidebar"/>
                 </td>
                 <td>
@@ -771,7 +772,7 @@
     <table border="0" cellpadding="0" cellspacing="0" t-attf-class="oe_form_group #{classnames}"/>
 </t>
 <t t-name="FormRenderingNotebook">
-    <div>
+    <div class="oe_clear">
         <ul t-attf-class="oe_notebook #{classnames}">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
                 <a t-attf-href="##{page.id}">
@@ -786,7 +787,7 @@
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
-    <div t-attf-class="oe_horizontal_separator #{classnames}">
+    <div t-attf-class="oe_horizontal_separator oe_clear #{classnames}">
         <t t-esc="string"/>
     </div>
 </t>
@@ -942,11 +943,12 @@
 </t>
 <t t-name="FieldMany2One">
     <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
-        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
+        <t t-if="widget.get('effective_readonly')">
+            <a href="#" class="oe_form_uri"/>
+            <span class="oe_form_m2o_follow"/>
+        </t>
         <t t-if="!widget.get('effective_readonly')">
-            <button class="oe_button oe_m2o_cm_button" title="Open Resource">
-                <img t-att-src='_s + "/web/static/src/img/icons/terp-folder-yellow.png"'/>
-            </button>
+            <a href="#" class="oe_m2o_cm_button oe_e oe_right">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -961,18 +963,20 @@
         </t>
     </span>
 </t>
+<!-- Collection of m2m tags -->
 <t t-name="FieldMany2ManyTags">
-    <div class="oe_form_field oe_form_field_many2manytags" t-att-style="widget.node.attrs.style">
+    <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">
             <textarea rows="1" style="width: 100%"
                 t-att-placeholder="widget.node.attrs.placeholder"></textarea>
         </t>
     </div>
 </t>
-<t t-name="FieldMany2ManyTags.box">
+<!-- Individual m2m tag element -->
+<t t-name="FieldMany2ManyTag">
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span class="oe_form_field_many2manytags_box" t-att-data-index="i">
+        <span class="oe_tag" t-att-data-index="i">
             <t t-esc="el[1]"/>
         </span>
         <t t-set="i" t-value="i + 1"/>

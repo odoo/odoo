@@ -260,7 +260,7 @@ openerp.web_process = function (instance) {
                 buttons : [
                     {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
                     {text: _t("Save"), click: function() {
-                        var form_view = action_manager.inner_viewmanager.views.form.controller;
+                        var form_view = action_manager.inner_widget.views.form.controller;
 
                         form_view.do_save(function() {
                             self.initialize_process_view();
