@@ -754,7 +754,9 @@ openerp.mail = function(session) {
                 record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]);
             }
             // body text manipulation
-            record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
+            if (record.subtype == 'plain') {
+                record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
+            }
             record.body = mail.ChatterUtils.do_replace_expressions(record.body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
