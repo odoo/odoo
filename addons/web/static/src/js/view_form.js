@@ -3236,6 +3236,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         if (!form.$element.is('.oe_form_dirty')) {
             return true;
         }
+        this.o2m._dirty_flag = true;
 
         // Otherwise validate internal form
         return _(form.fields).chain()
