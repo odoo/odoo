@@ -910,7 +910,7 @@ instance.web.WebClient = instance.web.Widget.extend({
                     var doc_width = $(document).width();
                     var offset = $menu.offset();
                     var menu_width = $menu.width();
-                    var x = doc_width - offset.left - menu_width - 15;
+                    var x = doc_width - offset.left - menu_width - 2;
                     if (x < 0) {
                         $menu.offset({ left: offset.left + x }).width(menu_width);
                     }
