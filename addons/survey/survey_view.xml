@@ -30,17 +30,18 @@
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                     </div>
-                    <label for="title" class="oe_edit_only"/>
-                    <h1>
-                        <field name="title" select="1" class="oe_inline"/>
-                        <label string=", " attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
-                        <field name="type" class="oe_inline"/>
-                    </h1>
+                    <div class="oe_title">
+                        <label for="title" class="oe_edit_only"/>
+                        <h1>
+                            <field name="title"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
                             <field name="responsible_id" class="oe_inline"/>
                             <field name="send_response"/>
+                            <field name="type"/>
                         </group>
                         <group>
                             <field name="max_response_limit" attrs="{'readonly':[('state','in',('open','close'))]}"/>
