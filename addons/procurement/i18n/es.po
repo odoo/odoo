@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:01+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:20+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -85,7 +85,7 @@ msgstr "Calcular sólo reglas de stock mínimo"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
+msgstr "Excepciones de abastecimiento temporales"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -164,7 +164,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Permanent Procurement Exceptions"
-msgstr ""
+msgstr "Excepciones de abastecimiento permanentes"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -234,6 +234,9 @@ msgid ""
 "procurement to bring the virtual stock to the Quantity specified as Max "
 "Quantity."
 msgstr ""
+"Cuando la cantidad virtual de stock es inferior a la Cantidad Mínima, "
+"OpenERP genera un abastecimiento para aumentar el stock virtual a la "
+"cantidad especificada como Cantidad Máxima."
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -388,7 +391,7 @@ msgstr "Referencias"
 #: view:product.product:0
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Regla de stock mínimo"
 
 #. module: procurement
 #: view:res.company:0
@@ -402,6 +405,8 @@ msgid ""
 "Please check the quantity in procurement order(s), it should not be 0 or "
 "less!"
 msgstr ""
+"¡Por favor, verifique la cantidad en órdenes de abastecimiento, nodebe ser "
+"inferior o igual a 0!"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -472,6 +477,9 @@ msgid ""
 "OpenERP generates a procurement to bring the virtual stock to the Max "
 "Quantity."
 msgstr ""
+"Cuando la cantidad virtual de stock es inferior a la Cantidad Mínima, "
+"OpenERP genera un abastecimiento para aumentar el stock virtual a la "
+"cantidad especificada como Cantidad Máxima."
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -509,7 +517,7 @@ msgstr "más"
 #. module: procurement
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "No puede mover productos desde o hacia una ubicación de tipo vista."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -631,7 +639,7 @@ msgstr "Regla de inventario mínimo"
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
-msgstr ""
+msgstr "La cantidad del abastecimiento será redondeada a este múltiplo."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -671,7 +679,7 @@ msgstr "Ordenar el máximo"
 #. module: procurement
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "¡La referencia debe ser única por compañía!"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -908,12 +916,12 @@ msgstr "Planificador de MRP y logística"
 #: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state!"
-msgstr ""
+msgstr "¡No puede eliminar órdenes de abastecimiento en el estado %s!"
 
 #. module: procurement
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "¡El nombre de la compañía debe ser único!"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -1009,12 +1017,12 @@ msgstr "Detalles de abastecimiento"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr ""
+msgstr "El abastecieminto se inició con retraso"
 
 #. module: procurement
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Código EAN inválido"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:152

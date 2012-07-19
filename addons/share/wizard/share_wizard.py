@@ -48,7 +48,7 @@ RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTU
 def generate_random_pass():
     return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
 
-class share_wizard(osv.osv_memory):
+class share_wizard(osv.TransientModel):
     _name = 'share.wizard'
     _description = 'Share Wizard'
 
@@ -177,9 +177,10 @@ class share_wizard(osv.osv_memory):
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'record_name': fields.char('Record name', size=128, help="Name of the shared record, if sharing a precise record"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the email notification."),
-
-        'embed_code': fields.function(_embed_code, type='text'),
-        'embed_option_title': fields.boolean("Display title"),
+        'embed_code': fields.function(_embed_code, type='text', string='Code',
+            help="Embed this code in your documents to provide a link to the "\
+                  "shared document."),
+        'embed_option_title': fields.boolean('Display title'),
         'embed_option_search': fields.boolean('Display search view'),
         'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
     }
@@ -273,7 +274,6 @@ class share_wizard(osv.osv_memory):
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
-                'menu_tips' : False,
                 'company_id': current_user.company_id.id
             }, context)
             new_line = { 'user_id': user_id,
@@ -903,8 +903,11 @@ class share_result_line(osv.osv_memory):
     def _share_url(self, cr, uid, ids, _fieldname, _args, context=None):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
-            data = dict(dbname=cr.dbname, login=this.login, password='')
-            result[this.id] = this.share_wizard_id.share_url_template() % data
+            data = dict(dbname=cr.dbname, login=this.login, password=this.password)
+            if this.share_wizard_id and this.share_wizard_id.action_id:
+                data['action_id'] = this.share_wizard_id.action_id.id
+            ctx = dict(context, share_url_template_hash_arguments=['action_id'])
+            result[this.id] = this.share_wizard_id.share_url_template(context=ctx) % data
         return result
 
     _columns = {

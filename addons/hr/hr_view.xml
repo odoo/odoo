@@ -9,6 +9,8 @@
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_reporting_timesheet" name="Reports"
+            parent="menu_hr_reporting" sequence="6" />
 
         <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
@@ -18,60 +20,64 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                    <div class="oe_right oe_button_box">
-                        <!-- Put here related buttons -->
-                    </div>
-                    <field class="oe_right" name="photo" widget='image' on_change="onchange_photo(photo)"/>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-
-                        <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
-                        <h2><field name="company_id" widget="selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/></h2>
-
-                        <label for="department_id" class="oe_edit_only"/>
-                        <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
-                    </div>
-                    <notebook>
-                        <page string="Personal Information">
-                            <group>
-                                <group string="General">
-                                    <field name="user_id" on_change="onchange_user(user_id)"/>
-                                    <field name="active"/>
-                                    <field name="parent_id"/>
+                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>    
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                                <label class="oe_inline" string="," attrs="{'invisible': [('job_id', '=', False)]}"/>
+                                <field class="oe_inline" name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                <label class="oe_inline" string="at" attrs="{'invisible': [('company_id', '=', False)]}" groups="base.group_multi_company"/>
+                                <field class="oe_inline" name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                            </h1>
+                            <label for="department_id" class="oe_edit_only"/>
+                            <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                            <label for="category_ids" class="oe_edit_only"/>
+                            <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
+                        <group colspan="4" col="4">
+                            <field name="work_email" widget="email" />
+                            <field name="work_phone"/>
+                            <field name="address_id" on_change="onchange_address_id(address_id)" />
+                            <field name="mobile_phone"/>
+                        </group>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <field name="user_id" on_change="onchange_user(user_id)"/>
+                                        <field name="parent_id" />
+                                        <field name="coach_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group name="active_group">
+                                        <field name="active"/>
+                                    </group>
                                 </group>
-                                <group groups="base.group_hr_user" string="Social IDs">
-                                    <field name="identification_id"/>
-                                    <field name="passport_id"/>
-                                    <field name="otherid"/>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group col="4">
+                                    <group>
+                                        <field name="country_id"/>
+                                        <field name="bank_account_id"/>
+                                        <field name="address_home_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                        <field name="birthday"/>
+                                    </group>
                                 </group>
-                                <group groups="base.group_hr_user" string="Status">
-                                    <field name="gender"/>
-                                    <field name="marital"/>
-                                    <field name="country_id"/>
-                                    <field name="birthday"/>
-                                </group>
-                                <group string="Contact Information">
-                                    <field name="address_home_id"/>
-                                    <field name="address_id" on_change="onchange_address_id(address_id)"/>
-                                    <field name="work_phone"/>
-                                    <field name="mobile_phone"/>
-                                    <field name="work_email" widget="email"/>
-                                    <field name="work_location"/>
-                                </group>
-                                <group string="Job Information">
-                                    <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                                    <field name="coach_id"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids" widget="many2many_tags"/>
-                        </page>
-                        <page string="Notes" groups="base.group_hr_user">
-                            <field name="notes"/>
-                        </page>
-                    </notebook>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -357,16 +363,21 @@
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                            <field name="department_id" class="oe_inline"/>
+                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                        </h1>
                         <group>
                             <group>
-                                <field name="name"/>
-                                <field name="department_id"/>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
-                            <group>
-                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                                 <field name="no_of_employee"/>
                                 <field name="expected_employees"/>
+                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                            </group>
+                            <group>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
@@ -375,9 +386,6 @@
                                 <field name="description"/>
                                 <label for="requirements"/>
                                 <field name="requirements"/>
-                            </page>
-                            <page string="Employees" groups="base.group_user">
-                                <field name="employee_ids" widget="many2many" mode="tree,form"/>
                             </page>
                         </notebook>
                     </sheet>

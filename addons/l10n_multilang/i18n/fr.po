@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-16 05:07+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Modèle de régime de taxe"
 
 #. module: l10n_multilang
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr ""
+msgstr "Le code du compte doit être unique par société."
 
 #. module: l10n_multilang
 #: constraint:account.account.template:0
@@ -34,36 +34,39 @@ msgid ""
 "You can not define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Erreur de configuration!\n"
+"Vous ne pouvez pas définir un sous-compte pour un compte de type interne  "
+"'Vue'! "
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_journal
 msgid "Analytic Journal"
-msgstr ""
+msgstr "Journal analytique"
 
 #. module: l10n_multilang
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de modèles de compte récursifs"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "Modèles de plan comptable"
 
 #. module: l10n_multilang
 #: sql_constraint:account.tax:0
 msgid "The description must be unique per company!"
-msgstr ""
+msgstr "La description doit être unique par société!"
 
 #. module: l10n_multilang
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de codes de taxe récursifs"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_template
@@ -78,7 +81,7 @@ msgstr ""
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
 msgid "Account"
-msgstr ""
+msgstr "Compte"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
@@ -91,11 +94,13 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Erreur de configuration ! La devise choisie devrait être aussi celle des "
+"comptes par défaut."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
 msgid "Templates for Accounts"
-msgstr ""
+msgstr "Modèles de comptes"
 
 #. module: l10n_multilang
 #: help:account.chart.template,spoken_languages:0
@@ -109,7 +114,7 @@ msgstr ""
 #. module: l10n_multilang
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de comptes récursifs."
 
 #. module: l10n_multilang
 #: constraint:account.account:0
@@ -118,26 +123,29 @@ msgid ""
 "You can not select an account type with a deferral method different of "
 "\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
 msgstr ""
+"Erreur de configuration! \n"
+"Pour les comptes de tiers vous devez choisir la méthode de report à nouveau "
+"\"Délettré\"! "
 
 #. module: l10n_multilang
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Le nom du journal doit être unique per société !"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Compte analytique"
 
 #. module: l10n_multilang
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "Le code du journal doit être unique dans chaque société !"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Régime de taxe"
 
 #. module: l10n_multilang
 #: constraint:account.account:0
@@ -146,18 +154,21 @@ msgid ""
 "You can not define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Erreur de configuration!\n"
+"Vous ne pouvez pas définir de sous-compte à un compte de type interne "
+"différent de \"vue\"! "
 
 #. module: l10n_multilang
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de comptes analytiques récursifs."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr ""
+msgstr "Modèle de code de taxe"
 
 #. module: l10n_multilang
 #: field:account.chart.template,spoken_languages:0
 msgid "Spoken Languages"
-msgstr ""
+msgstr "Langues parlées"

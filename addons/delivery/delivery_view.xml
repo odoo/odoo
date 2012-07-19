@@ -15,60 +15,82 @@
                 </tree>
             </field>
         </record>
+        
         <record id="view_delivery_carrier_form" model="ir.ui.view">
             <field name="name">delivery.carrier.form</field>
             <field name="model">delivery.carrier</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Carrier" version="7.0">
-                    <group col="4" name="general">
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                        <field name="product_id"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="general">
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
                         <field name="active"/>
-                        <separator string="Pricing Information" colspan="4"/>
-                        <group colspan="4" col="4">
+                        </group>
+                    </group>
+                    <group col="4">
+                        <group string="Pricing Information">
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                            <newline/>
-                            <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                            <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
+                            <label for="free_if_more_than"/>
+                            <div>
+                                <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
+                                <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
+                            </div>
                         </group>
                         <newline/>
                         <field name="use_detailed_pricelist"/>
                     </group>
-                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
-                         <tree string="Delivery grids">
+                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
+                        <tree string="Delivery grids">
                               <field name="sequence"/>
                               <field name="name"/>
-                         </tree>
+                        </tree>
                         <form string="Delivery grids" version="7.0">
-                             <group col="4">
-                                 <field name="name"/>
-                                 <field name="active"/>
-                                 <field name="sequence"/>
+                             <group>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                                <group>
+                                    <field name="active"/>
+                                    <field name="sequence"/>
+                                </group>
                              </group>
                              <notebook>
-                               <page string="Grid definition">
-                                  <field name="line_ids"/>
-                               </page>
-                               <page string="Destination">
-                                   <group string="Countries">
-                                       <field colspan="2" name="country_ids" nolabel="1"/>
-                                   </group>
-                                   <group string="States">
-                                       <field colspan="2" name="state_ids" nolabel="1"/>
-                                   </group>
-                                   <group col="4">
-                                       <field name="zip_from"/>
-                                       <field name="zip_to"/>
-                                   </group>
-                               </page>
-                             </notebook>
-                       </form>
+                                <page string="Grid definition">
+                                   <field name="line_ids"/>
+                                </page>
+                                <page string="Destination">
+                                    <group>
+                                        <group>
+                                            <field name="country_ids" widget="many2many_tags"/>
+                                            <field name="state_ids" widget="many2many_tags"/>
+                                        </group>
+                                        <group>
+                                            <label for="zip_from" string="Zip"/>
+                                            <div>
+                                                <field name="zip_from" class="oe_inline"/>
+                                                -
+                                                <field name="zip_to" class="oe_inline"/>
+                                            </div>
+                                        </group>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </form>
                    </field>
                 </form>
             </field>
         </record>
+        
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
             <field name="name">Delivery Method</field>
             <field name="type">ir.actions.act_window</field>
@@ -140,18 +162,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines" version="7.0">
-                    <field colspan="4" name="name"/>
-                    <div>
-                        <label string="condition" for="type"/>
-                        <field name="type" class="oe_inline"/>
-                        <field name="operator" class="oe_inline"/>
-                        <field name="max_value" class="oe_inline"/>
-                    </div>
-                    <group col="4">
-                        <field name="list_price"/>
-                        <field name="standard_price"/>
-                        <field name="price_type"/>
-                        <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="type" string="Condition"/>
+                            <div>
+                                <field name="type" class="oe_inline"/>
+                                <field name="operator" class="oe_inline"/>
+                                <field name="max_value" class="oe_inline"/>
+                            </div>
+                            <label for="price_type"/>
+                            <div>
+                                <field name="price_type" class="oe_inline"/>
+                                <label string=" in Function of " class="oe_inline" attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="list_price"/>
+                            <field name="standard_price"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -178,7 +210,7 @@
             <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="after">
+                <field name="min_date" position="after">
                     <field name="carrier_id"/>
                     <field name="carrier_tracking_ref"/>
                     <field name="number_of_packages"/>
@@ -230,23 +262,10 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <field name="picking_id" position="after">
+                <xpath expr="//group[@name='main_grp']" position="inside">
                     <field name="weight"/>
                     <field name="weight_net"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_move_reception_picking_withweight_form" model="ir.ui.view">
-            <field name="name">stock.move.reception.packing.form.weight</field>
-            <field name="type">form</field>
-            <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
-            <field name="arch" type="xml">
-                <field name="picking_id">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
@@ -257,13 +276,18 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='sale_total']" position="after">
-                    <group>
+                    <group style="width: 65%%">
                         <label for="carrier_id"/>
                         <div>
                             <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
-                            <button name="delivery_set" states="draft" string="Add to Sale Order" type="object"/>
+                            <button name="delivery_set" string="Add in Quote" type="object"
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                            <br/>
+                            <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
                         </div>
-                        <label string="If you do not 'Add to Sale Order', the delivery charges will be added based on the delivery order."/>
                     </group>
                 </xpath>
             </field>

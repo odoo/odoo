@@ -169,41 +169,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account" version="7.0">
-                    <label for="name" class="oe_edit_only" string="Account Name and Code:"/>
+                    <label for="code" class="oe_edit_only" string="Account Code and Name"/>
                     <h1>
-                        <field name="name"/> -
-                        <field name="code"/>
+                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> - 
+                        <field name="name" class="oe_inline" placeholder="Account name"/>
                     </h1>
-                    <label for="company_id"/>
-                    <h2>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </h2>
                     <group>
                         <group>
                             <field name="parent_id"/>
                             <field name="type"/>
                             <field name="user_type"/>
                             <field name="active"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
-                            <field name="credit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
-                            <field name="balance" invisible="context.get('config_invisible', True)"/>
+                            <field name="debit" attrs="{'readonly':[('type','=','view')]}"/>
+                            <field name="credit" attrs="{'readonly':[('type','=','view')]}"/>
+                            <field name="balance"/>
                         </group>
                         <group>
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
+                            <field name="reconcile"/>
                             <field name="child_consol_ids"
-                                attrs="{'readonly':[('type','!=','consolidation')]}"
+                                attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
-                        <group string="Currency">
+                        <group>
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
                         </group>
-                        <group string="Reconcile">
-                            <field name="reconcile"/>
-                        </group>
                     </group>
+                    <label for="note"/>
                     <field name="note"/>
                 </form>
             </field>
@@ -490,6 +486,7 @@
                             <group>
                                 <field name="centralisation"/>
                                 <field name="entry_posted"/>
+                                <field name="with_last_closing_balance" />
                                 <field name="allow_date"/>
                                 <field name="group_invoice_lines"/>
                             </group>
@@ -498,6 +495,29 @@
                                 <field name="account_control_ids" widget="many2many_tags"/>
                             </group>
                         </group>
+                        <page string="Entry Controls">
+                            <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
+                            <field colspan="4" name="type_control_ids" nolabel="1"/>
+                            <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
+                            <field colspan="4" name="account_control_ids" nolabel="1"/>
+                        </page>
+                        <page string="Cash">
+                            <group string="Profit &amp; Loss Accounts">
+                                <field name="profit_account_id" />
+                                <field name="loss_account_id" />
+                            </group>
+
+                            <group string="Internal Transfer Account">
+                                <field name="internal_account_id" />
+                            </group>
+
+                            <separator string="Available Currencies" colspan="4" />
+                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">
+                                <tree string="CashBox Lines" editable="bottom">
+                                    <field name="pieces" />
+                                </tree>
+                            </field>
+                        </page>
                     </page>
                     </notebook>
                 </form>
@@ -600,15 +620,21 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="date" on_change="onchange_date(date, company_id)"/>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
-                            <field name="period_id"/>
+                            <label for="date" string="Date / Period"/>
+                            <div>
+                                <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
+                                <field name="period_id" class="oe_inline"/>
+                            </div>
+                            <field name="name"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group><group>
-                            <field name="balance_start"/>
+                            <label for="balance_start"/>
+                            <div>
+                                <field name="balance_start" class="oe_inline"/>
+                                <field name="currency" class="oe_inline"/>
+                            </div>
                             <field name="balance_end_real"/>
-                            <field name="currency" invisible="1"/>
                         </group>
                     </group>
 
@@ -894,47 +920,68 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Tax" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="description"/>
-                        <field name="type_tax_use"/>
-                        <field name="price_include"/>
-                        <field name="active"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                        <group>
+                            <field name="type_tax_use"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Tax Definition">
-                            <group col="4">
-                                  <field name="type"/>
-                                  <field name="amount" attrs="{'readonly':[('type','in',('none', 'code', 'balance'))]}"/>
-                                  <separator colspan="4" string="Accounting Information"/>
+                        <group>
+                            <group string="Tax Computation">
+                                <label for="type"/>
+                                <div>
+                                    <field name="type"/>
+                                    <field name="amount" class="oe_inline"
+                                        attrs="{'invisible':[('type','in',('none', 'code', 'balance'))]}"/>
+                                    <label string="%%" attrs="{'invisible':[('type','&lt;&gt;','percent')]}"/>
+                                </div>
+                                <field name="python_compute" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                                <field name="python_compute_inv" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                                <field name="price_include"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="sequence"/>
+                                <field name="include_base_amount"/>
+                                <field name="child_depend"/>
+                            </group>
+                            <group string="Invoices">
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
-                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
-                                  <separator colspan="4" string="Tax Declaration: Invoices"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
                                   <field name="tax_code_id"/>
                                   <field name="tax_sign"/>
-                                  <separator colspan="4" string="Tax Declaration: Credit Notes"/>
+
+                            </group>
+                            <group string="Refunds">
+                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>
                                   <field name="ref_tax_code_id"/>
                                   <field name="ref_tax_sign"/>
-                                  <separator colspan="4" string="Children Definition"/>
-                                  <field name="child_depend"/>
-                                  <field name="sequence"/>
-                                  <field name="include_base_amount"/>
-                                  <field colspan="4" name="child_ids">
+                            </group>
+                            <group string="Children/Sub Taxes" colspan="2">
+                                <field name="child_depend" class="oe_inline"/>
+                                <field name="child_ids" nolabel="1" colspan="2">
                                       <tree string="Account Tax">
                                           <field name="sequence"/>
                                           <field name="name"/>
                                           <field name="price_include"/>
                                           <field name="description"/>
                                      </tree>
-                                 </field>
+                                </field>
                             </group>
+                        </group>
                         </page>
                         <page string="Special Computation">
                             <group col="4">
@@ -943,10 +990,6 @@
                                 <field name="domain"/>
                                 <separator colspan="4" string="Applicable Code (if type=code)"/>
                                 <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
-                                <separator colspan="2" string="Compute Code"/>
-                                <separator colspan="2" string="Reverse Compute Code"/>
-                                <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
-                                <field colspan="2" name="python_compute_inv" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
                             </group>
                         </page>
                     </notebook>
@@ -2357,12 +2400,11 @@
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <p>This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template.</p>
                     <div groups="base.group_multi_company">
                         <label for="company_id"/>
                         <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     </div>
-                    <group string="Set Your Accounting Options">
+                    <group>
                         <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <label for="chart_template_id"/>
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
@@ -2529,7 +2571,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
-                    <field name="balance_end"/>
+                    <field name="balance_end" invisible="1" />
                     <field name="state"/>
                 </tree>
             </field>
@@ -2588,31 +2630,24 @@ action = pool.get('res.config').next(cr, uid, [], context)
                                 </form>
                             </field>
                         </page>
-                        <page string="CashBox">
-                            <group>
-                                <field name="starting_details_ids" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1">
-                                    <tree string = "Opening Balance" editable="bottom">
+                        <page string="Cash Control">
+                            <group col="2" expand="1">
+                                <field name="opening_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '!=', 'draft')]}">
+                                    <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces"/>
-                                        <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
-                                        <field name="subtotal" sum="Total"/>
+                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                        <field name="subtotal_opening" string="Opening Subtotal"/>
                                     </tree>
-                                    <form string = "Opening Balance" version="7.0">
-                                        <field name="pieces"/>
-                                        <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
-                                        <field name="subtotal"/>
-                                    </form>
                                 </field>
-                                <field name="ending_details_ids" attrs="{'readonly':[('state','!=','open')]}" nolabel="1">
-                                    <tree string = "Closing Balance" editable="bottom">
-                                        <field name="pieces"/>
-                                        <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
-                                        <field name="subtotal" sum="Total"/>
+                                <field name="closing_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                    <tree string="Closing Cashbox Lines" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number_opening" string="Opening Unit Numbers" readonly="1" />
+                                        <field name="subtotal_opening" string="Opening Subtotal" readonly="1" />
+
+                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
+                                        <field name="subtotal_closing" string="Closing Subtotal"/>
                                     </tree>
-                                    <form string = "Closing Balance" version="7.0">
-                                        <field name="pieces"/>
-                                        <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
-                                        <field name="subtotal"/>
-                                    </form>
                                 </field>
                             </group>
                         </page>
@@ -2620,18 +2655,15 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="move_line_ids" string="Journal Entries"/>
                         </page>
                     </notebook>
-                    <group col="3">
-                        <group string="Dates">
-                            <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
-                            <field name="closing_date" readonly="1"/>
-                        </group>
-                        <group string="Opening Balance">
-                            <field name="balance_start" readonly="1" string="Opening Balance"/>
-                            <field name="total_entry_encoding"/>
+                    <group col="6" colspan="4">
+                        <group col="2" colspan="2">
+                            <separator string="Opening Balance" colspan="4"/>
+                            <field name="balance_start" readonly="1" string="Opening Cash Control"/>
+                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" />
+                            <field name="total_entry_encoding" />
                         </group>
                         <group string="Closing Balance">
                             <field name="balance_end"/>
-                            <field name="balance_end_cash"/>
                         </group>
                     </group>
                 </sheet>

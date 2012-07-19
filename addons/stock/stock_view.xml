@@ -121,20 +121,16 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
-                        <div class="oe_edit_only">
-                            <label for="name"  /> 
-                        </div>
+                    <div>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="Annual inventory"/>
+                            <field name="name" placeholder="e.g. Annual inventory" class="oe_inline"/> -
+                            <field name="date" class="oe_inline"/>
                         </h1>
                     </div>
-                <group>
                     <group>
-                        <field name="date"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                </group>
                     <notebook>
                     <page string="General Informations">
                         <field name="inventory_line_id">
@@ -150,19 +146,27 @@
                                 <field name="state" invisible="True"/>
                             </tree>
                             <form string="Products" version="7.0">
-                                <group col="4">
-                                    <field domain="[('usage','=','internal')]" name="location_id"/>
-                                    <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
-                                    <field name="prod_lot_id" groups="stock.group_production_lot"/>
-                                    <button name="%(stock.action_view_stock_inventory_line_split)d"
+                                <group>
+                                    <group>
+                                        <field domain="[('usage','=','internal')]" name="location_id"/>
+                                        <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
+                                    </group>
+                                    <group>
+                                        <label for="product_qty"/>
+                                        <div>
+                                            <field name="product_qty" class="oe_inline"/>
+                                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                        </div>
+                                        <field name="prod_lot_id" groups="stock.group_production_lot"/>
+                                        <button name="%(stock.action_view_stock_inventory_line_split)d"
                                         string="Split inventory lines" groups="stock.group_inventory_valuation"
                                         type="action" icon="terp-stock_effects-object-colorize"/>
+                                    </group>
                                 </group>
                             </form>
                         </field>
-                    </page><page string="Posted Inventory">
+                    </page>
+                    <page string="Posted Inventory">
                          <field name="move_ids" context="{'inventory_id':active_id}" >
                             <tree string="Stock Moves">
                                 <field name="product_id"/>
@@ -331,18 +335,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
+                    <div class="oe_button_box oe_right">
+                        <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up"/>
+                        <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
                     <group>
-                        <group string="Serial Number Identification">
+                        <group>
                             <field name="product_id"/>
                             <field name="prefix"/>
-                            <field name="name"/>
                             <field name="ref"/>
-                            <field name="date"/>
                         </group>
-                        <group string="Traceability">
+                        <group>
+                            <field name="date"/>
                             <field name="stock_available"/>
-                            <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up" colspan="2"/>
-                            <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down" colspan="2"/>
                         </group>
                     </group>
                     <notebook>
@@ -734,7 +745,7 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
-                        <span attr="{'invisible': [('origin','=',False)]}"> - </span>
+                        <span attrs="{'invisible': [('origin','=',False)]}"> - </span>
                         <field name="origin" placeholder="PO0032" class="oe_inline"/>
                     </h1>
                     <label for="partner_id" class="oe_edit_only"/>
@@ -790,10 +801,10 @@
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <field name="state" widget="statusbar" status_visible="draft,assigned,done" />
+                                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" />
                                     </header>
                                     <group>
-                                        <group string="Move Information">
+                                        <group>
                                             <field name="name" invisible="1"/>
                                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
                                             <label for="product_qty"/>
@@ -803,17 +814,16 @@
                                                 <button name="%(stock.move_scrap)d"
                                                         string="Scrap" type="action"
                                                         icon="gtk-convert" context="{'scrap': True}"
-                                                        states="draft,waiting,confirmed,assigned" colspan="1"/>
+                                                        states="draft,waiting,confirmed,assigned"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
-                                            <div>
-                                                <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                                <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
+                                            <div groups="product.group_uos">
+                                                <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
+                                                <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
                                             </div>
                                             <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
                                         </group>
-
-                                        <group string="Dates">
+                                        <group>
                                             <field name="create_date" invisible="1"/>
                                             <field name="date"/>
                                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
@@ -977,9 +987,9 @@
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Customer"/>
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
-                        <footer>
-                            <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                        </footer>
+                        <div class="oe_chatter">
+                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        </div>
                     </xpath>
                 </data>
             </field>
@@ -1090,8 +1100,8 @@
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Supplier"/>
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
-                        <div class="oe_bottom">
-                            <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                        <div class="oe_chatter">
+                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                         </div>
                     </xpath>
                 </data>
@@ -1216,14 +1226,15 @@
                 <form string="Stock Moves" version="7.0">
                 <header>
                     <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
-                    <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" class="oe_highlight"/>
+                    <button name="%(action_partial_move_server)d" string="Process Partially" type="action" states="assigned" class="oe_highlight"/>
+                    <button name="action_done" states="draft,assigned,confirmed" string="Process Entirely" type="object" class="oe_highlight"/>
                     <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>
                 <sheet>
                     <group>
-                        <group>
+                        <group name="main_grp" string="Details">
                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                             <label for="product_qty"/>
                             <div>
@@ -1236,28 +1247,28 @@
                                         icon="gtk-convert" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" colspan="1"/>
                             </div>
-                            <label for="product_uso_qty" />
-                            <div>
+                            <label for="product_uos_qty" groups="product.group_uos"/>
+                            <div groups="product.group_uos">
                                 <field name="product_uos_qty" 
-                                    groups="product.group_uos" 
                                     on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" 
                                     class="oe_inline"/>
-                                <field name="product_uos" groups="product.group_uos" colspan="4" class="oe_inline"/>
+                                <field name="product_uos" class="oe_inline"/>
                             </div>
                             <field name="name" string="Reason"/>
-                        </group>
-                        <group>
-                            <field name="picking_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                        <group name="origin_grp" string="Origin">
+                            <field name="picking_id"/>
                             <field name="location_id" groups="stock.group_locations"/>
+                            <field name="create_date" groups="base.group_no_one"/>
+                        </group>
+                        <group name="destination_grp" string="Destination">
                             <field name="location_dest_id" groups="stock.group_locations"/>
                             <field name="partner_id" context="{'contact_display':'partner'}"/>
-                            <field name="create_date" groups="base.group_no_one" />
-                            <field name="date" groups="base.group_no_one" />
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-
+                            <field name="date" groups="base.group_no_one" />
                         </group>
-                        <group>
+                        <group string="Tracability">
                             <label for="tracking_id"/>
                             <div>
                                 <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
@@ -1397,80 +1408,6 @@
             </field>
         </record>
 
-
-        <record id="view_move_form_reception_picking" model="ir.ui.view">
-            <field name="name">stock.move.form2</field>
-            <field name="model">stock.move</field>
-            <field name="type">form</field>
-            <field eval="6" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Receive Products" version="7.0">
-                <header>
-                    <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
-                    <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
-                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" class="oe_highlight"/>
-                    <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
-                </header>
-                <sheet>
-                <group>
-                    <group>
-                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                        <label for="product_qty"/>
-                        <div>
-                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                            <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                            <button name="%(stock.move_scrap)d"
-                                string="Scrap" type="action"
-                                icon="gtk-convert" context="{'scrap': True}"
-                                states="draft,waiting,confirmed,assigned"/>
-                        </div>
-                        <label for="product_uos_qty"/>
-                        <div>
-                            <field name="product_uos_qty" groups="product.group_uos" class="oe_inline"
-                                on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
-                            <field name="product_uos" groups="product.group_uos"/>
-                        </div>
-                        <field name="name" string="Reason"/>
-                    </group>
-                    <group>
-                        <field name="picking_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        <field name="location_id" groups="stock.group_locations"/>
-                        <field name="location_dest_id" groups="stock.group_locations"/>
-                        <field name="partner_id" groups="stock.group_locations"/>
-                        <field name="create_date" groups="base.group_no_one" />
-                        <field name="date" groups="base.group_no_one" />
-                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                    </group>
-
-                    <group>
-                        <label name="tracking_id"/>
-                        <div>
-                            <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
-                            <button name="%(split_into)d" string="New Pack" type="action"
-                              groups="product.group_stock_packaging"
-                              icon="terp-stock_effects-object-colorize"
-                              states="draft,assigned,confirmed,done" colspan="1"/>
-                        </div>
-                        <label name="prodlot_id"/>
-                        <div>
-                            <field name="prodlot_id" groups="stock.group_production_lot"
-                                context="{'location_id':location_id, 'product_id':product_id}"
-                                domain="[('product_id','=?',product_id)]" class="oe_inline"
-                                on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)"/>
-                            <button name="%(track_line)d"
-                                  groups="stock.group_tracking_lot" class="oe_inline"
-                                  states="draft,waiting,confirmed,assigned,done"
-                                  string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
-                        </div>
-                    </group>
-                </group>
-                </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="view_move_search_reception_incoming_picking" model="ir.ui.view">
             <field name="name">stock.move.incoming.search2</field>
             <field name="model">stock.move</field>
@@ -1555,7 +1492,7 @@
         <record model="ir.actions.act_window.view" id="action_move_reception_picking_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_move_form_reception_picking"/>
+            <field name="view_id" ref="view_move_form"/>
             <field name="act_window_id" ref="action_reception_picking_move"/>
         </record>
 
@@ -1611,13 +1548,6 @@
             name="Inventory Move"
             res_model="stock.move"
             src_model="product.product"/>
-
-        <act_window
-            domain="[('move_lines','=',active_id)]"
-            id="act_relate_picking"
-            name="Related Picking"
-            res_model="stock.picking"
-            src_model="stock.move"/>
 
         <act_window
             context="{'search_default_future': 1,'search_default_product_id': [active_id], 'default_product_id': active_id}"
