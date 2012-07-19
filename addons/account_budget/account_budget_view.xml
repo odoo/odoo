@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <search string="Budgetary Position">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budgetary Position"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -201,17 +201,12 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Budget">
-                   <group>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budget"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_from"/>
-                        <field name="date_to"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
-                        <separator orientation="vertical"/>
-                        <field name="state"/>
-                    </group>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budget"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="state"/>
+                    <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                    <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                 </search>
             </field>
         </record>
