@@ -9,11 +9,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale">
-                        <group col="6" colspan="4">
-                            <separator colspan="6" string="Extended Configuration"/>
+                        <group col="4" colspan="4">
                             <field name="journal_user"/>
-                            <field name="auto_cash"/>
-                            <field name="check_dtls"/>
+                            <field name="opening_control"/>
+                            <field name="closing_control"/>
+                            <field name="amount_authorized_diff"/>
+                            <field name="self_checkout_payment_method" />
                         </group>
                     </page>
                 </xpath>
@@ -105,7 +106,7 @@
             <field name="inherit_id" ref="account.view_cash_statement_tree"/>
             <field name="arch" type="xml">
                 <field name="journal_id" position="after">
-                    <field name="user_id"/>
+                    <field name="user_id" string="Responsible"/>
                 </field>
             </field>
         </record>
@@ -133,6 +134,7 @@
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
 
+        <!--
         <menuitem name="Cash Register Management" parent="point_of_sale.menu_point_root"
             id="menu_point_open_config" sequence="10"/>
         <menuitem
@@ -160,6 +162,7 @@
             id="menu_all_menu_all_register"
             sequence="4"
         />
+    -->
 
 
     </data>

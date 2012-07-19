@@ -11,15 +11,15 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="//notebook" position="inside">
-                    <page string="Paie">
+                 <xpath expr="//group[@name='account_grp']" position="after">
+                    <group string="Paie">
                             <field name="plafond_secu"/>
                             <field name="nombre_employes"/>
                             <newline/>
                             <field name="org_ss"/>
                             <newline/>
                             <field name="conv_coll"/>
-                    </page>
+                    </group>
                  </xpath>
             </data>
             </field>
