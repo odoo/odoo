@@ -307,28 +307,28 @@ class res_partner(osv.osv):
             to handle some basic formats to create partners using the
             name_create.
             Supported syntax:
-            - 'info@mail.com': create a partner with name info@mail.com, and
-              sets its email to info@mail.com
+            - 'raoul@grosbedon.fr': create a partner with name raoul@grosbedon.fr
+              and sets its email to raoul@grosbedon.fr
             - 'Raoul Grosbedon <raoul@grosbedon.fr>': create a partner with name
               Raoul Grosbedon, and set its email to raoul@grosbedon.fr
             - anything else: fall back on the default name_create
             Regex :
-            - (^|\s)([\w|\.]+)@([\w|\.]*): (void), info, openerp.com
-            - (^|\s)([\w|\.|\s]+)[\<]([\w|\.]+)@([\w|\.]*)[\>]: (void), Raoul
-              Grosbedon, raoul, grosbedon.fr
+            - ([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}): raoul@grosbedon.fr
+            - ([\w|\.|\s]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})[\>]:
+              Raoul Grosbedon, raoul@grosbedon.fr
         """
-        contact_regex = re.compile('(^|\s)([\w|\.|\s]+)[\<]([\w|\.]+)@([\w|\.]*)[\>]')
-        email_regex = re.compile('(^|\s)([\w|\.]+)@([\w|\.]*)')
+        contact_regex = re.compile('([\w|\.|\s]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})[\>]')
+        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})')
         contact_regex_res = contact_regex.findall(name)
         email_regex_res = email_regex.findall(name)
         if contact_regex_res:
-            name = contact_regex_res[0][1]
-            name = name.rstrip(' ') # remove extra spaces on the right
-            email = '%s@%s' % (contact_regex_res[0][2], contact_regex_res[0][3])
+            print contact_regex_res
+            name = contact_regex_res[0][0].rstrip(' ') # remove extra spaces on the right
+            email = contact_regex_res[0][1]
             rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
             return self.name_get(cr, uid, [rec_id], context)[0]
         elif email_regex:
-            email = '%s@%s' % (email_regex_res[0][1], email_regex_res[0][2])
+            email = '%s' % (email_regex_res[0])
             rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
             return self.name_get(cr, uid, [rec_id], context)[0]
         else:
