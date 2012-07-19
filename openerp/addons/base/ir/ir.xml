@@ -68,9 +68,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Client Actions">
-                    <field name="name"
-                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
-                        string="Client Action"/>
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]" string="Client Action"/>
                     <group expand="0" string="Group By...">
                         <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'key2'}"/>
@@ -561,9 +559,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wizards">
-                    <field name="name"
-                        filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]"
-                        string="Wizard"/>
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('type','ilike',self), ('wiz_name','ilike',self)]" string="Wizard"/>
                 </search>
             </field>
         </record>
@@ -1416,7 +1412,7 @@
             <field name="arch" type="xml">
                 <search string="Scheduled Actions">
                     <field name="name" string="Scheduled Action"/>
-                    <field name="user_id" widget="selection"/>
+                    <field name="user_id"/>
                     <field name="nextcall"/>
                     <field name="active"/>
                     <group expand="0" string="Group By...">

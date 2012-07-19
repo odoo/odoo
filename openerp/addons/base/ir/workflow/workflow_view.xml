@@ -295,7 +295,7 @@
         <field name="arch" type="xml">
             <search string="Workflow Instances">
                 <field name="res_type" string="Resource Object"/>
-                <field name="wkf_id" widget="selection"/>
+                <field name="wkf_id"/>
                 <field name="res_id"/>
                 <field name="state"/>
                 <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
@@ -358,7 +358,7 @@
         <field name="arch" type="xml">
             <search string="Workflow Workitems">
                 <field name="state" string="State"/>
-                <field name="wkf_id" widget="selection"/>
+                <field name="wkf_id"/>
                 <field name="act_id"/>
                 <field name="subflow_id"/>
                 <field name="inst_id"/>
