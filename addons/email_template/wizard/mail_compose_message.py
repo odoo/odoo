@@ -74,6 +74,8 @@ class mail_compose_message(osv.osv_memory):
             else:
                 # render the mail as one-shot
                 values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
+                # get partner_ids back
+                values['dest_partner_ids'] = values['partner_ids']
                 # retrofit generated attachments in the expected field format
                 if values['attachments']:
                     attachment = values.pop('attachments')

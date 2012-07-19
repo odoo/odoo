@@ -616,11 +616,18 @@ class mail_message(osv.Model):
                     body_alternative = message.body_text
                     content_subtype_alternative = 'plain'
 
+                # handle destination_partners
+                partner_ids_email_to = ''
+                for partner in message.partner_ids:
+                    partner_ids_email_to += '%s ' % (partner.email or '')
+                message_email_to = '%s %s' % (partner_ids_email_to, message.email_to or '')
+                print message_email_to
+
                 # build an RFC2822 email.message.Message object adn send it
                 # without queuing
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
-                    email_to=mail_tools_to_email(message.email_to),
+                    email_to=mail_tools_to_email(message_email_to),
                     subject=message.subject,
                     body=body,
                     body_alternative=body_alternative,
