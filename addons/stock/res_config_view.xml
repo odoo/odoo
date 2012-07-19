@@ -13,41 +13,39 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group col="1">
                         <div>
-                            <separator string="Traceability"/>
+                            <separator string="Traceability and Logistics"/>
                             <group>
                                 <label for="id" string="Traceability"/>
                                 <div>
                                     <div>
                                         <field name="group_stock_production_lot" class="oe_inline"/>
-                                        Allow Serial Numbers on<label for="group_stock_production_lot" string="Products"/>
+                                        Allow<label for="group_stock_production_lot"/>
                                     </div>
                                     <div>
                                         <field name="group_stock_tracking_lot" class="oe_inline"/>
-                                        Allow Serial Numbers on<label for="group_stock_tracking_lot" string="Logistic Units"/>(Pallets)
+                                        Allow<label for="group_stock_tracking_lot"/>
                                     </div>
                                     <div attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
                                         <field name="module_product_expiry" class="oe_inline"/>
-                                        Track<label for="module_product_expiry" string="Expiry"/>Date on Lots
+                                        Track<label for="module_product_expiry"/>
                                     </div>
                                 </div>    
                             </group>
-                             <separator string="Logistics"/>
                              <group>
-                                 <label for="id" string="Logistic Rules"/>
+                                 <label for="id" string="Logistics"/>
                                  <div>
                                      <div>
                                          <field name="group_stock_multiple_locations" class="oe_inline"/>
-                                         Manage Multiple<label for="group_stock_multiple_locations" string="Stock Locations and Warehouses"/>  
+                                         <label for="group_stock_multiple_locations"/>  
                                      </div>
                                      <div>
                                          <field name="module_stock_invoice_directly" class="oe_inline"/>
-                                         Allow You to<label for="module_stock_invoice_directly" string="Invoice"/>Directly from the Picking
+                                         <label for="module_stock_invoice_directly"/>
                                      </div>
                                      <div>
                                          <field name="module_stock_location" class="oe_inline"/>
-                                         Provide Push/Pull<label for="module_stock_location" string="Logistic Rules"/>
+                                         Provide<label for="module_stock_location"/>
                                      </div>
                                      <div>
                                          What's the Decimal Precision on Weights:
@@ -57,42 +55,40 @@
                              </group>
                         </div>
                         <div>
-                            <separator string="Partners"/>
+                            <separator string="Partners and Products"/>
                             <group>
-                                <label for="id" string="Partner Features"/>
+                                <label for="id" string="Partners"/>
                                 <div>
                                     <field name="module_claim_from_delivery" class="oe_inline"/>
-                                    Allow<label for="module_claim_from_delivery" string="Claims on Delivery Orders"/>
+                                    <label for="module_claim_from_delivery"/>
                                 </div>
                             </group>
-                            <separator string="Products"/>
                             <group>
-                                <label for="id" string="Product Features"/>
+                                <label for="id" string="Products"/>
                                 <div>
                                     <div>
                                         <field name="group_stock_packaging" class="oe_inline"/>
-                                        Manage<label for="group_stock_packaging" string="Product Packaging"/>
+                                        <label for="group_stock_packaging"/>
                                     </div>
                                     <div>
                                         <field name="group_uom" class="oe_inline"/>
-                                        Manage Different<label for="group_uom" string="Units of Measure for Products"/>
+                                        <label for="group_uom"/>
                                     </div>
                                     <div>
                                         <field name="group_uos" class="oe_inline"/>
-                                        Manage Secondary<label for="group_uos" string="Unit of Measure (for Sale)"/>
+                                        <label for="group_uos" string="Unit of Measure (for Sale)"/>
                                     </div>
                                     <div>
                                         <field name="group_stock_inventory_valuation" class="oe_inline"/>
-                                        Generate<label for="group_stock_inventory_valuation" string="Accounting Entries"/>per Stock Movement
+                                        <label for="group_stock_inventory_valuation"/>
                                     </div>
                                     <div>
                                         <field name="group_product_variant" class="oe_inline"/>
-                                        Support Multiple<label for="group_product_variant" string="Variants"/>per Product
+                                        <label for="group_product_variant"/>
                                     </div>
                                 </div>
                             </group>
                         </div>
-                    </group>
                 </form>
             </field>
         </record>
