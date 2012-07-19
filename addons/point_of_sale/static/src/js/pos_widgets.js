@@ -112,7 +112,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template:'OrderWidget',
         init: function(parent, options) {
             this._super(parent,options);
-            this.compact = false;   
+            this.compact = options.compact !== undefined ? options.compact : true;   
             this.set_numpad_state(options.numpadState);
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bind_orderline_events();
@@ -166,6 +166,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
 
             if(!this.compact){
+                console.log('not compact');
                 $('.point-of-sale .order-container').css({'bottom':'0px'});
             }
 
@@ -212,6 +213,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.summary .value.total').html(this.format_currency(total));
         },
         set_compact: function(compact){
+            console.log('set_compact',compact);
             if(this.compact !== compact){
                 this.compact = compact;
                 this.renderElement();
@@ -313,6 +315,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
     module.ActionButtonWidget = instance.web.Widget.extend({
         template:'ActionButtonWidget',
+        icon_template:'ActionButtonWidgetWithIcon',
         init: function(parent, options){
             this._super(parent, options);
             this.label = options.label || 'button';
@@ -320,7 +323,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.click_action = options.click;
             if(options.icon){
                 this.icon = options.icon;
-                this.template = 'ActionButtonWidgetWithIcon';
+                this.template = this.icon_template;
             }
         },
         renderElement: function(){
@@ -359,18 +362,20 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.button_list = [];
             return this;
         },
+        get_button_count: function(){
+            return this.button_list.length;
+        },
         add_new_button: function(button_options){
-            if(arguments.length == 1){
-                var button = new module.ActionButtonWidget(this,button_options);
-                this.button_list.push(button);
-                button.appendTo($('.pos-actionbar-button-list'));
-                return button;
-            }else{
-                for(var i = 0; i < arguments.length; i++){
-                    this.add_new_button(arguments[i]);
-                }
-            }
-            return undefined;
+            var button = new module.ActionButtonWidget(this,button_options);
+            this.button_list.push(button);
+            button.appendTo($('.pos-actionbar-button-list'));
+            return button;
+        },
+        show:function(){
+            this.$element.show();
+        },
+        hide:function(){
+            this.$element.hide();
         },
     });
 
@@ -419,14 +424,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
 
             var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
-            console.log('barfoo');
-         
             _.each(this.subcategories, function(category){
                 if(category.category_image_small){
-                    console.log("Image:",category.category_image_small);
                     hasimages = true;
                 }else{
-                    console.log('NoImage:',category.category_image_small);
                 }
             });
 
@@ -603,14 +604,35 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.HeaderButtonWidget = module.PosBaseWidget.extend({
+        template: 'HeaderButtonWidget',
+        init: function(parent, options){
+            options = options || {};
+            this._super(parent, options);
+            this.action = options.action;
+            this.label   = options.label;
+        },
+        renderElement: function(){
+            var self = this;
+            this._super();
+            if(this.action){
+                this.$element.click(function(){ self.action(); });
+            }
+        },
+        show: function(){ this.$element.show(); },
+        hide: function(){ this.$element.hide(); },
+
+    });
+
+
 // ---------- Main Point of Sale Widget ----------
 
     // this is used to notify the user that data is being synchronized on the network
     module.SynchNotificationWidget = module.PosBaseWidget.extend({
         template: "SynchNotificationWidget",
-        init: function(parent,options) {
+        init: function(parent, options){
             options = options || {};
-            this._super(parent,options);
+            this._super(parent, options);
         },
         renderElement: function() {
             var self = this;
@@ -652,6 +674,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.leftpane_visible = true;
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
+            var degree = 0;
+            /*
+             //Epileptic mode
+            setInterval(function(){ 
+                $('body').css({'-webkit-filter':'sepia('+Math.round(Math.random())+') hue-rotate('+Math.random()*360+'deg) blur('+Math.random()*5+'px)' });
+            },100);
+            */
+            
         },
       
         start: function() {
@@ -708,6 +738,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
         // startup screen, etc, override this method.
         build_widgets: function() {
+            var self = this;
 
             // --------  Screens ---------
 
@@ -749,13 +780,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
-            this.notification.replace(this.$('.placeholder-SynchNotificationWidget'));
+            this.notification.appendTo(this.$('#rightheader'));
 
             this.username   = new module.UsernameWidget(this,{});
             this.username.replace(this.$('.placeholder-UsernameWidget'));
 
             this.action_bar = new module.ActionBarWidget(this);
-            this.action_bar.appendTo($(".point-of-sale #content"));
+            this.action_bar.appendTo($(".point-of-sale #rightpane"));
 
             this.paypad = new module.PaypadWidget(this, {});
             this.paypad.replace($('#placeholder-PaypadWidget'));
@@ -770,6 +801,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 'keyboard_model': 'simple'
             });
             this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
+
+            this.close_button = new module.HeaderButtonWidget(this,{
+                label:'Close',
+                action: function(){ self.try_close(); },
+            });
+            this.close_button.appendTo(this.$('#rightheader'));
+
+            this.client_button = new module.HeaderButtonWidget(this,{
+                label:'Self-Checkout',
+                action: function(){ self.screen_selector.set_user_mode('client'); },
+            });
+            this.client_button.appendTo(this.$('#rightheader'));
+
             
             // --------  Screen Selector ---------
 

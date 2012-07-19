@@ -152,14 +152,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.screen_selector.show_popup('help');
         },
 
-        logout_button_action: function(){
-            this.pos_widget.screen_selector.set_user_mode('client');
-        },
-
-        close_button_action: function(){
-            this.pos_widget.try_close();
-        },
-
         barcode_product_screen:         'products',     //if defined, this screen will be loaded when a product is scanned
         barcode_product_error_popup:    'error',    //if defined, this popup will be loaded when there's an error in the popup
 
@@ -223,6 +215,29 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
 
+        // shows an action bar on the screen. The actionbar is automatically shown when you add a button
+        // with add_action_button()
+        show_action_bar: function(){
+            this.pos_widget.action_bar.show();
+            this.$element.css({'bottom':'105px'});
+        },
+
+        // hides the action bar. The actionbar is automatically hidden when it is empty
+        hide_action_bar: function(){
+            this.pos_widget.action_bar.hide();
+            this.$element.css({'bottom':'0px'});
+        },
+
+        // adds a new button to the action bar. The button definition takes three parameters, all optional :
+        // - label: the text below the button
+        // - icon:  a small icon that will be shown
+        // - click: a callback that will be executed when the button is clicked.
+        // the method returns a reference to the button widget, and automatically show the actionbar.
+        add_action_button: function(button_def){
+            this.show_action_bar();
+            return this.pos_widget.action_bar.add_new_button(button_def);
+        },
+
         // this method shows the screen and sets up all the widget related to this screen. Extend this method
         // if you want to alter the behavior of the screen.
         show: function(){
@@ -231,15 +246,30 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.$element.show();
             }
 
+            if(this.pos_widget.action_bar.get_button_count() > 0){
+                this.show_action_bar();
+            }else{
+                this.hide_action_bar();
+            }
+
             var self = this;
             var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
 
             this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
             this.pos_widget.set_cashier_controls_visible(cashier_mode);
-            this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });
-            this.pos_widget.action_bar.set_element_visible('logout-button', cashier_mode && this.pos.use_selfcheckout, function(){ self.logout_button_action(); });
-            this.pos_widget.action_bar.set_element_visible('close-button', cashier_mode, function(){ self.close_button_action(); });
+            /*this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });*/
+
+            if(cashier_mode && this.pos.use_selfcheckout){
+                this.pos_widget.client_button.show();
+            }else{
+                this.pos_widget.client_button.hide();
+            }
+            if(cashier_mode){
+                this.pos_widget.close_button.show();
+            }else{
+                this.pos_widget.close_button.hide();
+            }
             
             this.pos_widget.username.set_user_mode(this.pos_widget.screen_selector.get_user_mode());
 
@@ -250,7 +280,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 'discount': self.barcode_discount_action ? function(ean){ self.barcode_discount_action(ean); } : undefined,
             });
         },
-
 
         // this method is called when the screen is closed to make place for a new screen. this is a good place
         // to put your cleanup stuff as it is guaranteed that for each show() there is one and only one close()
@@ -366,8 +395,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             },500);
 
-            this.pos_widget.action_bar.add_new_button(
-                {
+            this.add_action_button({
                     label: 'back',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
@@ -375,8 +403,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         self.pos.proxy.weighting_end();
                         self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
                     }
-                }
-            );
+                });
         },
         close: function(){
             this._super();
@@ -395,7 +422,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.renderElement();
             var self = this;
 
-            this.pos_widget.action_bar.add_new_button({
+
+            this.add_action_button({
                     label: 'back',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){
@@ -403,7 +431,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     }
                 });
 
-            this.validate_button = this.pos_widget.action_bar.add_new_button({
+            this.validate_button = this.add_action_button({
                     label: 'Validate',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
@@ -465,8 +493,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ClientPaymentScreenWidget =  module.ScreenWidget.extend({
         template:'ClientPaymentScreenWidget',
+
         next_screen: 'welcome',
         previous_screen: 'products',
+
         show: function(){
             this._super();
             var self = this;
@@ -503,17 +533,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             },500);
 
-            this.pos_widget.action_bar.add_new_button(
-                {
+            this.add_action_button({
                     label: 'back',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
-                    click: function(){  //TODO Go to ask for weighting screen
+                    click: function(){  
                         clearInterval(this.intervalID);
                         self.pos.proxy.payment_canceled();
                         self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
                     }
-                }
-            );
+                });
         },
         close: function(){
             this._super();
@@ -578,7 +606,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
 
             if(this.pos_widget.screen_selector.current_mode === 'client'){ 
-                this.pos_widget.action_bar.add_new_button({
+                this.add_action_button({
                         label: 'pay',
                         icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                         click: function(){  
@@ -618,13 +646,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
-            this.pos_widget.action_bar.add_new_button({
+            this.add_action_button({
                     label: 'Print',
                     icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
                     click: function(){ self.print(); },
                 });
 
-            this.pos_widget.action_bar.add_new_button({
+            this.add_action_button({
                     label: 'Next Order',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function() { self.finishOrder(); },
@@ -676,7 +704,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.set_numpad_state(this.pos_widget.numpad.state);
             
-            this.back_button = this.pos_widget.action_bar.add_new_button({
+            this.back_button = this.add_action_button({
                     label: 'Back',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
@@ -684,7 +712,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     },
                 });
             
-            this.validate_button = this.pos_widget.action_bar.add_new_button({
+            this.validate_button = this.add_action_button({
                     label: 'Validate',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
