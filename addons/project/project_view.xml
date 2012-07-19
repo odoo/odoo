@@ -32,9 +32,9 @@
         <record id="action_project_unread" model="ir.values">
             <field name="name">action_project_unread</field>
             <field name="action_id" ref="actions_server_project_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_unread'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_project_project" />
+            <field name="model_id" ref="model_project_project"/>
             <field name="model">project.project</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -50,9 +50,9 @@
         <record id="action_project_read" model="ir.values">
             <field name="name">action_project_read</field>
             <field name="action_id" ref="actions_server_project_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_read'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_project_project" />
+            <field name="model_id" ref="model_project_project"/>
             <field name="model">project.project</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -96,7 +96,7 @@
                                 </tr>
                                 <tr name="use_attachment_row">
                                     <td/>
-                                    <td><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action" /></td>
+                                    <td><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action"/></td>
                                 </tr>
                             </table>
                         </group>
@@ -172,7 +172,7 @@
                         <field name="user_id" string="Project Manager"/>
                         <field name="partner_id" string="Partner"/>
                     </group>
-                    <newline />
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -358,9 +358,9 @@
         <record id="action_project_task_unread" model="ir.values">
             <field name="name">action_project_task_unread</field>
             <field name="action_id" ref="actions_server_project_task_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_unread'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_project_task" />
+            <field name="model_id" ref="model_project_task"/>
             <field name="model">project.task</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -376,9 +376,9 @@
         <record id="action_project_task_read" model="ir.values">
             <field name="name">action_project_task_read</field>
             <field name="action_id" ref="actions_server_project_task_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_project_task_read'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_project_task" />
+            <field name="model_id" ref="model_project_task"/>
             <field name="model">project.task</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -516,47 +516,43 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                <span class="oe_e">i</span>
+                                <span class="oe_e">í</span>
                                 <ul class="oe_dropdown_menu">
                                     <li><a type="edit" >Edit...</a></li>
                                     <li><a type="delete">Delete</a></li>
+                                    <li>
+                                      <ul class="oe_kanban_project_times">
+                                        <li><a name="set_remaining_time_1" type="object" class="oe_kanban_button">1</a></li>
+                                        <li><a name="set_remaining_time_2" type="object" class="oe_kanban_button">2</a></li>
+                                        <li><a name="set_remaining_time_5" type="object" class="oe_kanban_button">5</a></li>
+                                        <li><a name="set_remaining_time_10" type="object" class="oe_kanban_button">10</a></li>
+                                        <li><a name="do_open" states="draft" string="Validate planned time" type="object" class="oe_kanban_button oe_kanban_button_active">!</a></li>
+                                      </ul>
+                                    </li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
+
                             <div class="oe_kanban_content">
-                                <div>
-                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                    <b><field name="name"/></b>
-                                </div>
-                                <div>
-                                    <field name="partner_id"/>
-                                </div>
+                                <div><b><field name="name"/></b></div>
                                 <div>
                                     <field name="project_id"/>
                                     <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/><br/>
                                     <i><field name="date_deadline"/></i>
-                                    <span class="oe_kanban_project_times" style="white-space: nowrap; padding-left: 5px;">
-                                                <t t-set="hours" t-value="record.remaining_hours.raw_value"/>
-                                                <t t-set="times" t-value="[
-                                                     [1, (hours gte 1 and hours lt 2)]
-                                                    ,[2, (hours gte 2 and hours lt 5)]
-                                                    ,[5, (hours gte 5 and hours lt 10)]
-                                                    ,[10, (hours gte 10)]
-                                                ]"/>
-                                                <t t-foreach="times" t-as="time"><a
-                                                    t-if="!time[1]" t-attf-data-name="set_remaining_time_#{time[0]}" type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a><b
-                                                    t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b></t>
-                                                <a name="do_open" states="draft" string="Validate planned time" type="object" class="oe_kanban_button oe_kanban_button_active">!</a>
-                                    </span>
                                 </div>
-                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <div class="oe_right">
-                                        <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                        <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
-                                        <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-                                    </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="" name="set_kanban_state_done" class="oe_kanban_status"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
+                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
+                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                                <div class="oe_kanban_footer_left">
+                                    <span>
+                                        <span class="oe_e">N</span>
+                                        <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
+                                    </span>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -649,8 +645,8 @@
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
-                        <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
-                        <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                        <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal"/>
+                        <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-"/>
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]"
                             help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
@@ -686,7 +682,7 @@
                     <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
                 </xpath>
                 <xpath expr='//separator[@name="project_sep"]' position='after'>
-                    <field name="use_tasks" />
+                    <field name="use_tasks"/>
                 </xpath>
             </field>
         </record>
