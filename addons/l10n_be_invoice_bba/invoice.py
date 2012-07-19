@@ -75,10 +75,7 @@ class account_invoice(osv.osv):
             if (type == 'out_invoice'):
                 reference_type = self.pool.get('res.partner').browse(cr, uid, partner_id).out_inv_comm_type
                 if reference_type:
-                    algorithm = self.pool.get('res.partner').browse(cr, uid, partner_id).out_inv_comm_algorithm
-                    if not algorithm:
-                        algorithm = 'random' 
-                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, algorithm, partner_id, '')['value']['reference']
+                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, partner_id, '', context={})['value']['reference']
         res_update = {       
             'reference_type': reference_type or 'none',
             'reference': reference,
@@ -86,17 +83,15 @@ class account_invoice(osv.osv):
         result['value'].update(res_update)
         return result                    
 
-    def generate_bbacomm(self, cr, uid, ids, type, reference_type, algorithm, partner_id, reference):
+    def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, context=None):
         partner_obj =  self.pool.get('res.partner')
-        reference = reference or ''  
+        reference = reference or ''
+        algorithm = False
+        if partner_id:
+            algorithm = partner_obj.browse(cr, uid, partner_id, context=context).out_inv_comm_algorithm
+        algorithm = algorithm or 'random'
         if (type == 'out_invoice'):
             if reference_type == 'bba':
-                if not algorithm:
-                    if partner_id:
-                        algorithm = partner_obj.browse(cr, uid, partner_id).out_inv_comm_algorithm
-                    if not algorithm:
-                        if not algorithm:   
-                            algorithm = 'random'
                 if algorithm == 'date':
                     if not self.check_bbacomm(reference):
                         doy = time.strftime('%j')

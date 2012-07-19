@@ -171,7 +171,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
 
@@ -568,14 +568,6 @@
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
             <field name="filter" eval="True"/>
         </record>
-
-        <act_window
-            context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
-            id="act_res_partner_2_sale_order"
-            name="Quotations and Sales"
-            groups="base.group_sale_salesman"
-            res_model="sale.order"
-            src_model="res.partner"/>
 
         <act_window
             context="{'search_default_product_id': active_id, 'default_product_id': active_id}"
