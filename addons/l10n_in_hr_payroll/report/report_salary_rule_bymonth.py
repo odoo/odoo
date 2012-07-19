@@ -87,7 +87,7 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
                             left join hr_payslip as p on pl.slip_id = p.id \
                             left join hr_employee as emp on emp.id = p.employee_id \
                             left join resource_resource as r on r.id = emp.resource_id  \
-                            where (pl.code = 'NET')  and p.employee_id  = '''+str(emp_id.id)+''' \
+                            where pl.code = 'NET' and p.state = 'done' and p.employee_id  = '''+str(emp_id.id)+''' \
                             and to_char(date_to,'mm-yyyy') like '%'''+mnth+'''%'
                             group by r.name, p.date_to,emp.id''')
                     sal = self.cr.fetchall()
