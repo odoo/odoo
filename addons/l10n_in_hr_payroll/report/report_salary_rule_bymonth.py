@@ -97,7 +97,6 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
                         tol_mnths[cnt] = tol_mnths[cnt] + sal[0][0]
                     else:
                         ls1.append(0.00)
-                        tol_mnths[cnt] = 0.0
                 else:
                     ls1.append('')
                     tol_mnths[cnt] = ''
@@ -120,6 +119,6 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
               self.total += item[count]
         return self.total
 
-report_sxw.report_sxw('report.salary.rule.bymonth', 'salary.rule.month', 'l10n_in_hr_payroll/report/report_salary_rule_bymonth.rml', parser=report_salary_rule_bymonth)
+report_sxw.report_sxw('report.salary.rule.bymonth', 'salary.rule.month', 'l10n_in_hr_payroll/report/report_salary_rule_bymonth.rml', parser=report_salary_rule_bymonth, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
