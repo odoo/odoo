@@ -174,7 +174,6 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
-
                             <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
@@ -263,6 +262,8 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <group name="sale_margin_grp">
+                            </group>
                             <div class="oe_clear">
                                 <label for="note"/>
                             </div>
@@ -297,7 +298,7 @@
                                 <tree string="Invoices" colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'">
                                     <field name="date_invoice"/>
                                     <field name="number"/>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" string="Customer"/>
                                     <field name="user_id"/>
                                     <field name="date_due"/>
                                     <field name="amount_total"/>
