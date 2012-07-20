@@ -34,16 +34,22 @@
                                 <field name="date"/>
                                 <field name="type"/>
                                 <field name="content_subtype"/>
-                                <field name="partner_ids" widget="many2many_tags"/>
                             </group>
                             <group>
                                 <field name="model"/>
                                 <field name="res_id"/>
                                 <field name="parent_id"/>
-                                <field name="body_text"/>
-                                <field name="body_html"/>
+                                <field name="partner_ids" widget="many2many_tags"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Body (Rich)">
+                                <field name="body_html" widget="text_html"/>
+                            </page>
+                            <page string="Body (Plain)">
+                                <field name="body_text" widget="text"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
