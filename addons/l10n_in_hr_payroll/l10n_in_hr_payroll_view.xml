@@ -107,13 +107,15 @@
                         <div class="oe_clear"/>
                     </header>
                     <sheet>
-                        <group col="4" colspan="4">
+                        <group>
                             <label for="Name" class="oe_edit_only" string="Name"/>
                             <h2><field name="name"/></h2>
-                            <field name="number"/>
                             <label for="date" class="oe_edit_only"/>
                             <h2><field name="date"/></h2>
-                            <field name="bank_id"/>
+                            <group colspan="3" col="6">
+                                <field name="bank_id"/>
+                                <field name="number"/>
+                            </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Payment Lines">
@@ -121,7 +123,8 @@
                                     <tree string="Payment Lines" editable="bottom">
                                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                                         <field name="name"/>
-                                        <field name="ifsc_code"/>
+                                        <field name="ifsc" invisible="1"/>
+                                        <field name="ifsc_code" attrs="{'invisible':[('ifsc','=', False)]}" />
                                         <field name="bysal"/>
                                         <field name="debit_credit"/>
                                     </tree>
@@ -184,6 +187,28 @@
             id="hr_menu_payment_advice"
             parent="hr_payroll.menu_hr_root_payroll"
         />
+
+        <record id="view_advice_line_form" model="ir.ui.view">
+            <field name="name">advice.line.form</field>
+            <field name="model">hr.payroll.advice.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Advice Lines" version="7.0">
+                    <sheet>
+                    <label for="advice_id" class="oe_edit_only"/>
+                    <h1><field name="advice_id"/></h1>
+                        <group>
+                            <field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+                            <field name="name" />
+                            <field name="ifsc" invisible="1"/>
+                            <field name="ifsc_code" attrs="{'invisible':[('ifsc','=', False)]}" />
+                            <field name="bysal" />
+                            <field name="debit_credit" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <record id="view_res_company_da" model="ir.ui.view">
             <field name="name">res.company.inherit</field>
