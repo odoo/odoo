@@ -296,12 +296,7 @@
                                 </a>
                                 <div class="oe_kanban_details">
                                     <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a></h4>
-                                    <div>
-                                        <t t-foreach="record.category_id.raw_value" t-as="category">
-                                            <span class="oe_kanban_partner_category oe_tag"
-                                                t-att-data-category_id="category"/>
-                                        </t>
-                                    </div>
+                                    <div class="oe_kanban_partner_categories"/>
                                     <div class="oe_kanban_partner_links"/>
                                     <ul>
                                         <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
