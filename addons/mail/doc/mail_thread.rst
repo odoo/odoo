@@ -3,7 +3,25 @@
 mail.thread and OpenChatter
 ===========================
 
-TODO
+API
++++
+
+Writing messages and notifications
+----------------------------------
+
+``message_append``
+
+Creates a new mail.message through message_create. The new message is attached 
+to the current mail.thread, containing all the details passed as parameters. 
+All attachments will be attached to the  thread record as well as to the 
+actual message.
+
+This method calls message_create that will handle management of subscription 
+and notifications, and effectively create the message.
+
+If ``email_from`` is not set or ``type`` not set as 'email', a note message 
+is created (comment or system notification), without the usual envelope 
+attributes (sender, recipients, etc.).
 
 mail.group
 ++++++++++
