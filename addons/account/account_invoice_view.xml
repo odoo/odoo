@@ -177,11 +177,11 @@
                               domain="[('supplier', '=', True)]"/>
                             <field name="fiscal_position" widget="selection"/>
                             <field name="origin"/>
-			    <label for="reference_type"/>
-			    <div>
+			                <label for="reference_type"/>
+			                <div>
                                 <field name="reference_type" class="oe_inline oe_edit_only"/>
                                 <field name="reference" class="oe_inline"/>
-			    </div>
+			                </div>
                         </group>
                         <group>
                             <field name="date_invoice"/>
@@ -292,8 +292,10 @@
                 <form version="7.0">
                 <header>
                     <span groups="base.group_user">
-                        <button name="action_invoice_sent" type="object" string="Send by Email" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}" class="oe_highlight"/>
-                        <button name="invoice_print" string="Print Invoice" type="object" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}" class="oe_highlight"/>
+                        <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight"/>
+                        <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight"/>
+                        <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}"/>
+                        <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}"/>
                         <button name="invoice_open" states="draft" string="Validate" class="oe_highlight"/>
                         <button name="invoice_open" states="proforma2" string="Validate"/>
                         <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
@@ -322,11 +324,9 @@
                             <field name="fiscal_position" widget="selection" />
                         </group>
                         <group>
-
                             <field name="date_invoice"/>
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
-
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
@@ -342,7 +342,6 @@
                         </group>
                     </group>
                     <field name="sent" invisible="1"/>
-
                     <notebook colspan="4">
                         <page string="Invoice Lines">
                             <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
