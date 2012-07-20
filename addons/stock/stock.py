@@ -1733,6 +1733,8 @@ class stock_move(osv.osv):
         @param product_id: Product id
         @return: Warning message
         """
+        if not product_id:
+            return {}
         if not prodlot_id or not loc_id:
             return {}
         ctx = context and context.copy() or {}
