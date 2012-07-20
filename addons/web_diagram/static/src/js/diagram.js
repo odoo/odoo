@@ -51,6 +51,9 @@ instance.web.DiagramView = instance.web.View.extend({
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
+        this.labels = _.filter(this.fields_view.arch.children, function(label){ 
+        	return label.tag == "label" ;
+          });
 
         this.do_update_pager();
 
@@ -104,11 +107,21 @@ instance.web.DiagramView = instance.web.View.extend({
         );
     },
 
+    get_label : function(){
+    	var self = this
+    	var html_label = _.each(self.labels,function(label){
+    		html_label = "<span>" + label.attrs.string + "</span>"
+    		self.$element.find('.oe_diagram_diagram_header').append(html_label)
+    	})
+    	
+    },
+
     on_diagram_loaded: function(record) {
         var id_record = record['id'];
         if(id_record) {
             this.id = id_record;
             this.get_diagram_info();
+            this.get_label();
         }
     },
 
