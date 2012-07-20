@@ -118,41 +118,29 @@
     </record>
 
     <record id="view_mrp_production_workcenter_form_view_filter" model="ir.ui.view">
-            <field name="name">mrp.production.workcenter.line.select</field>
-            <field name="model">mrp.production.workcenter.line</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Work Orders">
-                    <group>
-                        <field name="name" string="Work Orders"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_planned"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft"
-                            domain="[('state','=','draft')]"/>
-                        <filter icon="terp-check" string="In Progress" name="Current"
-                            domain="[('state','=','startworking')]"/>
-                        <filter icon="terp-gtk-media-pause" string="Pending"
-                            domain="[('state','=','pause')]"/>
-                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                            help="Production started late"/>
-                        <separator orientation="vertical"/>
-                        <field name="workcenter_id" widget="selection"/>
-                        <field name="production_id"/>
-                        <field name="state"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
-                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                    </group>
-               </search>
-            </field>
+        <field name="name">mrp.production.workcenter.line.select</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Orders">
+                <field name="name" string="Work Orders"/>
+                <field name="date_planned"/>
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+                <field name="state"/>
+                <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+                <filter icon="terp-check" string="In Progress" name="Current" domain="[('state','=','startworking')]"/>
+                <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pause')]"/>
+                <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                    help="Production started late"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                    <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
+                </group>
+             </search>
+        </field>
     </record>
 
     <record id="workcenter_line_calendar" model="ir.ui.view">
