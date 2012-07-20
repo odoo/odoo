@@ -73,6 +73,7 @@
                 <search string="Messages Search">
                     <field name="user_id"/>
                     <field name="body"/>
+                    <field name="model" string="Message" filter_domain="['|', ('subject', 'ilike', self), ('body_text', 'ilike', self)]" />
                 </search>
             </field>
         </record>
