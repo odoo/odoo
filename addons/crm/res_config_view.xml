@@ -10,44 +10,57 @@
             <field name="arch" type="xml">
                 <group name="On Mail Client" version="7.0" position="after">
                     <group>
-                    <label for="id" string="On Mail Server"/>
-                    <div>
-                        <div name="fetchmail_lead"><field name="fetchmail_lead" class="oe_inline"/>
-                        Create<label for="fetchmail_lead" string="Leads"/>from Incoming Mails
-                        <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
-                            attrs="{'invisible': [('fetchmail_lead','=',False)]}" class="oe_link"/>
+                        <label for="id" string="On Mail Server"/>
+                        <div>
+                            <div name="fetchmail_lead">
+                                <field name="fetchmail_lead" class="oe_inline"/>
+                                <label for="fetchmail_lead"/>
+                                <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
+                                attrs="{'invisible': [('fetchmail_lead','=',False)]}" class="oe_link"/>
+                            </div>
                         </div>
-                    </div>
                     </group>
                 </group>
                 <group name="config_other" version="7.0" position="inside">
                     <separator string="Import and Synchronize Data from an Other Application" colspan="2"/>
                     <group>
-                    <label for="id" string="Import From"/>
-                    <div>
-                        <div><field name="module_import_sugarcrm"/>SugarCRM</div>
-                    </div>
+                        <label for="id" string="Import From"/>
+                        <div>
+                            <div>
+                                <field name="module_import_sugarcrm"/>
+                                <label for="module_import_sugarcrm"/>
+                            </div>
+                        </div>
                     </group>
                     <group>
-                    <label for="id" string="Synchronize with"/>
-                    <div>
-                    <div><field name="module_import_google"/>
-                    <label for="module_import_google" string="Google"/>(Contact and Calendar)</div>
-                    <div><field name="module_crm_caldav"/>
-                    Application with<label for="module_crm_caldav" string="Caldav"/>Protocol</div>
-                    </div>
+                        <label for="id" string="Synchronize with"/>
+                        <div>
+                            <div>
+                                <field name="module_import_google"/>
+                                <label for="module_import_google"/>
+                            </div>
+                            <div>
+                                <field name="module_crm_caldav"/>
+                                <label for="module_crm_caldav"/>
+                            </div>
+                        </div>
                     </group>
                     <separator string="Customer Form"/>
                     <div>
-                        <div><field name="module_google_map"/>Add Google Maps on Customer</div>
+                        <div>
+                            <field name="module_google_map" class="oe_inline"/>
+                            <label for="module_google_map"/>
+                        </div>
                     </div>
                 </group>
                 <group name="config_sale" position="inside">
                     <separator string="Documents and Wiki" colspan="2"/>
+                    <div>
                         <div>
-                            <div><field name="module_wiki_sale_faq"/>
-                            Share Information with<label for="module_wiki_sale_faq" string="Sales FAQ"/></div>
+                            <field name="module_wiki_sale_faq"/>
+                            <label for="module_wiki_sale_faq"/>
                         </div>
+                    </div>
                 </group>
             </field>
         </record>
