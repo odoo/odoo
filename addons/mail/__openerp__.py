@@ -83,9 +83,10 @@ The main features of the module are :
         'static/src/img/email_icong.png',
         'static/src/img/_al.png',
         'static/src/img/_pincky.png',
-        'static/src/img/feeds.png',
-        'static/src/img/feeds-hover.png',
         'static/src/img/groupdefault.png',
+        'static/src/img/attachment.png',
+        'static/src/img/checklist.png',
+        'static/src/img/formatting.png',
     ],
     'css': [
         'static/src/css/mail.css',
