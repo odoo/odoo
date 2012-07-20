@@ -80,7 +80,7 @@
                           <h4><a type="edit"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
-                             <i><field name="name" groups="base.group_no_one"/></i><br/>
+                             <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
                           <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
                           <button t-if="installed" disabled="disabled">Installed</button>
