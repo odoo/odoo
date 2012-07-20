@@ -314,18 +314,18 @@
                 <form string="Product Categories" version="7.0">
                     <sheet>
                         <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <label for="name" class="oe_edit_only"/>
                                 <field name="name"/>
                             </h1>
                         </div>
                         <group>
-                                <group>
-                                    <field name="type"/>
-                                </group>
-                                <group>
-                                    <field name="parent_id"/>
-                                </group>
+                            <group>
+                                <field name="parent_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
                         </group>
                         <group name="basic">
                             <group name="account_property" string="Account Properties"/>
