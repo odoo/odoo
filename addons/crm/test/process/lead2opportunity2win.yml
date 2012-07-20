@@ -111,7 +111,7 @@
 -
   !python {model: crm.meeting}: |
     context.update({'active_model': 'crm.meeting'}) 
-    self.case_open(cr, uid, [ref('crm.crm_case_reviewneeds0')])
+    self.case_open(cr, uid, [ref('base_calendar.crm_case_reviewneeds0')])
 -
   I invite a user for meeting.
 -
