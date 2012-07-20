@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_salary_rule_month" model="ir.ui.view">
-            <field name="name">Salary rule monthly</field>
-            <field name="model">salary.rule.month</field>
+        <record id="view_salary_employee_month" model="ir.ui.view">
+            <field name="name">Hr monthly Employee Salary</field>
+            <field name="model">hr.salary.employee.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Print Salary Rule Monthly" version="7.0">
+            <form string="Print Hr monthly Employee Salary" version="7.0">
                 <header>
                     <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                    or
                     <button string="Cancel" class="oe_link" special="cancel" />
                 </header>
                 <group>
                     <field name="start_date"/>
                     <field name="end_date"/>
+                    <separator string="Employee" />
                     <field name="employee_ids"  nolabel="1" colspan="4"/>
                 </group>
             </form>
             </field>
         </record>
 
-        <record id="action_yearly_salary_rule" model="ir.actions.act_window">
+        <record id="action_salary_employee_month" model="ir.actions.act_window">
             <field name="name">Salary Register</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">salary.rule.month</field>
+            <field name="res_model">hr.salary.employee.month</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -33,14 +33,14 @@
         <menuitem
             name="Reporting"
             parent="hr.menu_hr_root"
-            id="menu_yearly_salary_rule_report" sequence="50"
+            id="menu_salary_employee_month_report" sequence="50"
            />
 
         <menuitem
-            name="Yearly Salary Rule Report"
-            parent="menu_yearly_salary_rule_report"
-            action="action_yearly_salary_rule"
-            id="menu_yearly_salary_rule"
+            name="Salary Register"
+            parent="menu_salary_employee_month_report"
+            action="action_salary_employee_month"
+            id="menu_salary_employee_month"
            />
 
     </data>

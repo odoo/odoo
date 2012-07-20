@@ -2,7 +2,7 @@
 <document filename="yearly salary report.pdf">
   <template pageSize="(620.0,842.0)" title="Yearly Salary Report" author="OpenERP" allowSplitting="50">
     <pageTemplate id="first">
-      <frame id="first" x1="28.0" y1="28.0" width="400" height="786"/>
+      <frame id="first" x1="28.0" y1="28.0"  width="539" height="772"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -106,7 +106,7 @@
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="5.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="5.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="7.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="7.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="5.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="7.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -117,7 +117,7 @@
     <para style="P5">From [[ formatLang(data['form']['start_date'], date=True) ]] To [[ formatLang(data['form']['end_date'], date=True) ]]</para>
     <section>
       <para style="terp_default_1">[[ repeatIn(get_periods(data['form']),'m') ]]</para>
-      <blockTable colWidths="53.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,57.0" style="Table1">
+      <blockTable colWidths="55.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,57.0" style="Table1">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Name</para>
@@ -165,7 +165,7 @@
       </blockTable>
       <section>
         <para style="terp_default_1">[[ repeatIn(get_employee(data['form']),'e') ]]</para>
-        <blockTable colWidths="53.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,57.0" style="Table2">
+        <blockTable colWidths="55.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,57.0" style="Table2">
           <tr>
             <td>
               <para style="terp_default_9">[[ e[0] ]]</para>
@@ -235,17 +235,11 @@
             </td>
           </tr>
         </blockTable>
-        <para style="P2">
-          <font color="white"> </font>
-        </para>
       </section>
-      <para style="P2">
-        <font color="white"> </font>
-      </para>
     </section>
     <section>
       <para style="terp_default_1">[[ repeatIn(get_months_tol(),'t') ]]</para>
-      <blockTable colWidths="53.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,57.0" style="Table6">
+      <blockTable colWidths="55.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,40.0,57.0" style="Table6">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Total</para>
@@ -291,12 +285,6 @@
           </td>
         </tr>
       </blockTable>
-      <para style="P2">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="P6">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>

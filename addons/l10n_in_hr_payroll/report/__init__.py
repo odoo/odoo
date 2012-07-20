@@ -24,8 +24,7 @@
 
 import report_payslip_details
 import report_payroll_advice
-import report_salary_rule_bymonth
+import report_hr_salary_employee_bymonth
 import payment_advice_report
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,15 +23,14 @@ import time
 
 from osv import osv, fields
 
-class salary_rule_bymonth(osv.osv_memory):
+class hr_salary_employee_bymonth(osv.osv_memory):
 
-    _name = 'salary.rule.month'
-    _description = 'Print Monthly Salary Rule Report'
+    _name = 'hr.salary.employee.month'
+    _description = 'Print Hr Salary Employee By Month Report'
     _columns = {
         'start_date': fields.date('Starting Date', required=True),
         'end_date': fields.date('Ending Date', required=True),
         'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel', 'payroll_year_id', 'emp_id', 'Employees', required=True),
-#        'rule_id': fields.many2one('hr.salary.rule.category', 'Rule Category', required=True),
     }
 
     _defaults = {
@@ -55,13 +54,13 @@ class salary_rule_bymonth(osv.osv_memory):
         res = self.read(cr, uid, ids, ['employee_ids',  'start_date', 'end_date'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
-        datas['ids'] = res.get('employee_ids', [])
+        res['employee_ids'] = res.get('employee_ids', [])
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'salary.rule.bymonth',
+            'report_name': 'salary.employee.bymonth',
             'datas': datas,
        }
 
-salary_rule_bymonth()
+hr_salary_employee_bymonth()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,12 +23,12 @@ import datetime
 import time
 
 from report import report_sxw
-import pooler
 
-class report_salary_rule_bymonth(report_sxw.rml_parse):
+class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(report_salary_rule_bymonth, self).__init__(cr, uid, name, context)
+        super(report_hr_salary_employee_bymonth, self).__init__(cr, uid, name, context=context)
+
         self.localcontext.update({
             'time': time,
             'get_employee': self.get_employee,
@@ -37,47 +37,48 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
             'get_total': self.get_total,
         })
 
+        self.context = context
         self.mnths =[]
-        self.mnths_tol = []
+        self.mnths_total = []
         self.total=0.0
 
     def get_periods(self, form):
 #       Get start year-month-date and end year-month-date
-        fy = int(form['start_date'][0:4])
-        ly = int(form['end_date'][0:4])
+        first_year = int(form['start_date'][0:4])
+        last_year = int(form['end_date'][0:4])
 
-        fm = int(form['start_date'][5:7])
-        lm = int(form['end_date'][5:7])
-        no_months = (ly-fy)*12+lm-fm + 1
-        cm = fm
-        cy = fy
+        first_month = int(form['start_date'][5:7])
+        last_month = int(form['end_date'][5:7])
+        no_months = (last_year-first_year) * 12 + last_month - first_month + 1
+        current_month = first_month
+        current_year = first_year
 
 #       Get name of the months from integer
         mnth_name = []
         for count in range(0, no_months):
-            m = datetime.date(cy, cm, 1).strftime('%b')
+            m = datetime.date(current_year, current_month, 1).strftime('%b')
             mnth_name.append(m)
-            self.mnths.append(str(cm)+'-'+str(cy))
-            if cm == 12:
-                cm = 0
-                cy = ly
-            cm = cm +1
+            self.mnths.append(str(current_month)+'-'+str(current_year))
+            if current_month == 12:
+                current_month = 0
+                current_year = last_year
+            current_month = current_month +1
         for c in range(0, (12-no_months)):
             mnth_name.append('None')
             self.mnths.append('None')
         return [mnth_name]
 
     def get_employee(self, form):
-        ls1=[]
-        ls = []
-        tol_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        emp = pooler.get_pool(self.cr.dbname).get('hr.employee')
-        emp_ids = form['employee_ids']
-        empll  = emp.browse(self.cr, self.uid, emp_ids)
+        list1=[]
+        list = []
+        total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        emp_obj = self.pool.get('hr.employee')
+        emp_ids = form.get('employee_ids', [])
+        employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
         cnt = 1
-        for emp_id in empll:
-            ls1.append(emp_id.name)
-            tol = 0.0
+        for emp_id in employees:
+            list1.append(emp_id.name)
+            total = 0.0
             for mnth in self.mnths:
                 if mnth <> 'None':
                     if len(mnth) != 7:
@@ -90,35 +91,35 @@ class report_salary_rule_bymonth(report_sxw.rml_parse):
                             where pl.code = 'NET' and p.state = 'done' and p.employee_id  = '''+str(emp_id.id)+''' \
                             and to_char(date_to,'mm-yyyy') like '%'''+mnth+'''%'
                             group by r.name, p.date_to,emp.id''')
-                    sal = self.cr.fetchall()
-                    if sal:
-                        ls1.append(sal[0][0])
-                        tol += sal[0][0]
-                        tol_mnths[cnt] = tol_mnths[cnt] + sal[0][0]
+                    salary = self.cr.fetchall()
+                    if salary:
+                        list1.append(salary[0][0])
+                        total += salary[0][0]
+                        total_mnths[cnt] = total_mnths[cnt] + salary[0][0]
                     else:
-                        ls1.append(0.00)
+                        list1.append(0.00)
                 else:
-                    ls1.append('')
-                    tol_mnths[cnt] = ''
+                    list1.append('')
+                    total_mnths[cnt] = ''
                 cnt = cnt + 1
             cnt = 1
-            ls1.append(tol)
-            ls.append(ls1)
-            ls1 = []
-        self.mnths_tol.append(tol_mnths)
-        return ls
+            list1.append(total)
+            list.append(list1)
+            list1 = []
+        self.mnths_total.append(total_mnths)
+        return list
 
     def get_months_tol(self):
-        return self.mnths_tol
+        return self.mnths_total
 
     def get_total(self):
-        for item in self.mnths_tol:
+        for item in self.mnths_total:
             for count in range(1, len(item)):
               if item[count] == '':
                   continue
               self.total += item[count]
         return self.total
 
-report_sxw.report_sxw('report.salary.rule.bymonth', 'salary.rule.month', 'l10n_in_hr_payroll/report/report_salary_rule_bymonth.rml', parser=report_salary_rule_bymonth, header='internal')
+report_sxw.report_sxw('report.salary.employee.bymonth', 'hr.salary.employee.month', 'l10n_in_hr_payroll/report/report_hr_salary_employee_bymonth.rml', parser=report_hr_salary_employee_bymonth, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
