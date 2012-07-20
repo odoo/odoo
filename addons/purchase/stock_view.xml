@@ -7,11 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='tracking_id']" position="before">
-                    <field name="purchase_line_id" colspan="2" />
+                 <xpath expr="//group[@name='destination_grp']" position="inside">
+                    <field name="purchase_line_id"/>
                 </xpath>
             </field>
-        </record>      
+        </record>
         <record id="stock_picking_inherit_purchase" model="ir.ui.view">
             <field name="name">Picking list</field>
             <field name="model">stock.picking</field>
@@ -30,12 +30,15 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="/form/sheet/group/group/field[@name='date']" position="before">
+                <xpath expr="//field[@name='date']" position="before">
                     <field name="purchase_id"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="warehouse_id"/>
                 </xpath>
             </field>
         </record>
-        
+
         <!-- Picking to Invoice -->
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
@@ -86,7 +89,7 @@
             <field name="context">{'search_default_purchase_id': active_id,'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
         </record>
-        
+
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
             <field name="name">Purchase Picking Inherited</field>
             <field name="model">purchase.order</field>
@@ -102,7 +105,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">Based on Incoming Shipments</field>
             <field name="res_model">stock.picking</field>
