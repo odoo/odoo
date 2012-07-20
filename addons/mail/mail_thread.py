@@ -811,31 +811,6 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
     # Note specific
     #------------------------------------------------------
-    
-    def message_broadcast(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', content_subtype='html', context=None):
-        if context is None:
-            context = {}
-        notification_obj = self.pool.get('mail.notification')
-        # write message
-        msg_ids = self.message_append_note(cr, uid, ids, subject=subject, body=body, parent_id=parent_id, type=type, content_subtype=content_subtype, context=context)
-        # escape if in install mode or note writing was not successfull
-        if 'install_mode' in context:
-            return True
-        if not isinstance(msg_ids, (list)):
-            return True
-        # get already existing notigications
-        notification_ids = notification_obj.search(cr, uid, [('message_id', 'in', msg_ids)], context=context)
-        already_pushed_user_ids = map(itemgetter('user_id'), notification_obj.read(cr, uid, notification_ids, context=context))
-        # get base.group_user group
-        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user') or False
-        group_id = res and res[1] or False
-        if not group_id: return True
-        group = self.pool.get('res.groups').browse(cr, uid, [group_id], context=context)[0]
-        for user in group.users:
-            if user.id in already_pushed_user_ids: continue
-            for msg_id in msg_ids:
-                notification_obj.create(cr, uid, {'user_id': user.id, 'message_id': msg_id}, context=context)
-        return True
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
         _logger.warning("log() is deprecated. As this module inherit from \
