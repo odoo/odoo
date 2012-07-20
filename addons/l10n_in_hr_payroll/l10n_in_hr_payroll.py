@@ -243,7 +243,7 @@ class hr_payslip_run(osv.osv):
                 wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'hr_verify_sheet', cr)
                 wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'process_sheet', cr)
                 slip_ids.append(slip_id.id)
-                
+
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
@@ -284,6 +284,8 @@ class payroll_advice_line(osv.osv):
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
         'debit_credit': fields.char('C/D', size=3, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
+        # used to set attrs on ifsc_code
+        'ifsc': fields.related('advice_id','neft',type='boolean', string='IFSC'),
     }
     _defaults = {
         'debit_credit': 'C',
