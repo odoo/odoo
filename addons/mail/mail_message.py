@@ -57,13 +57,13 @@ def to_email(text):
     return mail_tools_to_email(text)
 
 class mail_message_common(osv.TransientModel):
-    """Common abstract class for holding the main attributes of a 
-       message object. It could be reused as parent model for any
-       database model or wizard screen that needs to hold a kind of
-       message.
-       All internal logic should be in a database-based model while this
-       model holds the basics of a message. For example, a wizard for writing
-       emails should inherit from this class and not from mail.message."""
+    """ Common abstract class for holding the main attributes of a 
+        message object. It could be reused as parent model for any
+        database model or wizard screen that needs to hold a kind of
+        message.
+        All internal logic should be in another model while this
+        model holds the basics of a message. For example, a wizard for writing
+        emails should inherit from this class and not from mail.message."""
 
     def get_body(self, cr, uid, ids, name, arg, context=None):
         """ get correct body version: body_html for html messages, and
@@ -132,11 +132,13 @@ class mail_message_common(osv.TransientModel):
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
         'body': fields.function(get_body, fnct_search = search_body, type='text',
             string='Message Content', store=True,
-            help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
-        'parent_id': fields.many2one('mail.message', 'Parent Message',
+            help="Content of the message. This content equals the body_text field "\
+                 "for plain-test messages, and body_html for rich-text/HTML "\
+                 "messages. This allows having one field if we want to access "\
+                 "the content matching the message content_subtype."),
+        'parent_id': fields.many2one('mail.message.common', 'Parent Message',
             select=True, ondelete='set null',
             help="Parent message, used for displaying as threads with hierarchy"),
-        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
     }
 
     _defaults = {
@@ -149,24 +151,22 @@ class mail_message(osv.Model):
        notifications), comments (for OpenChatter feature) and
        RFC2822 email messages. This model also provides facilities to
        parse, queue and send new email messages. Type of messages
-       are differentiated using the 'type' column.
-       
-       The ``display_text`` field will have a slightly different
-       presentation for real emails and for log messages."""
+       are differentiated using the 'type' column. """
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
     _description = 'Mail Message (email, comment, notification)'
     _order = 'date desc'
 
-    # XXX to review - how to determine action to use?
     def open_document(self, cr, uid, ids, context=None):
+        """ Open the message related document. Note that only the document of
+            ids[0] will be opened.
+            TODO: how to determine the action to use ?
+        """
         action_data = False
         if not ids:
             return action_data
-        # works only on 1 item
-        id = ids[0]
-        msg = self.browse(cr, uid, id, context=context)
+        msg = self.browse(cr, uid, ids[0], context=context)
         ir_act_window = self.pool.get('ir.actions.act_window')
         action_ids = ir_act_window.search(cr, uid, [('res_model', '=', msg.model)], context=context)
         if action_ids:
@@ -178,14 +178,16 @@ class mail_message(osv.Model):
                     })
         return action_data
 
-    # XXX to review - how to determine action to use?
     def open_attachment(self, cr, uid, ids, context=None):
+        """ Open the message related attachments.
+            TODO: how to determine the action to use ?
+        """
         action_data = False
         if not ids:
             return action_data
         action_pool = self.pool.get('ir.actions.act_window')
         messages = self.browse(cr, uid, ids, context=context)
-        att_ids = [x.id for x in message.attachment_ids for message in messages]
+        att_ids = [x.id for message in messages for x in message.attachment_ids]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')], context=context)
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)
@@ -200,13 +202,11 @@ class mail_message(osv.Model):
                         ('email', 'email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', help="Message type: email for email message, notification for system message, comment for other messages such as user replies"),
-        'subtype': fields.char('Subtype', size=64,
-                        help="Message subtype, such as 'create' or 'cancel'. The purpose \
-                        is to be able to distinguish message of the same type.\
-                        For example, it is used to add the possibility to hide \
-                        notifications in the wall."),
-        'partner_id': fields.many2one('res.partner', 'Related partner'),
+                        ], 'Type',
+            help="Message type: email for email message, notification for system "\
+                  "message, comment for other messages such as user replies"),
+        'partner_id': fields.many2one('res.partner', 'Related partner',
+            help="Deprecated field. Use partner_ids instead."),
         'partner_ids': fields.many2many('res.partner',
             'mail_message_destination_partner_rel',
             'message_id', 'partner_id', 'Destination partners',
@@ -222,13 +222,18 @@ class mail_message(osv.Model):
                         ('exception', 'Delivery Failed'),
                         ('cancel', 'Cancelled'),
                         ], 'Status', readonly=True),
-        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
-        'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
+        'auto_delete': fields.boolean('Auto Delete',
+            help="Permanently delete this email after sending it, to save space"),
+        'original': fields.binary('Original', readonly=1,
+            help="Original version of the message, as it was sent on the network"),
+        'parent_id': fields.many2one('mail.message', 'Parent Message',
+            select=True, ondelete='set null',
+            help="Parent message, used for displaying as threads with hierarchy"),
+        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
     }
         
     _defaults = {
         'type': 'email',
-        'subtype': 'email',
         'state': 'received',
     }
     
@@ -382,7 +387,10 @@ class mail_message(osv.Model):
         return email_msg_id
 
     def mark_outgoing(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'outgoing'}, context)
+        return self.write(cr, uid, ids, {'state':'outgoing'}, context=context)
+
+    def cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
@@ -582,10 +590,9 @@ class mail_message(osv.Model):
         """
         if message.auto_delete:
             self.pool.get('ir.attachment').unlink(cr, uid,
-                                                  [x.id for x in message.attachment_ids \
-                                                        if x.res_model == self._name and \
-                                                           x.res_id == message.id],
-                                                  context=context)
+                [x.id for x in message.attachment_ids
+                    if x.res_model == self._name and x.res_id == message.id],
+                context=context)
             message.unlink()
         return True
 
@@ -604,8 +611,6 @@ class mail_message(osv.Model):
                                     transactions (default: False)
            :return: True
         """
-        if context is None:
-            context = {}
         ir_mail_server = self.pool.get('ir.mail_server')
         self.write(cr, uid, ids, {'state': 'outgoing'}, context=context)
         for message in self.browse(cr, uid, ids, context=context):
@@ -629,7 +634,7 @@ class mail_message(osv.Model):
                     partner_ids_email_to += '%s ' % (partner.email or '')
                 message_email_to = '%s %s' % (partner_ids_email_to, message.email_to or '')
 
-                # build an RFC2822 email.message.Message object adn send it
+                # build an RFC2822 email.message.Message object and send it
                 # without queuing
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
@@ -664,8 +669,6 @@ class mail_message(osv.Model):
                 cr.commit()
         return True
 
-    def cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
