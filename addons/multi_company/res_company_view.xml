@@ -26,17 +26,18 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Multi Company">
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="6"/>
-                        <separator string="Matching" colspan="6"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="object_id"/>
-                        <field name="field_id" domain="[('model_id','=',object_id)]"/>
-                        <separator string="Condition" colspan="6"/>
-                        <field name="expression" colspan="4"/>
-                        <field name="sequence"/>
-                        <separator string="Returning" colspan="6"/>
-                        <field name="company_dest_id"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="object_id"/>
+                            <field name="field_id" domain="[('model_id','=',object_id)]"/>
+                            <field name="expression"/>
+                            <field name="sequence"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -71,7 +72,7 @@
             parent="base.menu_custom"
             sequence="50"/>
 
-        <menuitem id="menu_action_inventory_form" 
+        <menuitem id="base.menu_action_inventory_form" 
             action="action_inventory_form"
             parent="menu_custom_multicompany"/>
     </data>

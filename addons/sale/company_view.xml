@@ -8,9 +8,9 @@
             <field name="priority">24</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <field name="security_lead"/>
-                </page>
+                <xpath expr="//group[@name='logistics_grp']" position="inside">
+                   <field name="security_lead"/>
+                </xpath>
             </field>
         </record>
     </data>

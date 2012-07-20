@@ -97,8 +97,7 @@
                 groups="base.group_sale_salesman"
                 res_model="crm.phonecall"
                 view_mode="tree,calendar,form"
-                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id,'default_partner_phone':phone}"
-                domain="[('opportunity_id', '=', active_id)]"
+                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
                 view_type="form"/>
 
         <act_window
@@ -107,7 +106,6 @@
                 res_model="crm.meeting"
                 view_mode="tree,form,calendar"
                 context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-                domain="[('opportunity_id', '=', active_id)]"
                 view_type="form"/>
 
 
@@ -140,9 +138,10 @@
                             name="%(act_crm_opportunity_crm_phonecall_new)d"
                             string="Phone Calls" />
                     </div>
-
-                    <label for="name" class="oe_edit_only" string="Lead Description"/>
-                    <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    </div>
                     <group>
                         <group>
                             <field name="user_id" />

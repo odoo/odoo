@@ -2,27 +2,21 @@
 <openerp>
     <data>
 
-         <!--  Partners inherited form -->
-        <record id="base.view_crm_partner_info_History" model="ir.ui.view">
-           <field name="name">res.partner.crm.history.inherit1</field>
-           <field name="model">res.partner</field>
-           <field name="type">form</field>
-           <field name="inherit_id" ref="base.view_partner_form"/>
-           <field name="arch" type="xml">
-                <xpath expr="//page[@string='History']" position="attributes">
-                   <attribute name="invisible">False</attribute>
-                </xpath>
-           </field>
-          </record>    
+         <!--  Partners inherited form -->  
         <record id="view_workitem_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.workitem.info.inherit</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                    <page string="History" position="inside">
-                            <field name="workitem_ids" colspan="4" nolabel="1"/>
-                        </page>
+                <xpath expr="//page[@name='page_history']" position="attributes">
+                   <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//page[@name='page_history']" position="inside">
+                    <group name="grp_campaign" string="Campaign">
+                        <field name="workitem_ids" colspan="4" nolabel="1"/>
+                    </group>
+                </xpath>
             </field>
        </record>
    </data>
