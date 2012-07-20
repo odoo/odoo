@@ -2762,7 +2762,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     });
                     return false;
                  });
-            $(".oe_form_m2o_follow").html(follow);
+            $(".oe_form_m2o_follow", this.$element).html(follow);
         }
     },
     set_value: function(value_) {
