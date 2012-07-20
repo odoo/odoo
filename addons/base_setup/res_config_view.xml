@@ -6,30 +6,28 @@
             <field name="model">base.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="General Settings" version="7.0">
+                <form string="General Settings" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+                    <separator string="Company Settings"/>
                     <group>
-                        <separator string="Company Settings" colspan="2"/>
-                            <group>
-                                <label for="id" string="Company"/>
-                                <div>
-                                    <field name="module_multi_company" class="oe_inline"/>
-                                    Manage<label for="module_multi_company"/>
-                                </div>
-                            </group>
+                        <label for="id" string="Company"/>
+                        <div>
                             <div>
-                                <div>
-                                    You will also find several configuration options on your company data:
-                                    address for the header and footer, overdue payments texts, etc.
-                                </div>
-                                <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute" class="oe_link"/>
+                                <field name="module_multi_company" class="oe_inline"/>
+                                <label for="module_multi_company"/>
                             </div>
+                            <div>
+                                <label string="You will also find several configuration options on your company data:
+                                    address for the header and footer, overdue payments texts, etc."/>
+                                <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute" class="oe_inline oe_link"/>
+                            </div>
+                        </div>
                     </group>
-                    <separator string="External Accesses" colspan="2"/>
+                    <separator string="External Accesses"/>
                     <group>
                         <label for="id" string="External Accesses"/>
                         <div>
@@ -43,14 +41,11 @@
                             </div>
                         </div>
                     </group>
+                    <separator string="Others"/>
                     <group>
-                        <separator string="Others" colspan="2"/>
-                        <group>
-                            <label for="id" string="Outgoing Mail Servers"/>
-                                <button type="action" name="%(base.action_ir_mail_server_list)d"
-                                string="Configure" icon="gtk-execute" class="oe_link"/>
-                        </group>
-                        
+                        <label for="id" string="Outgoing Mail Servers"/>
+                        <button type="action" name="%(base.action_ir_mail_server_list)d"
+                            string="Configure" icon="gtk-execute" class="oe_link"/>
                     </group>
                 </form>
             </field>
