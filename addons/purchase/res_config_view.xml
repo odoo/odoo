@@ -11,54 +11,54 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                        <separator string="Purchase Order"/>
-                        <group>
-                            <label for="id" string="Purchase Order Setting"/>   
-                            <div>
-                                <div>
-                                    <field name="group_purchase_pricelist" class="oe_inline"/>
-                                    <label for="group_purchase_pricelist"/>
-                                </div>    
-                                <div>
-                                    <field name="group_uom" class="oe_inline"/>
-                                    <label for="group_uom"/>
-                                </div>                   
-                                <div>
-                                    <field name="group_purchase_delivery_address" class="oe_inline"/>
-                                    <label for="group_purchase_delivery_address"/>
-                                </div>    
-                                <div>
-                                    <field name="module_purchase_double_validation" class="oe_inline"/>
-                                    <label for="module_purchase_double_validation"/>
-                                </div>     
-                                <div>
-                                    <field name="module_purchase_requisition" class="oe_inline"/>
-                                    <label for="module_purchase_requisition"/>
-                                </div>
-                                <div>    
-                                    <field name="module_warning" class="oe_inline"/>
-                                    <label for="module_warning"/>
-                                </div>
-                                <div>
-                                    <field name="module_purchase_analytic_plans" class="oe_inline"/>
-                                    <label for="module_purchase_analytic_plans"/>
-                                </div>
-                            </div>    
-			            </group>
-			            <separator string="Invoicing"/>
-			            <group>
-                            <label for="id" string="Invoicing Setting"/>   
-                            <div>
-                                <div>
-                                    <label for="default_invoice_method"/>
-                                    <field name="default_invoice_method" class="oe_inline"/>
-                                </div>
-                                <div>
-                                     <label for="decimal_precision"/>
-                                     <field name="decimal_precision" class="oe_inline"/>
-                                </div>
-                            </div>            
-                        </group>
+                    <separator string="Purchase Order"/>
+                    <group>
+                        <label for="id" string="Order Setting"/>   
+                        <div>
+							<div>
+								<field name="group_purchase_pricelist" class="oe_inline"/>
+								<label for="group_purchase_pricelist"/>
+							</div>    
+							<div>
+								<field name="group_uom" class="oe_inline"/>
+								<label for="group_uom"/>
+							</div>                   
+							<div>
+								<field name="group_purchase_delivery_address" class="oe_inline"/>
+								<label for="group_purchase_delivery_address"/>
+							</div>    
+							<div name="module_purchase_double_validation">
+								<field name="module_purchase_double_validation" class="oe_inline"/>
+								<label for="module_purchase_double_validation"/>
+							</div>     
+							<div>
+								<field name="module_purchase_requisition" class="oe_inline"/>
+								<label for="module_purchase_requisition"/>
+							</div>
+							<div>    
+								<field name="module_warning" class="oe_inline"/>
+								<label for="module_warning"/>
+							</div>
+							<div>
+								<field name="module_purchase_analytic_plans" class="oe_inline"/>
+								<label for="module_purchase_analytic_plans"/>
+							</div>
+                        </div>    
+			        </group>
+			        <separator string="Invoicing"/>
+					<group>
+						<label for="id" string="Invoicing Setting"/>   
+						<div>
+							<div>
+								<label for="default_invoice_method"/>
+								<field name="default_invoice_method" class="oe_inline"/>
+							</div>
+							<div>
+								 <label for="decimal_precision"/>
+								 <field name="decimal_precision" class="oe_inline"/>
+							</div>
+						</div>            
+					</group>
                 </form>
             </field>
         </record>
