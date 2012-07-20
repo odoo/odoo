@@ -11,36 +11,35 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group>
-                    <separator string="Manufacturing Order" colspan="4" />
-                        <group colspan="2">
+                    <separator string="Manufacturing Order" />
+                        <group>
                             <label for="id" string="Manufacturing Order Settings"/>
                             <div>
                                 <div>
                                     <field name="module_mrp_operations" class="oe_inline"/>
-                                    Manage<label for="module_mrp_operations" />
+                                    <label for="module_mrp_operations" />
                                 </div>
                                 <div>
                                     <field name="module_stock_planning" class="oe_inline"/>
-                                    <label for="module_stock_planning"/>Of Products
+                                    <label for="module_stock_planning"/>
                                 </div>    
                                 <div>
                                     <field name="module_mrp_subproduct" class="oe_inline"/>
-                                    <label for="module_mrp_subproduct"/>For Sub-Prodcuts                               
+                                    <label for="module_mrp_subproduct"/>                          
                                 </div>
                                 <div>
                                     <field name="module_mrp_repair" class="oe_inline"/>
-                                    Allow To<label for="module_mrp_repair"/>
+                                    <label for="module_mrp_repair"/>
                                 </div>                            
                             </div>
                         </group>
-                        <separator string="Logistics" />Prodouction
-                        <group colspan="2">
-                            <label for="id" string="Logistics Settings"/>Of Products   
+                        <separator string="Logistics" />
+                        <group >
+                            <label for="id" string="Logistics Settings"/>   
                             <div>
                                 <div>
                                     <field name="module_mrp_jit" class="oe_inline"/>
-                                    Manage<label for="module_mrp_jit" string="Real-Time"/>Logistics
+                                   <label for="module_mrp_jit" string="Real-Time"/>
                                 </div>
                                 <div>
                                      <field name="module_stock_no_autopicking" class="oe_inline"/>
@@ -48,31 +47,30 @@
                                 </div>
                             </div>    
                         </group>
-                        <separator string="Products" colspan="2"/>
-                        <group colspan="2">
+                        <separator string="Products"/>
+                        <group >
                             <label for="id" string="Product Settings"/>   
                             <div>
                                 <div>
                                     <field name="module_product_manufacturer" class="oe_inline"/>
-                                    Manage<label for="module_product_manufacturer"/>For Productions
+                                    <label for="module_product_manufacturer"/>
                                 </div>
                             </div>    
                         </group>                           
-                        <separator string="Bill Of Material" colspan="2"/>
-                        <group colspan="2">
+                        <separator string="Bill Of Material" />
+                        <group >
                             <label for="id" string="Bill Of Material Settings"/>   
                             <div>
                                 <div>
                                     <field name="group_mrp_routings" class="oe_inline"/>
-                                    <label for="group_mrp_routings"/>For BoMs
+                                    <label for="group_mrp_routings"/>
                                 </div>
                                 <div>
                                     <field name="group_mrp_properties" class="oe_inline"/>
-                                    To Set<label for="group_mrp_properties" string="BoMs Per Product"/>
+                                    <label for="group_mrp_properties" />
                                 </div>
                             </div>
                         </group>
-                   </group>
                 </form>
             </field>
         </record>
