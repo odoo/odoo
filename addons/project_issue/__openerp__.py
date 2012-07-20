@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Project Management',
     "sequence": 22,
+    "summary": "Multi Level Support",
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================

@@ -2,10 +2,11 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
-            web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"
-            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
+        <!-- Top menu item -->
+        <menuitem name="Human Resources"
+            id="menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            sequence="110"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
