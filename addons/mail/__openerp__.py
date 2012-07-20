@@ -100,7 +100,7 @@ The main features of the module are :
         'static/src/xml/mail.xml',
     ],
     'demo': [
-        'mail_demo.xml',
+        'data/mail_demo.xml',
     ],   
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
