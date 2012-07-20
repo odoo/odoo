@@ -33,6 +33,7 @@
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
+        "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
@@ -60,6 +61,7 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
+        "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [
         "static/src/xml/*.xml",
