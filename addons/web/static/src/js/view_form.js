@@ -4047,15 +4047,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.searchview.do_search();
             });
             self.view_list.on_loaded.add_last(function() {
-                self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons"));
+                self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons", {widget:self}));
                 var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-close");
                 $cbutton.click(function() {
                     self.destroy();
                 });
                 var $sbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-select");
-                if(self.options.disable_multiple_selection) {
-                    $sbutton.hide();
-                }
                 $sbutton.click(function() {
                     self.on_select_elements(self.selected_ids);
                     self.destroy();

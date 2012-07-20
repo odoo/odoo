@@ -1468,8 +1468,11 @@
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
-    <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_button oe_selectcreatepopup-search-close">Cancel</button>
+    <t t-if="! widget.options.disable_multiple_selection">
+        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+        or
+    </t>
+    <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! multi_select">
@@ -1479,7 +1482,7 @@
         <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
         <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
     </t>
-    <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
+    or <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
