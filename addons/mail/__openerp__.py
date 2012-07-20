@@ -24,6 +24,7 @@
     'version': '1.0',
     'category':'Social Network',
     "sequence": 2,
+    "summary": "Discussions, Feeds, Alerts",
     'description': """
 A bussiness oriented Social Networking with a fully-integrated email 
 and message management.

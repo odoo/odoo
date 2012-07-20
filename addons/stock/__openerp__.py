@@ -23,6 +23,7 @@
     "name" : "Warehouse Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
+    "summary": "Incoming Shipments, Deliveries, Inventory, Stock",
     "description" : """
 OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
 ======================================================================================================
