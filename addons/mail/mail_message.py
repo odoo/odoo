@@ -409,7 +409,7 @@ class mail_message(osv.Model):
         if context is None:
             context = {}
         if not ids:
-            filters = [('state', '=', 'outgoing')]
+            filters = ['&', ('state', '=', 'outgoing'), ('type', '=', 'email')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
