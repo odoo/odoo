@@ -295,7 +295,7 @@ class mail_message(osv.Model):
         self.check(cr, uid, ids, 'unlink', context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
-    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False,
+    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, type='email',
                              email_cc=None, email_bcc=None, reply_to=False, partner_ids=None, attachments=None,
                              message_id=False, references=False, res_id=False, content_subtype='plain',
                              headers=None, mail_server_id=False, auto_delete=False, context=None):
@@ -352,6 +352,7 @@ class mail_message(osv.Model):
                 'user_id': uid,
                 'model': model,
                 'res_id': res_id,
+                'type': type,
                 'body_text': body if content_subtype != 'html' else False,
                 'body_html': body if content_subtype == 'html' else False,
                 'email_from': email_from,
