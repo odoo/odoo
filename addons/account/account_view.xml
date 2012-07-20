@@ -1023,7 +1023,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:reconcile_id > 0" string="Journal Items" editable="top" on_write="on_create_write">
+                <tree colors="red:state == 'draft';black:reconcile_id > 0" string="Journal Items" editable="top" on_write="on_create_write" default_selection="get_selection_ids">
                     <field name="date"/>
                     <field name="period_id"  invisible="1"/>
                     <field name="move_id"/>

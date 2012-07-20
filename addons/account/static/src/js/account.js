@@ -140,6 +140,21 @@ instance.account.many2one_pager = instance.web.form.FieldMany2One.extend({
     },
 })
 instance.account.btn_extend = instance.web.form.WidgetButton.extend({
+    on_click: function() {
+        var self = this;
+        this.force_disabled = true;
+        this.check_disable();
+        this.execute_action().always(function() {
+            self.force_disabled = false;
+            self.check_disable();
+            self.reload_view();
+        });
+        
+    },
+    reload_view :function(){
+       viewmanager = this.view.getParent().getParent()
+       viewmanager.inner_widget.list_view.controller.reload_content();
+    },
     on_confirmed: function() {
         var self = this;
 
@@ -193,19 +208,29 @@ instance.account.list_button = instance.web.form.WidgetButton.extend({
         });
    }
 })
-instance.account.set_selection = instance.web.ListView.List.include({
-    render: function(){
-        this._super()
-        self = this
-        // To Do: Create method on addons which give ids which have to default selected OR create tag like "colors" on tree
-        if (this.options.action && this.options.action.extended_form_view_id){
-            this.$current.find('th.oe_list_record_selector input')
-            .closest('tr').each(function () {
-                var record = self.records.get($(this).data('id'));
-                if (!record.get('reconcile_id'))
-                    $(this).find('th.oe_list_record_selector input').prop('checked', true)
-            })
+instance.account.set_selection = instance.web.ListView.include({
+     default_selection: function(){
+        var self = this
+        selection_method = this.fields_view.arch.attrs.default_selection;
+        if(selection_method){
+            this.dataset.call(selection_method, [this.dataset.ids], this.context).then(_.bind(self.set_selection, self));
         }
-    }
+     },
+     
+     set_selection : function(ids){
+         this.$element.find('th.oe_list_record_selector input')
+                .closest('tr').each(function () {
+            if(_.include(ids, $(this).data('id'))){
+                $(this).find('th.oe_list_record_selector input').prop('checked', true)
+                }
+            }
+        );
+     },
+     reload_content: function() {
+         var reloaded =this._super()
+         var self = this
+         reloaded.done(_.bind(self.default_selection, self))
+     },
 })
+
 }

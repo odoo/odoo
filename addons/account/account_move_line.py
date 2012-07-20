@@ -107,7 +107,15 @@ class account_move_line(osv.osv):
 
         query += company_clause
         return query
-
+    
+    def get_selection_ids(self, cr, uid, ids, context=None):
+        records = self.read(cr, uid, ids, ['reconcile_id'])
+        res = []
+        for record in records:
+            if not record.get('reconcile_id'):
+                res.append(record['id'])
+        return res
+        
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
            This function returns the residual amount on a receivable or payable account.move.line.
