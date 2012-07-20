@@ -200,7 +200,7 @@ class mail_compose_message(osv.TransientModel):
         body_text = message_data.body_text or ''
         body_html = message_data.body_html or ''
         quoted_body_text = '> %s' % tools.ustr(body_text.replace('\n', "\n> ") or '')
-        quoted_body_html = '<blockquote>%s</blockquote>' % {tools.ustr(body_html)},
+        quoted_body_html = '<blockquote>%s</blockquote>' % (tools.ustr(body_html)),
         reply_body_text = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body_text, current_user.signature)
         reply_body_html = '<br /><br />%s%s<br />%s<br />%s' % (sent_date, sender, quoted_body_html, current_user.signature)
         # form dest_partner_ids
