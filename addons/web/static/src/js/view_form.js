@@ -2320,12 +2320,8 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
         this.$cleditor = this.$textarea.cleditor()[0];
         // call super now, because cleditor resets the disable attr
         this._super.apply(this, arguments);
-        if (this.$textarea.attr('disabled') == 'disabled') {
-            this.$textarea.cleditor()[0].disable(true);
-        }
-        else {
-            this.$textarea.cleditor()[0].disable(false);
-        }
+        // propagate disabled property to cleditor
+        this.$cleditor.disable(this.$textarea.prop('disabled'));
     },
 
     set_value: function(value_) {
@@ -2339,8 +2335,7 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
     },
 
     get_value: function() {
-        var value = this.$cleditor.$area.val();
-        return value;
+        return this.$cleditor.$area.val();
     },
 });
 
