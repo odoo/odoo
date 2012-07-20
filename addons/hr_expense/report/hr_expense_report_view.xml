@@ -51,46 +51,31 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Expenses Analysis">
-              <group>
-                    <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
-                      help = "Confirm Expenses"/>
-                    <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
-                      help = "Approved Expenses"/>
-                    <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]"
-                      help = "Invoiced Expenses"/>
-                    <separator orientation="vertical"/>
-                    <field name="employee_id"/>
-                    <field name="department_id"/>
-            </group>
-            <newline/>
-            <group expand="0" string="Extended Filters...">
-                <field name="product_id"/>
-                <separator orientation="vertical"/>
-                <field name="user_id"/>
-                <separator orientation="vertical"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                <newline/>
-                <field name="date" string="Creation Date"/>
-                <field name="date_confirm"/>
-                <field name="date_valid"/>
-            </group>
-            <newline/>
-            <group expand="1" string="Group By...">
-                <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
-                <filter string="Validation User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
-                <separator orientation="vertical"/>
-                <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
-                <filter string="Analytic account" icon="terp-folder-green" context="{'group_by':'analytic_account'}" groups="analytic.group_analytic_accounting"/>
-                <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
-                <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                <separator orientation="vertical"/>
-                <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
-                <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
-                <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
-            </group>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]" help = "Confirm Expenses"/>
+                <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]" help = "Approved Expenses"/>
+                <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]" help = "Invoiced Expenses"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="product_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date" string="Creation Date"/>
+                    <field name="date_confirm"/>
+                    <field name="date_valid"/>
+                </group>
+                <group expand="1" string="Group By...">
+                    <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
+                    <filter string="Validation User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="Analytic account" icon="terp-folder-green" context="{'group_by':'analytic_account'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
+                </group>
             </search>
         </field>
     </record>
