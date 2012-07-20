@@ -142,7 +142,10 @@ class WebClient(openerpweb.Controller):
             if mods is not None:
                 path += '?mods=' + mods
             return [path]
-        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
+        # re-normalize fs paths to URLs: split on fs path separator
+        # ('/' or '\\' usually) and join on url path separator ('/')
+        return ['%s?debug=%s' % ('/'.join(wp.split(os.path.sep)), os.path.getmtime(fp))
+                for fp, wp in self.manifest_glob(req, mods, extension)]
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
