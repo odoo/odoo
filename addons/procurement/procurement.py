@@ -319,6 +319,9 @@ class procurement_order(osv.osv):
             if record.move_id and record.move_id.state == 'cancel':
                 return True
         return False
+    
+    def get_phantom_bom_id(self, cr, uid, ids, context=None):
+        return False
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms procurement and writes exception message if any.
