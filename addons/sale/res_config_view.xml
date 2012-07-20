@@ -9,7 +9,6 @@
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <div name="config_sale" position="before">
-                    <div>
                         <separator string="Invoicing Process"/>
                         <group>
                             <label for="id" string="Invoicing Process"/>
@@ -49,7 +48,6 @@
                                 </div>
                             </div>
                         </group>
-                    </div>
                     <field name="module_project_timesheet" invisible="1"/>
                     <field name="module_project_mrp" invisible="1"/>
                     <separator string="Quotations and Sales Orders" col="1"/>
