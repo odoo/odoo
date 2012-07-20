@@ -24,8 +24,9 @@ from tools.translate import _
 
 class res_users(osv.osv):
     """ Update of res.users class
-        - add a preference about sending emails about notificatoins
+        - add a preference about sending emails about notifications
         - make a new user follow itself
+        - add a welcome message
     """
     _name = 'res.users'
     _inherit = ['res.users', 'mail.thread']
@@ -61,11 +62,10 @@ class res_users(osv.osv):
         user = self.browse(cr, uid, [user_id], context=context)[0]
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
-        # create a welcome message to broadcast
+        # create a welcome message
         company_name = user.company_id.name if user.company_id else 'the company'
-        message = _('%s has joined %s! You may leave him/her a message to celebrate a new arrival in the company ! You can help him/her doing its first steps on OpenERP.') % (user.name, company_name)
-        # TODO: clean the broadcast feature. As this is not cleany specified, temporarily remove the message broadcasting that is not buggy but not very nice.
-        #self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
+        message = _('%s has joined %s! Welcome in OpenERP !') % (user.name, company_name)
+        self.message_append_note(cr, uid, [user_id], subject='Welcom to OpenERP', body=message, type='comment', context=context)
         return user_id
 
     def message_search_get_domain(self, cr, uid, ids, context=None):
