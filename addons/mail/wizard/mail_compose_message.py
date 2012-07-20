@@ -136,6 +136,8 @@ class mail_compose_message(osv.TransientModel):
             'email_from': user.user_email or tools.config.get('email_from', False),
             'body_html': False,
             'body_text': False,
+            'subject': False,
+            'dest_partner_ids': [],
         })
         return result
 
@@ -263,6 +265,7 @@ class mail_compose_message(osv.TransientModel):
             subject = mail_wiz.subject if formatting else False
             content_subtype = 'html' if formatting else 'plain'
             type = 'email' if email_mode else 'comment'
+            state = 'outgoing' if email_mode else False
             partner_ids = [partner.id for partner in mail_wiz.dest_partner_ids]
             references = None
             headers = {}
@@ -298,7 +301,7 @@ class mail_compose_message(osv.TransientModel):
                     # processed as soon as the mail scheduler runs.
                     if mail_thread_enabled:
                         active_model_pool.message_append(cr, uid, [active_id], rendered_subject, rendered_body_text, rendered_body_html,
-                            type=type, content_subtype=content_subtype, state='outgoing', partner_ids=partner_ids,
+                            type=type, content_subtype=content_subtype, state=state, partner_ids=partner_ids,
                             email_from=email_from, email_to=email_to, email_cc=email_cc, email_bcc=email_bcc,
                             reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
                     else:
@@ -310,16 +313,17 @@ class mail_compose_message(osv.TransientModel):
                 # normal mode - no mass-mailing
                 if mail_thread_enabled:
                     msg_ids = active_model_pool.message_append(cr, uid, active_ids, subject, mail_wiz.body_text, mail_wiz.body_html,
-                        type=type, content_subtype=content_subtype, state='outgoing', partner_ids=partner_ids,
+                        type=type, content_subtype=content_subtype, state=state, partner_ids=partner_ids,
                         email_from=mail_wiz.email_from, email_to=mail_wiz.email_to, email_cc=mail_wiz.email_cc, email_bcc=mail_wiz.email_bcc,
                         reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context)
                 else:
                     msg_ids = [mail_message_obj.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), subject, mail_wiz.body_text,
-                        model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), email_bcc=to_email(mail_wiz.email_bcc), reply_to=mail_wiz.reply_to,
+                        type=type, model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), email_bcc=to_email(mail_wiz.email_bcc), reply_to=mail_wiz.reply_to,
                         attachments=attachment, references=references, res_id=int(mail_wiz.res_id), partner_ids=partner_ids,
                         content_subtype=mail_wiz.content_subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
-                mail_message_obj.send(cr, uid, msg_ids, context=context)
+                if type == 'email':
+                    mail_message_obj.send(cr, uid, msg_ids, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
