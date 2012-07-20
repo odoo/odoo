@@ -9,8 +9,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Post Journal Entries" version="7.0">
-                    <separator string="Post Journal Entries of a Journal"/>
-                    <label string="All draft account entries in this journal and period will be validated. It means you won't be able to modify their accounting fields anymore."/>
                     <group>
                         <field name="journal_id"/>
                         <field name="period_id"/>
@@ -25,7 +23,7 @@
         </record>
 
         <record id="action_validate_account_move" model="ir.actions.act_window">
-            <field name="name">Open Journal</field>
+            <field name="name">Post Journal Entries</field>
             <field name="res_model">validate.account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
