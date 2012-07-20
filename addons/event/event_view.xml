@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-      <act_window
+        <act_window
             id="act_event_list_register_event"
             name="Registration"
             res_model="event.registration"
@@ -9,12 +9,16 @@
             view_mode="calendar,tree,form,graph"
             context="{'search_default_event_id': active_id, 'default_event_id': active_id}"
             view_type="form"/>
-        <menuitem  name="Events" id="event_main_menu"/>
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
 
-    <!-- EVENTS  -->
+        <!-- Top menu item -->
+        <menuitem name="Events"
+            id="event_main_menu"
+            sequence="80"/>
+        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu"/>
 
-    <!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
+        <!-- EVENTS  -->
+
+        <!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
         <record model="ir.ui.view" id="view_event_type_form">
             <field name="name">Event type</field>
             <field name="model">event.type</field>
@@ -52,7 +56,7 @@
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
 
-    <!-- Events Organisation/CONFIGURATION/EVENTS -->
+        <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
         <!-- Event Read/Unread actions -->
         <record id="actions_server_event_event_unread" model="ir.actions.server">
@@ -111,7 +115,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                        </div> 
+                        </div>
                         <div>
                             <h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
                             </h2>
@@ -151,7 +155,7 @@
                                     </group>
                                     <group>
                                         <field name="register_attended"/>
-                                    </group> 
+                                    </group>
                                 </group>
                                 <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                                     <tree string="Registration" editable="top">
@@ -222,7 +226,7 @@
 
         <!-- Event Kanban View -->
 
-    <record model="ir.ui.view" id="view_event_kanban">
+        <record model="ir.ui.view" id="view_event_kanban">
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="type">kanban</field>
@@ -286,7 +290,7 @@
             </field>
         </record>
 
-      <!-- Events  Calendar  View -->
+        <!-- Events  Calendar  View -->
 
         <record id="view_event_calendar" model="ir.ui.view">
             <field name="name">event.event.calendar</field>
@@ -316,7 +320,7 @@
             </field>
         </record>
 
-    <!-- Event Search View -->
+        <!-- Event Search View -->
 
         <record model="ir.ui.view" id="view_event_search">
             <field name="name">Events</field>
@@ -357,7 +361,7 @@
 
 
         <!-- Events Organisation/CONFIGURATION/EVENTS  -->
-       <record model="ir.actions.act_window" id="action_event_view">
+        <record model="ir.actions.act_window" id="action_event_view">
            <field name="name">Events</field>
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
@@ -366,9 +370,9 @@
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
-       </record>
+        </record>
 
-      <act_window
+        <act_window
             id="act_register_event_partner"
             name="Subscribe"
             res_model="event.registration"
@@ -377,9 +381,9 @@
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             view_type="form"/>
 
-       <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
+        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
 
-    <!-- EVENTS/REGISTRATIONS/EVENTS  -->
+        <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
         <!-- Registration Read/Unread actions -->
         <record id="actions_server_event_registration_unread" model="ir.actions.server">
