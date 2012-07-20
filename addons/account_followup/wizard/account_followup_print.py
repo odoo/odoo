@@ -31,7 +31,7 @@ class account_followup_print(osv.osv_memory):
     _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
-        'followup_id': fields.many2one('account_followup.followup', 'Follow-up', required=True),
+        'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True),
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -121,10 +121,10 @@ class account_followup_print_all(osv.osv_memory):
     _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
         'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
-        'email_conf': fields.boolean('Send email confirmation'),
+        'email_conf': fields.boolean('Send Email Confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
-        'email_body': fields.text('Email body'),
+        'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', required=True, readonly=True),
         'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.')
     }
