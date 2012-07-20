@@ -313,12 +313,12 @@ class res_partner(osv.osv):
               Raoul Grosbedon, and set its email to raoul@grosbedon.fr
             - anything else: fall back on the default name_create
             Regex :
-            - ([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}): raoul@grosbedon.fr
-            - ([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})[\>]:
+            - ([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8}): raoul@grosbedon.fr
+            - ([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]:
               Raoul Grosbedon, raoul@grosbedon.fr
         """
-        contact_regex = re.compile('([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})[\>]')
-        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})')
+        contact_regex = re.compile('([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]')
+        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})')
         contact_regex_res = contact_regex.findall(name)
         email_regex_res = email_regex.findall(name)
         if contact_regex_res:
