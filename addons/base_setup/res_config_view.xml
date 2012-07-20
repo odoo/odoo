@@ -6,31 +6,46 @@
             <field name="model">base.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="General Settings" version="7.0">
+                <form string="General Settings" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+                    <separator string="Company Settings"/>
                     <group>
-                        <group string="Company Settings">
-                            <field name="module_multi_company"/>
-                            <separator string="External Accesses" colspan="2"/>
-                            <field name="module_share"/>
-                            <field name="module_portal"/>
-                        </group>
-                        <group>
+                        <label for="id" string="Company"/>
+                        <div>
                             <div>
-                                You will also find several configuration options on your company data:
-                                address for the header and footer, overdue payments texts, etc.
+                                <field name="module_multi_company" class="oe_inline"/>
+                                <label for="module_multi_company"/>
                             </div>
-                            <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
-                            <separator string="Others" colspan="2"/>
-                            <label for="id" string="Outgoing Mail Servers"/>
-                            <button type="action" name="%(base.action_ir_mail_server_list)d"
-                            string="Configure" icon="gtk-execute"/>
-                        </group>
-                        
+                            <div>
+                                <label string="You will also find several configuration options on your company data:
+                                    address for the header and footer, overdue payments texts, etc."/>
+                                <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute" class="oe_inline oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="External Accesses"/>
+                    <group>
+                        <label for="id" string="External Accesses"/>
+                        <div>
+                            <div>
+                                <field name="module_share" class="oe_inline"/>
+                                <label for="module_share"/>
+                            </div>
+                            <div>
+                                <field name="module_portal" class="oe_inline"/>
+                                <label for="module_portal"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Others"/>
+                    <group>
+                        <label for="id" string="Outgoing Mail Servers"/>
+                        <button type="action" name="%(base.action_ir_mail_server_list)d"
+                            string="Configure" icon="gtk-execute" class="oe_link"/>
                     </group>
                 </form>
             </field>
