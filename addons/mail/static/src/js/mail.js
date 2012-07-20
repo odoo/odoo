@@ -319,11 +319,11 @@ openerp.mail = function(session) {
         reinit: function() {
             var self = this;
             if (! this.form_view) return;
-            // debugger
             var call_defer = this.ds_compose.call('default_get', [['subject', 'body_text', 'body_html', 'dest_partner_ids'], this.ds_compose.get_context()]).then(
                 function (result) {
                     self.form_view.on_processed_onchange({'value': result}, []);
                 });
+            return call_defer;
         },
 
         /**
@@ -586,11 +586,7 @@ openerp.mail = function(session) {
 
         do_customize_display: function() {
             if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_action').eq(0).show(); }
-            if (this.session.debug) {
-                this.$element.find('ul.oe_mail_debug').toggleClass('oe_mail_invisible');
-            }
         },
-
 
         /**
          * Bind events in the widget. Each event is slightly described
@@ -654,12 +650,6 @@ openerp.mail = function(session) {
                 var formatting = (event.srcElement.dataset.formatting == 'html');
                 if (! msg_id) return false;
                 self.instantiate_composition_form('reply', email_mode, formatting, msg_id);
-                event.preventDefault();
-            });
-            // event: click on "Debug data" in msg side menu (email style)
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_debug', 'click', function (event) {
-                var act_dom = $(event.srcElement).parents('div.oe_mail_msg_content').find('ul.oe_mail_debug');
-                act_dom.toggleClass('oe_mail_invisible');
                 event.preventDefault();
             });
         },

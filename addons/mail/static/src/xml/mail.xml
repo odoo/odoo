@@ -136,7 +136,6 @@
                         </li> -->
                         <li><a href="#" t-attf-data-msg_id="{record.id}" t-attf-data-type="{record.type}" t-attf-data-formatting="{record.content_subtype}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
                         <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
-                        <li><a href="#" class="oe_mail_msg_debug">Debug data</a></li>
                     </ul>
                 </span>
                 <!-- message itself -->
@@ -147,27 +146,12 @@
                     <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
                         <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a>
                     </div>
-                    <ul class="oe_mail_invisible oe_mail_debug">
-                        <li>document: (<t t-raw="record.model"/>,<t t-raw="record.res_id"/>)</li>
-                        <li>id: <t t-raw="record.id"/></li>
-                        <li>type: <t t-raw="record.type"/></li>
-                        <li>content_subtype: <t t-raw="record.content_subtype"/></li>
-                        <li>state: <t t-raw="record.state"/></li>
-                        <li>parent_id: <t t-raw="record.parent_id"/></li>
-                        <li>email_from: <t t-raw="record.email_from"/></li>
-                        <li>email_to: <t t-raw="record.email_to"/></li>
-                        <li>email_cc: <t t-raw="record.email_cc"/></li>
-                        <li>email_bcc: <t t-raw="record.email_bcc"/></li>
-                        <li>reply_to: <t t-raw="record.reply_to"/></li>
-                        <li>partner_ids: <t t-raw="record.partner_ids"/></li>
-                        <li t-if="record.type == 'email'">message_id: <t t-raw="record.message_id"/></li>
-                        <li t-if="record.type == 'email'">references: <t t-raw="record.references"/></li>
-                    </ul>
                     <div class="oe_clear"/>
                     <div class="oe_mail_msg_body">
                         <a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a>
                         <div class="oe_mail_msg_record_body"><t t-raw="record.body"/></div>
                     </div>
+                    <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
