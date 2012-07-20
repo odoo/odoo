@@ -22,6 +22,7 @@ import pdb
 import io
 import openerp
 import addons
+import openerp.addons.product.product
 
 import time
 from datetime import datetime
@@ -142,8 +143,6 @@ class pos_config(osv.osv):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
-
-pos_config()
 
 class pos_session(osv.osv):
     _name = 'pos.session'
@@ -424,8 +423,6 @@ class pos_session(osv.osv):
             'tag' : 'pos.ui',
             'context' : context,
         }
-
-pos_session()
 
 class pos_order(osv.osv):
     _name = "pos.order"
@@ -1038,8 +1035,6 @@ class pos_order(osv.osv):
         self.create_account_move(cr, uid, ids, context=context)
         return True
 
-pos_order()
-
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
     _columns= {
@@ -1138,8 +1133,6 @@ class pos_order_line(osv.osv):
         })
         return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
-pos_order_line()
-
 class pos_category(osv.osv):
     _name = 'pos.category'
     _description = "Point of Sale Category"
@@ -1211,12 +1204,24 @@ class pos_category(osv.osv):
     #    'category_image': _get_default_image,
     #}
 
-pos_category()
-
 import io, StringIO
+
+class ean_wizard(osv.osv_memory):
+    _name = 'pos.ean_wizard'
+    _columns = {
+        'ean13_pattern': fields.char('Ean13 Pattern', size=32, required=True, translate=True),
+    }
+    def sanitize_ean13(self, cr, uid, ids, context):
+        for r in self.browse(cr,uid,ids):
+            ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
+            m = context.get('active_model')
+            m_id =  context.get('active_id')
+            self.pool.get(m).write(cr,uid,[m_id],{'ean13':ean13})
 
 class product_product(osv.osv):
     _inherit = 'product.product'
+
+
     def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
         result = {}
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1247,7 +1252,16 @@ class product_product(osv.osv):
         'to_weight' : False,
     }
 
-product_product()
-
+    def add_ean13(self, cr, uid, ids, context):
+        return {
+            'name': _('Return Products'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.ean_wizard',
+            'target' : 'new',
+            'view_id': False,
+            'context':context,
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

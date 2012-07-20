@@ -63,6 +63,18 @@ def check_ean(eancode):
         return False
     return ean_checksum(eancode) == int(eancode[-1])
 
+def sanitize_ean13(ean13):
+    """Creates and returns a valid ean13 from an invalid one"""
+    if not ean13:
+        return "0000000000000"
+    ean13 = re.subs("[A-Za-z]","0",ean13);
+    ean13 = re.subs("[^0-9]","",ean13);
+    ean13 = ean13[:13]
+    if len(ean13) < 13:
+        ean13 = ean13 + '0' * (13-len(ean13))
+    ean13[-1] = openerp.addons.product.product.ean_checksum(ean13)
+    return ean13
+
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -567,6 +579,7 @@ class product_product(osv.osv):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
             res = check_ean(product['ean13'])
         return res
+
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
