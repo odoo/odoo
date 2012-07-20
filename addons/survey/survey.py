@@ -45,6 +45,10 @@ class survey(osv.osv):
     _description = 'Survey'
     _rec_name = 'title'
 
+    def notify_survey_attempt(self, ids=False, args=None):
+        print "How it works !!!"
+        return True
+
     def default_get(self, cr, uid, fields, context=None):
         data = super(survey, self).default_get(cr, uid, fields, context)
         return data
@@ -569,7 +573,6 @@ class survey_answer(osv.osv):
                 where question_id = %d and state = 'done'"\
                      % (rec.id, rec.question_id.id))
             res = cr.fetchone()
-            print("Records>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             if res[0]:
                 avg = float(res[1]) * 100 / res[0]
             else:
