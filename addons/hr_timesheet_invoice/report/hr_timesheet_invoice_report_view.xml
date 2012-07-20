@@ -46,29 +46,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
-                    <group>
-                      <filter icon="terp-personal"
-                              string="Non Assigned timesheets to users"
-                              help="Non Assigned timesheets to users"
-                              domain="[('user_id','=',False)]"/>
-                      <separator orientation="vertical"/>
-                      <field name="user_id" widget="selection"/>
-                      <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                      <field name="product_id"/>
-                    </group>
-                    <newline/>
+                    <field name="user_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="product_id"/>
+                    <filter icon="terp-personal" string="Non Assigned timesheets to users" help="Non Assigned timesheets to users" domain="[('user_id','=',False)]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <field name="invoice_id" widget="selection"/>
+                        <field name="invoice_id"/>
                     </group>
                     <group expand="1" string="Group By...">
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                         <filter string="Invoice" icon="terp-dolar" context="{'group_by':'invoice_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
@@ -149,12 +139,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
-                    <group>
-                        <field name="name" string="Timesheet by users"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_id"/>
-                        <field name="month"/>
-                    </group>
+                    <field name="name" string="Timesheet by users"/>
+                    <field name="user_id"/>
+                    <field name="month"/>
                 </search>
             </field>
         </record>
@@ -201,7 +188,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by invoice">
-                    <separator orientation="vertical"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="manager_id"/>
                     <field name="user_id"/>
@@ -282,13 +268,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
-                    <group>
-                        <field name="name" string="Timesheet by account"/>
-                        <separator orientation="vertical"/>
-                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                        <field name="user_id"/>
-                        <field name="month"/>
-                    </group>
+                    <field name="name" string="Timesheet by account"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
+                    <field name="month"/>
                 </search>
             </field>
         </record>
@@ -351,13 +334,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by account">
-                    <group>
-                        <field name="name" string="Timesheet by account"/>
-                        <separator orientation="vertical"/>
-                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                        <field name="user_id"/>
-                        <field name="month"/>
-                    </group>
+                    <field name="name" string="Timesheet by account"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
+                    <field name="month"/>
                 </search>
             </field>
         </record>
