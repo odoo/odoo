@@ -28,8 +28,8 @@
 French Payroll Rules.
 =====================
 
-    - Configuration of hr_payroll for french localization
-    - All main contributions rules for french payslip, for 'cadre' and 'non-cadre'
+    - Configuration of hr_payroll for French localization
+    - All main contributions rules for French payslip, for 'cadre' and 'non-cadre'
     - New payslip report
 
 TODO :

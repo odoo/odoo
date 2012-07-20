@@ -40,7 +40,7 @@ LDAP servers, as long as they have unique usernames (usernames need to be unique
 in OpenERP, even across multiple companies).
 
 Anonymous LDAP binding is also supported (for LDAP servers that allow it), by
-simpling keeping the LDAP user and password empty in the LDAP configuration.
+simply keeping the LDAP user and password empty in the LDAP configuration.
 This does not allow anonymous authentication for users, it is only for the master
 LDAP account that is used to verify if a user exists before attempting to
 authenticate it.

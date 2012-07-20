@@ -34,7 +34,7 @@ A supplier invoice is created for the particular purchase order.
 Dashboard for purchase management that includes:
 ------------------------------------------------
     * Request for Quotations
-    * Monthly Purchasess by Category
+    * Monthly Purchases by Category
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

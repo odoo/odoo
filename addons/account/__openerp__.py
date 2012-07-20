@@ -29,7 +29,7 @@ Accounting and Financial Management.
 
 Financial and accounting module that covers:
 --------------------------------------------
-    * General accountings
+    * General Accounting
     * Cost/Analytic accounting
     * Third party accounting
     * Taxes management

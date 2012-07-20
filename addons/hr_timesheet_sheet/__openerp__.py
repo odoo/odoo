@@ -29,7 +29,7 @@
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
 
-    * It will mentain attendances and track (sign in/sign out) events.
+    * It will maintain attendances and track (sign in/sign out) events.
     * Track the timesheet lines.
 
 Other tabs contains statistics views to help you analyse your
