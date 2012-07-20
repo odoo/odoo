@@ -368,7 +368,7 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <field name="subflow_id" position="after">
-                <field name="directory_id" domain="[('ressource_type_id','=',model_id),('ressource_parent_type_id','=',False)]"/>
+                <field name="directory_id" string="Document Directory" domain="[('ressource_type_id','=',model_id),('ressource_parent_type_id','=',False)]"/>
                 <newline/>
             </field>
         </field>

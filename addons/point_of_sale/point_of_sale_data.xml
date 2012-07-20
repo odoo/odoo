@@ -3,15 +3,9 @@
     <data>
 
 
-        <menuitem
-            id="stock.next_id_61"
-            name="Reporting"
-            parent="stock.menu_stock_root" groups="base.group_user"/>
-
-        <menuitem action="stock.action_picking_tree" id="stock.menu_action_picking_tree"
-            parent="stock.menu_stock_root" sequence="19" groups="res_groups_posuser0"/>
-        <menuitem parent="stock.next_id_61" action="stock.action_stock_line_date"
-            id="stock.menu_report_stock_line_date" groups="base.group_user"/>
+        <record model="pos.config" id="pos_config_main">
+            <field name="name">Main PoS</field>
+        </record>
 
     </data>
 </openerp>

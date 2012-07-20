@@ -8,18 +8,17 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
-           <xpath expr="//field[@name='workcenter_lines']/form//field[@name='hour']" position="after">
-               <group colspan="8" col="8">
-                   <separator colspan="8"/>
-                   <field name="state"/>
-                   <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
-                   <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
-                   <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
-                   <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
-                   <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
-                   <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
-               </group>
-           </xpath>
+            <xpath expr="//field[@name='workcenter_lines']/form//field[@name='name']" position="before">
+                <header colspan="8">
+                    <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
+                    <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
+                    <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
+                    <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
+                    <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+                    <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+            </xpath>
         </field>
     </record>
 
@@ -80,7 +79,7 @@
             <sheet string="Work Orders">
                 <group col="4">
                     <field colspan="4" name="name"/>
-                    <field name="workcenter_id" widget="selection"/>
+                    <field name="workcenter_id"/>
                     <field name="production_id"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
@@ -111,9 +110,9 @@
                 </page>
                 </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
     </record>
@@ -351,7 +350,7 @@
         <field name="model">mrp.production</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <field name="priority" position="after">
+            <field name="date_finished" position="after">
                 <field name="allow_reorder"/>
             </field>
         </field>

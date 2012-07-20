@@ -51,7 +51,7 @@
             <field name="src_model">res.partner</field>
             <field name="res_model">crm.meeting</field>
             <field name="view_mode">calendar,tree,form,gantt</field>
-            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="context">{'search_default_partner_ids': active_id}</field>
         </record>
 
         <!-- open opportunities related to given partner -->
@@ -107,11 +107,11 @@
                     <field name="meeting_count"/>
                 </field>
                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                    <a name="%(relate_partner_opportunities)d" type="action">
-                        <t t-if="record.opportunity_count.value"><t t-esc="record.opportunity_count.value"/> Opportunities</t>
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0" class="oe_tag">
+                        <t t-esc="record.opportunity_count.value"/> Opportunities
                     </a>
-                    <a name="%(crm_meeting_partner)d" type="action">
-                        <t t-if="record.meeting_count.value"><t t-esc="record.meeting_count.value"/> Meetings</t>
+                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0" class="oe_tag">
+                        <t t-esc="record.meeting_count.value"/> Meetings
                     </a>
                 </xpath>
             </field>
@@ -123,12 +123,13 @@
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
                         string="Schedule a Meeting"
                         name="%(base_calendar.action_crm_meeting)d"
-                        context="{'search_default_partner_id': active_id, 'default_duration': 4.0}"/>
+                        context="{'search_default_partner_ids': active_id}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />

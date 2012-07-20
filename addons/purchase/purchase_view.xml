@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3"
-           groups="group_purchase_manager,group_purchase_user"
-           web_icon="images/purchases.png"
-           web_icon_hover="images/purchases-hover.png"/>
-       <menuitem id="menu_procurement_management" name="Purchase"
+
+        <!-- Top menu item -->
+        <menuitem name="Purchases"
+            id="base.menu_purchase_root"
+            groups="group_purchase_manager,group_purchase_user"
+            sequence="40"/>
+        <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
@@ -214,41 +216,38 @@
                                     <field name="product_qty"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="price_subtotal"/>  
+                                    <field name="price_subtotal"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
-                                <div class="oe_subtotal_footer_separator oe_inline" colspan="2">
-                                    <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute" class="oe_inline oe_left"/>
-                                    <field name="amount_total"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+				    <label for="amount_total"/>
+                                    <button name="button_dummy"
+				    	states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                 </div>
-                            </group>                         
+			        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
+                            </group>
                             <div class="oe_clear"/>
                             <label for="notes"/>
                             <field name="notes"/>
                         </page>
                         <page string="Delivery &amp; Invoicing">
                             <group>
-                                <group string="Delivery">
+                                <group>
                                     <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>
                                 </group>
                                 <group>
-                                    <field name="validator" groups="base.group_no_one"/>
-                                    <field name="date_approve"/>
-                                </group>
-                            </group>
-                            <group string="Invoicing">
-                                <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
-                                </group>
-                                <group>
                                     <field name="fiscal_position"/>
+				    <!-- we do not need these fields anymore, the information is in open chatter -->
+                                    <field name="validator" groups="base.group_no_one"/>
+                                    <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
                             <separator string="Invoices"/>
@@ -256,9 +255,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                    <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -395,31 +394,29 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
+                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                 <label for="product_qty"/>
                                 <div>
-                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
-                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" class="oe_inline"/>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)" class="oe_inline"/>
                                 </div>
                                 <field name="price_unit"/>
-                                <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/> 
                             </group>
                             <group>
-                                <field name="name"/>
+                                <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date"/>
                                 <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
-                            <group string="Notes" colspan="4">
-                                <field name="notes" nolabel="1" placeholder="Add a note on the purchase line..."/>
-                            </group>
-                            <group string="Invoices" colspan="4">
-                                <field name="invoice_lines" nolabel="1"/>
-                            </group>
-                            <group string="Stock Moves" colspan="4">
-                                <field name="move_ids" nolabel="1"/>
-                            </group>
                         </group>
+                        <notebook>
+                        <page string="Notes">
+                            <field name="name"/>
+                        </page><page string="Invoices and Receptions">
+                            <field name="invoice_lines"/>
+                            <field name="move_ids"/>
+                        </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -456,14 +453,13 @@
                         <label for="order_id" class="oe_edit_only"/>
                         <h1>
                             <field name="order_id" class="oe_inline"/>
-                            <label string="," attrs="{'invisible':[('date_order','=',False)]}"/> 
+                            <label string="," attrs="{'invisible':[('date_order','=',False)]}"/>
                             <field name="date_order" class="oe_inline"/>
                         </h1>
                         <label for="partner_id" class="oe_edit_only"/>
                         <h2><field name="partner_id"/></h2>
                         <group>
                             <group>
-                                <field name="name"/>
                                 <field name="product_id" readonly="1"/>
                                 <label for="product_qty"/>
                                 <div>
@@ -473,18 +469,17 @@
                                 <field name="price_unit"/>
                             </group>
                             <group>
+                                <field name="taxes_id" widget="many2many_tags"
+                                    domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                                <field name="taxes_id" widget="many2many_tags"
-                                    domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="invoiced"/>
                             </group>
                         </group>
+                        <field name="name"/>
                         <separator string="Manual Invoices"/>
                         <field name="invoice_lines"/>
-                        <separator string="Notes"/>
-                        <field name="notes"/>
                         <separator string="Stock Moves"/>
                         <field name="move_ids"/>
                     </sheet>

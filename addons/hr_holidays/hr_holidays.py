@@ -265,7 +265,7 @@ class hr_holidays(osv.osv):
                 meeting_obj = self.pool.get('crm.meeting')
                 meeting_vals = {
                     'name': record.name,
-                    'categ_id': record.holiday_status_id.categ_id.id,
+                    'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
                     'description': record.name,
                     'user_id': record.user_id.id,
@@ -409,7 +409,7 @@ class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"
     _description = "Leave Detail"
     _columns = {
-        'holiday_id': fields.many2one("hr.holidays", "Holiday"),
+        'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
 resource_calendar_leaves()

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:26+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -27,11 +27,13 @@ msgstr "Configuration de l'application de séquencement comptable"
 msgid ""
 "You can not create more than one move per period on centralized journal"
 msgstr ""
+"Vous ne pouvez pas créer plus d'un mouvement par période dans un journal "
+"centralisateur"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "La société doit être la même pour son compte et la période liée."
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -107,7 +109,7 @@ msgstr "Nombre interne"
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Vous ne pouvez pas passer d'écriture sur un compte de type 'vue'"
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -126,7 +128,7 @@ msgstr "Nom"
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Vous ne pouvez pas passer d'écritures sur un compte clôturé."
 
 #. module: account_sequence
 #: constraint:account.journal:0
@@ -134,6 +136,8 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Problème de configuration: la devise choisie devrait être celle des comptes "
+"par défaut."
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -182,6 +186,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
+"devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
+"sélectionner une vue multi-devise sur le journal."
 
 #. module: account_sequence
 #: constraint:account.move.line:0
@@ -189,6 +196,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"La date de votre écriture ne correspond pas à la période définie! Vous devez "
+"modifier la date ou supprimer la contrainte de date du journal."
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0

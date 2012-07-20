@@ -143,9 +143,9 @@
                             <field name="name" nolabel="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" placeholder="Add a reason..."/>
                     </group>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -183,9 +183,9 @@
                     </group>
                     <field name="name" placeholder="Add a reason..."/>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -490,7 +490,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
             <field name="arch" type="xml">
-                <field name="date_to" position="after">
+                <field name="name" position="after">
                     <field name="holiday_id"/>
                 </field>
             </field>
