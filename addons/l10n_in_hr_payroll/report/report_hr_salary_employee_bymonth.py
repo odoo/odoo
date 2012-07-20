@@ -69,7 +69,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         return [mnth_name]
 
     def get_employee(self, form):
-        list1=[]
+        list1 = []
         list = []
         total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp_obj = self.pool.get('hr.employee')
