@@ -78,6 +78,9 @@ send an Email to Invited Person')
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, uid, uid, context=context)
+
+        import pdb
+        pdb.set_trace()
         for datas in self.read(cr, uid, ids, context=context):
             type = datas.get('type')
             vals = []
