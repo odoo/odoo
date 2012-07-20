@@ -3351,15 +3351,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
-        action = {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'board.board',
-            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'board_account_form')[1],
-            'menu_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'menu_finance')[1]
-        }
-        return action
+        return {}
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
         '''
