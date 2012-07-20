@@ -482,6 +482,7 @@ class module(osv.osv):
             'application': terp.get('application', False),
             'auto_install': terp.get('auto_install', False),
             'icon': terp.get('icon', False),
+            'summary': terp.get('summary', ''),
         }
 
     # update the list of available packages
