@@ -20,26 +20,56 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+                    <separator string="Additional Features"/>
                     <group>
-                        <group string="Additional Features" name="left_column">
-                            <field name="module_hr_expense"/>
-                            <field name="module_hr_evaluation"/>
-                            <field name="module_hr_holidays"/>
-                            <field name="module_hr_recruitment"/>
-                            <field name="module_hr_contract"/>
-                            <label for="module_hr_payroll"/>
+                        <label for="id" string="Additional Features"/>
+                        <div>
                             <div>
-                                <field name="module_hr_payroll"/>
+                                <field name="module_hr_expense" class="oe_inline"/>
+                                <label for="module_hr_expense"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_evaluation" class="oe_inline"/>
+                                <label for="module_hr_evaluation"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_holidays" class="oe_inline"/>
+                                <label for="module_hr_holidays"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_recruitment" class="oe_inline"/>
+                                <label for="module_hr_recruitment"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_contract" class="oe_inline"/>
+                                <label for="module_hr_contract"/>
+                            </div>
+                            <div name="hr_payroll">
+                                <field name="module_hr_payroll" class="oe_inline"/>
+                                <label for="module_hr_payroll"/>
                                 <button name="%(open_payroll_modules)d" type="action"
                                     string="Install Country-Specific Payroll" icon="gtk-go-forward"
-                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
+                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}" class="oe_link"/>
                             </div>
-                        </group>
-                        <group string="Timesheets" name="right_column">
-                            <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)"/>
-                            <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)"/>
-                            <field name="module_hr_timesheet_sheet"/>
-                        </group>
+                        </div>
+                    </group>
+                    <separator string="Timesheets"/>
+                    <group name="timesheet_grp">
+                        <label for="id" string="Timesheet Features"/>
+                        <div>
+                            <div>
+                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
+                                <label for="module_hr_attendance"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)" class="oe_inline"/>
+                                <label for="module_hr_timesheet"/>
+                            </div>
+                            <div name="hr_timesheet">
+                                <field name="module_hr_timesheet_sheet" class="oe_inline"/>
+                                <label for="module_hr_timesheet_sheet"/>
+                            </div>
+                        </div>
                     </group>
                 </form>
             </field>
