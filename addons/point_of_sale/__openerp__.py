@@ -25,7 +25,7 @@
     'version': '1.0.1',
     'category': 'Point Of Sale',
     "sequence": 6,
-    "summary": "Touchscreen to manage your shop",
+    "summary": "Touchscreen to Manage your Shop",
     'description': """
 This module provides a quick and easy sale process.
 ===================================================
