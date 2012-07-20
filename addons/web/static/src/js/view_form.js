@@ -1740,7 +1740,26 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
         this.datewidget = this.build_widget();
         this.datewidget.on_change.add_last(this.on_ui_change);
         this.datewidget.appendTo(this.$element);
-        this.setupFocus(this.datewidget.$input);
+
+        var in_picker = false;
+        this.datewidget.picker('option', 'beforeShow', function () {
+            in_picker = true;
+        });
+        this.datewidget.picker('option', 'onClose', function () {
+            in_picker = false;
+        });
+        this.datewidget.$input.bind({
+            focus: function () {
+                if (!in_picker) {
+                    $(self).trigger('widget-focus');
+                }
+            },
+            blur: function () {
+                if (!in_picker) {
+                    $(self).trigger('widget-blur');
+                }
+            }
+        });
     },
     set_value: function(value) {
         this._super(value);
