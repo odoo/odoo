@@ -58,7 +58,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         for count in range(0, no_months):
             m = datetime.date(current_year, current_month, 1).strftime('%b')
             mnth_name.append(m)
-            self.mnths.append(str(current_month)+'-'+str(current_year))
+            self.mnths.append(str(current_month) + '-' + str(current_year))
             if current_month == 12:
                 current_month = 0
                 current_year = last_year
@@ -88,8 +88,8 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
                             left join hr_payslip as p on pl.slip_id = p.id \
                             left join hr_employee as emp on emp.id = p.employee_id \
                             left join resource_resource as r on r.id = emp.resource_id  \
-                            where pl.code = 'NET' and p.state = 'done' and p.employee_id  = '''+str(emp_id.id)+''' \
-                            and to_char(date_to,'mm-yyyy') like '%'''+mnth+'''%'
+                            where pl.code = 'NET' and p.state = 'done' and p.employee_id  = ''' + str(emp_id.id) + ''' \
+                            and to_char(date_to,'mm-yyyy') like '%'''+ mnth +'''%'
                             group by r.name, p.date_to,emp.id''')
                     salary = self.cr.fetchall()
                     if salary:
