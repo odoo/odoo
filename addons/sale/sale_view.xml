@@ -1,6 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            groups="base.group_sale_salesman,base.group_sale_manager"
+            sequence="30"/>
+
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
 
@@ -196,7 +203,7 @@
                                         <group>
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                groups="base.group_user" 
+                                                groups="base.group_user"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
                                             <label for="product_uom_qty"/>
                                             <div>
