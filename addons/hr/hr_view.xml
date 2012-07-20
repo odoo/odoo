@@ -109,16 +109,13 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <field name="job_id" widget="selection"/>
+                    <field name="department_id" />
+                    <field name="job_id"/>
                     <field name="parent_id"/>
                     <field name="category_ids"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -418,16 +415,9 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test"
-                            domain="[('state','=','open')]"
-                            string="In Position"
-                            help="In Position"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
-                        help="In Recruitment"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <newline />
+                    <field name="department_id"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="In Position" help="In Position"/>
+                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment" help="In Recruitment"/>
                     <group expand="0" string="Group By...">
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
