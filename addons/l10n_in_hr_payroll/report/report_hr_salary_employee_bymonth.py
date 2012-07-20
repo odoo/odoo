@@ -38,7 +38,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         })
 
         self.context = context
-        self.mnths =[]
+        self.mnths = []
         self.mnths_total = []
         self.total=0.0
 
