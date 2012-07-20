@@ -40,7 +40,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         self.context = context
         self.mnths = []
         self.mnths_total = []
-        self.total=0.0
+        self.total = 0.0
 
     def get_periods(self, form):
 #       Get start year-month-date and end year-month-date
@@ -62,7 +62,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
             if current_month == 12:
                 current_month = 0
                 current_year = last_year
-            current_month = current_month +1
+            current_month = current_month + 1
         for c in range(0, (12-no_months)):
             mnth_name.append('None')
             self.mnths.append('None')
