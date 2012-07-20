@@ -2,8 +2,6 @@
 <openerp>
     <data>
 
-
-
         <!-- MEMBERSHIP -->
 
         <!-- MEMBERSHIP/MEMBERSHIP PRODUCTS -->
@@ -71,7 +69,7 @@
                             <group>
                                 <label for="membership_date_from" string="Membership Duration"/>
                                 <div>
-                                    <field name="membership_date_from" required="1" class="oe_inline"/> - 
+                                    <field name="membership_date_from" required="1" class="oe_inline"/> -
                                     <field name="membership_date_to" required="1" class="oe_inline"/>
                                 </div>
                                 <field name="list_price" string="Membership Fee"/>
@@ -282,7 +280,7 @@
         <!-- MEMBERSHIP/REPORTING -->
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
 
-<!-- View for product.product object inherited from product module................ -->
+        <!-- View for product.product object inherited from product module -->
         <record model="ir.ui.view" id="view_product_form_inherit1">
             <field name="name">product.normal.form</field>
             <field name="type">form</field>
