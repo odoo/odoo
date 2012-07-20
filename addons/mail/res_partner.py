@@ -33,7 +33,7 @@ class res_partner_mail(osv.osv):
         """
         initial_domain = super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
         if self._name == 'res.partner': # to avoid models inheriting from res.partner
-            search_domain = ['|'] + initial_domain + [('partner_ids', 'in', ids)]
+            search_domain = ['|'] + initial_domain + ['|', ('partner_id', 'in', ids), ('partner_ids', 'in', ids)]
         return search_domain
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
