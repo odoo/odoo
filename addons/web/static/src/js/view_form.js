@@ -3877,14 +3877,16 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     display_popup: function() {
         var self = this;
         this.renderElement();
-        new instance.web.Dialog(this, {
+        var dialog = new instance.web.Dialog(this, {
             min_width: '800px',
-        dialogClass: 'oe_act_window',
+            dialogClass: 'oe_act_window',
             close: function() {
                 self.check_exit(true);
             },
             title: this.options.title || "",
+            buttons: [{text:"tmp"}],
         }, this.$element).open();
+        this.$buttonpane = dialog.$element.dialog("widget").find(".ui-dialog-buttonpane").html("");
         this.start();
     },
     on_write_completed: function() {},
@@ -3900,16 +3902,18 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         if (this.row_id !== null) {
             options.initial_mode = this.options.readonly ? "view" : "edit";
         }
+        _.extend(options, {
+            $buttons: this.$buttonpane,
+        });
         this.view_form = new instance.web.FormView(this, this.dataset, false, options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$element.find(".oe_popup_form"));
         this.view_form.on_loaded.add_last(function() {
-            var $buttons = self.view_form.$element.find(".oe_form_buttons");
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
-            $buttons.html(QWeb.render("AbstractFormPopup.buttons", {multi_select: multi_select}));
-            var $snbutton = $buttons.find(".oe_abstractformpopup-form-save-new");
+            self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {multi_select: multi_select}));
+            var $snbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save-new");
             $snbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
                     self.view_form.reload_mutex.exec(function() {
@@ -3917,7 +3921,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
                     });
                 });
             });
-            var $sbutton = $buttons.find(".oe_abstractformpopup-form-save");
+            var $sbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save");
             $sbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
                     self.view_form.reload_mutex.exec(function() {
@@ -3925,7 +3929,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
                     });
                 });
             });
-            var $cbutton = $buttons.find(".oe_abstractformpopup-form-close");
+            var $cbutton = self.$buttonpane.find(".oe_abstractformpopup-form-close");
             $cbutton.click(function() {
                 self.check_exit();
             });
@@ -4034,6 +4038,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                         'selectable': !self.options.disable_multiple_selection,
                         'read_only': true,
                         'import_enabled': false,
+                        '$buttons': self.$buttonpane,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($(".oe_popup_list", self.$element)).pipe(function() {
@@ -4042,13 +4047,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.searchview.do_search();
             });
             self.view_list.on_loaded.add_last(function() {
-                var $buttons = self.view_list.$element.find(".oe-actions");
-                $buttons.prepend(QWeb.render("SelectCreatePopup.search.buttons"));
-                var $cbutton = $buttons.find(".oe_selectcreatepopup-search-close");
+                self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons"));
+                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-close");
                 $cbutton.click(function() {
                     self.destroy();
                 });
-                var $sbutton = $buttons.find(".oe_selectcreatepopup-search-select");
+                var $sbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-select");
                 if(self.options.disable_multiple_selection) {
                     $sbutton.hide();
                 }
