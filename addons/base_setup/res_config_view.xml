@@ -72,9 +72,9 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group name="config_sale" col="1">
+                    <div name="config_sale">
                         <field name="module_crm" invisible="1"/>
-                        <separator string="Emails Integration" col="1" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                        <separator string="Emails Integration" attrs="{'invisible': [('module_crm','=',False)]}"/>
                         <div style="color:grey" attrs="{'invisible': [('module_crm','=',False)]}">
                             The email integration allows ypu to autometically create leads or others documents from an incoming emails account.
                             Users can do it from the mail client by pressing a button or it can be configured to automatically synchronize from your mail server.
@@ -92,9 +92,9 @@
                                 </div>
                             </div>
                         </group>
-                    </group>
-                    <group name="config_other" col="1">
-                    </group>
+                    </div>
+                    <div name="config_other">
+                    </div>
                     
                 </form>
             </field>
