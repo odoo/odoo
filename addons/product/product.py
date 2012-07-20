@@ -30,15 +30,10 @@ from tools.translate import _
 def is_pair(x):
     return not x%2
 
-def check_ean(eancode):
-    if not eancode:
-        return True
+def ean_checksum(eancode):
+    """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
     if len(eancode) <> 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
+        return -1
     oddsum=0
     evensum=0
     total=0
@@ -54,10 +49,20 @@ def check_ean(eancode):
     total=(oddsum * 3) + evensum
 
     check = int(10 - math.ceil(total % 10.0)) %10
+    return check
 
-    if check != int(eancode[-1]):
+def check_ean(eancode):
+    """returns True if eancode is a valid ean13 string, or null"""
+    if not eancode:
+        return True
+    if len(eancode) <> 13:
         return False
-    return True
+    try:
+        int(eancode)
+    except:
+        return False
+    return ean_checksum(eancode) == int(eancode[-1])
+
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
