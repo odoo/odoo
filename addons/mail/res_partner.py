@@ -22,21 +22,18 @@
 from osv import osv
 from osv import fields
 
-class res_partner(osv.osv):
+class res_partner_mail(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
-    _columns = {
-        'emails': fields.one2many('mail.message', 'partner_id', 'Emails', readonly=True, domain=[('email_from','!=',False)]),
-    }
 
     def message_search_get_domain(self, cr, uid, ids, context=None):
         """ Override of message_search_get_domain for partner discussion page.
             The purpose is to add messages directly sent to the partner.
         """
-        initial_domain = super(res_partner, self).message_search_get_domain(cr, uid, ids, context=context)
+        initial_domain = super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
         if self._name == 'res.partner': # to avoid models inheriting from res.partner
-            search_domain = ['|'] + initial_domain + [('partner_id', 'in', ids)]
+            search_domain = ['|'] + initial_domain + [('partner_ids', 'in', ids)]
         return search_domain
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
