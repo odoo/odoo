@@ -1,19 +1,19 @@
 <template>
 <t t-name="DashBoard">
-    <div class="oe-dashboard-links">
-        <button type="button" class="button oe-dashboard-link-reset" title="Reset Layout.." t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
+    <div class="oe_dashboard_links">
+        <button type="button" class="button oe_dashboard_link_reset" title="Reset Layout.." t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
             <img src="/web_dashboard/static/src/img/layout_2-1.png" width="16" height="16"/>
             <span> Reset </span>
         </button>
-        <button type="button" class="button oe-dashboard-link-change_layout" title="Change Layout..">
+        <button type="button" class="button oe_dashboard_link_change_layout" title="Change Layout..">
             <img src="/web_dashboard/static/src/img/layout_1-1-1.png" width="16" height="16"/>
             <span> Change Layout </span>
         </button>
     </div>
-    <table t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}" cellspacing="0" cellpadding="0" border="0">
+    <table t-att-data-layout="node.attrs.style" t-attf-class="oe_dashboard oe_dashboard_layout_#{node.attrs.style}" cellspacing="0" cellpadding="0" border="0">
     <tr>
         <td t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
-             t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe-dashboard-column index_#{column_index}">
+             t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe_dashboard_column index_#{column_index}">
 
             <t t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
         </td>
@@ -21,20 +21,20 @@
     </table>
 </t>
 <t t-name="DashBoard.action">
-    <div t-att-data-id="action.attrs.name" class="oe-dashboard-action">
-        <h2 t-attf-class="oe-dashboard-action-header #{action.attrs.string ? '' : 'oe-dashboard-action-header-empty'}">
+    <div t-att-data-id="action.attrs.name" class="oe_dashboard_action">
+        <h2 t-attf-class="oe_dashboard_action_header #{action.attrs.string ? '' : 'oe_dashboard_action_header_empty'}">
             <t t-esc="action.attrs.string"/>
             <t t-if="!action.attrs.string">&amp;nbsp;</t>
             <button t-if="action.attrs.creatable and action.attrs.creatable !== 'false'" class="oe_button oe_dashboard_button_create">Create</button>
             <span class='ui-icon ui-icon-closethick'></span>
-            <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
-            <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>
+            <span class='ui-icon ui-icon-minusthick oe_dashboard_fold' t-if="!action.attrs.fold"></span>
+            <span class='ui-icon ui-icon-plusthick oe_dashboard_fold' t-if="action.attrs.fold"></span>
         </h2>
-        <div t-attf-id="#{view.element_id}_action_#{column_index}_#{action_index}" class="oe-dashboard-action-content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
+        <div t-attf-id="#{view.element_id}_action_#{column_index}_#{action_index}" class="oe_dashboard_action_content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
 <t t-name="DashBoard.layouts">
-    <div class="oe-dashboard-layout-selector">
+    <div class="oe_dashboard_layout_selector">
         <p>
             <strong>Choose dashboard layout</strong>
         </p>
@@ -42,13 +42,13 @@
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
                 <img t-attf-src="/web_dashboard/static/src/img/layout_#{layout}.png"/>
                 <img t-if="layout == current_layout"
-                    src="/web/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe-selected-layout"/>
+                    src="/web/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe_dashboard_selected_layout"/>
             </li>
         </ul>
     </div>
 </t>
 <t t-name="DashBoard.xml">
-    <form t-att-string="form_title">
+    <form t-att-string="form_title" version="7.0">
         <board t-att-style="style">
             <column t-foreach="columns" t-as="column">
                 <action t-foreach="column" t-as="action" t-att="action"/>
@@ -56,7 +56,7 @@
         </board>
     </form>
 </t>
-<div t-name="HomeWidget" class="oe-dashboard-home-widget"/>
+<div t-name="HomeWidget" class="oe_dashboard_home_widget"/>
 <t t-name="HomeWidget.content">
     <h3><t t-esc="widget.title"/></h3>
     <iframe width="100%" frameborder="0" t-att-src="url"/>

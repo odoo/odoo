@@ -99,7 +99,6 @@ openerp.web.corelib = function(instance) {
         for (var name in prop) {
             // Check if we're overwriting an existing function
             prototype[name] = typeof prop[name] == "function" &&
-                              typeof _super[name] == "function" &&
                               fnTest.test(prop[name]) ?
                     (function(name, fn) {
                         return function() {
@@ -1396,19 +1395,19 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         } else {
             // Indirect jsonp request
             var ifid = _.uniqueId('oe_rpc_iframe');
-            var display = options.openerp.debug ? 'block' : 'none';
+            var display = self.debug ? 'block' : 'none';
             var $iframe = $(_.str.sprintf("<iframe src='javascript:false;' name='%s' id='%s' style='display:%s'></iframe>", ifid, ifid, display));
             var $form = $('<form>')
                         .attr('method', 'POST')
                         .attr('target', ifid)
                         .attr('enctype', "multipart/form-data")
-                        .attr('action', ajax.url + '?' + $.param(data))
+                        .attr('action', ajax.url + '?jsonp=1&' + $.param(data))
                         .append($('<input type="hidden" name="r" />').attr('value', payload_str))
                         .hide()
                         .appendTo($('body'));
             var cleanUp = function() {
                 if ($iframe) {
-                    $iframe.unbind("load").attr("src", "javascript:false;").remove();
+                    $iframe.unbind("load").remove();
                 }
                 $form.remove();
             };

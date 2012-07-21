@@ -50,6 +50,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         this.calendar_fields = {};
         this.ids = this.dataset.ids;
         this.color_values = [];
@@ -119,13 +120,56 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
         scheduler.config.api_date = "%Y-%m-%d %H:%i";
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
-        scheduler.config.start_on_monday = true;
+        scheduler.config.start_on_monday = Date.CultureInfo.firstDayOfWeek !== 0; //Sunday = Sunday, Others = Monday
         scheduler.config.time_step = 30;
         scheduler.config.scroll_hour = 8;
         scheduler.config.drag_resize = true;
         scheduler.config.drag_create = true;
         scheduler.config.mark_now = true;
         scheduler.config.day_date = '%l %j';
+
+        scheduler.locale = {
+            date:{
+                month_full: Date.CultureInfo.monthNames,
+                month_short: Date.CultureInfo.abbreviatedMonthNames,
+                day_full: Date.CultureInfo.dayNames,
+                day_short: Date.CultureInfo.abbreviatedDayNames
+            },
+            labels:{
+                dhx_cal_today_button: _t("Today"),
+                day_tab: _t("Day"),
+                week_tab: _t("Week"),
+                month_tab: _t("Month"),
+                new_event: _t("New event"),
+                icon_save: _t("Save"),
+                icon_cancel: _t("Cancel"),
+                icon_details: _t("Details"),
+                icon_edit: _t("Edit"),
+                icon_delete: _t("Delete"),
+                confirm_closing: "",//Your changes will be lost, are your sure ?
+                confirm_deleting: _t("Event will be deleted permanently, are you sure?"),
+                section_description: _t("Description"),
+                section_time: _t("Time period"),
+                full_day: _t("Full day"),
+
+                /*recurring events*/
+                confirm_recurring: _t("Do you want to edit the whole set of repeated events?"),
+                section_recurring: _t("Repeat event"),
+                button_recurring: _t("Disabled"),
+                button_recurring_open: _t("Enabled"),
+
+                /*agenda view extension*/
+                agenda_tab: _t("Agenda"),
+                date: _t("Date"),
+                description: _t("Description"),
+
+                /*year view extension*/
+                year_tab: _t("Year"),
+
+                /* week agenda extension */
+                week_agenda_tab: _t("Agenda")
+            }
+        };
 
         scheduler.init(this.$element.find('.oe_calendar')[0], null, this.mode || 'month');
 
@@ -203,6 +247,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                     }
                     evt.color = filter_item.color;
                     evt.textColor = '#ffffff';
+                } else {
+                    evt.textColor = '#000000';
                 }
             }
 
@@ -225,22 +271,14 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var date_start = instance.web.str_to_datetime(evt[this.date_start]),
             date_stop = this.date_stop ? instance.web.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || 1.0,
-            res_text = '',
-            res_description = [];
+            res_text = '';
 
         if (this.info_fields) {
-            var fld = evt[this.info_fields[0]];
-            res_text = (typeof fld == 'object') ? fld[fld.length -1] : res_text = fld;
-
-            var sliced_info_fields = this.info_fields.slice(1);
-            for (var sl_fld in sliced_info_fields) {
-                var slc_fld = evt[sliced_info_fields[sl_fld]];
-                if (typeof slc_fld == 'object') {
-                    res_description.push(slc_fld[slc_fld.length - 1]);
-                } else if (slc_fld) {
-                    res_description.push(slc_fld);
-                }
-            }
+            res_text = _.map(this.info_fields, function(fld) {
+                if(evt[fld] instanceof Array)
+                    return evt[fld][1];
+                return evt[fld];
+            });
         }
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().addHours(date_delay);
@@ -248,9 +286,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var r = {
             'start_date': date_start.toString('yyyy-MM-dd HH:mm:ss'),
             'end_date': date_stop.toString('yyyy-MM-dd HH:mm:ss'),
-            'text': res_text,
-            'id': evt.id,
-            'title': res_description.join()
+            'text': res_text.join(', '),
+            'id': evt.id
         };
         if (evt.color) {
             r.color = evt.color;

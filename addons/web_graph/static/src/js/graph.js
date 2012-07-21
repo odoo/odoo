@@ -53,6 +53,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         // TODO: move  to load_view and document
         var self = this;
         this.fields_view = fields_view_get;
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
 
         this.mode = this.fields_view.arch.attrs.type || 'bar';
         this.orientation = this.fields_view.arch.attrs.orientation == 'horizontal';

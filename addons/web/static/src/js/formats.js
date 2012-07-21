@@ -118,7 +118,9 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             return instance.web.insert_thousand_seps(
                 _.str.sprintf('%d', value));
         case 'float':
-            var precision = descriptor.digits ? descriptor.digits[1] : 2;
+            var digits = descriptor.digits ? descriptor.digits : [69,2];
+            digits = typeof digits === "string" ? py.eval(digits) : digits;
+            var precision = digits[1];
             var formatted = _.str.sprintf('%.' + precision + 'f', value).split('.');
             formatted[0] = instance.web.insert_thousand_seps(formatted[0]);
             return formatted.join(l10n.decimal_point);
@@ -307,7 +309,7 @@ instance.web.format_cell = function (row_data, column, options) {
             '</button>', {
                 title: column.string || '',
                 additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
-                    'disabled="disabled" class="oe-listview-button-disabled"' : '',
+                    'disabled="disabled" class="oe_list_button_disabled"' : '',
                 prefix: instance.connection.prefix,
                 icon: column.icon,
                 alt: column.string || ''

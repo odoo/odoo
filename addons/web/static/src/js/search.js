@@ -352,6 +352,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             e.stopImmediatePropagation();
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
+        instance.web.bus.on('click', this, function(ev) {
+            if ($(ev.target).parents('.oe_searchview').length === 0) {
+                self.$element.removeClass('oe_searchview_open_drawer');
+            }
+        });
         // Focus last input if the view itself is clicked (empty section of
         // facets element)
         this.$element.on('click', function (e) {
@@ -640,6 +645,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var drawer_started = $.when.apply(
             null, _(this.select_for_drawer()).invoke(
                 'appendTo', this.$element.find('.oe_searchview_drawer')));
+        
+        new instance.web.search.AddToDashboard(this).appendTo($('.oe_searchview_drawer', this.$element));
 
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
@@ -691,53 +698,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         } else {
             select.val('');
         }
-    },
-    on_add_to_dashboard: function() {
-        this.$element.find(".oe_search-view-filters-management")[0].selectedIndex = 0;
-        var self = this,
-            menu = instance.webclient.menu,
-            $dialog = $(QWeb.render("SearchView.add_to_dashboard", {
-                dashboards : menu.data.data.children,
-                selected_menu_id : menu.$element.find('a.active').data('menu')
-            }));
-        $dialog.find('input').val(this.fields_view.name);
-        instance.web.dialog($dialog, {
-            modal: true,
-            title: _t("Add to Dashboard"),
-            buttons: [
-                {text: _t("Cancel"), click: function() {
-                    $(this).dialog("close");
-                }},
-                {text: _t("OK"), click: function() {
-                    $(this).dialog("close");
-                    var menu_id = $(this).find("select").val(),
-                        title = $(this).find("input").val(),
-                        data = self.build_search_data(),
-                        context = new instance.web.CompoundContext(),
-                        domain = new instance.web.CompoundDomain();
-                    _.each(data.contexts, function(x) {
-                        context.add(x);
-                    });
-                    _.each(data.domains, function(x) {
-                           domain.add(x);
-                    });
-                    self.rpc('/web/searchview/add_to_dashboard', {
-                        menu_id: menu_id,
-                        action_id: self.getParent().action.id,
-                        context_to_save: context,
-                        domain: domain,
-                        view_mode: self.getParent().active_view,
-                        name: title
-                    }, function(r) {
-                        if (r === false) {
-                            self.do_warn("Could not add filter to dashboard");
-                        } else {
-                            self.do_notify("Filter added to dashboard", '');
-                        }
-                    });
-                }}
-            ]
-        });
     },
     /**
      * Extract search data from the view's facets.
@@ -1234,7 +1194,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
         var self = this;
         // A field needs a context to send when active
         var context = this.attrs.context;
-        if (!context || !facet.values.length) {
+        if (_.isEmpty(context) || !facet.values.length) {
             return;
         }
         var contexts = facet.values.map(function (facetValue) {
@@ -1530,6 +1490,15 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             return [[name, '=', facetValue.get('value')]];
         }
         return this._super(name, operator, facetValue);
+    },
+    get_context: function (facet) {
+        var values = facet.values;
+        if (_.isEmpty(this.attrs.context) && values.length === 1) {
+            var c = {};
+            c['default_' + this.attrs.name] = values.at(0).get('value');
+            return c;
+        }
+        return this._super(facet);
     }
 });
 
@@ -1540,6 +1509,14 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         var self = this;
         this.model = new instance.web.Model('ir.filters');
         this.filters = {};
+        this.view.query
+            .on('remove', function (facet) {
+                if (!facet.get('is_custom_filter')) {
+                    return;
+                }
+                self.clear_selection();
+            })
+            .on('reset', this.proxy('clear_selection'));
         this.$element.on('submit', 'form', this.proxy('save_current'));
         this.$element.on('click', 'h4', function () {
             self.$element.toggleClass('oe_opened');
@@ -1548,6 +1525,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
         }).pipe(this.proxy('set_filters'));
+    },
+    clear_selection: function () {
+        this.$element.find('li.oe_selected').removeClass('oe_selected');
     },
     append_filter: function (filter) {
         var self = this;
@@ -1583,8 +1563,10 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                     get_groupby: function () { return [filter.context]; },
                     get_domain: function () { return filter.domain; }
                 },
+                is_custom_filter: true,
                 values: [{label: filter.name, value: null}]
             }]);
+            $filter.addClass('oe_selected');
         });
     },
     set_filters: function (filters) {
@@ -1671,6 +1653,77 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         }));
     }
 });
+instance.web.search.AddToDashboard = instance.web.Widget.extend({
+    template: 'SearchView.addtodashboard',
+    _in_drawer: true,
+    start: function () {
+        var self = this;
+        this.data_loaded = $.Deferred();
+        this.dashboard_data =[];
+        this.$element
+            .on('click', 'h4', this.proxy('show_option'))
+            .on('submit', 'form', function (e) {
+                e.preventDefault();
+                self.add_dashboard();
+            });
+        return $.when(this.load_data(),this.data_loaded).pipe(this.proxy("render_data"));
+    },
+    load_data:function(){
+        var self = this,dashboard_menu = instance.webclient.menu.data.data.children;
+        var ir_model_data = new instance.web.Model('ir.model.data',{},[['name','=','menu_reporting_dashboard']]).query(['res_id']);
+        var map_data = function(result){
+            _.detect(dashboard_menu, function(dash){
+                var id = _.pluck(dash.children, "id"),indexof = _.indexOf(id, result.res_id);
+                if(indexof !== -1){
+                    self.dashboard_data = dash.children[indexof].children
+                    self.data_loaded.resolve();
+                    return;
+                }
+            });
+        };
+        return ir_model_data._execute().done(function(result){map_data(result[0])}); 
+    },
+    
+    render_data: function(){
+        var self = this;
+        var selection = instance.web.qweb.render("SearchView.addtodashboard.selection",{selections:this.dashboard_data});
+        this.$element.find("input").before(selection)
+    },
+    add_dashboard:function(){
+        var self = this;
+        var getParent = this.getParent();
+        var view_parent = this.getParent().getParent();
+        if (! view_parent.action || ! this.$element.find("select").val())
+            return this.do_warn("Can't find dashboard action");
+        data = getParent.build_search_data(),
+        context = new instance.web.CompoundContext(getParent.dataset.get_context() || []),
+        domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
+        _.each(data.contexts, function(x) {context.add(x);});
+        _.each(data.domains, function(x) {domain.add(x);});
+        this.rpc('/web/searchview/add_to_dashboard', {
+            menu_id: this.$element.find("select").val(),
+            action_id: view_parent.action.id,
+            context_to_save: context,
+            domain: domain,
+            view_mode: view_parent.active_view,
+            name: this.$element.find("input").val()
+        }, function(r) {
+            if (r === false) {
+                self.do_warn("Could not add filter to dashboard");
+            } else {
+                self.$element.toggleClass('oe_opened');
+                self.do_notify("Filter added to dashboard", '');
+            }
+        });
+    },
+    show_option:function(){
+        this.$element.toggleClass('oe_opened');
+        if (! this.$element.hasClass('oe_opened'))
+            return;
+        this.$element.find("input").val(this.getParent().fields_view.name || "" );
+    }
+});
+
 instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',
     _in_drawer: true,

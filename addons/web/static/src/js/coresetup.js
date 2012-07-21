@@ -224,6 +224,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }
             return loaded.then(function() {
                 self.on_modules_loaded();
+                self.trigger('module_loaded');
                 if (!no_session_valid_signal) {
                     self.on_session_valid();
                 }
@@ -333,11 +334,14 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             .appendTo(document.body)
             .load(function () {
                 try {
-                    if (options.error) {
-                        options.error(JSON.parse(
-                            this.contentDocument.body.childNodes[1].textContent
-                        ));
-                    }
+                   if (options.error) {
+                         if (!this.contentDocument.body.childNodes[1]) {
+                            options.error(this.contentDocument.body.childNodes);
+                        }
+                        else {
+                            options.error(JSON.parse(this.contentDocument.body.childNodes[1].textContent));
+                        }
+                   }
                 } finally {
                     complete();
                 }
@@ -400,6 +404,31 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     }
 });
 
+
+/**
+ * Event Bus used to bind events scoped in the current instance
+ */
+instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, {
+    init: function() {
+        instance.web.EventDispatcherMixin.init.call(this, parent);
+        var self = this;
+        // TODO fme: allow user to bind keys for some global actions.
+        //           check gtk bindings
+        // http://unixpapa.com/js/key.html
+        _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
+            $('html').on(evtype, self, function(ev) {
+                self.trigger(evtype, ev);
+            });
+        });
+        _.each('resize,scroll'.split(','), function(evtype) {
+            $(window).on(evtype, self, function(ev) {
+                self.trigger(evtype, ev);
+            });
+        });
+    }
+})
+instance.web.bus = new instance.web.Bus();
+
 /** OpenERP Translations */
 instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
     /**
@@ -454,64 +483,6 @@ instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance
     }
 });
 
-/** Configure default qweb */
-instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
-/**
- * Lazy translation function, only performs the translation when actually
- * printed (e.g. inserted into a template)
- *
- * Useful when defining translatable strings in code evaluated before the
- * translation database is loaded, as class attributes or at the top-level of
- * an OpenERP Web module
- *
- * @param {String} s string to translate
- * @returns {Object} lazy translation object
- */
-instance.web._lt = function (s) {
-    return {toString: function () { return instance.web._t(s); }}
-};
-instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
-instance.web.qweb.default_dict = {
-    '_' : _,
-    '_t' : instance.web._t
-};
-instance.web.qweb.preprocess_node = function() {
-    // Note that 'this' is the Qweb Node
-    switch (this.node.nodeType) {
-        case 3:
-        case 4:
-            // Text and CDATAs
-            var translation = this.node.parentNode.attributes['t-translation'];
-            if (translation && translation.value === 'off') {
-                return;
-            }
-            var ts = _.str.trim(this.node.data);
-            if (ts.length === 0) {
-                return;
-            }
-            var tr = instance.web._t(ts);
-            if (tr !== ts) {
-                this.node.data = tr;
-            }
-            break;
-        case 1:
-            // Element
-            var attr, attrs = ['label', 'title', 'alt'];
-            while (attr = attrs.pop()) {
-                if (this.attributes[attr]) {
-                    this.attributes[attr] = instance.web._t(this.attributes[attr]);
-                }
-            }
-    }
-};
-
-/** Configure blockui */
-if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
-}
-
 /** Custom jQuery plugins */
 $.fn.getAttributes = function() {
     var o = {};
@@ -540,10 +511,6 @@ $.Mutex = (function() {
     };
     return Mutex;
 })();
-
-/** Setup default session */
-instance.connection = new instance.web.Session();
-instance.web.qweb.default_dict['__debug__'] = instance.connection.debug;
 
 $.async_when = function() {
     var async = false;
@@ -580,6 +547,95 @@ $.async_when = function() {
 		return old_async_when.apply(this, arguments);
 };
 
+/** Setup blockui */
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+}
+
+/** Setup default session */
+instance.connection = new instance.web.Session();
+
+/** Configure default qweb */
+instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
+/**
+ * Lazy translation function, only performs the translation when actually
+ * printed (e.g. inserted into a template)
+ *
+ * Useful when defining translatable strings in code evaluated before the
+ * translation database is loaded, as class attributes or at the top-level of
+ * an OpenERP Web module
+ *
+ * @param {String} s string to translate
+ * @returns {Object} lazy translation object
+ */
+instance.web._lt = function (s) {
+    return {toString: function () { return instance.web._t(s); }}
+};
+instance.web.qweb = new QWeb2.Engine();
+instance.web.qweb.default_dict['__debug__'] = instance.connection.debug; // Which one ?
+instance.web.qweb.debug = instance.connection.debug;
+instance.web.qweb.default_dict = {
+    '_' : _,
+    '_t' : instance.web._t
+};
+instance.web.qweb.preprocess_node = function() {
+    // Note that 'this' is the Qweb Node
+    switch (this.node.nodeType) {
+        case 3:
+        case 4:
+            // Text and CDATAs
+            var translation = this.node.parentNode.attributes['t-translation'];
+            if (translation && translation.value === 'off') {
+                return;
+            }
+            var ts = _.str.trim(this.node.data);
+            if (ts.length === 0) {
+                return;
+            }
+            var tr = instance.web._t(ts);
+            if (tr !== ts) {
+                this.node.data = tr;
+            }
+            break;
+        case 1:
+            // Element
+            var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
+            while (attr = attrs.pop()) {
+                if (this.attributes[attr]) {
+                    this.attributes[attr] = instance.web._t(this.attributes[attr]);
+                }
+            }
+    }
+};
+
+/** Setup jQuery timeago */
+var _t = instance.web._t;
+/*
+ * Strings in timeago are "composed" with prefixes, words and suffixes. This
+ * makes their detection by our translating system impossible. Use all literal
+ * strings we're using with a translation mark here so the extractor can do its
+ * job.
+ */
+{
+    _t('less than a minute ago');
+    _t('about a minute ago');
+    _t('%d minutes ago');
+    _t('about an hour ago');
+    _t('%d hours ago');
+    _t('a day ago');
+    _t('%d days ago');
+    _t('about a month ago');
+    _t('%d months ago');
+    _t('about a year ago');
+    _t('%d years ago');
+}
+
+instance.connection.on('module_loaded', this, function () {
+    // provide timeago.js with our own translator method
+    $.timeago.settings.translator = instance.web._t;
+});
+
 /**
  * Registry for all the client actions key: tag value: widget
  */
@@ -589,23 +645,27 @@ instance.web.client_actions = new instance.web.Registry();
  * Client action to reload the whole interface.
  * If params has an entry 'menu_id', it opens the given menu entry.
  */
-instance.web.client_actions.add("reload", "instance.web.Reload");
-
 instance.web.Reload = instance.web.Widget.extend({
     init: function(parent, params) {
         this._super(parent);
         this.menu_id = (params && params.menu_id) || false;
     },
     start: function() {
+        var l = window.location;
+        var timestamp = new Date().getTime();
+        var search = "?ts=" + timestamp;
+        if (l.search) {
+            search = l.search + "&ts=" + timestamp;
+        } 
+        var hash = l.hash;
         if (this.menu_id) {
-            // open the given menu id
-            var url_without_fragment = window.location.toString().split("#", 1)[0];
-            window.location = url_without_fragment + "#menu_id=" + this.menu_id;
-        } else {
-            window.location.reload();
+            hash = "#menu_id=" + this.menu_id;
         }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
     }
 });
+instance.web.client_actions.add("reload", "instance.web.Reload");
 
 };
 

@@ -10,32 +10,116 @@ instance.web.ActionManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
-        this.inner_viewmanager = null;
+        this.inner_widget = null;
         this.dialog = null;
-        this.dialog_viewmanager = null;
-        this.client_widget = null;
+        this.dialog_widget = null;
+        this.breadcrumbs = [];
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.on('click', '.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
     dialog_stop: function () {
         if (this.dialog) {
-            this.dialog_viewmanager.destroy();
-            this.dialog_viewmanager = null;
+            this.dialog_widget.destroy();
+            this.dialog_widget = null;
             this.dialog.destroy();
             this.dialog = null;
         }
     },
-    content_stop: function () {
-        if (this.inner_viewmanager) {
-            this.inner_viewmanager.destroy();
-            this.inner_viewmanager = null;
+    /**
+     * Add a new item to the breadcrumb
+     *
+     * If the title of an item is an array, the multiple title mode is in use.
+     * (eg: a widget with multiple views might need to display a title for each view)
+     * In multiple title mode, the show() callback can check the index it receives
+     * in order to detect which of its titles has been clicked on by the user.
+     *
+     * @param {Object} item breadcrumb item
+     * @param {Object} item.widget widget containing the view(s) to be added to the breadcrumb added
+     * @param {Function} [item.show] triggered whenever the widget should be shown back
+     * @param {Function} [item.hide] triggered whenever the widget should be shown hidden
+     * @param {Function} [item.destroy] triggered whenever the widget should be destroyed
+     * @param {String|Array} [item.title] title(s) of the view(s) to be displayed in the breadcrumb
+     * @param {Function} [item.get_title] should return the title(s) of the view(s) to be displayed in the breadcrumb
+     */
+    push_breadcrumb: function(item) {
+        var last = this.breadcrumbs.slice(-1)[0];
+        if (last) {
+            last.hide();
         }
-        if (this.client_widget) {
-            this.client_widget.destroy();
-            this.client_widget = null;
+        var item = _.extend({
+            show: function(index) {
+                this.widget.$element.show();
+            },
+            hide: function() {
+                this.widget.$element.hide();
+            },
+            destroy: function() {
+                this.widget.destroy();
+            },
+            get_title: function() {
+                return this.title || this.widget.get('title');
+            }
+        }, item);
+        item.id = _.uniqueId('breadcrumb_');
+        this.breadcrumbs.push(item);
+    },
+    on_breadcrumb_clicked: function(ev) {
+        var $e = $(ev.target);
+        var id = $e.data('id');
+        var item;
+        for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
+            var it = this.breadcrumbs[i];
+            if (it.id == id) {
+                item = it;
+                break;
+            }
+            this.remove_breadcrumb(i);
         }
+        var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        item.show(index, $e);
+        this.inner_widget = item.widget;
+    },
+    clear_breadcrumbs: function() {
+        while (this.breadcrumbs.length) {
+            this.remove_breadcrumb(0);
+        }
+    },
+    remove_breadcrumb: function(index) {
+        var item = this.breadcrumbs.splice(index, 1)[0];
+        if (item) {
+            var dups = _.filter(this.breadcrumbs, function(it) {
+                return item.widget === it.widget;
+            });
+            if (!dups.length) {
+                item.destroy();
+            }
+        }
+    },
+    get_title: function() {
+        var titles = [];
+        for (var i = 0; i < this.breadcrumbs.length; i += 1) {
+            var item = this.breadcrumbs[i];
+            var tit = item.get_title();
+            if (!_.isArray(tit)) {
+                tit = [tit];
+            }
+            for (var j = 0; j < tit.length; j += 1) {
+                var label = _.escape(tit[j]);
+                if (i === this.breadcrumbs.length - 1 && j === tit.length - 1) {
+                    titles.push(label);
+                } else {
+                    titles.push(_.str.sprintf('<a href="#" class="oe_breadcrumb_item" data-id="%s">%s</a>', item.id, label));
+                }
+            }
+        }
+        return titles.join(' <span class="oe_fade">/</span> ');
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
+                state['title'] = this.inner_action.name;
                 state['model'] = this.inner_action.res_model;
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
@@ -48,7 +132,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var self = this,
             action_loaded;
         if (state.action_id) {
-            var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
+            var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action_id;
             if (run_action) {
                 this.null_action();
                 action_loaded = this.do_action(state.action_id);
@@ -77,17 +161,24 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         } else if (state.client_action) {
             this.null_action();
-            this.ir_actions_client(state.client_action);
+            var action = state.client_action;
+            if(_.isString(action)) {
+                action = {
+                    tag: action,
+                    params: state,
+                };
+            }
+            this.ir_actions_client(action);
         }
 
         $.when(action_loaded || null).then(function() {
-            if (self.inner_viewmanager) {
-                self.inner_viewmanager.do_load_state(state, warm);
+            if (self.inner_widget && self.inner_widget.do_load_state) {
+                self.inner_widget.do_load_state(state, warm);
             }
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action)) {
+        if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);
@@ -116,7 +207,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     null_action: function() {
         this.dialog_stop();
-        this.content_stop();
+        this.clear_breadcrumbs();
     },
     ir_actions_act_window: function (action, on_close) {
         var self = this;
@@ -128,28 +219,32 @@ instance.web.ActionManager = instance.web.Widget.extend({
             };
         }
         if (action.target === 'new') {
-            if (this.dialog == null) {
-                this.dialog = new instance.web.Dialog(this, { width: '80%' });
+            if (this.dialog === null) {
+                // These buttons will be overwrited by <footer> if any
+                this.dialog = new instance.web.Dialog(this, {
+                    buttons: { "Close": function() { $(this).dialog("close"); }},
+		    dialogClass: 'oe_act_window'
+                });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
             } else {
-                this.dialog_viewmanager.destroy();
+                this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_viewmanager = new instance.web.ViewManagerAction(this, action);
-            this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog_widget = new instance.web.ViewManagerAction(this, action);
+            this.dialog_widget.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            this.content_stop();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
                 });
             }
             this.inner_action = action;
-            this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
-            this.inner_viewmanager.appendTo(this.$element);
+            var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
+            inner_widget.add_breadcrumb();
+            this.inner_widget.appendTo(this.$element);
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
@@ -168,10 +263,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     ir_actions_client: function (action) {
-        this.content_stop();
         this.dialog_stop();
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
-        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
+        this.inner_widget = new ClientWidget(this, action.params);
+        this.push_breadcrumb({
+            widget: this.inner_widget,
+            title: action.name
+        });
+        this.inner_widget.appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -280,35 +379,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.active_view = view_type;
 
         if (!view.controller) {
-            // Lazy loading of views
-            var controllerclass = this.registry.get_object(view_type);
-            var options = _.clone(view.options);
-            if (view_type === "form" && this.action) {
-                switch (this.action.target) {
-                    case 'new':
-                    case 'inline':
-                        options.initial_mode = 'edit';
-                        break;
-                }
-            }
-            var controller = new controllerclass(this, this.dataset, view.view_id, options);
-            if (view.embedded_view) {
-                controller.set_embedded_view(view.embedded_view);
-            }
-            controller.do_switch_view.add_last(_.bind(this.switch_view, this));
-            controller.do_prev_view.add_last(this.on_prev_view);
-            var container = this.$element.find(".oe_view_manager_view_" + view_type);
-            view_promise = controller.appendTo(container);
-            this.views[view_type].controller = controller;
-            this.views[view_type].deferred.resolve(view_type);
-            $.when(view_promise).then(function() {
-                self.on_controller_inited(view_type, controller);
-                if (self.searchview
-                        && self.flags.auto_search
-                        && view.controller.searchable !== false) {
-                    self.searchview.ready.then(self.searchview.do_search);
-                }
-            });
+            view_promise = this.do_create_view(view_type);
         } else if (this.searchview
                 && self.flags.auto_search
                 && view.controller.searchable !== false) {
@@ -320,7 +391,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
 
         this.$element
-            .find('.oe_view_manager_switch a').parent().removeClass('active')
+            .find('.oe_view_manager_switch a').parent().removeClass('active');
         this.$element
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
@@ -329,18 +400,97 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
+                    var container = self.$element.find(".oe_view_manager_view_" + view_name + ":first");
                     if (view_name === view_type) {
+                        container.show();
                         controller.do_show(view_options || {});
                     } else {
+                        container.hide();
                         controller.do_hide();
+                    }
+		    // put the <footer> in the dialog's buttonpane
+                    if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
+                        self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
+                        self.$element.find('footer').appendTo(
+                            self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonpane')
+                        );
                     }
                 }
             });
-
-            self.$element.find('.oe_view_title_text:first').text(
-                    self.display_title());
         });
         return view_promise;
+    },
+    do_create_view: function(view_type) {
+        // Lazy loading of views
+        var self = this;
+        var view = this.views[view_type];
+        var controllerclass = this.registry.get_object(view_type);
+        var options = _.clone(view.options);
+        if (view_type === "form" && this.action) {
+            switch (this.action.target) {
+                case 'new':
+                case 'inline':
+                    options.initial_mode = 'edit';
+                    break;
+            }
+        }
+        var controller = new controllerclass(this, this.dataset, view.view_id, options);
+
+        controller.on("change:title", this, function() {
+            if (self.active_view === view_type) {
+                self.set_title(controller.get('title'));
+            }
+        });
+
+        if (view.embedded_view) {
+            controller.set_embedded_view(view.embedded_view);
+        }
+        controller.do_switch_view.add_last(_.bind(this.switch_view, this));
+
+        controller.do_prev_view.add_last(this.on_prev_view);
+        var container = this.$element.find(".oe_view_manager_view_" + view_type);
+        var view_promise = controller.appendTo(container);
+        this.views[view_type].controller = controller;
+        this.views[view_type].deferred.resolve(view_type);
+        return $.when(view_promise).then(function() {
+            self.on_controller_inited(view_type, controller);
+            if (self.searchview
+                    && self.flags.auto_search
+                    && view.controller.searchable !== false) {
+                self.searchview.ready.then(self.searchview.do_search);
+            }
+        });
+    },
+    set_title: function(title) {
+        this.$element.find('.oe_view_title_text:first').text(title);
+    },
+    add_breadcrumb: function() {
+        var self = this;
+        var views = [this.active_view || this.views_src[0].view_type];
+        this.on_mode_switch.add(function(mode) {
+            var last = views.slice(-1)[0];
+            if (mode !== last) {
+                if (mode !== 'form') {
+                    views.length = 0;
+                }
+                views.push(mode);
+            }
+        });
+        this.getParent().push_breadcrumb({
+            widget: this,
+            show: function(index, $e) {
+                var view_to_select = views[index];
+                self.$element.show();
+                if (self.active_view !== view_to_select) {
+                    self.on_mode_switch(view_to_select);
+                }
+            },
+            get_title: function() {
+                return _.map(views, function(v) {
+                    return self.views[v].controller.get('title');
+                });
+            }
+        });
     },
     /**
      * Method used internally when a view asks to switch view. This method is meant
@@ -434,14 +584,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      */
     on_action_executed: function () {
     },
-    display_title: function () {
-        var view = this.views[this.active_view];
-        if (view) {
-            // ick
-            return view.controller.fields_view.arch.attrs.string;
-        }
-        return '';
-    }
 });
 
 instance.web.ViewManagerAction = instance.web.ViewManager.extend({
@@ -486,7 +628,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         if (this.session.hidden_menutips) {
             return;
         }
-        this.session.hidden_menutips = {}
+        this.session.hidden_menutips = {};
     },
     /**
      * Initializes the ViewManagerAction: sets up the searchview (if the
@@ -514,32 +656,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_debug_view').change(this.on_debug_changed);
-
-        if (this.action.help && !this.flags.low_profile) {
-            var Users = new instance.web.DataSet(self, 'res.users'),
-                $tips = this.$element.find('.oe_view_manager_menu_tips');
-            $tips.delegate('blockquote button', 'click', function() {
-                var $this = $(this);
-                //noinspection FallthroughInSwitchStatementJS
-                switch ($this.attr('name')) {
-                case 'disable':
-                    Users.write(self.session.uid, {menu_tips:false});
-                case 'hide':
-                    $this.closest('blockquote').hide();
-                    self.session.hidden_menutips[self.action.id] = true;
-                }
-            });
-            if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips']).then(function(users) {
-                    var user = users[0];
-                    if (!(user && user.id === self.session.uid)) {
-                        return;
-                    }
-                    $tips.find('blockquote').toggle(user.menu_tips);
-                });
-            }
-        }
-
+        this.$element.addClass("oe_view_manager_" + (this.action.target || 'current'));
         return manager_ready;
     },
     on_debug_changed: function (evt) {
@@ -662,11 +779,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 view: controller,
                 view_manager: self
             }));
-            if (!self.action.name && fvg) {
-                self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
-            }
-
+            self.set_title();
         });
+    },
+    do_create_view: function(view_type) {
+        var r = this._super.apply(this, arguments);
+        var view = this.views[view_type].controller;
+        view.set({ 'title': this.action.name });
+        return r;
+    },
+    set_title: function(title) {
+        this.$element.find('.oe_breadcrumb_title:first').html(this.getParent().get_title());
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
@@ -689,13 +812,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
-    display_title: function () {
-        return this.action.name;
-    }
 });
 
 instance.web.Sidebar = instance.web.Widget.extend({
     init: function(parent) {
+        var self = this;
         this._super(parent);
         var view = this.getParent();
         this.sections = [
@@ -712,19 +833,24 @@ instance.web.Sidebar = instance.web.Widget.extend({
             var item = { label: _t("Translate"), callback: view.on_sidebar_translate, title: _t("Technical translation") };
             this.items.other.push(item);
         }
+        this.fileupload_id = _.uniqueId('oe_fileupload');
+        $(window).on(this.fileupload_id, function() {
+            var args = [].slice.call(arguments).slice(1);
+            if (args[0] && args[0].error) {
+                alert(args[0].error);
+            } else {
+                self.do_attachement_update(self.dataset, self.model_id);
+            }
+            $.unblockUI();
+        });
     },
     start: function() {
         var self = this;
         this._super(this);
         this.redraw();
-        this.$element.on('click','.oe_dropdown_toggle',function(event) {
-            $(this).parent().find('ul').toggle();
-            return false;
-        });
         this.$element.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
             var index = $(this).data('index');
-            $(this).closest('ul').hide();
             var item = self.items[section][index];
             if (item.callback) {
                 item.callback.apply(self, [item]);
@@ -733,16 +859,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else if (item.url) {
                 return true;
             }
-            return false;
+            event.preventDefault();
         });
-        //this.$div.html(QWeb.render('FormView.sidebar.attachments', this));
-        //this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
-        //this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
     },
     redraw: function() {
         var self = this;
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
-        this.$element.find('ul').hide();
 
         // Hides Sidebar sections when item list is empty
         this.$('.oe_form_dropdown_section').each(function() {
@@ -826,6 +948,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         });
     },
     do_attachement_update: function(dataset, model_id) {
+        this.dataset = dataset;
+        this.model_id = model_id;
         if (!model_id) {
             this.on_attachments_loaded([]);
         } else {
@@ -837,42 +961,37 @@ instance.web.Sidebar = instance.web.Widget.extend({
     on_attachments_loaded: function(attachments) {
         var self = this;
         var items = [];
-        // TODO: preprend: _s +
-        var prefix = '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
+        var prefix = this.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
                 a.url = prefix  + a.id + '&t=' + (new Date().getTime());
             }
         });
-        attachments.push( { label: _t("Add..."), callback: self.on_attachment_add } );
         self.items['files'] = attachments;
         self.redraw();
-    },
-    on_attachment_add: function(e) {
-        this.$element.find('.oe_sidebar_add').show();
+        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
+        this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
-        return;
-        window[this.element_id + '_iframe'] = this.do_update;
         var $e = $(e.target);
-        if ($e.val() != '') {
-            this.$element.find('form.oe-binary-form').submit();
+        if ($e.val() !== '') {
+            this.$element.find('form.oe_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
+            this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
+            $.blockUI();
         }
     },
     on_attachment_delete: function(e) {
-        return;
-        var self = this, $e = $(e.currentTarget);
-        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm(_.str.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
-            this.rpc('/web/dataset/unlink', {
-                model: 'ir.attachment',
-                ids: [parseInt($e.attr('data-id'))]
-            }, function(r) {
-                $e.parent().remove();
-                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+        var self = this;
+        e.preventDefault();
+        e.stopPropagation();
+        var self = this;
+        var $e = $(e.currentTarget);
+        if (confirm(_t("Do you really want to delete this attachment ?"))) {
+            (new instance.web.DataSet(this, 'ir.attachment')).unlink([parseInt($e.attr('data-id'), 10)]).then(function() {
+                self.do_attachement_update(self.dataset, self.model_id);
             });
         }
     }
@@ -884,8 +1003,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         // TODO fme: should add the language to fields_view_get because between the fields view get
         // and the moment the user opens the translation dialog, the user language could have been changed
         this.view_language = view.session.user_context.lang;
-        this['on_button' + _t("Save")] = this.on_button_Save;
-        this['on_button' + _t("Close")] = this.on_button_Close;
+        this['on_button_' + _t("Save")] = this.on_btn_save;
+        this['on_button_' + _t("Close")] = this.on_btn_close;
         this._super(view, {
             width: '80%',
             height: '80%'
@@ -966,7 +1085,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             }
         });
     },
-    on_button_Save: function() {
+    on_btn_save: function() {
         var trads = {},
             self = this,
             trads_mutex = new $.Mutex();
@@ -989,7 +1108,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         });
         this.close();
     },
-    on_button_Close: function() {
+    on_btn_close: function() {
         this.close();
     }
 });
@@ -1118,7 +1237,7 @@ instance.web.View = instance.web.Widget.extend({
             args.push(context);
             return dataset.call_button(action_data.name, args, handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
+            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
         }

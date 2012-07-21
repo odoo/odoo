@@ -1,10 +1,10 @@
 {
-    "name" : "web",
+    "name" : "Web",
     "category": "Hidden",
     "description":
         """
         OpenERP Web core module.
-        This module provides the core of the OpenERP web client.
+        This module provides the core of the OpenERP Web Client.
         """,
     "depends" : [],
     'auto_install': True,
@@ -15,14 +15,12 @@
         "static/lib/datejs/parser.js",
         "static/lib/datejs/sugarpak.js",
         "static/lib/datejs/extras.js",
-        "static/lib/jquery/jquery-1.7.2b1.js",
+        "static/lib/jquery/jquery-1.7.2.js",
         "static/lib/jquery.MD5/jquery.md5.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
-        "static/lib/jquery.superfish/js/hoverIntent.js",
-        "static/lib/jquery.superfish/js/superfish.js",
         "static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
         "static/lib/jquery.ui.notify/js/jquery.notify.js",
@@ -30,13 +28,12 @@
         "static/lib/jquery.scrollTo/jquery.scrollTo-min.js",
         "static/lib/jquery.tipsy/jquery.tipsy.js",
         "static/lib/jquery.textext/jquery.textext.js",
-        "static/lib/json/json2.js",
+        "static/lib/jquery.timeago/jquery.timeago.js",
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
-
-        "static/lib/labjs/LAB.src.js",
+        "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
@@ -56,15 +53,15 @@
         "static/src/js/view_editor.js"
     ],
     'css' : [
-        "static/lib/jquery.superfish/css/superfish.css",
         "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/lib/jquery.tipsy/tipsy.css",
-#        "static/src/css/base_old.css",
+        "static/lib/jquery.textext/jquery.textext.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
+        "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [
         "static/src/xml/*.xml",

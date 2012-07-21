@@ -14,7 +14,7 @@ openerp.web_process = function (instance) {
             var self = this,
             grandparent = this.getParent() && this.getParent().getParent(),
             view = this.views[this.views_src[0].view_type],
-            $process_view = this.$element.find('.oe-process-view');
+            $process_view = this.$element.find('.oe_process');
             if (!(grandparent instanceof instance.web.WebClient) ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
@@ -260,7 +260,7 @@ openerp.web_process = function (instance) {
                 buttons : [
                     {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
                     {text: _t("Save"), click: function() {
-                        var form_view = action_manager.inner_viewmanager.views.form.controller;
+                        var form_view = action_manager.inner_widget.views.form.controller;
 
                         form_view.do_save(function() {
                             self.initialize_process_view();

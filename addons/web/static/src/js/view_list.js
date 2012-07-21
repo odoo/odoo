@@ -24,6 +24,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // if true, the view can't be editable, ignoring the view's and the context's
         // instructions
         'read_only': false,
+        // if true, the 'Import', 'Export', etc... buttons will be shown
+        'import_enabled': true,
     },
     /**
      * Core class for list-type displays.
@@ -64,7 +66,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.records = new Collection();
 
-        this.set_groups(new instance.web.ListView.Groups(this));
+        this.set_groups(new (this.options.GroupsType)(this));
 
         if (this.dataset instanceof instance.web.DataSetStatic) {
             this.groups.datagroup = new instance.web.StaticDataGroup(this.dataset);
@@ -87,6 +89,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.no_leaf = false;
     },
+    set_default_options: function (options) {
+        this._super(options);
+        _.defaults(this.options, {
+            GroupsType: instance.web.ListView.Groups,
+            ListType: instance.web.ListView.List
+        });
+    },
+
     /**
      * Retrieves the view's number of records per page (|| section)
      *
@@ -132,13 +142,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
     },
     /**
-     * View startup method, the default behavior is to set the ``oe-listview``
+     * View startup method, the default behavior is to set the ``oe_listw``
      * class on its root element and to perform an RPC load call.
      *
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$element.addClass('oe-listview');
+        this.$element.addClass('oe_list');
         return this.reload_view(null, null, true);
     },
     /**
@@ -242,18 +252,19 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.setup_columns(this.fields_view.fields, grouped);
 
         this.$element.html(QWeb.render(this._template, this));
+        this.$element.addClass(this.fields_view.arch.attrs['class']);
         // Head hook
         // Selecting records
-        this.$element.find('.all-record-selector').click(function(){
-            self.$element.find('.oe-record-selector input').prop('checked',
-                self.$element.find('.all-record-selector').prop('checked')  || false);
+        this.$element.find('.oe_list_record_selector').click(function(){
+            self.$element.find('.oe_list_record_selector input').prop('checked',
+                self.$element.find('.oe_list_record_selector').prop('checked')  || false);
             var selection = self.groups.get_selection();
             $(self.groups).trigger(
                 'selected', [selection.ids, selection.records]);
         });
 
         // Sorting columns
-        this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
+        this.$element.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
             var $this = $(this);
             self.dataset.sort($this.data('id'));
@@ -262,7 +273,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             } else {
                 $this.toggleClass("sortdown");
             }
-            $this.siblings('.oe-sortable').removeClass("sortup sortdown");
+            $this.siblings('.oe_sortable').removeClass("sortup sortdown");
 
             self.reload_content();
         });
@@ -314,7 +325,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         self.page = 0;
                     }
                     self.reload_content();
-                }).find('.oe-pager-state')
+                }).find('.oe_list_pager_state')
                     .click(function (e) {
                         e.stopPropagation();
                         var $this = $(this);
@@ -332,6 +343,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                                 self._limit = (isNaN(val) ? null : val);
                                 self.page = 0;
                                 self.reload_content();
+                            }).blur(function() {
+                                $(this).trigger('change');
                             })
                             .val(self._limit || 'NaN');
                     });
@@ -364,17 +377,19 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         var total = dataset.size();
+        var limit = this.limit() || total;
+        this.$pager.toggleClass('oe_list_pager_single_page', (total <= limit));
         var spager = '-';
         if (total) {
-            var range_start = this.page * this.limit() + 1;
-            var range_stop = range_start - 1 + this.limit();
+            var range_start = this.page * limit + 1;
+            var range_stop = range_start - 1 + limit;
             if (range_stop > total) {
                 range_stop = total;
             }
             spager = _.str.sprintf('%d-%d of %d', range_start, range_stop, total);
         }
 
-        this.$pager.find('.oe-pager-state').text(spager);
+        this.$pager.find('.oe_list_pager_state').text(spager);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -524,10 +539,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     reload_content: function () {
         var self = this;
-        self.$element.find('.all-record-selector').prop('checked', false);
+        self.$element.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
-        this.$element.find('.oe-listview-content').append(
+        this.$element.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
                     var has_one = false;
@@ -548,6 +563,20 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     reload: function () {
         return this.reload_content();
     },
+    reload_record: function (record) {
+        return this.dataset.read_ids(
+            [record.get('id')],
+            _.pluck(_(this.columns).filter(function (r) {
+                    return r.tag === 'field';
+                }), 'name')
+        ).then(function (records) {
+            _(records[0]).each(function (value, key) {
+                record.set(key, value, {silent: true});
+            });
+            record.trigger('change', record);
+        });
+    },
+
     do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
@@ -765,7 +794,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     display_aggregates: function (aggregation) {
         var self = this;
-        var $footer_cells = this.$element.find('.oe-list-footer');
+        var $footer_cells = this.$element.find('.oe_list_footer');
         _(this.aggregate_columns).each(function (column) {
             if (!column['function']) {
                 return;
@@ -803,9 +832,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
         // Padding for column titles, footer and data rows
         var $rows = this.$element
-                .find('.oe-listview-header-columns, tr:not(thead tr)')
+                .find('.oe_list_header_columns, tr:not(thead tr)')
                 .not(options['except']);
-        var newcols = new Array(count+1).join('<td class="oe-listview-padding"></td>');
+        var newcols = new Array(count+1).join('<td class="oe_list_padding"></td>');
         if (options.position === 'before') {
             $rows.prepend(newcols);
         } else {
@@ -816,7 +845,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * Removes all padding columns of the table
      */
     unpad_columns: function () {
-        this.$element.find('.oe-listview-padding').remove();
+        this.$element.find('.oe_list_padding').remove();
         if (this.previous_colspan) {
             this.$element
                     .find('thead tr:first th')
@@ -916,18 +945,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.$_element = $('<tbody>')
             .appendTo(document.body)
-            .delegate('th.oe-record-selector', 'click', function (e) {
+            .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
                 $(self).trigger(
                         'selected', [selection.ids, selection.records]);
             })
-            .delegate('td.oe-record-delete button', 'click', function (e) {
+            .delegate('td.oe_list_record_delete button', 'click', function (e) {
                 e.stopPropagation();
                 var $row = $(e.target).closest('tr');
                 $(self).trigger('deleted', [[self.row_id($row)]]);
             })
-            .delegate('td.oe-field-cell button', 'click', function (e) {
+            .delegate('td.oe_list_field_cell button', 'click', function (e) {
                 e.stopPropagation();
                 var $target = $(e.currentTarget),
                       field = $target.closest('td').data('field'),
@@ -1016,7 +1045,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
                 }, this)));
-        this.pad_table_to(5);
+        this.pad_table_to(4);
     },
     pad_table_to: function (count) {
         if (this.records.length >= count ||
@@ -1025,20 +1054,20 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }
         var cells = [];
         if (this.options.selectable) {
-            cells.push('<th class="oe-record-selector"></td>');
+            cells.push('<th class="oe_list_record_selector"></td>');
         }
         _(this.columns).each(function(column) {
             if (column.invisible === '1') {
                 return;
             }
             if (column.tag === 'button') {
-                cells.push('<td class="oe-button" title="' + column.string + '">&nbsp;</td>');
+                cells.push('<td class="oe_button" title="' + column.string + '">&nbsp;</td>');
             } else {
                 cells.push('<td title="' + column.string + '">&nbsp;</td>');
             }
         });
         if (this.options.deletable) {
-            cells.push('<td class="oe-record-delete"><button type="button" style="visibility: hidden"> </button></td>');
+            cells.push('<td class="oe_list_record_delete"><button type="button" style="visibility: hidden"> </button></td>');
         }
         cells.unshift('<tr>');
         cells.push('</tr>');
@@ -1054,12 +1083,12 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
      * @returns {Object} object with the keys ``ids`` and ``records``, holding respectively the ids of all selected records and the records themselves.
      */
     get_selection: function () {
+        var result = {ids: [], records: []};
         if (!this.options.selectable) {
-            return [];
+            return result;
         }
         var records = this.records;
-        var result = {ids: [], records: []};
-        this.$current.find('th.oe-record-selector input:checked')
+        this.$current.find('th.oe_list_record_selector input:checked')
                 .closest('tr').each(function () {
             var record = records.get($(this).data('id'));
             result.ids.push(record.get('id'));
@@ -1101,17 +1130,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
      * @returns {$.Deferred} promise to the finalization of the reloading
      */
     reload_record: function (record) {
-        return this.dataset.read_ids(
-            [record.get('id')],
-            _.pluck(_(this.columns).filter(function (r) {
-                    return r.tag === 'field';
-                }), 'name')
-        ).then(function (records) {
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
-            });
-            record.trigger('change', record);
-        });
+        return this.view.reload_record(record);
     },
     /**
      * Renders a list record to HTML
@@ -1236,7 +1255,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             });
         this.$row.children().last()
             .append($prev)
-            .append('<span class="oe-pager-state"></span>')
+            .append('<span class="oe_list_pager_state"></span>')
             .append($next);
     },
     open: function (point_insertion) {
@@ -1274,7 +1293,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
-            var child = self.children[group.value] = new instance.web.ListView.Groups(self.view, {
+            var child = self.children[group.value] = new (self.view.options.GroupsType)(self.view, {
                 records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
@@ -1302,13 +1321,18 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             }
             placeholder.appendChild($row[0]);
 
-            var $group_column = $('<th class="oe-group-name">').appendTo($row);
+            var $group_column = $('<th class="oe_list_group_name">').appendTo($row);
             // Don't fill this if group_by_no_leaf but no group_by
             if (group.grouped_on) {
                 var row_data = {};
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
+                if (! group_column) {
+                    throw new Error(_.str.sprintf(
+                        _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
+                        group.grouped_on));
+                }
                 try {
                     $group_column.html(instance.web.format_cell(
                         row_data, group_column, {
@@ -1352,7 +1376,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     }
                 });
             if (self.options.deletable) {
-                $row.append('<td class="oe-group-pagination">');
+                $row.append('<td class="oe_list_group_pagination">');
             }
         });
         return placeholder;
@@ -1377,7 +1401,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     },
     render_dataset: function (dataset) {
         var self = this,
-            list = new instance.web.ListView.List(this, {
+            list = new (this.view.options.ListType)(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
@@ -1403,11 +1427,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             } else {
                 if (dataset.size() == records.length) {
                     // only one page
-                    self.$row.find('td.oe-group-pagination').empty();
+                    self.$row.find('td.oe_list_group_pagination').empty();
                 } else {
                     var pages = Math.ceil(dataset.size() / limit);
                     self.$row
-                        .find('.oe-pager-state')
+                        .find('.oe_list_pager_state')
                             .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
                                 page: page + 1,
                                 page_count: pages

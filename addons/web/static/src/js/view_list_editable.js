@@ -125,29 +125,27 @@ openerp.web.list_editable = function (instance) {
          * Checks if a record is being edited, and if so cancels it
          */
         cancel_pending_edition: function () {
-            var self = this, cancelled = $.Deferred();
+            var self = this, cancelled;
             if (!this.edition) {
-                cancelled.resolve();
-                return cancelled.promise();
+                return $.when();
             }
 
-            if (this.edition_id != null) {
-                this.reload_record(self.records.get(this.edition_id)).then(function () {
-                    cancelled.resolve();
-                });
+            if (this.edition_id) {
+                cancelled = this.reload_record(this.records.get(this.edition_id));
             } else {
-                cancelled.resolve();
+                cancelled = $.when();
             }
             cancelled.then(function () {
                 self.view.unpad_columns();
                 self.edition_form.destroy();
                 self.edition_form.$element.remove();
                 delete self.edition_form;
+                self.dataset.index = null;
                 delete self.edition_id;
                 delete self.edition;
             });
             this.pad_table_to(5);
-            return cancelled.promise();
+            return cancelled;
         },
         /**
          * Adapts this list's view description to be suitable to the inner form
@@ -171,24 +169,29 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             switch (e.which) {
             case KEY_RETURN:
-                this.save_row().then(function (result) {
-                    if (result.created) {
-                        self.new_record();
-                        return;
-                    }
+                $(e.target).blur();
+                e.preventDefault();
+                //e.stopImmediatePropagation();
+                setTimeout(function () {
+                    self.save_row().then(function (result) {
+                        if (result.created) {
+                            self.new_record();
+                            return;
+                        }
 
-                    var next_record_id,
-                        next_record = self.records.at(
-                                self.records.indexOf(result.edited_record) + 1);
-                    if (next_record) {
-                        next_record_id = next_record.get('id');
-                        self.dataset.index = _(self.dataset.ids)
-                                .indexOf(next_record_id);
-                    } else {
-                        self.dataset.index = 0;
-                        next_record_id = self.records.at(0).get('id');
-                    }
-                    self.edit_record(next_record_id);
+                        var next_record_id,
+                            next_record = self.records.at(
+                                    self.records.indexOf(result.edited_record) + 1);
+                        if (next_record) {
+                            next_record_id = next_record.get('id');
+                            self.dataset.index = _(self.dataset.ids)
+                                    .indexOf(next_record_id);
+                        } else {
+                            self.dataset.index = 0;
+                            next_record_id = self.records.at(0).get('id');
+                        }
+                        self.edit_record(next_record_id);
+                    }, 0);
                 });
                 break;
             case KEY_ESCAPE:
@@ -198,15 +201,16 @@ openerp.web.list_editable = function (instance) {
         },
         render_row_as_form: function (row) {
             var self = this;
-            this.cancel_pending_edition().then(function () {
+            return this.ensure_saved().pipe(function () {
                 var record_id = $(row).data('id');
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': record_id,
-                        'class': (row ? $(row).attr('class') : '') + ' oe_form',
+                        'class': (row ? $(row).attr('class') : ''),
                         click: function (e) {e.stopPropagation();}
                     })
-                    .delegate('button.oe-edit-row-save', 'click', function () {
+                    .addClass('oe_form oe_form_container')
+                    .delegate('button.oe_list_edit_row_save', 'click', function () {
                         self.save_row();
                     })
                     .delegate('button', 'keyup', function (e) {
@@ -214,7 +218,13 @@ openerp.web.list_editable = function (instance) {
                     })
                     .keyup(function () {
                         return self.on_row_keyup.apply(self, arguments); })
-                    .keydown(function (e) { e.stopPropagation(); });
+                    .keydown(function (e) { e.stopPropagation(); })
+                    .keypress(function (e) {
+                        if (e.which === KEY_RETURN) {
+                            return false;
+                        }
+                    });
+
                 if (row) {
                     $new_row.replaceAll(row);
                 } else if (self.options.editable) {
@@ -236,17 +246,19 @@ openerp.web.list_editable = function (instance) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                $new_row.addClass("oe_form_container");
-                self.edition_form = new instance.web.ListEditableFormView(self.view, self.dataset, false);
-                self.edition_form.$element = $new_row;
-                self.edition_form.editable_list = self;
-                // HO HO
-                // empty
-                $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
-                    // put in $.when just in case  FormView.on_loaded becomes asynchronous
+                self.dataset.index = _(self.dataset.ids).indexOf(record_id);
+                if (self.dataset.index === -1) {
+                    self.dataset.index = null;
+                }
+                self.edition_form = _.extend(new instance.web.ListEditableFormView(self.view, self.dataset, false), {
+                    $element: $new_row,
+                    editable_list: self
+                });
+                // put in $.when just in case  FormView.on_loaded becomes asynchronous
+                return $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     $new_row.find('> td')
                       .end()
-                      .find('td:last').removeClass('oe-field-cell').end();
+                      .find('td:last').removeClass('oe_list_field_cell').end();
                     // pad in case of groupby
                     _(self.columns).each(function (column) {
                         if (column.meta) {
@@ -299,7 +311,7 @@ openerp.web.list_editable = function (instance) {
          */
         save_row: function () {
             //noinspection JSPotentiallyInvalidConstructorUsage
-            var self = this, done = $.Deferred();
+            var self = this;
             return this.edition_form
                 .do_save(null, this.options.editable === 'top')
                 .pipe(function (result) {
@@ -319,18 +331,24 @@ openerp.web.list_editable = function (instance) {
                                 created: result.created || false,
                                 edited_record: edited_record
                             };
-                        }, null);
-                }, null);
+                        });
+                });
         },
         /**
          * If the current list is being edited, ensures it's saved
          */
         ensure_saved: function () {
             if (this.edition) {
-                return this.save_row();
+                // kinda-hack-ish: if the user has entered data in a field,
+                // oe_form_dirty will be set on the form so save, otherwise
+                // discard the current (entirely empty) line
+                if (this.edition_form.$element.is('.oe_form_dirty')) {
+                    return this.save_row();
+                }
+                return this.cancel_pending_edition();
             }
             //noinspection JSPotentiallyInvalidConstructorUsage
-            return $.Deferred().resolve().promise();
+            return $.when();
         },
         /**
          * Cancels the edition of the row for the current dataset index
@@ -349,7 +367,6 @@ openerp.web.list_editable = function (instance) {
                 [record_id, this.dataset]);
         },
         new_record: function () {
-            this.dataset.index = null;
             this.render_row_as_form();
         },
         render_record: function (record) {
@@ -420,8 +437,7 @@ openerp.web.list_editable = function (instance) {
                 w.appendTo($td);
                 $td.appendTo($element);
             });
-            save = QWeb.render('ListView.row.save');
-            $(save).appendTo($element);
+            $(QWeb.render('ListView.row.save')).appendTo($element);
         },
     });
 };

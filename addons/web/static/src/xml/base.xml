@@ -27,9 +27,9 @@
 </t>
 
 <t t-name="CrashManager.warning">
-    <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
+    <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
-        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe-dialog-icon"/></td>
+        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe_dialog_icon"/></td>
         <td>
             <p>
                 <t t-js="d">
@@ -117,7 +117,7 @@
 <t t-name="DatabaseManager">
     <div class="oe_database_manager">
         <div class="oe_database_manager_menu">
-            <ul class="oe_form_notebook">
+            <ul class="oe_notebook">
                 <li><a href="#db_create">Create</a></li>
                 <li><a href="#db_drop">Drop</a></li>
                 <li><a href="#db_backup">Backup</a></li>
@@ -273,8 +273,10 @@
 </t>
 <t t-name="Menu.more">
     <li class="oe_menu_more_container">
-        <a href="#" class="oe_menu_more_link oe_dropdown_toggle">More</a>
-        <ul class="oe_menu_more" style="display: none;"/>
+        <span class="oe_topbar_item oe_menu_more_link oe_dropdown_toggle oe_dropdown_arrow">
+            More
+            <ul class="oe_menu_more oe_dropdown_menu"/>
+        </span>
     </li>
 </t>
 <t t-name="Menu.secondary">
@@ -316,19 +318,15 @@
 </t>
 
 <t t-name="UserMenu">
-    <ul class="oe_user_menu oe_topbar_item">
-        <li class="oe_dropdown">
-            <a href="#" class="oe_dropdown_toggle">
-                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
-                <span class="oe_topbar_name"/>
-            </a>
-            <ul class="oe_dropdown_options">
-                <li><a href="#" data-menu="about">About OpenERP</a></li>
-                <li><a href="#" data-menu="settings">Preferences</a></li>
-                <li><a href="#" data-menu="logout">Log out</a></li>
-            </ul>
-        </li>
-    </ul>
+    <span class="oe_user_menu oe_topbar_item oe_dropdown_toggle oe_dropdown_arrow">
+        <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
+        <span class="oe_topbar_name"/>
+        <ul class="oe_dropdown_menu">
+            <li><a href="#" data-menu="about">About OpenERP</a></li>
+            <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="logout">Log out</a></li>
+        </ul>
+    </span>
 </t>
 <t t-name="UserMenu.about">
     <div>
@@ -373,6 +371,7 @@
 </t>
 
 <t t-name="WebClient">
+    <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
             <td colspan="2" class="oe_topbar">
@@ -396,21 +395,29 @@
             </td>
         </tr>
     </table>
+    </div>
+</t>
+
+<t t-name="EmbedClient">
+    <div class="openerp">
+        <div class="oe_application"></div>
+    </div>
 </t>
 
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-            <col width="33%"/>
-            <col width="33%"/>
-            <col width="34%"/>
-            <tr class="oe_header_row">
+	    <col width="20%"/>
+	    <col width="25%"/>
+	    <col width="20%"/>
+	    <col width="35%"/>
+            <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                            <span class="oe_view_title_text oe_breadcrumb_title"/>
                         </h2>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_view_search" t-opentag="true"/>
                 </td>
             </tr>
@@ -418,13 +425,13 @@
                 <td>
                         <div class="oe_view_manager_buttons"/>
                 </td>
-                <td>
+                <td colspan="2">
                         <div class="oe_view_manager_sidebar"/>
                 </td>
                 <td>
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
-                        <t t-if="widget.views_src.length > 2" t-foreach="widget.views_src" t-as="view">
-                          <li t-if="view.view_type != 'form'" class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="_t('Switch to ') + (view.label || view.view_type)">
+                        <t t-if="widget.views_src.length > 1" t-foreach="widget.views_src" t-as="view">
+                          <li class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="_t('Switch to ') + (view.label || view.view_type)">
                             </a></li>
                         </t>
                     </ul>
@@ -432,7 +439,6 @@
                 </td>
             </tr>
         </table>
-
 
         <div class="oe_view_manager_body">
             <t t-foreach="widget.views_src" t-as="view">
@@ -511,65 +517,43 @@
     <div class="oe_sidebar">
         <t t-foreach="widget.sections" t-as="section">
             <div class="oe_form_dropdown_section">
-                <button class="oe_dropdown_toggle"><t t-esc="section.label"/></button>
-                <ul class="oe_dropdown_menu">
-                    <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                        <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
-                            <t t-raw="item.label"/>
-                        </a>
-                    </li>
-                    <li t-if="section.name == 'files'" class="oe_sidebar_add" style="display:none;">
-                        Input type file stuff
-                    </li>
-                </ul>
+                <button class="oe_dropdown_toggle oe_dropdown_arrow">
+                    <t t-esc="section.label"/>
+                    <ul class="oe_dropdown_menu">
+                        <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                            <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
+                                <t t-raw="item.label"/>
+                            </a>
+                            <a t-if="section.name == 'files'" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
+                        </li>
+                        <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
+                            <t t-call="HiddenInputFile">
+                                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                                <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                                <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
+                                <input type="hidden" name="id" t-att-value="widget.model_id"/>
+                                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                                <span>Add...</span>
+                            </t>
+                        </li>
+                    </ul>
+                </button>
             </div>
         </t>
     </div>
 </t>
-<t t-name="Sidebar.attachments">
-    <div class="oe-sidebar-attachments-toolbar">
-        <div class="oe-binary-file-set" style="float: right">
-            <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
-                method="post" enctype="multipart/form-data" action="/web/binary/upload_attachment">
-                <input type="hidden" name="session_id" t-att-value="session.session_id"/>
-                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
-                <input type="hidden" name="model" t-att-value="view.dataset.model"/>
-                <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
-                <button class="oe_button" type="button">
-                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
-                    <span>Add</span>
-                </button>
-                <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
-                    t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
-            </form>
-            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"/>
-        </div>
-    </div>
-    <br style="clear: both"/>
-    <ul class="oe-sidebar-attachments-items">
-        <li t-foreach="attachments" t-as="attachment">
-            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
-                + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
-            <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
-                <t t-esc="attachment.name"/>
-            </a>
-            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
-                <img t-att-src='_s + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
-            </a>
-        </li>
-    </ul>
-</t>
 
 <t t-name="TreeView">
-    <select t-if="toolbar" style="width: 30%">
-    </select>
+    <div class = "tree_header">
+         <select t-if="toolbar" ></select>
+         <button id = "tree_view_collapse">Collapse All</button>
+         <button id = "tree_view_expand">Expand All</button>
+     </div>
     <table class="oe-treeview-table">
         <thead>
             <tr>
                 <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible"
-                    class="treeview-header">
+                    t-if="!field.attrs.modifiers.tree_invisible">
                     <t t-esc="fields[field.attrs.name].string" />
                 </th>
             </tr>
@@ -581,11 +565,11 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level + 1">
+        t-att-data-id="record.id" t-att-data-level="level">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
     <t t-set="rank" t-value="'oe-treeview-first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + 19*(level-1) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
@@ -603,7 +587,7 @@
     </td>
 </tr>
 
-<table t-name="ListView" class="oe-listview-content">
+<table t-name="ListView" class="oe_list_content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <thead>
         <tr t-if="(!!options.action_buttons and !options.$buttons) or (!!options.pager and !options.$pager)">
@@ -613,18 +597,18 @@
                 <div class="oe_list_pager"/>
             </th>
         </tr>
-        <tr t-if="options.header" class="oe-listview-header-columns">
+        <tr t-if="options.header" class="oe_list_header_columns">
             <t t-foreach="columns" t-as="column">
                 <th t-if="column.meta">
                     <t t-esc="column.string"/>
                 </th>
             </t>
             <th t-if="options.selectable" width="1"  >
-                <input type="checkbox" class="all-record-selector"/>
+                <input type="checkbox" class="oe_list_record_selector"/>
             </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
+                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)">
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
@@ -634,7 +618,7 @@
     <tfoot>
         <tr>
             <td t-if="options.selectable"/>
-            <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe_number"
+            <td t-foreach="aggregate_columns" t-as="column" class="oe_list_footer oe_number"
                 t-att-data-field="column.id" t-att-title="column.label">
             </td>
             <td t-if="options.deletable"/>
@@ -642,17 +626,19 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_list_add oe_form_button_hi" t-if="widget.options.addable">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
+        <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        <t t-if="widget.options.import_enabled">
+            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </t>
     </t>
 </div>
 <t t-name="ListView.pager">
     <div class="oe_list_pager" t-att-colspan="widget.columns_count">
         <t t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe-pager-state">
+            <span class="oe_list_pager_state">
             </span>
         </t>
     </div>
@@ -671,7 +657,7 @@
 
         </td>
     </t>
-    <th t-if="options.selectable" class="oe-record-selector" width="1">
+    <th t-if="options.selectable" class="oe_list_record_selector" width="1">
         <t t-set="checked" t-value="options.select_view_id == record.get('id') ? 'checked' : null"/>
         <input t-if="options.radio" type="radio" name="radiogroup" t-att-checked="checked"/>
         <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
@@ -679,20 +665,20 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe-field-cell' + (align ? ' oe_number' : '')
-                         + (column.tag === 'button' ? ' oe-button' : '')"
+            t-att-class="'oe_list_field_cell' + (align ? ' oe_number' : '')
+                         + (column.tag === 'button' ? ' oe_button' : '')"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
         </td>
     </t>
-    <td t-if="options.deletable" class='oe-record-delete' width="1">
+    <td t-if="options.deletable" class='oe_list_record_delete' width="1">
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
 
 <t t-name="ListView.row.save">
     <td>
-        <button class='oe_i oe-edit-row-save' type='button' name='save'>S</button>
+        <button class='oe_i oe_list_edit_row_save' type='button' name='save'/>
     </td>
 </t>
 
@@ -711,7 +697,7 @@
             <button type="button" class="oe_button oe_form_button_create">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
+            <button type="button" class="oe_button oe_form_button_save oe_highlight">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
         </span>
     </t>
 </div>
@@ -791,11 +777,11 @@
 </t>
 <t t-name="FormRenderingGroup">
     <t t-if="string" t-call="FormRenderingSeparator"/>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" t-attf-class="oe_form_group #{classnames}"/>
+    <table border="0" cellpadding="0" cellspacing="0" t-attf-class="oe_form_group #{classnames}"/>
 </t>
 <t t-name="FormRenderingNotebook">
-    <div>
-        <ul t-attf-class="oe_form_notebook #{classnames}">
+    <div class="oe_clear">
+        <ul t-attf-class="oe_notebook #{classnames}">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
                 <a t-attf-href="##{page.id}">
                     <t t-esc="page.string"/>
@@ -805,11 +791,11 @@
     </div>
 </t>
 <t t-name="FormRenderingNotebookPage">
-    <div t-attf-class="oe_form_notebook_page #{classnames}" t-att-id="id">
+    <div t-attf-class="oe_notebook_page #{classnames}" t-att-id="id">
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
-    <div t-attf-class="oe_horizontal_separator #{classnames}">
+    <div t-attf-class="oe_horizontal_separator oe_clear #{classnames}">
         <t t-esc="string"/>
     </div>
 </t>
@@ -888,7 +874,7 @@
     </ul>
 </t>
 <t t-name="FieldChar">
-    <span t-att-class="'oe_form_field '+widget.widget_class">
+    <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <t  t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
@@ -900,12 +886,9 @@
     </span>
 </t>
 <t t-name="FieldEmail">
-    <span class="oe_form_field oe_form_field_email oe_form_field_with_button">
-        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
+    <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
+        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri" target="_blank"/>
         <t t-if="!widget.get('effective_readonly')">
-            <button class="oe_button" tabindex="-1" type="button" title="Send an e-mail with your default e-mail client">
-                <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
-            </button>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -921,20 +904,15 @@
     <t t-jquery="span:first">
         this.removeClass('oe_form_field_email').addClass('oe_form_field_url');
     </t>
-    <t t-jquery="button.oe_button" t-operation="replace">
-        <button class="oe_button" tabindex="-1" type="button" title="Open this resource">
-            <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
-        </button>
-    </t>
 </t>
 <t t-name="FieldText">
-    <div class="oe_form_field oe_form_field_text">
+    <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
         <textarea rows="6"
             t-att-name="widget.name"
             class="field_text"
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
-            t-att-placeholder="widget.node.attrs.placeholder"
+            t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
         ></textarea>
         <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
@@ -953,13 +931,13 @@
     </span>
 </t>
 <t t-name="FieldDate">
-    <span class="oe_form_field oe_datepicker_root oe_form_field_date"/>
+    <span class="oe_form_field oe_datepicker_root oe_form_field_date" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldDatetime">
-    <span class="oe_form_field oe_datepicker_root oe_form_field_datetime"/>
+    <span class="oe_form_field oe_datepicker_root oe_form_field_datetime" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldSelection">
-    <span class="oe_form_field oe_form_field_selection">
+    <span class="oe_form_field oe_form_field_selection" t-att-style="widget.node.attrs.style">
         <select t-if="!widget.get('effective_readonly')"
             t-att-name="widget.name"
             t-att-tabindex="widget.node.attrs.tabindex"
@@ -972,12 +950,13 @@
     </span>
 </t>
 <t t-name="FieldMany2One">
-    <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button">
-        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
+    <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
+        <t t-if="widget.get('effective_readonly')">
+            <a href="#" class="oe_form_uri"/>
+            <span class="oe_form_m2o_follow"/>
+        </t>
         <t t-if="!widget.get('effective_readonly')">
-            <button class="oe_button oe-m2o-cm-button" title="Open Resource">
-                <img t-att-src='_s + "/web/static/src/img/icons/terp-folder-yellow.png"'/>
-            </button>
+            <a href="#" class="oe_m2o_cm_button oe_e oe_right">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -985,31 +964,34 @@
                     t-att-autofocus="widget.node.attrs.autofocus"
                     t-att-placeholder="widget.node.attrs.placeholder"
                 />
-                <span class="oe-m2o-drop-down-button">
+                <span class="oe_m2o_drop_down_button">
                     <img t-att-src='_s + "/web/static/src/img/down-arrow.png"'/>
                 </span>
             </div>
         </t>
     </span>
 </t>
+<!-- Collection of m2m tags -->
 <t t-name="FieldMany2ManyTags">
-    <div class="oe_form_field oe_form_field_many2manytags">
+    <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">
-            <textarea rows="1" style="width: 100%"></textarea>
+            <textarea rows="1" style="width: 100%"
+                t-att-placeholder="widget.node.attrs.placeholder"></textarea>
         </t>
     </div>
 </t>
-<t t-name="FieldMany2ManyTags.box">
+<!-- Individual m2m tag element -->
+<t t-name="FieldMany2ManyTag">
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span class="oe_form_field_many2manytags_box" t-att-data-index="i">
+        <span class="oe_tag" t-att-data-index="i">
             <t t-esc="el[1]"/>
         </span>
         <t t-set="i" t-value="i + 1"/>
     </t>
 </t>
 <t t-name="FieldReference">
-    <table class="oe_form_field oe_form_field_reference oe_form" border="0" cellpadding="0" cellspacing="0">
+    <table class="oe_form_field oe_form_field_reference" border="0" cellpadding="0" cellspacing="0" t-att-style="widget.node.attrs.style">
     <tr>
         <td t-attf-class="oe_form_frame_cell oe_form_selection">
             <span t-attf-class="oe_form_view_reference_selection"/>
@@ -1021,7 +1003,7 @@
     </table>
 </t>
 <t t-name="FieldBoolean">
-    <span class="oe_form_field oe_form_field_boolean">
+    <span class="oe_form_field oe_form_field_boolean" t-att-style="widget.node.attrs.style">
         <input type="checkbox"
             t-att-id="widget.id_for_label"
             t-att-name="widget.name"
@@ -1031,47 +1013,38 @@
     </span>
 </t>
 <t t-name="FieldProgressBar">
-    <span class="oe_form_field oe_form_field_progressbar" t-opentag="true">
+    <span class="oe_form_field oe_form_field_progressbar" t-att-style="widget.node.attrs.style">
         <span></span>
     </span>
 </t>
+<t t-name="FieldStatus">
+    <ul class="oe_form_steps" t-att-style="widget.node.attrs.style"/>
+</t>
 <t t-name="FieldStatus.content">
-    <ul class="oe_form_steps">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-                <span><t t-esc="widget.to_show[i][1]"/></span>
-                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
-            </li>
-        </t>
-    </ul>
-    <div class="oe_clear"/>
+    <t t-set="size" t-value="widget.to_show.length"/>
+    <t t-foreach="_.range(size)" t-as="i">
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
+            <span><t t-esc="widget.to_show[i][1]"/></span>
+            <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+        </li>
+    </t>
 </t>
 <t t-name="FieldBinaryImage">
-    <span class="oe_form_field oe_form_field_image">
-        <div class="oe_form_field_image_controls oe_form_readonly_hidden">
-            <div class="oe-binary-file-set">
-                <form class="oe-binary-form" t-att-target="widget.iframe"
-                    method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                    <input type="hidden" name="session_id" value=""/>
-                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                    <button class="oe_button" type="button" title="Set Image">
-                        <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                    </button>
-                    <input type="file" class="oe-binary-file" name="ufile"
-                        t-att-tabindex="widget.node.attrs.tabindex"
-                        t-att-autofocus="widget.node.attrs.autofocus"
-                    />
-                </form>
-            </div>
-            <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
+    <span class="oe_form_field oe_form_field_image" t-att-style="widget.node.attrs.style">
+        <div class="oe_form_field_image_controls oe_edit_only">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <button class="oe_button" type="button" title="Set Image">
+                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                </button>
+            </t>
+            <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
             </button>
-            <div class="oe-binary-progress" style="display: none">
+            <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </div>
     </span>
 </t>
@@ -1085,7 +1058,7 @@
 </t>
 <t t-name="FieldBinaryFile">
     <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0" t-att-style="widget.node.attrs.style">
         <tr>
             <td>
                 <input type="text" size="1" readonly="readonly"
@@ -1095,31 +1068,29 @@
                     class="field_binary"
                 />
             </td>
-            <td class="oe-binary" nowrap="true">
+            <td class="oe_form_binary" nowrap="true">
                 <table cellspacing="0" cellpadding="0" border="0">
                 <tr>
                     <td>
-                        <div class="oe-binary-file-set" style="width: 80px; height:22px;">
-                            <form class="oe-binary-form" t-att-target="widget.iframe"
-                                method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                                <input type="hidden" name="session_id" value=""/>
-                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                                <button class="oe_button oe_field_button" type="button" title="Set Image">
-                                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                                    <span>Select</span>
-                                </button>
-                                <input type="file" class="oe-binary-file" name="ufile"/>
-                            </form>
-                        </div>
+                        <t t-call="HiddenInputFile">
+                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                            <t t-set="fileupload_style">width: 83px;</t>
+                            <button class="oe_button oe_field_button" type="button" title="Set Image">
+                                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                                <span>Select</span>
+                            </button>
+                        </t>
                     </td>
                     <td>
-                        <button class="oe_button oe-binary-file-save" type="button" title="Save As">
-                            <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
-                            <span>Save As</span>
-                        </button>
+                        <a class="oe_form_binary_file_save_data">
+                            <button class="oe_button oe_form_binary_file_save" type="button" title="Save As">
+                                <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
+                                <span>Save As</span>
+                            </button>
+                        </a>
                     </td>
                     <td>
-                        <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
+                        <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
                             <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                             <span>Clear</span>
                         </button>
@@ -1127,22 +1098,34 @@
                 </tr>
                 </table>
             </td>
-            <td class="oe-binary-progress" style="display: none" nowrap="true">
+            <td class="oe_form_binary_progress" style="display: none" nowrap="true">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
-                <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
             </td>
         </tr>
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <span>
+        <span t-att-style="widget.node.attrs.style">
             <a href="javascript:void(0)" class="oe_form_uri"/>
         </span>
     </t>
 </t>
+<t t-name="HiddenInputFile">
+    <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
+        <form class="oe_form_binary_form" t-att-target="fileupload_id"
+            method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+            <input type="hidden" name="session_id" value=""/>
+            <input type="hidden" name="callback" t-att-value="fileupload_id"/>
+            <t t-raw="__content__"/>
+            <input type="file" class="oe_form_binary_file" name="ufile"/>
+        </form>
+        <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+    </div>
+</t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button oe_form_button"
+        t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus">
         <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
@@ -1204,8 +1187,6 @@
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
-
     <t t-jquery=".oe-view-manager-header">
         this.attr('t-if', 'views.length != 1');
     </t>
@@ -1233,7 +1214,7 @@
 <div t-name="SearchView" class="oe_searchview">
     <div class="oe_searchview_facets"/>
     <div class="oe_searchview_clear"/>
-    <div class="oe_searchview_unfold_drawer"/>
+    <div class="oe_searchview_unfold_drawer" title="Advanced Search..."/>
     <div class="oe_searchview_drawer"/>
 </div>
 
@@ -1257,7 +1238,7 @@
 </span>
 
 <t t-name="SearchView.managed-filters">
-    <option class="oe-filters-title" value="">Filters</option>
+    <option class="oe_search_filters_title" value="">Filters</option>
     <optgroup label="-- Filters --">
         <t t-foreach="filters" t-as="filter">
             <option t-attf-value="get:#{filter_index}"
@@ -1270,7 +1251,6 @@
     <optgroup label="-- Actions --">
         <option value="advanced_filter">Add Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
-        <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>
     </optgroup>
 </t>
@@ -1281,18 +1261,9 @@
         <p>(Any existing filter with the same name will be replaced)</p>
     </div>
 </t>
-<t t-name="SearchView.add_to_dashboard">
-    <div class="oe_form">
-        <p><b>Select Dashboard to add this filter to:</b></p>
-        <select style="width: 100%; margin-right: 1em;">
-            <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
-        </select>
-        <p><b>Title of new Dashboard item:</b></p>
-        <input type="text" style="width: 100%; margin-right: 1em;"/>
-    </div>
-</t>
+
 <t t-name="SearchView.render_lines">
-    <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
+    <table class="oe_search_render_line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
         <tr>
             <td t-foreach="line" t-as="widget" class="oe_searchview_field">
@@ -1429,6 +1400,20 @@
     <div>
     </div>
 </div>
+<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
+    <h4>Add to Dashboard</h4>
+    <form>
+         <input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/>
+         <button class="oe_apply" type="submit">save</button>
+    </form>
+</div>
+<t t-name="SearchView.addtodashboard.selection">
+    <select  title = "Select Dashboard to add this filter to">
+        <t t-foreach="selections" t-as="element">
+        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
+        </t>
+    </select>
+</t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
     <form>
@@ -1443,8 +1428,7 @@
     <li>
         <select class="searchview_extended_prop_field">
             <t t-foreach="widget.attrs.fields" t-as="field">
-                <option t-if="typeof field.store === 'undefined' || field.store || field.fnct_search"
-                        t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
+                <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
                         t-att-value="field.name">
                     <t t-esc="field.string"/>
                 </option>
@@ -1479,31 +1463,34 @@
         <table style="width:100%">
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div class="oe-select-create-popup-view-search" style="width:100%"></div>
+                    <div class="oe_popup_search" style="width:100%"></div>
                 </td>
             </tr>
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div class="oe-select-create-popup-view-list" style="width:100%"></div>
+                    <div class="oe_popup_list" style="width:100%"></div>
                 </td>
             </tr>
         </table>
-        <div class="oe-form-view-popup-form-placeholder oe-select-create-popup-view-form" style="width:100%"></div>
+        <div class="oe_popup_form" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
-    <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_button oe_selectcreatepopup-search-close">Cancel</button>
+    <t t-if="! widget.options.disable_multiple_selection">
+        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+        or
+    </t>
+    <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
     </t>
     <t t-if="multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save &amp; Close</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
     </t>
-    <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
+    or <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
@@ -1511,7 +1498,7 @@
          missing columns
      -->
     <t t-jquery="&gt; :last" t-operation="after">
-        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
+        <td t-if="edited and !options.deletable" class="oe_list_padding"/>
     </t>
 </t>
 
@@ -1527,7 +1514,7 @@
                 <tr>
                     <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                         <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                            src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                            t-att-src='_s + "/web/static/src/img/collapse.gif"' width="16" height="16" border="0"/>
                     </td>
                     <td style="cursor: pointer;">
                         <a style="text-decoration:none" href="javascript:void(0);">
@@ -1539,22 +1526,22 @@
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
-            <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+            <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
         </td>
         <td width="2%">
             <img t-if="rec.att_list.length"
-                id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
         </td>
         <t t-if="rec.child_id.length">
             <t t-set="data" t-value="rec.child_id"/>
@@ -1578,11 +1565,10 @@
 <t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>
 </t>
-
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
-<table t-name="ExportTreeView" class="oe-export"
+<table t-name="ExportTreeView" class="oe_export"
        style="background-color: #F3F3F3;">
     <tr>
         <td colspan="3">
@@ -1687,7 +1673,7 @@
 </t>
 <t t-name="ImportDataView">
 <form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
-        class="oe-import oe-import-no-result">
+        class="oe_import oe_import_no_result">
     <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
     <h2 class="separator horizontal">1. Import a .CSV file</h2>
     <p>Select a .CSV file to import. If you need a sample of file to import,
@@ -1697,9 +1683,9 @@
         <label for="csvfile">CSV File:</label>
         <input type="file" id="csvfile" size="50" name="csvfile"/>
     </p>
-    <h2 class="separator horizontal oe-import-result">2. Check your file format</h2>
-    <div id="result" class="oe-import-result"></div>
-    <fieldset class="oe-closed oe-import-result">
+    <h2 class="separator horizontal oe_import_result">2. Check your file format</h2>
+    <div id="result" class="oe_import_result"></div>
+    <fieldset class="oe_closed oe_import_result">
         <legend>Import Options</legend>
         <table>
             <tr>
@@ -1739,7 +1725,7 @@
         </tr>
         <tr>
             <td t-foreach="records[0]" t-as="column">
-                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
+                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe_m2o_drop_down_button">
                         <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
         </tr>

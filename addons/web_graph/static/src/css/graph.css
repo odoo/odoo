@@ -1,9 +1,12 @@
-.dropdown-menu-icon {
-    z-index: 5000;
+.openerp a.dropdown-menu-icon {
+    z-index: 10;
     position: absolute;
-    right: 0px;
+    color: #4c4c4c;
+    right: 8px;
 }
-
+.openerp a.dropdown-menu-icon:hover {
+    text-decoration: none;
+}
 .editor-render {
     position: relative;
 }
@@ -12,24 +15,62 @@
     width: 650px;
     height: 350px;
 }
-.graph-dropdown {
-    padding: 5px;
-    width: 200px;
-    border: 1px #333 solid;
+.openerp .graph-dropdown {
     display: none;
     position: absolute;
-    right: 0px;
-    background: #fafaf5;
-    z-index: 100;
+    top: 32px;
+    right: 8px;
+    padding: 8px;
+    border: 1px solid #afafb6;
+    background: white;
+    z-index: 900;
+    min-width: 160px;
+    overflow-x: hidden;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
-.open .graph-dropdown {
+.openerp .graph-dropdown h3 {
+    margin: 8px 4px 4px 0;
+    color: #8786b7;
+    font-size: 13px;
+}
+.openerp .graph-menu > li > a {
+    position: relative;
+    display: block;
+    padding: 2px 4px 2px 20px;
+    line-height: 14px;
+    color: #4c4c4c;
+    text-decoration: none;
+}
+.openerp .graph-menu > li > a:hover {
+    text-decoration: none;
+    background: #f0f0fa;
+    background: -moz-linear-gradient(#f0f0fa, #eeeef6);
+    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+    background: -webkit-linear-gradient(#f0f0fa, #eeeef6);
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -box-shadow: none;
+}
+.openerp .open .graph-dropdown {
     display: block;
 }
 .graph-menu {
     padding: 3px;
 }
-.graph-menu .active {
-    background: #aaaaff;
+.graph-menu .active:before {
+    content: "W";
+    font-family: "entypoRegular" !important;
+    font-size: 24px;
+    font-weight: 300 !important;
+    color: #a3a3a3;
+    position: absolute;
+    left: 4px;
+    top: -2px;
 }
 li {
     padding: 2px;

@@ -28,6 +28,7 @@ import werkzeug.wsgi
 from . import nonliterals
 from . import session
 from . import openerplib
+import urlparse
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -332,12 +333,9 @@ def httprequest(f):
 # OpenERP Web werkzeug Session Managment wraped using with
 #----------------------------------------------------------
 STORES = {}
-SESSION_TIMEOUT = 7 * 24 * 60 * 60      # FIXME make it configurable ?
-SESSION_COUNTER = 0
 
 @contextlib.contextmanager
 def session_context(request, storage_path, session_cookie='sessionid'):
-    global SESSION_COUNTER
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
         session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
@@ -347,22 +345,10 @@ def session_context(request, storage_path, session_cookie='sessionid'):
 
     sid = request.cookies.get(session_cookie)
     with session_lock:
-
-        SESSION_COUNTER += 1
-        if SESSION_COUNTER % 100 == 0:
-            SESSION_COUNTER = 0
-            for s in session_store.list():
-                ss = session_store.get(s)
-                t = ss.get('timestamp')
-                if not t or t + SESSION_TIMEOUT < time.time():
-                    _logger.debug('deleting http session %s', s)
-                    session_store.delete(ss)
-
         if sid:
             request.session = session_store.get(sid)
         else:
             request.session = session_store.new()
-        request.session['timestamp'] = time.time()
 
     try:
         yield request.session
@@ -379,7 +365,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                     and not value.jsonp_requests
                     # FIXME do not use a fixed value
                     and value._creation_time + (60*5) < time.time()):
-                _logger.debug('remove OpenERP session %s', key)
+                _logger.debug('remove session %s', key)
                 removed_sessions.add(key)
                 del request.session[key]
 
@@ -432,6 +418,20 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class DisableCacheMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def start_wrapped(status, headers):
+            referer = environ.get('HTTP_REFERER', '')
+            parsed = urlparse.urlparse(referer)
+            debug = not urlparse.parse_qs(parsed.query).has_key('debug')
+            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and k=='Cache-Control'))] 
+            if debug:
+                filtered_headers.append(('Cache-Control', 'no-cache'))
+            start_response(status, filtered_headers)
+        return self.app(environ, start_wrapped)
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
 
@@ -467,8 +467,8 @@ class Root(object):
 
         static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
-            self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
-                self.dispatch, static_dirs)
+            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
@@ -603,26 +603,22 @@ class LocalConnector(openerplib.Connector):
         import openerp
         import traceback
         import xmlrpclib
+        code_string = "warning -- %s\n\n%s"
         try:
-            result = openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except Exception,e:
+            return openerp.netsvc.dispatch_rpc(service_name, method, args)
+        except openerp.osv.osv.except_osv, e:
         # TODO change the except to raise LibException instead of their emulated xmlrpc fault
-            if isinstance(e, openerp.osv.osv.except_osv):
-                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + str(e.value), '')
-            elif isinstance(e, openerp.exceptions.Warning):
-                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
-            elif isinstance(e, openerp.exceptions.AccessError):
-                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
-            elif isinstance(e, openerp.exceptions.AccessDenied):
-                fault = xmlrpclib.Fault('AccessDenied', str(e))
-            elif isinstance(e, openerp.exceptions.DeferredException):
-                info = e.traceback
-                formatted_info = "".join(traceback.format_exception(*info))
-                fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-            else:
-                info = sys.exc_info()
-                formatted_info = "".join(traceback.format_exception(*info))
-                fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
-            raise fault
-        return result
+            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
+        except openerp.exceptions.Warning, e:
+            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
+        except openerp.exceptions.AccessError, e:
+            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
+        except openerp.exceptions.AccessDenied, e:
+            raise xmlrpclib.Fault('AccessDenied', str(e))
+        except openerp.exceptions.DeferredException, e:
+            formatted_info = "".join(traceback.format_exception(*e.traceback))
+            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+        except Exception, e:
+            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
+            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
 
