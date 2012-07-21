@@ -238,20 +238,6 @@ instance.web.ParentedMixin = {
 };
 
 /**
- * Utility function for APIs which can take either a value or a function which
- * returns a value
- *
- * @param {Object} object
- * @param {String} property
- * @returns {Object}
- */
-var getValue = function (object, property) {
-    if (object == null) { return null; }
-    var value = object[property];
-    return _.isFunction(value) ? value.call(object) : value;
-};
-
-/**
  * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
  *
  * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
@@ -677,6 +663,12 @@ instance.web.CallbackEnabled = instance.web.Class.extend(instance.web.CallbackEn
  * That will kill the widget in a clean way and erase its content from the dom.
  */
 instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
+    // Backbone-ish API
+    tagName: 'div',
+    id: null,
+    className: null,
+    attributes: {},
+    events: {},
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -695,7 +687,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * destroyed too. Can be null.
      */
     init: function(parent) {
-        this._uid = _.uniqueId('-widget-');
         instance.web.WidgetMixin.init.call(this,parent);
         this.session = instance.connection;
     },
@@ -746,12 +737,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
 
         return this;
     },
-
-    // Backbone-ish API
-    tagName: 'div',
-    id: null,
-    className: null,
-    attributes: {},
     /**
      * Utility function to build small DOM elements.
      *
@@ -770,9 +755,8 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
         return el;
     },
-    events: {},
     delegateEvents: function () {
-        var events = getValue(this, 'events');
+        var events = this.events;
         if (_.isEmpty(events)) { return; }
 
         for(var key in events) {
@@ -784,8 +768,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             var event = match[1];
             var selector = match[3];
 
-            // add namespace for easy un-delegation
-            event += '.delegated-events' + this._uid;
+            event += '.delegated-events';
             if (!selector) {
                 this.$el.on(event, method);
             } else {
@@ -794,7 +777,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
     },
     undelegateEvents: function () {
-        this.$el.off('.delegated-events' + this._uid);
+        this.$el.off('.delegated-events');
     },
     /**
      * Shortcut for ``this.$el.find(selector)``
