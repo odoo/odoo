@@ -7,10 +7,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <field name="description" position="replace">
-		    <field name="description_pad"
-		    	attrs="{'readonly':[('state','=','done')]}"
-			widget="etherpad"
-			/>
+                    <field name="description_pad" attrs="{'readonly':[('state','=','done')]}" widget="pad"/>
                 </field>
             </field>
         </record>

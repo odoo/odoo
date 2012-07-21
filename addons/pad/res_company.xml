@@ -8,8 +8,7 @@
       <field name="arch" type="xml">
         <xpath expr="//group[@name='account_grp']" position="after">
             <group string="Pads">
-                <field name="pad_url_template"/>
-                <field name="etherpad_api_key"/>
+                <field name="pad_url_template" placeholder="e.g. http://beta.etherpad.org/p/%%(db)s-%%(model)s-%%(salt)s"/>
             </group>
         </xpath>
       </field>

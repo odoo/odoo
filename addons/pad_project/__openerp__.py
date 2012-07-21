@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Specifications on PADs',
+    'name': 'Pad on tasks',
     'version': '1.0',
     "category": "Project Management",
     'description': """
