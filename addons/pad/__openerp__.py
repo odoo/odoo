@@ -25,6 +25,7 @@ Lets the company customize which Pad installation should be used to link to new 
         "static/src/xml/*.xml",
     ],
     'images': ['static/src/img/pad_link_companies.jpeg'],
+    "css": ['static/src/css/etherpad.css',],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
