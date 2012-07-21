@@ -132,18 +132,18 @@ class account_cash_statement(osv.osv):
 
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft':
-                self.search(cr, uid,
-                    [('journal_id', '=', journal_id),('state', '=', 'confirm')],
+                statement_ids = self.search(cr, uid,
+                    [('journal_id', '=', obj.journal_id.id),('state', '=', 'confirm')],
                     order='create_date desc',
                     limit=1,
                     context=context
                 )
 
                 if not statement_ids:
-                    return result
-
-                st = self.browse(cr, uid, statement_ids[0], context=context)
-                result[obj.id] = st.balance_end_real
+                    continue
+                else:
+                    st = self.browse(cr, uid, statement_ids[0], context=context)
+                    result[obj.id] = st.balance_end_real
 
         return result
 

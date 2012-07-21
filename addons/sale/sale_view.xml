@@ -1,6 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager"/>
+
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
+
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
 
@@ -146,10 +156,10 @@
                             <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                             <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                             <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent" class="oe_highlight"/>
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent"/>
                             <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_highlight"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent" class="oe_highlight"/>
-                            <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent"/>
+                            <button name="action_button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
@@ -171,10 +181,9 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
-
                             <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
@@ -197,7 +206,7 @@
                                         <group>
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                groups="base.group_user" 
+                                                groups="base.group_user"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
                                             <label for="product_uom_qty"/>
                                             <div>
@@ -263,6 +272,8 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <group name="sale_margin_grp">
+                            </group>
                             <div class="oe_clear">
                                 <label for="note"/>
                             </div>
@@ -297,7 +308,7 @@
                                 <tree string="Invoices" colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'">
                                     <field name="date_invoice"/>
                                     <field name="number"/>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" string="Customer"/>
                                     <field name="user_id"/>
                                     <field name="date_due"/>
                                     <field name="amount_total"/>
@@ -568,14 +579,6 @@
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
             <field name="filter" eval="True"/>
         </record>
-
-        <act_window
-            context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
-            id="act_res_partner_2_sale_order"
-            name="Quotations and Sales"
-            groups="base.group_sale_salesman"
-            res_model="sale.order"
-            src_model="res.partner"/>
 
         <act_window
             context="{'search_default_product_id': active_id, 'default_product_id': active_id}"
