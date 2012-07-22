@@ -57,7 +57,7 @@ class share_wizard(osv.TransientModel):
            The error_message should have been translated with _().
         """
         if not condition:
-            raise osv.except_osv(_('Sharing access could not be created'), error_message)
+            raise osv.except_osv(_('Sharing access cannot be created.'), error_message)
 
     def has_group(self, cr, uid, module, group_xml_id, context=None):
         """Returns True if current user is a member of the group identified by the module, group_xml_id pair."""

@@ -234,7 +234,7 @@ class wiki_history(osv.osv):
         if text2:
             line2=tools.ustr(text2.splitlines(1))
         if (not line1 and not line2) or (line1 == line2):
-            raise osv.except_osv(_('Warning !'), _('There are no changes in revisions'))
+            raise osv.except_osv(_('Warning !'), _('There are no changes in revisions.'))
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
 
