@@ -212,6 +212,16 @@ class hr_employee(osv.osv):
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
+    def create(self, cr, uid, data, context=None):
+        employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
+        try:
+            (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
+            employee = self.browse(cr, uid, employee_id, context=context)
+            self.pool.get('mail.group').message_append_note(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
+        except:
+            pass # group deleted: do not push a message
+        return employee_id
+
     def unlink(self, cr, uid, ids, context=None):
         resource_obj = self.pool.get('resource.resource')
         resource_ids = []
