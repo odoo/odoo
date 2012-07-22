@@ -116,14 +116,14 @@ class survey_question_wiz(osv.osv_memory):
                         if ((context.has_key('active') and not context.get('active', False)) \
                                     or not context.has_key('active')) and not sur_name_rec.page_no + 1:
                             if sur_rec.state != "open" :
-                                raise osv.except_osv(_('Warning !'),_("You can not answer because the survey is not open"))
+                                raise osv.except_osv(_('Warning !'),_("You cannot answer because the survey is not open."))
                             cr.execute('select count(id) from survey_history where user_id=%s\
                                                     and survey_id=%s', (uid,survey_id))
                             res = cr.fetchone()[0]
                             user_limit = survey_obj.browse(cr, uid, survey_id)
                             user_limit = user_limit.response_user
                             if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning !'),_("You can not answer this survey more than %s times") % (user_limit))
+                                raise osv.except_osv(_('Warning !'),_("You cannot answer this survey more than %s times") % (user_limit))
 
                         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
@@ -743,7 +743,7 @@ class survey_question_wiz(osv.osv_memory):
                                 except:
                                     for res in resp_id_list:
                                         sur_name_read['store_ans'].pop(res)
-                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' \n" + _("Please enter an integer value"))
+                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' \n" + _("Please enter an integer value."))
 
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) == 3:
                             if type(val1) == type('') or type(val1) == type(u''):
@@ -777,7 +777,7 @@ class survey_question_wiz(osv.osv_memory):
                     if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'\n" + _("You cannot select the same answer more than one time"))
+                        raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'\n" + _("You cannot select the same answer more than one time."))
 
                     if not select_count:
                         resp_obj.write(cr, uid, resp_id, {'state':'skip'})
@@ -938,7 +938,7 @@ class survey_question_wiz(osv.osv_memory):
                                     sur_name_read['store_ans'][update].update({key:val})
                                     select_count += 1
                                 except:
-                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'\n" + _("Please enter an integer value"))
+                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'\n" + _("Please enter an integer value."))
 
                         elif val and len(key.split('_')) == 3:
                             resp_obj.write(cr, uid, update, {'state': 'done'})
@@ -969,7 +969,7 @@ class survey_question_wiz(osv.osv_memory):
                     raise osv.except_osv(_('Warning !'), "'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg']))
 
                 if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
-                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "\n" + _("You cannot select same answer more than one time'"))
+                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "\n" + _("You cannot select same answer more than one time.'"))
 
                 if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                     raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))

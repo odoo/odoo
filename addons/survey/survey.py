@@ -449,11 +449,11 @@ class survey_question(osv.osv):
                 for col in vals['column_heading_ids']:
                     if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
                         raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices\
-                                 in column heading"))
+                                 in column heading."))
                     elif not col[2] or not col[2].has_key('menu_choice') or\
                              col[2]['menu_choice'].strip() == '':
                         raise osv.except_osv(_('Warning !'),_("You must enter one or more menu \
-                                choices in column heading (white spaces not allowed)"))
+                                choices in column heading (white spaces not allowed)."))
 
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
@@ -481,14 +481,14 @@ class survey_question(osv.osv):
                 if vals.has_key('answer_choice_ids') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']) or not vals['maximum_req_ans']:
                     raise osv.except_osv(_('Warning !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
                 if maximum_ans <= minimum_ans:
-                    raise osv.except_osv(_('Warning !'),_("Maximum Required Answer is greater than Minimum Required Answer"))
+                    raise osv.except_osv(_('Warning !'),_("Maximum Required Answer is greater than Minimum Required Answer."))
 
         if vals['type'] ==  'matrix_of_drop_down_menus':
             for col in vals['column_heading_ids']:
                 if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices in column heading"))
+                    raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices in column heading."))
                 elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)"))
+                    raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)."))
 
         res = super(survey_question, self).create(cr, uid, vals, context)
         return res
