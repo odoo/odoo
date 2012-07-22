@@ -379,7 +379,7 @@ class survey_question(osv.osv):
             if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans',\
                              'matrix_of_drop_down_menus', 'rating_scale']:
                 if not col_len:
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more column heading."))
+                    raise osv.except_osv(_('Warning !'),_("You must enter one or more column headings."))
             ans_len = len(question['answer_choice_ids'])
 
             if vals.has_key('answer_choice_ids'):
@@ -391,7 +391,7 @@ class survey_question(osv.osv):
 
             if que_type not in ['descriptive_text', 'single_textbox', 'comment','table']:
                 if not ans_len:
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more Answer."))
+                    raise osv.except_osv(_('Warning !'),_("You must enter one or more Answers."))
             req_type = ""
 
             if vals.has_key('required_type'):
@@ -462,7 +462,7 @@ class survey_question(osv.osv):
         maximum_ans = 0
         if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
             if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment','table']:
-                raise osv.except_osv(_('Warning !'),_("You must enter one or more answer."))
+                raise osv.except_osv(_('Warning !'),_("You must enter one or more answers."))
 
         if vals.has_key('column_heading_ids') and  not len(vals['column_heading_ids']):
             if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:

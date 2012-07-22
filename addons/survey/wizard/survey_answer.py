@@ -123,7 +123,7 @@ class survey_question_wiz(osv.osv_memory):
                             user_limit = survey_obj.browse(cr, uid, survey_id)
                             user_limit = user_limit.response_user
                             if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning !'),_("You cannot answer this survey more than %s times") % (user_limit))
+                                raise osv.except_osv(_('Warning !'),_("You cannot answer this survey more than %s times.") % (user_limit))
 
                         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
