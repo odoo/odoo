@@ -76,7 +76,7 @@ class sugar_import(import_framework):
         #login
         PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
         if sessionid == '-1':
-            raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password or bad SugarSoap Api url !'))
+            raise osv.except_osv(_('Error !'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
         self.context['port'] = PortType
         self.context['session_id'] = sessionid
         
@@ -929,8 +929,8 @@ class sugar_import(import_framework):
     """   
     def get_email_subject(self, result, error=False):
         if error:
-            return "Sugarcrm data import failed at %s due to an unexpected error" % self.date_ended
-        return "your sugarcrm data were successfully imported at %s" % self.date_ended 
+            return "Sugarcrm data import failed at %s due to an unexpected error." % self.date_ended
+        return "your sugarcrm data were successfully imported at %s." % self.date_ended 
     
     def get_body_header(self, result):
         return "Sugarcrm import : report of last import" 

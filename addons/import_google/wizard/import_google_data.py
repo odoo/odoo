@@ -73,7 +73,7 @@ class synchronize_google(osv.osv_memory):
             user_obj = self.pool.get('res.users').browse(cr, uid, uid,context=context)
             google=self.pool.get('google.login')
             if not user_obj.gmail_user or not user_obj.gmail_password:
-                raise osv.except_osv(_('Warning !'), _("No Google Username or password defined for user.\nPlease define in user view."))
+                raise osv.except_osv(_('Warning !'), _("No Google username or password is defined for user.\nPlease define in user view."))
             gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
             if not gd_client:
                 return [('failed', 'Connection to google fail')]
@@ -127,13 +127,13 @@ class synchronize_google(osv.osv_memory):
         gmail_pwd = user_obj.gmail_password
         google = self.pool.get('google.login')
         if not gmail_user or not gmail_pwd:
-            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
+            raise osv.except_osv(_('Error'), _("Invalid login detail !\nPlease specify correct username and password."))
         
         if context.get('contact'):
-            msg = "  Your contacts are being imported in background, an email to %s will be sent when the process is over" % (user_obj.gmail_user)
+            msg = "  Your contacts are being imported in background, an email to %s will be sent when the process is over." % (user_obj.gmail_user)
             gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
             if not gd_client:
-                raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
+                raise osv.except_osv(_('Error'), _("Please specify correct username and password!"))        
             if obj.group_name not in ['all']:
                 context.update({ 'group_name': obj.group_name})
             tables.append('Contact')
@@ -145,7 +145,7 @@ class synchronize_google(osv.osv_memory):
                             'supplier':sup})
               
         elif context.get('calendar'):
-            msg = "  You're Meeting are import in background, a email will be send when the process is finished to %s"%(user_obj.gmail_user)
+            msg = "  Your meetings are being imported in background, an email to %s will be sent when the process is over."%(user_obj.gmail_user)
          
             tables.append('Events')
             current_rec = self.browse(cr, uid, ids, context=context)
