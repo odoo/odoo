@@ -113,7 +113,7 @@ class partner_vat_intra(osv.osv_memory):
         issued_by = company_vat[:2]
 
         if len(wiz_data.period_code) != 6:
-            raise osv.except_osv(_('Wrong Period Code'), _('The period code you entered is not valid.'))
+            raise osv.except_osv(_('Wrong Period Code'), _('Period code is not valid.'))
 
         if not wiz_data.period_ids:
             raise osv.except_osv(_('Data Insufficient!'),_('Please select at least one Period.'))
