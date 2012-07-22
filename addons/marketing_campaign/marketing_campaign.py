@@ -133,7 +133,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activitie's in it."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started. There are no activities in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -145,7 +145,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_signal_without_from = True
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity. Modify campaign's activities to mark one as the starting point."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -505,7 +505,7 @@ class marketing_campaign_activity(osv.osv):
         method = '_process_wi_%s' % (activity.type,)
         action = getattr(self, method, None)
         if not action:
-            raise NotImplementedError('Method %r in not implemented on %r object' % (method, self))
+            raise NotImplementedError('Method %r is not implemented on %r object.' % (method, self))
 
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
