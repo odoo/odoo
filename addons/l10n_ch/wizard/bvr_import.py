@@ -222,10 +222,10 @@ def _import(self, cursor, user, data, context=None):
                     account_id = int(value.split(',')[1])
             else :
                 raise osv.except_osv(_('Error'),
-                    _('The properties account payable account receivable are not set.'))
+                    _('The properties account payable and account receivable are not set.'))
         if not account_id and line_ids:
             raise osv.except_osv(_('Error'),
-                _('The properties account payable account receivable are not set.'))
+                _('The properties account payable and account receivable are not set.'))
         values['account_id'] = account_id
         values['partner_id'] = partner_id
         statement_line_obj.create(cursor, user, values, context=context)
