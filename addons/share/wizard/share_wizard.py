@@ -649,19 +649,19 @@ class share_wizard(osv.TransientModel):
                          rule_name=rule_name, restrict=True, context=context)
         except Exception:
             _logger.exception('Failed to create share access')
-            raise osv.except_osv(_('Sharing access could not be created'),
+            raise osv.except_osv(_('Sharing access cannot be created.'),
                                  _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
         self._assert(wizard_data.action_id and wizard_data.access_mode,
-                     _('Action and Access Mode are required to create a shared access'),
+                     _('Action and Access Mode are required to create a shared access.'),
                      context=context)
         self._assert(self.has_share(cr, uid, context=context),
-                     _('You must be a member of the Share/User group to use the share wizard'),
+                     _('You must be a member of the Share/User group to use the share wizard.'),
                      context=context)
         if wizard_data.user_type == 'emails':
             self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
-                     _('Please indicate the emails of the persons to share with, one per line'),
+                     _('Please indicate the emails of the persons to share with, one per line.'),
                      context=context)
 
     def _create_share_users_group(self, cr, uid, wizard_data, context=None):

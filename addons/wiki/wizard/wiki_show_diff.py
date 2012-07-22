@@ -51,7 +51,7 @@ class showdiff(osv.osv_memory):
             nids.sort()
             diff = base64.encodestring(history.getDiff(cr, uid, ids[0], nids[-1]))
         else:
-            raise osv.except_osv(_('Warning'), _('You need to select minimum one or maximum two history revision!'))
+            raise osv.except_osv(_('Warning'), _('You need to select minimum one or maximum two history revisions!'))
 
 
         return diff

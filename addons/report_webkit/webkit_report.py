@@ -164,7 +164,7 @@ class WebKitParser(report_sxw):
             status = subprocess.call(command, stderr=subprocess.PIPE) # ignore stderr
             if status :
                 raise except_osv(
-                                _('Webkit raise an error !' ),
+                                _('Webkit raise an error!' ),
                                 status
                             )
         except Exception:
@@ -215,7 +215,7 @@ class WebKitParser(report_sxw):
         if not template and report_xml.report_webkit_data :
             template =  report_xml.report_webkit_data
         if not template :
-            raise except_osv(_('Error!'), _('Webkit report template not found !'))
+            raise except_osv(_('Error!'), _('Webkit report template not found!'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.header:
@@ -249,7 +249,7 @@ class WebKitParser(report_sxw):
                 except Exception, e:
                     msg = exceptions.text_error_template().render()
                     _logger.error(msg)
-                    raise except_osv(_('Webkit render !'), msg)
+                    raise except_osv(_('Webkit render!'), msg)
         else:
             try :
                 html = body_mako_tpl.render(helper=helper,
@@ -260,7 +260,7 @@ class WebKitParser(report_sxw):
             except Exception, e:
                 msg = exceptions.text_error_template().render()
                 _logger.error(msg)
-                raise except_osv(_('Webkit render !'), msg)
+                raise except_osv(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
             head = head_mako_tpl.render(helper=helper,
@@ -269,7 +269,7 @@ class WebKitParser(report_sxw):
                                         _debug=False,
                                         **self.parser_instance.localcontext)
         except Exception, e:
-            raise except_osv(_('Webkit render !'),
+            raise except_osv(_('Webkit render!'),
                 exceptions.text_error_template().render())
         foot = False
         if footer :
@@ -282,7 +282,7 @@ class WebKitParser(report_sxw):
             except:
                 msg = exceptions.text_error_template().render()
                 _logger.error(msg)
-                raise except_osv(_('Webkit render !'), msg)
+                raise except_osv(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
                 deb = head_mako_tpl.render(helper=helper,
@@ -293,7 +293,7 @@ class WebKitParser(report_sxw):
             except Exception, e:
                 msg = exceptions.text_error_template().render()
                 _logger.error(msg)
-                raise except_osv(_('Webkit render !'), msg)
+                raise except_osv(_('Webkit render!'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
