@@ -1,15 +1,6 @@
 <openerp>
     <data noupdate="1">
 
-    <record id="product_uom_categ_vol" model="product.uom.categ">
-        <field name="name">LTR</field>
-    </record>
-    <record id="product_uom_ltr" model="product.uom">
-        <field name="category_id" ref="product_uom_categ_vol"/>
-        <field name="name">LTR</field>
-        <field name="factor">1.0</field>
-    </record>
-    
         <record id="product_product_jambon" model="product.product">
             <field name="supply_method">buy</field>
             <field name="list_price">7.0</field>
@@ -106,7 +97,7 @@
             <field name="standard_price">6.0</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="uos_id" ref="product_uom_ltr" />
+            <field name="uos_id" ref="product.product_uom_litre" />
             <field name="uos_coeff">0.5</field>
             <field name="name">Cow milk</field>
             <field name="life_time">30</field>

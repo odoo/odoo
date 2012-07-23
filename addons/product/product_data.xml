@@ -20,8 +20,8 @@
         <record id="uom_categ_length" model="product.uom.categ">
             <field name="name">Length / Distance</field>
         </record>
-        <record id="product_uom_categ_fluid" model="product.uom.categ">
-            <field name="name">Fluid</field>
+        <record id="product_uom_categ_vol" model="product.uom.categ">
+            <field name="name">Volume</field>
         </record>
 
         <!--
@@ -88,7 +88,7 @@
         </record>
         <record id="product_uom_litre" model="product.uom">
             <field name="name">Litre</field>
-            <field name="category_id" ref="product_uom_categ_fluid"/>
+            <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">1.0</field>
         </record>
 
