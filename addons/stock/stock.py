@@ -2631,12 +2631,14 @@ class stock_inventory(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c)
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default.copy()
-        default.update({'move_ids': [], 'date_done': False})
-        return super(stock_inventory, self).copy(cr, uid, id, default, context=context)
+        # force new date, date_done and move_ids on copied datas
+        default.update(date=False, date_done=False, move_ids=[])
+        copied_data = super(stock_inventory, self).copy_data(cr, uid, id, default=default, context=context)
+        copied_data.pop('date',None)
+        return copied_data
 
     def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
         """ Creates a stock move from an inventory line
@@ -2654,7 +2656,11 @@ class stock_inventory(osv.osv):
             context = {}
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
-            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
+            inventory_move_ids = [x.id for x in inv.move_ids]
+            move_obj.action_done(cr, uid, inventory_move_ids, context=context)
+            # ask 'stock.move' action done are going to change to 'date' of the move,
+            # we overwrite the date as moves must appear at the inventory date.
+            move_obj.write(cr, uid, inventory_move_ids, {'date': inv.date}, context=context)
             self.write(cr, uid, [inv.id], {'state':'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
