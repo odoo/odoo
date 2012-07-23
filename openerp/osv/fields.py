@@ -182,7 +182,7 @@ class char(_column):
     _type = 'char'
 
     def __init__(self, string="unknown", size=None, **args):
-        _column.__init__(self, string=string, size=size, **args)
+        _column.__init__(self, string=string, size=size or None, **args)
         self._symbol_set = (self._symbol_c, self._symbol_set_char)
 
     # takes a string (encoded in utf8) and returns a string (encoded in utf8)
