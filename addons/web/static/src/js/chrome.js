@@ -135,8 +135,12 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.$element.dialog('close');
     },
     on_close: function() {
+	if (this.__tmp_dialog_destroying)
+	    return;
         if (this.dialog_options.destroy_on_close) {
+	    this.__tmp_dialog_closing = true;
             this.destroy();
+	    this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -145,6 +149,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
+        if (! this.__tmp_dialog_closing) {
+	    this.__tmp_dialog_destroying = true;
+	    this.close();
+	    this.__tmp_dialog_destroying = undefined;
+	}
         if (! this.isDestroyed()) {
             this.$element.dialog('destroy');
         }

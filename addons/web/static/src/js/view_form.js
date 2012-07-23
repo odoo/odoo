@@ -1682,11 +1682,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     on_confirmed: function() {
         var self = this;
 
-        var context = this.node.attrs.context;
-        if (context && context.__ref) {
-            context = new instance.web.CompoundContext(context);
-            context.set_eval_context(this._build_eval_context());
-        }
+        var context = this.build_context();
 
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
