@@ -41,7 +41,6 @@
             <field name="arch" type="xml">
                 <search string="Search Document Storage">
                     <field name="name" string="Document Storage"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
@@ -172,20 +171,15 @@
             <field name="arch" type="xml">
                 <search string="Search Document Directory">
                     <field name="name" string="Document Directory"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Static" domain="[('type','=','directory')]"/>
-                    <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
-                    <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
                     <field name="user_id" />
-                    <newline/>
+                    <filter string="Static" domain="[('type','=','directory')]"/>
+                    <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Storage" domain="[]" icon="terp-accessories-archiver" context="{'group_by':'storage_id'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
@@ -269,11 +263,7 @@
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_documents_filter']" position="replace">
-                    <filter name="my_documents_filter" 
-                            string="My Document(s)"
-                            icon="terp-personal"
-                            domain="[('user_id','=',uid)]"
-                            help="Filter on my documents"/>
+                    <filter name="my_documents_filter" string="My Document(s)" icon="terp-personal" domain="[('user_id','=',uid)]" help="Filter on my documents"/>
                 </xpath>
                 <xpath expr="//field[@name='create_uid']" position="replace">
                     <field name="user_id"/>
