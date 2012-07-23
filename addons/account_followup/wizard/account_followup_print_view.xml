@@ -42,12 +42,10 @@
             <field name="arch" type="xml">
                 <search string="Partner to Remind">
                     <field name="date_followup"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Balance > 0" domain="[('balance','&gt;',0)]" icon="terp-dolar" name="balance_positive"/>
-                    <separator orientation="vertical"/>
                     <field name="partner_id"/>
                     <field name="max_followup_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Balance > 0" domain="[('balance','&gt;',0)]" icon="terp-dolar" name="balance_positive"/>
                 </search>
             </field>
         </record>
