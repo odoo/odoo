@@ -78,18 +78,19 @@
                 <page string="Accounting" col="4">
                     <group>
                         <group>
-                            <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_account_position" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="last_reconciliation_date"/>
+                        </group>
+                        <group>
+                            <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_payment_term" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="property_account_payable" groups="account.group_account_invoice"/>
-                        </group>
-                        <group>
                             <field name="credit"/>
                             <field name="credit_limit"/>
                         </group>
                         <group>
+                            <field name="property_account_payable" groups="account.group_account_invoice"/>
                             <field name="debit"/>
                         </group>
                     </group>
@@ -141,17 +142,6 @@
             src_model="res.partner"
             view_type="form"
             view_mode="tree,form,graph,calendar"/>
-
-        <record id="view_res_partner_reconcile" model="ir.ui.view">
-            <field name="name">res.partner.form.reconcile</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <field name="credit_limit" position="after">
-                    <field name="last_reconciliation_date"/>
-                </field>
-            </field>
-        </record>
 
     </data>
 </openerp>
