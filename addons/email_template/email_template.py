@@ -101,6 +101,11 @@ class email_template(osv.osv):
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
         return {'value':{'model': mod_name}}
 
+    def name_get(self, cr, uid, ids, context=None):
+        """ Override name_get of mail.message: return directly the template
+            name, and not the generated name from mail.message.common."""
+        return [(record.id, record.name) for record in self.browse(cr, uid, ids, context=context)]
+
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id': fields.many2one('ir.model', 'Related document model'),
@@ -311,7 +316,7 @@ class email_template(osv.osv):
                   'attachment_ids': False,
                   'message_id': False,
                   'state': 'outgoing',
-                  'subtype': 'plain',
+                  'content_subtype': 'plain',
         }
         if not template_id:
             return values
@@ -326,8 +331,15 @@ class email_template(osv.osv):
                                                  template.model, res_id, context=context) \
                                                  or False
 
+        # if email_to: find or create a partner
+        if values['email_to']:
+            partner_id = self.pool.get('mail.thread').message_partner_by_email(cr, uid, values['email_to'], context=context)['partner_id']
+            if not partner_id:
+                partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
+            values['partner_ids'] = [partner_id]
+
         if values['body_html']:
-            values.update(subtype='html')
+            values.update(content_subtype='html')
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
