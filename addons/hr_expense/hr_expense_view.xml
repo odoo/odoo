@@ -69,7 +69,7 @@
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
                     <button name="done" states="accepted" string="Generate Account Entry" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
-                    <button name="action_view_receipt" states="done" string="Open Receipt" type="object" class="oe_highlight"/>
+                    <button name="action_view_receipt" states="done" string="Open Receipt" type="object"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
