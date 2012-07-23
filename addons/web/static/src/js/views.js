@@ -1074,11 +1074,13 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
                     sup.call(self);
+                    // desactivated because it created an exception, plus it does not seem very useful
+                    /*
                     if (field) {
                         var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
                         self.$element.scrollTo($field_input);
                         $field_input.focus();
-                    }
+                    }*/
                 });
             } else {
                 sup.call(self);
