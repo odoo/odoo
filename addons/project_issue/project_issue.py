@@ -397,6 +397,25 @@ class project_issue(base_stage, osv.osv):
         res = super(project_issue, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
+    
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+        if context is None:
+            context = {}
+        if not stage_id:
+            return {'value':{}}
+        stage = self.pool.get('project.task.type').browse(cr, uid, stage_id, context)
+        if stage.state == "draft":
+            return {'value':{'active': True,'date_open': False, 'date_closed': False}}
+        if stage.state == "open":
+            cases = self.browse(cr, uid, ids, context=context)
+            data = {'active': True}
+            for case in cases:
+                if case.stage_id and case.stage_id.state == 'draft':
+                    data['date_open'] = fields.datetime.now()
+                if not case.user_id:
+                    data['user_id'] = uid
+            return {'value':data}
+        return {'value':{}}
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
