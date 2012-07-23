@@ -767,7 +767,7 @@ class BaseModel(object):
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
-                'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
