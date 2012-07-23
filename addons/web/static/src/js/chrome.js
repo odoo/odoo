@@ -263,7 +263,11 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    if (instance.connection.debug) {
+		this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    } else {
+		this.$element.text(_t("Loading"));
+	    }
             this.$element.show();
             this.getParent().$element.addClass('oe_wait');
         } else {
