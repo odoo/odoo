@@ -519,7 +519,7 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-    
+
     def message_get_subscribers(self, cr, uid, ids, context=None):
         """ Override to add responsible user. """
         user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
@@ -538,7 +538,7 @@ class project_issue(base_stage, osv.osv):
         return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>converted</b> in to task.")
+        message = _("Project issue has been <b>converted</b> into task.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
