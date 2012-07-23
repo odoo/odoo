@@ -110,8 +110,9 @@ instance.web.DiagramView = instance.web.View.extend({
     get_label : function(){
     	var self = this
     	var html_label = _.each(self.labels,function(label){
-    		html_label = "<span>" + label.attrs.string + "</span>"
+    		html_label = "<p>" + label.attrs.string + "</p>"
     		self.$element.find('.oe_diagram_diagram_header').append(html_label)
+    		self.$element.find('.oe_diagram_diagram_header > p').css('padding-left','5px')
     	})
     	
     },
