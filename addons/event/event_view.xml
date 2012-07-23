@@ -103,10 +103,12 @@
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                     <header>
-                        <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
-                        <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
-                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+                        <span groups="base.user_group">
+                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
+                            <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
+                            <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
+                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+                        </span>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
