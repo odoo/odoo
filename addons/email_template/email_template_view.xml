@@ -122,16 +122,11 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Templates">
-                    <group>
-                        <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
-                        <separator orientation="vertical"/>
-                        <field name="model_id"/>
-                        <field name="lang"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
+                    <field name="model_id"/>
+                    <field name="lang"/>
                     <group expand="0" string="Group by...">
                         <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}" icon="terp-folder-orange"/>
-                        <separator orientation="vertical"/>
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
                     </group>
                </search>
