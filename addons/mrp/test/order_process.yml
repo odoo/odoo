@@ -89,8 +89,6 @@
                 assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond."
                 if order_line.product_uos:
                     assert move_line.product_uos.id == order_line.product_uos.id, "UOS is not correspond."
-                assert move_line.location_id.id == order.location_src_id.id, "Source location is not correspond."
-                assert move_line.location_dest_id.id == routing_loc or order.location_src_id.id, "Destination Location is not correspond."
                 procurement_ids = procurement.search(cr, uid, [('move_id','=',move_line.id)])
                 assert procurement_ids, "Procurement should be created for shipment line of raw materials."
                 shipment_procurement = procurement.browse(cr, uid, procurement_ids[0], context=context)
