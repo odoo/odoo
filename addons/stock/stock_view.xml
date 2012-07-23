@@ -683,14 +683,9 @@
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="1"/>
 
-<!--
-              STOCK PICKING
--->
-
         <!--
-        #
-        # Defaults and Internal Pickings
-        #
+            Stock picking
+            Defaults and Internal Pickings
         -->
 
         <record model="ir.ui.view" id="stock_picking_calendar">
@@ -800,9 +795,11 @@
                                 </tree>
                                 <form string="Stock Moves" version="7.0">
                                     <header>
-                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        <span groups="base.group_user">
+                                            <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                            <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                                            <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        </span>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
                                     </header>
                                     <group>
@@ -816,7 +813,8 @@
                                                 <button name="%(stock.move_scrap)d"
                                                         string="Scrap" type="action"
                                                         icon="gtk-convert" context="{'scrap': True}"
-                                                        states="draft,waiting,confirmed,assigned"/>
+                                                        states="draft,waiting,confirmed,assigned"
+                                                        groups="base.group_user"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
                                             <div groups="product.group_uos">
@@ -941,11 +939,7 @@
             <field name="act_window_id" ref="action_picking_tree6"/>
         </record>
 
-        <!--
-        #
-        # Sending Products
-        #
-        -->
+        <!-- Sending Products -->
         <record id="view_picking_out_tree" model="ir.ui.view">
             <field name="name">stock.picking.out.tree</field>
             <field name="model">stock.picking</field>
@@ -1059,11 +1053,7 @@
         </record>
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
-        <!--
-        #
-        # Incomming Shipments
-        #
-        -->
+        <!-- Incomming Shipments -->
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
             <field name="model">stock.picking.in</field>
@@ -1191,8 +1181,7 @@
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"
-                      />
+                        states="draft,waiting,confirmed,assigned"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
@@ -1217,7 +1206,7 @@
             </field>
         </record>
 
-<!--        <menuitem id="menu_traceability_low" name="Low Level" parent="menu_traceability"/> -->
+        <!-- <menuitem id="menu_traceability_low" name="Low Level" parent="menu_traceability"/> -->
 
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
@@ -1393,8 +1382,9 @@
                 </tree>
             </field>
         </record>
+
         <!-- test -->
-          <record id="view_move_tree_reception_picking_board" model="ir.ui.view">
+        <record id="view_move_tree_reception_picking_board" model="ir.ui.view">
             <field name="name">stock.move.tree3</field>
             <field name="model">stock.move</field>
             <field name="type">tree</field>
