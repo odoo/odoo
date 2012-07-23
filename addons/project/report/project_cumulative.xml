@@ -53,21 +53,20 @@
             <field name="model">project.task.history.cumulative</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-               <search string="Task's Analysis">
-                    <group>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="In Progress Tasks" icon="terp-camera_test"/>
-                        <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                        <filter name="kanban_blocked" string="Blocked" domain="[('kanban_state','=','blocked')]" icon="terp-gtk-media-pause"/>
-                        <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]" icon="terp-camera_test"/>
-                        <filter string="My Tasks" domain="[('user_id','=',uid)]" help="My Tasks" icon="terp-personal" />
-                        <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                        <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
-                        <separator orientation="vertical"/>
-                        <field name="project_id"/>
-                        <field name="user_id"/>
-                    </group>
+                <search string="Task's Analysis">
+                    <field name="date"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="In Progress Tasks" icon="terp-camera_test"/>
+                    <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
+                    <separator/>
+                    <filter name="kanban_blocked" string="Blocked" domain="[('kanban_state','=','blocked')]" icon="terp-gtk-media-pause"/>
+                    <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]" icon="terp-camera_test"/>
+                    <separator/>
+                    <filter string="My Tasks" domain="[('user_id','=',uid)]" help="My Tasks" icon="terp-personal" />
+                    <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                    <separator/>
+                    <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                 </search>
             </field>
         </record>
