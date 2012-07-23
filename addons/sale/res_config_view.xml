@@ -8,35 +8,122 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <group name="config_sale" position="inside">
+                <div name="config_sale" position="before">
+                    <separator string="Invoicing Process"/>
+                    <group>
+                        <label for="id" string="Invoicing Process"/>
+                        <div>
+                            <div>
+                                <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
+                                <label for="group_invoice_so_lines"/>
+                            </div>
+                            <div>
+                                <field name="group_invoice_deli_orders" class="oe_inline" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
+                                <label for="group_invoice_deli_orders"/>
+                            </div>
+                            <div>
+                                <field name="task_work" class="oe_inline" on_change="onchange_task_work(task_work)"/>
+                                <label for="task_work"/>
+                            </div>
+                            <div>
+                                <field name="timesheet" class="oe_inline" on_change="onchange_timesheet(timesheet)"/>
+                                <label for="timesheet"/>
+                            </div>
+                        </div>    
+                    </group> 
+                    <group>
+                        <label for="id" string="Default Process" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False),('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False),('task_work','=',False), ('module_account_analytic_analysis','=',False)]}"/>
+                        <div>
+                            <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
+                                <label for="default_order_policy"/>
+                                <field name="default_order_policy" class="oe_inline"/>
+                            </div>
+                            <div attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}">
+                                <field name="module_delivery" class="oe_inline"/>
+                                <label for="module_delivery"/>
+                            </div>
+                            <div attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}">
+                                <label for="time_unit"/>
+                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
                     <field name="module_project_timesheet" invisible="1"/>
                     <field name="module_project_mrp" invisible="1"/>
-                    <separator string="Sale Order" colspan="2"/>
-                    <field name="group_uom"/>
-                    <field name="group_sale_delivery_address"/>
-                    <field name="group_sale_pricelist"/>
-                    <field name="group_multiple_shops"/>
-                    <field name="module_warning"/>
-                    <field name="decimal_precision"/>
-                    <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
-                    <field name="group_discount_per_so_line"/>
-                    <field name="module_sale_margin"/>
-                    <field name="module_sale_journal"/>
-                </group>
-                <group name="config_other" position="inside">
-                    <separator string="Invoicing Policy" colspan="2" />
-                    <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
-                    <field name="group_invoice_deli_orders" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
-                    <field name="task_work" on_change="onchange_task_work(task_work)"/>
-                    <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
-                    <field name="default_order_policy" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}"/>
-                    <field name="module_delivery" attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"/>
-                    <field name="time_unit" domain="[('category_id.name','=','Working Time')]"
-                        attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"/>
-                    <separator string="Contracts" colspan="2"/>
-                    <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
-                    <field name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
-                </group>
+                    <separator string="Quotations and Sales Orders"/>
+                    <group>
+                        <label for="id" string="Customer Features"/>
+                        <div>
+                            <div>
+                                <field name="group_sale_delivery_address" class="oe_inline"/>
+                                <label for="group_sale_delivery_address"/>
+                            </div>
+                            <div>
+                                <field name="group_sale_pricelist" class="oe_inline"/>
+                                <label for="group_sale_pricelist"/>
+                            </div>
+                            <div>
+                                <field name="module_sale_journal" class="oe_inline"/>
+                                <label for="module_sale_journal"/>
+                            </div>
+                            <div name="module_warning">
+                                <field name="module_warning" class="oe_inline"/>
+                                <label for="module_warning"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Product Features"/>
+                        <div>
+                            <div>
+                                <field name="group_uom" class="oe_inline"/>
+                                <label for="group_uom"/>
+                            </div>
+                            <div>
+                                <field name="group_discount_per_so_line" class="oe_inline"/>
+                                <label for="group_discount_per_so_line"/>
+                            </div>
+                            <div>
+                                <label for="decimal_precision"/>
+                                <field name="decimal_precision" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Sale Features"/>
+                        <div>
+                            <div>
+                                <field name="group_multiple_shops" class="oe_inline"/>
+                                <label for="group_multiple_shops"/>
+                            </div>
+                            <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}">
+                                <field name="default_picking_policy" class="oe_inline"/>
+                                <label for="default_picking_policy"/>
+                            </div>
+                            <div name="module_sale_margin">
+                                <field name="module_sale_margin" class="oe_inline"/>
+                                <label for="module_sale_margin"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Contracts Management"/>
+                    <div style="color:grey">
+                        Use contract to be able to manage your services with multiple invoicing as part of the same contract with your customer
+                    </div>
+                    <group>
+                        <label for="id" string="Contract Feature"/>
+                        <div>
+                            <div>
+                                <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)" class="oe_inline"/>
+                                <label for="module_account_analytic_analysis"/>
+                            </div>
+                            <div attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}">
+                                <field name="module_analytic_user_function" class="oe_inline"/>
+                                <label for="module_analytic_user_function"/>
+                            </div>
+                        </div>
+                    </group>
+                </div>
             </field>
         </record>
 
