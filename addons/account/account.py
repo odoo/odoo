@@ -2916,7 +2916,7 @@ class account_fiscal_position_template(osv.osv):
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         fp_ids = self.search(cr, uid, [('chart_template_id', '=', chart_temp_id)])
         for position in self.browse(cr, uid, fp_ids, context=context):
-            new_fp = obj_fiscal_position.create(cr, uid, {'company_id': company_id, 'name': position.name})
+            new_fp = obj_fiscal_position.create(cr, uid, {'company_id': company_id, 'name': position.name, 'note': position.note})
             for tax in position.tax_ids:
                 obj_tax_fp.create(cr, uid, {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
