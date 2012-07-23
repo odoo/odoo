@@ -18,6 +18,9 @@ Contents:
 
     search-view
 
+    list-view
+    form-notes
+
 Older stuff
 -----------
 

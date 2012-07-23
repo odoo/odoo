@@ -1669,6 +1669,7 @@ instance.web.search.AddToDashboard = instance.web.Widget.extend({
         return $.when(this.load_data(),this.data_loaded).pipe(this.proxy("render_data"));
     },
     load_data:function(){
+        if (!instance.webclient) { return $.Deferred().reject(); }
         var self = this,dashboard_menu = instance.webclient.menu.data.data.children;
         var ir_model_data = new instance.web.Model('ir.model.data',{},[['name','=','menu_reporting_dashboard']]).query(['res_id']);
         var map_data = function(result){

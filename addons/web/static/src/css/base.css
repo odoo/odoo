@@ -2180,8 +2180,32 @@
   height: auto;
   line-height: 16px;
 }
+.openerp .oe_form_field_one2many .oe_list_buttons.oe_editing .oe_list_save {
+  visibility: hidden;
+}
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
+}
+.openerp .oe_list_buttons .oe_list_save, .openerp .oe_list_buttons .oe_list_discard {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_add, .openerp .oe_list_buttons.oe_editing .oe_list_button_import {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_save {
+  display: inline-block;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_discard {
+  display: inline;
+}
+.openerp .oe_list {
+  position: relative;
+}
+.openerp .oe_list .oe_form .oe_form_field {
+  width: auto;
+  position: absolute;
+  margin: 0 !important;
+  padding: 0;
 }
 .openerp .oe_list_content {
   width: 100%;
@@ -2240,6 +2264,7 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {
   padding: 3px 6px;
+  white-space: pre-line;
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell progress {
   width: 100%;
@@ -2289,9 +2314,6 @@
 }
 .openerp .oe_list_content .numeric input {
   text-align: right;
-}
-.openerp .oe_list_content .oe_list_edit_row_save:before {
-  content: "S";
 }
 .openerp .oe_trad_field.touched {
   border: 1px solid green !important;
@@ -2418,6 +2440,19 @@
 }
 .kitten-mode-activated > * {
   opacity: 0.7;
+}
+.kitten-mode-activated .oe_footer a {
+  background-image: url(http://www.risacher.com/la-rache/zfiles/la-rache.png);
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+  display: inline-block;
+  height: 15px;
+  width: 80px;
+  vertical-align: top;
+}
+.kitten-mode-activated .oe_footer a span {
+  display: none;
 }
 
 div.ui-widget-overlay {

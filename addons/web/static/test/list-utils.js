@@ -133,7 +133,7 @@ $(document).ready(function () {
         strictEqual(changed, 1);
     });
 
-    module('list-collections-degenerate', {
+    module('list-collections', {
         setup: function () {
             openerp = window.openerp.init([]);
             window.openerp.web.corelib(openerp);
@@ -145,7 +145,7 @@ $(document).ready(function () {
             window.openerp.web.list(openerp);
         }
     });
-    test('Fetch from collection', function () {
+    test('degenerate-fetch', function () {
         var c = new openerp.web.list.Collection();
         strictEqual(c.length, 0);
         c.add({id: 1, value: 2});
@@ -163,7 +163,7 @@ $(document).ready(function () {
         strictEqual(r2.get('id'), 1);
         strictEqual(r2.get('value'), 2);
     });
-    test('Add at index', function () {
+    test('degenerate-indexed-add', function () {
         var c = new openerp.web.list.Collection([
             {id: 1, value: 5},
             {id: 2, value: 10},
@@ -175,7 +175,7 @@ $(document).ready(function () {
         strictEqual(c.at(1).get('value'), 55);
         strictEqual(c.at(3).get('value'), 20);
     });
-    test('Remove record', function () {
+    test('degenerate-remove', function () {
         var c = new openerp.web.list.Collection([
             {id: 1, value: 5},
             {id: 2, value: 10},
@@ -188,7 +188,7 @@ $(document).ready(function () {
         equal(c.get(2), undefined);
         strictEqual(c.at(1).get('value'), 20);
     });
-    test('Remove unbind', function () {
+    test('degenerate-remove-bound', function () {
         var changed = false,
             c = new openerp.web.list.Collection([ {id: 1, value: 5} ]);
         c.bind('change', function () { changed = true; });
@@ -198,7 +198,7 @@ $(document).ready(function () {
         ok(!changed, 'removed records should not trigger events in their ' +
                      'parent collection');
     });
-    test('Reset', function () {
+    test('degenerate-reset', function () {
         var event, obj, c = new openerp.web.list.Collection([
             {id: 1, value: 5},
             {id: 2, value: 10},
@@ -218,7 +218,7 @@ $(document).ready(function () {
         strictEqual(c.length, 1);
         strictEqual(c.get(42).get('value'), 55);
     });
-    test('Reset unbind', function () {
+    test('degenerate-reset-bound', function () {
         var changed = false,
             c = new openerp.web.list.Collection([ {id: 1, value: 5} ]);
         c.bind('change', function () { changed = true; });
@@ -229,7 +229,7 @@ $(document).ready(function () {
                      'parent collection');
     });
 
-    test('Events propagation', function () {
+    test('degenerate-propagations', function () {
         var values = [];
         var c = new openerp.web.list.Collection([
             {id: 1, value: 5},
@@ -259,6 +259,82 @@ $(document).ready(function () {
         strictEqual(total, 42);
         c.at(1).set('wealth', 5);
         strictEqual(total, 47);
+    });
+    test('degenerate-successor', function () {
+        var root = new openerp.web.list.Collection([
+            {id: 1, value: 1},
+            {id: 2, value: 2},
+            {id: 3, value: 3},
+            {id: 4, value: 5},
+            {id: 5, value: 8}
+        ]);
+
+        deepEqual(root.succ(root.at(2)).attributes,
+                  root.at(3).attributes,
+                  "should return the record at (index + 1) from the pivot");
+        equal(root.succ(root.at(4)), null,
+              "should return null as successor to last record");
+        deepEqual(root.succ(root.at(4), {wraparound: true}).attributes,
+                  root.at(0).attributes,
+                  "should return index 0 as successor to last record if" +
+                  " wraparound is set");
+        deepEqual(root.succ(root.at(2), {wraparound: true}).attributes,
+                  root.at(3).attributes,
+                  "wraparound should have no effect if not succ(last_record)");
+    });
+    test('successor', function () {
+        var root = new openerp.web.list.Collection();
+        root.proxy('first').add([{id: 1, value: 1}, {id: 2, value: 2}]);
+        root.proxy('second').add([{id: 3, value: 3}, {id: 4, value: 5}]);
+        root.proxy('third').add([{id: 5, value: 8}, {id: 6, value: 13}]);
+
+        deepEqual(root.succ(root.get(3)).attributes,
+                  root.get(4).attributes,
+                  "should get successor");
+        equal(root.succ(root.get(4)),
+              null,
+              "successors do not cross collections");
+        deepEqual(root.succ(root.get(4), {wraparound: true}).attributes,
+                  root.get(3).attributes,
+                  "should wraparound within a collection");
+    });
+    test('degenerate-predecessor', function () {
+        var root = new openerp.web.list.Collection([
+            {id: 1, value: 1},
+            {id: 2, value: 2},
+            {id: 3, value: 3},
+            {id: 4, value: 5},
+            {id: 5, value: 8}
+        ]);
+
+        deepEqual(root.pred(root.at(2)).attributes,
+                  root.at(1).attributes,
+                  "should return the record at (index - 1) from the pivot");
+        equal(root.pred(root.at(0)), null,
+              "should return null as predecessor to first record");
+        deepEqual(root.pred(root.at(0), {wraparound: true}).attributes,
+                  root.at(4).attributes,
+                  "should return last record as predecessor to first record" +
+                  " if wraparound is set");
+        deepEqual(root.pred(root.at(1), {wraparound: true}).attributes,
+                  root.at(0).attributes,
+                  "wraparound should have no effect if not pred(first_record)");
+    });
+    test('predecessor', function () {
+        var root = new openerp.web.list.Collection();
+        root.proxy('first').add([{id: 1, value: 1}, {id: 2, value: 2}]);
+        root.proxy('second').add([{id: 3, value: 3}, {id: 4, value: 5}]);
+        root.proxy('third').add([{id: 5, value: 8}, {id: 6, value: 13}]);
+
+        deepEqual(root.pred(root.get(4)).attributes,
+                  root.get(3).attributes,
+                  "should get predecessor");
+        equal(root.pred(root.get(3)),
+              null,
+              "predecessor do not cross collections");
+        deepEqual(root.pred(root.get(3), {wraparound: true}).attributes,
+                  root.get(4).attributes,
+                  "should wraparound within a collection");
     });
 
     module('list-hofs', {
@@ -337,5 +413,34 @@ $(document).ready(function () {
         deepEqual(
             ids, [1, 2, 3, 10, 20, 30],
             'tree collections should be deeply iterated');
+    });
+
+    module("list-weirds", {
+        setup: function () {
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
+            window.openerp.web.chrome(openerp);
+            // views loader stuff
+            window.openerp.web.data(openerp);
+            window.openerp.web.views(openerp);
+            window.openerp.web.list(openerp);
+        }
+    });
+    test('set-from-noid', function () {
+        var root = new openerp.web.list.Collection();
+        root.add({v: 3});
+        root.at(0).set('id', 42);
+        var record = root.get(42);
+        equal(root.length, 1);
+        equal(record.get('v'), 3, "should have fetched the original record");
+    });
+    test('set-from-previd', function () {
+        var root = new openerp.web.list.Collection();
+        root.add({id: 1, v: 2});
+        root.get(1).set('id', 42);
+        var record = root.get(42);
+        equal(root.length, 1);
+        equal(record.get('v'), 2, "should have fetched the original record");
     });
 });
