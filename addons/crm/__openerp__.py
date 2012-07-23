@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     "sequence": 2,
+    "summary": "Agenda, Leads, Opportunities",
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================
@@ -84,7 +85,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',

@@ -44,7 +44,7 @@ There are two common alternatives to configure the mailbox integration:
 
     """,
     "init_xml": [],
-    "update_xml": ["security/ir.model.access.csv",
+    "update_xml": [
     ],
     'demo_xml': [
     ],
