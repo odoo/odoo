@@ -2593,7 +2593,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                 <header>
                     <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
+                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">

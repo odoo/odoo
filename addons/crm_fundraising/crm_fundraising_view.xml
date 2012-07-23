@@ -66,7 +66,7 @@
                     <button name="case_close" string="Done" states="open,pending" type="object" class="oe_highlight"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" class="oe_highlight"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" class="oe_highlight"/>
-                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" groups="base.group_extended" />
+                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" />
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" />
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
