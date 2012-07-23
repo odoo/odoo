@@ -51,10 +51,8 @@
             <field name="arch" type="xml">
                 <search string="Stock Periods">
                     <field name="name" string="Stock Periods"/>
-                    <separator orientation="vertical"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <separator orientation="vertical"/>
                     <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
                     <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
                 </search>
@@ -198,19 +196,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search  Sales Forecast">
-                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
-                    <separator orientation="vertical"/>
                     <field name="company_id"/>
                     <field name="warehouse_id" />
                     <field name="period_id" />
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                    <newline/>
+                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
                     <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                     </group>
               </search>
@@ -307,18 +302,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
-                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
-                    <separator orientation="vertical"/>
-                    <field name="company_id" widget="selection"/>
-                    <field name="warehouse_id" widget="selection"/>
-                    <field name="period_id" widget="selection"/>
+                    <field name="company_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="period_id"/>
                     <field name="product_id"/>
-                    <newline/>
+                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
                     <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
-                       <separator orientation="vertical"/>
                     </group>
               </search>
             </field>
