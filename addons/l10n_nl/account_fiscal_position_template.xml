@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Fiscal Position Templates -->
+        
+        <!--  for the moment no use for this 
+        <record
+            id="fiscal_position_template_domestic"
+            model="account.fiscal.position.template">
+            <field name="name">Binnenland</field>
+            <field
+                name="chart_template_id"
+                ref="l10nnl_chart_template" />
+        </record>
+        -->
+        <record
+            id="fiscal_position_template_eu"
+            model="account.fiscal.position.template">
+	    <field name="name">EU landen</field>
+            <field
+                name="chart_template_id"
+                ref="l10nnl_chart_template" />
+        </record>
+        <record
+            id="fiscal_position_template_non_eu"
+            model="account.fiscal.position.template">
+            <field name="name">Niet-EU landen</field>
+            <field
+                name="chart_template_id"
+                ref="l10nnl_chart_template" />
+        </record>
+    </data>
+</openerp>

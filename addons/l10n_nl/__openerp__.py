@@ -118,6 +118,9 @@ Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4 ci
                  ],
     "init_xml" : [],
     "update_xml" : ["account_chart_netherlands.xml",
+                    "account_fiscal_position_template.xml",
+                    "account_fiscal_position_tax_template.xml",
+                    "account_fiscal_position_account_template.xml",
                     "l10n_nl_wizard.xml"
                    ],
     "demo_xml" : [
