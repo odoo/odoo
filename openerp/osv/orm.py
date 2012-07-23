@@ -758,7 +758,7 @@ class BaseModel(object):
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
-                'field_description': f.string.replace("'", " "),
+                'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
