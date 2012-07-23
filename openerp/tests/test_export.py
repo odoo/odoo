@@ -18,6 +18,8 @@ models = [
     ('datetime', fields.datetime()),
     ('text', fields.text()),
     ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux")])),
+    # just relate to an integer
+    ('many2one', fields.many2one('export.integer')),
     # TODO: m2o, o2m, m2m
     # TODO: function?
     # TODO: related?
@@ -29,7 +31,11 @@ for name, field in models:
         '_module': 'base',
         '_columns': {
             'value': field
-        }
+        },
+        'name_get': (lambda self, cr, uid, ids, context=None:
+            [(record.id, "%s:%s" % (self._name, record.value))
+             for record in self.browse(cr, uid, ids, context=context)])
+
     }
     NewModel = type(
         'Export%s' % ''.join(section.capitalize() for section in name.split('.')),
@@ -265,3 +271,36 @@ class test_selection(CreatorCase):
             self.export(2),
             [[u"Bar"]])
 
+class test_m2o(CreatorCase):
+    model_name = 'export.many2one'
+
+    def test_empty(self):
+        self.assertEqual(
+            self.export(False),
+            [[False]])
+    def test_basic(self):
+        """ Exported value is the name_get of the related object
+        """
+        integer_id = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        name = dict(self.registry('export.integer').name_get(
+            self.cr, openerp.SUPERUSER_ID,[integer_id]))[integer_id]
+        self.assertEqual(
+            self.export(integer_id),
+            [[name]])
+    def test_path(self):
+        """ Can recursively export fields of m2o via path
+        """
+        integer_id = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        self.assertEqual(
+            self.export(integer_id, fields=['value/.id', 'value/value']),
+            [[unicode(integer_id), u'42']])
+    def test_external_id(self):
+        integer_id = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        # __export__.$class.$id
+        external_id = u'__export__.export_many2one_%d' % integer_id
+        self.assertEqual(
+            self.export(integer_id, fields=['value/id']),
+            [[external_id]])
