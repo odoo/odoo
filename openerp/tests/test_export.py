@@ -54,10 +54,12 @@ class CreatorCase(common.TransactionCase):
     def make(self, value):
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, {'value': value})
         return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
-    def export(self, value, context=None):
+    def export(self, value, fields=('value',), context=None):
         record = self.make(value)
         return self.model._BaseModel__export_row(
-            self.cr, openerp.SUPERUSER_ID, record, [["value"]], context=context)
+            self.cr, openerp.SUPERUSER_ID, record,
+            [f.split('/') for f in fields],
+            context=context)
 
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'
@@ -245,7 +247,7 @@ class test_datetime(CreatorCase):
         """ Export ignores the timezone and always exports to UTC
         """
         self.assertEqual(
-            self.export('2011-11-07 21:05:48', {'tz': 'Pacific/Norfolk'}),
+            self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}),
             [[u'2011-11-07 21:05:48']])
 
 class test_selection(CreatorCase):
