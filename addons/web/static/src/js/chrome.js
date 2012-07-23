@@ -970,10 +970,12 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_login: function() {
         var self = this;
+        self.$('.oe_topbar').hide();
         self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
+        self.$('.oe_topbar').show();
         self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
