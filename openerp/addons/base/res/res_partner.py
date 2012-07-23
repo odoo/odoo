@@ -276,13 +276,9 @@ class res_partner(osv.osv):
             context={}
         # Update parent and siblings records
         if vals.get('parent_id') and vals.get('use_parent_address'):
-            # [RPA] why we need to change the siblings? 
-            # we are creating a child of parent and it should not affect parent and siblings
-            # domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
-            # update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
-            # [RPA] the vals we pass in update_address is not of parent so it will do nothing
-            # self.update_address(cr, uid, update_ids, vals, context)
-            vals.update(self.get_parent_address(cr, uid, vals['parent_id'], address_fields=ADDRESS_FIELDS, context=context))
+            domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
+            update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
+            self.update_address(cr, uid, update_ids, vals, context)
         if 'photo' not in vals  :
             vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
         return super(res_partner,self).create(cr, uid, vals, context=context)
