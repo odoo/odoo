@@ -79,8 +79,8 @@ Use-Case
 --------
 
 You can use the demo data as follow:
-  CPU1: Sell some CPU1 from Shop 1 and run the scheduler
-     - Warehouse: delivery order, Shop 1: reception
+  CPU1: Sell some CPU1 from Computech and run the scheduler
+     - Warehouse: delivery order, Computech: reception
   CPU3:
      - When receiving the product, it goes to Quality Control location then stored to shelf 2.
      - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A
