@@ -234,7 +234,8 @@
 
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
-                                            <field name="property_ids" widget="many2many_tags"/>
+                                            <field name="property_ids" widget="many2many_tags"
+                                                groups="sale.group_mrp_properties"/>
                                         </group>
                                     </group>
                                     <label for="name"/>
