@@ -320,12 +320,6 @@ class procurement_order(osv.osv):
                 return True
         return False
     
-    #Initialize get_phantom_bom_id method as it is raising an error from yml of mrp_jit 
-    #when one install first mrp and after that, mrp_jit. get_phantom_bom_id defined in mrp module 
-    #which is not dependent for mrp_jit.
-    def get_phantom_bom_id(self, cr, uid, ids, context=None):
-        return False
-
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms procurement and writes exception message if any.
         @return: True
