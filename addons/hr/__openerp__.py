@@ -26,6 +26,7 @@
     "category": "Human Resources",
     "sequence": 12,
     "website": "http://www.openerp.com",
+    "summary": "Hierarchy, Jobs, Departments",
     "description": """
 Module for human resource management.
 =====================================
