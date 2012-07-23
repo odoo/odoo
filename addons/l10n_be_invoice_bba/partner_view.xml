@@ -9,7 +9,7 @@
       <field name="type">form</field>
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
-        <field name="property_payment_term" position="after">
+        <field name="last_reconciliation_date" position="after">
           <field name="out_inv_comm_type"/>
           <field name="out_inv_comm_algorithm" attrs="{'invisible':[('out_inv_comm_type','!=','bba')]}"/>
         </field>
