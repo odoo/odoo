@@ -182,33 +182,29 @@ class sale_advance_payment_inv(osv.osv_memory):
                     }
                     self.pool.get('sale.order.line').create(cr, uid, vals, context=context)
 
-        context.update({'invoice_id':list_inv})
-
         if context.get('open_invoices'):
-            return self.open_invoices( cr, uid, ids, context=context)
+            return self.open_invoices( cr, uid, ids, list_inv, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-    def open_invoices(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        mod_obj = self.pool.get('ir.model.data')
-        for advance_pay in self.browse(cr, uid, ids, context=context):
-            form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-            form_id = form_res and form_res[1] or False
-            tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-            tree_id = tree_res and tree_res[1] or False
+    def open_invoices(self, cr, uid, ids, invoice_ids, context=None):
+        """ open a view on one of the given invoice_ids """
+        ir_model_data = self.pool.get('ir.model.data')
+        form_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_id = form_res and form_res[1] or False
+        tree_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_id = tree_res and tree_res[1] or False
 
         return {
             'name': _('Advance Invoice'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'account.invoice',
-            'res_id': int(context['invoice_id'][0]),
+            'res_id': invoice_ids[0],
             'view_id': False,
             'views': [(form_id, 'form'), (tree_id, 'tree')],
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
-         }
+        }
 
 sale_advance_payment_inv()
 
