@@ -2985,6 +2985,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', help="Currency as per company's country."),
         'only_one_chart_template': fields.boolean('Only One Chart Template Available'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
@@ -2995,6 +2996,27 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
+    def _default_company(self, cr, uid, context=None):
+        user_company = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id
+        return user_company or False
+
+    def _default_currency(self, cr, uid, context=None):
+        company_id=self._default_company(cr, uid, context=context)
+        currency= self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+        return currency.currency_id and currency.currency_id.id or False
+
+    _defaults = {
+        'company_id': _default_company,
+        'currency_id':_default_currency,
+    }
+
+    def onchange_company_id(self, cr, uid, ids, company_id):
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            return {'value':{'currency_id':company.currency_id and company.currency_id.id}}
+        else :
+            return False
+
     def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 

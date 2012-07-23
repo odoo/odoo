@@ -2359,7 +2359,8 @@
                     <field name="complete_tax_set" invisible="1"/>
                     <div groups="base.group_multi_company">
                         <label for="company_id"/>
-                        <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                        <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                        <field name="currency_id" />
                     </div>
                     <group>
                         <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
