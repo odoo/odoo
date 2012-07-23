@@ -28,6 +28,7 @@ import werkzeug.wsgi
 from . import nonliterals
 from . import session
 from . import openerplib
+import urlparse
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -422,7 +423,9 @@ class DisableCacheMiddleware(object):
         self.app = app
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
-            debug = environ.get('HTTP_REFERER', '').find('debug') != -1
+            referer = environ.get('HTTP_REFERER', '')
+            parsed = urlparse.urlparse(referer)
+            debug = not urlparse.parse_qs(parsed.query).has_key('debug')
             filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and k=='Cache-Control'))] 
             if debug:
                 filtered_headers.append(('Cache-Control', 'no-cache'))
