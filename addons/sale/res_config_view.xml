@@ -137,16 +137,23 @@
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <separator name="analytic_accounting" position="attributes">
+                <separator name="analytic_account" position="attributes">
                     <attribute name="invisible">0</attribute>
-                    <attribute name="colspan">2</attribute>
                 </separator>
-                <separator name="analytic_accounting" position="after">
-                    <field name="group_analytic_account_for_sales"/>
-                    <field name="module_sale_analytic_plans" on_change="onchange_sale_analytic_plans(module_sale_analytic_plans)"/>
-                </separator>
+                <group name="analytic_account" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <div name="analytic_account" position="inside">
+                    <div>
+                        <field name="group_analytic_account_for_sales" class="oe_inline"/>
+                        <label for="group_analytic_account_for_sales"/>
+                    </div>
+                    <div>
+                        <field name="module_sale_analytic_plans" on_change="onchange_sale_analytic_plans(module_sale_analytic_plans)" class="oe_inline"/>
+                        <label for="module_sale_analytic_plans"/>
+                    </div>
+                </div>
             </field>
         </record>
-
     </data>
 </openerp>
