@@ -69,15 +69,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Type">
-                    <group>
-                        <field name="name"/>
-                        <separator orientation="vertical"/>
-                        <field name="month"/>
-                        <field name="section_id" widget="selection" />
-                        <field name="category2_id"/>
-                        <field name="nbr"/>
-                        <field name="state"/>
-                   </group>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="section_id"/>
+                    <field name="category2_id"/>
+                    <field name="nbr"/>
+                    <field name="state"/>
                </search>
             </field>
         </record>
@@ -157,14 +154,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
-                   <group>
-                        <field name="name"/>
-                        <separator orientation="vertical"/>
-                        <field name="month"/>
-                        <field name="section_id" widget="selection"/>
-                        <field name="nbr"/>
-                        <field name="state"/>
-                   </group>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="section_id"/>
+                    <field name="nbr"/>
+                    <field name="state"/>
                </search>
             </field>
         </record>
@@ -229,14 +223,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Section, Category and Stage">
-                    <group>
-                        <field name="name"/>
-                        <separator orientation="vertical"/>
-                        <field name="month"/>
-                        <field name="section_id" widget="selection"/>
-                        <field name="nbr"/>
-                        <field name="state"/>
-                    </group>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="section_id"/>
+                    <field name="nbr"/>
+                    <field name="state"/>
                </search>
             </field>
         </record>
@@ -318,14 +309,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
-                    <group>
-                        <field name="name"/>
-                        <separator orientation="vertical"/>
-                        <field name="month"/>
-                        <field name="section_id" widget="selection"/>
-                        <field name="nbr"/>
-                        <field name="state"/>
-                    </group>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="section_id"/>
+                    <field name="nbr"/>
+                    <field name="state"/>
                </search>
             </field>
     </record>
