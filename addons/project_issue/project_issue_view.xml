@@ -48,7 +48,6 @@
             <field name="arch" type="xml">
                 <search string="Issue Version">
                     <field name="name" string="Issue Version"/>
-                    <separator orientation="vertical"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -206,46 +205,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <group>
-                        <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-mail-message-new"
-                            string="Inbox" help="Unread messages"
-                            name="needaction_pending"
-                            domain="[('needaction_pending','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
-                        <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
-                        <separator orientation="vertical"/>
-                        <field name="user_id"/>
-                        <field name="project_id"/>
-                        <separator orientation="vertical"/>
-                        <field name="id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="user_id"/>
+                    <field name="project_id"/>
+                    <field name="id"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <separator/>
+                    <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
+                    <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                    <separator/>
+                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                     <group expand="0" string="Group By..." >
-                        <filter string="Responsible" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" icon="terp-partner" domain="[]"
-                            context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Project"  icon="terp-folder-violet" domain="[]"
-                            context="{'group_by':'project_id'}"/>
-                        <filter string="Version" icon="terp-gtk-jump-to-rtl"
-                            domain="[]" context="{'group_by':'version_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"
-                            context="{'group_by':'categ_id'}"/>
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]"
-                            context="{'group_by':'priority'}"/>
-                        <filter string="Stage" icon="terp-stage" domain="[]"
-                            context="{'group_by':'stage_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
-                            context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Project"  icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
+                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
                     </group>
                 </search>
             </field>
@@ -363,18 +342,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <group>
-                        <field name="name" string="Feature description"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
-                        <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_id"/>
-                        <field name="project_id" string="Project"/>
-                        <field name="state" groups="base.group_no_one"/>
-                    </group>
+                    <field name="name" string="Feature description"/>
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="project_id" string="Project"/>
+                    <field name="state" groups="base.group_no_one"/>
+                    <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                 </search>
             </field>
         </record>
