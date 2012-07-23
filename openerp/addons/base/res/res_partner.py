@@ -220,17 +220,15 @@ class res_partner(osv.osv):
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
 
-    def get_parent_address(self, cr, uid, parent_id, address_fields=POSTAL_ADDRESS_FIELDS, context=None):
+    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-        parent = self.browse(cr, uid, parent_id, context=context)
-        return dict((key, value_or_id(parent[key])) for key in address_fields)
- 
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
-         if use_parent_address and parent_id:
-            return {'value': self.get_parent_address(cr, uid, parent_id, address_fields=ADDRESS_FIELDS, context=context)}
-         return {}
+
+        if use_parent_address and parent_id:
+            parent = self.browse(cr, uid, parent_id, context=context)
+            return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
+        return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
