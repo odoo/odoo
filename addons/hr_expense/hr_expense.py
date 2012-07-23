@@ -86,10 +86,10 @@ class hr_expense_expense(osv.osv):
             ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
-            ('done', 'Done'),
+            ('done', 'Paid'),
             ],
             'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Paid\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
