@@ -27,6 +27,7 @@
     "website" : "http://www.openerp.com",
     "category" : "Manufacturing",
     "sequence": 18,
+    "summary": "Manufacturing, Production, Bill of Materials",
     "images" : ["images/bill_of_materials.jpeg", "images/manufacturing_order.jpeg", "images/planning_manufacturing_order.jpeg", "images/production_analysis.jpeg", "images/production_dashboard.jpeg","images/routings.jpeg","images/work_centers.jpeg"],
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
