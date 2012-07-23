@@ -286,13 +286,20 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     compute_groups_width: function() {
         var unfolded = 0;
+        var self = this;
         _.each(this.groups, function(group) {
             unfolded += group.state.folded ? 0 : 1;
             group.$element.css('width', '');
         });
         _.each(this.groups, function(group) {
             if (!group.state.folded) {
-                group.$element.css('width', Math.round(100/unfolded) + '%');
+                if (182*unfolded>=self.$element.width()) {
+                    group.$element.css('width', "170px");
+                } else if (262*unfolded>self.$element.width()) {
+                    group.$element.css('width', Math.round(100/unfolded) + '%');
+                } else {
+                    group.$element.css('width', "250px");
+                }
             }
         });
     },
@@ -749,6 +756,9 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         if (cache !== undefined) {
             // Set the cache duration in seconds.
             url += '&cache=' + parseInt(cache, 10);
+        }
+        if (this.record[field] && this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
+            url = 'data:image/png;base64,' + this.record[field].value;
         }
         return url;
     },
