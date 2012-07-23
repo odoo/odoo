@@ -35,6 +35,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 Use Percentage to invoice a percentage of the total amount.
                 Use Fixed Price to invoice a specific amound in advance.
                 Use Some Order Lines to invoice a selection of the sale order lines."""),
+        'qtty': fields.float('Quantity', digits=(16, 2), required=True),
         'product_id': fields.many2one('product.product', 'Advance Product',
             help="""Select a product of type service which is called 'Advance Product'.
                 You may have to create it and set it as a default value on this field."""),
@@ -52,6 +53,7 @@ class sale_advance_payment_inv(osv.osv_memory):
 
     _defaults = {
         'advance_payment_method': 'all',
+        'qtty': 1.0,
         'product_id': _get_advance_product,
     }
 
@@ -149,7 +151,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'name': res.get('name'),
                 'account_id': res['account_id'],
                 'price_unit': inv_amount,
-                'quantity': 1.0,
+                'quantity': wizard.qtty or 1.0,
                 'discount': False,
                 'uos_id': res.get('uos_id', False),
                 'product_id': wizard.product_id.id,
@@ -183,8 +185,8 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'order_id': sale.id,
                     'name': res.get('name'),
                     'price_unit': -inv_amount,
-                    'product_uom_qty': 1.0,
-                    'product_uos_qty': 1.0,
+                    'product_uom_qty': wizard.qtty or 1.0,
+                    'product_uos_qty': wizard.qtty or 1.0,
                     'product_uos': res.get('uos_id', False),
                     'product_uom': res.get('uom_id', False),
                     'product_id': wizard.product_id.id or False,
