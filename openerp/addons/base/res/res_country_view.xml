@@ -28,12 +28,13 @@
                         <group>
                             <field name="name"/>
                             <field name="currency_id"/>
-                            <field name="address_format" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="code"/>
                         </group>
                     </group>
+                    <label for="address_format" string="Address Format"/>
+                    <field name="address_format" colspan="4" groups="base.group_no_one"/>
                 </form>
             </field>
         </record>
