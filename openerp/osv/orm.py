@@ -4179,11 +4179,7 @@ class BaseModel(object):
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
-        try:
-            cr.execute("SELECT nextval('"+self._sequence+"')")
-        except:
-            raise except_orm(_('UserError'),
-                        _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+        cr.execute("SELECT nextval('"+self._sequence+"')")
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
