@@ -945,6 +945,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     is_create_mode: function() {
         return !this.datarecord.id;
     },
+    open_translate_dialog: function(field) {
+        return this._super(field);
+    },
 });
 
 /**
