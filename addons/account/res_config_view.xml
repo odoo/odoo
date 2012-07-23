@@ -105,10 +105,10 @@
                         <label for="id" string="Configuration"/>
                         <div name="account_config">
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <label for="default_sale_tax"/>
                                 <field name="default_sale_tax"
                                     domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
                                     class="oe_inline"/>
-                                <label for="default_sale_tax"/>
                             </div>
                             <div>
                                 <field name="module_account_accountant" class="oe_inline"/>
