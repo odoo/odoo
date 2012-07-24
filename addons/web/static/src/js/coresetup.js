@@ -551,6 +551,8 @@ $.async_when = function() {
 if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
     $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+    $.blockUI.defaults.css.border = '0';
+    $.blockUI.defaults.css["background-color"] = '';
 }
 
 /** Setup default session */
