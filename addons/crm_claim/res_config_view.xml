@@ -6,21 +6,17 @@
             <field name="name">crm_claim settings</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_sale_config_settings"/>
-            <field name="priority" eval="12"/>       <!-- to put fetchmail_lead before fetchmail_claim -->
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="priority" eval="20"/>       <!-- to put fetchmail_lead before fetchmail_claim -->
             <field name="arch" type="xml">
-                <group name="config_fetchmail" position="after">
-                    <field name="fetchmail_claim"/>
-                    <group colspan="2" attrs="{'invisible': [('fetchmail_claim','=',False)]}">
-                        <field name="claim_server" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
-                        <field name="claim_type" on_change="onchange_fetchmail('claim', claim_type, claim_is_ssl)" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
-                        <field name="claim_port" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
-                        <field name="claim_is_ssl" on_change="onchange_fetchmail('claim', claim_type, claim_is_ssl)"/>
-                        <field name="claim_user" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
-                        <field name="claim_password" password="True" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
-                    </group>
-                    <newline/>
-                </group>
+                <separator string="Emails" version="7.0" position="after">
+                    <label for="fetchmail_claim"/>
+                    <div>
+                        <field name="fetchmail_claim"/>
+                        <button type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-go-forward"
+                            attrs="{'invisible': [('fetchmail_claim','=',False)]}"/>
+                    </div>
+                </separator>
             </field>
         </record>
 

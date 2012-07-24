@@ -24,7 +24,6 @@
     'name': 'Delivery Costs',
     'version': '1.0',
     'category': 'Sales Management',
-    'complexity': "normal",
     'description': """
 Allows you to add delivery methods in sale orders and picking.
 ==============================================================
@@ -38,7 +37,6 @@ When creating invoices from picking, OpenERP is able to add and compute the ship
     'init_xml': ['delivery_data.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
-        'wizard/delivery_sale_order_view.xml',
         'delivery_report.xml',
         'delivery_view.xml',
         'partner_view.xml'

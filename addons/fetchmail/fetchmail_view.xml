@@ -24,52 +24,51 @@
             <field name="model">fetchmail.server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Incoming Mail Server">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="type" select="1" on_change="onchange_server_type(type, is_ssl, object_id)"/>
-                        <field name="date" select="1"/>
-                    </group>
-                    <notebook colspan="4">
+                <form string="Incoming Mail Server" version="7.0">
+                    <header attrs="{'invisible' : [('type', '=', 'local')]}">
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                     <group col="4">
+                        <field name="name"/>
+                        <field name="type" on_change="onchange_server_type(type, is_ssl, object_id)"/>
+                        <field name="date"/>
+                     </group>
+                     <notebook>
                         <page string="Server &amp; Login">
-                            <group col="2" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
-                                <separator string="Server Information" colspan="2"/>
-                                <field name="server" colspan="2" attrs="{'required' : [('type', '!=', 'local')]}" />
-                                <field name="port" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
-                                <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
-                            </group>
-                            <group col="2" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
-                                <separator string="Login Information" colspan="2"/>
-                                <field name="user" attrs="{'required' : [('type', '!=', 'local')]}"/>
-                                <field name="password" password="True" attrs="{'required' : [('type', '!=', 'local')]}"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Actions to Perform on Incoming Mails" colspan="2"/>
-                                <field name="object_id" on_change="onchange_server_type(type, is_ssl, object_id)"/>
-                                <field name="action_id"/>
-                            </group>
-                            <group attrs="{'invisible' : [('type', '!=', 'local')]}" colspan="4" col="4">
-                                <separator string="Configuration" colspan="4"/>
-                                <field name="configuration" colspan="4"/>
-                                <field name="script" colspan="4" widget="url"/>
+                            <group>
+                                <group attrs="{'invisible' : [('type', '=', 'local')]}" string="Server Information">
+                                    <field name="server" colspan="2" attrs="{'required' : [('type', '!=', 'local')]}" />
+                                    <field name="port" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
+                                    <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
+                                </group>
+                                <group attrs="{'invisible' : [('type', '=', 'local')]}" string="Login Information">
+                                    <field name="user" attrs="{'required' : [('type', '!=', 'local')]}"/>
+                                    <field name="password" password="True" attrs="{'required' : [('type', '!=', 'local')]}"/>
+                                </group>
+                                <group string="Actions to Perform on Incoming Mails">
+                                    <field name="object_id" on_change="onchange_server_type(type, is_ssl, object_id)"/>
+                                    <field name="action_id"/>
+                                </group>
+                                <group attrs="{'invisible' : [('type', '!=', 'local')]}" string="Configuration">
+                                    <field name="configuration" colspan="4"/>
+                                    <field name="script" colspan="4" widget="url"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Advanced" groups="base.group_no_one">
-                            <group colspan="2" col="2">
-                                <separator string="Advanced Options" colspan="2"/>
+                            <group string="Advanced Options" col="4">
                                 <field name="priority"/>
                                 <field name="attach"/>
                                 <field name="original"/>
-                                <field name="active" select="1"/>
+                                <field name="active"/>
                             </group>
                         </page>
                     </notebook>
-                    <group colspan="4" col="6" attrs="{'invisible' : [('type', '=', 'local')]}">
-                        <field name="state"/>
-                        <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
-                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
-                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
-                    </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -80,12 +79,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
+                    <field name="name" string="Incoming Mail Server"/>
+                    <separator orientation="vertical"/>
                     <filter string="IMAP" icon="terp-folder-green" domain="[('type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" icon="terp-folder-orange" domain="[('type','=','pop')]" help="Server type POP."/>
                     <separator orientation="vertical"/>
                     <filter string="SSL" icon="terp-camera_test" domain="[('is_ssl','=',True)]" help="If SSL required."/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
                 </search>
             </field>
         </record>
@@ -115,7 +114,7 @@
           <field name="inherit_id" ref="mail.view_email_message_tree"/>
           <field name="arch" type="xml">
               <field name="user_id" position="after">
-                  <field name="fetchmail_server_id" select="1"/>
+                  <field name="fetchmail_server_id"/>
               </field>
           </field>
       </record>

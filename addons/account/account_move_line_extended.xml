@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         <record id="view_move_line_extended_form_view" model="ir.ui.view">
+            <field name="name">account.move.partner.info.form</field>
+            <field name="model">account.move.partner.info</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Journal Item" layout="manual"  version="7.0">
+                    <h3>
+                        <field name="partner_id" widget="many2one_pager"/>
+                    </h3>
+                    <div class="oe_right">
+	                    <label for="last_reconciliation_date"/>
+	                    <field name="last_reconciliation_date"/>
+	                    <label for="latest_date"/>
+	                    <field name="latest_date" />
+                    </div>
+                    <div class="oe_button_container">
+	                    <button string="Reconcile" name="%(action_view_account_move_line_reconcile)d" widget="list_button" type="action"/>
+	                    <button string="Nothing to Reconcile" name="skip_partner" widget="btn_extend" type="object"/> 
+	                    <field name="reconciliation_progress" widget="progressbar"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -23,11 +23,12 @@ import logging
 import string
 import datetime
 import re
+_logger = logging.getLogger(__name__)
 
 try:
     import vatnumber
 except ImportError:
-    logging.getLogger('base_vat').warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
+    _logger.warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 

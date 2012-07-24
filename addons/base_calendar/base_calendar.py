@@ -333,11 +333,11 @@ class calendar_attendee(osv.osv):
                     ('opt-participant', 'Optional Participation'), \
                     ('non-participant', 'For information Purpose')], 'Role', \
                     help='Participation role for the calendar user'),
-        'state': fields.selection([('tentative', 'Tentative'),
-                        ('needs-action', 'Needs Action'),
-                        ('accepted', 'Accepted'),
+        'state': fields.selection([('needs-action', 'Needs Action'),
+                        ('tentative', 'Tentative'),
                         ('declined', 'Declined'),
-                        ('delegated', 'Delegated')], 'State', readonly=True, \
+                        ('accepted', 'Accepted'),
+                        ('delegated', 'Delegated')], 'Status', readonly=True, \
                         help="Status of the attendee's participation"),
         'rsvp':  fields.boolean('Required Reply?',
                     help="Indicats whether the favor of a reply is requested"),
@@ -767,7 +767,7 @@ class calendar_alarm(osv.osv):
                     ('run', 'Run'),
                     ('stop', 'Stop'),
                     ('done', 'Done'),
-                ], 'State', select=True, readonly=True),
+                ], 'Status', select=True, readonly=True),
      }
 
     _defaults = {
@@ -814,7 +814,6 @@ class calendar_alarm(osv.osv):
             context = {}
         mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
-        request_obj = self.pool.get('res.request')
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
 
         mail_to = []
@@ -854,26 +853,28 @@ class calendar_alarm(osv.osv):
                 ref = alarm.model_id.model + ',' + str(alarm.res_id)
 
                 # search for alreay sent requests
-                if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
-                    continue
+                #if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
+                    #continue
 
-                if alarm.action == 'display':
-                    value = {
-                       'name': alarm.name,
-                       'act_from': alarm.user_id.id,
-                       'act_to': alarm.user_id.id,
-                       'body': alarm.description,
-                       'trigger_date': r_date,
-                       'ref_doc1': ref
-                    }
-                    request_id = request_obj.create(cr, uid, value)
-                    request_ids = [request_id]
-                    for attendee in res_obj.attendee_ids:
-                        if attendee.user_id:
-                            value['act_to'] = attendee.user_id.id
-                            request_id = request_obj.create(cr, uid, value)
-                            request_ids.append(request_id)
-                    request_obj.request_send(cr, uid, request_ids)
+                # Deactivated because of the removing of res.request
+                # TODO: when cleaning calendar module, re-add this in a new mechanism
+                #if alarm.action == 'display':
+                    #value = {
+                       #'name': alarm.name,
+                       #'act_from': alarm.user_id.id,
+                       #'act_to': alarm.user_id.id,
+                       #'body': alarm.description,
+                       #'trigger_date': r_date,
+                       #'ref_doc1': ref
+                    #}
+                    #request_id = request_obj.create(cr, uid, value)
+                    #request_ids = [request_id]
+                    #for attendee in res_obj.attendee_ids:
+                        #if attendee.user_id:
+                            #value['act_to'] = attendee.user_id.id
+                            #request_id = request_obj.create(cr, uid, value)
+                            #request_ids.append(request_id)
+                    #request_obj.request_send(cr, uid, request_ids)
 
                 if alarm.action == 'email':
                     sub = '[Openobject Reminder] %s' % (alarm.name)
@@ -1030,14 +1031,15 @@ class calendar_event(osv.osv):
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-             ('confidential', 'Public for Employees')], 'Mark as', states={'done': [('readonly', True)]}),
+             ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
-                                                'Show as', states={'done': [('readonly', True)]}),
+                                                'Show Time as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([('tentative', 'Tentative'),
+                        ('cancelled', 'Cancelled'),
                         ('confirmed', 'Confirmed'),
-                        ('cancelled', 'Cancelled')], 'State', readonly=True),
+                        ], 'Status', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
@@ -1049,7 +1051,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                             ('yearly', 'Yearly'),],
                             'Recurrency', states={'done': [('readonly', True)]},
                             help="Let the event automatically repeat at that interval"),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
+        'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
                         help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),

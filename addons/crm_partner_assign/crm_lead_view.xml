@@ -10,28 +10,28 @@
                 <data>
                     <xpath expr="//notebook/page[@string='Lead']" position="after">
                         <page string="Assignation">
-                        <group name="partner_assign_group" col="5" colspan="4">
-                            <separator string="Partner Assignation" colspan="5"/>
-                            <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
-                            <field name="date_assign"/>
-                            <group colspan="1" col="1">
-                                <button string="Forward"
-                                    attrs="{'invisible':[('partner_assigned_id','=',False)]}"
-                                    name="%(crm_lead_forward_to_partner_act)d"
-                                    icon="terp-mail-forward" type="action"
-                                    context="{'default_name': 'partner', 'default_partner_id': partner_assigned_id}"
-                                />
-                            </group>
-                            <group name="geo_assign_group" col="5" colspan="4">
-                                <separator string="Geo Assignation" colspan="5"/>
-                                <field name="partner_latitude"/>
-                                <field name="partner_longitude"/>
-                                <group colspan="1" col="1">
+                            <group name="partner_assign_group">
+                                <group string="Partner Assignation">
+                                    <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
+                                    <label for="date_assign"/>
+                                    <div>
+                                        <field name="date_assign"/>
+                                        <button string="Forward"
+                                            attrs="{'invisible':[('partner_assigned_id','=',False)]}"
+                                            name="%(crm_lead_forward_to_partner_act)d"
+                                            icon="terp-mail-forward" type="action"
+                                            context="{'default_name': 'partner', 'default_partner_id': partner_assigned_id}"
+                                        />
+                                    </div>
+                                </group>
+                                <group string="Geo Assignation">
+                                    <field name="partner_latitude"/>
+                                    <field name="partner_longitude"/>
+                                    <span/>
                                     <button string="Geo Assign" name="action_assign_partner" type="object" colspan="1"
                                         icon="gtk-apply"/>
                                 </group>
                             </group>
-                        </group>
                         </page>
                     </xpath>
                 </data>
@@ -58,7 +58,7 @@
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
                 <filter string="Team" position="after">
-                    <filter string="Referred Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
 
                 <field name="user_id" position="after">

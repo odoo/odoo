@@ -79,7 +79,7 @@ class crm_lead_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'email': fields.integer('# Emails', size=128, readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),

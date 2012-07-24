@@ -12,7 +12,7 @@
                 <field name="job_id"/>
                 <field name="partner_name"/>
                 <field name="stage_id"/>
-                <field name="state"/>
+                <field name="state" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
@@ -30,13 +30,14 @@
     <record id="board_hr_applicants_status_form" model="ir.ui.view">
         <field name="name">board.hr.applicants.status.form</field>
         <field name="model">board.board</field>
-        <field name="inherit_id" ref="hr.board_hr_manager_form"/>
+        <field name="inherit_id" ref="hr.board_hr_form"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
-          <xpath expr="/form/board/column" position="inside">
-            <action name="%(action_applicants_status)d" string="Applicants Status"/>
-          </xpath>
+            <xpath expr="/form/board/column[1]" position="inside">
+                <action name="%(action_applicants_status)d" string="Applicants To be Processed"/>
+            </xpath>
         </field>
     </record>
+
     </data>
 </openerp>

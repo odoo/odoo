@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-03-21 21:33+0000\n"
-"Last-Translator: Christos Ververidis <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:59+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-22 04:57+0000\n"
-"X-Generator: Launchpad (build 14981)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:52+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -58,7 +58,7 @@ msgstr "Στατιστικά Λογαριασμού"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma/Open/Paid Invoices"
-msgstr ""
+msgstr "Προτιμολόγια/Ανοιχτά/Εξοφλημένα Τιμολόγια"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -183,11 +183,6 @@ msgstr "Πηγή Λογαριασμού"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Όλες οι εγγραφές αναλυτικής"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Τιμολόγια που εκδόθηκαν τις τελευταίες 15 μέρες"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -699,18 +694,6 @@ msgstr "Ημερολογιακή Περίοδος"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Λογαριασμοί Εισπρακτέοι"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1675,11 +1658,6 @@ msgstr "Διαχωρισμένες Ιεραρχήσεις Ημερολογίου
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Υπεύθυνος"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Πωλήσεις Τύπο Λογαριασμού"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2740,13 +2718,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr ""
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr ""
@@ -3137,8 +3108,8 @@ msgstr "Πρότυπα Λογιστικών Σχεδίων"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Δημιουργία Λογιστικού Σχεδίου από Πρότυπο"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6290,11 +6261,6 @@ msgid "Supplier Refund"
 msgstr "Επιστροφή Χρημάτων από Προμηθευτή"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr ""
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Γραμμές εγγραφής"
@@ -6838,11 +6804,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Λογαριασμοί Εσόδων"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr ""
@@ -7056,7 +7017,7 @@ msgstr "Πρότυπο Μητρικού Λογαριασμού"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -10546,6 +10507,9 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
+#~ msgid "Reconciliation result"
+#~ msgstr "Αποτελέσματα Εκκαθάρισης"
+
 #~ msgid "Entries Encoding"
 #~ msgstr "Κωδικοποίηση Εγγραφών"
 
@@ -10667,8 +10631,14 @@ msgstr ""
 #~ msgid "Amount paid"
 #~ msgstr "Ποσό που πληρώθηκε"
 
+#~ msgid "Tax codes"
+#~ msgstr "Κώδικες Φόρων"
+
 #~ msgid "New Analytic Account"
 #~ msgstr "Νέος Λογαριασμός Αναλυτικής"
+
+#~ msgid "Compute Code for Taxes included prices"
+#~ msgstr "Κώδικας Υπολογισμού για Φόρους που συμπεριλαμβάνονται στις τιμές"
 
 #~ msgid "Tax Report"
 #~ msgstr "Αναφορά Φόρου"
@@ -10740,6 +10710,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Δεν μπορείτε να κάνετε αυτήν την τροποποίηση σε μιά συμφωνημένη εγγραφή! "
 #~ "Σημειώστε ότι μπορείτε απλά να αλλάξετε κάποια μή σημαντικά πεδία!"
+
+#~ msgid "Open for bank reconciliation"
+#~ msgstr "Ανοιχτό για συμφωνία τράπεζας"
 
 #~ msgid "Account Entry Reconcile"
 #~ msgstr "Συμφωνία Εγγραφών Λογαριασμού"
@@ -11110,6 +11083,9 @@ msgstr ""
 #~ msgid "The statement balance is incorrect !\n"
 #~ msgstr "Το υπόλοιπο του παραστατικού είναι εσφαλμένο\n"
 
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Δημιουργία Λογιστικού Σχεδίου από Πρότυπο"
+
 #~ msgid "Legal Statements"
 #~ msgstr "Νομικές Δηλώσεις"
 
@@ -11264,6 +11240,9 @@ msgstr ""
 #~ msgid "Statement Entries"
 #~ msgstr "Εγγραφές Δήλωσης"
 
+#~ msgid "Reconciliation transactions"
+#~ msgstr "Συναλλαγές συμφωνίας"
+
 #~ msgid "_Go"
 #~ msgstr "_Go"
 
@@ -11303,6 +11282,9 @@ msgstr ""
 #~ msgid "Please set an analytic journal on this financial journal !"
 #~ msgstr ""
 #~ "Παρακαλώ ορίστε ένα αναλυτικό ημερολόγιο για αυτό το οικονομικό ημερολόγιο!"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Συναλλαγές ακύρωσης συμφωνιών"
 
 #~ msgid "Reconcilation of entries from payment order."
 #~ msgstr "Συμφωνία εγγραφών από εντολή πληρωμής."
@@ -11405,6 +11387,9 @@ msgstr ""
 
 #~ msgid "3 Months"
 #~ msgstr "3 Μήνες"
+
+#~ msgid "Standard entries"
+#~ msgstr "Τυπικές εγγραφές"
 
 #~ msgid ""
 #~ "Check this box if you want to print all entries when printing the General "
@@ -11541,6 +11526,10 @@ msgstr ""
 
 #~ msgid "Modify Invoice"
 #~ msgstr "Τροποποίηση Τιμολογίου"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Λογαριασμοί Εισπρακτέοι"
 
 #~ msgid "OK"
 #~ msgstr "OK"
@@ -11897,6 +11886,9 @@ msgstr ""
 #~ msgid "Choose Journal and Payment Date"
 #~ msgstr "Επιλογή ημερολογίου και Ημερομηνίας Πληρωμής"
 
+#~ msgid "Are you sure ?"
+#~ msgstr "Είστε σίγουρος;"
+
 #~ msgid "Print VAT Decl."
 #~ msgstr "Εκτύπωση Δήλωσης ΦΠΑ"
 
@@ -12013,11 +12005,20 @@ msgstr ""
 #~ "Αν είναι λογαριασμός φόρου εδώ θα περιέχει το ποσό μετά τον φόρο, αν είναι "
 #~ "λογαριασμός βάσης του φόρου θα περιέχει το αφορολόγητο ποσό."
 
+#~ msgid "Income Accounts"
+#~ msgstr "Λογαριασμοί Εσόδων"
+
 #~ msgid "Total :"
 #~ msgstr "Σύνολο:"
 
 #~ msgid "Year :"
 #~ msgstr "Έτος :"
+
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Τιμολόγια που εκδόθηκαν τις τελευταίες 15 μέρες"
+
+#~ msgid "Accounts by type"
+#~ msgstr "Λογαριασμοί με βάση τον τύπο"
 
 #~ msgid "Display accounts"
 #~ msgstr "Παρουσίαση λογαριασμών"
@@ -12056,12 +12057,18 @@ msgstr ""
 #~ msgid "Anglo-Saxon Accounting"
 #~ msgstr "Αγγλο- Σαχονικό Σύστημα Λογιστικής"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Πωλήσεις Τύπο Λογαριασμού"
+
 #~ msgid "Voucher Management"
 #~ msgstr "Διαχείριση παραστατικών"
 
 #, python-format
 #~ msgid "CashBox Balance is not matching with Calculated Balance !"
 #~ msgstr "Το υπόλοιπο Ταμείου δεν συμφωνεί με το υπολογιζόμενο Υπόλοιπο"
+
+#~ msgid "Go to next partner"
+#~ msgstr "Πήγαινετε στον επόμενο έταιρο"
 
 #~ msgid "Tax Code Test"
 #~ msgstr "Τεστ Φορολογικού Κώδικα"

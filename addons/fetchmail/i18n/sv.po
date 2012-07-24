@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:58+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:18+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -25,17 +25,17 @@ msgstr "Bekräftad"
 #. module: fetchmail
 #: field:fetchmail.server,server:0
 msgid "Server Name"
-msgstr ""
+msgstr "Servernamn"
 
 #. module: fetchmail
 #: field:fetchmail.server,script:0
 msgid "Script"
-msgstr ""
+msgstr "Skript"
 
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
+msgstr "Ange bearbetningsordningen, lägre värde betyder högre prioritet"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -43,11 +43,13 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
+"Anslutningen krypteras med SSL/TLS genom en viss port (standard: IMAP=993, "
+"POP3S=995)"
 
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
 msgid "Keep Attachments"
-msgstr ""
+msgstr "Behåll bilagor"
 
 #. module: fetchmail
 #: help:fetchmail.server,original:0
@@ -56,32 +58,35 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
+"Om en fullständig original kopia av varje e-postmeddelande bör hållas som "
+"referens och biläggs varje bearbetad meddelande. Detta kommer vanligtvis "
+"göra din meddelandedatabas dubbelt så stor."
 
 #. module: fetchmail
 #: field:fetchmail.server,priority:0
 msgid "Server Priority"
-msgstr ""
+msgstr "Servierprioritet"
 
 #. module: fetchmail
 #: field:fetchmail.server,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "POP"
-msgstr ""
+msgstr "POP"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Fetch Now"
-msgstr ""
+msgstr "Hämta nu"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr ""
+msgstr "E-post-server för inkommande e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,port:0
@@ -91,42 +96,42 @@ msgstr "Port"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "POP/IMAP Servers"
-msgstr ""
+msgstr "POP/IMAP-Servrar"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "Local Server"
-msgstr ""
+msgstr "Lokal server"
 
 #. module: fetchmail
 #: field:fetchmail.server,user:0
 msgid "Username"
-msgstr ""
+msgstr "Användarnamn"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
 msgid "POP/IMAP Server"
-msgstr ""
+msgstr "POP/IMAP-Server"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "Återställ bekräftelsen"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_message
 msgid "Email Message"
-msgstr ""
+msgstr "E-post-meddelande"
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
 msgid "Last Fetch Date"
-msgstr ""
+msgstr "Senaste hämtningsdatum"
 
 #. module: fetchmail
 #: help:fetchmail.server,action_id:0
@@ -134,16 +139,18 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
+"Option för anpassade serveråtgärder som utförs för varje inkommande e-post, "
+"på den post som skapades eller uppdaterades av detta meddelande"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "# of emails"
-msgstr ""
+msgstr "# e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,original:0
 msgid "Keep Original"
-msgstr ""
+msgstr "Behåll original"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:155
@@ -152,74 +159,76 @@ msgid ""
 "Here is what we got instead:\n"
 " %s"
 msgstr ""
+"Detta var vad vi fick istället:\n"
+" %s"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
-msgstr ""
+msgstr "Inställningar"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Inkommande e-postserver"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:155
 #, python-format
 msgid "Connection test failed!"
-msgstr ""
+msgstr "Anslutsningstest fallerade!"
 
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr ""
+msgstr "Hostnamn eller IP för e-postservern"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type IMAP."
-msgstr ""
+msgstr "Servertyp IMAP."
 
 #. module: fetchmail
 #: field:fetchmail.server,name:0
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: fetchmail
 #: field:fetchmail.server,is_ssl:0
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Test & Confirm"
-msgstr ""
+msgstr "Testa och bekräfta"
 
 #. module: fetchmail
 #: field:fetchmail.server,action_id:0
 msgid "Server Action"
-msgstr ""
+msgstr "Serveråtgärd"
 
 #. module: fetchmail
 #: field:mail.message,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr ""
+msgstr "Server för inkommande e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
 msgid "Messages"
-msgstr ""
+msgstr "Meddelanden"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "Sök inkommande e-postservrar"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: fetchmail
 #: help:fetchmail.server,attach:0
@@ -227,6 +236,8 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
+"Om bilagor skall laddas ned. Om ej aktiverad, hämtas endast texten och "
+"bilagorna lämnas kvar."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -236,7 +247,7 @@ msgstr ""
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "IMAP Server"
-msgstr ""
+msgstr "IMAP-server"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -246,7 +257,7 @@ msgstr "IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type POP."
-msgstr ""
+msgstr "Servertyp POP."
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -256,32 +267,32 @@ msgstr "Lösenord"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Actions to Perform on Incoming Mails"
-msgstr ""
+msgstr "Åtgärder att utföra på inkommande e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,type:0
 msgid "Server Type"
-msgstr ""
+msgstr "Servertyp"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Login Information"
-msgstr ""
+msgstr "Inloggningsuppgifter"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server Information"
-msgstr ""
+msgstr "Serverinformation"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "If SSL required."
-msgstr ""
+msgstr "Om SSL krävs."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Advanced"
-msgstr ""
+msgstr "Avancerad"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -295,16 +306,19 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
+"Bearbeta varje inkommande e-postmeddelande som en del av en konversation som "
+"motsvarar denna dokumenttyp. Detta kommer att skapa nya dokument för nya "
+"samtal, eller bifoga uppföljningse-post till befintliga samtal (dokument)."
 
 #. module: fetchmail
 #: field:fetchmail.server,object_id:0
 msgid "Create a New Record"
-msgstr ""
+msgstr "Skapa ny post"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Not Confirmed"
-msgstr ""
+msgstr "Icke godkänd"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -314,7 +328,7 @@ msgstr "POP server"
 #. module: fetchmail
 #: view:mail.message:0
 msgid "Mail Server"
-msgstr ""
+msgstr "E-postserver"
 
 #~ msgid "Set to Draft"
 #~ msgstr "Sätt till preliminär"
@@ -339,3 +353,6 @@ msgstr ""
 
 #~ msgid "Date"
 #~ msgstr "Datum"
+
+#~ msgid "Advanced options"
+#~ msgstr "Avancerade inställningar"

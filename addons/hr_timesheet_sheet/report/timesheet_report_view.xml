@@ -49,20 +49,6 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group>
-                        <filter icon="terp-go-year" string="Year"
-                                name="year"
-                                domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                                help="Timesheet in current year"/>
-                        <separator orientation="vertical"/>								
-                        <filter icon="terp-go-month" string=" Month "
-                                name="month"
-                                domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                                help="Timesheet in current month"/>
-                        <filter icon="terp-go-month"
-                            string=" Month-1 "
-                            domain="[('date_current','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Timesheet of last month"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new"
                                 string="Draft"
                                 domain="[('state','=','draft')]"/>
@@ -70,11 +56,11 @@
                                 string="Confirmed"
                                 domain="[('state','=','confirm')]"/>
                         <filter icon="terp-dialog-close"
-                                    string="Done"
-                                    domain="[('state','=','done')]"/>
+                                string="Done"
+                                domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <field name="account_id"/>
-                      <field name="user_id" />
+                        <field name="user_id" />
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
@@ -87,6 +73,7 @@
                         <separator orientation="vertical"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <newline/>
+                        <field name="date_current"/>
                         <field name="date_to"/>
                         <field name="date_from"/>
                     </group>
@@ -102,7 +89,7 @@
                         <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
                         <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
@@ -123,6 +110,6 @@
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
         <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all"
-                parent="hr_timesheet.menu_hr_reporting_timesheet" sequence="1" groups="base.group_hr_manager"/>
+                parent="hr.menu_hr_reporting" sequence="4" groups="base.group_hr_manager"/>
     </data>
 </openerp>

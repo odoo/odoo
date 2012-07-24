@@ -1,0 +1,780 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-06-09 02:19+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:50+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
+
+#. module: account_followup
+#: view:account_followup.followup:0
+msgid "Search Followup"
+msgstr "フォローアップの選択"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Group By..."
+msgstr "グループ化…"
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "フォローアップメッセージ"
+
+#. module: account_followup
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
+msgid "Follow-Up"
+msgstr "フォローアップ"
+
+#. module: account_followup
+#: help:account.followup.print.all,test_print:0
+msgid ""
+"Check if you want to print followups without changing followups level."
+msgstr "フォローアップレベルを変更せずにフォローアップを印刷したい場合はチェックして下さい。"
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+"we can resolve the matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
+"\n"
+"%(partner_name)s 様、\n"
+"\n"
+"御社口座の支払期限は大幅に過ぎております。支払期限についてのお知らせは既に通知いたしておりますが、いまだにお支払いただいておりません。\n"
+"\n"
+"即刻、お支払をお願いいたします。そうでない場合、御社口座を閉鎖するべく検討をしなければなりません。これは、御社に商品やサービスをもはや提供できなくなること"
+"を意味します。\n"
+"どうぞ、8日間以内にこの支払のための適切な措置を講じて下さるよう、お願いいたします。\n"
+"\n"
+"この請求書のお支払について、弊社が気付いていない問題がございましたら、どうぞ、弊社の会計部門 （+32）.10.68.94.39 "
+"にご連絡下さい。至急、問題解決に当たらせていただきます。\n"
+"\n"
+"支払に関する詳細は以下をご参照下さい。\n"
+"\n"
+"敬具\n"
+
+#. module: account_followup
+#: field:account_followup.followup,company_id:0
+#: view:account_followup.stat:0
+#: field:account_followup.stat,company_id:0
+#: field:account_followup.stat.by.partner,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Invoice Date"
+msgstr "請求日"
+
+#. module: account_followup
+#: field:account.followup.print.all,email_subject:0
+msgid "Email Subject"
+msgstr "Eメール件名"
+
+#. module: account_followup
+#: model:ir.actions.act_window,help:account_followup.action_followup_stat
+msgid ""
+"Follow up on the reminders sent over to your partners for unpaid invoices."
+msgstr "未払請求書のためにパートナに送信された通知のフォローアップ"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "Legend"
+msgstr "凡例"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow up Entries with period in current year"
+msgstr "現在年の期間におけるエントリーのフォローアップ"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Ok"
+msgstr "OK"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Amount"
+msgstr "金額"
+
+#. module: account_followup
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
+
+#. module: account_followup
+#: selection:account_followup.followup.line,start:0
+msgid "Net Days"
+msgstr "実日数"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-Ups"
+msgstr "フォローアップ"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:0
+msgid "Balance > 0"
+msgstr "残高＞0"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
+msgstr "借方合計"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(heading)s: Move line header"
+msgstr "%(heading)s：行ヘッダーの移動"
+
+#. module: account_followup
+#: field:account.followup.print,followup_id:0
+msgid "Follow-up"
+msgstr "フォローアップ"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "VAT:"
+msgstr "消費税："
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,partner_id:0
+#: field:account_followup.stat.by.partner,partner_id:0
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Date :"
+msgstr "日付 :"
+
+#. module: account_followup
+#: field:account.followup.print.all,partner_ids:0
+msgid "Partners"
+msgstr "パートナ"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:142
+#, python-format
+msgid "Invoices Reminder"
+msgstr "請求書の通知"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow Up"
+msgstr "アカウントフォローアップ"
+
+#. module: account_followup
+#: selection:account_followup.followup.line,start:0
+msgid "End of Month"
+msgstr "月末"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Not Litigation"
+msgstr "告訴しない"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(user_signature)s: User name"
+msgstr "%(user_signature)s：ユーザ名"
+
+#. module: account_followup
+#: field:account_followup.stat,debit:0
+msgid "Debit"
+msgstr "借方"
+
+#. module: account_followup
+#: view:account.followup.print:0
+msgid ""
+"This feature allows you to send reminders to partners with pending invoices. "
+"You can send them the default message for unpaid invoices or manually enter "
+"a message should you need to remind them of a specific information."
+msgstr ""
+"この機能は保留中の請求書を持つパートナに通知を送ることができます。未払請求書のためのデフォルトメッセージ、あるいは特定の情報を通知する必要がある時にメッセ"
+"ージを手動で入力して送ることができます。"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Ref"
+msgstr "参照"
+
+#. module: account_followup
+#: help:account_followup.followup.line,sequence:0
+msgid "Gives the sequence order when displaying a list of follow-up lines."
+msgstr "フォローアップ行のリスト表示の際の並び順を与えます。"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,email_body:0
+msgid "Email body"
+msgstr "Eメール本文"
+
+#. module: account_followup
+#: field:account.move.line,followup_line_id:0
+msgid "Follow-up Level"
+msgstr "フォローアップレベル"
+
+#. module: account_followup
+#: field:account_followup.stat,date_followup:0
+#: field:account_followup.stat.by.partner,date_followup:0
+msgid "Latest followup"
+msgstr "最新フォローアップ"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Select Partners to Remind"
+msgstr "通知するパートナを選択"
+
+#. module: account_followup
+#: field:account.followup.print.all,partner_lang:0
+msgid "Send Email in Partner Language"
+msgstr "パートナ言語でEメール送信"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Partner Selection"
+msgstr "パートナ選択"
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount stays unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to contact our accounting department at "
+"(+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
+"\n"
+"%(partner_name)s 様、\n"
+"\n"
+"弊社の手違いであったかの知れませんが、どうやら、以下のお支払をいただいていないように思われます。どうぞ、8日間以内にこの支払のための適切な措置を講じて下さ"
+"るよう、お願いいたします。\n"
+"\n"
+"すでにお支払を済ませられたにもかかわらず、この通知がなされた場合には、この通知を無視して下さい。何かご不明な点がございましたら、弊社の会計部門 "
+"（+32）.10.68.94.39 にご連絡下さい。\n"
+"\n"
+"敬具\n"
+
+#. module: account_followup
+#: field:account_followup.followup.line,description:0
+msgid "Printed Message"
+msgstr "メッセージ印刷済"
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send followups"
+msgstr "フォローアップ送信済"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:0
+msgid "Partner to Remind"
+msgstr "通知するパートナ"
+
+#. module: account_followup
+#: field:account_followup.followup.line,followup_id:0
+#: field:account_followup.stat,followup_id:0
+msgid "Follow Ups"
+msgstr "フォローアップ"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:296
+#, python-format
+msgid ""
+"All E-mails have been successfully sent to Partners:.\n"
+"\n"
+"%s"
+msgstr ""
+"全てのEメールはパートナに正常に送信されました：\n"
+"\n"
+"%s"
+
+#. module: account_followup
+#: constraint:account_followup.followup.line:0
+msgid ""
+"Your description is invalid, use the right legend or %% if you want to use "
+"the percent character."
+msgstr "記述が無効です。正しい凡例またはパーセンテージ文字を使う場合は%%を使って下さい。"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr "選択した仕訳のアカウントは第２の通貨の入力を要求しています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Send Mails"
+msgstr "メール送信"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Followup Statistics by Partner"
+msgstr "パートナ別の統計のフォローアップ"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "Message"
+msgstr "メッセージ"
+
+#. module: account_followup
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "ブロック"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:299
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+"%s"
+msgstr ""
+"\n"
+"\n"
+"以下のパートナへのEメール送信が成功しました。\n"
+"\n"
+"%s"
+
+#. module: account_followup
+#: help:account.followup.print,date:0
+msgid ""
+"This field allow you to select a forecast date to plan your follow-ups"
+msgstr "この項目はフォローアップの計画するために予測日付の選択ができます。"
+
+#. module: account_followup
+#: field:account.followup.print,date:0
+msgid "Follow-up Sending Date"
+msgstr "送信日のフォローアップ"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:56
+#, python-format
+msgid "Select Partners"
+msgstr "パートナ選択"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Email Settings"
+msgstr "E-メール設定"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Print Follow Ups"
+msgstr "フォローアップの印刷"
+
+#. module: account_followup
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
+msgstr "最新フォローアップ"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Followup Statistics"
+msgstr "統計のフォローアップ"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "%(user_signature)s: User Name"
+msgstr "%(user_signature)s：ユーザ名"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_move_line
+msgid "Journal Items"
+msgstr "仕訳帳項目"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr "ビュータイプのアカウントでは仕訳帳項目を作ることはできません。"
+
+#. module: account_followup
+#: field:account.followup.print.all,email_conf:0
+msgid "Send email confirmation"
+msgstr "Eメール確認を送信"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Total:"
+msgstr "合計："
+
+#. module: account_followup
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(company_name)s: User's Company name"
+msgstr "%(company_name)s：ユーザの会社名"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,summary:0
+msgid "Summary"
+msgstr "要約"
+
+#. module: account_followup
+#: field:account_followup.stat,credit:0
+msgid "Credit"
+msgstr "貸方"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Maturity Date"
+msgstr "満期日"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "%(partner_name)s: Partner Name"
+msgstr "%(partner_name)s：パートナ名"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow-Up lines"
+msgstr "フォローアップ行"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(company_currency)s: User's Company Currency"
+msgstr "%(company_currency)s：ユーザの会社の通貨"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,balance:0
+#: field:account_followup.stat.by.partner,balance:0
+msgid "Balance"
+msgstr "残高"
+
+#. module: account_followup
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
+msgstr "期間のタイプ"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_print
+#: model:ir.model,name:account_followup.model_account_followup_print_all
+msgid "Print Followup & Send Mail to Customers"
+msgstr "フォローアップの印刷＆顧客にメール送信"
+
+#. module: account_followup
+#: field:account_followup.stat,date_move_last:0
+#: field:account_followup.stat.by.partner,date_move_last:0
+msgid "Last move"
+msgstr "前回動作"
+
+#. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
+msgid "Followup Report"
+msgstr "フォローアップレポート"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "Follow-Up Steps"
+msgstr "フォローアップステップ"
+
+#. module: account_followup
+#: field:account_followup.stat,period_id:0
+msgid "Period"
+msgstr "期間"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:307
+#, python-format
+msgid "Followup Summary"
+msgstr "フォローアップの要約"
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Litigation"
+msgstr "訴訟"
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,max_followup_id:0
+msgid "Max Follow Up Level"
+msgstr "最大フォローアップレベル"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
+msgid "Review Invoicing Follow-Ups"
+msgstr "請求フォローアップのレビュー"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
+
+#. module: account_followup
+#: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
+msgid ""
+"Define follow up levels and their related messages and delay. For each step, "
+"specify the message and the day of delay. Use the legend to know the using "
+"code to adapt the email content to the good context (good name, good date) "
+"and you can manage the multi language of messages."
+msgstr ""
+"フォローアップレベル、それに関するメッセージ、猶予期間を定義して下さい。各ステップ毎にメッセージと猶予日数を定義します。良い文脈（良い名前、良い日付）にE"
+"メールを適合させるためのコードの使い方を知るために凡例を使って下さい。また、多言語のメッセージが管理できます。"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
+msgid "Payable Items"
+msgstr "買掛金項目"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:298
+#, python-format
+msgid ""
+"E-Mail not sent to following Partners, E-mail not available !\n"
+"\n"
+"%s"
+msgstr ""
+"Eメールが利用可能ではないため次のパートナにEメールは送信されません。\n"
+"\n"
+"%s"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(followup_amount)s: Total Amount Due"
+msgstr "%(followup_amount)s：支払われるべき合計金額"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "%(date)s: Current Date"
+msgstr "%(date)s：現在日付"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Including journal entries marked as a litigation"
+msgstr "訴訟としてマークされた仕訳帳エントリーを含みます。"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Followup Level"
+msgstr "フォローアップレベル"
+
+#. module: account_followup
+#: field:account_followup.followup,description:0
+#: report:account_followup.followup.print:0
+msgid "Description"
+msgstr "説明"
+
+#. module: account_followup
+#: constraint:account_followup.followup:0
+msgid "Only One Followup by Company."
+msgstr "会社による１つのフォローアップのみです。"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "This Fiscal year"
+msgstr "今会計年度"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Partner entries"
+msgstr "パートナエントリー"
+
+#. module: account_followup
+#: help:account.followup.print.all,partner_lang:0
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr "パートナの言語、または会社の設定でEメールを送信したい場合は、メッセージのテキストを変更しないで下さい。"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
+msgid "Receivable Items"
+msgstr "売掛金項目"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: model:ir.actions.act_window,name:account_followup.action_followup_stat
+#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
+msgid "Follow-ups Sent"
+msgstr "送信済フォローアップ"
+
+#. module: account_followup
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "会社名は固有でなければいけません。"
+
+#. module: account_followup
+#: field:account_followup.followup,name:0
+#: field:account_followup.followup.line,name:0
+msgid "Name"
+msgstr "氏名"
+
+#. module: account_followup
+#: field:account_followup.stat,date_move:0
+#: field:account_followup.stat.by.partner,date_move:0
+msgid "First move"
+msgstr "最初の動作"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Li."
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print:0
+msgid "Continue"
+msgstr "続き"
+
+#. module: account_followup
+#: field:account_followup.followup.line,delay:0
+msgid "Days of delay"
+msgstr "猶予日数"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Document : Customer account statement"
+msgstr "ドキュメント：顧客口座取引明細書"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "合計貸方"
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days, then legal action for the "
+"recovery of the debt will be taken without further notice.\n"
+"\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
+"\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
+"\n"
+"%(partner_name)s 様、\n"
+"\n"
+"すでに何度かご通知させていただいておりますが、いまだにお客様の口座の決済をいただいておりません。\n"
+"\n"
+"万が一、全額のお支払を8日間以内にいただけない場合は、債務の回収のための法的措置は予告なしに実行されます。\n"
+"\n"
+"弊社ではこれらは不必要であると、お客様を信頼しておりますので、今一度、以下に印刷された期限切れのお支払の詳細をご覧下さい。\n"
+"\n"
+"本件に関するどんな疑問でもございましたら、どうぞ、弊社の会計部門 （+32）.10.68.94.39 にご連絡下さい。\n"
+"\n"
+"敬具\n"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(line)s: Ledger Posting lines"
+msgstr "%(line)s：元帳記帳行"
+
+#. module: account_followup
+#: field:account_followup.followup.line,sequence:0
+msgid "Sequence"
+msgstr "順序"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "%(company_name)s: User's Company Name"
+msgstr "%(company_name)s：ユーザの会社名"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Customer Ref :"
+msgstr "顧客参照："
+
+#. module: account_followup
+#: field:account.followup.print.all,test_print:0
+msgid "Test Print"
+msgstr "テストプリント"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(partner_name)s: Partner name"
+msgstr "%(partner_name)s：パートナ名"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Latest Followup Date"
+msgstr "最新フォローアップ日"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-Up Criteria"
+msgstr "フォローアップ基準"

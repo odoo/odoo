@@ -50,7 +50,7 @@ class purchase_report(osv.osv):
         'date_approve':fields.date('Date Approved', readonly=True),
         'expected_date':fields.date('Expected Date', readonly=True),
         'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
-        'product_uom' : fields.many2one('product.uom', 'Reference UoM', required=True),
+        'product_uom' : fields.many2one('product.uom', 'Reference Unit of Measure', required=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),

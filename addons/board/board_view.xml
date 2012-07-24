@@ -8,7 +8,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Dashboard">
-                <field name="name"/>
+                <field name="name" string="Dashboard"/>
                 <field name="line_ids"/>
             </search>
         </field>
@@ -68,7 +68,10 @@
         <field name="search_view_id" ref="view_board_search"/>
     </record>
 
-    <menuitem action="action_view_board_list_form" id="menu_view_board_form" parent="base.menu_reporting_config" sequence="2"/>
+    <menuitem action="action_view_board_list_form"
+        id="menu_view_board_form" parent="base.menu_reporting_config"
+    groups="base.group_no_one"
+    sequence="2"/>
 
 </data>
 </openerp>

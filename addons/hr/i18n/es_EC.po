@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:08+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -196,8 +196,9 @@ msgstr "Mujer"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr "Número de empleados requeridos en total para este puesto"
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -248,8 +249,8 @@ msgstr "Otra información"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Email de trabajo"
+msgid "Work Email"
+msgstr "E-mail de Trabajo"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -289,8 +290,8 @@ msgstr "Categorías"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Empleados previstos"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -421,12 +422,6 @@ msgid "Working Address"
 msgstr "Dirección de trabajo"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Tablero Director Recursos Humanos"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Departamentos Inferiores"
@@ -440,7 +435,7 @@ msgstr "Estado"
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
 msgid "Categories Structure"
-msgstr "Árbol de categorías"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,partner_id:0
@@ -470,7 +465,7 @@ msgstr "¡Error! No se puede crear una jerarquía recursiva de empleados."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordinate Hierarchy"
-msgstr "Organigrama Jerárquico"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -648,7 +643,7 @@ msgstr "Empleados"
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Número Social"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -668,7 +663,7 @@ msgstr "Creación de un usuario OpenERP"
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Usuario"
 
 #. module: hr
 #: view:hr.employee:0
@@ -719,11 +714,13 @@ msgstr "Subordinados"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "Número de Empleados"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
 
-#~ msgid "Work Email"
-#~ msgstr "E-mail de Trabajo"
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Categorías de Horarios de Trabajo"
@@ -749,7 +746,7 @@ msgstr "Número de Empleados"
 #~ msgid "Working Time Category"
 #~ msgstr "Categoría - Horario de Trabajo"
 
-#~ msgid "Workgroup Manager"
+#~ msgid "Workgroup manager"
 #~ msgstr "Jefe de Proyectos"
 
 #~ msgid "Fill up contact information"
@@ -781,6 +778,9 @@ msgstr "Número de Empleados"
 
 #~ msgid "Monday"
 #~ msgstr "Lunes"
+
+#~ msgid "Categories structure"
+#~ msgstr "Árbol de categorías"
 
 #~ msgid "Wednesday"
 #~ msgstr "Miercoles"
@@ -844,3 +844,21 @@ msgstr "Número de Empleados"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo inválido en la definición de acción."
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Número de empleados requeridos en total para este puesto"
+
+#~ msgid "Work E-mail"
+#~ msgstr "Email de trabajo"
+
+#~ msgid "Expected Employees"
+#~ msgstr "Empleados previstos"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Tablero Director Recursos Humanos"
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Organigrama Jerárquico"
+
+#~ msgid "Number of Employees"
+#~ msgstr "Número de Empleados"

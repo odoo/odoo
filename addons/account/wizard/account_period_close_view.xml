@@ -7,17 +7,15 @@
             <field name="model">account.period.close</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Close Period">
-                    <group colspan="4" >
-                        <separator string="Are you sure?" colspan="4"/>
+                <form string="Close Period" version="7.0">
+                    <group string="Are you sure?">
                         <field name="sure"/>
                     </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button  icon="terp-gtk-go-back-rtl" string="Close Period" name="data_save" type="object"/>
-                   </group>
+                    <footer>
+                        <button string="Close Period" name="data_save" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
     <!-- Audittrail View Log  wizard-->
-    
-  		<record id="view_audittrail_view_log" model="ir.ui.view">
+
+        <record id="view_audittrail_view_log" model="ir.ui.view">
             <field name="name">audittrail.view.log.form</field>
             <field name="model">audittrail.view.log</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Audit Logs">
-                	<group colspan="4" >
-                		 <field name="from" colspan="4"/>
-              			 <newline/>
-              			 <field name="to" colspan="4"/>   
+                <form string="Audit Logs" version="7.0">
+                    <group col="4">
+                         <field name="from"/>
+                         <field name="to"/>
                     </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel"
-                    		string="Cancel" />
-                    	<button icon="gtk-open" string="Open Logs"
-                    		name="log_open_window" type="object" />
-                    </group>
+                    <footer>
+                        <button string="Open Logs" name="log_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
-  		</record>
-  
+          </record>
+
   <!-- action for audittrail view log wizard -->
-  		
+
         <record id="action_audittrail_view_log" model="ir.actions.act_window">
             <field name="name">View log</field>
             <field name="res_model">audittrail.view.log</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_audittrail_view_log"/> 
+           <field name="view_id" ref="view_audittrail_view_log"/>
            <field name="target">new</field>
         </record>
-        
+
     </data>
 </openerp>

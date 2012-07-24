@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:31+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:02+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -170,11 +170,13 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"¡La conversión de la UdM %s del producto a UdM por defecto %s no es posible "
+"debido a que no pertenecen a la misma categoría!"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen"
-msgstr ""
+msgstr "Docena"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -258,6 +260,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Cree un producto para todo lo que compre o venda. Especifique un proveedor "
+"si el producto puede ser comprado."
 
 #. module: product
 #: view:product.uom:0
@@ -545,7 +549,7 @@ msgstr "Tacos de metal"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Cannot change the category of existing UoM '%s'."
-msgstr ""
+msgstr "No puede cambiar la categoría de la UdM existente '%s'"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -565,7 +569,7 @@ msgstr "Cálculo del precio"
 #. module: product
 #: model:res.groups,name:product.group_uos
 msgid "Product UoS View"
-msgstr ""
+msgstr "Vista UdV producto"
 
 #. module: product
 #: field:product.template,purchase_ok:0
@@ -614,7 +618,7 @@ msgstr "Plantillas producto"
 #. module: product
 #: field:product.category,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Padre izquierdo"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
@@ -664,7 +668,7 @@ msgstr "Precio base"
 #. module: product
 #: model:product.template,name:product.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Servicio en hoja de Trabajo"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
@@ -1066,7 +1070,6 @@ msgstr "Seq"
 #: view:product.price_list:0
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
-"Calcular los precios del producto según unidades para una versión de tarifa."
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -1258,7 +1261,7 @@ msgstr ""
 #. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
-msgstr "Peso neto"
+msgstr ""
 
 #. module: product
 #: field:product.packaging,width:0
@@ -1489,7 +1492,7 @@ msgstr "Unidad de medida compra"
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr "Método suministro"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1793,7 +1796,7 @@ msgstr "Asigna la prioridad a la lista de proveedor de producto."
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit of Measure"
-msgstr "Unidad de medida por defecto"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -2238,7 +2241,7 @@ msgstr "Margen precio mín."
 #. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
-msgstr "Peso bruto"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
@@ -2471,6 +2474,9 @@ msgstr "Descuento precio"
 #~ "La cantidad mínima a comprar a este proveedor, expresada en la unidad de "
 #~ "medida por defecto."
 
+#~ msgid "Net weight"
+#~ msgstr "Peso neto"
+
 #~ msgid ""
 #~ "Quantities of products that are planned to arrive in selected locations or "
 #~ "all internal if none have been selected."
@@ -2595,6 +2601,9 @@ msgstr "Descuento precio"
 #~ "Nombre del producto para esta empresa, se utilizará al imprimir una petición "
 #~ "de presupuesto. Dejarlo vacío para utilizar el nombre interno."
 
+#~ msgid "Supply method"
+#~ msgstr "Método suministro"
+
 #~ msgid "Suppliers of Product"
 #~ msgstr "Proveedores del producto"
 
@@ -2626,6 +2635,9 @@ msgstr "Descuento precio"
 
 #~ msgid "Price list"
 #~ msgstr "Precio"
+
+#~ msgid "Gross weight"
+#~ msgstr "Peso bruto"
 
 #~ msgid ""
 #~ "Gives the different ways to package the same product. This has no impact on "
@@ -2792,6 +2804,10 @@ msgstr "Descuento precio"
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtros extendidos..."
 
+#~ msgid "Calculate Product Price per unit base on pricelist version."
+#~ msgstr ""
+#~ "Calcular los precios del producto según unidades para una versión de tarifa."
+
 #~ msgid "Stockable"
 #~ msgstr "Almacenable"
 
@@ -2843,6 +2859,9 @@ msgstr "Descuento precio"
 #~ msgstr ""
 #~ "¡La conversión de la UdM m a la UdM PCE no es posible ya que ambas "
 #~ "pertenecen a categorías diferentes!"
+
+#~ msgid "Default Unit Of Measure"
+#~ msgstr "Unidad de medida por defecto"
 
 #~ msgid ""
 #~ "Future stock for this product according to the selected locations or all "

@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:06+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:23+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Value Mapping"
-msgstr ""
+msgstr "Värdemappning"
 
 #. module: caldav
 #: help:caldav.browse,url:0
 msgid "Url of the caldav server, use for synchronization"
-msgstr ""
+msgstr "Url till caldav-servern, används för synkronisering"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:99
@@ -57,6 +57,32 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Förutsättningar\n"
+"----------\n"
+"Det finns inget egentlig inbyggd metod för att synkronisera två "
+"kalenderservrar med CalDAV.\n"
+"Så denna modul tillför denna funktion.\n"
+"\n"
+"\n"
+"konfiguration\n"
+"-------------\n"
+"\n"
+"1. Öppna Kalender Sync\n"
+"    Jag får ett gränssnitt med 2 flikar\n"
+"    Bo på den första\n"
+"\n"
+"2. CaDAV Kalender URL: sätta URL ovan (dvs. "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Sätt ditt openerp användarnamn och lösenord\n"
+"\n"
+"4. Om din server inte använder SSL, får du en warnign, säger \"Yes\"\n"
+"\n"
+"5. Sedan kan du synkronisera manuellt eller anpassad inställningarna för att "
+"synkronisera varje x minuter.\n"
+"\n"
+"    "
 
 #. module: caldav
 #: field:basic.calendar.alias,name:0
@@ -66,7 +92,7 @@ msgstr "Filnamn"
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_export
 msgid "Event Export"
-msgstr ""
+msgstr "Exportera händelser"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
@@ -93,7 +119,7 @@ msgstr "Deltagare"
 #. module: caldav
 #: sql_constraint:basic.calendar.fields:0
 msgid "Can not map a field more than once"
-msgstr ""
+msgstr "Kan bara mappa ett fält en gång"
 
 #. module: caldav
 #: model:ir.actions.act_window,help:caldav.action_caldav_form
@@ -104,6 +130,11 @@ msgid ""
 "to synchronize Meeting with Calendars client.You can access Calendars using "
 "CalDAV clients, like sunbird, Calendar Evaluation, Mobile."
 msgstr ""
+"\"Kalendrar\" kan du anpassa kalendern händelse och att-göra-attribut med "
+"någon av OpenERP modell. Caledars ger iCal Import / Export "
+"functionality.Webdav server som ger fjärråtkomst till calendar.Help du "
+"synkronisera Möte med kalendrar client.You kan komma kalendrar med CalDAV "
+"kunder, som Sunbird, Kalender utvärdering, Mobile."
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
@@ -126,12 +157,12 @@ msgstr "Att göra"
 #. module: caldav
 #: model:ir.model,name:caldav.model_user_preference
 msgid "User preference Form"
-msgstr ""
+msgstr "Användarinställningsformulär"
 
 #. module: caldav
 #: field:user.preference,service:0
 msgid "Services"
-msgstr ""
+msgstr "Tjänster"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
@@ -141,7 +172,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Evolution"
-msgstr ""
+msgstr "Evolution"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -176,6 +207,26 @@ msgid ""
 "side.\n"
 "     "
 msgstr ""
+"\n"
+"    1. Gå till Kalendervyn\n"
+"\n"
+"2. Arkiv -> Nytt -> Kalender\n"
+"\n"
+"3. Fylla i formuläret\n"
+"    - Typ: CalDAV\n"
+"    - Namn: Vad du vill ha (dvs: Möte)\n"
+"    - URL: http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings "
+"(dvs. http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) "
+"adressen i din webbläsare\n"
+"    - Avmarkera \"Använd SSL\"\n"
+"    - Användarnamn: Ditt användarnamn (dvs. Demo)\n"
+"    - Uppdatera: varje gång du vill att kalenderklienten synkronisera data "
+"med servern\n"
+"\n"
+"4. Klicka på OK och ge ditt openerp lösenord\n"
+"\n"
+"5. En ny kalender namnges med det namn du gav ska visas på vänster sida.\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:879
@@ -191,7 +242,7 @@ msgstr ""
 #. module: caldav
 #: field:caldav.browse,url:0
 msgid "Caldav Server"
-msgstr ""
+msgstr "Caldav-server"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
@@ -201,14 +252,14 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #. module: caldav
 #: selection:basic.calendar,type:0
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "TODO"
-msgstr ""
+msgstr "ATT GÖRA"
 
 #. module: caldav
 #: view:calendar.event.export:0
@@ -236,7 +287,7 @@ msgstr ""
 #: field:basic.calendar,line_ids:0
 #: model:ir.model,name:caldav.model_basic_calendar_lines
 msgid "Calendar Lines"
-msgstr ""
+msgstr "Kalenderrader"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_subscribe
@@ -258,7 +309,7 @@ msgstr "_Avbryt"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_event
 msgid "basic.calendar.event"
-msgstr ""
+msgstr "basic.calendar.event"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -266,7 +317,7 @@ msgstr ""
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Event"
-msgstr ""
+msgstr "Evenemang"
 
 #. module: caldav
 #: field:document.directory,calendar_collection:0
@@ -282,12 +333,12 @@ msgstr "Fel! Ni kan inte skapa rekursiva kataloger."
 #. module: caldav
 #: view:user.preference:0
 msgid "_Open"
-msgstr ""
+msgstr "_Öppna"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "Next"
-msgstr ""
+msgstr "Nästa"
 
 #. module: caldav
 #: field:basic.calendar,type:0
@@ -295,7 +346,7 @@ msgstr ""
 #: field:basic.calendar.fields,type_id:0
 #: field:basic.calendar.lines,name:0
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: caldav
 #: help:calendar.event.export,name:0
@@ -311,17 +362,17 @@ msgstr "Fel !"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
-msgstr ""
+msgstr "Kalenderattribut"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_caldav_browse
 msgid "Caldav Browse"
-msgstr ""
+msgstr "Kalenderbläddring"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Android based device"
-msgstr ""
+msgstr "Android-enhet"
 
 #. module: caldav
 #: view:user.preference:0
@@ -341,7 +392,7 @@ msgstr ""
 #. module: caldav
 #: model:ir.model,name:caldav.model_document_directory
 msgid "Directory"
-msgstr ""
+msgstr "Katalog"
 
 #. module: caldav
 #: field:calendar.event.subscribe,url_path:0
@@ -356,7 +407,7 @@ msgstr "Domän"
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "_Subscribe"
-msgstr ""
+msgstr "_Prenumerera"
 
 #. module: caldav
 #: field:basic.calendar,user_id:0
@@ -388,7 +439,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,service:0
 msgid "CalDAV"
-msgstr ""
+msgstr "CalDAV"
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -428,7 +479,7 @@ msgstr ""
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "Katalogen kan inte ha sig själv som förälder!"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -436,17 +487,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:caldav.action_caldav_form
 #: model:ir.ui.menu,name:caldav.menu_caldav_directories
 msgid "Calendars"
-msgstr ""
+msgstr "Kalendrar"
 
 #. module: caldav
 #: field:basic.calendar,collection_id:0
 msgid "Collection"
-msgstr ""
+msgstr "Samling"
 
 #. module: caldav
 #: field:basic.calendar,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Avtalsdatum"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:32
@@ -478,7 +529,7 @@ msgstr ""
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "Katalognamnet måste vara unikt !"
 
 #. module: caldav
 #: view:user.preference:0
@@ -494,22 +545,22 @@ msgstr ""
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_timezone
 msgid "basic.calendar.timezone"
-msgstr ""
+msgstr "basic.calendar.timezone"
 
 #. module: caldav
 #: field:basic.calendar.fields,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Uttryck"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attendee
 msgid "basic.calendar.attendee"
-msgstr ""
+msgstr "basic.calendar.attendee"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alias
 msgid "basic.calendar.alias"
-msgstr ""
+msgstr "basic.calendar.alias"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -525,7 +576,7 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "Fältmappning"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:141
@@ -568,27 +619,27 @@ msgstr ""
 #. module: caldav
 #: field:user.preference,host_name:0
 msgid "Host Name"
-msgstr ""
+msgstr "Värddator"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
 msgid "basic.calendar"
-msgstr ""
+msgstr "basic.calendar"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Other Info"
-msgstr ""
+msgstr "Annan information"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Other"
-msgstr ""
+msgstr "Övrigt"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "My Calendar(s)"
-msgstr ""
+msgstr "Mina kalendrar"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
@@ -600,12 +651,12 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.fields,fn:0
 msgid "Function"
-msgstr ""
+msgstr "Funktion"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "database.my.openerp.com  or companyserver.com"
-msgstr ""
+msgstr "database.my.openerp.com  or companyserver.com"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -613,7 +664,7 @@ msgstr ""
 #: view:caldav.browse:0
 #: field:caldav.browse,description:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
@@ -623,7 +674,7 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
 msgid "Mapping"
-msgstr ""
+msgstr "Fältmappning"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:86
@@ -634,7 +685,7 @@ msgstr ""
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "_Import"
-msgstr ""
+msgstr "_Importera"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
@@ -649,7 +700,7 @@ msgstr ""
 #. module: caldav
 #: field:calendar.event.export,name:0
 msgid "File name"
-msgstr ""
+msgstr "Filnamn"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
@@ -666,18 +717,18 @@ msgstr ""
 #: field:basic.calendar.attributes,name:0
 #: field:basic.calendar.fields,name:0
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: caldav
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Alarm"
-msgstr ""
+msgstr "Larm"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alarm
 msgid "basic.calendar.alarm"
-msgstr ""
+msgstr "basic.calendar.alarm"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1293
@@ -764,12 +815,12 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Sunbird/Thunderbird"
-msgstr ""
+msgstr "Sunbird/Thunderbird"
 
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
 msgid "Order"
-msgstr ""
+msgstr "Sortera"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
@@ -780,7 +831,7 @@ msgstr "Fel!"
 #. module: caldav
 #: field:basic.calendar,calendar_color:0
 msgid "Color"
-msgstr ""
+msgstr "Färg"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -801,19 +852,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe_values
 msgid "Subscribe"
-msgstr ""
+msgstr "Prenumerera"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "Katalogen måste ha en förälder eller en lagringsplats"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_todo
 msgid "basic.calendar.todo"
-msgstr ""
+msgstr "basic.calendar.todo"
 
 #. module: caldav
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
+
+#~ msgid "Provide path for Remote Calendar"
+#~ msgstr "Ange en sökväg till den främmande kalendern"

@@ -24,22 +24,40 @@
         <record id="project_tt_specification" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">Design</field>
-            <field name="project_default" eval="1"/>
+            <field name="state">draft</field>
+            <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_development" model="project.task.type">
             <field name="sequence">2</field>
             <field name="name">Development</field>
-            <field name="project_default" eval="1"/>
+            <field name="state">open</field>
+            <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_testing" model="project.task.type">
             <field name="sequence">3</field>
             <field name="name">Testing</field>
-            <field name="project_default" eval="1"/>
+            <field name="state">open</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_pending" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">Pending</field>
+            <field name="state">pending</field>
+            <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
         </record>
         <record id="project_tt_merge" model="project.task.type">
-            <field name="sequence">4</field>
+            <field name="sequence">5</field>
             <field name="name">Deployment</field>
-            <field name="project_default" eval="1"/>
+            <field name="state">done</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_cancel" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Cancelled</field>
+            <field name="state">cancelled</field>
+            <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
         </record>
     </data>
 </openerp>

@@ -34,7 +34,7 @@ from ..mail_message import to_email
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
 class mail_compose_message(osv.osv_memory):
-    """Generic E-mail composition wizard. This wizard is meant to be inherited
+    """Generic Email composition wizard. This wizard is meant to be inherited
        at model and view level to provide specific wizard features.
 
        The behavior of the wizard can be modified through the use of context
@@ -58,7 +58,7 @@ class mail_compose_message(osv.osv_memory):
     """
     _name = 'mail.compose.message'
     _inherit = 'mail.message.common'
-    _description = 'E-mail composition wizard'
+    _description = 'Email composition wizard'
 
     def default_get(self, cr, uid, fields, context=None):
         """Overridden to provide specific defaults depending on the context
@@ -291,5 +291,44 @@ class mail_compose_message(osv.osv_memory):
                 return ""
             return tools.ustr(result)
         return template and EXPRESSION_PATTERN.sub(merge, template)
+
+
+
+class mail_compose_message_extended(osv.osv_memory):
+    """ Extension of 'mail.compose.message' to support default field values related
+        to CRM-like models that follow the following conventions:
+
+        1. The model object must have an attribute '_mail_compose_message' equal to True.
+
+        2. The model should define the following fields:
+            - 'name' as subject of the message (required);
+            - 'email_from' as destination email address (required);
+            - 'email_cc' as cc email addresses (required);
+            - 'section_id.reply_to' as reply-to address (optional).
+    """
+    _inherit = 'mail.compose.message'
+
+    def get_value(self, cr, uid, model, res_id, context=None):
+        """Overrides the default implementation to provide more default field values
+           related to the corresponding CRM case.
+        """
+        result = super(mail_compose_message_extended, self).get_value(cr, uid,  model, res_id, context=context)
+        model_obj = self.pool.get(model)
+        if getattr(model_obj, '_mail_compose_message', False) and res_id:
+            data = model_obj.browse(cr, uid , res_id, context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            result.update({
+                'model': model,
+                'res_id': res_id,
+                'email_from': user.user_email or tools.config.get('email_from', False),
+                'email_to': data.email_from or False,
+                'email_cc': tools.ustr(data.email_cc or ''),
+                'subject': data.name or False,
+                'body_text': '\n' + tools.ustr(user.signature or ''),
+                'subtype': 'plain',
+            })
+            if hasattr(data, 'section_id'):
+                result['reply_to'] = data.section_id and data.section_id.reply_to or False
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

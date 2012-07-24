@@ -67,6 +67,7 @@ class account_common_report(osv.osv_memory):
 
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account' and view_id:
             doc = etree.XML(res['arch'])

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-19 13:56+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 18:07+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-20 05:41+0000\n"
-"X-Generator: Launchpad (build 14833)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:20+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -33,6 +33,9 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
+"Vink aan om alleen de voorraadlocatie van het huidige magazijn te berekenen. "
+"Indien niet geselecteerd wordt de berekening gemaakt voor inkomend, voorraad "
+"en uitgaande locatie van het magazijn."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
@@ -99,6 +102,7 @@ msgstr "Maak prognose regels"
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
+"Hoeveeheid van alle bevestigde uitgaande mutaties in de berekende periode."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -121,6 +125,8 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"Alle verkoopprognoses voor het geselecteerde magazijn, van de geselecteerde "
+"producten gedurende de geselecteerde periode."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -130,28 +136,30 @@ msgstr "Minimum voorraad regels indicatoren"
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
 msgid "Period which forecasts will concern."
-msgstr ""
+msgstr "Periode waar de 'forcasts' betrekking op hebben."
 
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
 msgid "Stock Location Only"
-msgstr ""
+msgstr "Alleen voorraadlocatie"
 
 #. module: stock_planning
 #: help:stock.planning,already_out:0
 msgid ""
 "Quantity which is already dispatched out of this warehouse in current period."
 msgstr ""
+"Hoeveelheid welke al is verscheept uit het magazijn gedurende de huidige "
+"periode."
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
-msgstr ""
+msgstr "Bevestigd in"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Current Period Situation"
-msgstr ""
+msgstr "Huidige periodesituatie"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_period_createlines_form
@@ -185,6 +193,8 @@ msgstr "Alle producten met prognose"
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Het voor dit magazijn bij de 'Minimale Voorraad Regels'  gedefinieerde  "
+"maximale aantal."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -202,7 +212,7 @@ msgstr ""
 #: help:stock.planning,already_in:0
 msgid ""
 "Quantity which is already picked up to this warehouse in current period."
-msgstr ""
+msgstr "Het aantal dat in de huidige periode reeds in dit magazijn"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
@@ -256,7 +266,7 @@ msgstr "Deze gebruiker periode5"
 #. module: stock_planning
 #: help:stock.planning,history:0
 msgid "History of procurement or internal supply of this planning line."
-msgstr ""
+msgstr "Historie van verwerving of interne leveringen van dezeplanningsregel"
 
 #. module: stock_planning
 #: help:stock.planning,company_forecast:0
@@ -264,6 +274,8 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
+"Alle verkoop-prognoses voor dit bedrijf van het geselecteerde product in de "
+"geselecteerde periode (berekend over alle magazijnen)"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
@@ -288,7 +300,7 @@ msgstr "Minimum regel"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procure Incoming Left"
-msgstr ""
+msgstr "Verwerk inkomend over"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -302,7 +314,7 @@ msgstr "Maken"
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_manual
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
-msgstr ""
+msgstr "Productieplanning"
 
 #. module: stock_planning
 #: field:stock.planning,line_time:0
@@ -350,6 +362,13 @@ msgid ""
 "Initial Stock - Planned Out Before + Incoming Before - Planned Out + Planned "
 "In."
 msgstr ""
+"Voorraad simulatie aan het einde van de geselecteerde periode.\n"
+" Voor de huidige periode is deze: \n"
+" Huidige voorraad - Reeds eruit + Reeds binnen - Verwacht uit + Nog te "
+"ontvangen\n"
+"Voor de aankomende periode:\n"
+" Huidige voorraad - Eerder gepland eruit + Eerder binnen - Gepland eruit + "
+"Gepland nog te ontvangen"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
@@ -457,7 +476,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculated Period Simulation"
-msgstr ""
+msgstr "Berekende periode simulatie"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -483,6 +502,7 @@ msgstr "Bedrijf prognose"
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Minimum hoeveelheid ingesteld in minimale voorraadregel voor dit magazijn."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -492,7 +512,7 @@ msgstr "Per gebruiker:"
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Magazijn waarvoor deze planning is."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
@@ -502,7 +522,7 @@ msgstr "Gemaakt/Gecontroleerd door"
 #. module: stock_planning
 #: field:stock.planning,warehouse_forecast:0
 msgid "Warehouse Forecast"
-msgstr ""
+msgstr "Magazijn"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:674
@@ -516,7 +536,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Cannot delete a validated sales forecast!"
-msgstr ""
+msgstr "Een gevalideerde verkoop-prognose kan niet verwijderd worden."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
@@ -569,12 +589,12 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
-msgstr ""
+msgstr "Geplanned uit"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Prognose hoeveelheid"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -609,7 +629,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Planning and Situation for Calculated Period"
-msgstr ""
+msgstr "Planning en situatie voor de berekende periode"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -639,7 +659,7 @@ msgstr "%s Pick Liijs %s (%s,  %s) %s %s \n"
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_createlines
 msgid "Create Sales Forecasts"
-msgstr ""
+msgstr "Maak een verkoopprognose"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
@@ -678,14 +698,14 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr ""
+msgstr "Bevestigd uit"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_createlines
 #: view:stock.planning.createlines:0
 msgid "Create Stock Planning Lines"
-msgstr ""
+msgstr "Maak productieplannigsregels"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -695,7 +715,7 @@ msgstr "Algemene info"
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr ""
+msgstr "Verkoopprognose"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
@@ -715,17 +735,17 @@ msgstr "Bron magazijn"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecast Product quantity."
-msgstr ""
+msgstr "Prognose productie hoeveelheid"
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr ""
+msgstr "Voorraadlevering locatie"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "Einddatum voor planningperiode"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -740,12 +760,12 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:702
 #, python-format
 msgid "MPS(%s) %s"
-msgstr ""
+msgstr "MPS(%s) %s"
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
 msgid "Already In"
-msgstr ""
+msgstr "Reeds binnen"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom_categ:0
@@ -823,12 +843,12 @@ msgstr "Zoek voorraad planning"
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy Last Forecast"
-msgstr ""
+msgstr "Kopieer laatste prognose"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Laat zien over welke producten deze prognose gaat"
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
@@ -868,42 +888,42 @@ msgstr "Open"
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr ""
+msgstr "Kopieer hoeveelheden van productie en verkoopprognose"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr ""
+msgstr "Deze diepte periode1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr ""
+msgstr "Deze diepte periode3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr ""
+msgstr "Deze diepte periode2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr ""
+msgstr "Deze diepte periode5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr ""
+msgstr "4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr ""
+msgstr "Dit magazijn periode2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr ""
+msgstr "Dit magazijn periode3"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -984,17 +1004,17 @@ msgstr "Dit bedrijf periode4"
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Periode waarover deze planning gaat."
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr ""
+msgstr "Reeds buiten"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "Producten waar deze planning voor gemaakt is."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1009,7 +1029,7 @@ msgstr "Verwerving historie"
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr ""
+msgstr "Startdatum voor plannigsperiode"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
@@ -1030,6 +1050,7 @@ msgstr "Voorraad"
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
 msgstr ""
+"Hoeveelheid van alle bevestigde inkomende mutaties in de berekende periode."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
@@ -1040,7 +1061,7 @@ msgstr "Einddatum"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr ""
+msgstr "Geen vordering"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
@@ -1050,7 +1071,7 @@ msgstr "Naam"
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Geeft aan over welke periode deze prognose gaat."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
@@ -1087,12 +1108,12 @@ msgstr "Productcategorie"
 #: code:addons/stock_planning/stock_planning.py:672
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "U dient een bronmagazijn te specificeren!"
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Verwerf naar vororaadlocatie"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1110,12 +1131,12 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:631
 #, python-format
 msgid "MPS planning for %s"
-msgstr ""
+msgstr "Productieplanning v oor %s"
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
-msgstr ""
+msgstr "Huidige voorraad"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
@@ -1142,7 +1163,7 @@ msgstr "Dit magazijn"
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Laat zien wie deze prognose heeft gemaakt of heeft goedgekeurd."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_team_id:0
@@ -1233,3 +1254,6 @@ msgstr ""
 #~ msgstr ""
 #~ "\n"
 #~ " Verwacht Uit: "
+
+#~ msgid "Sales history"
+#~ msgstr "Verkoophistorie"

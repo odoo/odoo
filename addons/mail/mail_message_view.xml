@@ -25,19 +25,23 @@
             <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Message">
-                    <group colspan="2" col="2">
-                        <field name="subject"/>
-                        <field name="date"/>
-                        <field name="type"/>
-                        <field name="body_text"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <field name="user_id" string="User" readonly="0"/>
-                        <field name="model"/>
-                        <field name="res_id"/>
-                        <field name="parent_id"/>
-                    </group>
+                <form string="Message" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="subject"/>
+                                <field name="date"/>
+                                <field name="type"/>
+                                <field name="body_text"/>
+                            </group>
+                            <group>
+                                <field name="user_id" string="User"/>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="parent_id"/>
+                            </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -50,9 +54,11 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="user_id"/>
-                    <field name="model"/>
+                    <field name="model" string="Message"/>
+                    <separator orientation="vertical"/>
                     <field name="date"/>
+                    <separator orientation="vertical"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>
@@ -76,63 +82,60 @@
             <field name="model">mail.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email message">
-                    <group colspan="4" col="6">
-                        <field name="subject" colspan="4"/>
-                        <field name="date"/>
-                        <field name="user_id" string="User"/>
-                        <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
-                        <field name="type"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Details">
-                            <group col="2" colspan="2">
-                                <separator string="Recipients" colspan="4"/>
-                                <field name="email_from"/>
-                                <field name="email_to"/>
-                                <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
-                                <field name="email_bcc" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
-                                <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
-                            </group>
-                            <group col="4" colspan="2">
-                                <separator string="Message Details" colspan="4"/>
-                                <field name="model"/>
-                                <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
-                                <field name="res_id"/>
-                                <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
-                                <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
-                            </group>
-                            <notebook colspan="4">
-                                <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
-                                    <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
-                                </page>
-                                <page string="Body (Plain)">
-                                    <field name="body_text" colspan="4" widget="text" nolabel="1"/>
-                                </page>
-                            </notebook>
-                            <separator string="" colspan="4"/>
-                            <group col="6" colspan="6">
-                                <field name="state" colspan="2"/>
-                                <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
-                                <group colspan="2">
-                                    <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                <form string="Email message" version="7.0">
+                    <sheet>
+                        <label for="subject" class="oe_edit_only"/>
+                        <h1><field name="subject"/></h1>
+                        <label for="user_id"/>
+                        <h2><field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/></h2>
+                        <group col="4">
+                            <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
+                            <field name="type"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Details">
+                                <group string="Recipients">
+                                    <field name="email_from"/>
+                                    <field name="email_to"/>
+                                    <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
+                                    <field name="email_bcc" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
+                                    <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Attachments">
-                            <separator string="Attachments" colspan="4"/>
-                            <field name="attachment_ids" nolabel="1" colspan="4"/>
-                        </page>
-                        <page string="Advanced" groups="base.group_no_one">
-                            <group col="2" colspan="4">
-                                <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
-                                <field name="auto_delete"/>
-                                <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
-                                <field name="original" colspan="4" attrs="{'invisible':[('original', '=', False)]}"/>
-                            </group>
-                        </page>
-                    </notebook>
+                                <group col="4" string="Message Details">
+                                    <field name="model"/>
+                                    <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
+                                    <field name="res_id"/>
+                                    <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
+                                    <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
+                                </group>
+                                <notebook>
+                                    <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
+                                        <field name="body_html" widget="text_html"/>
+                                    </page>
+                                    <page string="Body (Plain)">
+                                        <field name="body_text" widget="text"/>
+                                    </page>
+                                </notebook>
+                                <group col="5">
+                                    <field name="state" colspan="2"/>
+                                    <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
+                                    <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                                </group>
+                            </page>
+                            <page string="Attachments">
+                                <field name="attachment_ids"/>
+                            </page>
+                            <page string="Advanced" groups="base.group_no_one">
+                                <group col="2" colspan="4">
+                                    <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
+                                    <field name="auto_delete"/>
+                                    <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
+                                    <field name="original" colspan="4" attrs="{'invisible':[('original', '=', False)]}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -167,20 +170,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
+                    <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
                     <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
                     <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="email_from"/>
-                    <field name="email_to"/>
-                    <field name="subject"/>
-                    <field name="date"/>
                     <newline/>
                     <group expand="0" string="Extended Filters...">
                         <field name="user_id" string="User"/>
@@ -190,7 +190,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
@@ -234,7 +234,7 @@
         <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" groups="base.group_no_one"/>
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
-            <field name="name">Wall</field>
+            <field name="name">News Feed</field>
             <field name="tag">mail.all_feeds</field>
             <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
         </record>

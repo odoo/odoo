@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-18 23:29+0000\n"
-"Last-Translator: t.o <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:43+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-19 05:43+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:06+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -229,7 +229,7 @@ msgstr "Période pour valider"
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr "Donne l'ordre lors de l'affichage d'une liste de lignes de dépense"
+msgstr "Défini l'ordre d'affichage d'une liste de lignes de frais"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
@@ -428,7 +428,7 @@ msgstr "En attente d'approbation"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
 msgid "Employee encode all his expenses"
-msgstr "L'employé inscrit tous ses frais"
+msgstr "L'employé saisit tous ses frais"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0 view:hr.expense.report:0
@@ -439,7 +439,7 @@ msgstr "Facturée"
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
 msgid "Can Constitute an Expense"
-msgstr "Peut constituer une dépense"
+msgstr "Peut figurer sur les notes de frais"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0 selection:hr.expense.report,state:0
@@ -866,7 +866,7 @@ msgstr "Notes de frais"
 #. module: hr_expense
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Erreur : Code ean invalide"
+msgstr "Erreur : code EAN incorrect"
 
 #. module: hr_expense
 #: view:hr.expense.report:0 field:hr.expense.report,year:0
@@ -907,6 +907,9 @@ msgstr "Refacturation"
 #~ msgstr ""
 #~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
 #~ "spéciaux !"
+
+#~ msgid "Accounting data"
+#~ msgstr "Données Comptables"
 
 #~ msgid "Account Move"
 #~ msgstr "Mouvement de Compte"
@@ -1017,3 +1020,6 @@ msgstr "Refacturation"
 
 #~ msgid "Expenses waiting invoice"
 #~ msgstr "Frais attendant la facture"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle incorrect dans la définition de l'action"

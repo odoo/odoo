@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="ViewManagerAction">
+          <t t-jquery=".oe_view_manager_header" t-operation="after">
+          <div class='oe_extended_form_view'></div>
+          </t>
+    </t>
+    <t t-name="ExtendedFormView">
+        <div class="oe_formview">
+            <div class="oe_form_container"/>
+        </div>
+    </t>
+    <t t-name="FieldMany2One_Pager">
+    
+    <span class="oe_form_field_many2one oe_form_field_with_button">
+        <ul class="oe_pager_group">
+        <li>
+            <a type="button" data-pager-action="previous">Previous</a>
+        </li>
+        <li>
+            <a type="button" data-pager-action="next">Next</a>
+        </li>
+         </ul>
+         <ul class="oe_pager_m2o">
+         <li>
+         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri"/>
+         </li>
+         <li>
+        (<span class="oe_pager_index_extend">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count_extend">0</span>)
+        </li>
+        </ul>
+        
+        <t t-if="!widget.get('effective_readonly')">
+            <button class="oe_button oe-m2o-cm-button" title="Open Resource">
+                <img t-att-src='_s + "/web/static/src/img/icons/terp-folder-yellow.png"'/>
+            </button>
+            <div>
+                <input type="text"
+                    t-att-id="widget.id_for_label"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
+                />
+                <span class="oe-m2o-drop-down-button">
+                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"'/>
+                </span>
+            </div>
+        </t>
+    </span>
+ 
+</t>
+
+</templates>

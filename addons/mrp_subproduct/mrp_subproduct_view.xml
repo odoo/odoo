@@ -9,16 +9,16 @@
             <field name="arch" type="xml">
              <notebook position="inside">
                  <page string="Sub Products" position="inside">
-                     <field colspan="4" name="sub_products" nolabel="1" widget="one2many_list">
+                     <field name="sub_products">
                          <tree string="sub products"  editable="top">
                              <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                             <field name="product_uom"/>
+                             <field name="product_uom" groups="product.group_uom"/>
                              <field name="product_qty"/>
                              <field name="subproduct_type"/>
                          </tree>
                          <form string="Sub Products">
                              <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                             <field name="product_uom"/>
+                             <field name="product_uom" groups="product.group_uom"/>
                              <field name="product_qty"/>
                              <field name="subproduct_type"/>
                          </form>

@@ -6,26 +6,29 @@
             <field name="model">purchase.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Purchases" layout="manual">
-                    <div class="oe_form_topbar">
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
-                    </div>
-                    <sheet layout="auto">
-                        <separator string="Invoicing" colspan="4"/>
-                        <field name="default_invoice_method" />
-
-                        <separator string="Purchase Order" colspan="4"/>
-                        <field name="group_purchase_pricelist"/>
-                        <field name="group_uom"/>
-                        <field name="module_purchase_double_validation"/>
-                        <field name="module_purchase_requisition"/>
-                        <field name="module_warning"/>
-                        <field name="module_purchase_analytic_plans"/>
-
-                        <separator string="Products" colspan="4"/>
-                        <field name="module_product_manufacturer"/>
-                    </sheet>
+                <form string="Configure Purchases" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group>
+                        <group>
+                            <separator string="Purchase Order" colspan="2"/>
+                            <field name="group_purchase_pricelist"/>
+                            <field name="group_uom"/>
+                            <field name="group_purchase_delivery_address"/>
+                            <field name="module_purchase_double_validation"/>
+                            <field name="module_purchase_requisition"/>
+                            <field name="module_warning"/>
+                            <field name="module_purchase_analytic_plans"/>
+                        </group>
+			<group>
+                            <separator string="Invoicing" colspan="2"/>
+                            <field name="default_invoice_method" class="oe_inline"/>
+                            <field name="decimal_precision" class="oe_inline"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -39,17 +42,23 @@
         </record>
 
         <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config"
-            sequence="2" action="action_purchase_configuration"/>
+            sequence="3" action="action_purchase_configuration"/>
 
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>
             <field name="model">account.config.settings</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="priority" eval="18"/>
             <field name="arch" type="xml">
-                <group name="analytic_accounting" position="after">
+                <separator name="analytic_accounting" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="colspan">2</attribute>
+                </separator>
+                <separator name="analytic_accounting" position="after">
                     <field name="group_analytic_account_for_purchases"/>
-                </group>
+                    <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans)"/>
+                </separator>
             </field>
         </record>
 

@@ -25,7 +25,6 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 30,
-    'complexity': "easy",
     'description': """
 This module aims to manage employee's expenses.
 ===============================================
@@ -57,7 +56,6 @@ re-invoice your customer's expenses if your work by project.
         'security/ir_rule.xml',
         'report/hr_expense_report_view.xml',
         'board_hr_expense_view.xml',
-        'board_hr_expense_manager_view.xml',
         'hr_expense_installer_view.xml',
     ],
     'demo_xml': [

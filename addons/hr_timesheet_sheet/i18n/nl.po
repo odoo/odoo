@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-21 05:55+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:05+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
@@ -32,7 +32,7 @@ msgstr "Service"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "No employee defined for your user !"
-msgstr "Geen medewerker gedefinieerd voor uw gebruiker!"
+msgstr "Geen werknemer gedefinieerd voor uw gebruiker!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
@@ -238,7 +238,7 @@ msgstr "Waarschuwing !"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr "Invullen urenstaat door medewerker"
+msgstr "Invullen urenstaat door werknemer"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 field:hr.timesheet.report,account_id:0
@@ -266,7 +266,6 @@ msgstr " Maand "
 #: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_sheet_graph
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: view:res.company:0
 msgid "Timesheets"
@@ -314,7 +313,7 @@ msgstr "Status is 'bevestigd'."
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,employee_id:0
 msgid "Employee"
-msgstr "Medewerker"
+msgstr "Werknemer"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -521,7 +520,7 @@ msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
 msgstr ""
-"De urenstaatregel toont de gewerkte tijd door een medewerker aan een "
+"De urenstaatregel toont de gewerkte tijd door een werknemer aan een "
 "specifieke dienst."
 
 #. module: hr_timesheet_sheet
@@ -543,8 +542,8 @@ msgid ""
 "your employees. You can group them by specific selection criteria thanks to "
 "the search tool."
 msgstr ""
-"Dit overzicht doet analyse op urenstaten van personeel in het systeem. Het "
-"geeft u een volledig overzicht van de invoer van uw medewerkers. U kunt "
+"Dit overzicht doet analyse op urenstaten van werknemers in het systeem. Het "
+"geeft u een volledig overzicht van de invoer van uw werknemers. U kunt "
 "groeperen en zoeken op specifieke selectiecriteria."
 
 #. module: hr_timesheet_sheet
@@ -645,7 +644,7 @@ msgstr "U kunt niet wijzigen in een bevestigde urenstaat !"
 #. module: hr_timesheet_sheet
 #: view:board.board:0
 msgid "My Total Attendance By Week"
-msgstr "My totale aanwezigheid op week"
+msgstr "Mijn totale aanwezigheid per week"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:259
@@ -681,7 +680,7 @@ msgid ""
 "sign ins and sign outs!"
 msgstr ""
 "Deze urenstaat kan niet worden gecontroleerd, omdat deze geen gelijke "
-"hoeveelheid aan- en uitmeldingen heeft!"
+"hoeveelheid inklok- en uitklokkingen heeft!"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
@@ -691,7 +690,7 @@ msgstr "Januari"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "The employee signs in and signs out."
-msgstr "De medewerker klokt in en klokt uit."
+msgstr "De werknemer klokt in en klokt uit."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -780,8 +779,8 @@ msgstr "Dag"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
-msgid "My Timesheet"
-msgstr "Mijn urenverantwoording"
+msgid "My Current Timesheet"
+msgstr "Mijn huidige urenstaat"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0 selection:timesheet.report,state:0
@@ -901,7 +900,7 @@ msgstr "Omschrijving"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "The employee periodically confirms his own timesheets."
-msgstr "De medewerker bevestigt periodiek zijn eigen urenstaten."
+msgstr "De werknemer bevestigt periodiek zijn eigen urenstaten."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
@@ -959,7 +958,7 @@ msgstr "De naam van het bedrijf moet uniek zijn!"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Employees"
-msgstr "Medewerkers"
+msgstr "Werknemers"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
@@ -979,7 +978,7 @@ msgstr "Bevestiging"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
 msgid "Invoice rate"
-msgstr "Facturatiesnelheid"
+msgstr "Factuur tarief"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:619
@@ -1030,7 +1029,7 @@ msgid ""
 "user!"
 msgstr ""
 "Om een urenstaat te kunnen aanmaken voor een werknemer, dient u een "
-"werknemer aan een gebruiker te koppelen!"
+"werknemer aan een gebruiker toe te wijzen!"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0 field:timesheet.report,total_attendance:0
@@ -1139,9 +1138,6 @@ msgstr "Dagboek"
 
 #~ msgid "You must select a Current date wich is in the timesheet dates !"
 #~ msgstr "U dient een Huidige datum te kiezen die binnen de urenstaat valt!"
-
-#~ msgid "My Current Timesheet"
-#~ msgstr "Mijn huidige urenstaat"
 
 #~ msgid "Defines employee's timesheet entry"
 #~ msgstr "Definieërt invullen van urenstaten"
@@ -1292,6 +1288,9 @@ msgstr "Dagboek"
 #, python-format
 #~ msgid "You cannot duplicate a timesheet !"
 #~ msgstr "U kunt een urenstaat niet dupliceren !"
+
+#~ msgid "My Timesheet"
+#~ msgstr "Mijn urenverantwoording"
 
 #, python-format
 #~ msgid ""

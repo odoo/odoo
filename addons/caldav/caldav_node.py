@@ -23,6 +23,7 @@ from document_webdav import nodes
 from document.nodes import _str2time, nodefd_static
 import logging
 from orm_utils import get_last_modified
+_logger = logging.getLogger(__name__)
 
 try:
     from tools.dict_tools import  dict_merge2
@@ -223,7 +224,6 @@ class node_calendar(nodes.node_class):
         res = []
         if not filters:
             return res
-        _log = logging.getLogger('caldav.query')
         if filters.localName == 'calendar-query':
             res = []
             for filter_child in filters.childNodes:

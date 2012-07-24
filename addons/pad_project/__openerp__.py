@@ -23,7 +23,6 @@
     'name': 'Specifications on PADs',
     'version': '1.0',
     "category": "Project Management",
-    'complexity': "easy",
     'description': """
 This module adds a PAD in all project kanban views
 ==================================================

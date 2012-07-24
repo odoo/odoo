@@ -15,7 +15,7 @@
                     <field name="user_id"/>
                     <field name="remaining_hours"/>
                     <field name="kanban_state"/>
-                    <field name="state"/>
+                    <field name="state" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -31,18 +31,21 @@
                 </graph>
             </field>
         </record>
-        <record id="view_task_history_burndown_graph" model="ir.ui.view">
-            <field name="name">project.task.history.burndown.graph</field>
-            <field name="model">project.task.history.burndown</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Burndown Chart of Tasks" type="bar">
-                    <field name="date"/>
-                    <field name="remaining_hours" operator="+"/>
-                    <field name="type_id" group="True"/>
-                </graph>
-            </field>
-        </record>
+        
+        <!-- Where is this object in py file ? -->
+        
+        <!--<record id="view_task_history_burndown_graph" model="ir.ui.view">-->
+        <!--    <field name="name">project.task.history.burndown.graph</field>-->
+        <!--    <field name="model">project.task.history.burndown</field>-->
+        <!--    <field name="type">graph</field>-->
+        <!--    <field name="arch" type="xml">-->
+        <!--        <graph string="Burndown Chart of Tasks" type="bar">-->
+        <!--            <field name="date"/>-->
+        <!--            <field name="remaining_hours" operator="+"/>-->
+        <!--            <field name="type_id" group="True"/>-->
+        <!--        </graph>-->
+        <!--    </field>-->
+        <!--</record>-->
 
 
         <record id="view_task_history_search" model="ir.ui.view">
@@ -52,26 +55,18 @@
             <field name="arch" type="xml">
                <search string="Task's Analysis">
                     <group>
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
                         <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                        <separator orientation="vertical"/>
                         <filter name="kanban_blocked" string="Blocked" domain="[('kanban_state','=','blocked')]" icon="terp-gtk-media-pause"/>
                         <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]" icon="terp-camera_test"/>
+                        <filter string="My Tasks" domain="[('user_id','=',uid)]" help="My Tasks" icon="terp-personal" />
+                        <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                        <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         <separator orientation="vertical"/>
-                        <filter string="Month" icon="terp-go-month" name="this_month"
-                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-month" string="Month-1" name="month1"
-                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-month" string="Month-2" name="month2"
-                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=2)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=2)).strftime('%%Y-%%m-%%d'))]"/>
-                        <separator orientation="vertical"/>
-                        <field name="project_id">
-                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
-                        </field>
-                        <field name="user_id">
-                            <filter domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
-                            <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                        </field>
+                        <field name="project_id"/>
+                        <field name="user_id"/>
                     </group>
                 </search>
             </field>
@@ -84,25 +79,25 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_task_history_graph"/>
             <field eval="False" name="filter"/>
-            <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>
+            <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>
         </record>
         <menuitem action="action_view_task_history_cumulative"
             id="menu_action_view_task_history_cumulative"
-            parent="project_report_task" />
+            parent="base.menu_project_report" />
 
 
-        <record id="action_view_task_history_burndown" model="ir.actions.act_window">
-            <field name="name">Burndown Chart</field>
-            <field name="res_model">project.task.history.cumulative</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_task_history_burndown_graph"/>
-            <field eval="False" name="filter"/>
-            <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>
-        </record>
-        <menuitem action="action_view_task_history_burndown"
-            id="menu_action_view_task_history_burndown"
-            parent="project_report_task" />
+        <!--<record id="action_view_task_history_burndown" model="ir.actions.act_window">-->
+        <!--    <field name="name">Burndown Chart</field>-->
+        <!--    <field name="res_model">project.task.history.cumulative</field>-->
+        <!--    <field name="view_type">form</field>-->
+        <!--    <field name="view_mode">graph,tree</field>-->
+        <!--    <field name="view_id" ref="view_task_history_burndown_graph"/>-->
+        <!--    <field eval="False" name="filter"/>-->
+        <!--    <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>-->
+        <!--</record>-->
+        <!--<menuitem action="action_view_task_history_burndown"-->
+        <!--    id="menu_action_view_task_history_burndown"-->
+        <!--    parent="project_report_task" />-->
 
 
     </data>

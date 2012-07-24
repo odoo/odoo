@@ -20,12 +20,12 @@
             <field name="model">delivery.carrier</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Carrier">
-                    <group colspan="4" col="4" name="general">
-                        <field name="name" select="1"/>
-                        <field name="partner_id" select="1"/>
-                        <field name="product_id" select="1"/>
-                        <field name="active" select="1"/>
+                <form string="Carrier" version="7.0">
+                    <group col="4" name="general">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="product_id"/>
+                        <field name="active"/>
                         <separator string="Pricing Information" colspan="4"/>
                         <group colspan="4" col="4">
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
@@ -36,26 +36,32 @@
                         <newline/>
                         <field name="use_detailed_pricelist"/>
                     </group>
-                        <field name="pricelist_ids" nolabel="1" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
+                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
                          <tree string="Delivery grids">
                               <field name="sequence"/>
                               <field name="name"/>
                          </tree>
-                        <form string="Delivery grids">
-                             <field name="name" select="1"/>
-                             <field name="active" select="1"/>
-                             <field name="sequence" select="1"/>
-                             <notebook colspan="4">
+                        <form string="Delivery grids" version="7.0">
+                             <group col="4">
+                                 <field name="name"/>
+                                 <field name="active"/>
+                                 <field name="sequence"/>
+                             </group>
+                             <notebook>
                                <page string="Grid definition">
-                                  <field colspan="4" name="line_ids" nolabel="1" select="1"/>
+                                  <field name="line_ids"/>
                                </page>
                                <page string="Destination">
-                                   <separator colspan="4" string="Countries"/>
-                                   <field colspan="4" name="country_ids" nolabel="1"/>
-                                   <separator colspan="4" string="States"/>
-                                   <field colspan="4" name="state_ids" nolabel="1"/>
-                                   <field name="zip_from"/>
-                                   <field name="zip_to"/>
+                                   <group string="Countries">
+                                       <field colspan="2" name="country_ids" nolabel="1"/>
+                                   </group>
+                                   <group string="States">
+                                       <field colspan="2" name="state_ids" nolabel="1"/>
+                                   </group>
+                                   <group col="4">
+                                       <field name="zip_from"/>
+                                       <field name="zip_to"/>
+                                   </group>
                                </page>
                              </notebook>
                        </form>
@@ -93,22 +99,26 @@
             <field name="model">delivery.grid</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery grids">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="carrier_id" select="1"/>
-                    <field name="sequence" select="1"/>
-                    <notebook colspan="4">
+                <form string="Delivery grids" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="carrier_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook>
                         <page string="Grid definition">
-                            <field colspan="4" name="line_ids" nolabel="1" select="1"/>
+                            <field name="line_ids"/>
                         </page>
                         <page string="Destination">
-                            <separator colspan="4" string="Countries"/>
-                            <field colspan="4" name="country_ids" nolabel="1"/>
-                            <separator colspan="4" string="States"/>
-                            <field colspan="4" name="state_ids" nolabel="1"/>
-                            <field name="zip_from"/>
-                            <field name="zip_to"/>
+                            <group string="Countries">
+                                <field name="country_ids"/>
+                            </group>
+                            <group string="States">
+                                <field colspan="2" name="state_ids" nolabel="1"/>
+                                <field name="zip_from"/>
+                                <field name="zip_to"/>
+                            </group>
                         </page>
                     </notebook>
                 </form>
@@ -129,19 +139,20 @@
             <field name="model">delivery.grid.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Grid Lines">
-                    <group colspan="5" col="5">
-                        <field colspan="4" name="name" select="1"/>
-                        <newline/>
-                        <field name="type" string="Condition"/>
-                        <field name="operator" nolabel="1"/>
-                        <field name="max_value" nolabel="1"/>
+                <form string="Grid Lines" version="7.0">
+                    <field colspan="4" name="name"/>
+                    <div>
+                        <label string="condition" for="type"/>
+                        <field name="type" class="oe_inline"/>
+                        <field name="operator" class="oe_inline"/>
+                        <field name="max_value" class="oe_inline"/>
+                    </div>
+                    <group col="4">
+                        <field name="list_price"/>
+                        <field name="standard_price"/>
+                        <field name="price_type"/>
+                        <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                     </group>
-                    <newline/>
-                    <field name="list_price"/>
-                    <field name="standard_price"/>
-                    <field name="price_type"/>
-                    <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                 </form>
             </field>
         </record>
@@ -161,44 +172,16 @@
             </field>
         </record>
 
-        <record id="view_order_withcarrier_form" model="ir.ui.view">
-            <field name="name">delivery.sale.order_withcarrier.form.view</field>
-            <field name="type">form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <group name="logistics" position="inside">
-                    <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':active_id or False}"/>
-                </group>
-            </field>
-        </record>
-
         <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
             <field name="name">delivery.stock.picking_withcarrier.out.form.view</field>
             <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="carrier_id"/>
                     <field name="carrier_tracking_ref"/>
                     <field name="number_of_packages"/>
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_picking_withweight_in_form" model="ir.ui.view">
-            <field name="name">stock.picking_withweight.in.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_in_form"/>
-            <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
                 </field>
             </field>
         </record>
@@ -209,7 +192,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
+                <field name="company_id" position="before">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </field>
@@ -218,7 +201,7 @@
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
             <field name="name">Picking to be invoiced</field>
-            <field name="res_model">stock.picking</field>
+            <field name="res_model">stock.picking.out</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -228,39 +211,13 @@
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
         </record>
 
-        <record id="view_picking_withcarrier_out_move_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.out.move.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_out_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_picking_withweight_in_move_form" model="ir.ui.view">
-            <field name="name">stock.picking_withweight.in.move.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_in_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
-                    <field name="weight"/>
-                    <field name="weight_net"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_picking_withweight_internal_move_form" model="ir.ui.view">
             <field name="name">stock.picking_withweight.internal.move.form.view</field>
             <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
+                <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </xpath>
@@ -273,13 +230,10 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <group colspan="2" col="2" position="after">
-                    <group colspan="2" col="2">
-                        <separator string="Weights" colspan="2"/>
-                        <field name="weight"/>
-                        <field name="weight_net"/>
-                    </group>
-                </group>
+                <field name="picking_id" position="after">
+                    <field name="weight"/>
+                    <field name="weight_net"/>
+                </field>
             </field>
         </record>
 
@@ -289,24 +243,34 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
             <field name="arch" type="xml">
-                <group colspan="2" col="2" position="after">
-                    <group colspan="2" col="2">
-                        <separator string="Weights" colspan="2"/>
-                        <field name="weight"/>
-                        <field name="weight_net"/>
-                    </group>
-                </group>
+                <field name="picking_id">
+                    <field name="weight"/>
+                    <field name="weight_net"/>
+                </field>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="edit_project_multicompany">
-            <field name="name">sale.order.multicompany</field>
+        <record id="view_order_withcarrier_form" model="ir.ui.view">
+            <field name="name">delivery.sale.order_withcarrier.form.view</field>
+            <field name="type">form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                    <xpath expr="//button[@name='order_confirm']" position="after">
-                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>
-                    </xpath>
+                <xpath expr="//group[@name='sale_total']" position="after">
+                    <group style="width: 65%%">
+                        <label for="carrier_id"/>
+                        <div>
+                            <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
+                            <button name="delivery_set" string="Add in Quote" type="object"
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+        		    <br/>
+                            <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                        </div>
+                    </group>
+                </xpath>
             </field>
         </record>
 
@@ -316,7 +280,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Products']/group/button[@string='Create Invoice']" position="after">
+                <xpath expr="/form/header/button[@string='Create Invoice']" position="after">
                     <button name="%(report_shipping)d" string="Delivery Order" states="done" type="action" icon="gtk-print"/>
                 </xpath>
             </field>

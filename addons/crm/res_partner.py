@@ -24,14 +24,26 @@ from osv import fields,osv
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
+
+    def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = {
+                'opportunity_count': len(partner.opportunity_ids),
+                'meeting_count': len(partner.meeting_ids),
+            }
+        return res
+
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
-            'Leads and Opportunities'),
-        'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+            'Leads and Opportunities', domain=[('state','in', ('draft','open','pending'))]),
+        'meeting_ids': fields.many2many('crm.meeting', 'crm_meeting_partner_rel','partner_id', 'meeting_id',
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
+        'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
+        'meeting_count': fields.function(_opportunity_meeting_count, string="Meeting", type='integer', multi='opp_meet'),
     }
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):

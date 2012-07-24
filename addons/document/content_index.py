@@ -22,7 +22,7 @@ import logging
 import os
 import tempfile
 from subprocess import Popen, PIPE
-
+_logger = logging.getLogger(__name__)
 class NhException(Exception):
     pass
 
@@ -116,7 +116,7 @@ def mime_match(mime, mdict):
     return (None, None)
 
 class contentIndex(object):
-    __logger = logging.getLogger('addons.document.content_index')
+    
     def __init__(self):
         self.mimes = {}
         self.exts = {}
@@ -132,7 +132,7 @@ class contentIndex(object):
             f = True
 
         if f:
-            self.__logger.debug('Register content indexer: %r', obj)
+            _logger.debug('Register content indexer: %r', obj)
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
 
@@ -169,22 +169,22 @@ class contentIndex(object):
                 (result, _) = pop.communicate()
 
                 mime2 = result.split(';')[0]
-                self.__logger.debug('File gave us: %s', mime2)
+                _logger.debug('File gave us: %s', mime2)
                 # Note that the temporary file still exists now.
                 mime,fobj = mime_match(mime2, self.mimes)
                 if not mime:
                     mime = mime2
             except Exception:
-                self.__logger.exception('Cannot determine mime type')
+                _logger.exception('Cannot determine mime type')
 
         try:
             if fobj:
                 res = (mime, fobj.indexContent(content,filename,fname or realfname) )
             else:
-                self.__logger.debug("Have no object, return (%s, None)", mime)
+                _logger.debug("Have no object, return (%s, None)", mime)
                 res = (mime, None )
         except Exception:
-            self.__logger.exception("Could not index file %s (%s)",
+            _logger.exception("Could not index file %s (%s)",
                                     filename, fname or realfname)
             res = None
 
@@ -193,8 +193,7 @@ class contentIndex(object):
             try:
                 os.unlink(fname)
             except Exception:
-                self.__logger.exception("Could not unlink %s", fname)
-
+                _logger.exception("Could not unlink %s", fname)
         return res
 
 cntIndex = contentIndex()

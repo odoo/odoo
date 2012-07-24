@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-04-15 15:24+0000\n"
+"PO-Revision-Date: 2012-05-10 17:46+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-16 04:40+0000\n"
-"X-Generator: Launchpad (build 15099)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:07+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: hr
@@ -190,8 +190,9 @@ msgstr "Žena"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr "Celkový požadovaný počet zaměstnanců pro úlohu."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -242,8 +243,8 @@ msgstr "Jiné informace"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Pracovní E-mail"
+msgid "Work Email"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -283,8 +284,8 @@ msgstr "Kategorie"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Očekávaní zaměstnanci"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -400,12 +401,6 @@ msgstr "Kontaktní informace"
 #: field:hr.employee,address_id:0
 msgid "Working Address"
 msgstr "Pracovní adresa"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Nástěnka správce HR"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -696,8 +691,13 @@ msgstr "Podřízení"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "Počet zaměstnanců"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Simplifies the management of employee's attendances."
 #~ msgstr "Zjednodušuje správu docházky zaměstnance"
@@ -746,12 +746,18 @@ msgstr "Počet zaměstnanců"
 #~ msgid "Number of employee with that job."
 #~ msgstr "Počet zaměstnanců s tímto zaměstnáním."
 
+#~ msgid "Work E-mail"
+#~ msgstr "Pracovní E-mail"
+
 #~ msgid ""
 #~ "You can enhance the base HR Application by installing few HR-related "
 #~ "functionalities."
 #~ msgstr ""
 #~ "Můžete rozšířit základní aplikaci HR instalováním několika funkčností "
 #~ "souvisejících s HR."
+
+#~ msgid "Expected Employees"
+#~ msgstr "Očekávaní zaměstnanci"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Průběh nastavení"
@@ -772,8 +778,14 @@ msgstr "Počet zaměstnanců"
 #~ msgid "Recruitment Process"
 #~ msgstr "Průběh náboru"
 
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Nástěnka správce HR"
+
 #~ msgid "Configure"
 #~ msgstr "Nastavit"
+
+#~ msgid "Categories structure"
+#~ msgstr "Struktura kategorií"
 
 #~ msgid "Holidays / Leaves Management"
 #~ msgstr "Prázdniny / Nepřítomnost"
@@ -850,3 +862,9 @@ msgstr "Počet zaměstnanců"
 
 #~ msgid "Employee's Contracts"
 #~ msgstr "Smlouvy zaměstnance"
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Celkový požadovaný počet zaměstnanců pro úlohu."
+
+#~ msgid "Number of Employees"
+#~ msgstr "Počet zaměstnanců"

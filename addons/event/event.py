@@ -48,27 +48,25 @@ class event_event(osv.osv):
     _name = 'event.event'
     _description = __doc__
     _order = 'date_begin'
+    _inherit = ['ir.needaction_mixin','mail.thread']
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
               return []
         res = []
         for record in self.browse(cr, uid, ids, context=context):
-            date = record.date_begin.split(" ")
-            date = date[0]
-            registers=''
-            if record.register_max !=0:
-                register_max = str(record.register_max)
-                register_tot = record.register_current+record.register_prospect
-                register_tot = str(register_tot)
-                registers = register_tot+'/'+register_max
-            name = record.name+' ('+date+') '+registers
-            res.append((record['id'], name))
+            date = record.date_begin.split(" ")[0]
+            date_end = record.date_end.split(" ")[0]
+            if date != date_end:
+                date += ' - ' + date_end
+            display_name = record.name + ' (' + date + ')'
+            res.append((record['id'], display_name))
         return res
 
-    def _name_get_fnc(self, cr, uid, ids,prop,unknow, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(event_event, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def copy(self, cr, uid, id, default=None, context=None):
         """ Reset the state and the registrations while copying an event
@@ -82,6 +80,7 @@ class event_event(osv.osv):
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
 
     def button_draft(self, cr, uid, ids, context=None):
+        self.button_draft_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -91,9 +90,11 @@ class event_event(osv.osv):
             if event_reg.state == 'done':
                 raise osv.except_osv(_('Error!'),_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event.") )
         registration.write(cr, uid, reg_ids, {'state': 'cancel'}, context=context)
+        self.button_cancel_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def button_done(self, cr, uid, ids, context=None):
+        self.button_done_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def check_registration_limits(self, cr, uid, ids, context=None):
@@ -102,6 +103,14 @@ class event_event(osv.osv):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
+
+    def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
+            available_seats = event.register_avail
+            if available_seats and no_of_registration > available_seats:
+                 raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+            elif available_seats == 0:
+                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
 
     def confirm_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
@@ -119,6 +128,7 @@ class event_event(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check_registration_limits(cr, uid, ids, context=context)
+        self.button_confirm_send_note(cr, uid, ids, context=context)
         return self.confirm_event(cr, uid, ids, context=context)
 
     def _get_register(self, cr, uid, ids, fields, args, context=None):
@@ -179,24 +189,25 @@ class event_event(osv.osv):
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
         'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
-        'register_attended': fields.function(_get_register, string='Attended Registrations', multi='register_numbers'), 
+        'register_attended': fields.function(_get_register, string='# of Participations', multi='register_numbers'), 
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Unconfirmed'),
+            ('cancel', 'Cancelled'),
             ('confirm', 'Confirmed'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled')],
-            'State', readonly=True, required=True,
+            ('done', 'Done')],
+            'Status', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
-        'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
-        'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
+        'street': fields.related('address_id','street',type='char',string='Street'),
+        'zip': fields.related('address_id','zip',type='char',string='zip'),
+        'city': fields.related('address_id','city',type='char',string='city'),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
@@ -204,21 +215,23 @@ class event_event(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
     }
-
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
-
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
+        num_of_seats = int(context.get('ticket', 1))
+        self.check_registration_limits_before(cr, uid, ids, num_of_seats, context=context)
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id,})]
+            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+        else:
+            register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
         return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
 
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
@@ -236,7 +249,6 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
-
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
@@ -248,16 +260,46 @@ class event_event(osv.osv):
               'register_max': type_info.default_registration_max,
             }
             return {'value': dic}
+        
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_draft_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been set to <b>draft</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_done_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>done</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_confirm_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>confirmed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
 event_event()
 
 class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin','mail.thread']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
@@ -268,13 +310,16 @@ class event_registration(osv.osv):
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
-        'user_id': fields.many2one('res.users', 'Attendee', states={'done': [('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'User', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
-                                    ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
-                                    ('done', 'Attended')], 'State',
+                                    ('open', 'Confirmed'),
+                                    ('done', 'Attended')], 'Status',
                                     size=16, readonly=True),
+        'email': fields.char('Email', size=64),
+        'phone': fields.char('Phone', size=64),
+        'name': fields.char('Name', size=128, select=True),
     }
 
     _defaults = {
@@ -283,18 +328,27 @@ class event_registration(osv.osv):
     }
     _order = 'name, create_date desc'
 
-
     def do_draft(self, cr, uid, ids, context=None):
+        self.do_draft_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
         self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(event_registration, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
+        event_obj = self.pool.get('event.event')
+        for register in  self.browse(cr, uid, ids, context=context):
+            event_id = register.event_id.id
+            no_of_registration = register.nb_register
+            event_obj.check_registration_limits_before(cr, uid, [event_id], no_of_registration, context=context)
         res = self.confirm_registration(cr, uid, ids, context=context)
         self.mail_user(cr, uid, ids, context=context)
         return res
@@ -342,18 +396,15 @@ class event_registration(osv.osv):
         return True
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner, context=None):
-        data ={}
         if not contact:
-            return data
+            return {}
         addr_obj = self.pool.get('res.partner')
         contact_id =  addr_obj.browse(cr, uid, contact, context=context)
-        data = {
+        return {'value': {
             'email':contact_id.email,
-            'contact_id':contact_id.id,
             'name':contact_id.name,
             'phone':contact_id.phone,
-            }
-        return {'value': data}
+            }}
 
     def onchange_event(self, cr, uid, ids, event_id, context=None):
         """This function returns value of Product Name, Unit Price based on Event.
@@ -382,7 +433,20 @@ class event_registration(osv.osv):
             data.update(d['value'])
         return {'value': data}
 
-event_registration()
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
 
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Registration has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def do_draft_send_note(self, cr, uid, ids, context=None):
+        message = _("Registration has been set as <b>draft</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+event_registration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

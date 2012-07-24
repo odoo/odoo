@@ -2,11 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem
-            id="menu_purchase_deshboard"
-            name="Purchase"
-            parent="base.menu_reporting_dashboard" sequence="5"/>
-
         <record id="purchase_draft" model="ir.actions.act_window">
             <field name="name">Request for Quotations</field>
             <field name="type">ir.actions.act_window</field>
@@ -15,14 +10,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="context">{'quotation_only': True}</field>
-        </record>
-        <record id="purchase_waiting" model="ir.actions.act_window">
-            <field name="name">Purchase Order Waiting Approval</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','in',('wait','confirmed'))]</field>
         </record>
 
         <record model="ir.ui.view" id="view_purchase_order_monthly_categ_tree">
@@ -69,26 +56,13 @@
             <field name="domain">[('state','in',('approved','except_picking','except_invoice','done'))]</field>
             <field name="view_id" ref="view_purchase_order_monthly_categ_graph"></field>
         </record>
-        <record id="open_view_purchase_order_monthly_categ_tree" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_purchase_order_monthly_categ_tree"/>
-            <field name="act_window_id" ref="action_purchase_order_monthly_categ_graph"/>
-        </record>
-        <record id="open_view_purchase_order_monthly_categ_graph" model="ir.actions.act_window.view">
-                <field eval="1" name="sequence"/>
-                <field name="view_mode">graph</field>
-                <field name="view_id" ref="view_purchase_order_monthly_categ_graph"/>
-                <field name="act_window_id" ref="action_purchase_order_monthly_categ_graph"/>
-        </record>
-
 
         <record id="board_purchase_form" model="ir.ui.view">
             <field name="name">board.purchase.form</field>
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Dashboard" layout="manual">
+                <form string="Purchase Dashboard" version="7.0">
                     <board style="2-1">
                         <column>
                             <action name="%(purchase_draft)d" string="Request for Quotations" creatable="true"/>
@@ -102,22 +76,19 @@
         </record>
 
         <record id="open_board_purchase" model="ir.actions.act_window">
-            <field name="name">Purchase Dashboard</field>
+            <field name="name">Purchases</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="usage">menu</field>
             <field name="view_id" ref="board_purchase_form"/>
         </record>
-        <menuitem
-            action="open_board_purchase"
-            icon="terp-graph"
-            id="menu_board_purchase"
-            parent="menu_purchase_deshboard"
-            sequence="4"/>
 
-        <menuitem icon="terp-purchase" id="base.menu_purchase_root" action="open_board_purchase" name="Purchases"/>
-
+        <menuitem action="open_board_purchase"
+                  icon="terp-graph"
+                  id="menu_board_purchase"
+                  parent="base.menu_reporting_dashboard"
+                  sequence="20"/>
 
     </data>
 </openerp>

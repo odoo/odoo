@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-14 14:21+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:41+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-15 05:27+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:10+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -78,7 +78,7 @@ msgid ""
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using OpenERP's web service features."
 msgstr ""
-"De tijdregistratie functionaliteit beoogt medewerker aanwezigheid te beheren "
+"De tijdregistratie functionaliteit beoogt werknemer aanwezigheid te beheren "
 "via aan-/afmeld acties. U kunt deze funktie ook koppelen met een prikklok "
 "apparaat via OpenERP's webservice mogelijkheden."
 
@@ -130,7 +130,7 @@ msgstr "Aanwezigheid per maand"
 #: field:hr.sign.in.out,name:0
 #: field:hr.sign.in.out.ask,name:0
 msgid "Employees name"
-msgstr "Naam medewerker"
+msgstr "Naam werknemer"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -197,7 +197,7 @@ msgstr "Pers. aanwezigheid zoeken"
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
 msgid "Attendances By Week"
-msgstr "Aanwezigheden per week"
+msgstr "Aanwezigheid per week"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -269,7 +269,7 @@ msgstr "Actiesoort"
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
-"(*) A negatieve vertraging betekent dat de medewerker langer werkte dan "
+"(*) A negatieve vertraging betekent dat de werknemer langer werkte dan "
 "vastgelegd."
 
 #. module: hr_attendance
@@ -348,7 +348,7 @@ msgstr "November"
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Fout ! U kunt geen recursieve hiërarchie van medewerkers maken."
+msgstr "Fout ! U kunt geen recursieve werknemershiërarchie aanmaken."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -396,9 +396,9 @@ msgid ""
 "tool. If each employee has been linked to a system user, then they can "
 "encode their time with this action button."
 msgstr ""
-"Als uw personeel moet aanmelden als ze aankomen op het werk en afmelden aan "
-"het einde van de werkdag, laat OpenERP u dit beheren met deze tool. Als elke "
-"medewerker is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
+"Als uw werknemers moeten aanmelden als ze aankomen op het werk en afmelden "
+"aan het einde van de werkdag, laat OpenERP u dit beheren met deze tool. Als "
+"elke werknemer is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
 "invoeren met deze actieknop."
 
 #. module: hr_attendance
@@ -410,7 +410,7 @@ msgstr "Afdrukken weekaanwezigheid overzicht"
 #: field:hr.sign.in.out,emp_id:0
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
-msgstr "Medewerker ID"
+msgstr "Werknemer ID"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -431,7 +431,7 @@ msgstr "Geeft de reden voor inklokken/uitklokken."
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
-"(*) Een positieve vertraging betekent dat de medewerker minder heeft gewerkt "
+"(*) Een positieve vertraging betekent dat de werknemer minder heeft gewerkt "
 "dan geregistreerd."
 
 #. module: hr_attendance
@@ -455,7 +455,7 @@ msgstr "Vertraging"
 #: view:hr.attendance:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
-msgstr "Medewerker"
+msgstr "Werknemer"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:140
@@ -509,7 +509,7 @@ msgid ""
 "has been linked to a system user, then they can encode their time with this "
 "action button."
 msgstr ""
-"In-/Uitklokken. In sommige bedrijven moet personeel zich aanmelden als ze "
+"In-/Uitklokken. In sommige bedrijven moet werknemers zich aanmelden als ze "
 "aankomen op het werk en afmelden aan het einde van de werkdag. Als elke "
 "medewerker is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
 "invoeren met deze actieknop."
@@ -517,7 +517,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
 msgid "Employee's Name"
-msgstr "Naam medewerker"
+msgstr "Naam werknemer"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -532,7 +532,7 @@ msgstr "Februari"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr "Aanwezigheid medewerker"
+msgstr "Aanwezigheid werknemer"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,state:0
@@ -647,6 +647,9 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "My Attendances"
 #~ msgstr "Mijn aanwezigheid"
+
+#~ msgid "Sign-Out Entry must follow Sign-In."
+#~ msgstr "Uitklokken-boeking moet volgen op inklokken."
 
 #~ msgid "Employee ID"
 #~ msgstr "Medewerker ID"

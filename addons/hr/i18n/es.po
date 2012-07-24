@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-10 18:04+0000\n"
-"Last-Translator: Carlos @ smile-iberia <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:49+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-11 05:09+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:08+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -24,7 +24,7 @@ msgstr "Usuario OpenERP"
 #. module: hr
 #: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
-msgstr "Requerimientos"
+msgstr "Requisitos"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -39,7 +39,7 @@ msgstr "Enlaza el empleado con información"
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr "Nº Mutua"
+msgstr "Núm. SIN"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -108,7 +108,7 @@ msgstr "Previsión en selección"
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
 msgid "HR Management"
-msgstr "Gestión RH"
+msgstr "Gestión RRHH"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -194,7 +194,8 @@ msgstr "Mujer"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -246,8 +247,8 @@ msgstr "Otra información"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Email de trabajo"
+msgid "Work Email"
+msgstr "Correo-e del trabajo"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -287,8 +288,8 @@ msgstr "Categorías"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Empleados previstos"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -420,12 +421,6 @@ msgid "Working Address"
 msgstr "Dirección de trabajo"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Tablero director RRHH"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Departamentos hijos"
@@ -449,7 +444,7 @@ msgstr "Desconocido"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Número de empleados con ese trabajo"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -565,7 +560,7 @@ msgstr "Nº Pasaporte"
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Móvil del trabajo"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -668,7 +663,7 @@ msgstr "Creación de un usuario OpenERP"
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Usuario"
 
 #. module: hr
 #: view:hr.employee:0
@@ -684,7 +679,7 @@ msgstr "Puestos de trabajo"
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Otro ID"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,coach_id:0
@@ -719,8 +714,13 @@ msgstr "Subordinados"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "Número de empleados"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Categorías horarios de trabajo"
@@ -730,9 +730,6 @@ msgstr "Número de empleados"
 
 #~ msgid "Contact  of employee"
 #~ msgstr "Contacto del empleado"
-
-#~ msgid "Work Email"
-#~ msgstr "Correo-e del trabajo"
 
 #~ msgid "Group name"
 #~ msgstr "Nombre Grupo"
@@ -752,7 +749,7 @@ msgstr "Número de empleados"
 #~ msgid "Working Time Category"
 #~ msgstr "Categoría horario trabajo"
 
-#~ msgid "Workgroup Manager"
+#~ msgid "Workgroup manager"
 #~ msgstr "Jefe de Proyectos"
 
 #~ msgid "Fill up contact information"
@@ -883,12 +880,18 @@ msgstr "Número de empleados"
 #~ msgid "No of Employee"
 #~ msgstr "Nº de empleado"
 
+#~ msgid "Expected Employees"
+#~ msgstr "Empleados previstos"
+
 #~ msgid ""
 #~ "Lets you create and manage the periodic evaluation and performance review of "
 #~ "employees."
 #~ msgstr ""
 #~ "Le permite crear y gestionar la evaluación periódica y revisión de la "
 #~ "productividad de los empleados."
+
+#~ msgid "Categories structure"
+#~ msgstr "Estructura de categorías"
 
 #~ msgid "Required number of Employees in total for that job."
 #~ msgstr "Número necesario de empleados en total para ese trabajo."
@@ -963,6 +966,9 @@ msgstr "Número de empleados"
 #~ msgid "It is linked with manager of Department"
 #~ msgstr "Está vinculado con el director del departamento."
 
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Tablero director RRHH"
+
 #~ msgid "Configure"
 #~ msgstr "Configurar"
 
@@ -999,5 +1005,17 @@ msgstr "Número de empleados"
 #~ msgid "Configuration Progress"
 #~ msgstr "Progreso de la configuración"
 
+#~ msgid "Work E-mail"
+#~ msgstr "Email de trabajo"
+
 #~ msgid "Current"
 #~ msgstr "Presente"
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Jerarquía subirdinada"
+
+#~ msgid "Number of Employees"
+#~ msgstr "Número de empleados"
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Número total de empleados necesarios para ese trabajo"

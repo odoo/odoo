@@ -2,36 +2,38 @@
 <openerp>
     <data>
 
-    	<record id="view_project_gtd_fill" model="ir.ui.view">
+        <record id="view_project_gtd_fill" model="ir.ui.view">
             <field name="name">Plannify Timebox</field>
             <field name="model">project.timebox.fill.plan</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              	<form string="Plannify Timebox">
-              		  <field name="timebox_id" widget="selection"/>
-              		  <field name="timebox_to_id" widget="selection"/>
-              		  <field colspan="4" name="task_ids" nolabel="1" domain="[('timebox_id','=',timebox_id),('state','=','open')]" />
-              		  <separator colspan="4"/>
-		              <group colspan="4" col="6">
-				            <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-		              		<button name="process" icon="gtk-ok" string="Add to Timebox" type="object" />
-		              </group>
-			  	</form>
+                <form string="Plannify Timebox" version="7.0">
+                      <group col="4">
+                          <field name="timebox_id" widget="selection"/>
+                          <field name="timebox_to_id" widget="selection"/>
+                      </group>
+                      <field name="task_ids" domain="[('timebox_id','=',timebox_id),('state','=','open')]" />
+                    <footer>
+                        <button name="process" string="Add to Timebox" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
             </field>
-		</record>
+        </record>
 
-		<record id="action_project_gtd_fill" model="ir.actions.act_window">
-	           <field name="name">Plannify Timebox</field>
-	           <field name="type">ir.actions.act_window</field>
-	           <field name="res_model">project.timebox.fill.plan</field>
-	           <field name="view_type">form</field>
-	           <field name="view_mode">form</field>
-	           <field name="view_id" ref="view_project_gtd_fill"/>
-		       <field name="context">{'record_id' : active_id}</field>
-	           <field name="target">new</field>
-    	</record>
+        <record id="action_project_gtd_fill" model="ir.actions.act_window">
+               <field name="name">Plannify Timebox</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">project.timebox.fill.plan</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="view_id" ref="view_project_gtd_fill"/>
+               <field name="context">{'record_id' : active_id}</field>
+               <field name="target">new</field>
+        </record>
 
-    	<record model="ir.values" id="project_gtd_fill_values">
+        <record model="ir.values" id="project_gtd_fill_values">
             <field name="model_id" ref="model_project_gtd_timebox" />
             <field name="name">Plannify Timebox</field>
             <field name="key2">client_action_multi</field>

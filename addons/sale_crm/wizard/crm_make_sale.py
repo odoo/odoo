@@ -107,7 +107,6 @@ class crm_make_sale(osv.osv_memory):
                 new_ids.append(new_id)
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_append_note(body=message)
-
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:
@@ -120,6 +119,7 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
+                    'name' : _('Quotation'),
                     'res_id': new_ids and new_ids[0]
                 }
             else:
@@ -130,6 +130,7 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
+                    'name' : _('Quotation'),
                     'res_id': new_ids
                 }
             return value
@@ -145,9 +146,9 @@ class crm_make_sale(osv.osv_memory):
         'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'),
     }
     _defaults = {
-         'shop_id': _get_shop_id,
-         'close': False,
-         'partner_id': _selectPartner,
+        'shop_id': _get_shop_id,
+        'close': False,
+        'partner_id': _selectPartner,
     }
 
 crm_make_sale()

@@ -7,21 +7,21 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 19:53+0000\n"
+"PO-Revision-Date: 2012-06-20 16:27+0000\n"
 "Last-Translator: Lorenzo Battistini - Agile BG - Domsense "
 "<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 04:58+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:53+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account
 #: view:account.invoice.report:0
 #: view:analytic.entries.report:0
 msgid "last month"
-msgstr ""
+msgstr "mese scorso"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -39,6 +39,8 @@ msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
 msgstr ""
+"Determina l'ordine di visualizzazione nel report 'Contabilità \\ "
+"Reportistica \\ Reporting Generico \\ Imposte \\ Report imposte'"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -56,7 +58,7 @@ msgstr "Statistiche contabili"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma/Open/Paid Invoices"
-msgstr ""
+msgstr "Fatture Proforma/Aperte/Pagate"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -82,7 +84,7 @@ msgstr "Definizione sottoconti"
 #: code:addons/account/account_bank_statement.py:302
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr ""
+msgstr "L'elemento \"%s\" del sezionale non è valido."
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -182,11 +184,6 @@ msgstr "Conto sorgente"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Tutte le voci analitiche"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Fatture create negli ultimi 15 giorni"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -384,7 +381,7 @@ msgstr ""
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Non è possibile effettuare registrazioni su un conto di tipo vista."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -701,18 +698,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Per la riconciliazione si deve avere la stessa azienda per tutte le "
 "registrazioni."
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Conti di Credito"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1699,11 +1684,6 @@ msgstr "Sequenze Separate per Sezionale"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Responsabile"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Vendite per tipo di conto"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2801,13 +2781,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Vendite per conto"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Questo wizard crea voci contabili ricorrenti."
@@ -3207,8 +3180,8 @@ msgstr "Template di piano dei conti"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Genera un Piano dei Conti da un Template di Piano dei Conti"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6435,11 +6408,6 @@ msgid "Supplier Refund"
 msgstr "Resi a fornitore"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Dashboard"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Righe movimento"
@@ -7000,11 +6968,6 @@ msgstr ""
 "Esempio: Il mio modello del %(date)s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Conti per entrate"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "Riferimento al documento che ha creato questa fattura"
@@ -7220,8 +7183,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
-msgstr ""
+msgid "Configure your Chart of Accounts"
+msgstr "Installa un Piano dei Conti"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -10154,7 +10117,7 @@ msgstr ""
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Chart of Accounts from a Chart Template"
-msgstr ""
+msgstr "Genera un Piano dei Conti da un Template di Piano dei Conti"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -10781,6 +10744,9 @@ msgstr ""
 #~ msgid "Printing Date"
 #~ msgstr "Stampa Data"
 
+#~ msgid "Open for bank reconciliation"
+#~ msgstr "Apri per la riconciliazione bancaria"
+
 #~ msgid "account.analytic.journal"
 #~ msgstr "account.analytic.journal"
 
@@ -10866,6 +10832,9 @@ msgstr ""
 
 #~ msgid "x Expenses Credit Notes Journal"
 #~ msgstr "x Giornale note di accredito su Acquisti"
+
+#~ msgid "Reconciliation result"
+#~ msgstr "Risultato riconciliato"
 
 #~ msgid "Print Taxes Report"
 #~ msgstr "Stampa il report delle Tasse"
@@ -11224,6 +11193,9 @@ msgstr ""
 #~ msgid "3 Months"
 #~ msgstr "Trimestri"
 
+#~ msgid "Standard entries"
+#~ msgstr "Registrazioni standard"
+
 #~ msgid ""
 #~ "Check this box if you want to print all entries when printing the General "
 #~ "Ledger, otherwise it will only print its balance."
@@ -11333,6 +11305,9 @@ msgstr ""
 
 #~ msgid "Unpaid Customer Refunds"
 #~ msgstr "Non pagati"
+
+#~ msgid "Are you sure ?"
+#~ msgstr "Sei sicuro?"
 
 #~ msgid "PRO-FORMA Customer Invoices"
 #~ msgstr "Pro-forma"
@@ -11504,6 +11479,12 @@ msgstr ""
 #~ msgid "Generic Reports"
 #~ msgstr "Stampe generiche"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Fatture create negli ultimi 15 giorni"
+
+#~ msgid "Accounts by type"
+#~ msgstr "Conti per Tipo"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome modello non valido nella definizione dell'azione."
 
@@ -11546,6 +11527,9 @@ msgstr ""
 
 #~ msgid "J.C. or Move name"
 #~ msgstr "J.C. o nome movimento"
+
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Genera un Piano dei Conti da un Template di Piano dei Conti"
 
 #~ msgid "wizard.company.setup"
 #~ msgstr "wizard.company.setup"
@@ -11659,6 +11643,9 @@ msgstr ""
 #~ msgid "Print Journal -"
 #~ msgstr "Stampa libro giornale -"
 
+#~ msgid "Compute Code for Taxes included prices"
+#~ msgstr "Codice per il calcolo delle tasse incluse nel prezzo"
+
 #~ msgid "Total write-off"
 #~ msgstr "Totale storno"
 
@@ -11696,6 +11683,12 @@ msgstr ""
 #~ "I termini di pagamento definiti generano un importo calcolato maggiore del "
 #~ "totale importo fatturato."
 
+#~ msgid "Go to next partner"
+#~ msgstr "Vai al partner successivo"
+
+#~ msgid "Sales by Account Type"
+#~ msgstr "Vendite per tipo di conto"
+
 #~ msgid "Error! You cannot define overlapping fiscal years"
 #~ msgstr "Errore! Non è possibile definire anni fiscali sovrapposti"
 
@@ -11727,12 +11720,18 @@ msgstr ""
 #~ msgid "  number of days: 30"
 #~ msgstr "  numero di giorni: 30"
 
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
 #, python-format
 #~ msgid "CashBox Balance is not matching with Calculated Balance !"
 #~ msgstr "Il saldo cassa contanti non coincide con quello calcolato !"
 
 #~ msgid "Calculated Balance"
 #~ msgstr "Bilancio calcolato"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Transazioni non riconciliate"
 
 #~ msgid "Customer Invoices to Approve"
 #~ msgstr "Fatture dei clienti da approvare"
@@ -11744,6 +11743,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Permette di cambire il segno del saldo nei report, in modo da vedere valori "
 #~ "positivi invece che negativi nei conti di spesa."
+
+#~ msgid "Open For Unreconciliation"
+#~ msgstr "Apri per eliminare la riconciliazione"
 
 #, python-format
 #~ msgid "The statement balance is incorrect !\n"
@@ -11804,6 +11806,9 @@ msgstr ""
 #~ msgid ""
 #~ "Check this if the user is allowed to reconcile entries in this account."
 #~ msgstr "Spunta se l'utente può riconciliare registrazioni in questo conto."
+
+#~ msgid "Sales by Account"
+#~ msgstr "Vendite per conto"
 
 #, python-format
 #~ msgid ""
@@ -11880,6 +11885,9 @@ msgstr ""
 #~ msgid "Unable to find a valid period !"
 #~ msgstr "Impossibile trovare un periodo valido !"
 
+#~ msgid "Unreconciliate transactions"
+#~ msgstr "Transazioni non riconciliate"
+
 #, python-format
 #~ msgid "Taxes missing !"
 #~ msgstr "Mancano le imposte !"
@@ -11897,6 +11905,9 @@ msgstr ""
 #, python-format
 #~ msgid "New currency is not confirured properly !"
 #~ msgstr "La nuova valuta non e' configurata correttamente !"
+
+#~ msgid "Create an Account based on this template"
+#~ msgstr "Creare un conto basandosi su questo template"
 
 #~ msgid "Statements reconciliation"
 #~ msgstr "Riconciliazione registrazioni"
@@ -11922,6 +11933,9 @@ msgstr ""
 #, python-format
 #~ msgid "Currnt currency is not confirured properly !"
 #~ msgstr "La valuta corrente non e' correttamente configurata"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Conti per entrate"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Errore ! Non è possibile creare membri associati ricorsivi."
@@ -12085,6 +12099,9 @@ msgstr ""
 #~ msgid "CashBox Balance"
 #~ msgstr "BIlancio di Cassa"
 
+#~ msgid "Cost Ledger for period"
+#~ msgstr "Costi per periodo"
+
 #~ msgid "Followups Management"
 #~ msgstr "Gestione Richiami"
 
@@ -12140,6 +12157,10 @@ msgstr ""
 #, python-format
 #~ msgid "Cannot locate parent code for template account!"
 #~ msgstr "Non è possibile localizzare il codice padre del modello del conto!"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Conti di Credito"
 
 #~ msgid ""
 #~ "Allows invoice lines to impact multiple analytic accounts simultaneously."
@@ -12229,6 +12250,9 @@ msgstr ""
 #~ msgid "Sale Tax(%)"
 #~ msgstr "Imposta vendite (%)"
 
+#~ msgid "Tax codes"
+#~ msgstr "Conti Imposte"
+
 #~ msgid ""
 #~ "All manually created new journal entry are usually in the state 'Unposted', "
 #~ "but you can set the option to skip that state on the related journal. In "
@@ -12242,3 +12266,6 @@ msgstr ""
 #~ "registrazioni contabili create automaticamente dal sistema nella conferma "
 #~ "documenti (fatture, estratti conto bancari...) e saranno create con lo stato "
 #~ "di 'Pubblicate'."
+
+#~ msgid "Install your Chart of Accounts"
+#~ msgstr "Installa un Piano dei Conti"

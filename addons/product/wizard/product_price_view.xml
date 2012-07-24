@@ -4,35 +4,36 @@
 
     <!--   Product Price List -->
 
-		<record id="view_product_price_list" model="ir.ui.view">
-		      <field name="name">Price per unit</field>
-		      <field name="model">product.price_list</field>
-		      <field name="type">form</field>
-		      <field name="arch" type="xml">
-				<form string="Price List">
-                    <separator colspan="4" string="Calculate Product Price per Unit Based on Pricelist Version."/>
-				    <field name="price_list" widget="selection"/>
-				    <field name="qty1" colspan="2" />
-				    <field name="qty2" colspan="2" />
-				    <field name="qty3" colspan="2" />
-				    <field name="qty4" colspan="2" />
-				    <field name="qty5" colspan="2" />
-					<separator colspan="4"/>
-                    <group col="2" colspan="4">
-                         <button icon="gtk-cancel" special="cancel" string="Close"/>
-                         <button name="print_report" string="Print"  type="object"  icon="gtk-print"/>
+        <record id="view_product_price_list" model="ir.ui.view">
+              <field name="name">Price per unit</field>
+              <field name="model">product.price_list</field>
+              <field name="type">form</field>
+              <field name="arch" type="xml">
+                <form string="Price List" version="7.0">
+                    <group string="Calculate Product Price per Unit Based on Pricelist Version.">
+                        <field name="price_list" widget="selection"/>
+                        <field name="qty1"/>
+                        <field name="qty2"/>
+                        <field name="qty3"/>
+                        <field name="qty4"/>
+                        <field name="qty5"/>
                     </group>
-				</form>
-		      </field>
-    	</record>
+                    <footer>
+                        <button name="print_report" string="Print"  type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+              </field>
+        </record>
 
         <act_window id="action_product_price_list"
-    		key2="client_print_multi"
+            key2="client_print_multi"
             name="Price List"
-    		res_model="product.price_list"
+            res_model="product.price_list"
             src_model="product.product"
             groups="product.group_sale_pricelist"
-    		view_mode="form" target="new" view_type="form" />
+            view_mode="form" target="new" view_type="form" />
 
 </data>
 </openerp>

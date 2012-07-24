@@ -8,9 +8,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
-                <field name="priority" position="after">
-                    <button string="Convert to Quote" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
-                </field>
+                <data>
+                    <xpath expr="/form/header/button[@name='stage_previous']" position="before">
+                        <button string="Convert to Quote" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
+                    </xpath>
+                </data>
             </field>
         </record>
 
@@ -33,13 +35,15 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
-                    <field name="section_id" widget="selection" string="Sales Team">
-                        <filter icon="terp-personal+"
-                                domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)"/>
-                    </field>
-                </field>
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <filter string="My Sales Team(s)"
+                        icon="terp-personal+"
+                        domain="[('section_id.user_id','=',uid)]"
+                        help="My Sales Team(s)"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="section_id" widget="selection" string="Sales Team"/>
+                </xpath>
             </field>
         </record>
 

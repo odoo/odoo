@@ -13,18 +13,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:10+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:45+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
 msgid "Product Nb."
-msgstr ""
+msgstr "Productnr."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
 msgid "Sales by day"
-msgstr ""
+msgstr "Verkopen per dag"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -37,75 +37,81 @@ msgid ""
 "new payment methods directly from menu \"PoS Backend > Configuration > "
 "Payment Methods\"."
 msgstr ""
+"U moet bepalen welke betalingsmethode kan worden gebruiktvanuit het "
+"verkooppunt via de journalen \"Financieel > Instellingen > Financiële "
+"boekhouding > Journalen\". Kies een dagboek en schakel het veldje "
+"\"Verkooppuntbetalingsmethode\" in op het tabblad \"Verkooppunt\". U kunt "
+"ook nieuwe betalingsmethoden maken via het menu \"Backend verkooppunt > "
+"Instellingen > Betalingsmethoden\"."
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.pos.order:0
 msgid "Today"
-msgstr ""
+msgstr "Vandaag"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
 msgid "Plain Water"
-msgstr ""
+msgstr "Zuiver water"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Year from Creation date of cash register"
-msgstr ""
+msgstr "Jaar van creatiedatum kasboek"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Post All Orders"
-msgstr ""
+msgstr "Alle orders boeken"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
 msgid "Spa Reine 2L"
-msgstr ""
+msgstr "Spa Reine 2L"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_out
 msgid "Pos Box Out"
-msgstr ""
+msgstr "Verkooppunt uit kas"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_cash_register_all
 msgid "Register Analysis"
-msgstr ""
+msgstr "Kasboekanalyse"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Details of Sales"
-msgstr ""
+msgstr "Details verkopen"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,day:0
 #: view:report.pos.order:0 field:report.pos.order,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dag"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
 msgid "Add payment :"
-msgstr ""
+msgstr "Betaling toevoegen:"
 
 #. module: point_of_sale
 #: field:pos.box.out,name:0
 msgid "Description / Reason"
-msgstr ""
+msgstr "Omschrijving / reden"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr ""
+msgstr "Productnaam"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Month from Creation date of cash register"
-msgstr ""
+msgstr "Maand van creatiedatum kasboek"
 
 #. module: point_of_sale
 #: report:account.statement:0 field:pos.box.entries,amount:0
@@ -113,7 +119,7 @@ msgstr ""
 #: field:pos.make.payment,amount:0 report:pos.user.product:0
 #: field:report.transaction.pos,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Bedrag"
 
 #. module: point_of_sale
 #: constraint:account.journal:0
@@ -121,38 +127,40 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Configuratiefout: de gekozen munt moet door de standaardrekeningen worden "
+"gedeeld."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category view:pos.category:0
 msgid "PoS Categories"
-msgstr ""
+msgstr "Verkooppuntcategorieën"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_out
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Take Money Out"
-msgstr ""
+msgstr "Geld uit kas"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "VAT"
-msgstr ""
+msgstr "Btw"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Origin"
-msgstr ""
+msgstr "Oorsprong"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Tax"
-msgstr ""
+msgstr "Btw"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Begindatum"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -161,216 +169,218 @@ msgid ""
 "You do not have any open cash register. You must create a payment method or "
 "open a cash register."
 msgstr ""
+"U heeft geen openstaand kasboek. Maak een betalingsmethode of open een "
+"kasboek."
 
 #. module: point_of_sale
 #: report:account.statement:0 field:report.pos.order,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Total of the day"
-msgstr ""
+msgstr "Totaal van de dag"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,average_price:0
 msgid "Average Price"
-msgstr ""
+msgstr "Gemiddelde prijs"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "Korting(%)"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
 msgid "Cash Register Management"
-msgstr ""
+msgstr "Kassabeheer"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_45g_product_template
 msgid "Lays Naturel 45g"
-msgstr ""
+msgstr "Lays Naturel 45g"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Boekhoudinformatie"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_2l_product_template
 msgid "Coca-Cola Regular 2L"
-msgstr ""
+msgstr "Coca-Cola Regular 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
 msgid "Sales by month"
-msgstr ""
+msgstr "Verkopen per maand"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda_orange
 msgid "Orange"
-msgstr ""
+msgstr "Sinaasappel"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 msgid "Sales by User"
-msgstr ""
+msgstr "Verkopen per gebruiker"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Korting(%)"
 
 #. module: point_of_sale
 #: field:pos.box.entries,ref:0
 msgid "Ref"
-msgstr ""
+msgstr "Ref."
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Totale prijs"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
 msgid "Leffe Brune 33cl"
-msgstr ""
+msgstr "Leffe Bruin 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
-msgstr ""
+msgstr "Verkooprapport"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
 msgid "Beverages"
-msgstr ""
+msgstr "Dranken"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
 msgid "Stella Artois 50cl"
-msgstr ""
+msgstr "Stella Artois 50cl"
 
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "Dates"
-msgstr ""
+msgstr "Datums"
 
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Hoofdcategorie"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.lines:0 report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,total:0
 #: field:report.sales.by.margin.pos.month,total:0
 msgid "Margin"
-msgstr ""
+msgstr "Marge"
 
 #. module: point_of_sale
 #: field:pos.discount,discount:0 field:pos.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Korting (%)"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_speciale_product_template
 msgid "Dr. Oetker Ristorante Speciale"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Speciale"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Total qty"
-msgstr ""
+msgstr "Totale hvh"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
 msgid "Fanta Orange 33cl"
-msgstr ""
+msgstr "Fanta Orange 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr ""
+msgstr "Maandelijkse verkopen per gebruiker"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Today's Closed Cashbox"
-msgstr ""
+msgstr "Gesloten kasboek van vandaag"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Day from Creation date of cash register"
-msgstr ""
+msgstr "Datum van creatiedatum kasboek"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
 msgid "Daily Operations"
-msgstr ""
+msgstr "Dagelijkse transacties"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:285
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Configuratiefout"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.sparkling_water
 msgid "Sparkling Water"
-msgstr ""
+msgstr "Bruiswater"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "Vul dit formulier als u geld wilt overmaken naar het kasboek:"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Search Cash Statements"
-msgstr ""
+msgstr "Kasboekingen zoeken"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "August"
-msgstr ""
+msgstr "Augustus"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_lemon_33cl_product_template
 msgid "Pepsi Max Cool Lemon 33cl"
-msgstr ""
+msgstr "Pepsi Max Cool Lemon 33cl"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Order line"
-msgstr ""
+msgstr "Verkooppuntorderlijn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
 msgid "Fanta Orange 50cl"
-msgstr ""
+msgstr "Fanta Orange 50cl"
 
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr ""
+msgstr "Onderliggende categorieën"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Betaaldatum"
 
 #. module: point_of_sale
 #: help:product.product,pos_categ_id:0
@@ -378,140 +388,142 @@ msgid ""
 "If you want to sell this product through the point of sale, select the "
 "category it belongs to."
 msgstr ""
+"Als u een product wilt verkopen via het verkooppunt, moet u de categorie "
+"selecteren."
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Afsluitdatum"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_1l_product_template
 msgid "Coca-Cola Light 1L"
-msgstr ""
+msgstr "Coca-Cola Light 1L"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_50cl_product_template
 msgid "Chaudfontaine 50cl"
-msgstr ""
+msgstr "Chaudfontaine 50cl"
 
 #. module: point_of_sale
 #: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,qty:0
 #: field:report.sales.by.user.pos,qty:0
 #: field:report.sales.by.user.pos.month,qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Hoeveelheid"
 
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line No"
-msgstr ""
+msgstr "Lijnnr."
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined !"
-msgstr ""
+msgstr "Geen kasboek gedefinieerd"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Nettototaal:"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_name:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Betaalreferentie"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Betalingswijze"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "Verkooppuntboekingen definitief maken"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:408
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Verkoopfactuur"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Output Operation"
-msgstr ""
+msgstr "Uitgaande transactie"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,total_discount:0
 msgid "Total Discount"
-msgstr ""
+msgstr "Totale korting"
 
 #. module: point_of_sale
 #: view:pos.details:0 view:pos.payment.report:0 view:pos.payment.report.user:0
 #: view:pos.sale.user:0
 msgid "Print Report"
-msgstr ""
+msgstr "Rapport afdrukken"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_bolognese_product_template
 msgid "Dr. Oetker Ristorante Bolognese"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Bolognese"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:105
 #, python-format
 msgid "Please check that income account is set to %s"
-msgstr ""
+msgstr "Kijk na of de opbrengstenrekening op %s is ingesteld."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pizza
 msgid "Pizza"
-msgstr ""
+msgstr "Pizza"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:85
 #: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
-msgstr ""
+msgstr "Product toevoegen"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
 msgid "Invoice Amount"
-msgstr ""
+msgstr "Factuurbedrag"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
 msgid "Coke"
-msgstr ""
+msgstr "Cola"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel.:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_pos_confirm
 msgid "Create Sale Entries"
-msgstr ""
+msgstr "Verkoopboeking maken"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -521,116 +533,116 @@ msgstr ""
 #: report:pos.details:0 view:pos.order:0
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:87
 msgid "Payment"
-msgstr ""
+msgstr "Betaling"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created in current month"
-msgstr ""
+msgstr "Kasanalyse van deze maand"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Ending Balance"
-msgstr ""
+msgstr "Eindsaldo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
 msgid "Pepsi Max 50cl"
-msgstr ""
+msgstr "Pepsi Max 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.san_pellegrino_1l_product_template
 msgid "San Pellegrino 1L"
-msgstr ""
+msgstr "San Pellegrino 1L"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Post Entries"
-msgstr ""
+msgstr "Boekingen doen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_1l_product_template
 msgid "Spa Reine 1L"
-msgstr ""
+msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Mode of Taxes"
-msgstr ""
+msgstr "Btw-voorwaarden"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Cash registers are already closed."
-msgstr ""
+msgstr "Kasboeken zijn al gesloten."
 
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout: ongeldige EAN-code"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
 #: view:pos.open.statement:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Geopende uittreksels"
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0 field:pos.sale.user,date_end:0
 msgid "Date End"
-msgstr ""
+msgstr "Einddatum"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "Bestellingen verkooppunt van dit jaar"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale view:pos.order:0
 msgid "PoS Orders"
-msgstr ""
+msgstr "Verkooppuntorders"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Sales total(Revenue)"
-msgstr ""
+msgstr "Totale verkoop (inkomsten)"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Total paid"
-msgstr ""
+msgstr "Totaal betaald"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Lijst van kasboeken"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
 msgid "Maes 50cl"
-msgstr ""
+msgstr "Maes 50cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
 msgid "transaction for the pos"
-msgstr ""
+msgstr "transactie voor verkooppunt"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Niet gefactureerd"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "March"
-msgstr ""
+msgstr "Maart"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr ""
+msgstr "Product van de gebruiker"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:641
@@ -639,89 +651,91 @@ msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"U moet een prijslijst kiezen in het verkoopformulier.\n"
+"Gelieve dit te doen voordat u een product kiest."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
 msgid "Fanta Orange 2L"
-msgstr ""
+msgstr "Fanta Orange 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_33cl_product_template
 msgid "Spa Reine 33cl"
-msgstr ""
+msgstr "Spa Reine 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr ""
+msgstr "Voeg een globale korting toe"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal_incl:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotaal"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_prosciutto_product_template
 msgid "Dr. Oetker Ristorante Prosciutto"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Prosciutto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_paprika_170g_product_template
 #: model:product.template,name:point_of_sale.lays_paprika_170g_product_template
 msgid "Lays Light Paprika 170g"
-msgstr ""
+msgstr "Lays Light Paprika 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_50cl_product_template
 msgid "Coca-Cola Light Lemon 50cl"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 50cl"
 
 #. module: point_of_sale
 #: field:report.cash.register,balance_end_real:0
 msgid "Closing Balance"
-msgstr ""
+msgstr "Eindsaldo"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
 #: model:ir.model,name:point_of_sale.model_pos_close_statement
 msgid "Close Statements"
-msgstr ""
+msgstr "Uittreksels afsluiten"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_naturel_45g_product_template
 msgid "Croky Naturel 45g"
-msgstr ""
+msgstr "Croky Naturel 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange1_product_template
 msgid "Cash Out"
-msgstr ""
+msgstr "Uit kas"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Starting Balance"
-msgstr ""
+msgstr "Beginsaldo"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: field:product.product,pos_categ_id:0
 msgid "PoS Category"
-msgstr ""
+msgstr "Verkooppuntcategorie"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_75cl_product_template
 msgid "Chimay Bleu 75cl"
-msgstr ""
+msgstr "Chimay Bleu 75cl"
 
 #. module: point_of_sale
 #: report:pos.payment.report.user:0
 msgid "Payment By User"
-msgstr ""
+msgstr "Betaling door gebruiker"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# lijnen"
 
 #. module: point_of_sale
 #: help:account.journal,check_dtls:0
@@ -729,27 +743,29 @@ msgid ""
 "This field authorize Validation of Cashbox without controlling the closing "
 "balance."
 msgstr ""
+"Hiermee wordt de kas automatisch gevalideerd zonder controle op het "
+"eindsaldo."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_details
 msgid "Sale Details"
-msgstr ""
+msgstr "Verkoopdetails"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
 msgid "Pils"
-msgstr ""
+msgstr "Pils"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
 msgid "St.Name"
-msgstr ""
+msgstr "St.naam"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Sales total"
-msgstr ""
+msgstr "Totaal verkopen"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -759,69 +775,69 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Orderlijnen"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
-msgstr ""
+msgstr "Totaal transactie"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_50cl_product_template
 msgid "Chaudfontaine Petillante 50cl"
-msgstr ""
+msgstr "Chaudfontaine Petillante 50cl"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Creatiedatum"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
 msgid "Today's Sales"
-msgstr ""
+msgstr "Verkopen vandaag"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
 msgid "Lays Naturel XXL 300g"
-msgstr ""
+msgstr "Lays Naturel XXL 300g"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS "
-msgstr ""
+msgstr "Verkooppunt "
 
 #. module: point_of_sale
 #: report:account.statement:0 report:pos.user.product:0
 msgid "Total :"
-msgstr ""
+msgstr "Totaal:"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "My Sales"
-msgstr ""
+msgstr "Mijn verkopen"
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Prijslijst"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Total invoiced"
-msgstr ""
+msgstr "Totaal gefactureerd"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,product_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Hvh"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
 msgid "Sales by margin monthly"
-msgstr ""
+msgstr "Maandelijkse verkopen met marge"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:report.sales.by.margin.pos,date_order:0
@@ -829,22 +845,22 @@ msgstr ""
 #: field:report.sales.by.user.pos,date_order:0
 #: field:report.sales.by.user.pos.month,date_order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Besteldatum"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
 msgid "Stella Artois 33cl"
-msgstr ""
+msgstr "Stella Artois 33cl"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created during this year"
-msgstr ""
+msgstr "Kasanalyse van dit jaar"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Voorlopige factuur"
 
 #. module: point_of_sale
 #: constraint:account.bank.statement.line:0
@@ -852,51 +868,53 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
+"Het bedrag van het boekstuk moet hetzelfde bedrag zijn als dat van de "
+"uittreksellijn."
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Opmerking fiscale positie:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_2l_product_template
 msgid "Evian 2L"
-msgstr ""
+msgstr "Evian 2L"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Startdatum"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Btw:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_2l_product_template
 msgid "Coca-Cola Light 2L"
-msgstr ""
+msgstr "Coca-Cola Light 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_funghi_product_template
 msgid "Dr. Oetker Ristorante Funghi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Funghi"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
 msgid "Disc."
-msgstr ""
+msgstr "Kort."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
 msgid "Lindemans Kriek 37.5cl"
-msgstr ""
+msgstr "Lindemans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_33cl_product_template
@@ -906,34 +924,34 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "Btw:"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Order lines"
-msgstr ""
+msgstr "Verkooppuntorderlijnen"
 
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Receipt :"
-msgstr ""
+msgstr "Ontvangst:"
 
 #. module: point_of_sale
 #: field:account.bank.statement.line,pos_statement_id:0
 #: field:pos.order,amount_return:0
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #. module: point_of_sale
 #: report:pos.details:0 field:report.transaction.pos,date_create:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
 #: view:pos.discount:0
 msgid "Apply Discount"
-msgstr ""
+msgstr "Korting toepassen"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -947,42 +965,42 @@ msgstr ""
 #: field:report.transaction.pos,user_id:0
 #: model:res.groups,name:point_of_sale.group_pos_user
 msgid "User"
-msgstr ""
+msgstr "Gebruiker"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_33cl_product_template
 msgid "Coca-Cola Light 33cl"
-msgstr ""
+msgstr "Coca-Cola Light 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_1l_product_template
 msgid "Perrier 1L"
-msgstr ""
+msgstr "Perrier 1L"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Total discount"
-msgstr ""
+msgstr "Totale korting"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
-msgstr ""
+msgstr "Verkooppunt kasboekingen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
 msgid "Boon Framboise 37.5cl"
-msgstr ""
+msgstr "Boon Framboise 37.5cl"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: point_of_sale
 #: field:pos.config.journal,code:0
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 report:account.statement:0
@@ -992,70 +1010,70 @@ msgstr ""
 #: view:report.cash.register:0 field:report.cash.register,journal_id:0
 #: field:report.pos.order,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journaal"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
 msgid "Timmermans Faro 37.5cl"
-msgstr ""
+msgstr "Timmermans Faro 37.5cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 view:pos.order:0 field:pos.order,state:0
 #: report:pos.sales.user:0 report:pos.sales.user.today:0
 #: field:report.cash.register,state:0 field:report.pos.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
 msgid "Number of Transaction"
-msgstr ""
+msgstr "Aantal transacties"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0 view:pos.box.out:0 view:pos.confirm:0
 #: view:pos.make.payment:0 view:pos.open.statement:0 view:pos.receipt:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
 msgid "Sales (summary)"
-msgstr ""
+msgstr "Verkopen (samenvatting)"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
 msgid "Timmermans Kriek 37.5cl"
-msgstr ""
+msgstr "Timmermans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: field:account.journal,check_dtls:0
 msgid "Control Balance Before Closing"
-msgstr ""
+msgstr "Saldocontrole voor afsluiten"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale"
-msgstr ""
+msgstr "Verkooppuntlijnen"
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.transaction.pos:0
 msgid "Amount total"
-msgstr ""
+msgstr "Totaalbedrag"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
 msgid "Cash Registers"
-msgstr ""
+msgstr "Kassa's"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Users"
-msgstr ""
+msgstr "Gebruikers"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "Eten"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1065,17 +1083,17 @@ msgstr ""
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:30
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:69
 msgid "Price"
-msgstr ""
+msgstr "Prijs"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_stracciatella_2,5l_product_template
 msgid "ijsboerke Stracciatella 2.5L"
-msgstr ""
+msgstr "ijsboerke Stracciatella 2.5L"
 
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "Verkooppuntbetalingsmethode"
 
 #. module: point_of_sale
 #: help:product.product,expense_pdt:0
@@ -1083,44 +1101,46 @@ msgid ""
 "This is a product you can use to take cash from a statement for the point of "
 "sale backend, exemple: money lost, transfer to bank, etc."
 msgstr ""
+"Met dit product kunt u contant geld van een uittreksel boeken voor de "
+"backend van het verkooppunt: geld verloren, overschrijving naar bank, enz."
 
 #. module: point_of_sale
 #: field:report.cash.register,date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Creatiedatum"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
 msgid "Coca-Cola Regular 33cl"
-msgstr ""
+msgstr "Coca-Cola Regular 33cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:65
 #, python-format
 msgid "Unable to Delete !"
-msgstr ""
+msgstr "Niet in staat om te verwijderen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_oven_150g_product_template
 msgid "Lays Paprika Oven Baked 150g"
-msgstr ""
+msgstr "Lays Paprika Oven Baked 150g"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Start Period"
-msgstr ""
+msgstr "Beginperiode"
 
 #. module: point_of_sale
 #: report:account.statement:0 field:pos.category,complete_name:0
 #: field:pos.category,name:0 report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_33cl_product_template
 msgid "Spa Barisart 33cl"
-msgstr ""
+msgstr "Spa Barisart 33cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:284
@@ -1129,6 +1149,8 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)"
 msgstr ""
+"Er is geen centralisatierekening klanten gedefinieerd ter betaling van deze "
+"relatie: \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
@@ -1136,6 +1158,8 @@ msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed "
 "cash register or statement."
 msgstr ""
+"Maak alle verkoopboekingen voor niet-gefactureerde orders in een gesloten "
+"kasboek of uittreksel."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1148,42 +1172,42 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:88
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fout"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.lines:0 report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Rekeninguittreksel"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "De naam van het journaal moet uniek zijn per firma."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_naturel_170g_product_template
 #: model:product.template,name:point_of_sale.lays_naturel_170g_product_template
 msgid "Lays Light Naturel 170g"
-msgstr ""
+msgstr "Lays Light Naturel 170g"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
 #: report:pos.payment.report.user:0 report:pos.sales.user:0
 #: report:pos.sales.user.today:0 report:pos.user.product:0
 msgid "Print Date"
-msgstr ""
+msgstr "Afdrukdatum"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:282
 #, python-format
 msgid "There is no receivable account defined to make payment"
-msgstr ""
+msgstr "Er is geen centralisatierekening klanten voor de betaling"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -1195,162 +1219,163 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"Toont de volgorde bij het weergeven van een lijst van productcategorieën."
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "PoS Cash Output"
-msgstr ""
+msgstr "Verkooppunt uitgaande kasbewegingen"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
 msgid "Soda"
-msgstr ""
+msgstr "Soda"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 view:pos.order:0 view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groeperen op..."
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "POS Orders"
-msgstr ""
+msgstr "Verkooppuntorders"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.all_closed_cashbox_of_the_day
 msgid "All Closed CashBox"
-msgstr ""
+msgstr "Alle afgesloten kasboeken"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:640
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Geen prijslijst"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Update"
-msgstr ""
+msgstr "Bijwerken"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Base"
-msgstr ""
+msgstr "Basis"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "Diversen"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Point-of-Sale"
-msgstr ""
+msgstr "Verkooppunt"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_50cl_product_template
 msgid "Evian 50cl"
-msgstr ""
+msgstr "Evian 50cl"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Notes"
-msgstr ""
+msgstr "Opmerkingen"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Verkooporder"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_2l_product_template
 msgid "Coca-Cola Light Lemon 2L"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 2L"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.invoice:0 field:pos.order,amount_tax:0
 msgid "Taxes"
-msgstr ""
+msgstr "Btw"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "Verkooplijn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_oven_150g_product_template
 msgid "Lays Naturel Oven Baked 150g"
-msgstr ""
+msgstr "Lays Naturel Oven Baked 150g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_decaf_33cl_product_template
 msgid "Coca-Cola Light Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Light Decaf 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_normal_action
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 msgid "Products"
-msgstr ""
+msgstr "Producten"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
 msgid "Dr. Oetker Ristorante Quattro Formaggi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Quattro Formaggi"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_1l_product_template
 msgid "Coca-Cola Zero 1L"
-msgstr ""
+msgstr "Coca-Cola Zero 1L"
 
 #. module: point_of_sale
 #: report:pos.sales.user:0 report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Besteldatum"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS"
-msgstr ""
+msgstr "Verkooppunt"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_product_output
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
 msgid "Products 'Put Money In'"
-msgstr ""
+msgstr "Producten 'Inkomende kasbewegingen'"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
 msgid "Croky Bolognaise 250g"
-msgstr ""
+msgstr "Croky Bolognaise 250g"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Extra informatie"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax:"
 
 #. module: point_of_sale
 #: field:pos.order,user_id:0
 msgid "Connected Salesman"
-msgstr ""
+msgstr "Gekoppelde verkoper"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sale_all
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale_all
 msgid "All Sales Orders"
-msgstr ""
+msgstr "Alle verkooporders"
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
@@ -1358,6 +1383,8 @@ msgid ""
 "This is a product you can use to put cash into a statement for the point of "
 "sale backend."
 msgstr ""
+"Dit product kunt u gebruiken om contant geld in een uittreksel op te nemen "
+"voor de backend van het verkooppunt."
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -1367,12 +1394,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.make.payment,journal:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Betalingswijze"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
 msgid "Lays Paprika 45g"
-msgstr ""
+msgstr "Lays Paprika 45g"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1384,54 +1411,54 @@ msgstr ""
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:32
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:59
 msgid "Qty"
-msgstr ""
+msgstr "Hvh"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "Month -1"
-msgstr ""
+msgstr "Maand -1"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
 #: model:ir.model,name:point_of_sale.model_pos_sale_user
 #: view:pos.payment.report.user:0
 msgid "Sale by User"
-msgstr ""
+msgstr "Verkopen per gebruiker"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
 msgid "Evian 1L"
-msgstr ""
+msgstr "Evian 1L"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_open_statement
 msgid "Open Cash Registers"
-msgstr ""
+msgstr "Geopende kasboeken"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "Water"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "state"
-msgstr ""
+msgstr "Status"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
 msgid "Lays Sel et Poivre Oven Baked 150g"
-msgstr ""
+msgstr "Lays Sel et Poivre Oven Baked 150g"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Qty of product"
-msgstr ""
+msgstr "Hvh per product"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_rouge_33cl_product_template
@@ -1441,22 +1468,22 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "Validatie doorlooptijd"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
 msgid "Number of Print"
-msgstr ""
+msgstr "Aantal afdrukken"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Betaling verkooppunt"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_50cl_product_template
 msgid "Coca-Cola Light 50cl"
-msgstr ""
+msgstr "Coca-Cola Light 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_50cl_product_template
@@ -1466,129 +1493,129 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "End Period"
-msgstr ""
+msgstr "Eindperiode"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_33cl_product_template
 msgid "Coca-Cola Light Lemon 33cl"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 33cl"
 
 #. module: point_of_sale
 #: field:account.journal,auto_cash:0
 msgid "Automatic Opening"
-msgstr ""
+msgstr "Automatische opening"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
 msgid "Lays Ketchup 250g"
-msgstr ""
+msgstr "Lays Ketchup 250g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_50cl_product_template
 msgid "Perrier 50cl"
-msgstr ""
+msgstr "Perrier 50cl"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
 msgid "Synchronized"
-msgstr ""
+msgstr "Gesynchroniseerd"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,month:0
 #: view:report.pos.order:0 field:report.pos.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "Maand"
 
 #. module: point_of_sale
 #: report:account.statement:0
 msgid "Statement Name"
-msgstr ""
+msgstr "Uittrekselnaam"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Year of order date"
-msgstr ""
+msgstr "Jaar van besteldatum"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: field:pos.box.entries,journal_id:0 field:pos.box.out,journal_id:0
 msgid "Cash Register"
-msgstr ""
+msgstr "Kassa"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_receipt
 msgid "Point of sale receipt"
-msgstr ""
+msgstr "Ontvangst verkooppunt"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
-msgstr ""
+msgstr "Verkopen per gebruiker dagelijkse marge"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "Geopende kasboeken"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr ""
+msgstr "Verkoopjournaal"
 
 #. module: point_of_sale
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "Beginsaldo"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.pos.order,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Gesloten"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
 msgid "Dr. Oetker Ristorante Vegetale"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Vegetale"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created by today"
-msgstr ""
+msgstr "Verkooppuntorders van vandaag"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_2l_product_template
 msgid "Coca-Cola Zero 2L"
-msgstr ""
+msgstr "Coca-Cola Zero 2L"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0 selection:pos.order,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Betaald"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr ""
+msgstr "Alle verkooplijnen"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Discount"
-msgstr ""
+msgstr "Korting"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created in last month"
-msgstr ""
+msgstr "Kasanalyse van vorige maand"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beers
 msgid "Beers"
-msgstr ""
+msgstr "Bier"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -1597,21 +1624,23 @@ msgid ""
 "validation. He will also open all cash registers for which you have to "
 "control the ending belance before closing manually."
 msgstr ""
+"OpenERP sluit alle kasboeken automatisch zonder goedkeuring indien dit is "
+"ingesteld. Alle kasboeken met manuele controle van eindsaldo worden geopend."
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created by today"
-msgstr ""
+msgstr "Kasanalyse van vandaag"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "Offerte"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange0_product_template
 msgid "Cash In"
-msgstr ""
+msgstr "Kas in"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1623,17 +1652,17 @@ msgstr ""
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:93
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:271
 msgid "Total:"
-msgstr ""
+msgstr "Totaal:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos
 msgid "Sales by margin"
-msgstr ""
+msgstr "Verkopen met marge"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
 msgid "Journal Configuration"
-msgstr ""
+msgstr "Journaalinstellingen"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1643,12 +1672,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
 msgid "Croky Paprika 45g"
-msgstr ""
+msgstr "Croky Paprika 45g"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Reprint"
-msgstr ""
+msgstr "Opnieuw afdrukken"
 
 #. module: point_of_sale
 #: help:pos.order,user_id:0
@@ -1656,11 +1685,13 @@ msgid ""
 "Person who uses the the cash register. It could be a reliever, a student or "
 "an interim employee."
 msgstr ""
+"Persoon die het kasboek gebruikt. Kan vb. een een student of een interim "
+"zijn."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
-msgstr ""
+msgstr "Aantal facturen"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1669,7 +1700,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:231
 msgid "Receipt"
-msgstr ""
+msgstr "Kasticket"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -1678,90 +1709,93 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"Het systeem opent alle kasboeken, zodat u betalingen kunt registreren. We "
+"stellen voor het beginsaldo van elk kasboek te controleren via het tabblad "
+"Kas."
 
 #. module: point_of_sale
 #: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,price_unit:0
 #: report:pos.payment.report.user:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Eenheidsprijs"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Done"
-msgstr ""
+msgstr "Klaar"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: report:pos.invoice:0 view:pos.order:0 field:pos.order,invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.rochefort_8_33cl_product_template
 msgid "Rochefort \"8\" 33cl"
-msgstr ""
+msgstr "Rochefort \"8\" 33cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.cash.register,state:0
 msgid "Open"
-msgstr ""
+msgstr "Open"
 
 #. module: point_of_sale
 #: field:pos.order,name:0 field:pos.order.line,order_id:0
 msgid "Order Ref"
-msgstr ""
+msgstr "Orderref."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
 msgid "Timmermans Geuze 37.5cl"
-msgstr ""
+msgstr "Timmermans Geuze 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_pickles_250g_product_template
 msgid "Lays Pickels 250g"
-msgstr ""
+msgstr "Lays Pickles 250g"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,net_margin_per_qty:0
 #: field:report.sales.by.margin.pos.month,net_margin_per_qty:0
 msgid "Net margin per Qty"
-msgstr ""
+msgstr "Nettomarge per hvh"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr ""
+msgstr "Maandelijkse verkopen per gebruiker"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
 msgid "Spa et Fruit Orange 50cl"
-msgstr ""
+msgstr "Spa en Fruit Sinaasappel 50cl"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
-msgstr ""
+msgstr "Verkopen per gebruiker met marge"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_payment.py:59
 #, python-format
 msgid "Paiement"
-msgstr ""
+msgstr "Betaling"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Btw:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_33cl_product_template
 msgid "Pepsi Max 33cl"
-msgstr ""
+msgstr "Pepsi Max 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "Verkooppuntstatistieken"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1773,37 +1807,37 @@ msgstr ""
 #: view:report.pos.order:0 field:report.pos.order,product_id:0
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:29
 msgid "Product"
-msgstr ""
+msgstr "Product"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_pollo_product_template
 msgid "Dr. Oetker Ristorante Pollo"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Pollo"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Pos Lines"
-msgstr ""
+msgstr "Verkooppuntlijnen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
 msgid "Grisette Cerise 25cl"
-msgstr ""
+msgstr "Grisette Cerise 25cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_33cl_product_template
 msgid "Chaudfontaine 33cl"
-msgstr ""
+msgstr "Chaudfontaine 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_margherita_product_template
 msgid "Dr. Oetker La Margherita"
-msgstr ""
+msgstr "Dr. Oetker La Margherita"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 msgid "PoS Backend"
-msgstr ""
+msgstr "Backend verkooppunt"
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
@@ -1813,60 +1847,61 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,date_order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Besteldatum"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
 #: model:ir.model,name:point_of_sale.model_pos_payment_report_user
 msgid "Sales lines by Users"
-msgstr ""
+msgstr "Verkooplijnen per gebruiker"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
 msgid "Pepsi 2L"
-msgstr ""
+msgstr "Pepsi 2L"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "Order"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:472
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
+"Er is geen opbrengstenrekening gedefinieerd voor dit product: \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "POS Details"
-msgstr ""
+msgstr "Verkooppuntdetails"
 
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salesmen"
-msgstr ""
+msgstr "Verkopers"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_cash_register
 #: view:report.cash.register:0
 msgid "Point of Sale Cash Register Analysis"
-msgstr ""
+msgstr "Kasboekanalyse verkooppunt"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Nettototaal:"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0 field:pos.sale.user,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Begindatum"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1882,45 +1917,45 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.sale.user:0
 msgid "Sale By User"
-msgstr ""
+msgstr "Verkopen per gebruiker"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "Kasboeken openen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_pecheresse_37,5cl_product_template
 msgid "Lindemans Pecheresse 37.5cl"
-msgstr ""
+msgstr "Lindemans Pecheresse 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_33cl_product_template
 msgid "Pepsi 33cl"
-msgstr ""
+msgstr "Pepsi 33cl"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
-msgstr ""
+msgstr "Uittreksel"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_report
 #: model:ir.model,name:point_of_sale.model_pos_payment_report
 #: view:pos.payment.report:0
 msgid "Payment Report"
-msgstr ""
+msgstr "Betalingsrapport"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
 msgid "Fanta Orange 25cl"
-msgstr ""
+msgstr "Fanta Orange 25cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Journal Entries"
-msgstr ""
+msgstr "Boekingen doen"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -1930,49 +1965,49 @@ msgstr ""
 #: report:pos.sales.user.today:0 report:pos.user.product:0
 #: field:report.pos.order,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Factuurdatum"
 
 #. module: point_of_sale
 #: field:pos.box.entries,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Reden"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
 msgid "Orangina 33cl"
-msgstr ""
+msgstr "Orangina 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_product_input
 #: model:ir.ui.menu,name:point_of_sale.products_for_input_operations
 msgid "Products 'Take Money Out'"
-msgstr ""
+msgstr "Producten 'Geld uit kas'"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
 msgid "Chimay Bleu 33cl"
-msgstr ""
+msgstr "Chimay Bleu 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr ""
+msgstr "Betalingsmethoden"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.chips
 msgid "Chips"
-msgstr ""
+msgstr "Chips"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_spinaci_product_template
 msgid "Dr. Oetker Ristorante Spinaci"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Spinaci"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1980,127 +2015,129 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:88
 #, python-format
 msgid "You have to open at least one cashbox"
-msgstr ""
+msgstr "U moet tenminste een kasboek openen."
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
 msgid "Today's Payment By User"
-msgstr ""
+msgstr "Betalingen van vandaag per gebruiker"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
 msgid "Put Money In"
-msgstr ""
+msgstr "Geld in kas"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:238
 #: code:addons/point_of_sale/point_of_sale.py:253
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "No. Of Articles"
-msgstr ""
+msgstr "Aantal producten"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_vanille_2,5l_product_template
 msgid "ijsboerke Vanille 2.5L"
-msgstr ""
+msgstr "ijsboerke Vanille 2.5L"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Geannuleerd"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Einddatum"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
 msgid "Orangina 1.5L"
-msgstr ""
+msgstr "Orangina 1.5L"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "Picking"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.ice_cream
 msgid "Ice Cream"
-msgstr ""
+msgstr "Ijs"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0 field:report.pos.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Verkooppunt"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Rekeninguittreksellijn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
 msgid "Belle-Vue Kriek 25cl"
-msgstr ""
+msgstr "Belle-Vue Kriek 25cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_1,5l_product_template
 msgid "Chaudfontaine Petillante 1.5l"
-msgstr ""
+msgstr "Chaudfontaine Petillante 1.5l"
 
 #. module: point_of_sale
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
-msgstr ""
+msgstr "Verkooppuntrapport"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_1,5l_product_template
 msgid "Chaudfontaine 1.5l"
-msgstr ""
+msgstr "Chaudfontaine 1.5l"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
 msgid "Close Cash Register"
-msgstr ""
+msgstr "Kasboek sluiten"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:65
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr ""
+"Als u een verkoop wilt verwijderen, moet deze in status Nieuw of Geannuleerd "
+"staan."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
 msgid "Coca-Cola Regular 50cl"
-msgstr ""
+msgstr "Coca-Cola Regular 50cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "Boekingen maken"
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0 field:pos.box.out,product_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Transactie"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Boeking"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Bevestigd"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2110,7 +2147,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Confirm"
-msgstr ""
+msgstr "Bevestigen"
 
 #. module: point_of_sale
 #: help:account.journal,auto_cash:0
@@ -2118,73 +2155,76 @@ msgid ""
 "This field authorize the automatic creation of the cashbox, without control "
 "of the initial balance."
 msgstr ""
+"Met dit veld kunnen kasboeken automatisch worden gemaakt, zonder controle "
+"van het beginsaldo."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_50cl_product_template
 msgid "Coca-Cola Zero 50cl"
-msgstr ""
+msgstr "Coca-Cola Zero 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_tonno_product_template
 msgid "Dr. Oetker Ristorante Tonno"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Tonno"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Aankoopfactuur"
 
 #. module: point_of_sale
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "Journaal en periode moeten tot dezelfde firma behoren."
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:238
 #, python-format
 msgid "In order to set to draft a sale, it must be cancelled."
 msgstr ""
+"Om een verkoop naar status Voorlopig te zetten, moet u deze annuleren."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
 msgid "Fanta Zero Orange 33cl"
-msgstr ""
+msgstr "Fanta Zero Orange 33cl"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Day of order date"
-msgstr ""
+msgstr "Dag van besteldatum"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 msgid "Reporting"
-msgstr ""
+msgstr "Rapportering"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
 msgid "Maes 33cl"
-msgstr ""
+msgstr "Maes 33cl"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Put Money"
-msgstr ""
+msgstr "Geld in kas"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "De code van het journaal moet uniek zijn per firma."
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
 msgid "Configuration"
-msgstr ""
+msgstr "Instellingen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orval_33cl_product_template
@@ -2194,77 +2234,77 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_1l_product_template
 msgid "Coca-Cola Regular 1L"
-msgstr ""
+msgstr "Coca-Cola Regular 1L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:253
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "Kan de picking niet annuleren."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current month"
-msgstr ""
+msgstr "Bestellingen verkooppunt van deze maand"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created last month"
-msgstr ""
+msgstr "Bestellingen verkooppunt vorige maand"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
 msgid "Invoices"
-msgstr ""
+msgstr "Facturen"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
 msgid "Spa Barisart 1.5l"
-msgstr ""
+msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:329 view:pos.order:0
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "Producten retourneren"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_33cl_product_template
 msgid "Jupiler 33cl"
-msgstr ""
+msgstr "Jupiler 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_chocolat_2,5l_product_template
 msgid "ijsboerke Chocolat 2.5L"
-msgstr ""
+msgstr "ijsboerke Chocolat 2.5L"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Take Money"
-msgstr ""
+msgstr "Geld uit kas"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
 msgid "Sales Details"
-msgstr ""
+msgstr "Verkoopdetails"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Message"
-msgstr ""
+msgstr "Bericht"
 
 #. module: point_of_sale
 #: view:account.journal:0 model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root_touchscreen
 #: view:product.product:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "Verkooppunt"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.payment.report.user,user_id:0
@@ -2277,73 +2317,73 @@ msgstr ""
 #: report:pos.details:0 view:pos.order:0 selection:pos.order,state:0
 #: view:report.pos.order:0 selection:report.pos.order,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Gefactureerd"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
 msgid "Spa Barisart 50cl"
-msgstr ""
+msgstr "Spa Barisart 50cl"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
 msgid "Special Beers"
-msgstr ""
+msgstr "Speciale bieren"
 
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
 msgid "Discount Notice"
-msgstr ""
+msgstr "Kortingsbericht"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Re-Print"
-msgstr ""
+msgstr "Opnieuw afdrukken"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Draft"
-msgstr ""
+msgstr "Voorlopig"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_1,5l_product_template
 msgid "Fanta Zero Orange 1.5L"
-msgstr ""
+msgstr "Fanta Zero Orange 1.5L"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PRO FORMA"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:358
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "Gelieve een relatie op te geven voor de verkoop."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruity_beers
 msgid "Fruity Beers"
-msgstr ""
+msgstr "Fruitbieren"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
 msgid "ijsboerke Dame Blanche 2.5L"
-msgstr ""
+msgstr "ijsboerke Dame Blanche 2.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
 msgid "ijsboerke Moka 2.5L"
-msgstr ""
+msgstr "ijsboerke Moka 2.5L"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Verkooporders zoeken"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -2351,32 +2391,34 @@ msgid ""
 "Payment methods are defined by accounting journals having the field Payment "
 "Method checked."
 msgstr ""
+"Betalingsmethoden worden ingesteld via journalen waarvoor het veld "
+"Betalingsmethode is ingesteld."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos
 msgid "Sales by user"
-msgstr ""
+msgstr "Verkopen per gebruiker"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_hawaii_product_template
 msgid "Dr. Oetker Ristorante Hawaii"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Hawaii"
 
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Print Receipt"
-msgstr ""
+msgstr "Kasticket afdrukken"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Orders lines"
-msgstr ""
+msgstr "Verkooppuntorderlijnen"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_33cl_product_template
@@ -2391,22 +2433,26 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"U moet een product maken voor alles wat u aan– of verkoopt. Producten kunnen "
+"grondstoffen zijn, voorraadartikelen, verbruiksartikelen of diensten. Het "
+"productformulier bevat detailinfo over bevoorradingslogistiek, verkoopprijs, "
+"productcategorie, leveranciers, enz."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_2l_product_template
 msgid "Pepsi Max 2L"
-msgstr ""
+msgstr "Pepsi Max 2L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:358
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Fout"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_300g_product_template
 msgid "Lays Paprika XXL 300g"
-msgstr ""
+msgstr "Lays Paprika XXL 300g"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2416,18 +2462,18 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Refund"
-msgstr ""
+msgstr "Creditnota"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #, python-format
 msgid "Please create an invoice for this sale."
-msgstr ""
+msgstr "Maak een factuur voor deze verkoop."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_mozzarella_product_template
 msgid "Dr. Oetker Ristorante Mozzarella"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Mozzarella"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:66
@@ -2435,17 +2481,17 @@ msgstr ""
 #: view:pos.close.statement:0
 #, python-format
 msgid "Close Cash Registers"
-msgstr ""
+msgstr "Kasboeken sluiten"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.payment.report.user:0
 msgid "Disc(%)"
-msgstr ""
+msgstr "Korting(%)"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Algemene informatie"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -2455,115 +2501,115 @@ msgstr ""
 #: view:pos.payment.report.user:0 view:pos.sale.user:0
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:13
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Order lines"
-msgstr ""
+msgstr "Orderlijnen"
 
 #. module: point_of_sale
 #: view:account.journal:0
 msgid "Extended Configuration"
-msgstr ""
+msgstr "Uitgebreide configuratie"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal w/o Tax"
-msgstr ""
+msgstr "Subtotaal excl. btw"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_50cl_product_template
 msgid "Spa Reine 50cl"
-msgstr ""
+msgstr "Spa Reine 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_blonde_33cl_product_template
 msgid "Leffe Blonde 33cl"
-msgstr ""
+msgstr "Leffe Blonde 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
 msgid "Pyament Report"
-msgstr ""
+msgstr "Betalingsrapport"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
 msgid "Cash Journals"
-msgstr ""
+msgstr "Kasjournalen"
 
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
 msgid "Today's Sales By User"
-msgstr ""
+msgstr "Verkopen van vandaag per gebruiker"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "Klantencode"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_out.py:86
 #, python-format
 msgid "please check that account is set to %s"
-msgstr ""
+msgstr "Kijk na of de rekening op %s is ingesteld."
 
 #. module: point_of_sale
 #: field:pos.config.journal,name:0 report:pos.invoice:0 report:pos.lines:0
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Sales lines"
-msgstr ""
+msgstr "Verkooplijnen"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Yesterday"
-msgstr ""
+msgstr "Gisteren"
 
 #. module: point_of_sale
 #: field:pos.order,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Interne notities"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
 msgid "Coca-Cola Zero Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero Decaf 33cl"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Omschrijf waarom u geld uit het kasboek haalt:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 #: view:report.pos.order:0
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "Verkooppuntanalyse"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.order,partner_id:0 view:report.pos.order:0
 msgid "Customer"
-msgstr ""
+msgstr "Klant"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "    Today    "
-msgstr ""
+msgstr "    Vandaag    "
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
@@ -2573,22 +2619,22 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,statement_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "Betalingen"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Aankoopcreditnota"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
 msgid "Sales by User Monthly margin"
-msgstr ""
+msgstr "Verkopen per gebruiker maandelijkse marge"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_9_33cl_product_template
 msgid "Leffe Brune \"9\" 33cl"
-msgstr ""
+msgstr "Leffe Bruin \"9\" 33cl"
 
 #. module: point_of_sale
 #: help:account.journal,journal_user:0
@@ -2596,95 +2642,97 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
 msgstr ""
+"Schakel dit veld in als het journaal een betalingsmethode is voor het "
+"verkooppunt."
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Reeks"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:316 view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
-msgstr ""
+msgstr "Betaling uitvoeren"
 
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "U kunt niet dezelfde categorieën maken."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
 msgid "Sales User Today"
-msgstr ""
+msgstr "Verkopen van vandaag per gebruiker"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Month of order date"
-msgstr ""
+msgstr "Maand van besteldatum"
 
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "PoS Cash Input"
-msgstr ""
+msgstr "Verkooppunt inkomende kasbewegingen"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,year:0
 #: view:report.pos.order:0 field:report.pos.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:31
 msgid "Disc (%)"
-msgstr ""
+msgstr "Korting(%)"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:41
 msgid "Subtotal:"
-msgstr ""
+msgstr "Subtotaal:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:45
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:268
 msgid "Tax:"
-msgstr ""
+msgstr "Btw:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:64
 msgid "Disc"
-msgstr ""
+msgstr "Kort."
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:71
 msgid "+/-"
-msgstr ""
+msgstr "+/-"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:105
 msgid "Paid:"
-msgstr ""
+msgstr "Betaald:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:113
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:288
 msgid "Change:"
-msgstr ""
+msgstr "Wijzigen:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:124
 msgid "Back to Products"
-msgstr ""
+msgstr "Terug naar producten"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:127
 msgid "Validate"
-msgstr ""
+msgstr "Goedkeuren"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:140
 msgid "pending orders"
-msgstr ""
+msgstr "hangende orders"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:145
@@ -2692,33 +2740,44 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Er zijn hangende transacties die niet kunnen worden opgeslagen. Bent u zeker "
+"dat u wilt afsluiten?"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:236
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:238
 msgid "Next Order"
-msgstr ""
+msgstr "Volgende order"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:248
 msgid "Phone:"
-msgstr ""
+msgstr "Telefoon:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:249
 msgid "User:"
-msgstr ""
+msgstr "Gebruiker:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:250
 msgid "Shop:"
-msgstr ""
+msgstr "Verkooppunt:"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
+#~ msgid "Do you want to open cash registers ?"
+#~ msgstr "Wilt u de kasboeken openen?"
+
+#~ msgid "Print the receipt of the sale"
+#~ msgstr "Het kasticket van de verkoop afdrukken"
+
+#~ msgid "Do you want to close your cash registers ?"
+#~ msgstr "Wilt u de kasboeken sluiten?"

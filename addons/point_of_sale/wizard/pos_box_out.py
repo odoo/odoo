@@ -52,10 +52,13 @@ class pos_box_out(osv.osv_memory):
         'journal_id': fields.selection(pos_box_entries.get_journal, "Cash Register", required=True, size=-1),
         'product_id': fields.selection(_get_expense_product, "Operation", required=True, size=-1),
         'amount': fields.float('Amount', digits=(16, 2), required=True),
+        'session_id' : fields.many2one('pos.session', 'Session'),
+        'user_id' : fields.many2one('res.users', 'User'),
     }
     _defaults = {
-         'journal_id': 1,
-         'product_id': 1,
+        'journal_id': 1,
+        'product_id': 1,
+        'user_id' : lambda obj, cr, uid, context: uid,
     }
     def get_out(self, cr, uid, ids, context=None):
 

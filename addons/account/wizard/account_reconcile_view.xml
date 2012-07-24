@@ -7,21 +7,19 @@
             <field name="model">account.move.line.reconcile</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reconciliation">
-                    <separator string="Reconciliation Transactions" colspan="4"/>
-                    <field name="trans_nbr"/>
-                    <newline/>
-                    <field name="credit"/>
-                    <field name="debit"/>
-                    <separator string="Write-Off" colspan="4"/>
-                    <field name="writeoff"/>
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-stock_effects-object-colorize" string="Reconcile" name="trans_rec_reconcile_full" type="object" default_focus="1" attrs="{'invisible':[('writeoff','!=',0)]}"/>
-                        <button icon="gtk-ok" string="Reconcile With Write-Off" name="trans_rec_addendum_writeoff" type="object" attrs="{'invisible':[('writeoff','==',0)]}"/>
-                        <button icon="gtk-ok" string="Partial Reconcile" name="trans_rec_reconcile_partial_reconcile" type="object" attrs="{'invisible':[('writeoff','==',0)]}"/>
-                   </group>
+                <form string="Reconciliation" version="7.0">
+                    <group col="2" string="Reconciliation Transactions">
+                        <field name="credit"/>
+                        <field name="debit"/>
+                        <field name="writeoff"/>
+                    </group>
+                    <footer>
+                        <button string="Reconcile" name="trans_rec_reconcile_full" type="object" widget="btn_extend" default_focus="1" attrs="{'invisible':[('writeoff','!=',0)]}" class="oe_highlight"/>
+                        <button string="Reconcile With Write-Off" name="trans_rec_addendum_writeoff"  widget="btn_extend" type="object" attrs="{'invisible':[('writeoff','==',0)]}" class="oe_highlight"/>
+                        <button string="Partial Reconcile" name="trans_rec_reconcile_partial_reconcile"  widget="btn_extend" type="object" attrs="{'invisible':[('writeoff','==',0)]}" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
@@ -49,18 +47,19 @@
             <field name="model">account.move.line.reconcile.writeoff</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Information addendum">
-                    <separator string="Write-Off Move" colspan="4"/>
-                    <field name="journal_id"/>
-                    <field name="writeoff_acc_id" domain="[('type', '&lt;&gt;', 'view')]"/>
-                    <field name="date_p"/>
-                    <field name="comment"/>
-                    <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-stock_effects-object-colorize" string="Reconcile" name="trans_rec_reconcile" type="object" default_focus="1"/>
-                   </group>
+                <form string="Information addendum" version="7.0">
+                    <header>
+                        <button string="Reconcile" name="trans_rec_reconcile" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group string="Write-Off Move" col="4">
+                        <field name="journal_id"/>
+                        <field name="writeoff_acc_id" domain="[('type', '&lt;&gt;', 'view')]"/>
+                        <field name="date_p"/>
+                        <field name="comment"/>
+                        <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
+                    </group>
                </form>
             </field>
         </record>

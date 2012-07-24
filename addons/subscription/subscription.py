@@ -69,7 +69,7 @@ class subscription_subscription(osv.osv):
         'interval_type': fields.selection([('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'exec_init': fields.integer('Number of documents'),
         'date_init': fields.datetime('First Date'),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status'),
         'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128, help="User can choose the source document on which he wants to create documents"),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
         'cron_id': fields.many2one('ir.cron', 'Cron Job', help="Scheduler which runs on subscription"),

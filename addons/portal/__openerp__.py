@@ -40,9 +40,13 @@ module 'share'.
         'security/portal_security.xml',
         'security/ir.model.access.csv',
         'portal_view.xml',
+        'portal_data.xml',
         'res_user_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
+    ],
+    'demo': [
+        'portal_demo.xml',
     ],
     'installable': True,
 }

@@ -6,7 +6,7 @@
             <field name="model">account_followup.followup.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Follow-Up Steps">
+                <tree string="Follow-up Steps">
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="start"/>
@@ -19,20 +19,21 @@
             <field name="model">account_followup.followup.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Follow-Up Steps">
-                  <group col="6" colspan="4">
-                     <field name="name"/>
-                     <field name="delay"/>
-                     <field name="start"/>
-                  </group>
-                    <newline/>
-                    <separator string="Message" colspan="4"/>
-                    <field colspan="4" name="description" nolabel="1"/>
-                    <separator string="Legend" colspan="4"/>
-                    <label string="%%(partner_name)s: Partner Name" colspan="2"/>
-                    <label string="%%(date)s: Current Date" colspan="2"/>
-                    <label string="%%(user_signature)s: User Name" colspan="2"/>
-                    <label string="%%(company_name)s: User's Company Name" colspan="2"/>
+                <form string="Follow-up Steps" version="7.0">
+                    <group col="4">
+                       <field name="name"/>
+                       <field name="delay"/>
+                       <field name="start"/>
+                    </group>
+                    <separator string="Message"/>
+                    <field name="description"/>
+                    <separator string="Legend"/>
+                    <group>
+                        <label string="%%(partner_name)s: Partner Name"/>
+                        <label string="%%(date)s: Current Date"/>
+                        <label string="%%(user_signature)s: User Name"/>
+                        <label string="%%(company_name)s: User's Company Name"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -42,11 +43,12 @@
             <field name="model">account_followup.followup</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Follow-Up">
-                    <field name="name"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field colspan="4" name="followup_line" nolabel="1"/>
+                <form string="Follow-up" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <field name="followup_line"/>
                 </form>
             </field>
         </record>
@@ -56,7 +58,7 @@
             <field name="model">account_followup.followup</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Follow-Up">
+                <tree string="Follow-up">
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -68,26 +70,27 @@
             <field name="model">account_followup.followup</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Followup">
-                   <group>
-                        <field name="name"/>
+                <search string="Search Follow-up">
+                    <group>
+                        <field name="name" string="Follow-up"/>
+                        <separator orientation="vertical"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-               </search>
+                    </group>
+                </search>
             </field>
         </record>
 
         <record id="action_account_followup_definition_form" model="ir.actions.act_window">
-            <field name="name">Follow-Ups</field>
+            <field name="name">Follow-ups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account_followup.followup</field>
             <field name="search_view_id" ref="view_account_followup_filter"/>
             <field name="view_type">form</field>
-            <field name="help">Define follow up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages.</field>
+            <field name="help">Define follow-up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages.</field>
         </record>
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc"/>
 
-        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
+        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Follow-up Report"/>
 
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>
@@ -120,6 +123,19 @@
                 <field name="date_created" position="after">
                     <field name="followup_line_id"/>
                     <field name="followup_date"/>
+                </field>
+            </field>
+        </record>
+		
+       <record id="view_move_line_form" model="ir.ui.view">
+            <field name="name">account.move.partner.info.followup</field>
+            <field name="model">account.move.partner.info</field>
+            <field name="inherit_id" ref="account.view_move_line_extended_form_view"/>
+            <field name="arch" type="xml">
+                <field name="reconciliation_progress" position="after">
+                    <label for="followup_date"/>
+                    <field name="followup_date"/>
+                    <field name="max_followup_id"/>
                 </field>
             </field>
         </record>

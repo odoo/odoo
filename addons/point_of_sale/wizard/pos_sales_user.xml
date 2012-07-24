@@ -3,21 +3,22 @@
     <data>
         <!--   pos sales user -->
 
-		<record id="view_pos_sale_user" model="ir.ui.view">
+        <record id="view_pos_sale_user" model="ir.ui.view">
             <field name="name">Sale By User</field>
             <field name="model">pos.sale.user</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sale By User">
-				    <group col="2" colspan="4">
-				    	<field name="date_start"/>
-				    	<field name="date_end"/>
-				    	<field name="user_id"/>
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Close" />
-                		<button name="print_report" string="Print Report"
-                			colspan="1" type="object" icon="gtk-ok" />
-                	</group>
+                <form string="Sale By User" version="7.0">
+                    <header>
+                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </header>
+                    <group col="4">
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="user_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -32,5 +33,5 @@
             <field name="target">new</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

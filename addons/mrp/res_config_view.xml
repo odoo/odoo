@@ -6,25 +6,29 @@
             <field name="model">mrp.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Manufacturing" layout="manual">
-                    <div class="oe_form_topbar">
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
-                    </div>
-                    <sheet layout="auto">
-                        <separator string="Manufacturing Order" colspan="4"/>
-                        <field name="module_mrp_operations"/>
-                        <field name="module_stock_planning"/>
-                        <field name="module_mrp_subproduct"/>
-                        <field name="module_mrp_repair"/>
-
-                        <separator string="Logistics" colspan="4"/>
-                        <field name="module_mrp_jit"/>
-
-                        <separator string="Bill Of Material" colspan="4"/>
-                        <field name="group_mrp_routings"/>
-                        <field name="group_mrp_properties"/>
-                    </sheet>
+                <form string="Configure Manufacturing" version="7.0">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group>
+                        <group string="Manufacturing Order">
+                            <field name="module_mrp_operations"/>
+                            <field name="module_stock_planning"/>
+                            <field name="module_mrp_subproduct"/>
+                            <field name="module_mrp_repair"/>
+                            <separator string="Logistics" colspan="2"/>
+                            <field name="module_mrp_jit"/>
+                            <field name="module_stock_no_autopicking"/>
+                        </group>
+                        <group string="Products">
+                            <field name="module_product_manufacturer"/>
+                            <separator string="Bill Of Material" colspan="2"/>
+                            <field name="group_mrp_routings"/>
+                            <field name="group_mrp_properties"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -38,7 +42,7 @@
         </record>
 
         <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config"
-            sequence="4" action="action_mrp_configuration"/>
+            sequence="8" action="action_mrp_configuration"/>
 
     </data>
 </openerp>

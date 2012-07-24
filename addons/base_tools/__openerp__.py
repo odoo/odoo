@@ -5,7 +5,6 @@
     "version": "1.0",
     "depends": ["base"],
     "category" : "Hidden/Dependency",
-    'complexity': "easy",
     'description': """
 Common base for tools modules.
 ==============================

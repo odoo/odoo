@@ -77,56 +77,53 @@ class account_move_journal(osv.osv_memory):
 
         @return: Returns a dict that contains definition for fields, views, and toolbars
         """
-
+        if context is None:context = {}
         res = super(account_move_journal, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
 
-        if not view_id:
-            return res
-
-        period_pool = self.pool.get('account.period')
-        journal_pool = self.pool.get('account.journal')
-
-        journal_id = self._get_journal(cr, uid, context)
-        period_id = self._get_period(cr, uid, context)
-
-        journal = False
-        if journal_id:
-            journal = journal_pool.read(cr, uid, [journal_id], ['name'])[0]['name']
-            journal_string = _("Journal: %s") % tools.ustr(journal)
-        else:
-            journal_string = _("Journal: All")
-
-        period = False
-        if period_id:
-            period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
-            period_string = _("Period: %s") % tools.ustr(period)
-
-        separator_string = _("Open Journal Items !")
-        cancel_string = _("Cancel")
-        open_string = _("Open")
-        view = """<?xml version="1.0" encoding="utf-8"?>
-        <form string="Standard entries">
-            <separator string="%s" colspan="4"/>
-            <field name="target_move" />
-            <newline/>
-            <group colspan="4" >
-                <label width="300" string="%s"/>
-                <newline/>
-                <label width="300" string="%s"/>
-            </group>
-            <group colspan="4" col="4">
-                <label string ="" colspan="2"/>
-                <button icon="gtk-cancel" special="cancel" string="%s"/>
-                <button icon="terp-gtk-go-back-rtl" string="%s" name="action_open_window" default_focus="1" type="object"/>
-            </group>
-        </form>""" % (separator_string, journal_string, period_string, cancel_string, open_string)
-
-        view = etree.fromstring(view.encode('utf8'))
-        xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
-        view = xarch
-        res.update({
-            'arch': view
-        })
+        if context:
+            if not view_id:
+                return res
+    
+            period_pool = self.pool.get('account.period')
+            journal_pool = self.pool.get('account.journal')
+    
+            journal_id = self._get_journal(cr, uid, context)
+            period_id = self._get_period(cr, uid, context)
+    
+            journal = False
+            if journal_id:
+                journal = journal_pool.read(cr, uid, [journal_id], ['name'])[0]['name']
+                journal_string = _("Journal: %s") % tools.ustr(journal)
+            else:
+                journal_string = _("Journal: All")
+    
+            period = False
+            if period_id:
+                period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
+                period_string = _("Period: %s") % tools.ustr(period)
+    
+            separator_string = _("Open Journal Items")
+            open_string = _("Open")
+            view = """<?xml version="1.0" encoding="utf-8"?>
+            <form string="Standard entries" version="7.0">
+                <group string="%s">
+                    <field name="target_move" />
+                </group>
+                %s: <label string="%s"/>
+                %s: <label string="%s"/>
+                <footer>
+                    <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>""" % (separator_string, _('Journal'), journal_string, _('Period'), period_string,open_string)
+    
+            view = etree.fromstring(view.encode('utf8'))
+            xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
+            view = xarch
+            res.update({
+                'arch': view
+            })
         return res
 
     def action_open_window(self, cr, uid, ids, context=None):

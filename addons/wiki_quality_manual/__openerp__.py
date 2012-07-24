@@ -23,7 +23,6 @@
     'name': 'Wiki: Quality Manual',
     'version': '1.0',
     'category': 'Knowledge Management',
-    'complexity': "easy",
     'description': """
 Quality Manual Template.
 ========================

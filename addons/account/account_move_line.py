@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import sys
 import time
 from datetime import datetime
 from operator import itemgetter
@@ -106,7 +107,15 @@ class account_move_line(osv.osv):
 
         query += company_clause
         return query
-
+    
+    def get_selection_ids(self, cr, uid, ids, context=None):
+        records = self.read(cr, uid, ids, ['reconcile_id'])
+        res = []
+        for record in records:
+            if not record.get('reconcile_id'):
+                res.append(record['id'])
+        return res
+        
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
            This function returns the residual amount on a receivable or payable account.move.line.
@@ -474,7 +483,7 @@ class account_move_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports."),
-        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
@@ -508,7 +517,7 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation'),('currency','Currency Adjustment')], 'Centralisation', size=8),
         'balance': fields.function(_balance, fnct_search=_balance_search, string='Balance'),
-        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State', readonly=True,
+        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'Status', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
@@ -517,7 +526,7 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
 
     def _get_date(self, cr, uid, context=None):
@@ -708,8 +717,26 @@ class account_move_line(osv.osv):
             if not partner:
                 return []
             args.append(('partner_id', '=', partner[0]))
-        return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+        ids = super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+        if context.get('extended_from'):
+            return self.get_move_by_unique_partner(cr, uid, offset, context)
+        return ids
 
+    def get_move_by_unique_partner(self, cr, uid, offset=0, context=None):
+        cr.execute(
+             """
+             SELECT l.id ,l.partner_id AS partner_id  
+                FROM account_move_line l
+                LEFT JOIN account_account a ON (a.id = l.account_id)
+                    
+                    WHERE a.reconcile IS TRUE
+                    AND l.reconcile_id IS NULL
+
+                    AND l.state <> 'draft'
+                    GROUP BY l.id, l.partner_id OFFSET %s""", (offset, )
+            )
+        return  dict(cr.fetchall()).keys()
+        
     def get_next_partner_only(self, cr, uid, offset=0, context=None):
         cr.execute(
              """
@@ -985,32 +1012,32 @@ class account_move_line(osv.osv):
         if context.get('view_mode', False):
             return result
         fld = []
-        fields = {}
         flds = []
-        title = _("Accounting Entries") #self.view_header_get(cr, uid, view_id, view_type, context)
+        title = _("Accounting Entries")  # self.view_header_get(cr, uid, view_id, view_type, context)
 
-        ids = journal_pool.search(cr, uid, [])
+        ids = journal_pool.search(cr, uid, [], context=context)
         journals = journal_pool.browse(cr, uid, ids, context=context)
-        all_journal = [None]
-        common_fields = {}
-        total = len(journals)
         for journal in journals:
-            all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
-                if not field.field in fields:
-                    fields[field.field] = [journal.id]
+                # sometimes, it's possible that a defined column is not loaded (the module containing
+                # this field is not loaded) when we make an update.
+                if field.field not in self._columns:
+                    continue
+
+                if not field.field in flds:
                     fld.append((field.field, field.sequence))
                     flds.append(field.field)
-                    common_fields[field.field] = 1
-                else:
-                    fields.get(field.field).append(journal.id)
-                    common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3))
-        fld.append(('journal_id', 10))
-        flds.append('period_id')
-        flds.append('journal_id')
-        fields['period_id'] = all_journal
-        fields['journal_id'] = all_journal
+
+        default_columns = {
+            'period_id': 3,
+            'journal_id': 10,
+            'state': sys.maxint,
+        }
+        for d in default_columns:
+            if d not in flds:
+                fld.append((d, default_columns[d]))
+                flds.append(d)
+
         fld = sorted(fld, key=itemgetter(1))
         widths = {
             'statement_id': 50,
@@ -1020,14 +1047,11 @@ class account_move_line(osv.osv):
         }
 
         document = etree.Element('tree', string=title, editable="top",
-                                 refresh="5", on_write="on_create_write",
+                                 on_write="on_create_write",
                                  colors="red:state=='draft';black:state=='valid'")
         fields_get = self.fields_get(cr, uid, flds, context)
         for field, _seq in fld:
-            if common_fields.get(field) == total:
-                fields.get(field).append(None)
-            # if field=='state':
-            #     state = 'colors="red:state==\'draft\'"'
+            # TODO add string to element
             f = etree.SubElement(document, 'field', name=field)
 
             if field == 'debit':

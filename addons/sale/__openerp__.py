@@ -24,7 +24,6 @@
     'version': '1.0',
     'category': 'Sales Management',
     "sequence": 14,
-    'complexity': "easy",
     'description': """
 The base module to manage quotations and sales orders.
 ======================================================
@@ -80,6 +79,7 @@ Dashboard for Sales Manager that includes:
         'sale_report.xml',
         'sale_data.xml',
         'sale_view.xml',
+        'res_partner_view.xml',
         'report/sale_report_view.xml',
         'stock_view.xml',
         'process/sale_process.xml',

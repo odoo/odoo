@@ -7,15 +7,15 @@
             <field name="model">account.state.open</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                    <form string="Open Invoice">
+                <form string="Open Invoice" version="7.0">
                     <label string="Are you sure you want to open this invoice ?"/>
                     <newline/>
                     <label string="(Invoice should be unreconciled if you want to open it)"/>
-                    <separator colspan="4"/>
-                    <group colspan="2" col="4">
-                        <button special="cancel" string="No"  icon="terp-gtk-stop"/>
-                        <button name="change_inv_state" string="Yes" type="object" icon="terp-camera_test"/>
-                    </group>
+                    <footer>
+                        <button name="change_inv_state" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

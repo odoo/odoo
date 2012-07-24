@@ -23,7 +23,6 @@
     'name': 'Project Retro-planning',
     'version': '0.1',
     'category': 'Project Management',
-    'complexity': "expert",
     'description': """
 Changes dates according to change in project End Date.
 ======================================================

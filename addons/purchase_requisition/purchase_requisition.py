@@ -31,9 +31,10 @@ import decimal_precision as dp
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description="Purchase Requisition"
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
-        'origin': fields.char('Origin', size=32),
+        'origin': fields.char('Source', size=32),
         'date_start': fields.datetime('Requisition Date'),
         'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
@@ -43,10 +44,10 @@ class purchase_requisition(osv.osv):
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
+        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('cancel','Cancelled'),('done','Purchase Done')], 'Status', required=True)
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': 'draft',
         'exclusive': 'multiple',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition', context=c),
@@ -63,6 +64,7 @@ class purchase_requisition(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
         })
         return super(purchase_requisition, self).copy(cr, uid, id, default, context)
+    
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids, context=context):
@@ -70,19 +72,35 @@ class purchase_requisition(osv.osv):
                 if str(purchase_id.state) in('draft','wait'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
+        self.cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
+        self.in_progress_send_note(cr, uid, ids, context=context)
         return True
 
     def tender_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'})
+        self.reset_send_note(cr, uid, ids, context=context)
         return True
 
     def tender_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.done_to_send_note(cr, uid, ids, context=context)
         return True
+
+    def in_progress_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
+    
+    def reset_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
+     
+    def done_to_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
+        
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
     def _planned_date(self, requisition, delay=0.0):
         company = requisition.company_id
@@ -164,8 +182,37 @@ class purchase_requisition(osv.osv):
                 }, context=context)
                 
         return res
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
+
+    def create(self, cr, uid, vals, context=None):
+        requisition =  super(purchase_requisition, self).create(cr, uid, vals, context=context)
+        if requisition:
+            self.create_send_note(cr, uid, [requisition], context=context)
+        return requisition
 
 purchase_requisition()
+
+class mail_message(osv.osv):
+    _inherit = 'mail.message'
+    
+    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
+                             email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
+                             res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
+                             context=None):
+        purchase_order_obj = self.pool.get('purchase.order')
+        requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
+        result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc,
+                     email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
+                     res_id=res_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                     context=context)
+        if requisition_id:
+            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
+                             email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
+                             res_id=requisition_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                             context=context)
+        return result
 
 class purchase_requisition_line(osv.osv):
 
@@ -175,8 +222,8 @@ class purchase_requisition_line(osv.osv):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product' ),
-        'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
@@ -203,13 +250,14 @@ class purchase_order(osv.osv):
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
+
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:
-                    if order.id<>po.id:
+                    if order.id != po.id:
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
@@ -224,7 +272,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Purchase Requisition', help="Check this box so that requisitions generates purchase requisitions instead of directly requests for quotations.")
+        'purchase_requisition': fields.boolean('Purchase Requisition', help="Check this box to generates purchase requisition instead of generating requests for quotation from procurement.")
     }
     _defaults = {
         'purchase_requisition': False
@@ -239,27 +287,31 @@ class procurement_order(osv.osv):
         'requisition_id' : fields.many2one('purchase.requisition','Latest Requisition')
     }
     def make_po(self, cr, uid, ids, context=None):
+        res = {}
         sequence_obj = self.pool.get('ir.sequence')
-        res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
-        for proc_id, po_id in res.items():
-            procurement = self.browse(cr, uid, proc_id, context=context)
-            requisition_id=False
-            if procurement.product_id.purchase_requisition:
-                requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
-                    'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
+        requisition_obj = self.pool.get('purchase.requisition')
+        warehouse_obj = self.pool.get('stock.warehouse')
+        procurement = self.browse(cr, uid, ids, context=context)[0]
+        if procurement.product_id.purchase_requisition:
+             seq_name = sequence_obj.get(cr, uid, 'purchase.order.requisition')
+             warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
+             res[procurement.id] = requisition_obj.create(cr, uid, 
+                   {
+                    'name': seq_name,
                     'origin': procurement.origin,
                     'date_end': procurement.date_planned,
-                    'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
+                    'warehouse_id':warehouse_id and warehouse_id[0] or False,
                     'company_id':procurement.company_id.id,
                     'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
                         'product_qty': procurement.product_qty
 
-                    })],
-                    'purchase_ids': [(6,0,[po_id])]
+                   })],
                 })
-            self.write(cr,uid,proc_id,{'requisition_id':requisition_id})
+             self.write(cr,uid,[procurement.id],{'state': 'running','requisition_id': res[procurement.id]},context=context)
+        else:
+            res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         return res
 
 procurement_order()

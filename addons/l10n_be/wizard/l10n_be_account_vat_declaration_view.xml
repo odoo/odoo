@@ -7,29 +7,25 @@
             <field name="model">l1on_be.vat.declaration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Periodical VAT Declaration">
+                <form string="Periodical VAT Declaration" version="7.0">
                     <group>
-                        <group colspan="4">
-                            <separator string="Declare Periodical VAT" colspan="4"/>
+                        <group string="Declare Periodical VAT">
                             <field name="period_id" widget="selection"/>
                             <field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
-                            <newline/>
-                            <separator string="Advanced Options" colspan="4"/>
+                        </group>
+                        <group string="Advanced Options">
                             <field name="ask_restitution"/>
                             <field name="ask_payment"/>
-                            <field name="client_nihil" string="Is Last Declaration"/><label/>
-                        </group>
-                        <group colspan="4">
-                            <separator string="Comments" colspan="4"/>
-                            <field colspan="4" name="comments" nolabel="1"/>
-                        </group>
-                        <group>
-                            <separator colspan="4"/>
-                            <newline/>
-                            <button special="cancel" string="Close" icon="gtk-cancel"/>
-                            <button icon="gtk-execute"  name="create_xml" string="Create XML" type="object" default_focus="1" />
+                            <field name="client_nihil" string="Is Last Declaration"/>
                         </group>
                     </group>
+                    <separator string="Comments"/>
+                    <field name="comments"/>
+                    <footer>
+                        <button name="create_xml" string="Create XML" type="object" default_focus="1" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -39,15 +35,10 @@
             <field name="model">l1on_be.vat.declaration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Save xml">
-                    <group colspan="3">
-                        <label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
-                        <field name="name"/><newline/>
-                        <field name="file_save" readonly="True" filename="name"/>
-                        <newline/>
-                        <separator colspan="4"/><label/>
-                        <button special="cancel" string="Ok" icon="gtk-ok"/>
-                    </group>
+                <form string="Save xml" version="7.0">
+                    <label string="Save the File with '.xml' extension."/>
+                    <field name="name"/>
+                    <field name="file_save" readonly="True" filename="name"/>
                 </form>
             </field>
         </record>

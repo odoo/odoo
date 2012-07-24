@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-12-09 10:14+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:52+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:12+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -25,7 +25,7 @@ msgstr "Pasta ascendente"
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr "O nome da pasta contém caracteres especiais!"
+msgstr "O nome da pasta contém carateres especiais!"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -40,7 +40,7 @@ msgstr "Painel Documento"
 #. module: document
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
-msgstr "Nó do processo"
+msgstr "Nó do Processo"
 
 #. module: document
 #: view:document.directory:0
@@ -53,7 +53,7 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
-"Campo a usar como nome nas pastas. Se vazio o campo \"name\" será o usado."
+"Campo a usar como nome nas pastas. Se vazio o campo \"nome\" será o usado."
 
 #. module: document
 #: view:document.directory:0
@@ -127,8 +127,8 @@ msgid ""
 "to the current record, in dynamic folders"
 msgstr ""
 "Uma expressão python, usada para avaliar o campo\n"
-"Não pode usar 'dir_id' para a pasta actual, 'res_id', 'res_model' como "
-"referência para o registo actual em pastas dinâmicas"
+"Não pode usar 'dir_id' para a pasta atual, 'res_id', 'res_model' como "
+"referência para o registo atual em pastas dinâmicas"
 
 #. module: document
 #: view:report.document.user:0
@@ -150,7 +150,7 @@ msgstr "O nome da pasta tem de ser único"
 #. module: document
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Filtrar nos meus documentos"
 
 #. module: document
 #: field:ir.attachment,index_content:0
@@ -169,7 +169,7 @@ msgstr ""
 #. module: document
 #: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
 msgid "Knowledge Management"
-msgstr ""
+msgstr "Gestão de Conhecimento"
 
 #. module: document
 #: view:document.directory:0
@@ -213,7 +213,7 @@ msgstr "Data de modificação"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Conhecimento da configuração da aplicação"
 
 #. module: document
 #: view:ir.attachment:0
@@ -327,7 +327,7 @@ msgstr "Nome do ficheiro guardado"
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
-msgstr "Tipo de pasta"
+msgstr "Tipo de Directório"
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -383,6 +383,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
+"Ao executar este assistente, ele irá configurar os diretórios "
+"automaticamente de acordo com os módulos instalados."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -393,7 +395,7 @@ msgstr ""
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
-msgstr "Pasta"
+msgstr "Directório"
 
 #. module: document
 #: view:document.directory:0
@@ -428,7 +430,7 @@ msgstr "Data da modificação"
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
 msgid "Files details by Directory"
-msgstr "Detalhes dos ficheiros por pasta"
+msgstr "Detalhes dos ficheiros por directório"
 
 #. module: document
 #: view:report.document.user:0
@@ -456,7 +458,7 @@ msgstr "Imagem"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr "Pasta estática"
+msgstr "Diretório estático"
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -467,7 +469,8 @@ msgstr "Descendentes"
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
 msgstr ""
-"Defina palavras no contexto, para todas as pastas e ficheiros descendentes"
+"Defina palavras no contexto, para todos os diretórios e ficheiros "
+"descendentes"
 
 #. module: document
 #: help:document.storage,online:0
@@ -514,13 +517,13 @@ msgid ""
 msgstr ""
 "Assinale este campo se quer que o nome do ficheiro contenha o nome do "
 "registo.\n"
-"If set, the directory will have to be a resource one."
+"Se for definido, o diretório terá de ser um recurso."
 
 #. module: document
 #: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "Configure Directórios"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -548,8 +551,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
-"Assinale aqui se quer usar a mesma estrutura em árvore como a do objecto "
-"seleccionado no sistema."
+"Assinale aqui se quer usar a mesma estrutura em árvore como a do objeto "
+"selecionado no sistema."
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -614,8 +617,8 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
-"Se colocar um objecto aqui, este modelo de pasta irá aparecer abaixo de "
-"todos estes objectos. Pastas destas são anexadas ao modelo ou registo "
+"Se colocar um objeto aqui, este diretório do template irá aparecer por baixo "
+"de todos os objetos. Pastas destas são anexadas ao modelo ou registo "
 "específico, tal como os anexos. Não coloque uma pasta ascendente, se "
 "selecionar um modelo ascendente."
 
@@ -674,12 +677,12 @@ msgstr "Leitura apenas"
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 msgid "Document Directory"
-msgstr ""
+msgstr "Directório do Documento"
 
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr "O nome da pasta tem de ser único !"
+msgstr "O nome do diretório tem de ser único !"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -700,6 +703,11 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
+"Sistema de Gestão de Documentos OpenERP suporta mapeamento de pastas "
+"virtuais com documentos. A pasta virtual de um documento pode ser usada para "
+"gerir os ficheiros anexados ao documento, ou para imprimir e fazer download "
+"de qualquer relatório. Esta ferramenta irá criar diretórios automaticamente "
+"de acordo com os módulos instalados."
 
 #. module: document
 #: view:board.board:0
@@ -793,7 +801,7 @@ msgstr "Mês"
 #. module: document
 #: view:report.document.user:0
 msgid "This Months Files"
-msgstr ""
+msgstr "Ficheiros deste mês"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
@@ -828,7 +836,7 @@ msgid ""
 "project documents, invoices etc."
 msgstr ""
 "O repositório de documentos dá-lhe acesso a todos os anexos, tais como "
-"facturas, documentos dos projectos, mensagens de correio, etc."
+"faturas, documentos dos projetos, mensagens de correio, etc."
 
 #. module: document
 #: view:document.directory:0
@@ -858,7 +866,7 @@ msgstr "Ficheiros por parceiro"
 #. module: document
 #: view:ir.attachment:0
 msgid "Indexed Content - experimental"
-msgstr ""
+msgstr "Conteúdo anexado - experimental"
 
 #. module: document
 #: view:report.document.user:0
@@ -873,7 +881,7 @@ msgstr "Notas"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "Configuração do Diretório"
 
 #. module: document
 #: help:document.directory,type:0
@@ -886,8 +894,8 @@ msgid ""
 msgstr ""
 "Cada pasta pode ser do tipo estático ou estar ligada a uma tabela. Uma pasta "
 "estática é uma pasta que pode conter ficheiros, tal como no sistema "
-"operativo. As pastas ligadas a recursos do sistema, automaticamente contêm "
-"sub-pastas para cada recurso definido como descendente."
+"operativo. O diretórios ligados a recursos do sistema, automaticamente "
+"contêm sub-diretórios para cada recurso definido como descendente."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -929,7 +937,7 @@ msgstr "Campos"
 #. module: document
 #: help:document.storage,readonly:0
 msgid "If set, media is for reading only"
-msgstr "Se marcado, o armazenamento é de leitura apenas."
+msgstr "Se estiver marcado, o armazenamento é só de leitura."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -948,7 +956,7 @@ msgstr "# dos ficheiros"
 #: code:addons/document/document.py:209
 #, python-format
 msgid "(copy)"
-msgstr ""
+msgstr "(cópia)"
 
 #. module: document
 #: view:document.directory:0
@@ -956,7 +964,7 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
-"Apenas os membros deste grupo terão acesso a esta pasta e seus ficheiros."
+"Apenas os membros deste grupo terão acesso a este diretório e seus ficheiros."
 
 #. module: document
 #: view:document.directory:0
@@ -975,7 +983,7 @@ msgstr "Tipo Mime"
 #. module: document
 #: view:report.document.user:0
 msgid "All Months Files"
-msgstr ""
+msgstr "Ficheiros de todos os meses"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -987,7 +995,7 @@ msgstr "Nome do conteúdo"
 #: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
-msgstr "O nome do ficheiro tem de ser único !"
+msgstr "Nome ficheiro deve ser único!"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -1003,7 +1011,7 @@ msgstr "A pasta tem de ter um ascendente ou um armazenamento"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr "Estratura das pastas"
+msgstr "Estrutura das pastas"
 
 #. module: document
 #: view:report.document.user:0
@@ -1057,6 +1065,9 @@ msgstr "Tipo de documento"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"
+
+#~ msgid "Attached To"
+#~ msgstr "Ligado a"
 
 #~ msgid ""
 #~ "This wizard will configure the URL of the server of the document management "
@@ -1171,9 +1182,6 @@ msgstr "Tipo de documento"
 #~ msgid "Sale Order"
 #~ msgstr "Ordem de venda"
 
-#~ msgid "Project"
-#~ msgstr "Projeto"
-
 #~ msgid "Auto directory configuration for Products."
 #~ msgstr "Configuração automática de pastas para os artigos"
 
@@ -1236,3 +1244,13 @@ msgstr "Tipo de documento"
 #~ "    Deposi da instalação deste módulo, os ficheiros deixam de ficar gravados "
 #~ "na base de dados, mas sim\n"
 #~ "      no numa pasta do servidor como server/bin/filestore\n"
+
+#~ msgid "Project"
+#~ msgstr "Projecto"
+
+#~ msgid "Configure Resource Directory"
+#~ msgstr "Configurar Directória do Recurso"
+
+#~ msgid "Choose the following Resouces to auto directory configuration."
+#~ msgstr ""
+#~ "Escolha os Recursos a seguir para configuração automática da directoria."

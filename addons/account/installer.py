@@ -30,11 +30,11 @@ from tools.translate import _
 from osv import fields, osv
 import netsvc
 import tools
+_logger = logging.getLogger(__name__)
 
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
-    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -94,6 +94,7 @@ class account_installer(osv.osv_memory):
             raise osv.except_osv(_('No unconfigured company !'), _("There are currently no company without chart of account. The wizard will therefore not be executed."))
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
         res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         cmp_select = []
         # display in the widget selection only the companies that haven't been configured yet
@@ -123,11 +124,6 @@ class account_installer(osv.osv_memory):
             context = {}
         fy_obj = self.pool.get('account.fiscalyear')
         for res in self.read(cr, uid, ids, context=context):
-            if 'charts' in res and res['charts'] == 'configurable':
-                #load generic chart of account
-                fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
-                tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
-                fp.close()
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
                 if not f_ids:
@@ -153,7 +149,7 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.__logger.debug('Installing chart of accounts %s', chart)
+        _logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()

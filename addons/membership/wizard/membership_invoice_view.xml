@@ -7,15 +7,16 @@
             <field name="model">membership.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Membership Invoice">
-                	<group colspan="4" >
-                     	<field name="product_id" colspan="4" domain="[('membership','=',True)]" widget="selection" on_change="onchange_product(product_id)"/>
-                        <field name="member_price" colspan="4" />
+                <form string="Membership Invoice" version="7.0">
+                    <group>
+                        <field name="product_id" domain="[('membership','=',True)]" widget="selection" on_change="onchange_product(product_id)"/>
+                        <field name="member_price"/>
                     </group>
-                    <group colspan="4" col="6">
-                        <button  icon="gtk-close" special="cancel" string="Close"/>
-           	            <button  icon="gtk-apply" string="Join" name="membership_invoice" type="object"/>
-                    </group>
+                    <footer>
+                        <button string="Join" name="membership_invoice" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

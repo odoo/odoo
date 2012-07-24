@@ -1,126 +1,116 @@
 <?xml version="1.0"?>
 <openerp>
      <data>
-          <record model="ir.ui.view" id="view_crm_opportunity_user_graph1">
-               <field name="name">crm.opportunity.user.graph1</field>
-               <field name="model">crm.lead.report</field>
-               <field name="type">graph</field>
-               <field name="arch" type="xml">
-                    <graph string="Opportunities by User and Team" type="bar">
-                         <field name="stage_id"/>
-                         <field name="nbr" operator="+"/>
-                         <field name="user_id" group="True"/>
-                    </graph>
-               </field>
-          </record>
+        <!-- CRM dashboard -->
+        <record model="ir.actions.act_window" id="act_my_oppor">
+            <field name="name">My Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('user_id','=',uid),('type', '=', 'opportunity'),('state','not in',('cancel','done'))]</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
+        </record>
 
-        <record id="view_report_crm_oppor_graph" model="ir.ui.view">
-            <field name="name">crm.lead.report.graph</field>
+        <record model="ir.actions.act_window" id="act_crm_tag_tree_view_leads_all">
+            <field name="name">New Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('user_id','=',uid),('state','=','draft'),('type','=','lead')]</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_leads"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_crm_opportunity_stage_graph">
+            <field name="name">Opportunities By Stage - Graph</field>
             <field name="model">crm.lead.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="vertical" string="Opportunity Analysis" type="bar">
-                   <field name="stage_id"/>
-                    <field name="planned_revenue" operator="+"/>
+                <graph string="Opportunities By Stage" type="pie">
+                    <field name="stage_id"/>
+                    <field name="nbr" operator="+"/>
                 </graph>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="crm_case_my_open_oppor">
-            <field name="name">Opportunities</field>
-            <field name="model">crm.lead</field>
-            <field name="type">tree</field>
+        <record model="ir.actions.act_window" id="act_opportunity_stage">
+            <field name="name">Opportunities By Stage</field>
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="view_crm_opportunity_stage_graph"/>
+            <field name="domain">[('state', 'not in', ('done', 'cancel')), ('type', '=', 'opportunity')]</field>
+            <field name="context">{'search_default_Stage':1}</field>
+        </record>
+
+        <!--Planned Revenue By User line graph-->
+        <record model="ir.ui.view" id="view_crm_opportunity_user_stage_graph">
+            <field name="name">Opportunities By Stage Per User - Graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">graph</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
-                    <field name="name" string="Opportunity"/>
-                    <field name="partner_id" string="Customer"/>
+                <graph string="Opportunities By Stage" type="line">
                     <field name="stage_id"/>
-                    <button name="stage_previous" string="Previous Stage"
-                        states="open,pending" type="object" icon="gtk-go-back" />
-                    <button name="stage_next" string="Next Stage"
-                        states="open,pending" type="object"
-                        icon="gtk-go-forward" />
-                    <field name="planned_revenue" sum="Total of Planned Revenue"/>
-                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                    <field name="date_deadline" invisible="1"/>
-                    <field name="state"/>
-                    <button name="case_open" string="Open"
-                        states="draft,pending" type="object"
-                        icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending"
-                        states="open,draft" type="object"
-                        icon="gtk-media-pause" />
-                    <button name="case_mark_lost" string="Lost"
-                        states="open,pending" type="object"
-                        icon="gtk-cancel" />
-                    <button name="case_close" string="Won"
-                        states="open,draft,pending" type="object"
-                        icon="gtk-apply" />
-                </tree>
+                    <field name="planned_revenue" operator="+"/>
+                    <field name="user_id" group="True"/>
+                </graph>
             </field>
         </record>
 
-          <record model="ir.actions.act_window" id="act_my_oppor">
-              <field name="name">My Open Opportunities</field>
-              <field name="res_model">crm.lead</field>
-              <field name="view_type">form</field>
-              <field name="view_mode">tree,form</field>
-              <field name="domain">[('user_id','=',uid),('state','=','open'), ('type', '=', 'opportunity')]</field>
-              <field name="context">{'default_user_id': uid, 'default_type': 'opportunity'}</field>
-          </record>
-
-        <record model="ir.actions.act_window.view" id="act_my_oppor_tree_view">
-          <field name="sequence" eval="1"/>
-          <field name="view_mode">tree</field>
-          <field name="view_id" ref="crm_case_my_open_oppor"/>
-          <field name="act_window_id" ref="act_my_oppor"/>
-         </record>
-
-        <record model="ir.actions.act_window.view" id="act_my_oppor_form_view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="crm_case_form_view_oppor"/>
-            <field name="act_window_id" ref="act_my_oppor"/>
+        <!--Planned Revenue By User line graph action-->
+        <record model="ir.actions.act_window" id="act_oppor_stage_user">
+            <field name="name">Planned Revenue By User and Stage</field>
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="view_crm_opportunity_user_stage_graph"/>
+            <field name="domain">[('state','!=','cancel'),('opening_date','&gt;',datetime.date.today().strftime("%Y-%m-%d"))]</field>
+            <field name="context">{'search_default_Stage':1}</field>
         </record>
 
-          <record model="ir.actions.act_window" id="act_my_oppor_stage">
-               <field name="name">Planned Revenue By Stage</field>
-               <field name="res_model">crm.lead.report</field>
-               <field name="view_type">form</field>
-               <field name="view_mode">graph,tree,form</field>
-               <field name="view_id" ref="view_report_crm_oppor_graph"/>
-               <field name="domain">[('user_id','=',uid), ('type', '=', 'opportunity'), ('state','in',('draft','open','done','pending')), '!', '&amp;', ('state', '=', 'done'), ('date_closed','&gt;=',datetime.date.today().strftime('%Y-%m-01'))]</field>
-               <field name="context">{'search_default_Stage':1}</field>
-          </record>
+        <record model="ir.actions.act_window" id="crm_case_confirmed_meet">
+            <field name="name">Meetings</field>
+            <field name="res_model">crm.meeting</field>
+            <field name="view_mode">calendar,tree,form,gantt</field>
+            <field name="view_id" ref="base_calendar.view_crm_meeting_tree"/>
+            <field name="context">{"calendar_default_user_id":uid}</field>
+            <field name="domain">[('state','=','open'),('date','&gt;',datetime.date.today().strftime("%Y-%m-%d %H:%M:%S"))]</field>
+            <field name="search_view_id" ref="base_calendar.view_crm_meeting_search"/>
+        </record>
 
-          <record model="ir.ui.view" id="board_crm_form">
-               <field name="name">Sales Dashboard Form</field>
-               <field name="model">board.board</field>
-               <field name="type">form</field>
-               <field name="arch" type="xml">
-                    <form string="Sales Dashboard" layout="manual">
-                         <board style="2-1">
-                            <column>
-                                <action string="My Opportunities"
-                                    name="%(act_my_oppor)d" creatable="true"/>
-                            </column>
-                            <column>
-                                <action string="My Planned Revenues by Stage"
-                                    name="%(act_my_oppor_stage)d"/>
-                            </column>
+        <record model="ir.ui.view" id="board_crm_statistical_form">
+            <field name="name">CRM - Statistical Dashboard Form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Statistics Dashboard" version="7.0">
+                    <board style="1-1">
+                        <column>
+                            <action string="New Leads" name="%(act_crm_tag_tree_view_leads_all)d"/>
+                            <action string="My Opportunities" name="%(act_my_oppor)d"/>
+                            <action string="My Next Meetings" name="%(crm_case_confirmed_meet)d"/>
+                        </column>
+                        <column>
+                            <action string="Planned Revenue by Stage and User" name="%(act_oppor_stage_user)d"/>
+                            <action string="Opportunities by Stage" name="%(act_opportunity_stage)d"/>
+                        </column>
                     </board>
                 </form>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="open_board_crm">
-            <field name="name">Sales</field>
+
+        <record model="ir.actions.act_window" id="open_board_statistical_dash">
+            <field name="name">CRM</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="usage">menu</field>
-            <field name="view_id" ref="board_crm_form"/>
+            <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
-        <menuitem id="base.menu_base_partner"
-            action="open_board_crm"/>
+
+        <menuitem
+            id="menu_board_statistics_dash"
+            parent="base.menu_reporting_dashboard"
+            action="open_board_statistical_dash"
+            sequence="10"
+            groups="base.group_sale_manager"/>
+
     </data>
 </openerp>

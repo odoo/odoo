@@ -9,15 +9,16 @@
             <field name="model">crm.add.note</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Add Note">
-                    <separator string="Add Note" colspan="4" />
-                    <field name="body" nolabel="1" colspan="4" default_focus="1"/>
-                    <separator string="" colspan="6"/>
-                    <group colspan="6" col="4" >
-                        <field name="state" />
-                        <button string="_Cancel" icon="gtk-close" special="cancel" />
-                        <button name="action_add" type="object" string="_Add" icon="gtk-ok" />
+                <form string="Add Note" version="7.0">
+                    <group>
+                        <separator string="Add Note"/>
+                        <field name="body"/>
                     </group>
+                    <footer>
+                        <button name="action_add" type="object" string="_Add" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

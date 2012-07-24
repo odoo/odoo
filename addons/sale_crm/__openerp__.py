@@ -23,7 +23,6 @@
     'name': 'Opportunity to Quotation',
     'version': '1.0',
     'category': 'Hidden',
-    'complexity': "easy",
     'description': """
 This module adds a shortcut on one or several opportunity cases in the CRM.
 ===========================================================================
@@ -43,7 +42,6 @@ crm modules.
     'init_xml': [],
     'update_xml': ['wizard/crm_make_sale_view.xml',
                    'sale_crm_view.xml',
-                   'board_sale_crm_view.xml',
                    'process/sale_crm_process.xml',
                    'security/sale_crm_security.xml',
                    'security/ir.model.access.csv'

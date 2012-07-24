@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="Packing List.pdf">
-  <template title="Packing List" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Packing List" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="0.0" y1="57.0" width="538" height="728"/>
     </pageTemplate>
@@ -31,7 +31,6 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
@@ -52,14 +51,12 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
-
     </blockTableStyle>
     <blockTableStyle id="Move_Line_Header">
       <blockAlignment value="LEFT"/>
@@ -143,7 +140,7 @@
           <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">State</para>
+          <para style="terp_tblheader_Details_Centre">Status</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Location</para>
@@ -161,7 +158,9 @@
     <blockTable colWidths="269.0,269.0" style="Table_Address_detail">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Shipping Address :</para>
+          <para style="terp_default_Bold_9">Supplier Address : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Customer Address : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'delivery') ]]</para>
         </td>
@@ -181,16 +180,16 @@
     <blockTable colWidths="538.0" style="Table_Title_String">
       <tr>
         <td>
-          <para style="terp_header">Packing List: [[ (picking.type == 'out' or removeParentNode('para')) and '' ]] [[ picking.name ]] </para>
-          <para style="terp_header">Reception: [[ (picking.type == 'in' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
-          <para style="terp_header">Picking List: [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Delivery Order : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Incoming Shipment : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Internal Shipment : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="100.0,110.0,130.0,120.0,60.0" style="Header_Order_Reference_Tbl">
+    <blockTable colWidths="100.0,100.0,108.0,107.0,109.0" style="Header_Order_Reference_Tbl">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Journal</para>
@@ -209,7 +208,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="100.0,110.0,130.0,120.0,60.0" style="Content_Order_Reference_Table">
+    <blockTable colWidths="100.0,100.0,108.0,107.0,109.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
@@ -240,7 +239,7 @@
           <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">State</para>
+          <para style="terp_tblheader_Details_Centre">Status</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Location</para>
@@ -287,7 +286,9 @@
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move_lines.state ]]</para>
+            <para style="terp_default_9">[[ (picking.type == 'in' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Received' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.type == 'out' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Delivered' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.type == 'internal' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Transferred' or move_lines.state]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]] </para>

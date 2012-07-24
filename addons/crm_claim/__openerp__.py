@@ -24,7 +24,6 @@
     'name': 'Claims Management',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'complexity': "easy",
     'description': """
 This modules allows you to track your customers/suppliers claims and grievances.
 ================================================================================

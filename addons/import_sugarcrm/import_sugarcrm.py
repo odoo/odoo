@@ -149,7 +149,7 @@ class sugar_import(import_framework):
             res_model = 'res.partner'
         elif sugar_document_contact:
             res_id = self.get_mapped_id(self.TABLE_CONTACT, sugar_document_contact[0])
-            res_model = 'res.partner.address'
+            res_model = 'res.partner'
         elif sugar_document_opportunity:
             res_id = self.get_mapped_id(self.TABLE_OPPORTUNITY, sugar_document_opportunity[0])
             res_model = 'crm.lead'
@@ -587,7 +587,7 @@ class sugar_import(import_framework):
             
         partner_contact_id = False 
         partner_contact_email = False       
-        partner_address_obj = self.obj.pool.get('res.partner.address')
+        partner_address_obj = self.obj.pool.get('res.partner')
         partner_xml_id = self.name_exist(self.TABLE_ACCOUNT, val['account_name'], 'res.partner')
         
         for contact in sugar_opportunities_contact:
@@ -598,7 +598,7 @@ class sugar_import(import_framework):
                 if not partner_name: #link with partner id 
                     fields = ['partner_id/id']
                     data = [partner_xml_id]
-                    self.import_object(fields, data, 'res.partner.address', self.TABLE_CONTACT, contact, self.DO_NOT_FIND_DOMAIN)
+                    self.import_object(fields, data, 'res.partner', self.TABLE_CONTACT, contact, self.DO_NOT_FIND_DOMAIN)
                 if not partner_name or partner_name == val.get('account_name'):
                     partner_contact_id = self.xml_id_exist(self.TABLE_CONTACT, contact)
                     partner_contact_email = address.email
@@ -724,12 +724,12 @@ class sugar_import(import_framework):
         
     def get_contact_mapping(self):
         return { 
-            'model' : 'res.partner.address',
-            'dependencies' : [self.TABLE_ACCOUNT],
+            'model' : 'res.partner',
+            #'dependencies' : [self.TABLE_ACCOUNT],
             'hook' : self.import_contact,
             'map' :  {
                 'name': concat('first_name', 'last_name'),
-                'partner_id/id': ref(self.TABLE_ACCOUNT,'account_id'),
+                'parent_id/id': ref(self.TABLE_ACCOUNT,'account_id'),
                 'phone': 'phone_work',
                 'mobile': 'phone_mobile',
                 'fax': 'phone_fax',
@@ -782,7 +782,7 @@ class sugar_import(import_framework):
             
         val['type'] = type
         val['id_new'] = val['id'] + '_address_' + type
-        return self.import_object_mapping(map_partner_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id_new'], self.DO_NOT_FIND_DOMAIN) 
+        return self.import_object_mapping(map_partner_address, val, 'res.partner', self.TABLE_CONTACT, val['id_new'], self.DO_NOT_FIND_DOMAIN) 
         
     def get_partner_address(self, val):
         address_id=[]
@@ -846,7 +846,7 @@ class sugar_import(import_framework):
             val['country_id/id'] =  country_id
             val['state_id/id'] =  state_id
             
-        return self.import_object_mapping(map_user_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id'], self.DO_NOT_FIND_DOMAIN)
+        return self.import_object_mapping(map_user_address, val, 'res.partner', self.TABLE_CONTACT, val['id'], self.DO_NOT_FIND_DOMAIN)
 
     def get_employee_mapping(self):
         return {
@@ -898,7 +898,6 @@ class sugar_import(import_framework):
                 'context_lang' : 'context_lang',
                 'password' : 'password',
                 '.id' : '.id',
-                'context_department_id/id': self.get_users_department,
                 'user_email' : 'email1',
             }
         }
@@ -950,7 +949,7 @@ class import_sugarcrm(osv.osv):
         'user' : fields.boolean('User', help="Check this box to import sugarCRM Users into OpenERP users, warning if a user with the same login exist in OpenERP, user information will be erase by sugarCRM user information", readonly=True),
         'opportunity': fields.boolean('Leads & Opp', help="Check this box to import sugarCRM Leads and Opportunities into OpenERP Leads and Opportunities"),
         'contact': fields.boolean('Contacts', help="Check this box to import sugarCRM Contacts into OpenERP addresses"),
-        'account': fields.boolean('Accounts', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
+        'account': fields.boolean('Partner/Account', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
         'employee': fields.boolean('Employee', help="Check this box to import sugarCRM Employees into OpenERP employees"),
         'meeting': fields.boolean('Meetings', help="Check this box to import sugarCRM Meetings and Tasks into OpenERP meetings"),
         'call': fields.boolean('Calls', help="Check this box to import sugarCRM Calls into OpenERP calls"),

@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-     	<record id="product_margin_form_view" model="ir.ui.view">
+         <record id="product_margin_form_view" model="ir.ui.view">
             <field name="name">product.margin.form</field>
             <field name="model">product.margin</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Properties categories">
-                    <separator colspan="4" string="General Information"/>
-					<field name="from_date" />
-					<field name="to_date" />
-					<field name="invoice_state" />
-					<separator colspan="4" string=""/>						
-					<group col="4" colspan="2">
-                		<button icon='gtk-cancel' special="cancel" string="Cancel" />
-				    	<button name="action_open_window" string="Open Margins" type="object" icon="gtk-execute"/>
-					</group>
+                <form string="Properties categories" version="7.0">
+                    <group col="4" string="General Information">
+                        <field name="from_date" />
+                        <field name="to_date" />
+                        <field name="invoice_state" />
+                    </group>
+                    <footer>
+                        <button name="action_open_window" string="Open Margins" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
-  		        
-		<act_window name="Product Margins"
-			res_model="product.margin"
-			src_model="product.product"
-			view_mode="form"
-			target="new"
-			key2="client_action_multi"    
-			id="product_margin_act_window"/>	
-			       
+
+        <act_window name="Product Margins"
+            res_model="product.margin"
+            src_model="product.product"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="product_margin_act_window"/>
+
     </data>
 </openerp>

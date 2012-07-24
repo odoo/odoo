@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pytz
 
 import simplejson
 import cgi
@@ -27,60 +26,6 @@ import tools
 from osv import fields, osv
 from tools.translate import _
 from lxml import etree
-
-# Define users preferences for new users (ir.values)
-def _lang_get(self, cr, uid, context=None):
-    obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-    res = [(r['code'], r['name']) for r in res]
-    return res
-
-def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
-
-class user_preferences_config(osv.osv_memory):
-    _name = 'user.preferences.config'
-    _inherit = 'res.config'
-    _columns = {
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="Set default for new user's timezone, used to perform timezone conversions "
-                 "between the server and the client."),
-        'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets default language for the all user interface, when UI "
-                "translations are available. If you want to Add new Language, you can add it from 'Load an Official Translation' wizard  from 'Administration' menu."),
-        'view': fields.selection([('simple','Simplified'),
-                                  ('extended','Extended')],
-                                 'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
-        'menu_tips': fields.boolean('Display Tips', help="Check out this box if you want to always display tips on each menu action"),
-
-    }
-    _defaults={
-               'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
-               'context_lang' : 'en_US',
-               'menu_tips' : True
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        res = super(user_preferences_config, self).default_get(cr, uid, fields, context=context)
-        res_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['res.users'])
-        for id, field, value in res_default:
-            res.update({field: value})
-        return res
-
-    def execute(self, cr, uid, ids, context=None):
-        user_obj = self.pool.get('res.users')
-        user_ids = user_obj.search(cr, uid, [], context=context)
-        for o in self.browse(cr, uid, ids, context=context):
-            user_obj.write(cr , uid, user_ids ,{'context_tz' : o.context_tz, 'context_lang' : o.context_lang, 'view' : o.view, 'menu_tips' : o.menu_tips}, context=context)
-            ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
-            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
-            ir_values_obj.set(cr, uid, 'default', False, 'view', ['res.users'], o.view)
-            ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
-        return {}
 
 # Specify Your Terminology will move to 'partner' module
 class specify_partner_terminology(osv.osv_memory):
@@ -151,28 +96,5 @@ class specify_partner_terminology(osv.osv_memory):
                 act_ref = 'ir.actions.act_window' + ',' + 'help'
                 self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
         return {}
-
-# Preferences wizard for Sales & CRM.
-# It is defined here because it is inherited independently in modules sale, crm,
-# plugin_outlook and plugin_thunderbird.
-class sale_config_settings(osv.osv_memory):
-    _name = 'sale.config.settings'
-    _inherit = 'res.config.settings'
-    _columns = {
-        'module_crm': fields.boolean('CRM'),
-        'module_plugin_thunderbird': fields.boolean('Thunderbird Plugin',
-            help="""The plugin allows you archive email and its attachments to the selected
-                OpenERP objects. You can select a partner, a task, a project, an analytical
-                account, or any other object and attach the selected mail as a .eml file in
-                the attachment of a selected record. You can create documents for CRM Lead,
-                HR Applicant and Project Issue from the selected emails.
-                This installs the module plugin_thunderbird."""),
-        'module_plugin_outlook': fields.boolean('Outlook Plugin',
-            help="""The Outlook plugin allows you to select an object that you would like to add
-                to your email and its attachments from MS Outlook. You can select a partner, a task,
-                a project, an analytical account, or any other object and archive a selected
-                email into an OpenERP mail message with attachments.
-                This installs the module plugin_outlook."""),
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

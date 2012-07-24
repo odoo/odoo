@@ -31,7 +31,7 @@ class hr_employee(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
-        'uom_id': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='UoM', store=True, readonly=True)
+        'uom_id': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Unit of Measure', store=True, readonly=True)
     }
 
     def _getAnalyticJournal(self, cr, uid, context=None):
@@ -189,5 +189,16 @@ class hr_analytic_timesheet(osv.osv):
         }}
 
 hr_analytic_timesheet()
+
+class account_analytic_account(osv.osv):
+
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    
+    _columns = {
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+    }
+
+account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

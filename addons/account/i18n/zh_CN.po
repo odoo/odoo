@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-03 02:11+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"PO-Revision-Date: 2012-07-11 03:05+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-04 04:48+0000\n"
-"X-Generator: Launchpad (build 15195)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:58+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -176,11 +176,6 @@ msgstr "源科目"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "所有辅助核算"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "过去15天开的发票"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -665,18 +660,6 @@ msgstr "账簿的会计期间"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr "要核销这些凭证，这些凭证所属公司必须一致"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "应收款科目"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1639,11 +1622,6 @@ msgstr "分散的账簿序列"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "负责人"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "销售科目类型"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2702,13 +2680,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr "科目表设置"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "销售科目"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "该向导将创建一个定期分录"
@@ -3093,8 +3064,8 @@ msgstr "科目一览表模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "从模板产生科目一览表"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -4992,7 +4963,7 @@ msgstr "资产负债表"
 #: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr "一般账簿"
+msgstr "总账账簿"
 
 #. module: account
 #: field:account.journal,allow_date:0
@@ -5731,7 +5702,7 @@ msgstr "发票税科目"
 #: model:ir.actions.act_window,name:account.action_account_general_journal
 #: model:ir.model,name:account.model_account_general_journal
 msgid "Account General Journal"
-msgstr "一般账簿"
+msgstr "科目总账账簿"
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -6239,11 +6210,6 @@ msgstr "输入开始日期"
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
 msgstr "供应商红字发票"
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "仪表盘"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -6798,11 +6764,6 @@ msgstr ""
 "例如：日期为 %(date)s 的定期发生凭证"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "损益科目"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "相关单据生成此发票报表"
@@ -7020,7 +6981,7 @@ msgstr "上级科目模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr "导入会计科目表"
 
 #. module: account
@@ -10223,7 +10184,7 @@ msgstr "周期次数"
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr "一般账簿"
+msgstr "总账账簿"
 
 #. module: account
 #: view:account.invoice:0
@@ -10800,6 +10761,10 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "Control Invoice"
 #~ msgstr "控制发票"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "应收款科目"
+
 #~ msgid "Date payment"
 #~ msgstr "付款日期"
 
@@ -11054,6 +11019,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "Date Filter"
 #~ msgstr "日期过滤"
 
+#~ msgid "Are you sure ?"
+#~ msgstr "你确定吗?"
+
 #~ msgid "Supplier Invoice Process"
 #~ msgstr "供应商发票处理"
 
@@ -11159,6 +11127,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ "category"
 #~ msgstr "这科目将用于当前产品分类的默认进仓"
 
+#~ msgid "Open for bank reconciliation"
+#~ msgstr "开始银行对账"
+
 #~ msgid "Value Amount"
 #~ msgstr "金额"
 
@@ -11197,6 +11168,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "Year :"
 #~ msgstr "会计年度:"
 
+#~ msgid "Accounts by type"
+#~ msgstr "按类型划分的科目"
+
 #~ msgid ""
 #~ "Indicate if the tax computation is based on the value computed for the "
 #~ "computation of child taxes or based on the total amount."
@@ -11208,6 +11182,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "End of Year Treatments"
 #~ msgstr "结束会计年度处理"
 
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "从模板产生科目一览表"
+
 #~ msgid "Select Chart"
 #~ msgstr "选择一览表"
 
@@ -11216,6 +11193,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 
 #~ msgid "Entry encoding"
 #~ msgstr "明细"
+
+#~ msgid "Standard entries"
+#~ msgstr "普通分录"
 
 #~ msgid ""
 #~ "Indicate if the amount of tax must be included in the base amount for the "
@@ -11580,6 +11560,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "Select Period and Journal for Validation"
 #~ msgstr "选择会计期间和审核的业务类型"
 
+#~ msgid "Reconciliation transactions"
+#~ msgstr "核销交易"
+
 #~ msgid "Mvt"
 #~ msgstr "凭证编号"
 
@@ -11589,6 +11572,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #, python-format
 #~ msgid "No records found for your selection!"
 #~ msgstr "找不到你选择的记录"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "反核销处理"
 
 #, python-format
 #~ msgid "Unable to reconcile entry \"%s\": %.2f"
@@ -11733,6 +11719,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "Can not pay draft/proforma/cancel invoice."
 #~ msgstr "不能支付草稿/形式/取消的发票"
 
+#~ msgid "Reconciliation result"
+#~ msgstr "核销结果"
+
 #~ msgid "Analytic Entries by Journal"
 #~ msgstr "辅助核算类型的辅助核算凭证"
 
@@ -11876,6 +11865,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "No journal for ending writing has been defined for the fiscal year"
 #~ msgstr "会计年度未定义结账凭证的业务类型"
 
+#~ msgid "Compute Code for Taxes included prices"
+#~ msgstr "含税价格计算代码"
+
 #~ msgid "Entries Encoding"
 #~ msgstr "录入单据"
 
@@ -11969,6 +11961,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "<drawString x=\"4.6cm\" y=\"28.7cm\">"
 #~ msgstr "<drawString x=\"4.6cm\" y=\"28.7cm\">"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "过去15天开的发票"
+
 #~ msgid ""
 #~ "The sequence field is used to order the resources from lower sequences to "
 #~ "higher ones"
@@ -11979,6 +11974,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 
 #~ msgid "Negative"
 #~ msgstr "红字"
+
+#~ msgid "Open For Unreconciliation"
+#~ msgstr "打开反核销"
 
 #~ msgid "Due date Computation"
 #~ msgstr "计算截止日期"
@@ -12000,6 +11998,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ "invoiced amount."
 #~ msgstr "无法建立发票！"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "销售科目类型"
+
 #~ msgid "Error! You cannot define overlapping fiscal years"
 #~ msgstr "错误！你不能重复定义会计年度"
 
@@ -12015,6 +12016,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "Reserve & Profit/Loss Account"
 #~ msgstr "损益类科目"
 
+#~ msgid "Sales by Account"
+#~ msgstr "销售科目"
+
 #~ msgid "Calculated Balance"
 #~ msgstr "计算余额"
 
@@ -12029,6 +12033,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 
 #~ msgid "Error! The duration of the Fiscal Year is invalid. "
 #~ msgstr "错误！本年度的期间设置是无效的 "
+
+#~ msgid "Unreconciliate transactions"
+#~ msgstr "反核销业务"
 
 #~ msgid "Third Party (Country)"
 #~ msgstr "第三方（国家）"
@@ -12171,6 +12178,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
 #~ msgstr "例如：在14天内付款减2%，30天则没有减。"
 
+#~ msgid "Go to next partner"
+#~ msgstr "下一个业务伙伴"
+
 #~ msgid "Tax Code Test"
 #~ msgstr "税编码测试"
 
@@ -12183,6 +12193,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 
 #~ msgid "Account Profit And Loss"
 #~ msgstr "科目盈亏"
+
+#~ msgid "Tax codes"
+#~ msgstr "税编码"
 
 #~ msgid ""
 #~ "It adds initial balance row on report which display previous sum amount of "
@@ -12259,6 +12272,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgid "No Filter"
 #~ msgstr "不筛选"
 
+#~ msgid "Create an Account based on this template"
+#~ msgstr "基于此模板创建科目"
+
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "公司相关的科目必须和会计期间一致。"
 
@@ -12284,6 +12300,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #, python-format
 #~ msgid "Currnt currency is not confirured properly !"
 #~ msgstr "当前的货币没设置正确！"
+
+#~ msgid "Income Accounts"
+#~ msgstr "损益科目"
 
 #~ msgid ""
 #~ "Account Voucher module includes all the basic requirements of Voucher "
@@ -12368,6 +12387,9 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ "已过账的发票状态为未付款\n"
 #~ "已付款并核销的发票状态是已支付\n"
 #~ "点击作废按钮后发票状态是已作废"
+
+#~ msgid "Cost Ledger for period"
+#~ msgstr "成本分类账的会计期间"
 
 #, python-format
 #~ msgid ""
@@ -12558,3 +12580,12 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgstr ""
 #~ "科目一览表是根据贵公司所在国家的会计制度建立的。辅助核算项一览表是按贵公司管理需要或者需要查看成本/收益。一般用于管理合同、项目、产品或部门。很多Open"
 #~ "ERP业务（发票、计工单、费用报销）都会生成相关辅助核算项的记录"
+
+#~ msgid "Dashboard"
+#~ msgstr "仪表盘"
+
+#~ msgid "Install your Chart of Accounts"
+#~ msgstr "导入会计科目表"
+
+#~ msgid "Description On Invoices"
+#~ msgstr "发票上的描述"
