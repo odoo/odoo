@@ -24,11 +24,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Country" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="address_format" colspan="4" groups="base.group_no_one"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
                     </group>
+                    <label for="address_format" string="Address Format"/>
+                    <field name="address_format" colspan="4" groups="base.group_no_one"/>
                 </form>
             </field>
         </record>
