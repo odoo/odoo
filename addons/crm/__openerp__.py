@@ -69,7 +69,6 @@ Creates a dashboard for CRM that includes:
     'init_xml': [
         'crm_data.xml',
         'crm_lead_data.xml',
-        'crm_meeting_data.xml',
         'crm_phonecall_data.xml',
     ],
     'update_xml': [
@@ -86,7 +85,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
@@ -116,7 +114,6 @@ Creates a dashboard for CRM that includes:
     'demo_xml': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
-        'crm_meeting_demo.xml',
         'crm_phonecall_demo.xml',
     ],
     'test': [
