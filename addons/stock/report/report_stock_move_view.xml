@@ -58,15 +58,8 @@
             <search string="Moves Analysis">
                 <field name="product_id" default_focus="1"/>
                 <field name="partner_id" context="{'contact_display':'partner'}"/>
-                <filter string="Done"
-                        name="done"
-                        icon="terp-dialog-close"
-                        domain="[('state','=','done')]"
-                        help = "Completed Stock-Moves"/>
-                <filter string="Todo"
-                        icon="terp-gtk-go-back-rtl"
-                        domain="[('state','in',('assigned','waiting','confirmed'))]"
-                        help = "Future Stock-Moves"/>
+                <filter string="Done" name="done" icon="terp-dialog-close" domain="[('state','=','done')]" help = "Completed Stock-Moves"/>
+                <filter string="Todo" icon="terp-gtk-go-back-rtl" domain="[('state','in',('assigned','waiting','confirmed'))]" help = "Future Stock-Moves"/>
                 <separator/>
                 <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
                 <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
@@ -154,15 +147,10 @@
                 <field name="product_id" default_focus="1"/>
                 <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <filter string="Real"
-                        name="real"
-                        icon="terp-check"
-                        domain="[('state','=','done')]"
-                        help="Analysis of current inventory (only moves that have already been processed)"/>
-                <filter string="Future"
-                        icon="terp-stock"
-                        domain="[('state','in',('assigned','done','waiting','confirmed'))]"
-                        help = "Analysis including future moves (similar to virtual stock)"/>
+                <filter string="Real" name="real" icon="terp-check" domain="[('state','=','done')]"
+                    help="Analysis of current inventory (only moves that have already been processed)"/>
+                <filter string="Future" icon="terp-stock" domain="[('state','in',('assigned','done','waiting','confirmed'))]"
+                    help = "Analysis including future moves (similar to virtual stock)"/>
                 <separator/>
                 <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
                 <group expand="0" string="Extended Filters...">
@@ -174,12 +162,11 @@
                     <field name="date"/>
                     <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter name="group_product_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'product_categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                     <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
+                    <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
                     <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
                     <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>

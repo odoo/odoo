@@ -36,13 +36,10 @@
                 <search string="Dates of Inventories">
                     <field name="date"/>
                     <field name="product_id"/>
-                    <filter icon="terp-accessories-archiver" name="stockable" string="Stockable"
-                        domain="[('product_id.type','=', 'product')]"/>
-                    <filter icon="terp-accessories-archiver" string="Consumable"
-                        domain="[('product_id.type','=', 'consu')]"/>
+                    <filter icon="terp-accessories-archiver" name="stockable" string="Stockable" domain="[('product_id.type','=', 'product')]"/>
+                    <filter icon="terp-accessories-archiver" string="Consumable" domain="[('product_id.type','=', 'consu')]"/>
                     <separator/>
-                    <filter icon="terp-accessories-archiver-minus" string="Non Inv"
-                        domain="[('date','=', False)]"/>
+                    <filter icon="terp-accessories-archiver-minus" string="Non Inv" domain="[('date','=', False)]"/>
                 </search>
             </field>
         </record>
