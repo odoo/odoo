@@ -1089,6 +1089,7 @@ class task(base_stage, osv.osv):
                     #raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
+                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
