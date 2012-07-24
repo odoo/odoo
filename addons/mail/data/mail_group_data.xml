@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="mail.group" id="group_all_company">
+            <field name="name">All Company</field>
+            <field name="description">All company users can come here and discuss.</field>
+        </record>
+        <record model="mail.group" id="group_sales">
+            <field name="name">Sales</field>
+        </record>
+        <record model="mail.group" id="group_all_employees">
+            <field name="name">All Employees</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</openerp>

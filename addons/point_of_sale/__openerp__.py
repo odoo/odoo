@@ -25,6 +25,7 @@
     'version': '1.0.1',
     'category': 'Point Of Sale',
     "sequence": 6,
+    "summary": "Touchscreen to Manage your Shop",
     'description': """
 This module provides a quick and easy sale process.
 ===================================================
@@ -51,22 +52,23 @@ Main features :
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_close_statement.xml',
-        'wizard/pos_box_entries.xml',
         'wizard/pos_payment_report_user_view.xml',
-        'wizard/pos_box_out.xml',
         'wizard/pos_sales_user.xml',
         'wizard/pos_receipt_view.xml',
         'wizard/pos_payment_report_user.xml',
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
+        'wizard/pos_box.xml',
+        'wizard/pos_session_opening.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
+        'point_of_sale_data.xml',
         'report/pos_order_report_view.xml',
-        'report/report_cash_register_view.xml',
         'point_of_sale_sequence.xml',
         'point_of_sale_workflow.xml',
         'account_statement_view.xml',
         'account_statement_report.xml',
+        'res_users_view.xml',
     ],
     'demo_xml': [
         'point_of_sale_demo.xml',
@@ -80,10 +82,24 @@ Main features :
     ],
     'installable': True,
     'application': True,
-    'certificate' : '001156338024966477869',
     # Web client
-    'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'],
-    'css': ['static/src/css/pos.css'],
+    'js': [
+            'static/lib/backbone/backbone-0.9.2.js', 
+            'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
+            'static/src/js/pos_models.js',
+            'static/src/js/pos_basewidget.js',
+            'static/src/js/pos_keyboard_widget.js',
+            'static/src/js/pos_scrollbar_widget.js',
+            'static/src/js/pos_widgets.js',
+            'static/src/js/pos_devices.js',
+            'static/src/js/pos_screens.js',
+            'static/src/js/pos_main.js'
+    ],
+    'css': [
+        'static/src/css/pos.css',
+        'static/src/css/keyboard.css'
+    ],
     'qweb': ['static/src/xml/pos.xml'],
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

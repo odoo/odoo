@@ -24,6 +24,7 @@
     'version': '1.0',
     'category':'Social Network',
     "sequence": 2,
+    "summary": "Discussions, Feeds, Alerts",
     'description': """
 A bussiness oriented Social Networking with a fully-integrated email 
 and message management.
@@ -66,11 +67,11 @@ The main features of the module are :
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
+        'res_users_view.xml',
+        'data/mail_data.xml',
+        'data/mail_group_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
-        'mail_data.xml',
-        'mail_group_data.xml',
-        'res_users_view.xml',
     ],
     'installable': True,
     'auto_install': False,
@@ -83,13 +84,15 @@ The main features of the module are :
         'static/src/img/email_icong.png',
         'static/src/img/_al.png',
         'static/src/img/_pincky.png',
-        'static/src/img/feeds.png',
-        'static/src/img/feeds-hover.png',
         'static/src/img/groupdefault.png',
+        'static/src/img/attachment.png',
+        'static/src/img/checklist.png',
+        'static/src/img/formatting.png',
     ],
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
+        'static/src/css/mail_compose_message.css',
     ],
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
@@ -99,7 +102,7 @@ The main features of the module are :
         'static/src/xml/mail.xml',
     ],
     'demo': [
-        'mail_demo.xml',
+        'data/mail_demo.xml',
     ],   
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

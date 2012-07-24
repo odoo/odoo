@@ -474,7 +474,7 @@ class account_account(osv.osv):
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id', 'tax_id', 'Default Taxes'),
-        'note': fields.text('Note'),
+        'note': fields.text('Internal Notes'),
         'company_currency_id': fields.function(_get_company_currency, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
@@ -714,6 +714,7 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
+        'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
@@ -737,9 +738,14 @@ class account_journal(osv.osv):
         'entry_posted': fields.boolean('Skip \'Draft\' State for Manual Entries', help='Check this box if you don\'t want new journal entries to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation. \nNote that journal entries that are automatically created by the system are always skipping that state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
+
+        'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
+        'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
+        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
     }
 
     _defaults = {
+        'with_last_closing_balance' : False,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
@@ -1782,7 +1788,7 @@ class account_tax_code(osv.osv):
         'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.'),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax code to appear on invoices"),
         'sequence': fields.integer('Sequence', help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
     }
 
@@ -1874,17 +1880,17 @@ class account_tax(osv.osv):
         'python_applicable':fields.text('Python Code'),
 
         #
-        # Fields used for the VAT declaration
+        # Fields used for the Tax declaration
         #
-        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the VAT declaration."),
-        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the VAT declaration."),
+        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
+        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
         'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
@@ -2211,7 +2217,7 @@ class account_tax(osv.osv):
     def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
-        Price Unit is a VAT included price
+        Price Unit is a Tax included price
 
         RETURN:
             [ tax ]
@@ -2667,7 +2673,7 @@ class account_tax_code_template(osv.osv):
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign For Parent', required=True),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
     }
 
     _defaults = {
@@ -2782,17 +2788,17 @@ class account_tax_template(osv.osv):
         'python_applicable':fields.text('Python Code'),
 
         #
-        # Fields used for the VAT declaration
+        # Fields used for the Tax declaration
         #
-        'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the VAT declaration."),
-        'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the VAT declaration."),
+        'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the tax declaration."),
+        'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the tax declaration."),
         'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
@@ -3345,15 +3351,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
-        action = {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'board.board',
-            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'board_account_form')[1],
-            'menu_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'menu_finance')[1]
-        }
-        return action
+        return {}
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
         '''
