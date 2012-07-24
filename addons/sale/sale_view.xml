@@ -341,10 +341,7 @@
                     <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <filter icon="terp-mail-message-new"
-                        string="Inbox" help="Unread messages"
-                        name="needaction_pending"
-                        domain="[('needaction_pending','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                     <separator/>
                     <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
