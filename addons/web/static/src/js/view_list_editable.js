@@ -70,11 +70,9 @@ openerp.web.list_editable = function (instance) {
             _.extend(this.dataset, dataset);
         },
         editable: function () {
-            if (this.fields_view.arch.attrs.editable || this._context_editable) {
-                return true;
-            }
-
-            return this.options.editable;
+            return this.fields_view.arch.attrs.editable
+                || this._context_editable
+                || this.options.editable;
         },
         /**
          * Replace do_search to handle editability process
