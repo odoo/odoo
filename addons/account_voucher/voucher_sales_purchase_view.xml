@@ -95,7 +95,7 @@
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
+                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="name"/>
                             <field name="paid" invisible="1"/>
@@ -113,7 +113,7 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-			    <group>
+			                <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="tax_id" 
@@ -127,10 +127,10 @@
                                         <button type="object" class="oe_link oe_edit_only"
                                             name="compute_tax" string="(update)"
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
-			            </div>
+			                        </div>
                                     <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>                                    
-			        <group>
+			                    <group>
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
                                     <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                                     <field name="account_id"
@@ -139,7 +139,7 @@
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
                                 </group>
-			    </group>
+			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
@@ -249,14 +249,15 @@
                             <field name="journal_id"
                                 domain="[('type','in',['purchase','purchase_refund'])]"
                                 widget="selection"
-                                on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
+                                on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
+                                groups="account.group_account_user"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Bill Information">
                             <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}">
                                 <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"  groups="account.group_account_user"/>
+                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]" groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
