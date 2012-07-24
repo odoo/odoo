@@ -1074,11 +1074,13 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
                     sup.call(self);
+                    // desactivated because it created an exception, plus it does not seem very useful
+                    /*
                     if (field) {
                         var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
                         self.$element.scrollTo($field_input);
                         $field_input.focus();
-                    }
+                    }*/
                 });
             } else {
                 sup.call(self);
@@ -1346,7 +1348,9 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     if (typeof(node) === 'string') {
         return sindent + node;
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
-        throw("Node a json node");
+        throw new Error(
+            _.str.sprintf("Node [%s] is not a JSONified XML node",
+                          JSON.stringify(node)));
     }
     for (var attr in node.attrs) {
         var vattr = node.attrs[attr];

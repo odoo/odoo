@@ -92,9 +92,8 @@ $sheet-max-width: 860px
     letter-spacing: -1px
     color: transparent
     &:before
-        font-family: "mnmliconsRegular"
+        font: 21px "mnmliconsRegular"
         content: $icon-name
-        font-size: 20px
         color: $color
 
 // }}}
@@ -1721,6 +1720,9 @@ $sheet-max-width: 860px
                         li
                             height: auto
                             line-height: 16px
+        .oe_list_buttons.oe_editing .oe_list_save
+            // keep "save row" button hidden in o2m
+            visibility: hidden
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe_list
@@ -1728,6 +1730,25 @@ $sheet-max-width: 860px
             display: none
     // }}}
     // ListView {{{
+    .oe_list_buttons
+        .oe_list_save, .oe_list_discard
+            display: none
+        &.oe_editing
+            .oe_list_add, .oe_list_button_import
+                display: none
+            .oe_list_save
+                display: inline-block
+            .oe_list_discard
+                display: inline
+
+    .oe_list
+        position: relative
+        .oe_form .oe_form_field
+            width: auto
+            position: absolute
+            margin: 0 !important // dammit
+            padding: 0
+
     .oe_list_content
         width: 100%
         td:first-child, th:first-child
@@ -1771,8 +1792,7 @@ $sheet-max-width: 860px
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px
-                    progress
-                        width: 100%
+                    white-space: pre-line
                 > td, > th
                     > button
                         border: none
@@ -1800,8 +1820,6 @@ $sheet-max-width: 860px
             width: 82px
             input
                 text-align: right
-        .oe_list_edit_row_save:before
-            content: "S"
     // }}}
     // Translation {{{
     .oe_trad_field.touched
@@ -1910,6 +1928,7 @@ $sheet-max-width: 860px
     background-attachment: fixed
     >*
         opacity: 0.70
+
 // }}}
 
 div.ui-widget-overlay

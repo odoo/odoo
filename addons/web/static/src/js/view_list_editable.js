@@ -3,10 +3,6 @@
  * @namespace
  */
 openerp.web.list_editable = function (instance) {
-    var KEY_RETURN = 13,
-        KEY_ESCAPE = 27;
-    var QWeb = instance.web.qweb;
-
     // editability status of list rows
     instance.web.ListView.prototype.defaults.editable = null;
 
@@ -15,6 +11,13 @@ openerp.web.list_editable = function (instance) {
         init: function () {
             var self = this;
             this._super.apply(this, arguments);
+
+            this.editor = this.make_editor();
+            // Stores records of {field, cell}, allows for re-rendering fields
+            // depending on cell state during and after resize events
+            this.fields_for_resize = [];
+            instance.web.bus.on('resize', this, this.resize_fields);
+
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
                     self.do_edit(dataset.index, id, dataset);
@@ -26,7 +29,24 @@ openerp.web.list_editable = function (instance) {
                     self.configure_pager(self.dataset);
                     self.compute_aggregates();
                 }
-            })
+            });
+
+            this.records.bind('remove', function () {
+                if (self.editor.is_editing()) {
+                    self.cancel_edition();
+                }
+            });
+
+            this.on('edit:after', this, function () {
+                self.$element.add(self.$buttons).addClass('oe_editing');
+            });
+            this.on('save:after cancel:after', this, function () {
+                self.$element.add(self.$buttons).removeClass('oe_editing');
+            });
+        },
+        destroy: function () {
+            instance.web.bus.off('resize', this, this.resize_fields);
+            this._super();
         },
         /**
          * Handles the activation of a record in editable mode (making a record
@@ -49,6 +69,7 @@ openerp.web.list_editable = function (instance) {
          * @param {Boolean} [force] forces the list to editability. Sets new row edition status to "bottom".
          */
         set_editable: function (force) {
+            // TODO: fix handling of editability status to be simpler & clearer & more coherent
             // If ``force``, set editability to bottom
             // otherwise rely on view default
             // view' @editable is handled separately as we have not yet
@@ -71,15 +92,60 @@ openerp.web.list_editable = function (instance) {
             if (this.options.editable) {
                 this.$element.find('table:first').show();
                 this.$element.find('.oe_view_nocontent').remove();
-                this.groups.new_record();
+                this.start_edition();
             } else {
                 this._super();
             }
         },
         on_loaded: function (data, grouped) {
+            var self = this;
+            if (this.editor) {
+                this.editor.destroy();
+            }
             // tree/@editable takes priority on everything else if present.
             this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
-            return this._super(data, grouped);
+            var result = this._super(data, grouped);
+            if (this.options.editable) {
+                // FIXME: any hook available to ensure this is only done once?
+                this.$buttons
+                    .off('click', '.oe_list_save')
+                    .on('click', '.oe_list_save', this.proxy('save_edition'))
+                    .off('click', '.oe_list_discard')
+                    .on('click', '.oe_list_discard', function (e) {
+                        e.preventDefault();
+                        self.cancel_edition();
+                    });
+                this.$element
+                    .off('click', 'tbody td:not(.oe_list_field_cell)')
+                    .on('click', 'tbody td:not(.oe_list_field_cell)', function () {
+                        if (!self.editor.is_editing()) {
+                            self.start_edition();
+                        }
+                    });
+                // Editor is not restartable due to formview not being
+                // restartable
+                this.editor = this.make_editor();
+                var editor_ready = this.editor.prependTo(this.$element)
+                    .then(this.proxy('setup_events'));
+
+                return $.when(result, editor_ready);
+            }
+
+            return result;
+        },
+        /**
+         * Builds a new editor object
+         *
+         * @return {instance.web.list.Editor}
+         */
+        make_editor: function () {
+            return new instance.web.list.Editor(this);
+        },
+        do_button_action: function () {
+            var self = this, args = arguments;
+            this.ensure_saved().then(function () {
+                self.handle_button.apply(self, args);
+            });
         },
         /**
          * Ensures the editable list is saved (saves any pending edition if
@@ -90,27 +156,487 @@ openerp.web.list_editable = function (instance) {
          * @returns {$.Deferred}
          */
         ensure_saved: function () {
-            return this.groups.ensure_saved();
+            if (!this.editor.is_editing()) {
+                return $.when();
+            }
+            return this.save_edition();
+        },
+        /**
+         * Set up the edition of a record of the list view "inline"
+         *
+         * @param {instance.web.list.Record} [record] record to edit, leave empty to create a new record
+         * @param {Object} [options]
+         * @param {String} [options.focus_field] field to focus at start of edition
+         * @return {jQuery.Deferred}
+         */
+        start_edition: function (record, options) {
+            var self = this;
+            var item = false;
+            if (record) {
+                item = record.attributes;
+            } else {
+                var attrs = {id: false};
+                _(this.columns).chain()
+                    .filter(function (x) { return x.tag === 'field'})
+                    .pluck('name')
+                    .each(function (field) { attrs[field] = false; });
+                record = new instance.web.list.Record(attrs);
+                this.records.add(record, {
+                    at: this.prepends_on_create() ? 0 : null});
+            }
+            var $recordRow = this.groups.get_row_for(record);
+            var cells = this.get_cells_for($recordRow);
+
+            return this.ensure_saved().pipe(function () {
+                self.fields_for_resize.splice(0, self.fields_for_resize.length);
+                return self.with_event('edit', {
+                    record: record.attributes,
+                    cancel: false
+                }, function () {
+                    return self.editor.edit(item, function (field_name, field) {
+                        var cell = cells[field_name];
+                        if (!cell || field.get('effective_readonly')) {
+                            // Readonly fields can just remain the list's,
+                            // form's usually don't have backgrounds &al
+                            field.set({invisible: true});
+                            return;
+                        }
+
+                        self.fields_for_resize.push({field: field, cell: cell});
+                    }, options).pipe(function () {
+                        $recordRow.addClass('oe_edition');
+                        self.resize_fields();
+                        return record.attributes;
+                    });
+                });
+            });
+        },
+        get_cells_for: function ($row) {
+            var cells = {};
+            $row.children('td').each(function (index, el) {
+                cells[el.getAttribute('data-field')] = el
+            });
+            return cells;
+        },
+        /**
+         * If currently editing a row, resizes all registered form fields based
+         * on the corresponding row cell
+         */
+        resize_fields: function () {
+            if (!this.editor.is_editing()) { return; }
+            for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
+                var item = this.fields_for_resize[i];
+                this.resize_field(item.field, item.cell);
+            }
+        },
+        /**
+         * Resizes a field's root element based on the corresponding cell of
+         * a listview row
+         *
+         * @param {instance.web.form.AbstractField} field
+         * @param {jQuery} cell
+         */
+        resize_field: function (field, cell) {
+            var $cell = $(cell);
+            var position = $cell.position();
+
+            field.$element.css({
+                top: position.top,
+                left: position.left,
+                width: $cell.outerWidth(),
+                minHeight: $cell.outerHeight()
+            });
+        },
+        /**
+         * @return {jQuery.Deferred}
+         */
+        save_edition: function () {
+            var self = this;
+            return this.with_event('save', {
+                editor: this.editor,
+                form: this.editor.form,
+                cancel: false
+            }, function () {
+                return this.editor.save().pipe(function (attrs) {
+                    var created = false;
+                    var record = self.records.get(attrs.id);
+                    if (!record) {
+                        // new record
+                        created = true;
+                        record = self.records.find(function (r) {
+                            return !r.get('id');
+                        }).set('id', attrs.id);
+                    }
+                    // onwrite callback could be altering & reloading the
+                    // record which has *just* been saved, so first perform all
+                    // onwrites then do a final reload of the record
+                    return self.handle_onwrite(record)
+                        .pipe(function () {
+                            return self.reload_record(record); })
+                        .pipe(function () {
+                            return { created: created, record: record }; });
+                });
+            });
+        },
+        /**
+         * @return {jQuery.Deferred}
+         */
+        cancel_edition: function () {
+            var self = this;
+            return this.with_event('cancel', {
+                editor: this.editor,
+                form: this.editor.form,
+                cancel: false
+            }, function () {
+                return this.editor.cancel().pipe(function (attrs) {
+                    if (attrs.id) {
+                        var record = self.records.get(attrs.id);
+                        if (!record) {
+                            // Record removed by third party during edition
+                            return
+                        }
+                        return self.reload_record(record);
+                    }
+                    var to_delete = self.records.find(function (r) {
+                        return !r.get('id');
+                    });
+                    if (to_delete) {
+                        self.records.remove(to_delete);
+                    }
+                });
+            });
+        },
+        /**
+         * Executes an action on the view's editor bracketed by a cancellable
+         * event of the name provided.
+         *
+         * The event name provided will be post-fixed with ``:before`` and
+         * ``:after``, the ``event`` parameter will be passed alongside the
+         * ``:before`` variant and if the parameter's ``cancel`` key is set to
+         * ``true`` the action *will not be called* and the method will return
+         * a rejection
+         *
+         * @param {String} event_name name of the event
+         * @param {Object} event event object, provided to ``:before`` sub-event
+         * @param {Function} action callable, called with the view's editor as its context
+         * @param {Array} [args] supplementary arguments provided to the action
+         * @param {Array} [trigger_params] supplementary arguments provided to the ``:after`` sub-event, before anything fetched by the ``action`` function
+         * @return {jQuery.Deferred}
+         */
+        with_event: function (event_name, event, action) {
+            var self = this;
+            event = event || {};
+            this.trigger(event_name + ':before', event);
+            if (event.cancel) {
+                return $.Deferred().reject({
+                    message: _.str.sprintf("Event %s:before cancelled",
+                                           event_name)});
+            }
+            return $.when(action.call(this)).then(function () {
+                self.trigger.apply(self, [event_name + ':after']
+                        .concat(_.toArray(arguments)));
+            });
+        },
+        edition_view: function (editor) {
+            var view = $.extend(true, {}, this.fields_view);
+            view.arch.tag = 'form';
+            _.extend(view.arch.attrs, {
+                'class': 'oe_form_container',
+                version: '7.0'
+            });
+            _(view.arch.children).each(function (widget) {
+                var modifiers = JSON.parse(widget.attrs.modifiers || '{}');
+                widget.attrs.nolabel = true;
+                if (modifiers['tree_invisible'] || widget.tag === 'button') {
+                    modifiers.invisible = true;
+                }
+                widget.attrs.modifiers = JSON.stringify(modifiers);
+            });
+            return view;
+        },
+        handle_onwrite: function (source_record) {
+            var self = this;
+            var on_write_callback = self.fields_view.arch.attrs.on_write;
+            if (!on_write_callback) { return $.when(); }
+            return this.dataset.call(on_write_callback, [source_record.get('id')])
+                .pipe(function (ids) {
+                    return $.when.apply(
+                        null, _(ids).map(
+                            _.bind(self.handle_onwrite_record, self, source_record)));
+                });
+        },
+        handle_onwrite_record: function (source_record, id) {
+            var record = this.records.get(id);
+            if (!record) {
+                // insert after the source record
+                var index = this.records.indexOf(source_record) + 1;
+                record = new instance.web.list.Record({id: id});
+                this.records.add(record, {at: index});
+                this.dataset.ids.splice(index, 0, id);
+            }
+            return this.reload_record(record);
+        },
+        prepends_on_create: function () {
+            return this.options.editable === 'top';
+        },
+        setup_events: function () {
+            var self = this;
+            this.editor.$element.on('keyup keydown', function (e) {
+                if (!self.editor.is_editing()) { return; }
+                var key = _($.ui.keyCode).chain()
+                    .map(function (v, k) { return {name: k, code: v}; })
+                    .find(function (o) { return o.code === e.which; })
+                    .value();
+                if (!key) { return; }
+                var method = e.type + '_' + key.name;
+                if (!(method in self)) { return; }
+                self[method](e);
+            });
+        },
+        /**
+         * Saves the current record, and goes to the next one (creation or
+         * edition)
+         *
+         * @private
+         * @param {String} [next_record='succ'] method to call on the records collection to get the next record to edit
+         * @return {*}
+         */
+        _next: function (next_record) {
+            next_record = next_record || 'succ';
+            var self = this;
+            return this.save_edition().pipe(function (saveInfo) {
+                if (saveInfo.created) {
+                    return self.start_edition();
+                }
+                return self.start_edition(
+                    self.records[next_record](
+                        saveInfo.record, {wraparound: true}));
+            });
+        },
+        keyup_ENTER: function () {
+            return this._next();
+        },
+        keyup_ESCAPE: function () {
+            return this.cancel_edition();
+        },
+        _text_selection_range: function (el) {
+            if (el.selectionStart !== undefined) {
+                return {
+                    start: el.selectionStart,
+                    end: el.selectionEnd
+                };
+            } else if(document.body.createTextRange) {
+                throw new Error("Implement text range handling for MSIE");
+                var sel = document.body.createTextRange();
+                if (sel.parentElement() === el) {
+
+                }
+            }
+        },
+        _text_cursor: function (el) {
+            var selection = this._text_selection_range(el);
+            if (selection.start !== selection.end) {
+                return null;
+            }
+            return selection.start;
+        },
+        keydown_UP: function (e) {
+            if (!this.editor.is_editing('edit')) { return $.when(); }
+            // FIXME: assumes editable widgets are input-type elements
+            var index = this._text_cursor(e.target);
+            // If selecting or not at the start of the input
+            if (index === null || index !== 0) { return $.when(); }
+
+            e.preventDefault();
+            return this._next('pred');
+        },
+        keydown_DOWN: function (e) {
+            if (!this.editor.is_editing('edit')) { return $.when(); }
+            // FIXME: assumes editable widgets are input-type elements
+            var index = this._text_cursor(e.target);
+            // If selecting or not at the end of the input
+            if (index === null || index !== e.target.value.length) { return $.when(); }
+
+            e.preventDefault();
+            return this._next();
+        },
+        keydown_TAB: function (e) {
+            var form = this.editor.form;
+            var last_field = _(form.fields_order).chain()
+                .map(function (name) { return form.fields[name]; })
+                .filter(function (field) { return field.$element.is(':visible'); })
+                .last()
+                .value();
+            // tabbed from last field in form
+            if (last_field && last_field.$element.has(e.target).length) {
+                e.preventDefault();
+                return this._next();
+            }
+            return $.when();
+        }
+    });
+
+    instance.web.list.Editor = instance.web.Widget.extend({
+        /**
+         * @constructs instance.web.list.Editor
+         * @extends instance.web.Widget
+         *
+         * Adapter between listview and formview for editable-listview purposes
+         *
+         * @param {instance.web.Widget} parent
+         * @param {Object} options
+         * @param {instance.web.FormView} [options.formView=instance.web.FormView]
+         * @param {Object} [options.delegate]
+         */
+        init: function (parent, options) {
+            this._super(parent);
+            this.options = options || {};
+            _.defaults(this.options, {
+                formView: instance.web.FormView,
+                delegate: this.getParent()
+            });
+            this.delegate = this.options.delegate;
+
+            this.record = null;
+
+            this.form = new (this.options.formView)(
+                this, this.delegate.dataset, false, {
+                    initial_mode: 'edit',
+                    $buttons: $(),
+                    $pager: $()
+            });
+        },
+        start: function () {
+            var self = this;
+            var _super = this._super();
+            this.form.embedded_view = this._validate_view(
+                    this.delegate.edition_view(this));
+            var form_ready = this.form.appendTo(this.$element).then(
+                self.form.proxy('do_hide'));
+            return $.when(_super, form_ready);
+        },
+        _validate_view: function (edition_view) {
+            if (!edition_view) {
+                throw new Error("editor delegate's #edition_view must return "
+                              + "a view descriptor");
+            }
+            var arch = edition_view.arch;
+            if (!(arch && arch.children instanceof Array)) {
+                throw new Error("Editor delegate's #edition_view must have a" +
+                                " non-empty arch")
+            }
+            if (!(arch.tag === "form")) {
+                throw new Error("Editor delegate's #edition_view must have a" +
+                                " 'form' root node");
+            }
+            if (!(arch.attrs && arch.attrs.version === "7.0")) {
+                throw new Error("Editor delegate's #edition_view must be a" +
+                                " version 7 view");
+            }
+            if (!/\boe_form_container\b/.test(arch.attrs['class'])) {
+                throw new Error("Editor delegate's #edition_view must have the" +
+                                " class 'oe_form_container' on its root" +
+                                " element");
+            }
+
+            return edition_view;
+        },
+
+        /**
+         *
+         * @param {String} [state] either ``new`` or ``edit``
+         * @return {Boolean}
+         */
+        is_editing: function (state) {
+            if (!this.record) {
+                return false;
+            }
+            switch(state) {
+            case null: case undefined:
+                return true;
+            case 'new': return !this.record.id;
+            case 'edit': return !!this.record.id;
+            }
+            throw new Error("is_editing's state filter must be either `new` or" +
+                            " `edit` if provided");
+        },
+        _focus_setup: function (focus_field) {
+            var form = this.form;
+
+            var field;
+            // If a field to focus was specified
+            if (focus_field
+                    // Is actually in the form
+                    && (field = form.fields[focus_field])
+                    // And is visible
+                    && field.$element.is(':visible')) {
+                // focus it
+                field.focus();
+                return;
+            }
+
+            _(form.fields_order).detect(function (name) {
+                // look for first visible field in fields_order, focus it
+                var field = form.fields[name];
+                if (!field.$element.is(':visible')) {
+                    return false;
+                }
+                field.focus();
+                // Stop as soon as a field got focused
+                return true;
+            });
+        },
+        edit: function (record, configureField, options) {
+            // TODO: specify sequence of edit calls
+            var self = this;
+            var form = self.form;
+            var loaded = record
+                ? form.on_record_loaded(_.extend({}, record))
+                : form.load_defaults();
+
+            return loaded.pipe(function () {
+                return form.do_show({reload: false});
+            }).pipe(function () {
+                self.record = form.datarecord;
+                _(form.fields).each(function (field, name) {
+                    configureField(name, field);
+                });
+                self._focus_setup(options && options.focus_field);
+                return form;
+            });
+        },
+        save: function () {
+            var self = this;
+            return this.form
+                .do_save(null, this.delegate.prepends_on_create())
+                .pipe(function (result) {
+                    var created = result.created && !self.record.id;
+                    if (created) {
+                        self.record.id = result.result;
+                    }
+                    return self.cancel();
+                });
+        },
+        cancel: function () {
+            var record = this.record;
+            this.record = null;
+            if (!this.form.can_be_discarded()) {
+                return $.Deferred().reject({
+                    message: "The form's data can not be discarded"}).promise();
+            }
+            this.form.do_hide();
+            return $.when(record);
         }
     });
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
         passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
-        new_record: function () {
-            // TODO: handle multiple children
-            this.children[null].new_record();
-        },
-        /**
-         * Ensures descendant editable List instances are all saved if they have
-         * pending editions.
-         *
-         * @returns {$.Deferred}
-         */
-        ensure_saved: function () {
-            return $.when.apply(null,
-                _.invoke(
-                    _.values(this.children),
-                    'ensure_saved'));
+        get_row_for: function (record) {
+            return _(this.children).chain()
+                .invoke('get_row_for', record)
+                .compact()
+                .first()
+                .value();
         }
     });
 
@@ -119,325 +645,27 @@ openerp.web.list_editable = function (instance) {
             if (!this.options.editable) {
                 return this._super.apply(this, arguments);
             }
-            this.edit_record($(event.currentTarget).data('id'));
-        },
-        /**
-         * Checks if a record is being edited, and if so cancels it
-         */
-        cancel_pending_edition: function () {
-            var self = this, cancelled;
-            if (!this.edition) {
-                return $.when();
-            }
-
-            if (this.edition_id) {
-                cancelled = this.reload_record(this.records.get(this.edition_id));
-            } else {
-                cancelled = $.when();
-            }
-            cancelled.then(function () {
-                self.view.unpad_columns();
-                self.edition_form.destroy();
-                self.edition_form.$element.remove();
-                delete self.edition_form;
-                self.dataset.index = null;
-                delete self.edition_id;
-                delete self.edition;
+            var record_id = $(event.currentTarget).data('id');
+            this.view.start_edition(
+                record_id ? this.records.get(record_id) : null, {
+                focus_field: $(event.target).data('field')
             });
-            this.pad_table_to(5);
-            return cancelled;
         },
         /**
-         * Adapts this list's view description to be suitable to the inner form
-         * view of a row being edited.
+         * If a row mapping to the record (@data-id matching the record's id or
+         * no @data-id if the record has no id), returns it. Otherwise returns
+         * ``null``.
          *
-         * @returns {Object} fields_view_get's view section suitable for putting into form view of editable rows.
+         * @param {Record} record the record to get a row for
+         * @return {jQuery|null}
          */
-        get_form_fields_view: function () {
-            // deep copy of view
-            var view = $.extend(true, {}, this.group.view.fields_view);
-            _(view.arch.children).each(function (widget) {
-                widget.attrs.nolabel = true;
-                if (widget.tag === 'button') {
-                    delete widget.attrs.string;
-                }
-            });
-            view.arch.attrs.col = 2 * view.arch.children.length;
-            return view;
-        },
-        on_row_keyup: function (e) {
-            var self = this;
-            switch (e.which) {
-            case KEY_RETURN:
-                $(e.target).blur();
-                e.preventDefault();
-                //e.stopImmediatePropagation();
-                setTimeout(function () {
-                    self.save_row().then(function (result) {
-                        if (result.created) {
-                            self.new_record();
-                            return;
-                        }
-
-                        var next_record_id,
-                            next_record = self.records.at(
-                                    self.records.indexOf(result.edited_record) + 1);
-                        if (next_record) {
-                            next_record_id = next_record.get('id');
-                            self.dataset.index = _(self.dataset.ids)
-                                    .indexOf(next_record_id);
-                        } else {
-                            self.dataset.index = 0;
-                            next_record_id = self.records.at(0).get('id');
-                        }
-                        self.edit_record(next_record_id);
-                    }, 0);
-                });
-                break;
-            case KEY_ESCAPE:
-                this.cancel_edition();
-                break;
+        get_row_for: function (record) {
+            var id;
+            var $row = this.$current.children('[data-id=' + record.get('id') + ']');
+            if ($row.length) {
+                return $row;
             }
-        },
-        render_row_as_form: function (row) {
-            var self = this;
-            return this.ensure_saved().pipe(function () {
-                var record_id = $(row).data('id');
-                var $new_row = $('<tr>', {
-                        id: _.uniqueId('oe-editable-row-'),
-                        'data-id': record_id,
-                        'class': (row ? $(row).attr('class') : ''),
-                        click: function (e) {e.stopPropagation();}
-                    })
-                    .addClass('oe_form oe_form_container')
-                    .delegate('button.oe_list_edit_row_save', 'click', function () {
-                        self.save_row();
-                    })
-                    .delegate('button', 'keyup', function (e) {
-                        e.stopImmediatePropagation();
-                    })
-                    .keyup(function () {
-                        return self.on_row_keyup.apply(self, arguments); })
-                    .keydown(function (e) { e.stopPropagation(); })
-                    .keypress(function (e) {
-                        if (e.which === KEY_RETURN) {
-                            return false;
-                        }
-                    });
-
-                if (row) {
-                    $new_row.replaceAll(row);
-                } else if (self.options.editable) {
-                    var $last_child = self.$current.children('tr:last');
-                    if (self.records.length) {
-                        if (self.options.editable === 'top') {
-                            $new_row.insertBefore(
-                                self.$current.children('[data-id]:first'));
-                        } else {
-                            $new_row.insertAfter(
-                                self.$current.children('[data-id]:last'));
-                        }
-                    } else {
-                        $new_row.prependTo(self.$current);
-                    }
-                    if ($last_child.is(':not([data-id])')) {
-                        $last_child.remove();
-                    }
-                }
-                self.edition = true;
-                self.edition_id = record_id;
-                self.dataset.index = _(self.dataset.ids).indexOf(record_id);
-                if (self.dataset.index === -1) {
-                    self.dataset.index = null;
-                }
-                self.edition_form = _.extend(new instance.web.ListEditableFormView(self.view, self.dataset, false), {
-                    $element: $new_row,
-                    editable_list: self
-                });
-                // put in $.when just in case  FormView.on_loaded becomes asynchronous
-                return $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
-                    $new_row.find('> td')
-                      .end()
-                      .find('td:last').removeClass('oe_list_field_cell').end();
-                    // pad in case of groupby
-                    _(self.columns).each(function (column) {
-                        if (column.meta) {
-                            $new_row.prepend('<td>');
-                        }
-                    });
-                    // Add column for the save, if
-                    // there is none in the list
-                    if (!self.options.deletable) {
-                        self.view.pad_columns(
-                            1, {except: $new_row});
-                    }
-
-                    self.edition_form.do_show();
-                });
-            });
-        },
-        handle_onwrite: function (source_record_id) {
-            var self = this;
-            var on_write_callback = self.view.fields_view.arch.attrs.on_write;
-            if (!on_write_callback) { return; }
-            this.dataset.call(on_write_callback, [source_record_id], function (ids) {
-                _(ids).each(function (id) {
-                    var record = self.records.get(id);
-                    if (!record) {
-                        // insert after the source record
-                        var index = self.records.indexOf(
-                            self.records.get(source_record_id)) + 1;
-                        record = new instance.web.list.Record({id: id});
-                        self.records.add(record, {at: index});
-                        self.dataset.ids.splice(index, 0, id);
-                    }
-                    self.reload_record(record);
-                });
-            });
-        },
-        /**
-         * Saves the current row, and returns a Deferred resolving to an object
-         * with the following properties:
-         *
-         * ``created``
-         *   Boolean flag indicating whether the record saved was being created
-         *   (``true`` or edited (``false``)
-         * ``edited_record``
-         *   The result of saving the record (either the newly created record,
-         *   or the post-edition record), after insertion in the Collection if
-         *   needs be.
-         *
-         * @returns {$.Deferred<{created: Boolean, edited_record: Record}>}
-         */
-        save_row: function () {
-            //noinspection JSPotentiallyInvalidConstructorUsage
-            var self = this;
-            return this.edition_form
-                .do_save(null, this.options.editable === 'top')
-                .pipe(function (result) {
-                    if (result.created && !self.edition_id) {
-                        self.records.add({id: result.result},
-                            {at: self.options.editable === 'top' ? 0 : null});
-                        self.edition_id = result.result;
-                    }
-                    var edited_record = self.records.get(self.edition_id);
-
-                    return $.when(
-                        self.handle_onwrite(self.edition_id),
-                        self.cancel_pending_edition().then(function () {
-                            $(self).trigger('saved', [self.dataset]);
-                        })).pipe(function () {
-                            return {
-                                created: result.created || false,
-                                edited_record: edited_record
-                            };
-                        });
-                });
-        },
-        /**
-         * If the current list is being edited, ensures it's saved
-         */
-        ensure_saved: function () {
-            if (this.edition) {
-                // kinda-hack-ish: if the user has entered data in a field,
-                // oe_form_dirty will be set on the form so save, otherwise
-                // discard the current (entirely empty) line
-                if (this.edition_form.$element.is('.oe_form_dirty')) {
-                    return this.save_row();
-                }
-                return this.cancel_pending_edition();
-            }
-            //noinspection JSPotentiallyInvalidConstructorUsage
-            return $.when();
-        },
-        /**
-         * Cancels the edition of the row for the current dataset index
-         */
-        cancel_edition: function () {
-            this.cancel_pending_edition();
-        },
-        /**
-         * Edits record currently selected via dataset
-         */
-        edit_record: function (record_id) {
-            this.render_row_as_form(
-                this.$current.find('[data-id=' + record_id + ']'));
-            $(this).trigger(
-                'edit',
-                [record_id, this.dataset]);
-        },
-        new_record: function () {
-            this.render_row_as_form();
-        },
-        render_record: function (record) {
-            var index = this.records.indexOf(record),
-                 self = this;
-            // FIXME: context dict should probably be extracted cleanly
-            return QWeb.render('ListView.row', {
-                columns: this.columns,
-                options: this.options,
-                record: record,
-                row_parity: (index % 2 === 0) ? 'even' : 'odd',
-                view: this.view,
-                render_cell: function () {
-                    return self.render_cell.apply(self, arguments); },
-                edited: !!this.edition_form
-            });
+            return null;
         }
-    });
-    
-    instance.web.ListEditableFormView = instance.web.FormView.extend({
-        init: function() {
-            this._super.apply(this, arguments);
-            this.rendering_engine = new instance.web.ListEditableRenderingEngine(this);
-            this.options.initial_mode = "edit";
-        },
-        renderElement: function() {}
-    });
-    
-    instance.web.ListEditableRenderingEngine = instance.web.form.FormRenderingEngineInterface.extend({
-        init: function(view) {
-            this.view = view;
-        },
-        set_fields_view: function(fields_view) {
-            this.fvg = fields_view;
-        },
-        set_tags_registry: function(tags_registry) {
-            this.tags_registry = tags_registry;
-        },
-        set_fields_registry: function(fields_registry) {
-            this.fields_registry = fields_registry;
-        },
-        render_to: function($element) {
-            var self = this;
-    
-            var xml = instance.web.json_node_to_xml(this.fvg.arch);
-            var $xml = $(xml);
-            
-            if (this.view.editable_list.options.selectable)
-                $("<td>").appendTo($element);
-                
-            $xml.children().each(function(i, el) {
-                var modifiers = JSON.parse($(el).attr("modifiers") || "{}");
-                var $td = $("<td>");
-                if (modifiers.tree_invisible === true)
-                    $td.hide();
-                var tag_name = el.tagName.toLowerCase();
-                var w;
-                if (tag_name === "field") {
-                    var name = $(el).attr("name");
-                    var key = $(el).attr('widget') || self.fvg.fields[name].type;
-                    var obj = self.view.fields_registry.get_object(key);
-                    w = new (obj)(self.view, instance.web.xml_to_json(el));
-                    self.view.register_field(w, $(el).attr("name"));
-                } else {
-                    var obj = self.tags_registry.get_object(tag_name);
-                    w = new (obj)(self.view, instance.web.xml_to_json(el));
-                }
-                w.appendTo($td);
-                $td.appendTo($element);
-            });
-            $(QWeb.render('ListView.row.save')).appendTo($element);
-        },
     });
 };

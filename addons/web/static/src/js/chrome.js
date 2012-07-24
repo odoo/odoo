@@ -135,8 +135,12 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.$element.dialog('close');
     },
     on_close: function() {
+	if (this.__tmp_dialog_destroying)
+	    return;
         if (this.dialog_options.destroy_on_close) {
+	    this.__tmp_dialog_closing = true;
             this.destroy();
+	    this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -145,6 +149,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
+        if (! this.__tmp_dialog_closing) {
+	    this.__tmp_dialog_destroying = true;
+	    this.close();
+	    this.__tmp_dialog_destroying = undefined;
+	}
         if (! this.isDestroyed()) {
             this.$element.dialog('destroy');
         }
@@ -254,7 +263,11 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    if (instance.connection.debug) {
+		this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    } else {
+		this.$element.text(_t("Loading"));
+	    }
             this.$element.show();
             this.getParent().$element.addClass('oe_wait');
         } else {
@@ -957,10 +970,12 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_login: function() {
         var self = this;
+        self.$('.oe_topbar').hide();
         self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
+        self.$('.oe_topbar').show();
         self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
