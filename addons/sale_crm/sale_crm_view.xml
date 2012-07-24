@@ -36,13 +36,14 @@
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
                     <filter string="My Sales Team(s)"
                         icon="terp-personal+"
                         domain="[('section_id.user_id','=',uid)]"
                         help="My Sales Team(s)"/>
                 </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="section_id" widget="selection" string="Sales Team"/>
+                    <field name="section_id" string="Sales Team"/>
                 </xpath>
             </field>
         </record>
