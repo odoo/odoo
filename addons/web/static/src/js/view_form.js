@@ -4579,7 +4579,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
         clickable = this.node.attrs.clickable;
-        if(clickable == 'True' || clickable == '1')
+        var result = true;
+        if(clickable == undefined) result = false;
+        if(result == true && clickable.toLowerCase() == 'true' || clickable == '1')
         {
             var elemts = this.$element.find('.oe_form_steps_item')
             _.each(elemts, function(element){
