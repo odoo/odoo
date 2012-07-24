@@ -286,6 +286,7 @@ CREATE TABLE ir_module_module (
     write_date timestamp without time zone,
     write_uid integer references res_users on delete set null,
     website character varying(256),
+    summary character varying(256),
     name character varying(128) NOT NULL,
     author character varying(128),
     url character varying(128),
