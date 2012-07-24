@@ -371,6 +371,7 @@
 </t>
 
 <t t-name="WebClient">
+    <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
             <td colspan="2" class="oe_topbar">
@@ -394,6 +395,13 @@
             </td>
         </tr>
     </table>
+    </div>
+</t>
+
+<t t-name="EmbedClient">
+    <div class="openerp">
+        <div class="oe_application"></div>
+    </div>
 </t>
 
 <t t-name="ViewManager">
@@ -622,9 +630,9 @@
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <t t-if="widget.options.import_enabled">
+        <span class="oe_alternative" t-if="widget.options.import_enabled">
             <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
-        </t>
+        </span>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -644,6 +652,7 @@
 <tr t-name="ListView.row" t-att-class="row_parity"
         t-att-data-id="record.get('id')"
         t-att-style="view.style_for(record)">
+    <t t-set="asData" t-value="record.toForm().data"/>
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 
@@ -655,23 +664,26 @@
         <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
     <t t-foreach="columns" t-as="column">
-        <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
+        <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
+        <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe_list_field_cell' + (align ? ' oe_number' : '')
-                         + (column.tag === 'button' ? ' oe_button' : '')"
-            t-att-data-field="column.id">
-            <t t-raw="render_cell(record, column)"/>
-        </td>
+            t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
+            t-att-data-field="column.id"
+            ><t t-raw="render_cell(record, column)"/></td>
     </t>
     <td t-if="options.deletable" class='oe_list_record_delete' width="1">
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
 
-<t t-name="ListView.row.save">
-    <td>
-        <button class='oe_i oe_list_edit_row_save' type='button' name='save'/>
-    </td>
+<t t-extend="ListView.buttons">
+    <t t-jquery="button.oe_list_add" t-operation="after">
+        <button class="oe_button oe_list_save oe_highlight"
+                type="button">Save</button>
+    </t>
+    <t t-jquery="a.oe_list_button_import" t-operation="after">
+        <a href="#" class="oe_bold oe_list_discard">discard</a>
+    </t>
 </t>
 
 <t t-name="FormView">
@@ -948,7 +960,7 @@
             <span class="oe_form_m2o_follow"/>
         </t>
         <t t-if="!widget.get('effective_readonly')">
-            <a href="#" class="oe_m2o_cm_button oe_e oe_right">/</a>
+            <a href="#" tabindex="-1" class="oe_m2o_cm_button oe_e oe_right">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -1468,8 +1480,11 @@
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
-    <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_button oe_selectcreatepopup-search-close">Cancel</button>
+    <t t-if="! widget.options.disable_multiple_selection">
+        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+        or
+    </t>
+    <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! multi_select">
@@ -1479,7 +1494,7 @@
         <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
         <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
     </t>
-    <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
+    or <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
@@ -1487,7 +1502,7 @@
          missing columns
      -->
     <t t-jquery="&gt; :last" t-operation="after">
-        <td t-if="edited and !options.deletable" class="oe_list_padding"/>
+        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
     </t>
 </t>
 
