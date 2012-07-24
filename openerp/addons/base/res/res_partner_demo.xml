@@ -118,14 +118,14 @@
             <field name="zip">1300</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
-            <field name="email">s.l@agrolait.be</field>
+            <field name="email">info@agrolait.com</field>
             <field name="phone">+32 10 588 558</field>
             <field name="website">www.agrolait.com</field>
         </record>
         <record id="res_partner_3" model="res.partner">
             <field name="name">China Export</field>
             <field name="supplier">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_15')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_13'), ref('res_partner_category_15')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Shanghai</field>
             <field name="zip">200000</field>
@@ -190,7 +190,7 @@
             <field name="zip">75016</field>
             <field model="res.country" name="country_id" search="[('name','=','France')]"/>
             <field name="street">45, Rue du Palais</field>
-            <field name="email">a.g@wealthyandsons.com</field>
+            <field name="email">email@wealthyandsons.com</field>
             <field name="website">www.wealthyandsons.com/</field>
         </record>
 
@@ -250,7 +250,7 @@
 
         <record id="res_partner_12" model="res.partner">
             <field name="name">Camptocamp</field>
-            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_4')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="customer">1</field>
             <field name="is_company">1</field>
@@ -313,7 +313,6 @@
             <field eval="[(6, 0, [ref('res_partner_category_16'), ref('res_partner_category_11')])]" name="category_id"/>
             <field name="city">São Paulo</field>
             <field name="zip">01060-324</field>
-            <field name="email"></field>
             <field name="street">Rua Dom Carlos, 1073</field>
             <field name="phone">+55 11 2402 2045</field>
             <field model="res.country" name="country_id" search="[('code','ilike','br')]"/>
