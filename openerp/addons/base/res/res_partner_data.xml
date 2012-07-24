@@ -44,6 +44,19 @@
             <field name="bank_type_id" ref="bank_normal"/>
             <field name="required" eval="0"/>
         </record>
+
+        <!-- Bank Details  -->
+        <record model="res.partner.bank" id="main_partner_bank">
+            <field name="state">bank</field>
+            <field name="name">Company account</field>
+            <field name="acc_number">ABC132934</field>
+            <field name="partner_id" ref="main_partner"/>
+            <field name="company_id" ref="main_company"/>
+            <field name="bank" ref="res_bank_1"/>
+            <field name="bank_name">Reserve</field>
+            <field eval="1" name="footer"/>
+        </record>
+
         <!--
         Resource: res.request.link
         -->
