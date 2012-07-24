@@ -68,46 +68,60 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
             self.mnths.append('None')
         return [mnth_name]
 
+    def get_salary(self, form, emp_id,emp_salary):
+        emp_obj = self.pool.get('hr.employee')
+        emp_ids = form.get('employee_ids', [])
+        date_from = form.get('start_date', [])
+        date_to = form.get('end_date', [])
+        employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
+        self.cr.execute("select to_char(date_to,'mm-yyyy') as to_date ,sum(pl.total) as net \
+                             from hr_payslip_line as pl \
+                             left join hr_payslip as p on pl.slip_id = p.id \
+                             left join hr_employee as emp on emp.id = p.employee_id \
+                             left join resource_resource as r on r.id = emp.resource_id  \
+                            where pl.code = 'NET' and p.state = 'done' and p.employee_id in %s \
+                            group by r.name, p.date_to,emp.id",(tuple([emp_id]),))
+        salary = self.cr.fetchall()
+        salary1 = dict(salary)
+        total = 0.0
+        total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        cnt = 1
+        for month in self.mnths:
+            if month <> 'None':
+                if len(month) != 7:
+                    month = '0' + str(month)
+                if month in salary1 and salary1[month]:
+                    emp_salary.append(salary1[month])
+                    total += salary1[month]
+                    total_mnths[cnt] = total_mnths[cnt] + salary1[month]
+                else:
+                    emp_salary.append(0.00)
+            else:
+                emp_salary.append('')
+                total_mnths[cnt] = ''
+            cnt = cnt + 1
+        return emp_salary,total,total_mnths
+
     def get_employee(self, form):
-        list1 = []
-        list = []
+        emp_salary = []
+        salary_list = []
         total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
         employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
         cnt = 1
+
         for emp_id in employees:
-            list1.append(emp_id.name)
+            emp_salary.append(emp_id.name)
             total = 0.0
-            for mnth in self.mnths:
-                if mnth <> 'None':
-                    if len(mnth) != 7:
-                        mnth = '0' + str(mnth)
-                    self.cr.execute('''select  sum(pl.total) 
-                            from hr_payslip_line as pl \
-                            left join hr_payslip as p on pl.slip_id = p.id \
-                            left join hr_employee as emp on emp.id = p.employee_id \
-                            left join resource_resource as r on r.id = emp.resource_id  \
-                            where pl.code = 'NET' and p.state = 'done' and p.employee_id  = ''' + str(emp_id.id) + ''' \
-                            and to_char(date_to,'mm-yyyy') like '%'''+ mnth +'''%'
-                            group by r.name, p.date_to,emp.id''')
-                    salary = self.cr.fetchall()
-                    if salary:
-                        list1.append(salary[0][0])
-                        total += salary[0][0]
-                        total_mnths[cnt] = total_mnths[cnt] + salary[0][0]
-                    else:
-                        list1.append(0.00)
-                else:
-                    list1.append('')
-                    total_mnths[cnt] = ''
-                cnt = cnt + 1
+            emp_salary,total,total_mnths = self.get_salary(form,emp_id.id,emp_salary)
+            emp_salary.append(total)
             cnt = 1
-            list1.append(total)
-            list.append(list1)
-            list1 = []
+            emp_salary.append(total)
+            salary_list.append(emp_salary)
+            emp_salary = []
         self.mnths_total.append(total_mnths)
-        return list
+        return salary_list
 
     def get_months_tol(self):
         return self.mnths_total
