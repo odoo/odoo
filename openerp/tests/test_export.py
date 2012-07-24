@@ -21,7 +21,7 @@ models = [
     # just relate to an integer
     ('many2one', fields.many2one('export.integer')),
     ('one2many', fields.one2many('export.one2many.child', 'parent_id')),
-    # TODO: m2m
+    ('many2many', fields.many2many('export.many2many.other'))
     # TODO: function?
     # TODO: related?
     # TODO: reference?
@@ -59,6 +59,19 @@ class One2ManyChild(orm.Model):
         return [(record.id, "%s:%s" % (self._name, record.value))
             for record in self.browse(cr, uid, ids, context=context)]
 
+class Many2ManyChild(orm.Model):
+    _name = 'export.many2many.other'
+    _module = 'base'
+    # FIXME: orm.py:1161, fix to name_get on m2o field
+    _rec_name = 'value'
+
+    _columns = {
+        'str': fields.char('unknown', size=None),
+        'value': fields.integer()
+    }
+    def name_get(self, cr, uid, ids, context=None):
+        return [(record.id, "%s:%s" % (self._name, record.value))
+            for record in self.browse(cr, uid, ids, context=context)]
 
 def setUpModule():
     openerp.tools.config['update'] = dict(base=1)
@@ -392,10 +405,10 @@ class test_o2m(CreatorCase):
             self.export(self.commands, fields=['const', 'value/value', 'value']),
             [ # completely ignores name_get request
                 [u'4', u'4', ''],
-                [u'', u'42', ''],
-                [u'', u'36', ''],
-                [u'', u'4', ''],
-                [u'', u'13', ''],
+                ['', u'42', ''],
+                ['', u'36', ''],
+                ['', u'4', ''],
+                ['', u'13', ''],
             ])
 
     def test_multiple_subfields_neighbour(self):
@@ -419,3 +432,60 @@ class test_o2m(CreatorCase):
                 [u'record4', '', u'4'],
                 [u'record5', '', u'13'],
             ])
+
+class test_m2m(CreatorCase):
+    model_name = 'export.many2many'
+    commands = [
+        (0, False, {'value': 4, 'str': 'record000'}),
+        (0, False, {'value': 42, 'str': 'record001'}),
+        (0, False, {'value': 36, 'str': 'record010'}),
+        (0, False, {'value': 4, 'str': 'record011'}),
+        (0, False, {'value': 13, 'str': 'record100'}),
+    ]
+    names = [
+        u'export.many2many.other:%d' % d['value']
+        for c, _, d in commands
+    ]
+
+    def test_empty(self):
+        self.assertEqual(
+            self.export(False),
+            [[False]])
+
+    def test_single(self):
+        self.assertEqual(
+            self.export([(0, False, {'value': 42})]),
+            # name_get result
+            [[u'export.many2many.other:42']])
+
+    def test_single_subfield(self):
+        self.assertEqual(
+            self.export([(0, False, {'value': 42})],
+                        fields=['value', 'value/value']),
+            [[u'export.many2many.other:42', u'42']])
+
+    def test_integrate_one_in_parent(self):
+        self.assertEqual(
+            self.export([(0, False, {'value': 42})],
+                        fields=['const', 'value/value']),
+            [[u'4', u'42']])
+
+    def test_multiple_records(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value/value']),
+            [
+                [u'4', u'4'],
+                [u'', u'42'],
+                [u'', u'36'],
+                [u'', u'4'],
+                [u'', u'13'],
+            ])
+
+    def test_multiple_records_name(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value']),
+            [[
+                u'4', u','.join(self.names)
+            ]])
+
+    # essentially same as o2m, so boring
