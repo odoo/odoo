@@ -257,7 +257,7 @@ instance.web.Loading = instance.web.Widget.extend({
             // Block UI after 3s
             this.long_running_timer = setTimeout(function () {
                 self.blocked_ui = true;
-                $.blockUI();
+                instance.web.blockUI();
             }, 3000);
         }
 
@@ -276,7 +276,7 @@ instance.web.Loading = instance.web.Widget.extend({
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
                 this.blocked_ui = false;
-                $.unblockUI();
+                instance.web.unblockUI();
             }
             this.$element.fadeOut();
             this.getParent().$element.removeClass('oe_wait');
@@ -287,7 +287,7 @@ instance.web.Loading = instance.web.Widget.extend({
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
-        this.unblockUIFunction = $.unblockUI;
+        this.unblockUIFunction = instance.web.unblockUI;
         $.validator.addMethod('matches', function (s, _, re) {
             return new RegExp(re).test(s);
         }, _t("Invalid database name"));
@@ -354,16 +354,16 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
      * from unblocking the UI
      */
     blockUI: function () {
-        $.blockUI();
-        $.unblockUI = function () {};
+        instance.web.blockUI();
+        instance.web.unblockUI = function () {};
     },
     /**
      * Reinstates $.unblockUI so third parties can play with blockUI, and
      * unblocks the UI
      */
     unblockUI: function () {
-        $.unblockUI = this.unblockUIFunction;
-        $.unblockUI();
+        instance.web.unblockUI = this.unblockUIFunction;
+        instance.web.unblockUI();
     },
     /**
      * Displays an error dialog resulting from the various RPC communications
