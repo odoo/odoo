@@ -71,19 +71,14 @@
                 <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
                 <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
                 <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
-                    
-                </group>
-                <newline/>
                 <group expand="0" string="Extended Filters...">
                     <field name="location_id" />
                     <field name="location_dest_id" />
                     <field name="categ_id"/>
                     <field name="stock_journal"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
                     <field name="date"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By...">
                     <filter name="group_partner" string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <filter name="group_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
