@@ -55,7 +55,7 @@
                 <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
                 <filter string="Posted" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
                 <group expand="0" string="Extended Filters...">
-                    <field name="journal_id" widget="selection"/>
+                    <field name="journal_id"/>
                     <field name="account_id"/>
                     <field name="pay_now"/>
                     <field name="company_id" groups="base.group_multi_company"/>

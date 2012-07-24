@@ -7,7 +7,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_users_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="after">
+                <xpath expr="//field[@name='company_ids']" position="after">
                     <filter name="no_share" string="Regular users only (no share user)" icon="terp-partner"
                         domain="[('share','=',False)]"/>
                 </xpath>
@@ -32,8 +32,7 @@
                 <search string="Groups">
                     <field name="name" string="Group"/>
                     <field name="share"/>
-                    <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner"
-                        domain="[('share','=',False)]"/>
+                    <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner" domain="[('share','=',False)]"/>
                 </search>
             </field>
         </record>

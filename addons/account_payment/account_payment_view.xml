@@ -214,7 +214,7 @@
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
                     <field name="reference" string="Payment Order"/>
-                    <field name="mode" widget='selection'/>
+                    <field name="mode"/>
                     <field name="state"/>
                     <field name="date_done"/>
                     <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
