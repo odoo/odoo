@@ -135,8 +135,12 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.$element.dialog('close');
     },
     on_close: function() {
+	if (this.__tmp_dialog_destroying)
+	    return;
         if (this.dialog_options.destroy_on_close) {
+	    this.__tmp_dialog_closing = true;
             this.destroy();
+	    this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -145,6 +149,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
+        if (! this.__tmp_dialog_closing) {
+	    this.__tmp_dialog_destroying = true;
+	    this.close();
+	    this.__tmp_dialog_destroying = undefined;
+	}
         if (! this.isDestroyed()) {
             this.$element.dialog('destroy');
         }
@@ -254,7 +263,11 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    if (instance.connection.debug) {
+		this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    } else {
+		this.$element.text(_t("Loading"));
+	    }
             this.$element.show();
             this.getParent().$element.addClass('oe_wait');
         } else {
@@ -856,44 +869,24 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
 });
 
-instance.web.WebClient = instance.web.Widget.extend({
-    init: function(parent) {
-        var self = this;
+instance.web.Client = instance.web.Widget.extend({
+    init: function(parent, origin) {
+        instance.client = instance.webclient = this;
         this._super(parent);
-        instance.webclient = this;
-        this.querystring = '?' + jQuery.param.querystring();
-        this._current_state = null;
-    },
-    _get_version_label: function() {
-        if (this.session.openerp_entreprise) {
-            return 'OpenERP';
-        } else {
-            return _t("OpenERP - Unsupported/Community Version");
-        }
-    },
-    set_title: function(title) {
-        title = _.str.clean(title);
-        var sep = _.isEmpty(title) ? '' : ' - ';
-        document.title = title + sep + 'OpenERP';
+        this.origin = origin;
     },
     start: function() {
         var self = this;
-        this.$element.addClass("openerp openerp_webclient_container");
-        if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
-            $("body").addClass("kitten-mode-activated");
-            if ($.blockUI) {
-                $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
-            }
-        }
-        this.session.session_bind().then(function() {
-            self.destroy_content();
+        return instance.connection.session_bind(this.origin).then(function() {
+            var $e = $(QWeb.render(self._template, {}));
+            self.$element.replaceWith($e);
+            self.$element = $e;
+            self.bind_events();
             self.show_common();
-            if (!self.session.session_is_valid()) {
-                self.show_login();
-            } else {
-                self.show_application();
-            }
         });
+    },
+    bind_events: function() {
+        var self = this;
         this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
         });
@@ -925,6 +918,45 @@ instance.web.WebClient = instance.web.Widget.extend({
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
         instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        self.notification = new instance.web.Notification(this);
+        self.notification.appendTo(self.$element);
+        self.loading = new instance.web.Loading(self);
+        self.loading.appendTo(self.$element);
+        self.action_manager = new instance.web.ActionManager(self);
+        self.action_manager.appendTo(self.$('.oe_application'));
+    },
+});
+
+instance.web.WebClient = instance.web.Client.extend({
+    _template: 'WebClient',
+    init: function(parent) {
+        this._super(parent);
+        this._current_state = null;
+    },
+    start: function() {
+        var self = this;
+        return $.when(this._super()).pipe(function() {
+            if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
+                $("body").addClass("kitten-mode-activated");
+                if ($.blockUI) {
+                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
+                }
+            }
+            if (!self.session.session_is_valid()) {
+                self.show_login();
+            } else {
+                self.show_application();
+            }
+        });
+    },
+    set_title: function(title) {
+        title = _.str.clean(title);
+        var sep = _.isEmpty(title) ? '' : ' - ';
+        document.title = title + sep + 'OpenERP';
+    },
+    show_common: function() {
+        var self = this;
+        this._super();
         window.onerror = function (message, file, line) {
             self.crashmanager.on_traceback({
                 type: _t("Client Error"),
@@ -932,23 +964,18 @@ instance.web.WebClient = instance.web.Widget.extend({
                 data: {debug: file + ':' + line}
             });
         };
-        self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$element);
-        self.loading = new instance.web.Loading(self);
-        self.loading.appendTo(self.$element);
+        // TODO: deprecate and use login client action
         self.login = new instance.web.Login(self);
         self.login.on("login",self,self.show_application);
-        self.$table = $(QWeb.render("WebClient", {}));
-        self.action_manager = new instance.web.ActionManager(self);
-        self.action_manager.appendTo(self.$table.find('.oe_application'));
     },
     show_login: function() {
         var self = this;
+        self.$('.oe_topbar').hide();
         self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
-        self.$element.append(self.$table);
+        self.$('.oe_topbar').show();
         self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
@@ -960,7 +987,7 @@ instance.web.WebClient = instance.web.Widget.extend({
         self.user_menu.do_update();
         self.bind_hashchange();
         if (!self.session.openerp_entreprise) {
-            var version_label = self._get_version_label();
+            var version_label = _t("OpenERP - Unsupported/Community Version");
             self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
         }
         self.set_title();
@@ -1063,31 +1090,36 @@ instance.web.WebClient = instance.web.Widget.extend({
     }
 });
 
-instance.web.EmbeddedClient = instance.web.Widget.extend({
-    template: 'EmptyComponent',
-    init: function(parent, action_id, options) {
-        this._super(parent);
-        // TODO take the xmlid of a action instead of its id
+instance.web.EmbeddedClient = instance.web.Client.extend({
+    _template: 'EmbedClient',
+    init: function(parent, origin, dbname, login, key, action_id, options) {
+        this._super(parent, origin);
+
+        this.dbname = dbname;
+        this.login = login;
+        this.key = key;
         this.action_id = action_id;
         this.options = options || {};
-        this.am = new instance.web.ActionManager(this);
     },
     start: function() {
         var self = this;
-        this.am.appendTo(this.$element.addClass('openerp'));
-        return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
-            var action = result.result;
-            action.flags = _.extend({
-                //views_switcher : false,
-                search_view : false,
-                action_buttons : false,
-                sidebar : false
-                //pager : false
-            }, self.options, action.flags || {});
+        return $.when(this._super()).pipe(function() {
+            return instance.connection.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
+                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
+                    var action = result.result;
+                    action.flags = _.extend({
+                        //views_switcher : false,
+                        search_view : false,
+                        action_buttons : false,
+                        sidebar : false
+                        //pager : false
+                    }, self.options, action.flags || {});
 
-            self.am.do_action(action);
+                    self.action_manager.do_action(action);
+                });
+            });
         });
-    }
+    },
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {
@@ -1101,13 +1133,8 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    instance.connection.session_bind(origin).then(function () {
-        instance.connection.session_authenticate(dbname, login, key, true).then(function () {
-            var client = new instance.web.EmbeddedClient(null, action, options);
-            client.insertAfter(currentScript);
-        });
-    });
-
+    var client = new instance.web.EmbeddedClient(null, origin, dbname, login, key, action, options);
+    client.insertAfter(currentScript);
 };
 
 };

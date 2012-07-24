@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp a {
   text-decoration: none;
@@ -234,14 +234,13 @@
 .openerp.ui-dialog .ui-dialog-buttonpane {
   border-top: 1px solid #e0e0e0;
   background: #f5f7f9;
-  padding: 8px;
   margin: 0;
   -moz-border-radius: 0 0 2px 2px;
   -webkit-border-radius: 0 0 2px 2px;
   border-radius: 0 0 2px 2px;
 }
 .openerp.ui-dialog .ui-dialog-buttonpane button {
-  margin-left: 8px;
+  margin: 0;
 }
 .openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
   float: left;
@@ -1855,9 +1854,12 @@
   font-weight: bold;
   font-size: 18px;
 }
+.openerp .oe_form .oe_subtotal_footer label:after {
+  content: ":";
+}
 .openerp .oe_form .oe_subtotal_footer label.oe_subtotal_footer_separator {
   font-weight: bold !important;
-  padding: 2px 8px 2px 0px !important;
+  padding: 2px 11px 2px 0px !important;
 }
 .openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
   font-weight: normal;
@@ -2061,15 +2063,6 @@
 .openerp .oe_form .oe_form_field_with_button.oe_no_button > .oe_button {
   display: none;
 }
-.openerp .oe_form .oe_form_field_with_button:not(.oe_no_button) input {
-  border-right: none;
-  -webkit-border-top-right-radius: 0px;
-  -webkit-border-bottom-right-radius: 0px;
-  -moz-border-radius-topright: 0px;
-  -moz-border-radius-bottomright: 0px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
 .openerp .oe_form .oe_form_field_with_button:not(.oe_no_button) > .oe_button {
   float: right;
   -moz-border-radius: 0;
@@ -2148,8 +2141,11 @@
 }
 .openerp .oe_form_field_many2one span.oe_m2o_drop_down_button {
   position: absolute;
-  top: 1px;
+  top: 2px;
   right: 0px;
+}
+.openerp .oe_form_field_many2one .oe_m2o_cm_button {
+  line-height: 14px;
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
@@ -2184,8 +2180,32 @@
   height: auto;
   line-height: 16px;
 }
+.openerp .oe_form_field_one2many .oe_list_buttons.oe_editing .oe_list_save {
+  visibility: hidden;
+}
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
+}
+.openerp .oe_list_buttons .oe_list_save, .openerp .oe_list_buttons .oe_list_discard {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_add, .openerp .oe_list_buttons.oe_editing .oe_list_button_import {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_save {
+  display: inline-block;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_discard {
+  display: inline;
+}
+.openerp .oe_list {
+  position: relative;
+}
+.openerp .oe_list .oe_form .oe_form_field {
+  width: auto;
+  position: absolute;
+  margin: 0 !important;
+  padding: 0;
 }
 .openerp .oe_list_content {
   width: 100%;
@@ -2244,6 +2264,7 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {
   padding: 3px 6px;
+  white-space: pre-line;
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell progress {
   width: 100%;
@@ -2293,9 +2314,6 @@
 }
 .openerp .oe_list_content .numeric input {
   text-align: right;
-}
-.openerp .oe_list_content .oe_list_edit_row_save:before {
-  content: "S";
 }
 .openerp .oe_trad_field.touched {
   border: 1px solid green !important;
@@ -2422,6 +2440,19 @@
 }
 .kitten-mode-activated > * {
   opacity: 0.7;
+}
+.kitten-mode-activated .oe_footer a {
+  background-image: url(http://www.risacher.com/la-rache/zfiles/la-rache.png);
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+  display: inline-block;
+  height: 15px;
+  width: 80px;
+  vertical-align: top;
+}
+.kitten-mode-activated .oe_footer a span {
+  display: none;
 }
 
 div.ui-widget-overlay {
