@@ -1101,19 +1101,20 @@ $sheet-max-width: 860px
                 border-right: 5px solid transparent
                 @include opacity()
 
+        .oe_searchview_search
+            @include text-to-icon("r", #a3a3a3)
+            @include box-shadow(none)
+            @include radius(0)
+            position: absolute
+            left: 3px
+            top: 1px
+            padding: 0
+            border: none
+            background: transparent
+
         .oe_searchview_facets
             min-height: 22px
-            &:before
-                color: #ccc
-                font-family: "mnmliconsRegular"
-                content: "r"
-                font-size: 130%
-                display: inline
-                position: relative
-                left: 6px
-                top: 2px
-                color: #a3a3a3
-                padding-right: 4px
+            margin-left: 15px
             *
                 vertical-align: top
                 display: inline-block

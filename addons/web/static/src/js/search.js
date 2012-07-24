@@ -330,6 +330,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 });
         }
 
+        // Launch a search on clicking the oe_searchview_search button
+        this.$element.on('click', 'button.oe_searchview_search', function (e) {
+            e.stopImmediatePropagation();
+            self.do_search();
+        });
+
         this.$element.on('keydown',
                 '.oe_searchview_input, .oe_searchview_facet', function (e) {
             switch(e.which) {
