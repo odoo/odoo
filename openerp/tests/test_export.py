@@ -20,7 +20,8 @@ models = [
     ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux")])),
     # just relate to an integer
     ('many2one', fields.many2one('export.integer')),
-    # TODO: m2o, o2m, m2m
+    ('one2many', fields.one2many('export.one2many.child', 'parent_id')),
+    # TODO: m2m
     # TODO: function?
     # TODO: related?
     # TODO: reference?
@@ -30,17 +31,34 @@ for name, field in models:
         '_name': 'export.%s' % name,
         '_module': 'base',
         '_columns': {
+            'const': fields.integer(),
             'value': field
         },
+        '_defaults': {'const': 4},
         'name_get': (lambda self, cr, uid, ids, context=None:
             [(record.id, "%s:%s" % (self._name, record.value))
              for record in self.browse(cr, uid, ids, context=context)])
-
     }
     NewModel = type(
         'Export%s' % ''.join(section.capitalize() for section in name.split('.')),
         (orm.Model,),
         attrs)
+
+class One2ManyChild(orm.Model):
+    _name = 'export.one2many.child'
+    _module = 'base'
+    # FIXME: orm.py:1161, fix to name_get on m2o field
+    _rec_name = 'value'
+
+    _columns = {
+        'parent_id': fields.many2one('export.one2many'),
+        'str': fields.char('unknown', size=None),
+        'value': fields.integer()
+    }
+    def name_get(self, cr, uid, ids, context=None):
+        return [(record.id, "%s:%s" % (self._name, record.value))
+            for record in self.browse(cr, uid, ids, context=context)]
+
 
 def setUpModule():
     openerp.tools.config['update'] = dict(base=1)
@@ -251,6 +269,8 @@ class test_datetime(CreatorCase):
             [[u'2011-11-07 21:05:48']])
     def test_tz(self):
         """ Export ignores the timezone and always exports to UTC
+
+        .. note:: on the other hand, export uses user lang for name_get
         """
         self.assertEqual(
             self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}),
@@ -304,3 +324,98 @@ class test_m2o(CreatorCase):
         self.assertEqual(
             self.export(integer_id, fields=['value/id']),
             [[external_id]])
+
+class test_o2m(CreatorCase):
+    model_name = 'export.one2many'
+    commands = [
+        (0, False, {'value': 4, 'str': 'record1'}),
+        (0, False, {'value': 42, 'str': 'record2'}),
+        (0, False, {'value': 36, 'str': 'record3'}),
+        (0, False, {'value': 4, 'str': 'record4'}),
+        (0, False, {'value': 13, 'str': 'record5'}),
+    ]
+    names = [
+        u'export.one2many.child:%d' % d['value']
+        for c, _, d in commands
+    ]
+
+    def test_empty(self):
+        self.assertEqual(
+            self.export(False),
+            [[False]])
+
+    def test_single(self):
+        self.assertEqual(
+            self.export([(0, False, {'value': 42})]),
+            # name_get result
+            [[u'export.one2many.child:42']])
+
+    def test_single_subfield(self):
+        self.assertEqual(
+            self.export([(0, False, {'value': 42})],
+                        fields=['value', 'value/value']),
+            [[u'export.one2many.child:42', u'42']])
+
+    def test_integrate_one_in_parent(self):
+        self.assertEqual(
+            self.export([(0, False, {'value': 42})],
+                        fields=['const', 'value/value']),
+            [[u'4', u'42']])
+
+    def test_multiple_records(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value/value']),
+            [
+                [u'4', u'4'],
+                [u'', u'42'],
+                [u'', u'36'],
+                [u'', u'4'],
+                [u'', u'13'],
+            ])
+
+    def test_multiple_records_name(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value']),
+            [[
+                u'4', u','.join(self.names)
+            ]])
+
+    def test_multiple_records_with_name_before(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value', 'value/value']),
+            [[ # exports sub-fields of very first o2m
+                u'4', u','.join(self.names), u'4'
+            ]])
+
+    def test_multiple_records_with_name_before(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value/value', 'value']),
+            [ # completely ignores name_get request
+                [u'4', u'4', ''],
+                [u'', u'42', ''],
+                [u'', u'36', ''],
+                [u'', u'4', ''],
+                [u'', u'13', ''],
+            ])
+
+    def test_multiple_subfields_neighbour(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['const', 'value/str','value/value']),
+            [
+                [u'4', u'record1', u'4'],
+                ['', u'record2', u'42'],
+                ['', u'record3', u'36'],
+                ['', u'record4', u'4'],
+                ['', u'record5', u'13'],
+            ])
+
+    def test_multiple_subfields_separated(self):
+        self.assertEqual(
+            self.export(self.commands, fields=['value/str', 'const', 'value/value']),
+            [
+                [u'record1', u'4', u'4'],
+                [u'record2', '', u'42'],
+                [u'record3', '', u'36'],
+                [u'record4', '', u'4'],
+                [u'record5', '', u'13'],
+            ])
