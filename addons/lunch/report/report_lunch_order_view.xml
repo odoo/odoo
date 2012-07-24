@@ -25,19 +25,14 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Lunch Order Analysis">
-                <group>
-                    <field name="date"/>
-                </group>
-                <newline/>
+                <field name="date"/>
                 <group expand="0" string="Group By...">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Box" icon="terp-dolar" context="{'group_by':'box_name'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
-                <newline/>
             </search>
         </field>
     </record>
