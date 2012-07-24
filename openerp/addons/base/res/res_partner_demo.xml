@@ -156,12 +156,12 @@
             <field name="name">Epic Technologies</field>
             <field eval="[(6, 0, [ref('res_partner_category_2')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="city">Birmingham</field>
-            <field name="zip">B46 3AG</field>
-            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
-            <field name="street">99 Cheriton Rd</field>
+            <field model="res.country" name="country_id" search="[('code','=','us')]"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
+            <field name="zip">60610</field>
+            <field name="city">Chicago</field>
             <field name="email">epic@tech.info</field>
-            <field name="phone">+44 121 690 4596</field>
+            <field name="phone">+1 312 349 2324</field>
             <field name="website">www.epic-tech.info//</field>
         </record>
 

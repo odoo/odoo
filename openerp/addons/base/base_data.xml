@@ -1061,13 +1061,12 @@
             <field name="company_id" eval="None"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
-            <field model="res.country" name="country_id" search="[('code','=','us')]"/>
             <field name="street">81 Academy Avenue</field>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
-            <field name="zip">60610</field>
-            <field name="city">Chicago</field>
+            <field name="city">Birmingham</field>
+            <field name="zip">B46 3AG</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
+            <field name="phone">+44 121 690 4596</field>
             <field name="email">info@unisol.com</field>
-            <field name="phone">+1 312 349 2324</field>
             <field name="website">www.universalsolutions.com</field>
         </record>
 
@@ -1090,8 +1089,9 @@
         <record id="main_company" model="res.company">
             <field name="name">Universal Solutions</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_footer1">Web: http://www.universalsolutions.com - Tel: +1 312 349 2324</field>
-            <field name="rml_footer2">IBAN: IBAN Number - SWIFT: SWIFTCODE - VAT: Company vat number</field>
+            <field name="rml_header1">Your problems, Our Solutions.</field>
+            <field name="rml_footer1">Web: http://www.universalsolutions.com - Tel: +44 121 690 4596</field>
+            <field name="rml_footer2">IBAN: XX12 3456 7890 1234 5678 - SWIFT: SWIFTCODE - VAT: Company vat number</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
