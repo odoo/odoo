@@ -851,7 +851,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                         window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
-                modal: true, width: 960, title: _t("About")});
+                modal: true, width: 580, height: 290, resizable: false, title: _t("About")});
         });
     },
 });

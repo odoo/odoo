@@ -256,6 +256,29 @@ $sheet-max-width: 860px
                 &:hover
                     color: black
                     text-decoration: none
+        .oe_about
+            background-color: white
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+            @include radius(0 0 2px 2px)
+            a
+                color: #8A89BA
+                &:hover
+                    text-decoration: underline
+            .oe_logo
+                margin-left: -6px
+            .oe_bottom
+                position: absolute
+                top: 50%
+                left: 0
+                right: 0
+                bottom: 0
+                text-shadow: 0 1px 1px #999999
+                @include vertical-gradient(#b41616, #600606)
+                color: #eee
+                padding: 0 16px
+                @include radius(0 0 2px 2px)
+                a
+                    color: #eee
 
     &.ui-dialog.oe_act_window
         .ui-dialog-content
@@ -567,7 +590,7 @@ $sheet-max-width: 860px
     // }}}
     // Login {{{
     .oe_login
-        background: url("/web/static/src/img/pattern.png") repeat
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         text-align: center
         font-size: 14px
         height: 100%
