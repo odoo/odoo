@@ -196,7 +196,7 @@
                     <notebook>
                         <page string="Invoice">
                             <field context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line">
-                                <tree string="Invoice lines">
+                                <tree string="Invoice lines" editable="bottom">
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id,parent.partner_id,parent.type,parent.fiscal_position,account_id)" groups="base.group_account_user"/>
                                     <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
@@ -345,7 +345,24 @@
 
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
+                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
+                                <tree string="Invoice Lines" editable="bottom">
+                                    <field name="invoice_line_tax_id" invisible="1"/>
+                                    <field name="product_id"
+                                        on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
+                                    <field name="name"/>
+                                    <field name="account_id" groups="account.group_account_user"
+                                        domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]"
+                                        on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
+                                    <field name="quantity"/>
+                                    <field name="uos_id" groups="product.group_uom"/>
+                                    <field name="uos_id" groups="product.group_uom"
+                                        on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="price_subtotal"/>
+                                </tree>
+                            </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed"/>
                                 <div>
