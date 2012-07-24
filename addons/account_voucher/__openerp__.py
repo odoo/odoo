@@ -23,6 +23,7 @@
     "name" : "eInvoicing & Payments",
     "version" : "1.0",
     "author" : 'OpenERP SA',
+    "summary": 'Supplier & Customer Invoices, Payments',
     "description": """
 Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
 ====================================================================================================================================

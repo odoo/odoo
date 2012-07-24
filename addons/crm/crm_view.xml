@@ -2,10 +2,16 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1"
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
             groups="base.group_sale_manager,base.group_sale_salesman"/>
 
-        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities" 
+        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
             parent="base.menu_base_config" sequence="80" groups="base.group_sale_manager"/>
 
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
