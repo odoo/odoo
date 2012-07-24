@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    <!-- Fiscal Position Templates -->
+
+    <record id="fiscal_position_national_customers" model="account.fiscal.position.template">
+        <field name="name">Portugal</field>
+        <field name="chart_template_id" ref="pt_chart_template"/>
+    </record>
+
+    <record id="fiscal_position_foreign_eu" model="account.fiscal.position.template">
+        <field name="name">Europa</field>
+        <field name="chart_template_id" ref="pt_chart_template"/>
+    </record>
+
+    <record id="fiscal_position_foreign_other" model="account.fiscal.position.template">
+        <field name="name">Extra-comunitário</field>
+        <field name="chart_template_id" ref="pt_chart_template"/>
+    </record>
+
+    </data>
+</openerp>

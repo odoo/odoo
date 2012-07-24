@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="account_tax_code_template_tax_paid" model="account.tax.code.template">
+            <field name="code">TP</field>
+            <field name="name">Tax Paid</field>
+            <field name="info">Tax Paid</field>
+            <field name="sign" eval="1"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+
+        <record id="account_tax_code_template_tp_21" model="account.tax.code.template">
+            <field name="code">TP21</field>
+            <field name="name">TP21</field>
+            <field name="info">TP21</field>
+            <field name="sign" eval="1"/>
+            <field name="parent_id" eval="account_tax_code_template_tax_paid"/>
+            <field name="notprintable" eval="False"/>
+        </record>
+
+    </data>
+</openerp>
