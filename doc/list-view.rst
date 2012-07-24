@@ -87,34 +87,37 @@ List view edition is an extension to the base listview providing the
 capability of inline record edition by delegating to an embedded form
 view.
 
-.. todo::
+Editability status
+++++++++++++++++++
 
-    cleanup options and settings for editability configuration. Right
-    now there are:
+The editability status of a list view can be queried through the
+:js:func:`~openerp.web.ListView.editable` method, will return a falsy
+value if the listview is not currently editable.
 
-    ``defaults.editable``
+The editability status is based on three flags:
 
-        ``null``, ``"top"`` or ``"bottom"``, generally broken and
-        useless
+``tree/@editable``
 
-    ``context.set_editable``
+    If present, can be either ``"top"`` or ``"bottom"``. Either will
+    make the list view editable, with new records being respectively
+    created at the top or at the bottom of the view.
 
-        forces ``options.editable`` to ``"bottom"``
+``context.set_editable``
 
-    ``view.arch.attrs.editable``
+    Boolean flag extracted from a search context (during the
+    :js:func:`~openerp.web.ListView.do_search`` handler), ``true``
+    will make the view editable (from the top), ``false`` or the
+    absence of the flag is a noop.
 
-        same as ``defaults.editable``, but applied separately (after
-        reloading the view), if absent delegates to
-        ``options.editable`` which may have been set previously.
+``defaults.editable``
 
-    ``options.read_only``
+    Like ``tree/@editable``, one of absent (``null``)), ``"top"`` or
+    ``"bottom"``, fallback for the list view if none of the previous
+    two flags are set.
 
-        force options.editable to false, or something?
-
-        .. note:: can probably be replaced by cancelling ``edit:before``
-
-    and :js:func:`~openerp.web.ListView.set_editable` which
-    ultimately behaves weird-as-fuck-ly.
+These three flags can only *make* a listview editable, they can *not*
+override a previously set flag. To do that, a listview user should
+instead cancel :ref:`the edit:before event <listview-edit-before>`.
 
 The editable list view module adds a number of methods to the list
 view, on top of implementing the :js:class:`EditorDelegate` protocol:
@@ -218,6 +221,14 @@ view provides a number of dedicated events to its lifecycle.
           be set. If the ``cancel`` attribute is set, the view will
           abort its current behavior as soon as possible, and rollback
           any state modification.
+
+          Generally speaking, an event should only be cancelled (by
+          setting the ``cancel`` flag to ``true``), uncancelling an
+          event is undefined as event handlers are executed on a
+          first-come-first-serve basis and later handlers may
+          re-cancel an uncancelled event.
+
+.. _listview-edit-before:
 
 ``edit:before`` *cancellable*
 

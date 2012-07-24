@@ -12,6 +12,8 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
 
+            this._force_editability = null;
+            this._context_editable = false;
             this.editor = this.make_editor();
             // Stores records of {field, cell}, allows for re-rendering fields
             // depending on cell state during and after resize events
@@ -37,6 +39,11 @@ openerp.web.list_editable = function (instance) {
                 }
             });
 
+            this.on('edit:before', this, function (event) {
+                if (!self.editable() || self.editor.is_editing()) {
+                    event.cancel = true;
+                }
+            });
             this.on('edit:after', this, function () {
                 self.$element.add(self.$buttons).addClass('oe_editing');
             });
@@ -62,26 +69,18 @@ openerp.web.list_editable = function (instance) {
         do_edit: function (index, id, dataset) {
             _.extend(this.dataset, dataset);
         },
-        /**
-         * Sets editability status for the list, based on defaults, view
-         * architecture and the provided flag, if any.
-         *
-         * @param {Boolean} [force] forces the list to editability. Sets new row edition status to "bottom".
-         */
-        set_editable: function (force) {
-            // TODO: fix handling of editability status to be simpler & clearer & more coherent
-            // If ``force``, set editability to bottom
-            // otherwise rely on view default
-            // view' @editable is handled separately as we have not yet
-            // fetched and processed the view at this point.
-            this.options.editable = (
-                    ! this.options.read_only && ((force && "bottom") || this.defaults.editable));
+        editable: function () {
+            if (this.fields_view.arch.attrs.editable || this._context_editable) {
+                return true;
+            }
+
+            return this.options.editable;
         },
         /**
          * Replace do_search to handle editability process
          */
         do_search: function(domain, context, group_by) {
-            this.set_editable(context['set_editable']);
+            this._context_editable = !!context.set_editable;
             this._super.apply(this, arguments);
         },
         /**
@@ -89,7 +88,7 @@ openerp.web.list_editable = function (instance) {
          * as an editable row at the top or bottom of the list)
          */
         do_add_record: function () {
-            if (this.options.editable) {
+            if (this.editable()) {
                 this.$element.find('table:first').show();
                 this.$element.find('.oe_view_nocontent').remove();
                 this.start_edition();
@@ -103,9 +102,8 @@ openerp.web.list_editable = function (instance) {
                 this.editor.destroy();
             }
             // tree/@editable takes priority on everything else if present.
-            this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
-            if (this.options.editable) {
+            if (this.editable()) {
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
                     .off('click', '.oe_list_save')
@@ -210,6 +208,12 @@ openerp.web.list_editable = function (instance) {
                         self.resize_fields();
                         return record.attributes;
                     });
+                }).fail(function () {
+                    // if the start_edition event is cancelled and it was a
+                    // creation, remove the newly-created empty record
+                    if (!record.get('id')) {
+                        self.records.remove(record);
+                    }
                 });
             });
         },
@@ -379,7 +383,7 @@ openerp.web.list_editable = function (instance) {
             return this.reload_record(record);
         },
         prepends_on_create: function () {
-            return this.options.editable === 'top';
+            return this.editable() === 'top';
         },
         setup_events: function () {
             var self = this;
@@ -701,7 +705,7 @@ openerp.web.list_editable = function (instance) {
 
     instance.web.ListView.List.include(/** @lends instance.web.ListView.List# */{
         row_clicked: function (event) {
-            if (!this.options.editable) {
+            if (!this.view.editable()) {
                 return this._super.apply(this, arguments);
             }
             var record_id = $(event.currentTarget).data('id');
