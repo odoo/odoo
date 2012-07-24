@@ -89,6 +89,26 @@
             <field name="context">{'search_default_purchase_id': active_id,'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
         </record>
+        
+        <record id="act_purchase_order_2_stock_picking_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="stock.view_picking_in_tree"/>
+            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
+        </record>
+        
+        <record id="act_purchase_order_2_stock_picking_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_in_form"/>
+            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
+        </record>
+        
+        <record id="act_purchase_order_2_stock_picking_calendar" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
+        </record>
 
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
             <field name="name">Purchase Picking Inherited</field>
