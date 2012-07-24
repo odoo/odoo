@@ -404,10 +404,11 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     }
 });
 
+
 /**
  * Event Bus used to bind events scoped in the current instance
  */
-instance.web.bus = new (instance.web.Class.extend(instance.web.EventDispatcherMixin, {
+instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, {
     init: function() {
         instance.web.EventDispatcherMixin.init.call(this, parent);
         var self = this;
@@ -425,7 +426,8 @@ instance.web.bus = new (instance.web.Class.extend(instance.web.EventDispatcherMi
             });
         });
     }
-}))();
+})
+instance.web.bus = new instance.web.Bus();
 
 /** OpenERP Translations */
 instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{

@@ -37,11 +37,12 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 delete(action.attrs.width);
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
-                self.rpc('/web/action/load', {
-                    action_id: parseInt(action.attrs.name, 10)
-                }, function(result) {
-                    self.on_load_action(result, column_index + '_' + action_index, action.attrs);
-                });
+                var action_id = _.str.toNumber(action.attrs.name);
+                if (!_.isNaN(action_id)) {
+                    self.rpc('/web/action/load', {action_id: action_id}, function(result) {
+                        self.on_load_action(result, column_index + '_' + action_index, action.attrs);
+                    });
+                }
             });
         });
     },
@@ -209,8 +210,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 }
             });
         }
-        if (am.inner_viewmanager) {
-            am.inner_viewmanager.on_mode_switch.add(function(mode) {
+        if (am.inner_widget) {
+            am.inner_widget.on_mode_switch.add(function(mode) {
                 var new_views = [];
                 _.each(action_orig.views, function(view) {
                     new_views[view[1] === mode ? 'unshift' : 'push'](view);
@@ -219,7 +220,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                     new_views.unshift([false, mode]);
                 }
                 action_orig.views = new_views;
-                action_orig.res_id = am.inner_viewmanager.dataset.ids[am.inner_viewmanager.dataset.index];
+                action_orig.res_id = am.inner_widget.dataset.ids[am.inner_widget.dataset.index];
                 self.do_action(action_orig);
             });
         }

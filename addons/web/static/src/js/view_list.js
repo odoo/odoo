@@ -142,7 +142,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
     },
     /**
-     * View startup method, the default behavior is to set the ``oe_listw``
+     * View startup method, the default behavior is to set the ``oe_list``
      * class on its root element and to perform an RPC load call.
      *
      * @returns {$.Deferred} loading promise
@@ -288,7 +288,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped && this.options.editable);
+                    .prop('disabled', grouped);
             this.$buttons.on('click', '.oe_list_button_import', function() {
                 self.on_sidebar_import();
                 return false;
@@ -411,20 +411,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             if (column.modifiers) {
                 var modifiers = JSON.parse(column.modifiers);
                 column.modifiers_for = function (fields) {
-                    if (!modifiers.invisible) {
-                        return {};
+                    var out = {};
+
+                    for (var attr in modifiers) {
+                        if (!modifiers.hasOwnProperty(attr)) { continue; }
+                        var modifier = modifiers[attr];
+                        out[attr] = _.isBoolean(modifier)
+                            ? modifier
+                            : domain_computer(modifier, fields);
                     }
-                    return {
-                        'invisible': domain_computer(modifiers.invisible, fields)
-                    };
+
+                    return out;
                 };
                 if (modifiers['tree_invisible']) {
                     column.invisible = '1';
                 } else {
                     delete column.invisible;
                 }
+                column.modifiers = modifiers;
             } else {
                 column.modifiers_for = noop;
+                column.modifiers = {};
             }
             return column;
         };
@@ -436,10 +443,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (grouped) {
             this.columns.unshift({
                 id: '_group', tag: '', string: _t("Group"), meta: true,
-                modifiers_for: function () { return {}; }
+                modifiers_for: function () { return {}; },
+                modifiers: {}
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
-                modifiers_for: function () { return {}; }
+                modifiers_for: function () { return {}; },
+                modifiers: {}
             });
         }
 
@@ -667,6 +676,19 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Function} callback should be called after the action is executed, if non-null
      */
     do_button_action: function (name, id, callback) {
+        this.handle_button(name, id, callback);
+    },
+    /**
+     * Base handling of buttons, can be called when overriding do_button_action
+     * in order to bypass parent overrides.
+     *
+     * This method should not be overridden.
+     *
+     * @param {String} name action name
+     * @param {Object} id id of the record the action should be called on
+     * @param {Function} callback should be called after the action is executed, if non-null
+     */
+    handle_button: function (name, id, callback) {
         var action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
@@ -911,27 +933,42 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.find(
-                        '[data-id=' + record.get('id') + ']');
+                var $row = self.$current.children(
+                    '[data-id=' + record.get('id') + ']');
                 var index = $row.data('index');
                 $row.remove();
                 self.refresh_zebra(index);
             },
             'reset': function () { return self.on_records_reset(); },
-            'change': function (event, record) {
-                var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+            'change': function (event, record, attribute, value, old_value) {
+                var $row;
+                if (attribute === 'id') {
+                    if (old_value) {
+                        throw new Error("Setting 'id' attribute on existing record "
+                            + JSON.stringify(record.attributes));
+                    }
+                    if (!_.contains(self.dataset.ids, value)) {
+                        // add record to dataset if not already in (added by
+                        // the form view?)
+                        self.dataset.ids.splice(
+                            self.records.indexOf(record), 0, value);
+                    }
+                    // Set id on new record
+                    $row = self.$current.children('[data-id=false]');
+                } else {
+                    $row = self.$current.children(
+                        '[data-id=' + record.get('id') + ']');
+                }
                 $row.replaceWith(self.render_record(record));
             },
             'add': function (ev, records, record, index) {
-                var $new_row = $('<tr>').attr({
-                    'data-id': record.get('id')
-                });
+                var $new_row = $(self.render_record(record));
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);
                 } else {
                     var previous_record = records.at(index-1),
-                        $previous_sibling = self.$current.find(
+                        $previous_sibling = self.$current.children(
                                 '[data-id=' + previous_record.get('id') + ']');
                     $new_row.insertAfter($previous_sibling);
                 }
@@ -975,11 +1012,11 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 e.stopPropagation();
             })
             .delegate('tr', 'click', function (e) {
-                e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
-                if (row_id !== undefined) {
+                if (row_id) {
+                    e.stopPropagation();
                     if (!self.dataset.select_id(row_id)) {
-                        throw "Could not find id in dataset"
+                        throw new Error("Could not find id in dataset");
                     }
                     self.row_clicked(e);
                 }
@@ -1045,7 +1082,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
                 }, this)));
-        this.pad_table_to(5);
+        this.pad_table_to(4);
     },
     pad_table_to: function (count) {
         if (this.records.length >= count ||
@@ -1139,6 +1176,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
      * @returns {String} QWeb rendering of the selected record
      */
     render_record: function (record) {
+        var self = this;
         var index = this.records.indexOf(record);
         return QWeb.render('ListView.row', {
             columns: this.columns,
@@ -1147,7 +1185,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
             view: this.view,
             render_cell: function () {
-                return this.render_cell.apply(this, arguments); }
+                return self.render_cell.apply(self, arguments); }
         });
     },
     /**
@@ -1831,7 +1869,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
      * @returns this
      */
     remove: function (record) {
-        var index = _(this.records).indexOf(record);
+        var index = this.indexOf(record);
         if (index === -1) {
             _(this._proxies).each(function (proxy) {
                 proxy.remove(record);
@@ -1847,13 +1885,42 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         return this;
     },
 
-    _onRecordEvent: function (event, record, options) {
+    _onRecordEvent: function (event) {
+        switch(event) {
         // don't propagate reset events
-        if (event === 'reset') { return; }
+        case 'reset': return;
+        case 'change:id':
+            var record = arguments[1];
+            var new_value = arguments[2];
+            var old_value = arguments[3];
+            // [change:id, record, new_value, old_value]
+            if (this._byId[old_value] === record) {
+                delete this._byId[old_value];
+                this._byId[new_value] = record;
+            }
+            break;
+        }
         this.trigger.apply(this, arguments);
     },
 
     // underscore-type methods
+    find: function (callback) {
+        var record;
+        for(var section in this._proxies) {
+            if (!this._proxies.hasOwnProperty(section)) {
+                continue
+            }
+            if ((record = this._proxies[section].find(callback))) {
+                return record;
+            }
+        }
+        for(var i=0; i<this.length; ++i) {
+            record = this.records[i];
+            if (callback(record)) {
+                return record;
+            }
+        }
+    },
     each: function (callback) {
         for(var section in this._proxies) {
             if (this._proxies.hasOwnProperty(section)) {
@@ -1878,6 +1945,46 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
     },
     indexOf: function (record) {
         return _(this.records).indexOf(record);
+    },
+    succ: function (record, options) {
+        options = options || {wraparound: false};
+        var result;
+        for(var section in this._proxies) {
+            if (!this._proxies.hasOwnProperty(section)) {
+                continue;
+            }
+            if ((result = this._proxies[section].succ(record, options))) {
+                return result;
+            }
+        }
+        var index = this.indexOf(record);
+        if (index === -1) { return null; }
+        var next_index = index + 1;
+        if (options.wraparound && (next_index === this.length)) {
+            return this.at(0);
+        }
+        return this.at(next_index);
+    },
+    pred: function (record, options) {
+        options = options || {wraparound: false};
+
+        var result;
+        for (var section in this._proxies) {
+            if (!this._proxies.hasOwnProperty(section)) {
+                continue;
+            }
+            if ((result = this._proxies[section].pred(record, options))) {
+                return result;
+            }
+        }
+
+        var index = this.indexOf(record);
+        if (index === -1) { return null; }
+        var next_index = index - 1;
+        if (options.wraparound && (next_index === -1)) {
+            return this.at(this.length - 1);
+        }
+        return this.at(next_index);
     }
 });
 Collection.include(Events);
