@@ -81,8 +81,8 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
                              left join resource_resource as r on r.id = emp.resource_id  \
                             where pl.code = 'NET' and p.state = 'done' and p.employee_id in %s \
                             group by r.name, p.date_to,emp.id",(tuple([emp_id]),))
-        salary = self.cr.fetchall()
-        salary1 = dict(salary)
+        sal = self.cr.fetchall()
+        salary = dict(sal)
         total = 0.0
         total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         cnt = 1
@@ -90,10 +90,10 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
             if month <> 'None':
                 if len(month) != 7:
                     month = '0' + str(month)
-                if month in salary1 and salary1[month]:
-                    emp_salary.append(salary1[month])
-                    total += salary1[month]
-                    total_mnths[cnt] = total_mnths[cnt] + salary1[month]
+                if month in salary and salary[month]:
+                    emp_salary.append(salary[month])
+                    total += salary[month]
+                    total_mnths[cnt] = total_mnths[cnt] + salary[month]
                 else:
                     emp_salary.append(0.00)
             else:
