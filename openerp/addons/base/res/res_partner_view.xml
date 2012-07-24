@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Sales"
+            id="menu_base_partner"
+            groups="base.group_sale_salesman"
+            sequence="30"/>
+
             <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
             <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
                 <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
 
-        <!--
-          =======================
-          Partner Titles
-          =======================
-        -->
+        <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
             <field name="name">res.partner.title.tree</field>
             <field name="model">res.partner.title</field>
@@ -70,11 +72,8 @@
         </record>
 
         <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3" groups="base.group_no_one"/>
-        <!--
-          =======================
-          Partner
-          =======================
-        -->
+
+        <!-- Partner -->
         <record id="view_partner_tree" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
@@ -101,27 +100,25 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="photo" widget='image' class="oe_avatar oe_right" height="70"/>
-                    <div class="oe_right oe_button_box" name="buttons">
-
-                    </div>
+                    <field name="photo" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
-                            <label for="name" string="Customer Name"/> 
+                            <label for="name" string="Customer Name"/>
                             (<field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
                         </div>
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
                     </div>
+                    <div class="oe_right oe_button_box" name="buttons"> </div>
 
                     <group>
                         <group>
                             <field name="parent_id"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                 attrs="{'invisible': [('is_company','=', True)]}"
-                                on_change="onchange_address(use_parent_address, parent_id)"/>, 
+                                on_change="onchange_address(use_parent_address, parent_id)"/>,
                             <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
                             <div attrs="{'invisible': [('parent_id','=', False)]}">
                                 <field class="oe_inline"
@@ -198,7 +195,7 @@
                                                                         <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
                                                                             <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
                                                                         </a>
-                                                                        
+
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -216,18 +213,24 @@
                                 <group>
                                     <field name="user_id" />
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="supplier"/>
+                                </group>
+                                <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
                                     <field name="date"/>
                                 </group>
                                 <group>
-                                    <field name="customer"/>
-                                    <field name="supplier"/>
                                     <field name="active"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="History" invisible="True"></page>
+                        <!-- The History page becomes visible as soon as there is something to display inside -->
+                        <page string="History" name="page_history" invisible="True">
+                        </page>
                         <page string="Internal Notes">
                             <field name="comment" placeholder="Internal notes about this customer..."/>
                         </page>
@@ -244,7 +247,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <field name="name" 
+                        <field name="name"
                             filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"
                             string="Partner"/>
                         <separator orientation="vertical"/>
@@ -252,7 +255,7 @@
                         <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>
                         <filter string="Companies" name="type_company" icon="terp-partner" domain="[('is_company','=',1)]"/>
                         <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>                        
+                        <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
                         <field name="category_id"/>
                         <field name="user_id"/>
@@ -430,11 +433,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_payterm_form"/>
         </record>
-        <!--
-          ======================
-          Categories
-          ======================
-        -->
+
+        <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
             <field name="name">Partner Categories</field>
             <field name="model">res.partner.category</field>
@@ -513,4 +513,3 @@
 
     </data>
 </openerp>
-

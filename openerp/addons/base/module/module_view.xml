@@ -43,7 +43,7 @@
                 <search string="Search modules">
                     <group col='10' colspan='4'>
                         <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
-                        <field name="description" string="Keywords"/>
+                        <field name="description" string="Keywords" filter_domain="['|', ('description', 'ilike', self), ('summary', 'ilike', self)]"/>
                         <separator orientation="vertical"/>
                         <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                         <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
@@ -70,6 +70,7 @@
                   <field name="icon"/>
                   <field name="name"/>
                   <field name="state"/>
+                  <field name="summary"/>
                   <templates>
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette oe_kanban_auto_height">
@@ -78,7 +79,8 @@
                         <div class="oe_module_desc">
                           <h4><a type="edit"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
-                             <field name="name"/><br/>
+                             <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
+                             <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
                           <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
                           <button t-if="installed" disabled="disabled">Installed</button>
@@ -113,36 +115,32 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module" version="7.0">
-                <header>
-                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_highlight"/>
-                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_highlight"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"
-                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
-                    <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
-                    <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
-                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="uninstalled"/>
-                </header>
                 <sheet>
-                    <div class="oe_right oe_button_box">
-                        <field name="icon_image" widget="image"/>
-                    </div>
+                    <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <h1><field name="shortdesc"/></h1>
-                        <h2><field name="category_id" class="oe_inline"/></h2>
+                        <h2 class="oe_fade"><field name="summary"/></h2>
+                        <button name="button_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
+                        <button name="button_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
+                        <button name="button_uninstall" states="installed" string="Uninstall" type="object"
+                            confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
+                        <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object"/>
+                        <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
+                        <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
                     </div>
                     <group>
+                        <group>
+                            <field name="author"/>
+                            <field name="website" widget="url"/>
+                            <field name="category_id" widget="selection"/>
+                        </group>
                         <group>
                             <field name="name"/>
                             <field name="license"/>
                             <field name="installed_version"/>
                         </group>
-                        <group>
-                            <field name="author"/>
-                            <field name="website" widget="url"/>
-                        </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Description">
                             <field name="description"/>
                         </page>
@@ -150,7 +148,9 @@
                             <group col="4">
                                 <field name="demo"/>
                                 <field name="application"/>
+                                <field name="state"/>
                             </group>
+                            <label for="dependencies_id"/>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
