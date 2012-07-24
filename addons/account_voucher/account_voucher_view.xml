@@ -52,6 +52,7 @@
                   <sheet string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="payment_rate_currency_id" invisible="1"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
@@ -209,11 +210,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-              <field name="currency" invisible="1" position="after">
-                <button name="%(action_view_account_statement_from_invoice_lines)d"
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-execute"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
-              </field>
+                </xpath>
             </field>
         </record>
 
