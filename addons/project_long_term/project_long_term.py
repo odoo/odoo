@@ -114,7 +114,7 @@ class project_phase(osv.osv):
         'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'user_force_ids': fields.many2many('res.users', string='Force Assigned Users'),
         'user_ids': fields.one2many('project.user.allocation', 'phase_id', "Assigned Users",states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]},
-            help="The ressources on the project can be computed automatically by the scheduler"),
+            help="The resources on the project can be computed automatically by the scheduler."),
         'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'), ('pending', 'Pending'), ('done', 'Done')], 'Status', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
                                   \n If the phase is over, the states is set to \'Done\'.'),
