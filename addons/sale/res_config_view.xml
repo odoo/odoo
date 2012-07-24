@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <div name="config_sale" position="before">
+                <div name="customer feature" position="before">
                     <separator string="Invoicing Process"/>
                     <group>
                         <label for="id" string="Invoicing Process"/>
@@ -50,28 +50,26 @@
                     </group>
                     <field name="module_project_timesheet" invisible="1"/>
                     <field name="module_project_mrp" invisible="1"/>
-                    <separator string="Quotations and Sales Orders"/>
-                    <group>
-                        <label for="id" string="Customer Features"/>
-                        <div>
-                            <div>
-                                <field name="group_sale_delivery_address" class="oe_inline"/>
-                                <label for="group_sale_delivery_address"/>
-                            </div>
-                            <div>
-                                <field name="group_sale_pricelist" class="oe_inline"/>
-                                <label for="group_sale_pricelist"/>
-                            </div>
-                            <div>
-                                <field name="module_sale_journal" class="oe_inline"/>
-                                <label for="module_sale_journal"/>
-                            </div>
-                            <div name="module_warning">
-                                <field name="module_warning" class="oe_inline"/>
-                                <label for="module_warning"/>
-                            </div>
-                        </div>
-                    </group>
+                </div>
+                <div name="Customer Features" position="inside">
+                    <div>
+                        <field name="group_sale_delivery_address" class="oe_inline"/>
+                        <label for="group_sale_delivery_address"/>
+                    </div>
+                    <div>
+                        <field name="group_sale_pricelist" class="oe_inline"/>
+                        <label for="group_sale_pricelist"/>
+                    </div>
+                    <div>
+                        <field name="module_sale_journal" class="oe_inline"/>
+                        <label for="module_sale_journal"/>
+                    </div>
+                    <div name="module_warning">
+                        <field name="module_warning" class="oe_inline"/>
+                        <label for="module_warning"/>
+                    </div>
+                </div>
+                <group name="Sale" position="before">
                     <group>
                         <label for="id" string="Product Features"/>
                         <div>
@@ -89,23 +87,22 @@
                             </div>
                         </div>
                     </group>
-                    <group>
-                        <label for="id" string="Sale Features"/>
-                        <div>
-                            <div>
-                                <field name="group_multiple_shops" class="oe_inline"/>
-                                <label for="group_multiple_shops"/>
-                            </div>
-                            <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}">
-                                <field name="default_picking_policy" class="oe_inline"/>
-                                <label for="default_picking_policy"/>
-                            </div>
-                            <div name="module_sale_margin">
-                                <field name="module_sale_margin" class="oe_inline"/>
-                                <label for="module_sale_margin"/>
-                            </div>
-                        </div>
-                    </group>
+                </group>
+                <div name="Sale Features" position="inside">
+                    <div>
+                        <field name="group_multiple_shops" class="oe_inline"/>
+                        <label for="group_multiple_shops"/>
+                    </div>
+                    <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}">
+                        <field name="default_picking_policy" class="oe_inline"/>
+                        <label for="default_picking_policy"/>
+                    </div>
+                    <div name="module_sale_margin">
+                        <field name="module_sale_margin" class="oe_inline"/>
+                        <label for="module_sale_margin"/>
+                    </div>
+                </div>
+                <div name="customer feature" position="after">
                     <separator string="Contracts Management"/>
                     <div style="color:grey">
                         Use contract to be able to manage your services with multiple invoicing as part of the same contract with your customer
