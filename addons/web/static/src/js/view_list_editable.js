@@ -202,6 +202,8 @@ openerp.web.list_editable = function (instance) {
                             return;
                         }
 
+                        // FIXME: need better way to get the field back from bubbling (delegated) DOM events somehow
+                        field.$element.attr('data-fieldname', field_name);
                         self.fields_for_resize.push({field: field, cell: cell});
                     }, options).pipe(function () {
                         $recordRow.addClass('oe_edition');
@@ -399,18 +401,20 @@ openerp.web.list_editable = function (instance) {
          *
          * @private
          * @param {String} [next_record='succ'] method to call on the records collection to get the next record to edit
+         * @param {Object} [options]
+         * @param {String} [options.focus_field]
          * @return {*}
          */
-        _next: function (next_record) {
+        _next: function (next_record, options) {
             next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
-                return self.start_edition(
-                    self.records[next_record](
-                        saveInfo.record, {wraparound: true}));
+                var record = self.records[next_record](
+                        saveInfo.record, {wraparound: true});
+                return self.start_edition(record, options);
             });
         },
         keyup_ENTER: function () {
@@ -440,25 +444,34 @@ openerp.web.list_editable = function (instance) {
             }
             return selection.start;
         },
-        keydown_UP: function (e) {
+        /**
+         * @param DOMEvent event
+         * @param {String} record_direction direction to move into to get the next record (pred | succ)
+         * @param {Function} is_valid_move whether the edition should be moved to the next record
+         * @private
+         */
+        _key_move_record: function (event, record_direction, is_valid_move) {
             if (!this.editor.is_editing('edit')) { return $.when(); }
             // FIXME: assumes editable widgets are input-type elements
-            var index = this._text_cursor(e.target);
+            var index = this._text_cursor(event.target);
             // If selecting or not at the start of the input
-            if (index === null || index !== 0) { return $.when(); }
+            if (!is_valid_move(event.target, index)) { return $.when(); }
 
-            e.preventDefault();
-            return this._next('pred');
+            event.preventDefault();
+            var source_field = $(event.target).closest('[data-fieldname]')
+                    .attr('data-fieldname');
+            return this._next(record_direction, {focus_field: source_field});
+
+        },
+        keydown_UP: function (e) {
+            return this._key_move_record(e, 'pred', function (el, index) {
+                return index === 0;
+            });
         },
         keydown_DOWN: function (e) {
-            if (!this.editor.is_editing('edit')) { return $.when(); }
-            // FIXME: assumes editable widgets are input-type elements
-            var index = this._text_cursor(e.target);
-            // If selecting or not at the end of the input
-            if (index === null || index !== e.target.value.length) { return $.when(); }
-
-            e.preventDefault();
-            return this._next();
+            return this._key_move_record(e, 'succ', function (el, index) {
+                return index === el.value.length;
+            });
         },
         keydown_TAB: function (e) {
             var form = this.editor.form;
