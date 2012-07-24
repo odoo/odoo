@@ -28,8 +28,8 @@
     "category" : "Marketing",
     "depends" : ['mail'],
     "description": """
-Email Templating (simplified version of the original Power Email by Openlabs)
-=============================================================================
+Email Templating (simplified version of the original Power Email by Openlabs).
+==============================================================================
 
 Lets you design complete email templates related to any OpenERP document (Sale
 Orders, Invoices and so on), including sender, recipient, subject, body (HTML and
@@ -54,8 +54,7 @@ These email templates are also at the heart of the marketing campaign system
 campaigns on any OpenERP document.
 
 Technical note: only the templating system of the original Power Email by
-Openlabs was kept
-
+Openlabs was kept.
     """,
     "data": [
         'wizard/email_template_preview_view.xml',
