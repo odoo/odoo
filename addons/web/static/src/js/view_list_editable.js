@@ -473,6 +473,52 @@ openerp.web.list_editable = function (instance) {
                 return index === el.value.length;
             });
         },
+
+        keydown_LEFT: function (e) {
+            // If the cursor is at the beginning of the field
+            var source_field = $(e.target).closest('[data-fieldname]')
+                    .attr('data-fieldname');
+            var index = this._text_cursor(e.target);
+            if (index !== 0) { return $.when(); }
+
+            var fields_order = this.editor.form.fields_order;
+            var field_index = _(fields_order).indexOf(source_field);
+
+            // Look for the closest visible form field to the left
+            var fields = this.editor.form.fields;
+            var field;
+            do {
+                if (--field_index < 0) { return $.when(); }
+
+                field = fields[fields_order[field_index]];
+            } while (!field.$element.is(':visible'));
+
+            // and focus it
+            field.focus();
+            return $.when();
+        },
+        keydown_RIGHT: function (e) {
+            // same as above, but with cursor at the end of the field and
+            // looking for new fields at the right
+            var source_field = $(e.target).closest('[data-fieldname]')
+                    .attr('data-fieldname');
+            var index = this._text_cursor(e.target);
+            if (index !== e.target.value.length) { return $.when(); }
+
+            var fields_order = this.editor.form.fields_order;
+            var field_index = _(fields_order).indexOf(source_field);
+
+            var fields = this.editor.form.fields;
+            var field;
+            do {
+                if (++field_index >= fields_order.length) { return $.when(); }
+
+                field = fields[fields_order[field_index]];
+            } while (!field.$element.is(':visible'));
+
+            field.focus();
+            return $.when();
+        },
         keydown_TAB: function (e) {
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
