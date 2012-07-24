@@ -104,7 +104,7 @@
                 assert shipment_procurement.location_id.id == order.location_src_id.id, "Location is not correspond in procurement."
                 assert shipment_procurement.procure_method == order_line.product_id.procure_method, "Procure method is not correspond in procurement."
 -
-  I change production qty with 3 PC Assemble + 2GB RAM.
+  I change production qty with 3 PC Assemble SC349.
 -
   !python {model: change.production.qty}: |
     context.update({'active_id': ref('mrp_production_test1')})
