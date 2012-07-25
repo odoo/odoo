@@ -864,7 +864,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                         window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
-                modal: true, width: 960, title: _t("About")});
+                modal: true, width: 580, height: 290, resizable: false, title: _t("About")});
         });
     },
 });
@@ -903,7 +903,7 @@ instance.web.Client = instance.web.Widget.extend({
                     var doc_width = $(document).width();
                     var offset = $menu.offset();
                     var menu_width = $menu.width();
-                    var x = doc_width - offset.left - menu_width - 15;
+                    var x = doc_width - offset.left - menu_width - 2;
                     if (x < 0) {
                         $menu.offset({ left: offset.left + x }).width(menu_width);
                     }

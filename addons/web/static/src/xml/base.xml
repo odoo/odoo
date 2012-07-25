@@ -329,21 +329,20 @@
     </span>
 </t>
 <t t-name="UserMenu.about">
-    <div>
-        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developer mode</a>
-        <h1 style="margin:0;">OpenERP</h1>
-        <h3 style="margin:15px 0;padding:0;">Version <t t-esc="version_info.version"/></h3>
-        <p>
-            Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
-            OpenERP is a trademark of the <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP SA Company</a>.
-        </p>
-        <p>
-            Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a>
-        </p>
-        <p>
-            For more information visit <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP.com</a>
-        </p>
+
+    <div class="oe_about">
+      <a class="oe_activate_debug_mode oe_right" href="?debug">Activate the developer mode</a>
+      <img class="oe_logo" src="/web/static/src/img/logo2.png"/>
+      <h3>Version <t t-esc="version_info.version"/></h3>
+
+      <div class="oe_bottom">
+        <p>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
+            OpenERP is a trademark of the <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP SA Company</a>.</p>
+        <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a></p>
+        <p>For more information visit <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP.com</a></p>
+      </div>
     </div>
+
 </t>
 <t t-name="UserMenu.password">
     <form name="change_password_form" method="POST">
@@ -1409,8 +1408,8 @@
 <div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
     <h4>Add to Dashboard</h4>
     <form>
-         <input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/>
-         <button class="oe_apply" type="submit">save</button>
+        <p><input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/></p>
+        <button class="oe_apply" type="submit">Save</button>
     </form>
 </div>
 <t t-name="SearchView.addtodashboard.selection">
