@@ -23,15 +23,17 @@
     'name'      : 'Account Analytic Defaults',
     'version'   : '1.0',
     "category": 'Accounting & Finance',
-    'description': """Set default values for your analytic accounts
-Allows to automatically select analytic accounts based on criterions:
-=====================================================================
+    'description': """
+Set default values for your analytic accounts.
+=============================================
 
-* Product
-* Partner
-* User
-* Company
-* Date
+Allows to automatically select analytic accounts based on criterions:
+---------------------------------------------------------------------
+    * Product
+    * Partner
+    * User
+    * Company
+    * Date
     """,
     'author'    : 'OpenERP SA',
     'website'   : 'http://www.openerp.com',

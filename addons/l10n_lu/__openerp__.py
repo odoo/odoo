@@ -28,7 +28,7 @@
 This is the base module to manage the accounting chart for Luxembourg.
 ======================================================================
 
-    * the KLUWER Chart of Accounts,
+    * the KLUWER Chart of Accounts
     * the Tax Code Chart for Luxembourg
     * the main taxes used in Luxembourg""",
     'author': 'OpenERP SA',

@@ -25,17 +25,26 @@
     "category": 'Hidden/Dependency',
     'description': '''
 This module lets users enter the banking details of Partners in the RIB format (French standard for bank accounts details).
-RIB Bank Accounts can be entered in the "Accounting" tab of the Partner form by specifying the account type "RIB". The four standard RIB fields will then become mandatory:
-- Bank Code
-- Office Code
-- Account number
-- RIB key
-As a safety measure, OpenERP will check the RIB key whenever a RIB is saved, and will refuse to record the data if the key is incorrect. Please bear in mind that this can only happen when the user presses the "save" button, for example on the Partner Form.
-Since each bank account may relate to a Bank, users may enter the RIB Bank Code in the Bank form - it will the pre-fill the Bank Code on the RIB when they select the Bank. 
-To make this easier, this module will also let users find Banks using their RIB code.
+===========================================================================================================================
 
-The module base_iban can be a useful addition to this module, because French banks are now progressively adopting the international IBAN format instead of the RIB format.
-The RIB and IBAN codes for a single account can be entered by recording two Bank Accounts in OpenERP: the first with the type "RIB", the second with the type "IBAN". 
+RIB Bank Accounts can be entered in the "Accounting" tab of the Partner form by specifying
+the account type "RIB". The four standard RIB fields will then become mandatory:
+    - Bank Code
+    - Office Code
+    - Account number
+    - RIB key
+As a safety measure, OpenERP will check the RIB key whenever a RIB is saved, and
+will refuse to record the data if the key is incorrect. Please bear in mind that
+this can only happen when the user presses the "save" button, for example on the
+Partner Form. Since each bank account may relate to a Bank, users may enter the
+RIB Bank Code in the Bank form - it will the pre-fill the Bank Code on the RIB
+when they select the Bank. To make this easier, this module will also let users
+find Banks using their RIB code.
+
+The module base_iban can be a useful addition to this module, because French banks
+are now progressively adopting the international IBAN format instead of the RIB format.
+The RIB and IBAN codes for a single account can be entered by recording two Bank
+Accounts in OpenERP: the first with the type "RIB", the second with the type "IBAN". 
 ''',
     'author' : u'Numérigraphe SARL',
     'depends': ['account', 'base_iban'],

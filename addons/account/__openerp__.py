@@ -29,25 +29,23 @@ Accounting and Financial Management.
 
 Financial and accounting module that covers:
 --------------------------------------------
-General accountings
-Cost / Analytic accounting
-Third party accounting
-Taxes management
-Budgets
-Customer and Supplier Invoices
-Bank statements
-Reconciliation process by partner
+    * General Accounting
+    * Cost/Analytic accounting
+    * Third party accounting
+    * Taxes management
+    * Budgets
+    * Customer and Supplier Invoices
+    * Bank statements
+    * Reconciliation process by partner
 
 Creates a dashboard for accountants that includes:
 --------------------------------------------------
-* List of Customer Invoice to Approve
-* Company Analysis
-* Graph of Aged Receivables
-* Graph of Treasury
+    * List of Customer Invoice to Approve
+    * Company Analysis
+    * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
-grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_voucher.
+The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) for a particular
+financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
