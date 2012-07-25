@@ -366,8 +366,6 @@ class account_asset_depreciation_line(osv.osv):
         currency_obj = self.pool.get('res.currency')
         created_move_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
-                can_close = True
             depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -419,6 +417,8 @@ class account_asset_depreciation_line(osv.osv):
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
+            if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.asset_id.value_residual):
+               can_close = True
             if can_close:
                 asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)
         return created_move_ids
