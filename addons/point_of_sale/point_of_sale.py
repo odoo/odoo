@@ -1253,9 +1253,9 @@ class product_product(osv.osv):
         'to_weight' : False,
     }
 
-    def add_ean13(self, cr, uid, ids, context):
+    def edit_ean(self, cr, uid, ids, context):
         return {
-            'name': _('Return Products'),
+            'name': "Edit Ean",
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',

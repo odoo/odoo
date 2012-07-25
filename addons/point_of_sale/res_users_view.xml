@@ -22,8 +22,11 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Point Of Sale">
-                    <field name="ean13" />
-                    <field name="pos_config" />
+                    <group>
+                        <field name="pos_config" />
+                        <field name="ean13" />
+                        <button name="edit_ean" type="object" string="Edit" />
+                    </group>
                 </page>
             </notebook>
         </field>
