@@ -20,6 +20,7 @@
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
+        "static/lib/spinjs/spin.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
@@ -33,6 +34,7 @@
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
+        "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
@@ -60,6 +62,7 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
+        "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [
         "static/src/xml/*.xml",

@@ -274,7 +274,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
-        $.blockUI();
+        instance.web.blockUI();
         self.rpc("/web/session/eval_domain_and_context", {
             contexts: [action.context],
             domains: []
@@ -284,7 +284,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
-                complete: $.unblockUI,
+                complete: instance.web.unblockUI,
                 success: function(){
                     if (!self.dialog && on_closed) {
                         on_closed();
@@ -657,32 +657,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         this.$element.find('.oe_debug_view').change(this.on_debug_changed);
         this.$element.addClass("oe_view_manager_" + (this.action.target || 'current'));
-
-        if (this.action.help && !this.flags.low_profile) {
-            var Users = new instance.web.DataSet(self, 'res.users'),
-                $tips = this.$element.find('.oe_view_manager_menu_tips');
-            $tips.delegate('blockquote button', 'click', function() {
-                var $this = $(this);
-                //noinspection FallthroughInSwitchStatementJS
-                switch ($this.attr('name')) {
-                case 'disable':
-                    Users.write(self.session.uid, {menu_tips:false});
-                case 'hide':
-                    $this.closest('blockquote').hide();
-                    self.session.hidden_menutips[self.action.id] = true;
-                }
-            });
-            if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips']).then(function(users) {
-                    var user = users[0];
-                    if (!(user && user.id === self.session.uid)) {
-                        return;
-                    }
-                    $tips.find('blockquote').toggle(user.menu_tips);
-                });
-            }
-        }
-
         return manager_ready;
     },
     on_debug_changed: function (evt) {
@@ -867,7 +841,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else {
                 self.do_attachement_update(self.dataset, self.model_id);
             }
-            $.unblockUI();
+            instance.web.unblockUI();
         });
     },
     start: function() {
@@ -1006,7 +980,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
-            $.blockUI();
+            instance.web.blockUI();
         }
     },
     on_attachment_delete: function(e) {
@@ -1100,11 +1074,13 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
                     sup.call(self);
+                    // desactivated because it created an exception, plus it does not seem very useful
+                    /*
                     if (field) {
                         var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
                         self.$element.scrollTo($field_input);
                         $field_input.focus();
-                    }
+                    }*/
                 });
             } else {
                 sup.call(self);
@@ -1372,7 +1348,9 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     if (typeof(node) === 'string') {
         return sindent + node;
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
-        throw("Node a json node");
+        throw new Error(
+            _.str.sprintf("Node [%s] is not a JSONified XML node",
+                          JSON.stringify(node)));
     }
     for (var attr in node.attrs) {
         var vattr = node.attrs[attr];

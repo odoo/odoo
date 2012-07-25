@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1448,20 +1448,31 @@
   filter: alpha(opacity=50);
   opacity: 0.5;
 }
+.openerp .oe_searchview .oe_searchview_search {
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+.openerp .oe_searchview .oe_searchview_search:before {
+  font: 21px "mnmliconsRegular";
+  content: "r";
+  color: #a3a3a3;
+}
 .openerp .oe_searchview .oe_searchview_facets {
   min-height: 22px;
-}
-.openerp .oe_searchview .oe_searchview_facets:before {
-  color: #cccccc;
-  font-family: "mnmliconsRegular";
-  content: "r";
-  font-size: 130%;
-  display: inline;
-  position: relative;
-  left: 6px;
-  top: 2px;
-  color: #a3a3a3;
-  padding-right: 4px;
+  margin-left: 15px;
 }
 .openerp .oe_searchview .oe_searchview_facets * {
   vertical-align: top;
@@ -2220,8 +2231,32 @@
   height: auto;
   line-height: 16px;
 }
+.openerp .oe_form_field_one2many .oe_list_buttons.oe_editing .oe_list_save, .openerp .oe_form_field_many2many .oe_list_buttons.oe_editing .oe_list_save {
+  visibility: hidden;
+}
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
+}
+.openerp .oe_list_buttons .oe_list_save, .openerp .oe_list_buttons .oe_list_discard {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_add, .openerp .oe_list_buttons.oe_editing .oe_list_button_import {
+  display: none;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_save {
+  display: inline-block;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_discard {
+  display: inline;
+}
+.openerp .oe_list {
+  position: relative;
+}
+.openerp .oe_list .oe_form .oe_form_field {
+  width: auto;
+  position: absolute;
+  margin: 0 !important;
+  padding: 0;
 }
 .openerp .oe_list_content {
   width: 100%;
@@ -2280,9 +2315,7 @@
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {
   padding: 3px 6px;
-}
-.openerp .oe_list_content > tbody > tr > td.oe_list_field_cell progress {
-  width: 100%;
+  white-space: pre-line;
 }
 .openerp .oe_list_content > tbody > tr > td > button, .openerp .oe_list_content > tbody > tr > th > button {
   border: none;
@@ -2329,9 +2362,6 @@
 }
 .openerp .oe_list_content .numeric input {
   text-align: right;
-}
-.openerp .oe_list_content .oe_list_edit_row_save:before {
-  content: "S";
 }
 .openerp .oe_trad_field.touched {
   border: 1px solid green !important;
