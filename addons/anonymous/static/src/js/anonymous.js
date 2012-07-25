@@ -36,7 +36,7 @@ openerp.anonymous = function(instance) {
                 var p = self.getParent();
                 var am = p.action_manager;
                 am.do_action({type:'ir.actions.client', tag:'login'});
-                am.client_widget.on('login', p, p.show_application);
+                am.inner_widget.on('login', p, p.show_application);
             });
         }
     });

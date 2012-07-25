@@ -9,7 +9,7 @@ openerp.signup = function(instance) {
                 var am = p.action_manager;
                 am.do_action({
                     type:'ir.actions.act_window',
-                    res_model: 'signup.wizard',
+                    res_model: 'signup.signup',
                     views: [[false, 'form']],
                     target: 'new',
                     name: 'Sign Up'

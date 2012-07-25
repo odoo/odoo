@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record id="signup_wizard_form_view" model="ir.ui.view">
-            <field name="name">signup.wizard.form</field>
-            <field name="model">signup.wizard</field>
+        <record id="signup_form_view" model="ir.ui.view">
+            <field name="name">signup.signup.form</field>
+            <field name="model">signup.signup</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Signup" version="7.0">
                     <field name="state" invisible="1"/> 
-               		<group colspan="4" states="draft,missmatch">
+                    <group colspan="4" states="draft,missmatch">
                         <field name="name" required="1"/>
                         <field name="email" required="1"/>
-		                <field name="pw" required='1' on_change="onchange_pw(pw,cpw)"/>
-		                <field name="cpw" required='1' on_change="onchange_pw(pw,cpw)"/>
+                        <field name="password" required='1' on_change="onchange_pw(password,password_confirmation)"/>
+                        <field name="password_confirmation" required='1' on_change="onchange_pw(password,password_confirmation)"/>
                         <group colspan="4" states="missmatch">
                             <div>Passwords missmatch</div>
                         </group>
                         <group colspan="2" col="1">
-                            <button string="Sign Up" name="signup" icon="gtk-connect" attrs="{'readonly': [('state', '=', 'missmatch')]}" type="object"/>
+                            <button string="Sign Up" name="signup" attrs="{'readonly': [('state', '=', 'missmatch')]}" type="object"/>
                         </group>
-		            </group>
+                    </group>
                     <group colspan="4" states="done" col="1">
                         <div>You can now login.</div>
                         <button special="cancel" string="Close"/>
@@ -28,10 +28,10 @@
             </field>
         </record>
 
-        <record id="action_reset" model="ir.actions.act_window">
-            <field name="name">Reset Password</field>
+        <record id="signup_action" model="ir.actions.act_window">
+            <field name="name">signup.signup</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">signup.wizard</field>
+            <field name="res_model">signup.signup</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

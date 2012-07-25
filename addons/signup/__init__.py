@@ -1,2 +1,2 @@
-import signup_wizard
 import res_config
+import signup

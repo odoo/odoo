@@ -1,6 +1,6 @@
 {
  'name': 'Signup',
- 'description': 'Allow users to register',
+ 'description': 'Allow users to sign up',
  'author': 'OpenERP SA',
  'version': '1.0',
  'category': 'Tools',
@@ -8,15 +8,12 @@
  'installable': True,
  'depends': ['anonymous', 'base_setup'],
  'data': [
-    'signup_wizard.xml',
     'res_config.xml',
+    'signup.xml',
  ],
  'js': [
     'static/src/js/signup.js',
  ],
- #'css': [
- #    'static/src/css/reset_password.css',
- #],
  'qweb': [
      'static/src/xml/signup.xml',
  ],
