@@ -147,7 +147,7 @@ class hr_holidays(osv.osv):
         'holiday_type': 'employee'
     }
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category"),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
@@ -202,7 +202,7 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave, because it\'s not in draft state!'))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
@@ -379,7 +379,7 @@ class hr_holidays(osv.osv):
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("The %s request has been <b>created</b> and is waiting confirmation")
+                        _("The %s request has been <b>created</b> and is waiting confirmation.")
                         % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
         return True
     

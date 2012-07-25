@@ -533,7 +533,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !.', ['state']),
+        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
     ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
@@ -545,7 +545,7 @@ class hr_timesheet_line(osv.osv):
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
             if att.sheet_id and att.sheet_id.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You can not modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
         return True
 
 hr_timesheet_line()
@@ -616,7 +616,7 @@ class hr_attendance(osv.osv):
         res = super(hr_attendance,self).create(cr, uid, vals, context=context)
         if 'sheet_id' in context:
             if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
-                raise osv.except_osv(_('UserError'), _('You cannot enter an attendance ' \
+                raise osv.except_osv(_('UserError !'), _('You cannot enter an attendance ' \
                         'date outside the current timesheet dates!'))
         return res
 
@@ -636,7 +636,7 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             for attendance in self.browse(cr, uid, ids, context=context):
                 if context['sheet_id'] != attendance.sheet_id.id:
-                    raise osv.except_osv(_('UserError'), _('You cannot enter an attendance ' \
+                    raise osv.except_osv(_('UserError !'), _('You cannot enter an attendance ' \
                             'date outside the current timesheet dates!'))
         return res
 

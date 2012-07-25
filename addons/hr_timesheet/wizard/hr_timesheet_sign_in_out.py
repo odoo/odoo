@@ -74,7 +74,7 @@ class hr_so_project(osv.osv_memory):
         res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'], context=context)
 
         if not res['product_uom_id']:
-            raise osv.except_osv(_('UserError'), _('No cost unit defined for this employee!'))
+            raise osv.except_osv(_('UserError !'), _('Please define cost unit for this employee!'))
         up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour,False, res['product_uom_id'])['value']
 
         res['name'] = data['info']
@@ -129,7 +129,7 @@ class hr_si_project(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if not emp_id:
-            raise osv.except_osv(_('UserError'), _('No employee defined for your user!'))
+            raise osv.except_osv(_('UserError !'), _('Please define employee for your user!'))
         return False
 
     def check_state(self, cr, uid, ids, context=None):
