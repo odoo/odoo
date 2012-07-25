@@ -428,7 +428,7 @@ class purchase_order(osv.osv):
             journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
-                    _('Define purchase journal for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+                    _('Define purchase journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
 
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
@@ -438,7 +438,7 @@ class purchase_order(osv.osv):
                     if not acc_id:
                         acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
                     if not acc_id:
-                        raise osv.except_osv(_('Error !'), _('Define expense account for this company: "%s" (id:%d)') % (po_line.product_id.name, po_line.product_id.id,))
+                        raise osv.except_osv(_('Error !'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
                 else:
                     acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
                 fpos = order.fiscal_position or False
