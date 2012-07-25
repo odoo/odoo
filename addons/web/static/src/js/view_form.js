@@ -33,6 +33,14 @@ instance.web.form.FieldManagerMixin = {
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
+/**
+ * Properties:
+ *      - mode: always "view" or "edit". Used to switch the view between page (view) and
+ *      form (edit) mode. Depending what is indicated in the dataset, the view can still
+ *      switch to create mode if needed.
+ *      - actual_mode: always "view", "edit" or "create". Read-only property. Determines
+ *      the real mode used by the view.
+ */
 instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerMixin, {
     /**
      * Indicates that this view is not searchable, and thus that no search
@@ -82,6 +90,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.__blur_timeout = null;
         this.rendering_engine = new instance.web.form.FormRenderingEngine(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
+        this.on("change:mode", this, this._check_mode);
+        this.set({mode: "view"});
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -90,6 +100,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
         this.$element.off('.formBlur');
         this._super();
+    },
+    /**
+     * Reactualize actual_mode.
+     */
+    _check_mode: function(options) {
+        options = options || {};
+        var mode = this.get("mode");
+        if (mode === "edit" && ! this.datarecord.id)
+            mode = "create";
+        this.set({actual_mode: mode}, options);
     },
     on_loaded: function(data) {
         var self = this;
@@ -149,8 +169,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
             ]);
         }
-        this.on("change:mode", this, this.switch_mode);
-        this.set({mode: this.options.initial_mode});
+        this.on("change:actual_mode", this, this.switch_mode);
+        this.set({mode: this.options.initial_mode}, {silent: true});
+        this._check_mode({silent: true});
+        this.switch_mode();
         this.has_been_loaded.resolve();
         return $.when();
     },
@@ -300,6 +322,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
         this.datarecord = record;
+        this._check_mode();
         this.set({ 'title' : record.id ? record.name : "New record" });
 
         if (this.qweb) {
@@ -576,9 +599,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
-    switch_mode: function() {
+    switch_mode: function(source, options) {
         var self = this;
-        if(this.get("mode") == "view") {
+        if(this.get("actual_mode") === "view") {
             self.$element.removeClass('oe_form_editable').addClass('oe_form_readonly');
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
@@ -957,7 +980,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.fields_view.fields[field_name];
     },
     is_create_mode: function() {
-        return !this.datarecord.id;
+        return this.get("actual_mode") === "create";
     },
     open_translate_dialog: function(field) {
         return this._super(field);
