@@ -93,12 +93,6 @@
             <field name="view_id" ref="crm_case_form_view_oppor"/>
             <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
-        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_graph">
-            <field name="sequence" eval="4"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="crm_case_graph_view_opportunity"/>
-            <field name="act_window_id" ref="relate_partner_opportunities"/>
-        </record>
 
         <!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">

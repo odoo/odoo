@@ -37,7 +37,7 @@
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
           <field name="name">Opportunities</field>
           <field name="res_model">crm.lead</field>
-          <field name="view_mode">kanban,tree,form,graph,calendar</field>
+          <field name="view_mode">kanban,tree,form,calendar</field>
           <field name="domain">[('type','=','opportunity')]</field>
           <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
           <field name="view_id" eval="False"/>
@@ -65,13 +65,6 @@ You and your team(s) will be able to plan meetings and phone calls from opportun
           <field name="sequence" eval="2"/>
           <field name="view_mode">form</field>
           <field name="view_id" ref="crm_case_form_view_oppor"/>
-          <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
-     </record>
-
-     <record model="ir.actions.act_window.view" id="action_crm_tag_graph_view_oppor11">
-          <field name="sequence" eval="4"/>
-          <field name="view_mode">graph</field>
-          <field name="view_id" ref="crm_case_graph_view_opportunity"/>
           <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
      </record>
 
