@@ -68,12 +68,15 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
             self.mnths.append('None')
         return [mnth_name]
 
-    def get_salary(self, form, emp_id,emp_salary):
+    def get_salary(self, form, emp_id, emp_salary, total_mnths):
+#       Get salary of the employee
+
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
         date_from = form.get('start_date', [])
         date_to = form.get('end_date', [])
         employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
+
         self.cr.execute("select to_char(date_to,'mm-yyyy') as to_date ,sum(pl.total) as net \
                              from hr_payslip_line as pl \
                              left join hr_payslip as p on pl.slip_id = p.id \
@@ -84,8 +87,8 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         sal = self.cr.fetchall()
         salary = dict(sal)
         total = 0.0
-        total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         cnt = 1
+
         for month in self.mnths:
             if month <> 'None':
                 if len(month) != 7:
@@ -109,14 +112,11 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
         employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
-        cnt = 1
 
         for emp_id in employees:
             emp_salary.append(emp_id.name)
             total = 0.0
-            emp_salary,total,total_mnths = self.get_salary(form,emp_id.id,emp_salary)
-            emp_salary.append(total)
-            cnt = 1
+            emp_salary, total, total_mnths = self.get_salary(form, emp_id.id, emp_salary, total_mnths)
             emp_salary.append(total)
             salary_list.append(emp_salary)
             emp_salary = []
