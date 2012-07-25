@@ -367,7 +367,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
-                raise osv.except_osv(_('Error !'),_('You cannot confirm a purchase order without any lines.'))
+                raise osv.except_osv(_('Error !'),_('You cannot confirm a purchase order without any purchase order line.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
@@ -908,7 +908,7 @@ class purchase_order_line(osv.osv):
             uom_id = product_uom_po_id
 
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
-            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure')}
+            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
 
         res['value'].update({'product_uom': uom_id})
@@ -923,7 +923,7 @@ class purchase_order_line(osv.osv):
         if supplierinfo_ids:
             supplierinfo = product_supplierinfo.browse(cr, uid, supplierinfo_ids[0], context=context)
             if supplierinfo.product_uom.id != uom_id:
-                res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
+                res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s.') % supplierinfo.product_uom.name }
             min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
             if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
                 res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
