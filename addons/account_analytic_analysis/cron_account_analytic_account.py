@@ -13,12 +13,12 @@ MAKO_TEMPLATE = u"""Hello ${user.name},
 
 Here is a list of contracts that have to be renewed for two
 possible reasons:
-  - the end of contract date is passed
-  - the customer consumed more hours than expected
+  - the end date of the contract is passed
+  - the customer consumed more hours than included in the contract
 
-Can you contact the customer in order to sell a new or renew its contract.
-The contract has been set with a pending state, can you update the status
-of the analytic account following this rule:
+Can you contact the customer in order to sell a new or renew their contract.
+The contract has been set with a pending state, please update its status
+following this rule:
   - Set Done: if the customer does not want to renew
   - Set Open: if the customer purchased an extra contract
 
@@ -39,7 +39,7 @@ Here is the list of contracts to renew:
   % endfor
 % endfor
 
-You can use the report in the menu: Sales > Invoicing > Overdue Accounts
+You can use the report in the menu: Sales > Invoicing > Contracts To Renew
 
 Regards,
 
@@ -52,27 +52,26 @@ class analytic_account(osv.osv):
 
     def cron_account_analytic_account(self, cr, uid, context=None):
         domain = [
-            ('name', 'not ilike', 'maintenance'),
             ('partner_id', '!=', False),
-            ('user_id', '!=', False),
-            ('user_id.user_email', '!=', False),
             ('state', 'in', ('draft', 'open')),
-            '|', ('date',  '<', time.strftime('%Y-%m-%d')), ('date', '=', False),
+            '|', ('date',  '<=', time.strftime('%Y-%m-%d')),
+                 ('is_overdue_quantity', '=', True),
         ]
-
+        users = {}
         account_ids = self.search(cr, uid, domain, context=context, order='name asc')
         accounts = self.browse(cr, uid, account_ids, context=context)
-
-        users = dict()
         for account in accounts:
-            users.setdefault(account.user_id, dict()).setdefault(account.partner_id, []).append(account)
+            account.write({'state' : 'pending'})
+            if account.user_id:
+                users.setdefault(account.user_id, {}).setdefault(account.partner_id, []).append(account)
 
-            account.write({'state' : 'pending'}, context=context)
-
+        mail_message = self.pool.get('mail.message')
         for user, data in users.iteritems():
             subject = '[OPENERP] Reporting: Analytic Accounts'
             body = Template(MAKO_TEMPLATE).render_unicode(user=user, partners=data)
-            tools.email_send('noreply@openerp.com', [user.user_email, ], subject, body)
+            if user.user_email:
+                mail_message.schedule_with_attach(cr, uid, 'noreply@openerp.com', [user.user_email],
+                                                  subject, body)
 
         return True
 
