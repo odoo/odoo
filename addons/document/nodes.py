@@ -543,7 +543,7 @@ class node_dir(node_database):
                 try:
                     self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
                 except Exception,e:
-                    print "Cannot eval %s" % dfld.expr
+                    print "Cannot eval %s." % dfld.expr
                     print e
                     pass
 
@@ -640,7 +640,7 @@ class node_dir(node_database):
                 raise OSError(39, 'Directory not empty.')
             res = self.context._dirobj.unlink(cr, uid, [directory.id])
         else:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permited.')
         return res
 
     def create_child_collection(self, cr, objname):
@@ -654,7 +654,7 @@ class node_dir(node_database):
         ctx.update(self.dctx)
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permited.')
 
         #objname = uri2[-1]
         val = {
@@ -724,7 +724,7 @@ class node_dir(node_database):
             assert self.parent
 
         if self.parent != ndir_node:
-            _logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
+            _logger.debug('Cannot move dir %r from %r to %r.', self, self.parent, ndir_node)
             raise NotImplementedError('Cannot move dir to another dir.')
 
         ret = {}
@@ -832,7 +832,7 @@ class node_res_dir(node_class):
             elif isinstance(app, tuple):
                 where.append(app)
             else:
-                raise RuntimeError("incorrect domain expr: %s" % self.domain)
+                raise RuntimeError("Incorrect domain expr: %s." % self.domain)
         if self.resm_id:
             where.append(('id','=',self.resm_id))
 
@@ -923,7 +923,7 @@ class node_res_obj(node_class):
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
                 except Exception,e:
-                    print "Cannot eval %s for %s" % (expr, fld)
+                    print "Cannot eval %s for %s." % (expr, fld)
                     print e
                     pass
         else:
@@ -997,7 +997,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            _logger.warning("Who asked for %s:%s?" % (ns, prop))
+            _logger.warning("Who asks for %s:%s?" % (ns, prop))
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -1114,7 +1114,7 @@ class node_res_obj(node_class):
 
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permited.')
 
 
         val = {
@@ -1213,7 +1213,7 @@ class node_file(node_class):
 
     def open_data(self, cr, mode):
         stor = self.storage_id
-        assert stor, "No storage for file #%s" % self.file_id
+        assert stor, "No storage for file #%s." % self.file_id
         if not self.check_perms(4):
             raise IOError(errno.EPERM, "Permission denied.")
 
@@ -1314,10 +1314,10 @@ class node_file(node_class):
             dbro = doc_obj.browse(cr, self.context.uid, self.file_id, context=self.context.context)
         else:
             dbro = fil_obj
-            assert dbro.id == self.file_id, "%s != %s for %r" % (dbro.id, self.file_id, self)
+            assert dbro.id == self.file_id, "%s != %s for %r." % (dbro.id, self.file_id, self)
 
         if not dbro:
-            raise IndexError("Cannot locate doc %d", self.file_id)
+            raise IndexError("Cannot locate doc %d.", self.file_id)
 
         if (not self.parent):
             # there *must* be a parent node for this one
@@ -1327,8 +1327,8 @@ class node_file(node_class):
         ret = {}
         if ndir_node and self.parent != ndir_node:
             if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
-                _logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
-                raise NotImplementedError('Cannot move files between dynamic folders')
+                _logger.debug('Cannot move file %r from %r to %r.', self, self.parent, ndir_node)
+                raise NotImplementedError('Cannot move files between dynamic folders.')
 
             if not ndir_obj:
                 ndir_obj = self.context._dirobj.browse(cr, self.context.uid, \
@@ -1416,7 +1416,7 @@ class node_content(node_class):
         elif mode in ('r+', 'w+'):
             cperms = 'rw'
         else:
-            raise IOError(errno.EINVAL, "Cannot open at mode %s" % mode)
+            raise IOError(errno.EINVAL, "Cannot open at mode %s." % mode)
         
         if not self.check_perms(cperms):
             raise IOError(errno.EPERM, "Permission denied.")
@@ -1473,7 +1473,7 @@ class nodefd_content(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode!")
         self.mode = mode
 
@@ -1499,7 +1499,7 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -1527,7 +1527,7 @@ class nodefd_static(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode!")
         self.mode = mode
 
@@ -1552,7 +1552,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()

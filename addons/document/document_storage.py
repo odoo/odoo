@@ -188,7 +188,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode!")
         self.mode = mode
 
@@ -238,7 +238,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
                     (out, len(data), par.file_id))
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db file #%d for close:', par.file_id)
+            _logger.exception('Cannot update db file #%d for close.', par.file_id)
             raise
         finally:
             cr.close()
@@ -268,7 +268,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode!")
         self.mode = mode
 
@@ -420,7 +420,7 @@ class document_storage(osv.osv):
         """
         boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
-            raise IOError(errno.EREMOTE, 'medium offline!')
+            raise IOError(errno.EREMOTE, 'Medium offline!')
         
         if fil_obj:
             ira = fil_obj
@@ -470,7 +470,7 @@ class document_storage(osv.osv):
                             do_create = (mode[0] in ('w','a'))  )
             fpath = os.path.join(path, npath[-1])
             if (not os.path.exists(fpath)) and mode[0] == 'r':
-                raise IOError("File not found: %s" % fpath)
+                raise IOError("File not found: %s." % fpath)
             elif mode[0] in ('w', 'a') and not ira.store_fname:
                 store_fname = os.path.join(*npath)
                 cr.execute('UPDATE ir_attachment SET store_fname = %s WHERE id = %s',
@@ -521,7 +521,7 @@ class document_storage(osv.osv):
             elif not ira.store_fname:
                 return None
             else:
-                raise IOError(errno.ENOENT, "File not found: %s" % fpath)
+                raise IOError(errno.ENOENT, "File not found: %s." % fpath)
 
         elif boo.type == 'virtual':
             raise ValueError('Virtual storage does not support static file(s).')
@@ -546,7 +546,7 @@ class document_storage(osv.osv):
         if boo.readonly:
             raise IOError(errno.EPERM, "Readonly medium!")
 
-        _logger.debug( "Store data for ir.attachment #%d" % ira.id)
+        _logger.debug( "Store data for ir.attachment #%d." % ira.id)
         store_fname = None
         fname = None
         if boo.type == 'filestore':
@@ -559,7 +559,7 @@ class document_storage(osv.osv):
                     fp.write(data)
                 finally:    
                     fp.close()
-                _logger.debug( "Saved data to %s" % fname)
+                _logger.debug( "Saved data to %s." % fname)
                 filesize = len(data) # os.stat(fname).st_size
                 
                 # TODO Here, an old file would be left hanging.
@@ -588,12 +588,12 @@ class document_storage(osv.osv):
                     fp.write(data)
                 finally:    
                     fp.close()
-                _logger.debug("Saved data to %s", fname)
+                _logger.debug("Saved data to %s.", fname)
                 filesize = len(data) # os.stat(fname).st_size
                 store_fname = os.path.join(*npath)
                 # TODO Here, an old file would be left hanging.
             except Exception,e :
-                _logger.warning("Cannot save data:", exc_info=True)
+                _logger.warning("Cannot save data.", exc_info=True)
                 raise except_orm(_('Error!'), str(e))
 
         elif boo.type == 'virtual':
@@ -612,7 +612,7 @@ class document_storage(osv.osv):
                 mime, icont = cntIndex.doIndex(data, ira.datas_fname,
                 ira.file_type or None, fname)
             except Exception:
-                _logger.debug('Cannot index file:', exc_info=True)
+                _logger.debug('Cannot index file.', exc_info=True)
                 pass
 
             try:
@@ -629,7 +629,7 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            self._logger.warning("Cannot save data:", exc_info=True)
+            self._logger.warning("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
@@ -667,7 +667,7 @@ class document_storage(osv.osv):
                 try:
                     os.unlink(fname)
                 except Exception:
-                    _logger.warning("Cannot remove file %s, please remove manually.", fname, exc_info=True)
+                    _logger.warning("Cannot remove file %s, please remove it manually.", fname, exc_info=True)
             else:
                 _logger.warning("Unlink unknown key %s." % ktype)
 
@@ -684,10 +684,10 @@ class document_storage(osv.osv):
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
 
         if not sbro.online:
-            raise IOError(errno.EREMOTE, 'medium offline')
+            raise IOError(errno.EREMOTE, 'Medium offline!')
         
         if sbro.readonly:
-            raise IOError(errno.EPERM, "Readonly medium")
+            raise IOError(errno.EPERM, "Readonly medium!")
 
         if sbro.type in ('filestore', 'db', 'db64'):
             # nothing to do for a rename, allow to change the db field
@@ -726,10 +726,10 @@ class document_storage(osv.osv):
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
 
         if not sbro.online:
-            raise IOError(errno.EREMOTE, 'medium offline')
+            raise IOError(errno.EREMOTE, 'Medium offline!')
         
         if sbro.readonly:
-            raise IOError(errno.EPERM, "Readonly medium")
+            raise IOError(errno.EPERM, "Readonly medium!")
 
         par = ndir_bro
         psto = None

@@ -339,7 +339,7 @@ class document_file(osv.osv):
                 if r:
                     unres.append(r)
             else:
-                self.loggerdoc.warning("Unlinking attachment #%s %s that has no storage",
+                self.loggerdoc.warning("Unlinking attachment #%s %s that has no storage.",
                                                 f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)

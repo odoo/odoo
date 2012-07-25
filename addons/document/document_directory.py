@@ -108,7 +108,7 @@ class document_directory(osv.osv):
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
-        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage')
+        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage.')
     ]
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -193,7 +193,7 @@ class document_directory(osv.osv):
         elif dbro.type == 'ressource':
             return nodes.node_res_dir
         else:
-            raise ValueError("dir node for %s type", dbro.type)
+            raise ValueError("dir node for %s type!", dbro.type)
 
     def _prepare_context(self, cr, uid, nctx, context=None):
         """ Fill nctx with properties for this database
