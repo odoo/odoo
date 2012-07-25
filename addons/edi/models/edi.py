@@ -147,16 +147,16 @@ class edi_document(osv.osv):
         res = []
         for edi_document in edi_documents:
             module = edi_document.get('__import_module') or edi_document.get('__module')
-            assert module, 'a `__module` or `__import_module` attribute is required in each EDI document'
+            assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
-                raise osv.except_osv(_('Missing Application'),
+                raise osv.except_osv(_('Missing Application !'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
-            assert model, 'a `__model` or `__import_model` attribute is required in each EDI document'
+            assert model, 'a `__model` or `__import_model` attribute is required in each EDI document.'
             model_obj = self.pool.get(model)
             assert model_obj, 'model `%s` cannot be found, despite module `%s` being available - '\
-                              'this EDI document seems invalid or unsupported' % (model,module)
+                              'this EDI document seems invalid or unsupported.' % (model,module)
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
             record_action = model_obj._edi_record_display_action(cr, uid, record_id, context=context)
             res.append((model, record_id, record_action))
@@ -202,7 +202,7 @@ class edi_document(osv.osv):
                                     may be retrieved, without authentication.
         """
         if edi_url:
-            assert not edi_document, 'edi_document must not be provided if edi_url is given'
+            assert not edi_document, 'edi_document must not be provided if edi_url is given.'
             edi_document = urllib2.urlopen(edi_url).read()
         assert edi_document, 'EDI Document is empty!'
         edi_documents = self.deserialize(edi_document)
@@ -219,7 +219,7 @@ class EDIMixin(object):
         model_name = edi_document.get('__imported_model') or edi_document.get('__model') or self._name
         for attribute in attributes:
             assert edi_document.get(attribute),\
-                 'Attribute `%s` is required in %s EDI documents' % (attribute, model_name)
+                 'Attribute `%s` is required in %s EDI documents.' % (attribute, model_name)
 
     # private method, not RPC-exposed as it creates ir.model.data entries as
     # SUPERUSER based on its parameters
@@ -261,7 +261,7 @@ class EDIMixin(object):
             ext_id = existing_id or safe_unique_id(db_uuid, record._name, record.id)
             # ID is unique cross-db thanks to db_uuid (already included in existing_module)
             module = existing_module or "%s:%s" % (record._original_module, db_uuid)
-            _logger.debug("%s: Generating new external ID `%s.%s` for %r", self._name,
+            _logger.debug("%s: Generating new external ID `%s.%s` for %r.", self._name,
                           module, ext_id, record)
             ir_model_data.create(cr, openerp.SUPERUSER_ID,
                                  {'name': ext_id,
@@ -276,7 +276,7 @@ class EDIMixin(object):
                     # this could happen for data records defined in a module that depends
                     # on the module that owns the model, e.g. purchase defines
                     # product.pricelist records.
-                    _logger.debug('Mismatching module: expected %s, got %s, for %s',
+                    _logger.debug('Mismatching module! expected %s, got %s, for %s.',
                                   module, record._original_module, record)
                 # ID is unique cross-db thanks to db_uuid
                 module = "%s:%s" % (module, db_uuid)
@@ -464,12 +464,12 @@ class EDIMixin(object):
                 local_cr = db.cursor()
                 web_root_url = self.pool.get('ir.config_parameter').get_param(local_cr, uid, 'web.base.url')
                 if not web_root_url:
-                    _logger.warning('Ignoring EDI mail notification, web.base.url not defined in parameters')
+                    _logger.warning('Ignoring EDI mail notification, web.base.url is not defined in parameters.')
                     return
                 mail_tmpl = self._edi_get_object_by_external_id(local_cr, uid, template_ext_id, 'email.template', context=context)
                 if not mail_tmpl:
                     # skip EDI export if the template was not found
-                    _logger.warning('Ignoring EDI mail notification, template %s cannot be located', template_ext_id)
+                    _logger.warning('Ignoring EDI mail notification, template %s cannot be located.', template_ext_id)
                     return
                 for edi_record in self.browse(local_cr, uid, ids, context=context):
                     edi_token = self.pool.get('edi.document').export_edi(local_cr, uid, [edi_record], context = context)[0]
@@ -533,10 +533,10 @@ class EDIMixin(object):
                 file_data = base64.b64decode(attachment.get('content'))
             except TypeError:
                 pass
-            assert file_data, 'Incorrect/Missing attachment file content'
-            assert attachment.get('name'), 'Incorrect/Missing attachment name'
-            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name'
-            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name'
+            assert file_data, 'Incorrect/Missing attachment file content.'
+            assert attachment.get('name'), 'Incorrect/Missing attachment name.'
+            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name.'
+            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name.'
             ir_attachment.create(cr, uid, {'name': attachment['name'],
                                            'datas_fname': attachment['file_name'],
                                            'res_model': self._name,
@@ -593,12 +593,12 @@ class EDIMixin(object):
         target = self._edi_get_object_by_external_id(cr, uid, external_id, model, context=context)
         need_new_ext_id = False
         if not target:
-            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID not found, trying name_get",
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID is not found, trying name_get.",
                           self._name, external_id, value)
             target = self._edi_get_object_by_name(cr, uid, value, model, context=context)
             need_new_ext_id = True
         if not target:
-            _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it!",
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - name is not found, creating it!",
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
             model = self.pool.get(model)
@@ -622,7 +622,7 @@ class EDIMixin(object):
         """
         assert self._name == edi_document.get('__import_model') or \
                 ('__import_model' not in edi_document and self._name == edi_document.get('__model')), \
-                "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)" % \
+                "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)." % \
                    (edi_document['__model'], self._name)
 
         # First check the record is now already known in the database, in which case it is ignored
@@ -640,12 +640,12 @@ class EDIMixin(object):
                 continue
             field_info = self._all_columns.get(field_name)
             if not field_info:
-                _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document', field_name, self._name)
+                _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document.', field_name, self._name)
                 continue
             field = field_info.column
             # skip function/related fields
             if isinstance(field, fields.function):
-                _logger.warning("Unexpected function field value found in '%s' EDI document: '%s'" % (self._name, field_name))
+                _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'." % (self._name, field_name))
                 continue
             relation_model = field._obj
             if field._type == 'many2one':
