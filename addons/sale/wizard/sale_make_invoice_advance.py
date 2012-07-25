@@ -96,19 +96,19 @@ class sale_advance_payment_inv(osv.osv_memory):
                     account_id = prop and prop.id or False
                     account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, sale.fiscal_position.id or False, account_id)
                     if not account_id:
-                        raise osv.except_osv(_('Configuration Error !'),
-                                _('There is no income account defined as global property.'))
+                        raise osv.except_osv(_('Configuration Error!'),
+                                _('Please define income account as global property.'))
                     res['account_id'] = account_id
 
                 if not res.get('account_id'):
-                    raise osv.except_osv(_('Configuration Error !'),
-                                _('There is no income account defined ' \
-                                        'for this product: "%s" (id:%d)') % \
+                    raise osv.except_osv(_('Configuration Error!'),
+                                _('Please define income account ' \
+                                        'for this product: "%s" (id:%d).') % \
                                         (sale_adv_obj.product_id.name, sale_adv_obj.product_id.id,))
 
                 final_amount = 0
                 if sale_adv_obj.amount <= 0.00:
-                    raise osv.except_osv(_('Data Insufficient !'),
+                    raise osv.except_osv(_('Data Insufficient!'),
                         _('Please check the Advance Amount, it should not be 0 or less!'))
                 if sale_adv_obj.advance_payment_method == 'percentage':
                     final_amount = sale.amount_total * sale_adv_obj.amount / 100

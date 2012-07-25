@@ -419,7 +419,7 @@ class sale_order(osv.osv):
             limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
-                _('There is no sales journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+                _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
 
         invoice_vals = {
             'name': order.client_order_ref or '',
@@ -702,8 +702,8 @@ class sale_order(osv.osv):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel sales order!'),
-                        _('First cancelled all picking attached to this sale order.'))
+                        _('Cannot cancel sales order!'),
+                        _('First cancel all picking attached to this sales order.'))
                 if pick.state == 'cancel':
                     for mov in pick.move_lines:
                         proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
@@ -716,8 +716,8 @@ class sale_order(osv.osv):
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel this sales order!'),
-                        _('First cancelled all invoices attached to this sale order.'))
+                        _('Cannot cancel this sales order!'),
+                        _('First cancel all invoices attached to this sales order.'))
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
@@ -728,7 +728,7 @@ class sale_order(osv.osv):
         return True
 
     def action_button_confirm(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
 
@@ -763,7 +763,7 @@ class sale_order(osv.osv):
         '''
         This function opens a window to compose an email, with the edi sale template message loaded by default
         '''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         mod_obj = self.pool.get('ir.model.data')
         template = mod_obj.get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')
         template_id = template and template[1] or False
@@ -1193,7 +1193,7 @@ class sale_order_line(osv.osv):
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
                         raise osv.except_osv(_('Error !'),
-                                _('There is no income account defined for this product: "%s" (id:%d)') % \
+                                _('Please define income account for this product: "%s" (id:%d).') % \
                                     (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,
@@ -1210,7 +1210,7 @@ class sale_order_line(osv.osv):
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
                 raise osv.except_osv(_('Error !'),
-                            _('There is no Fiscal Position defined or income category account defined for Product Categories default Properties.'))
+                            _('Please define Fiscal Position or income category account for Product Categories default Properties.'))
             return {
                 'name': line.name,
                 'origin': line.order_id.name,
@@ -1253,7 +1253,7 @@ class sale_order_line(osv.osv):
             for move_line in line.move_ids:
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
-                            _('Cannot cancel sale order line!'),
+                            _('Cannot cancel sales order line!'),
                             _('You must first cancel stock moves attached to this sales order line.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
@@ -1445,7 +1445,7 @@ class sale_order_line(osv.osv):
                         'date': date_order,
                         })[pricelist]
             if price is False:
-                warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
+                warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
