@@ -94,7 +94,7 @@ send an Email to Invited Person')
             if type == 'internal':
                 
                 if not datas.get('user_ids'):
-                    raise osv.except_osv(_('Error!'), ("Please select any User."))
+                    raise osv.except_osv(_('Error!'), ("Please select any user."))
                 for user_id in datas.get('user_ids'):
                     user = user_obj.browse(cr, uid, user_id)
                     res = {

@@ -175,7 +175,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
                 res = self.sock.execute(database, uid, self.password, sObject , 'read',[ids[0]])
 		self.win.setEditText("txtUName",res[0][sMain[sMain.rfind("/")+1:]])
             else:
-                 ErrorDialog("Please select the Language Field")
+                 ErrorDialog("Please select the Language field.")
 
         except:
             import traceback;traceback.print_exc()
@@ -261,7 +261,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
 
             self.win.endExecute()
         else:
-            ErrorDialog("Please Fill appropriate data in Name field \nor select perticular value from the list of fields")
+            ErrorDialog("Please fill appropriate data in Name field \nor select particular value from the list of fields.")
 
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()

@@ -93,7 +93,7 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
 
         ids = self.sock.execute(database, uid, self.password, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids):
-            ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error !")
             exit(1)
 
         ids = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'search', [('report_xsl', '=', False),('report_xml', '=', False)])
@@ -167,11 +167,11 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
                 if oDoc2.hasLocation() and not oDoc2.isReadonly():
                     oDoc2.store()
 
-            ErrorDialog("Download is Completed","Your file has been placed here :\n"+ fp_name,"Download Message")
+            ErrorDialog("Download is Completed.","Your file has been placed here :\n ."+ fp_name,"Download Message !")
             obj=Logger()
             obj.log_write('Modify Existing Report',LOG_INFO, ':successful download report  %s  using database %s' % (self.report_with_id[selectedItemPos][2], database))
         except Exception, e:
-            ErrorDialog("Report has not been downloaded", "Report: %s\nDetails: %s" % ( fp_name, str(e) ),"Download Message")
+            ErrorDialog("Report has not been downloaded.", "Report: %s\nDetails: %s" % ( fp_name, str(e) ),"Download Message !")
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ModifyExistingReport', LOG_ERROR, info)
@@ -197,11 +197,11 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
          else :
             pass
          if temp:
-              ErrorDialog("Report","Report has been Delete:\n "+name,"Message")
+              ErrorDialog("Report","Report has been Delete:\n ."+name,"Message !")
               self.logobj.log_write('Delete Report',LOG_INFO, ':successful delete report  %s  using database %s' % (name, database))
 
          else:
-             ErrorDialog("Report","Report has not Delete:\n"+name," Message")
+             ErrorDialog("Report","Report has not Delete:\n ."+name," Message !")
          self.win.endExecute()
 
 

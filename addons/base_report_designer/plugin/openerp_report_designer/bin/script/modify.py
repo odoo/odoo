@@ -101,7 +101,7 @@ class modify(unohelper.Base, XJobExecutor ):
             else:
                 ErrorDialog(
 		    "Please place your cursor at begaining of field \n"
-		    "which you want to modify",""
+		    "which you want to modify.",""
 		)
 
         else:

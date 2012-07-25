@@ -145,7 +145,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         self.aSearchResult =self.sock.execute( database, uid, self.password, self.dModel[modelSelectedItem], 'name_search', self.win.getEditText("txtSearchName"))
         self.win.removeListBoxItems("lstResource", 0, self.win.getListBoxItemCount("lstResource"))
         if self.aSearchResult == []:
-            ErrorDialog("No search result found !!!", "", "Search ERROR" )
+            ErrorDialog("No search result is found !", "", "Search ERROR" )
             return
 
         for result in self.aSearchResult:
@@ -172,7 +172,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         docinfo = oDoc2.getDocumentInfo()
 
         if oDoc2.getURL() == "":
-            ErrorDialog("Please save your file", "", "Saving ERROR" )
+            ErrorDialog("Please save your file.", "", "Saving ERROR!" )
             return None
 
         url = oDoc2.getURL()
@@ -180,7 +180,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
             url = self.doc2pdf(url[7:])
 
         if url == None:
-            ErrorDialog( "Ploblem in creating PDF", "", "PDF Error" )
+            ErrorDialog( "Problem in creating PDF!", "", "PDF Error!" )
             return None
 
         url = url[7:]
@@ -193,7 +193,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         docinfo = oDoc2.getDocumentInfo()
 
         if self.win.getListBoxSelectedItem("lstResourceType") == "":
-            ErrorDialog("Please select resource type", "", "Selection ERROR" )
+            ErrorDialog("Please select resource type.", "", "Selection ERROR!" )
             return
 
         res = self.send_attachment( docinfo.getUserFieldValue(3), docinfo.getUserFieldValue(2) )
@@ -201,11 +201,11 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
 
     def btnOkWithInformation_clicked(self,oActionEvent):
         if self.win.getListBoxSelectedItem("lstResourceType") == "":
-            ErrorDialog( "Please select resource type", "", "Selection ERROR" )
+            ErrorDialog( "Please select resource type.", "", "Selection ERROR!" )
             return
 
         if self.win.getListBoxSelectedItem("lstResource") == "" or self.win.getListBoxSelectedItem("lstmodel") == "":
-            ErrorDialog("Please select Model and Resource","","Selection ERROR")
+            ErrorDialog("Please select Model and Resource.","","Selection ERROR!")
             return
 
         resourceid = None
@@ -215,7 +215,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
                 break
 
         if resourceid == None:
-            ErrorDialog("No resource selected !!!", "", "Resource ERROR" )
+            ErrorDialog("No resource is selected !", "", "Resource ERROR!" )
             return
 
         res = self.send_attachment( self.dModel[self.win.getListBoxSelectedItem('lstmodel')], resourceid )

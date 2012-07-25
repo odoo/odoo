@@ -93,7 +93,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
 
         self.ids = self.sock.execute(database, uid, self.password, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(self.ids):
-            ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error !")
             exit(1)
 
         report_name = ""
@@ -172,7 +172,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                             }
                         res = self.sock.execute(database, uid, self.password, 'ir.values' , 'create',rec )
                     else :
-                        ErrorDialog(" Report Name is all ready given !!!\n\n\n Please specify other Name","","Report Name")
+                        ErrorDialog(" Report Name is already given !\n\n\n Please specify other name.","","Report Name !")
                         self.logobj.log_write('SendToServer',LOG_WARNING, ':Report name all ready given DB %s' % (database))
                         self.win.endExecute()
                 except Exception,e:
@@ -205,7 +205,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
             self.logobj.log_write('SendToServer',LOG_INFO, ':Report %s successfully send using %s'%(params['name'],database))
             self.win.endExecute()
         else:
-            ErrorDialog("Either Report Name or Technical Name is blank !!!\nPlease specify appropriate Name","","Blank Field ERROR")
+            ErrorDialog("Either Report Name or Technical Name is blank !\nPlease specify appropriate Name.","","Blank Field ERROR !")
             self.logobj.log_write('SendToServer',LOG_WARNING, ':Either Report Name or Technical Name is blank')
             self.win.endExecute()
 

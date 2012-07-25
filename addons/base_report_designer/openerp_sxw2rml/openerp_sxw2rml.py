@@ -341,7 +341,7 @@ if __name__ == "__main__":
     parser.add_option("-o", "--output", dest="output", default='.', help="directory of image output")
     (opt, args) = parser.parse_args()
     if len(args) != 1:
-        parser.error("incorrect number of arguments")
+        parser.error("Incorrect number of arguments!")
 
     import sys
 

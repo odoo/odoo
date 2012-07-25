@@ -106,7 +106,7 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ExportToRML',LOG_ERROR, info)
-            ErrorDialog("Can't save the file to the hard drive.", "Exception: %s" % e, "Error" )
+            ErrorDialog("Cannot save the file to the hard drive.", "Exception: %s !" % e, "Error" )
 
     def GetAFileName(self):
         sFilePickerArgs = Array(10)

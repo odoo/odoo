@@ -139,7 +139,7 @@ class users(osv.osv):
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
-            raise osv.except_osv(_('Error'), _("Please specify the password !"))
+            raise osv.except_osv(_('Error!'), _("Please specify the password !"))
 
         obj = pooler.get_pool(cr.dbname).get('res.users')
         if not hasattr(obj, "_salt_cache"):
@@ -182,7 +182,7 @@ class users(osv.osv):
             return self._login(cr, db, login, password)
         except Exception:
             _logger.exception('Cannot authenticate!')
-            return Exception('Access Denied')
+            return Exception('Access is denied!')
         finally:
             if cr is not None:
                 cr.close()

@@ -100,8 +100,8 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
 #                sValue="Could not connect to the server!"
 #                self.lstDatabase.addItem("Could not connect to the server!",0)
             elif res == 0:
-                sValue="No Database found !!!"
-                self.lstDatabase.addItem("No Database found !!!",0)
+                sValue="No Database is found !"
+                self.lstDatabase.addItem("No Database is found !",0)
             else:
                 self.win.addComboListBox("lstDatabase", -2,28,123,15, True)
                 self.lstDatabase = self.win.getControl( "lstDatabase" )
@@ -129,12 +129,12 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         self.sock=RPCSession(url)
         UID = self.sock.login(sDatabase,sLogin,sPassword)
         if not UID or UID==-1 :
-            ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
+            ErrorDialog("Connection Refuse...","Please enter valid Login/Password.")
           #  self.win.endExecute()
         ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids_module):
-            ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
-            self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error !")
+            self.logobj.log_write('Module is not found.',LOG_WARNING, ':base_report_designer not install in  database %s.' % (sDatabase))
             #self.win.endExecute()
         else:
             desktop=getDesktop()
@@ -153,7 +153,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             #docinfo.setUserFieldValue(2,self.win.getListBoxSelectedItem("lstDatabase"))
             #docinfo.setUserFieldValue(3,"")
 
-            ErrorDialog(" You can start creating your report in \n  \t the current document.","After Creating  sending to the server.","Message")
+            ErrorDialog(" You can start creating your report in \n  \t the current document.","After Creating  sending to the server.","Message !")
             self.logobj.log_write('successful login',LOG_INFO, ':successful login from %s  using database %s' % (sLogin, sDatabase))
             self.win.endExecute()
 
