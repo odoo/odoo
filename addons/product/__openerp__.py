@@ -25,7 +25,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     'category': 'Sales Management',
-    "depends" : ["base", "mail", "process", "decimal_precision"],
+    "depends" : ["base", "process", "decimal_precision", "mail"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml", "product_image_demo.xml"],
     "description": """
