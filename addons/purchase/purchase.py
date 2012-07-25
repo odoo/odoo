@@ -755,7 +755,7 @@ class purchase_order_line(osv.osv):
         lang = res_partner.browse(cr, uid, partner_id).lang
         context_partner = {'lang': lang, 'partner_id': partner_id}
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        res['value'].update({'name': product.name, 'notes': notes or product.description_purchase})
+        res['value'].update({'name': product.partner_ref, 'notes': notes or product.description_purchase})
         
         # - set a domain on product_uom
         res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
