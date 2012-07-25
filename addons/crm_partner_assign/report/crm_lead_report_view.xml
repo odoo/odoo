@@ -10,11 +10,6 @@
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <group>
-                        <filter string="Last 30 Days" icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-week" string="7 Days"
-                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                        <separator orientation="vertical" />
                         <filter icon="terp-check"
                             string="Current"
                             domain="[('state','in',('draft','open'))]"/>
@@ -34,7 +29,6 @@
                       <field name="partner_id"/>
                       <separator orientation="vertical"/>
                       <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
-                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                       <newline/>
@@ -54,8 +48,6 @@
                             context="{'group_by':'section_id'}" />
                         <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'grade_id'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'categ_id'}" />
 
                         <separator orientation="vertical" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
@@ -120,7 +112,6 @@
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="priority"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="nbr" string="#Opportunities" sum="#Opportunities"/>

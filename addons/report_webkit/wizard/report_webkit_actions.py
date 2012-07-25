@@ -77,11 +77,6 @@ class report_webkit_actions(osv.osv_memory):
         if ids:
             res['arch'] = '''<form string="Add Print Buttons">
                                  <label string="Report Action already exist for this report."/>
-                                 <separator colspan="4"/>
-                                 <group col="2" colspan="4">
-                                     <button icon='gtk-cancel' special="cancel"
-                                         string="_Cancel" />
-                                 </group>
                              </form> 
                             '''
         

@@ -1,6 +1,17 @@
 <openerp>
   <data>
 
+    <!-- Show menus that are hidden in module base -->
+    <record id="base.menu_res_company_global" model="ir.ui.menu">
+        <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
+    </record>
+    <record id="base.menu_users" model="ir.ui.menu">
+        <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
+    </record>
+    <record id="base.menu_publisher_warranty" model="ir.ui.menu">
+        <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
+    </record>
+
       <!--   Specify Your Terminology Config Wiz-->
      <record id="base_setup_terminology_form" model="ir.ui.view">
           <field name="name">Specify Your Terminology</field>
@@ -13,8 +24,8 @@
                 <attribute name="string">Specify Your Terminology</attribute>
               </form>
              <group string="res_config_contents" position="replace">
-             	<label string="You can use this wizard to change the terminologies for customers in the whole application."/>
-                	<separator string="Specify Your Terminology"/>
+                 <label string="You can use this wizard to change the terminologies for customers in the whole application."/>
+                    <separator string="Specify Your Terminology"/>
                     <group colspan="4">
                         <field colspan="4" name="partner"/>
                   </group>
@@ -31,46 +42,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
       </record>
-
-    <record id="base.view_sale_config_settings" model="ir.ui.view">
-        <field name="name">sale settings</field>
-        <field name="model">sale.config.settings</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Configure Sales" version="7.0">
-                <header>
-                    <button string="Apply" type="object" name="execute"/>
-                    <button string="Cancel" special="cancel"/>
-                </header>
-                <sheet>
-                    <group>
-                        <group name="config_sale" colspan="4"/>
-
-                        <!-- this part is necessary to allow the plugins to extend the view -->
-                        <field name="module_crm" invisible="1"/>
-                        <group name="config_fetchmail" colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
-                            <separator string="Emails"/>
-                        </group>
-                        <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                        <newline/>
-                        <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
-
-                        <group name="config_crm" colspan="2"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Sale config wizard -->
-    <record id="base.action_sale_config" model="ir.actions.act_window">
-        <field name="name">Configure Sales</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">sale.config.settings</field>
-        <field name="view_id" ref="base.view_sale_config_settings"/>
-        <field name="view_mode">form</field>
-        <field name="target">inline</field>
-    </record>
 
   </data>
 </openerp>

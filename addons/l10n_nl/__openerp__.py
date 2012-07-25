@@ -94,19 +94,25 @@ This is the module to manage the accounting chart for Netherlands in OpenERP.
 =============================================================================
 
 Read changelog in file __openerp__.py for version information.
-Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor Nederlandse bedrijven te installeren in OpenERP versie 5.
+Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor
+Nederlandse bedrijven te installeren in OpenERP versie 5.
 
-De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren, denk b.v. aan intracommunautaire verwervingen
-waarbij u 19% BTW moet opvoeren, maar tegelijkertijd ook 19% als voorheffing weer mag aftrekken.
+De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren,
+denk b.v. aan intracommunautaire verwervingen waarbij u 19% BTW moet opvoeren,
+maar tegelijkertijd ook 19% als voorheffing weer mag aftrekken.
 
 Na installatie van deze module word de configuratie wizard voor "Accounting" aangeroepen.
-    * U krijgt een lijst met grootboektemplates aangeboden waarin zich ook het Nederlandse grootboekschema bevind.
+    * U krijgt een lijst met grootboektemplates aangeboden waarin zich ook het
+      Nederlandse grootboekschema bevind.
 
-    * Als de configuratie wizard start, wordt u gevraagd om de naam van uw bedrijf in te voeren, welke grootboekschema te installeren, uit hoeveel cijfers een grootboekrekening mag bestaan, het rekeningnummer van uw bank en de currency om Journalen te creeren.
+    * Als de configuratie wizard start, wordt u gevraagd om de naam van uw bedrijf
+      in te voeren, welke grootboekschema te installeren, uit hoeveel cijfers een
+      grootboekrekening mag bestaan, het rekeningnummer van uw bank en de currency
+      om Journalen te creeren.
 
-Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4 cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verhogen. De extra cijfers worden dan achter het rekeningnummer aangevult met "nullen"
-
-    * Dit is dezelfe configuratie wizard welke aangeroepen kan worden via Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
+Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4
+cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verhogen.
+De extra cijfers worden dan achter het rekeningnummer aangevult met "nullen".
 
     """,
     "author"  : "Veritos - Jan Verlaan",

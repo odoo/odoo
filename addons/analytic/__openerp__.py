@@ -25,18 +25,20 @@
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category": 'Hidden/Dependency',
-    "depends" : ["base", "decimal_precision"],
+    "depends" : ["base", "decimal_precision", "mail"],
     "description": """
 Module for defining analytic accounting object.
 ===============================================
 
 In OpenERP, analytic accounts are linked to general accounts but are treated
-totally independently. So you can enter various different analytic operations
+totally independently. So, you can enter various different analytic operations
 that have no counterpart in the general financial accounts.
     """,
     "init_xml" : [],
     "update_xml": ['security/analytic_security.xml',
                    "security/ir.model.access.csv",
+                   "analytic_sequence.xml",
+                   "analytic_view.xml"
     ],
     'demo_xml': [
     ],

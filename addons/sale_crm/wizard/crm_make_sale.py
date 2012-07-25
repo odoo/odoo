@@ -86,11 +86,11 @@ class crm_make_sale(osv.osv_memory):
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
                     raise osv.except_osv(_('Data Insufficient!'), _('Customer has no addresses defined!'))
-
+                
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
-                    'categ_id': case.categ_id and case.categ_id.id or False,
+                    'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
                     'shop_id': make.shop_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': pricelist,
@@ -107,7 +107,6 @@ class crm_make_sale(osv.osv_memory):
                 new_ids.append(new_id)
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_append_note(body=message)
-
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:

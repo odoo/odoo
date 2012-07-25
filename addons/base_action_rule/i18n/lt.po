@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:13+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:23+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -161,11 +161,16 @@ msgid ""
 "specific sales team, or an opportunity which still has status pending after "
 "14 days might trigger an automatic reminder email."
 msgstr ""
+"Naudokite automatinius veiksmus, kad automatiškai iškviesti veiksmus "
+"įvairiuose atvejuose. Pavyzdžiui, iniciatyva sukurta tam tikro žmogaus "
+"turėtų būti automatiškai perduota pardavimų komandai, arba galimybė, kuri "
+"turi statusą \"Laukiama\" jau 14 dienų, turėtų būti priminta el. paštu "
+"atsakingam asmeniui."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
-msgstr ""
+msgstr "Asmens, kuriam turi būti nusiųstas laiškas, el. pašto ID"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -228,6 +233,8 @@ msgid ""
 "Use a python expression to specify the right field on which one than we will "
 "use for the 'To' field of the header"
 msgstr ""
+"Naudokite Python išraišką teisingo laukelio nurodymui, kuris bus naudojamas "
+"antraštės \"Kam\" laukeliui."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -296,6 +303,8 @@ msgid ""
 "Use a python expression to specify the right field on which one than we will "
 "use for the 'From' field of the header"
 msgstr ""
+"Naudokite Python išraišką teisingo laukelio nurodymui, kuris bus naudojamas "
+"antraštės \"Nuo\" laukeliui."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -314,6 +323,9 @@ msgid ""
 "need a delay before the trigger date, like sending a reminder 15 minutes "
 "before a meeting."
 msgstr ""
+"Delsa po iškvietimo datos,nurodo, kad galite įterpti neigiamą skaičių. Jei "
+"Jums reikia delsos prieš iškvietimo datą, pavyzdžiui siųsti priminimą 15 "
+"min. prieš susitikimą."
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
@@ -323,8 +335,8 @@ msgstr "Aktyvus"
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:329
 #, python-format
-msgid "No E-Mail ID Found for your Company address!"
-msgstr "Jūsų kompanijos adrese nerastas el. pašto ID!"
+msgid "No Email ID Found for your Company address!"
+msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -517,3 +529,7 @@ msgstr "Įvykio data"
 
 #~ msgid "Special Keywords to Be Used in The Body"
 #~ msgstr "Specialūs raktažodžiai naudojami tekste"
+
+#, python-format
+#~ msgid "No E-Mail ID Found for your Company address!"
+#~ msgstr "Jūsų kompanijos adrese nerastas el. pašto ID!"

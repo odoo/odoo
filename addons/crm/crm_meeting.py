@@ -19,55 +19,21 @@
 #
 ##############################################################################
 
-from base_calendar import base_calendar
-from base_status.base_state import base_state
-from base_status.base_stage import base_stage
-import logging
 from osv import fields, osv
 import tools
 from tools.translate import _
+import logging
+_logger = logging.getLogger(__name__)
 
-class crm_lead(base_stage, osv.osv):
-        """ CRM Leads """
-        _name = 'crm.lead'
-
-class crm_meeting(base_state, osv.Model):
+#
+# crm.meeting is defined in module base_calendar
+#
+class crm_meeting(osv.Model):
     """ Model for CRM meetings """
-    _name = 'crm.meeting'
-    _description = "Meeting"
-    _order = "id desc"
-    _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
+    _inherit = 'crm.meeting'
     _columns = {
-        # base_state required fields
-        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]},
-                        select=True, groups='base.group_sale_salesman', help='Sales team to which Case belongs to.'),
-        'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'write_date': fields.datetime('Write Date' , readonly=True),
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
-        # Meeting fields
-        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
-        'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
-                        domain="[('object_id.model', '=', 'crm.meeting')]", \
-            ),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
-        'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
-                                 'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
-        'state': fields.selection([ ('draft', 'Unconfirmed'),
-                                    ('open', 'Confirmed'),
-                                    ('cancel', 'Cancelled'),
-                                    ('done', 'Done')],
-                                    string='Status', size=16, readonly=True),
-    }
-    _defaults = {
-        'state': 'draft',
-        'active': 1,
-        'user_id': lambda self, cr, uid, ctx: uid,
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -75,58 +41,27 @@ class crm_meeting(base_state, osv.Model):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def case_open(self, cr, uid, ids, context=None):
-        """ Confirms meeting """
-        res = super(crm_meeting, self).case_open(cr, uid, ids, context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            id=base_calendar.base_calendar_id2real_id(id)
-        return res
-    
-    # ----------------------------------------
-    # OpenChatter
-    # ----------------------------------------
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Meeting'
-
     def create_send_note(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         # update context: if come from phonecall, default state values can make the message_append_note crash
         context.pop('default_state', False)
         for meeting in self.browse(cr, uid, ids, context=context):
-            # convert datetime field to a datetime, using server format, then
-            # convert it to the user TZ and re-render it with %Z to add the timezone
-            meeting_datetime = fields.DT.datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            meeting_date_str = fields.datetime.context_timestamp(cr, uid, meeting_datetime, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-            message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting_date_str)
+            # in the message, transpose meeting.date to the timezone of the current user
+            meeting_date = fields.DT.datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            meeting_date_tz = fields.datetime.context_timestamp(cr, uid, meeting_date, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
             if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
                 lead = meeting.opportunity_id
-                parent_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (lead.name, meeting.date)
+                message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, meeting_date_tz)
                 lead.message_append_note(_('System Notification'), message)
             elif meeting.phonecall_id:
                 phonecall = meeting.phonecall_id
-                parent_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (phonecall.name, meeting.date)
+                message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (phonecall.name, meeting_date_tz)
                 phonecall.message_append_note(body=message)
             else:
-                parent_message = message
-            if parent_message:
-                meeting.message_append_note(body=parent_message)
+                message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting_date_tz)
+            meeting.message_append_note(body=message)
         return True
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>confirmed</b>."), context=context)
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>done</b>."), context=context)
-
 
 class calendar_attendee(osv.osv):
     """ Calendar Attendee """
@@ -161,8 +96,6 @@ class calendar_attendee(osv.osv):
                         relation="crm.case.categ", multi='categ_id'),
     }
 
-calendar_attendee()
-
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
@@ -180,10 +113,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
         return user_id
-
-res_users()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

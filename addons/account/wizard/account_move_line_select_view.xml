@@ -8,11 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Select" version="7.0">
-                    <header>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="Open Entries" name="open_window" type="object" default_focus="1"/>
-                    </header>
-                    <label string="Are you sure you want to open Account move line entries!"/>
+                    <label string="Are you sure you want to open Account move line entries?"/>
+                    <footer>
+                        <button string="Open Entries" name="open_window" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

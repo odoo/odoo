@@ -9,13 +9,9 @@
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
             <data>
-            <xpath expr="/form/label[@string='']" position="replace">
-                <separator string="General Journals" colspan="4"/>
-                <label nolabel="1" colspan="4" string="This report gives you an overview of the situation of your general journals"/>
-            </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
-	           <field name="amount_currency"/>
-	           <newline/>
+               <field name="amount_currency"/>
+               <newline/>
             </xpath>
             </data>
             </field>

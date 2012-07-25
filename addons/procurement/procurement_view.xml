@@ -48,41 +48,53 @@
             <field name="arch" type="xml">
                 <form string="Procurement" version="7.0">
                     <header>
-                        <button name="button_confirm" states="draft" string="Confirm"/>
-                        <button name="button_check" states="confirmed" string="Run Procurement"/>
-                        <button name="button_restart" states="exception" string="Retry"/>
+                        <button name="button_confirm" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="button_check" states="confirmed" string="Run Procurement" class="oe_highlight"/>
+                        <button name="button_restart" states="exception" string="Retry" class="oe_highlight"/>
                         <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
                     <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <label string="-" attrs="{'invisible':[('origin','=',False)]}"/>
+                        <field name="origin" class="oe_inline"/>
+                    </h1>
                     <group>
-                        <group string="References">
-                            <field name="name"/>
-                            <field name="origin"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        </group>
-                        <group string="Planification">
+                        <group>
                             <field name="date_planned"/>
                             <field name="procure_method"/>
                             <field name="priority"/>
                         </group>
+                        <group>
+                            <field name="message"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
                     </group>
                     <notebook>
                     <page string="Procurement Details">
-                        <group string="Product &amp; Location" col="4">
-                            <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                            <field name="location_id" domain="[('usage','=','internal')]"/>
-                            <field name="product_qty"/>
-                            <field name="product_uom"/>
-
-                            <field name="product_uos_qty" groups="product.group_uos"/>
-                            <field name="product_uos"  groups="product.group_uos"/>
+                        <group>
+                            <group>
+                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline"/>
+                                </div>
+                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                <div groups="product.group_uos">
+                                    <field name="product_uos_qty" class="oe_inline"/>
+                                    <field name="product_uos" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                               <field name="location_id" domain="[('usage','=','internal')]"/>
+                            </group>
                         </group>
-                        <separator string="Status"/>
-                        <field name="message"/>
                     </page>
                     <page string="Extra Information">
-                        <group string="Details" col="4">
+                        <group>
                             <field name="move_id"/>
                             <field name="date_close"/>
                             <field name="close_move"/>
@@ -93,9 +105,9 @@
                     </page>
                     </notebook>
                     </sheet>
-                    <footer>
-                        <field name="message_ids" widget="ThreadView"/>
-                    </footer>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -106,17 +118,18 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group>
+                       <field name="origin" string="Procurement"/>
+                       <separator orientation="vertical"/>
+                       <field name="date_planned"/>
+                       <separator orientation="vertical"/>
                        <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
                        <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
                        <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
-                       <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
                            help="Procurement started late" />
                        <separator orientation="vertical"/>
-                       <field name="origin"/>
                        <field name="product_id" />
-                       <field name="date_planned"/>
                        <field name="state" />
                     </group>
                     <newline/>
@@ -169,10 +182,10 @@
             <field name="arch" type="xml">
                 <tree string="Reordering Rules">
                     <field name="name"/>
-                    <field name="warehouse_id"/>
+                    <field name="warehouse_id" groups="stock.group_locations"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -186,7 +199,8 @@
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Reordering Rules"/>
+                        <separator orientation="vertical"/>
                         <field name="warehouse_id" widget="selection"/>
                         <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -214,8 +228,8 @@
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
                             </group>
                             <group>
-                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                                <field name="product_uom"/>
+                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="product_uom" groups="product.group_uom"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
@@ -278,12 +292,17 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="misc" position="after">
-                    <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
-                        <separator string="Minimum Stock Rules" colspan="4"/>
-                        <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
-                    </group>
-                </group>
+                <page string="Procurement &amp; Locations" position="inside">
+                    <separator string="Minimum Stock Rules"/>
+                        <field name="orderpoint_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
+                            <tree string="Reordering Rules">
+                                <field name="name"/>
+                                <field name="warehouse_id"/>
+                                <field name="product_min_qty"/>
+                                <field name="product_max_qty"/>
+                            </tree>
+                        </field>
+                </page>
             </field>
         </record>
 

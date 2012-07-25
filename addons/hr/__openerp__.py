@@ -26,8 +26,9 @@
     "category": "Human Resources",
     "sequence": 12,
     "website": "http://www.openerp.com",
+    "summary": "Hierarchy, Jobs, Departments",
     "description": """
-Module for human resource management.
+Module for Human Resource Management.
 =====================================
 
 You can manage:
@@ -43,12 +44,12 @@ You can manage:
     'update_xml': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
+        'board_hr_view.xml',
         'hr_view.xml',
         'hr_department_view.xml',
         'process/hr_process.xml',
         'hr_installer.xml',
         'hr_data.xml',
-        'hr_board.xml',
         'res_config_view.xml',
     ],
     'demo_xml': [

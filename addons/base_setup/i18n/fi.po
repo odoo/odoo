@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:16+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:50+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: base_setup
 #: field:user.preferences.config,menu_tips:0
 msgid "Display Tips"
-msgstr ""
+msgstr "Näytä vihjeet"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Guest"
-msgstr ""
+msgstr "Vieras"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_product_installer
@@ -35,17 +35,17 @@ msgstr ""
 #. module: base_setup
 #: selection:product.installer,customers:0
 msgid "Create"
-msgstr ""
+msgstr "Luo"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Member"
-msgstr ""
+msgstr "Jäsen"
 
 #. module: base_setup
 #: field:migrade.application.installer.modules,sync_google_contact:0
 msgid "Sync Google Contact"
-msgstr ""
+msgstr "Synkronoi Google kontaktit"
 
 #. module: base_setup
 #: help:user.preferences.config,context_tz:0
@@ -53,11 +53,13 @@ msgid ""
 "Set default for new user's timezone, used to perform timezone conversions "
 "between the server and the client."
 msgstr ""
+"Aseta uuden käyttäjän oletusaikavyöhyke, jota käytetään "
+"aikavyöhykemuunnoksiin palvelimen ja työaseman välissä"
 
 #. module: base_setup
 #: selection:product.installer,customers:0
 msgid "Import"
-msgstr ""
+msgstr "Tuo"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -67,7 +69,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Set Company Header and Footer"
-msgstr ""
+msgstr "Aseta yrityksen ylä ja alatunniste"
 
 #. module: base_setup
 #: model:ir.actions.act_window,help:base_setup.action_base_setup_company
@@ -76,21 +78,24 @@ msgid ""
 "printed on your reports. You can click on the button 'Preview Header' in "
 "order to check the header/footer of PDF documents."
 msgstr ""
+"Syötä yrityksesi tiedot (osoite, logi, tilitiedot) jotka tulostetaan "
+"raportteihin. Voit klikata nappia 'esikatesele tunnisteet' tarkastaaksesi "
+"ylä/alatunnisteen pdf dokumentissa."
 
 #. module: base_setup
 #: field:product.installer,customers:0
 msgid "Customers"
-msgstr ""
+msgstr "Asiakkaat"
 
 #. module: base_setup
 #: selection:user.preferences.config,view:0
 msgid "Extended"
-msgstr ""
+msgstr "Laajennettu"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Patient"
-msgstr ""
+msgstr "Kärsivällinen"
 
 #. module: base_setup
 #: model:ir.actions.act_window,help:base_setup.action_import_create_installer
@@ -99,16 +104,18 @@ msgid ""
 "you can import your existing partners by CSV spreadsheet from \"Import "
 "Data\" wizard"
 msgstr ""
+"Luo tai tuo asiakkaita ja heiden kontaktejaan tältä lomakkeelta tai voit "
+"tuoda olemassaolevat kumppanit CSV tiedostona \"tuo tiedot\" velhon avulla"
 
 #. module: base_setup
 #: view:user.preferences.config:0
 msgid "Define Users's Preferences"
-msgstr ""
+msgstr "Määrittele käyttäjän asetukset"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_user_preferences_config_form
 msgid "Define default users preferences"
-msgstr ""
+msgstr "Määrittele käyttäjien oletusasetukset"
 
 #. module: base_setup
 #: help:migrade.application.installer.modules,import_saleforce:0
@@ -127,17 +134,21 @@ msgid ""
 "simplified interface, which has less features but is easier. You can always "
 "switch later from the user preferences."
 msgstr ""
+"Jos käytät OpenERP järjestelmää ensimmäsen kerran, suosittelemme että "
+"valitset yksinkertaisen käyttöliittymän, jossa on vähemmän ominaisuuksia "
+"mutta se on helppokäyttöisempi. Voit vaihtaa liittymää myöhemmin "
+"asetuksistasi."
 
 #. module: base_setup
 #: view:base.setup.terminology:0
 #: view:user.preferences.config:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: base_setup
 #: field:user.preferences.config,view:0
 msgid "Interface"
-msgstr ""
+msgstr "Liittymä"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_migrade_application_installer_modules
@@ -150,21 +161,22 @@ msgid ""
 "You can use this wizard to change the terminologies for customers in the "
 "whole application."
 msgstr ""
+"Voit käyttää tätä velhoa vaihtaaksesi asiakastermejä koko ohjelmistossa"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Tenant"
-msgstr ""
+msgstr "Vuokralainen"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Customer"
-msgstr ""
+msgstr "Asiakas"
 
 #. module: base_setup
 #: field:user.preferences.config,context_lang:0
 msgid "Language"
-msgstr ""
+msgstr "Kieli"
 
 #. module: base_setup
 #: help:user.preferences.config,context_lang:0
@@ -173,6 +185,9 @@ msgid ""
 "available. If you want to Add new Language, you can add it from 'Load an "
 "Official Translation' wizard  from 'Administration' menu."
 msgstr ""
+"Asettaa oletuskielen käyttöliittymälle, kun käyttöliittymän käännökset ovat "
+"saatavilla. Jos haluat lisätä uuden kielen, voit tehdä sen 'Lataa virallinen "
+"käännös' vleholla 'Asetukset' valikosta."
 
 #. module: base_setup
 #: view:user.preferences.config:0
@@ -181,11 +196,14 @@ msgid ""
 "ones. Afterwards, users are free to change those values on their own user "
 "preference form."
 msgstr ""
+"Tämä asettaa oletusasetukset uusille käyttäjille ja päivittää "
+"olemassaolevat. Käyttäjät voivat myöhemmin vaihtaa näitä arvoja haluamikseen "
+"käyttäjänasetukset lomakkeella."
 
 #. module: base_setup
 #: field:base.setup.terminology,partner:0
 msgid "How do you call a Customer"
-msgstr ""
+msgstr "Kuinka soitat asiakkaalle"
 
 #. module: base_setup
 #: field:migrade.application.installer.modules,quickbooks_ippids:0
@@ -195,7 +213,7 @@ msgstr ""
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Client"
-msgstr ""
+msgstr "Asiakas"
 
 #. module: base_setup
 #: field:migrade.application.installer.modules,import_saleforce:0
@@ -205,12 +223,12 @@ msgstr ""
 #. module: base_setup
 #: field:user.preferences.config,context_tz:0
 msgid "Timezone"
-msgstr ""
+msgstr "Aikavyöhyke"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
 msgid "Use another word to say \"Customer\""
-msgstr ""
+msgstr "Käytä toista sanaa sanoaksesi \"asiakas\""
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_terminology
@@ -222,6 +240,8 @@ msgstr ""
 msgid ""
 "Check out this box if you want to always display tips on each menu action"
 msgstr ""
+"Valitse tämä laatikko, jos haluat aina näyttää vihjeet kaikille "
+"valikkotoiminnoille"
 
 #. module: base_setup
 #: field:base.setup.terminology,config_logo:0
@@ -239,12 +259,12 @@ msgstr ""
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_config_access_other_user
 msgid "Create Additional Users"
-msgstr ""
+msgstr "Luo lisää käyttäjiä"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_import_create_installer
 msgid "Create or Import Customers"
-msgstr ""
+msgstr "Luo tai tuo asiakkaita"
 
 #. module: base_setup
 #: field:migrade.application.installer.modules,import_sugarcrm:0
@@ -254,12 +274,12 @@ msgstr ""
 #. module: base_setup
 #: help:product.installer,customers:0
 msgid "Import or create customers"
-msgstr ""
+msgstr "Tuo tai luo asiakkaita"
 
 #. module: base_setup
 #: selection:user.preferences.config,view:0
 msgid "Simplified"
-msgstr ""
+msgstr "Yksinkertaistettu"
 
 #. module: base_setup
 #: help:migrade.application.installer.modules,import_sugarcrm:0
@@ -269,17 +289,17 @@ msgstr ""
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Partner"
-msgstr ""
+msgstr "Yhteistyökumppani"
 
 #. module: base_setup
 #: view:base.setup.terminology:0
 msgid "Specify Your Terminology"
-msgstr ""
+msgstr "Määrittele termisi"
 
 #. module: base_setup
 #: help:migrade.application.installer.modules,sync_google_contact:0
 msgid "For Sync Google Contact"
-msgstr ""
+msgstr "Synkronoi Google kontaktit"
 
 #~ msgid "Next"
 #~ msgstr "Seuraava"

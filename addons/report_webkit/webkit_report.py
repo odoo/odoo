@@ -51,7 +51,7 @@ import tools
 from tools.translate import _
 from osv.osv import except_osv
 
-logger = logging.getLogger('report_webkit')
+_logger = logging.getLogger(__name__)
 
 def mako_template(text):
     """Build a Mako template.
@@ -248,7 +248,7 @@ class WebKitParser(report_sxw):
                     htmls.append(html)
                 except Exception, e:
                     msg = exceptions.text_error_template().render()
-                    logger.error(msg)
+                    _logger.error(msg)
                     raise except_osv(_('Webkit render'), msg)
         else:
             try :
@@ -259,7 +259,7 @@ class WebKitParser(report_sxw):
                 htmls.append(html)
             except Exception, e:
                 msg = exceptions.text_error_template().render()
-                logger.error(msg)
+                _logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
         head_mako_tpl = mako_template(header)
         try :
@@ -281,7 +281,7 @@ class WebKitParser(report_sxw):
                                             **self.parser_instance.localcontext)
             except:
                 msg = exceptions.text_error_template().render()
-                logger.error(msg)
+                _logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
         if report_xml.webkit_debug :
             try :
@@ -292,7 +292,7 @@ class WebKitParser(report_sxw):
                                            **self.parser_instance.localcontext)
             except Exception, e:
                 msg = exceptions.text_error_template().render()
-                logger.error(msg)
+                _logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid)

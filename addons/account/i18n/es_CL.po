@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:54+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:58+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -186,11 +186,6 @@ msgstr "Cuenta de origen"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Todos los asientos analíticos"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Facturas creadas en los últimos 15 días"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -683,18 +678,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr ""
-
-#. module: account
 #: constraint:account.move.line:0
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
@@ -791,7 +774,7 @@ msgstr ""
 msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
-msgstr ""
+msgstr "¡Faltan impuestos!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -904,7 +887,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr ""
+msgstr "Tabla de impuestos"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -1207,7 +1190,7 @@ msgstr ""
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Purchases"
-msgstr ""
+msgstr "Impuestos usados en las compras"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1336,7 +1319,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_tax_report
 #: model:ir.ui.menu,name:account.next_id_27
 msgid "Taxes"
-msgstr ""
+msgstr "Impuestos"
 
 #. module: account
 #: code:addons/account/wizard/account_financial_report.py:69
@@ -1435,7 +1418,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Search Taxes"
-msgstr ""
+msgstr "Buscar impuestos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
@@ -1460,7 +1443,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Compute Taxes"
-msgstr ""
+msgstr "Calcular impuestos"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -1656,11 +1639,6 @@ msgid "Responsible"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr ""
-
-#. module: account
 #: view:account.invoice.refund:0
 msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
@@ -1670,7 +1648,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturación"
 
 #. module: account
 #: code:addons/account/report/account_partner_balance.py:115
@@ -2461,7 +2439,7 @@ msgstr ""
 #. module: account
 #: field:product.template,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr ""
+msgstr "Impuestos proveedor"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2499,6 +2477,8 @@ msgid ""
 "The fiscal position will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
+"La posición fiscal calculará los impuestos y las cuentas contables "
+"utilizados para esta empresa."
 
 #. module: account
 #: view:account.print.journal:0
@@ -2706,13 +2686,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr ""
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr ""
@@ -2911,6 +2884,8 @@ msgid ""
 "Set if the amount of tax must be included in the base amount before "
 "computing the next taxes."
 msgstr ""
+"Indica si el importe del impuesto deberá incluirse en el importe base antes "
+"de calcular los siguientes impuestos."
 
 #. module: account
 #: help:account.journal,user_id:0
@@ -3094,7 +3069,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
+msgid "Set Your Accounting Options"
 msgstr ""
 
 #. module: account
@@ -3297,7 +3272,7 @@ msgstr ""
 #. module: account
 #: view:product.product:0
 msgid "Purchase Taxes"
-msgstr ""
+msgstr "Impuestos de compras"
 
 #. module: account
 #: view:validate.account.move.lines:0
@@ -4141,7 +4116,7 @@ msgstr ""
 #. module: account
 #: view:account.account.template:0
 msgid "Default taxes"
-msgstr ""
+msgstr "Impuestos por defecto"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
@@ -4405,7 +4380,7 @@ msgstr ""
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr ""
+msgstr "Selecciona plan de impuestos."
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -4535,7 +4510,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Vendedor"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5277,7 +5252,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "This action will erase taxes"
-msgstr ""
+msgstr "Esta acción borrará impuestos"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingentries0
@@ -5351,7 +5326,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
-msgstr ""
+msgstr "Texto normal"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5441,7 +5416,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:0
 msgid "Invoicing Data"
-msgstr ""
+msgstr "Datos facturación"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -5899,7 +5874,7 @@ msgstr ""
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr ""
+msgstr "Impuestos de cliente"
 
 #. module: account
 #: help:account.model,name:0
@@ -5920,7 +5895,7 @@ msgstr ""
 #: view:account.account.type:0
 #: view:account.tax.code:0
 msgid "Reporting Configuration"
-msgstr ""
+msgstr "Configuración informes"
 
 #. module: account
 #: field:account.tax,type:0
@@ -5980,6 +5955,7 @@ msgstr ""
 #: help:account.chart.template,tax_template_ids:0
 msgid "List of all the taxes that have to be installed by the wizard"
 msgstr ""
+"Lista de todos los impuestos que deben ser instalados por el asistente"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_intracom
@@ -6124,6 +6100,8 @@ msgid ""
 "Indicates if the amount of tax must be included in the base amount for the "
 "computation of the next taxes"
 msgstr ""
+"Indica si el importe del impuesto debe ser incluido en el importe base para "
+"el cálculo de los siguientes impuestos."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
@@ -6219,11 +6197,6 @@ msgstr ""
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
 msgstr ""
 
 #. module: account
@@ -6766,11 +6739,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr ""
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr ""
@@ -6984,7 +6952,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -7126,12 +7094,12 @@ msgstr ""
 #. module: account
 #: view:res.partner:0
 msgid "Information About the Bank"
-msgstr ""
+msgstr "Información del banco"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Informes"
 
 #. module: account
 #: code:addons/account/account_move_line.py:759
@@ -7256,7 +7224,7 @@ msgstr ""
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_email_templates
@@ -7778,6 +7746,13 @@ msgid ""
 "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
 "generate analytic entries on the related account."
 msgstr ""
+"La estructura normal de cuentas está definida por los requerimientos legales "
+"del país. La estructura de árbol de cuentas analíticas reflejan sus propias "
+"necesidades de negocio en términos de informes costo/beneficio. Son "
+"usualmente estructurados en función de contratos, proyectos, productos o "
+"departamentos. La mayoría de las operaciones de OpenERP (facturas, "
+"imputaciones de horas, gastos, etc) generan entradas analíticas en la cuenta "
+"relacionada."
 
 #. module: account
 #: field:account.account.type,close_method:0
@@ -7982,7 +7957,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
 msgid "Generic Reporting"
-msgstr ""
+msgstr "Informes genéricos"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
@@ -8195,6 +8170,13 @@ msgid ""
 "You should press this button to re-open it and let it continue its normal "
 "process after having resolved the eventual exceptions it may have created."
 msgstr ""
+"Este botón solo aparece cuando el estado de la factura es 'pagado' "
+"(mostrando que ha sido totalmente conciliado) y el campo booleano "
+"autocalculado 'pagado/conciliado' es falso (representa que ya no es el "
+"caso). En otras palabra, la conciliación de la factura ha sido rota y ya no "
+"está en estado 'pagado'. Debería presionar este botón para volver a abrir la "
+"factura y le permitirá continuar su proceso normal después de haber resuelto "
+"la excepción eventual que lo puede haber producido."
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
@@ -8431,7 +8413,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Invoicing & Payments"
-msgstr ""
+msgstr "Facturación y pagos"
 
 #. module: account
 #: help:account.invoice,internal_number:0
@@ -10453,6 +10435,9 @@ msgstr ""
 #, python-format
 #~ msgid "Please define sequence on invoice journal"
 #~ msgstr "Defina una secuencia en el diario de la factura"
+
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Facturas creadas en los últimos 15 días"
 
 #~ msgid "Open For Unreconciliation"
 #~ msgstr "abrierto para reconciliacion"

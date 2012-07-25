@@ -38,15 +38,6 @@
                         <filter icon="terp-go-year" string="Year" name="year"
                             domain="[('year','=',time.strftime('%%Y'))]"
                             help="POS ordered created during current year"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-month" string="Month" name="This Month"
-                           domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="POS ordered created during current month"/>
-                        <filter icon="terp-go-month"
-                             string="Month -1"
-                             domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                             help="POS ordered created last month"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-go-today"
                              string="Today"
                              name="today"
@@ -59,14 +50,17 @@
                         <filter icon="terp-dolar"
                             string="Not Invoiced"
                             domain="[('state','=',('paid'))]"/>
-                    <separator orientation="vertical"/>
-                    <field name="partner_id"/>
-                    <field name="user_id" widget="selection">
+			            <separator orientation="vertical"/>
+			            <field name="partner_id"/>
+			            <field name="date"/>
+			            <field name="user_id" widget="selection" /> 
                         <filter icon="terp-personal"
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
-                    </field>
+                        <separator orientation="vertical"/>
+                        <field name="partner_id"/>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
@@ -84,12 +78,12 @@
         </record>
 
         <record id="action_report_pos_order_all" model="ir.actions.act_window">
-            <field name="name">Point of Sale Analysis</field>
+            <field name="name">Orders Analysis</field>
             <field name="res_model">report.pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
-            <field name="context">{'search_default_year':1,'search_default_This Month':1,'search_default_today':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_year':1,'search_default_today':1,'group_by_no_leaf':1,'group_by':['product_id']}</field>
         </record>
 
         <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>

@@ -10,35 +10,25 @@
             <field name="arch" type="xml">
                 <form string="Invitation details" version="7.0">
                     <header>
-                        <button name="do_tentative"
-                            states="needs-action,declined,accepted"
-                            string="Uncertain" type="object"/>
-                        <button name="do_accept" string="Accept"
-                            states="needs-action,tentative,declined"
-                            type="object" />
-                        <button
-                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            string="Delegate" type="action"
-                            states="needs-action,tentative,declined,accepted"
-                            context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                        <button name="do_decline" string="Decline"
-                            states="needs-action,tentative,accepted"
-                            type="object" />
+                        <button name="do_tentative" states="needs-action,declined,accepted" string="Uncertain" type="object" class="oe_highlight"/>
+                        <button name="do_accept" string="Accept" states="needs-action,tentative,declined" type="object" class="oe_highlight"/>
+                        <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" string="Delegate" type="action" states="needs-action,tentative,declined,accepted" context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                        <button name="do_decline" string="Decline" states="needs-action,tentative,accepted" type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar"
                             statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
                     </header>
                     <sheet>
 
-                        <div class="oe_form_title">
-                            <label for="email" string="Invitation To" class="oe_form_readonly_hidden" /> 
+                        <div class="oe_title">
+                            <label for="email" string="Invitation To" class="oe_edit_only" /> 
                             <h1>
-                                <field name="email" class="oe_form_inline" />
-                                (<field name="language" class="oe_form_inline" />)
+                                <field name="email" class="oe_inline" />
+                                (<field name="language" class="oe_inline" />)
                             </h1>
                             
                             <h2>
-                                From <field name="event_date" class="oe_form_inline" />
-                                to <field name="event_end_date" class="oe_form_inline"/>
+                                From <field name="event_date" class="oe_inline" />
+                                to <field name="event_end_date" class="oe_inline"/>
                             </h2>
                         </div>
                         <group>
@@ -55,10 +45,10 @@
                             </group>
                         </group>
                         <group>
-                            <group string="Delegrated From">
+                            <group string="Delegated From">
                                 <field name="parent_ids" readonly="1" nolabel="1" />
                             </group>
-                            <group string="Delegrated To" >
+                            <group string="Delegated To" >
                                 <field name="child_ids" readonly="1" nolabel="1" />
                             </group>
                         </group>
@@ -94,6 +84,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
+                   <field name="email" string="Email"/>
+                   <separator orientation="vertical"/>
+                   <field name="event_date"/>
+                   <separator orientation="vertical"/>
                    <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
                        domain="[('state','=', 'needs-action')]"
                        help="Invitations To Review" />
@@ -107,11 +101,9 @@
                        domain="[('state','=', 'delegated')]"
                        help="Delegated Invitations" />
                    <separator orientation="vertical"/>
-                   <field name="email"/>
                    <field name="user_id" string="Responsible"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type"/>
-                   <field name="event_date"/>
                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]"
@@ -144,7 +136,7 @@
 
         <!-- Calenadar's menu -->
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
-            parent="base.menu_base_config" sequence="50" groups="base.group_sale_manager" />
+            parent="base.menu_base_config" sequence="50" groups="base.group_no_one"/>
 
         <!-- Invitation menu -->
 
@@ -214,21 +206,9 @@
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                 <header>
-                    <button name="do_confirm"
-                        string="Confirm"
-                        states="tentative,cancelled"
-                        type="object"
-                        />
-                    <button name="do_tentative"
-                        states="confirmed,cancelled"
-                        string="Uncertain"
-                        type="object"
-                        />
-                    <button name="do_cancel"
-                        string="Cancel"
-                        states="tentative,confirmed"
-                        type="object"
-                        />
+                    <button name="do_confirm" string="Confirm" states="tentative,cancelled" type="object" class="oe_highlight"/>
+                    <button name="do_tentative" states="confirmed,cancelled" string="Uncertain" type="object" class="oe_highlight"/>
+                    <button name="do_cancel" string="Cancel" states="tentative,confirmed" type="object" />
                     <field name="state" widget="statusbar"
                         statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
@@ -270,7 +250,7 @@
                             icon="terp-partner" type="action"
                             context="{'model' : 'calendar.event', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" colspan="4"
-                            nolabel="1" widget="one2many" mode="tree,form">
+                            nolabel="1" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
                                 <field name="sent_by_uid" string="From"/>
                                 <field name="user_id" string="To"/>
@@ -435,6 +415,8 @@
             <field name="arch" type="xml">
                 <search string="Search Events">
                        <group>
+                           <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>
+                           <separator orientation="vertical"/>
                            <filter icon="terp-go-today" string="My Events"
                                domain="[('user_id','=',uid)]"
                                help="My Events" />
@@ -442,9 +424,6 @@
                            <filter icon="terp-check" string="Confirmed"
                                domain="[('state','=','confirmed')]"
                                help="Confirmed Events" />
-                           <separator orientation="vertical"/>
-                           <field name="name" string="Summary"/>
-                           <field name="location" string="Location"/>
                            <separator orientation="vertical"/>
                            <field name="user_id"/>
                            <separator orientation="vertical"/>
@@ -465,7 +444,6 @@
                             <separator orientation="vertical" />
                             <filter string="Date" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date'}" />
-
                         </group>
                 </search>
             </field>

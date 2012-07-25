@@ -36,7 +36,10 @@
     'name': 'Honduras - Accounting',
     'version': '0.1',
     'category': 'Localization/Account Charts',
-    'description': """Agrega una nomenclatura contable para Honduras. También incluye impuestos y la moneda Lempira. -- Adds accounting chart for Honduras.  It also includes taxes and the Lempira currency""",
+    'description': """
+Agrega una nomenclatura contable para Honduras. También incluye impuestos y la
+moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
+and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'http://trimarchi.co.cc',
     'depends': ['base', 'account', 'account_chart'],

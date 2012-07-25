@@ -9,10 +9,6 @@
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
             <data>
-            <xpath expr="/form/label[@string='']" position="replace">
-                <separator string="Journals" colspan="4"/>
-                <label nolabel="1" colspan="4" string="This report gives you an overview of the situation of a specific journal"/>
-            </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
                 <field name="sort_selection"/>
                 <field name="amount_currency"/>
@@ -67,5 +63,5 @@
             sequence="1"/>
 
 
-	</data>
+    </data>
 </openerp>

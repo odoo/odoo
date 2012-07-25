@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-14 05:06+0000\n"
+"PO-Revision-Date: 2012-06-21 23:39+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-15 04:42+0000\n"
-"X-Generator: Launchpad (build 15414)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:41+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -27,7 +27,7 @@ msgstr "買い手は仕入先に送られる前に見積依頼（RFQ）を承認
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr "制御のために入ってくる製品"
+msgstr "制御のための入庫製品"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -344,7 +344,7 @@ msgstr "価格リスト"
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr "輸送例外"
+msgstr "出荷例外"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -355,12 +355,12 @@ msgstr "請求書行"
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr "入ってくる製品"
+msgstr "入庫製品"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr "出て行く製品"
+msgstr "出庫製品"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -599,7 +599,7 @@ msgstr "住所宛名"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Shipping address :"
-msgstr "送付先："
+msgstr "送付先住所："
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1037,7 +1037,7 @@ msgstr "これは請求書は既に支払われたことを意味しています
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr "請求するための出て行く製品"
+msgstr "請求するための出庫製品"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1179,7 +1179,7 @@ msgstr "この発注オーダーはキャンセルできません。"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr "入ってくる製品を追跡するために集荷リストが作成されます。"
+msgstr "入庫製品を追跡するために集荷リストが作成されます。"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0

@@ -8,10 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project Task Delegate" version="7.0">
-                    <header>
-                        <button icon="gtk-ok" name="delegate" string="_Delegate" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                    </header>
                     <group>
                         <group>
                             <field name="project_id" on_change="onchange_project_id(project_id)"/>
@@ -29,6 +25,11 @@
                             <field name="state"/>
                         </group>
                     </group>
+                    <footer>
+                        <button name="delegate" string="_Delegate" type="object" class="oe_highlight"/>
+                         or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

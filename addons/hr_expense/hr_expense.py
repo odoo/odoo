@@ -56,12 +56,12 @@ class hr_expense_expense(osv.osv):
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)], context=context)[0]
 
     _name = "hr.expense.expense"
+    _inherit = ['mail.thread']
     _description = "Expense"
     _order = "id desc"
     _columns = {
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
-        'ref': fields.char('Reference', size=32),
         'date': fields.date('Date', select=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is invoiced"),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),

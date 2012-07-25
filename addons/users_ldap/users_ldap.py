@@ -27,6 +27,7 @@ import pooler
 import tools
 from osv import fields, osv
 from openerp import SUPERUSER_ID
+_logger = logging.getLogger(__name__)
 
 class CompanyLDAP(osv.osv):
     _name = 'res.company.ldap'
@@ -107,8 +108,7 @@ class CompanyLDAP(osv.osv):
         except ldap.INVALID_CREDENTIALS:
             return False
         except ldap.LDAPError, e:
-            logger = logging.getLogger('orm.ldap')
-            logger.error('An LDAP exception occurred: %s', e)
+            _logger.error('An LDAP exception occurred: %s', e)
         return entry
         
     def query(self, conf, filter, retrieve_attributes=None):
@@ -135,7 +135,6 @@ class CompanyLDAP(osv.osv):
         """
 
         results = []
-        logger = logging.getLogger('orm.ldap')
         try:
             conn = self.connect(conf)
             conn.simple_bind_s(conf['ldap_binddn'] or '',
@@ -144,9 +143,9 @@ class CompanyLDAP(osv.osv):
                                      filter, retrieve_attributes, timeout=60)
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
-            logger.error('LDAP bind failed.')
+            _logger.error('LDAP bind failed.')
         except ldap.LDAPError, e:
-            logger.error('An LDAP exception occurred: %s', e)
+            _logger.error('An LDAP exception occurred: %s', e)
         return results
 
     def map_ldap_attributes(self, cr, uid, conf, login, ldap_entry):
@@ -188,8 +187,7 @@ class CompanyLDAP(osv.osv):
             if res[1]:
                 user_id = res[0]
         elif conf['create_user']:
-            logger = logging.getLogger('orm.ldap')
-            logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
             user_obj = self.pool.get('res.users')
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:

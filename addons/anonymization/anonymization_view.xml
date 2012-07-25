@@ -10,6 +10,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Anonymized Field" version="7.0">
+                <sheet>
                 <group col="4">
                     <field name="model_id" on_change="onchange_model_id(model_id)" />
                     <field name="model_name" on_change="onchange_model_name(model_name)" />
@@ -20,6 +21,7 @@
                     <field name="field_name" on_change="onchange_field_name(field_name, model_name)" />
                     <field name="state" />
                 </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -102,6 +104,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Anonymization History" version="7.0">
+                <sheet>
                 <group col="4">
                     <field name="date"/>
                     <field name="state"/>
@@ -119,6 +122,7 @@
                         </tree>
                     </field>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>

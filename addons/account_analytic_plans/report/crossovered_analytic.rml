@@ -237,10 +237,10 @@
             <para style="terp_default_Centre_9">[[ a['ref_code'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(a['ref_qty']) ]]</para>
+            <para style="terp_default_Right_9">[[ a['ref_qty'] and formatLang(a['ref_qty']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(a['ref_amt'], currency_obj=company.currency_id) ]]</para>
+            <para style="terp_default_Right_9">[[ a['ref_amt'] and formatLang(a['ref_amt'], currency_obj=company.currency_id) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">100.00%</para>

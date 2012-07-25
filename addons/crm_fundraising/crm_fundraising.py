@@ -21,11 +21,8 @@
 
 from base_status.base_stage import base_stage
 from crm import crm
-from crm import wizard
 from osv import fields, osv
 from tools.translate import _
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.fundraising')
 
 class crm_fundraising(base_stage, osv.osv):
     """ Fund Raising Cases """
@@ -34,6 +31,7 @@ class crm_fundraising(base_stage, osv.osv):
     _description = "Fund Raising"
     _order = "id desc"
     _inherit = ['mail.thread']
+    _mail_compose_message = True
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
@@ -127,21 +125,26 @@ class crm_fundraising(base_stage, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
+    # -------------------------------------------------------
+    # Mail gateway
+    # -------------------------------------------------------
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically called when new email message arrives"""
-        res_id = super(crm_fundraising,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        vals = {
-            'name': msg.get('subject'),
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override also updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name': msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'description': msg.get('body_text'),
-        }
-        priority = msg.get('priority')
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from')))
-        self.write(cr, uid, [res_id], vals, context=context)
-        return res_id
+        })
+        if msg.get('priority'):
+            custom_values['priority'] = priority
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
+        return super(crm_fundraising,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     # ---------------------------------------------------
     # OpenChatter methods and notifications

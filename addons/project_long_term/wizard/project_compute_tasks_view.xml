@@ -8,13 +8,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                  <form string="Schedule Tasks" version="7.0">
-                     <header>
-                         <button icon="gtk-ok" name="compute_date" string="C_ompute" type="object"/>
-                         <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                     </header>
                      <group>
                          <field name="project_id"/>
                      </group>
+                     <footer>
+                         <button name="compute_date" string="C_ompute" type="object" class="oe_highlight"/>
+                         or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                     </footer>
                   </form>
             </field>
         </record>

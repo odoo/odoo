@@ -8,11 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Event Confirmation" version="7.0">
-                  <header>
-                      <button icon="gtk-ok" name="confirm" string="Confirm Anyway" type="object"/>
-                      <button  icon="gtk-close" special="cancel" string="Close"/>
-                  </header>
                   <label string="Warning: This Event has not reached its Minimum Registration Limit. Are you sure you want to confirm it?"/>
+                  <footer>
+                      <button name="confirm" string="Confirm Anyway" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />
+                  </footer>
             </form>
             </field>
         </record>

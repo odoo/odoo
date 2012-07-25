@@ -7,12 +7,12 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <field name="property_account_payable" position="after" version="7.0">
+                <field name="property_account_position" position="after" version="7.0">
                     <label for="vat"/>
                     <div>
-                        <field name="vat" on_change="vat_change(vat)" placeholder="BE0477472702" class="oe_form_inline"/>
-                        <button colspan="2" name="button_check_vat" string="Check VAT" type="object" icon="gtk-execute" class="oe_form_inline"/>
-                        <field name="vat_subjected" class="oe_form_inline"/>
+                        <field name="vat" on_change="vat_change(vat)" placeholder="BE0477472702" class="oe_inline"/>
+                        <button colspan="2" name="button_check_vat" string="Check VAT" type="object" icon="gtk-execute" class="oe_inline"/>
+                        <field name="vat_subjected" class="oe_inline"/>
                     </div>
                 </field>
             </field>

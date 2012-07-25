@@ -13,11 +13,11 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                     <header>
-                        <button icon="gtk-go-forward" name="action_next" string="Start" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
-                        <separator colspan="4"  string =  "Select Survey and Related Answer"/>
                         <field name="survey_id"/>
                         <field name="response_id" domain="[('survey_id','=', survey_id)]"/>
                     </group>

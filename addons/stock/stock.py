@@ -33,7 +33,7 @@ import tools
 from tools import float_compare
 import decimal_precision as dp
 import logging
-
+_logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # Incoterms
@@ -419,9 +419,8 @@ class stock_location(osv.osv):
                     # so we ROLLBACK to the SAVEPOINT to restore the transaction to its earlier
                     # state, we return False as if the products were not available, and log it:
                     cr.execute("ROLLBACK TO stock_location_product_reserve")
-                    logger = logging.getLogger('stock.location')
-                    logger.warn("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
-                    logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
+                    _logger.warn("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
+                    _logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
                     return False
 
             # XXX TODO: rewrite this with one single query, possibly even the quantity conversion
@@ -1727,10 +1726,15 @@ class stock_move(osv.osv):
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
         return location_id
+    
+    def _default_destination_address(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.partner_id.id
 
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
+        'partner_id': _default_destination_address,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,

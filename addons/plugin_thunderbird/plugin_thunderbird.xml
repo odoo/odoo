@@ -11,29 +11,28 @@
                     <form position="attributes">
                         <attribute name="string">Install Thunderbird Plug-In</attribute>
                     </form>
-                     <separator string="title" position="before">
-                        <label string="This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."/>
-                    </separator>
-                    <xpath expr="//button[@string='Install Modules']" position="replace">
-                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
-                    </xpath>
-                    <xpath expr="//button[@string='Cancel']" position="replace"></xpath>
+                    <xpath expr="//footer" position="replace"/>
                     <xpath expr="//separator[@string='title']" position="after">
-                        <group colspan="8" height="450" width="750">
+                        <group>
                             <field name="thunderbird" invisible="1"/>
-                            <field name="name" invisible="1"/>
-                            <field name="pdf_name" invisible="1"/>
-                            <newline/>
-                            <field name="plugin_file" filename="name" widget="url"/>
-                            <newline/>
-                            <field name="pdf_file" filename="pdf_name" widget="url"/>
-                            <newline/>
-                            <separator string="Installation and Configuration Steps" colspan="4"/>
-                            <field name="description" nolabel="1" colspan="8"/>
+                            <field name="plugin_name" invisible="1"/>
+                            <field name="plugin_file" filename="plugin_name" widget="url"/>
+                            <field name="pdf_file" widget="url"/>
                         </group>
+                        <separator string="Installation and Configuration Steps"/>
+                        <p>Thunderbird plugin installation:</p>
+                        <ul>
+                            <li>1. Save the Thunderbird plug-in.</li>
+                            <li>2. From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
+                            <li>3. Select the plug-in (the file named openerp_plugin.xpi).</li>
+                            <li>4. Click "Install Now".</li>
+                            <li>5. Restart Thunderbird.</li>
+                            <li>6. From the Thunderbird menubar: OpenERP -> Configuration.</li>
+                            <li>7. Configure your openerp server.</li>
+                        </ul>
                     </xpath>
                     <separator string="title" position="attributes">
-                         <attribute name="string">Install Thunderbird Plug-In</attribute>
+                        <attribute name="string"></attribute>
                     </separator>
                 </data>
             </field>
@@ -48,19 +47,21 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
         </record>
-    
+
         <!-- Sales Configuration -->
         <record id="view_config_thunderbird_installer" model="ir.ui.view">
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <field name="module_plugin_thunderbird" position="after">
-                    <group colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
-                        <button name="%(action_thunderbird_installer)d" type="action"
-                            string="Configure Thunderbird Plugin" icon="gtk-execute"/>
-                    </group>
+                <field name="module_plugin_thunderbird" version="7.0" position="replace">
+                    <label for="module_plugin_thunderbird"/>
+                    <div>
+                        <field name="module_plugin_thunderbird"/>
+                        <button name="%(action_thunderbird_installer)d" type="action" string="Configure" icon="gtk-execute"
+                            attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}"/>
+                    </div>
                 </field>
             </field>
         </record>

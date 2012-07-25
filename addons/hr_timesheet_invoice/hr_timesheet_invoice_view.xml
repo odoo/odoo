@@ -5,28 +5,24 @@
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="priority">30</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="on_change_partner_id(partner_id, context)"/>
-                </field>
-                <group name="contract" position="after">
-                    <group name="invoice_data">
-                        <separator colspan="2" string="Invoicing Data"/>
+                <xpath expr='//separator[@name="description"]' position='before'>
+                    <group string="Invoice on Timesheets Options" name="invoice_on_timesheets" col="4">
+                        <field name="pricelist_id" />
                         <field name="to_invoice" widget="selection"/>
-                        <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" attrs="{'required':[('to_invoice','!=',False)]}"/>
-                        <field name="amount_max"/>
                     </group>
-                    <group name="invoice_stats">
-                        <separator colspan="4" string="Invoicing Statistics"/>
-                        <field name="amount_invoiced"/>
-                    </group>
-                </group>
+                 </xpath>
+                <xpath expr="//field[@name='use_timesheets']" position="replace">
+                    <field name="use_timesheets" on_change="on_change_use_timesheets(use_timesheets, context)"/>
+                </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
-                        <button name="set_pending" string="Pending" type="object" states="open"/>
-                        <button name="set_close" string="Close" type="object" states="open,pending"/>
-                        <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close,draft"/>
+                        <button name="set_pending" string="Pending" type="object" states="open" />
+                        <button name="set_close" string="Close" type="object" states="open,pending" />
+                        <button name="set_open" string="Re-open project" type="object" states="pending,close" />
+                        <button name="set_open" string="Re-open project" type="object" states="cancelled,draft"/>
                         <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                         <field name="state" readonly="1" widget="statusbar"
                             statusbar_visible="open,pending,close" statusbar_colors='{"pending":"red", "template":"blue"}'/>
@@ -57,7 +53,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -80,9 +76,8 @@
             <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -119,7 +114,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
-                <field name="product_uom_id" position="after">
+                <field name="amount" position="before">
                     <field name="to_invoice"/>
                     <field name="invoice_id"/>
                 </field>
@@ -128,7 +123,7 @@
 
         <!-- Menus -->
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -150,7 +145,7 @@
             <field name="arch" type="xml">
                 <search string="Type of invoicing">
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Type of invoicing"/>
                     </group>
                 </search>
             </field>

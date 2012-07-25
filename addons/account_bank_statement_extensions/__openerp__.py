@@ -20,22 +20,23 @@
 #
 ##############################################################################
 {
-    'name': 'Bank Statement extensions to support e-banking',
+    'name': 'Bank Statement Extensions to Support e-banking',
     'version': '0.3',
     'license': 'AGPL-3',
     'author': 'Noviat',
     'category': 'Generic Modules/Accounting',
     'description': '''
 Module that extends the standard account_bank_statement_line object for improved e-banking support.
+===================================================================================================
 
-Adds
-- valuta date
-- batch payments
-- traceability of changes to bank statement lines
-- bank statement line views
-- bank statements balances report
-- performance improvements for digital import of bank statement (via 'ebanking_import' context flag)
-- name_search on res.partner.bank enhanced to allow search on bank and iban account numbers
+This module adds:
+    - valuta date
+    - batch payments
+    - traceability of changes to bank statement lines
+    - bank statement line views
+    - bank statements balances report
+    - performance improvements for digital import of bank statement (via 'ebanking_import' context flag)
+    - name_search on res.partner.bank enhanced to allow search on bank and iban account numbers
     ''',
     'depends': ['account'],
     'demo_xml': [],

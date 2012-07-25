@@ -9,14 +9,16 @@
             <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
             <field name="arch" type="xml">
               <data>
-                    <xpath expr="//form/group/group/separator" position="attributes">
+<!--
+                    <xpath expr="//group[@string='res_config_contents']/separator" position="attributes">
                         <attribute name="string">
                         Generate Your UK Accounting Chart from a Chart Template
                         </attribute>
                     </xpath>
-                    <xpath expr="//form/group/group/label" position="attributes">
+                    <xpath expr="//group[@string='res_config_contents']/label" position="attributes">
                         <attribute name="string">SELECT 4 DIGIT ACCOUNTS.  This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/ Financial Accounts/Generate Chart of Accounts from a Chart Template.</attribute>
                     </xpath>
+-->                    
               </data>
             </field>
         </record>

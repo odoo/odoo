@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <!-- Supplier voucher view -->
-        
+        <!-- Supplier write check view -->
+
         <record model="ir.ui.view" id="view_vendor_payment_check_form">
             <field name="name">account.voucher.payment.check.form</field>
             <field name="model">account.voucher</field>
@@ -20,7 +20,7 @@
                     <field name="number" attrs="{'readonly':[('allow_check','!=',1)]}" />
                 </field>
                 <button name="proforma_voucher" position="after">
-                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}"/>
+                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}" class="oe_highlight"/>
                 </button>
             </field>
         </record>

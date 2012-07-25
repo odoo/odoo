@@ -11,25 +11,22 @@
                     <form position="attributes">
                         <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
-                    <separator string="title" position="before">
-                        <label string="This plug-in allows you to create and link outlook emails with openerp objects."/>
-                    </separator>
-                    <xpath expr="//button[@string='Install Modules']" position="replace">
-                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
-                    </xpath>
-                    <xpath expr="//button[@string='Cancel']" position="replace">
-                    </xpath>
-                   <xpath expr="//separator[@string='title']" position="after">
-                        <group colspan="8" height="450" width="750">
-                            <field name="name" widget="url" colspan="4"/>
-                            <field name="name2" widget="url" colspan="4"/>
-                            <newline/>
-                            <separator string="Installation and Configuration Steps" colspan="4"/>
-                            <field name="description" nolabel="1" colspan="8"/>
+                    <xpath expr="//footer" position="replace"/>
+                    <xpath expr="//separator[@string='title']" position="after" version="7.0">
+                        <group>
+                            <field name="plugin32" widget="url"/>
+                            <field name="plugin64" widget="url"/>
                         </group>
+                        <separator string="Installation and Configuration Steps"/>
+                        <p>Click on the link above to download the installer for either 32 or 64 bits, and execute it.</p>
+                        <p>System requirements:</p>
+                        <ul>
+                            <li>1. MS Outlook 2005 or above.</li>
+                            <li>2. MS .Net Framework 3.5 or above.</li>
+                        </ul>
                     </xpath>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Install Outlook Plug-In</attribute>
+                        <attribute name="string"></attribute>
                     </separator>
                 </data>
             </field>
@@ -50,13 +47,15 @@
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <field name="module_plugin_outlook" position="after">
-                    <group colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
-                        <button name="%(action_outlook_installer)d" type="action"
-                            string="Configure Outlook Plugin" icon="gtk-execute"/>
-                    </group>
+                <field name="module_plugin_outlook" version="7.0" position="replace">
+                    <label for="module_plugin_outlook"/>
+                    <div>
+                        <field name="module_plugin_outlook"/>
+                        <button name="%(action_outlook_installer)d" type="action" string="Configure" icon="gtk-execute"
+                            attrs="{'invisible': [('module_plugin_outlook','=',False)]}"/>
+                    </div>
                 </field>
             </field>
         </record>

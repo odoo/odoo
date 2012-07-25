@@ -245,7 +245,7 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
-        'note': fields.text('Notes'),
+        'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
             store = {
@@ -483,19 +483,19 @@ class sale_order(osv.osv):
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
     
     def manual_invoice(self, cr, uid, ids, context=None):
+        """ create invoices for the given sale orders (ids), and open the form
+            view of one of the newly created invoices
+        """
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
-        inv_ids = set()
-        inv_ids1 = set()
-        for id in ids:
-            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
-                inv_ids.add(record.id)
-        # inv_ids would have old invoices if any
+
+        # create invoices through the sale orders' workflow
+        inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         for id in ids:
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
-            for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
-                inv_ids1.add(record.id)
-        inv_ids = list(inv_ids1.difference(inv_ids))
+        inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
+        # determine newly created invoices
+        new_inv_ids = list(inv_ids1 - inv_ids0)
 
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False,
@@ -510,7 +510,7 @@ class sale_order(osv.osv):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'res_id': inv_ids and inv_ids[0] or False,
+            'res_id': new_inv_ids and new_inv_ids[0] or False,
         }
 
     def action_view_invoice(self, cr, uid, ids, context=None):
@@ -726,7 +726,7 @@ class sale_order(osv.osv):
             self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
-    
+
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         wf_service = netsvc.LocalService('workflow')
@@ -831,7 +831,7 @@ class sale_order(osv.osv):
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         return {
-            'name': line.name,
+            'name': line.name.split('\n')[0],
             'origin': order.name,
             'date_planned': date_planned,
             'product_id': line.product_id.id,
@@ -845,14 +845,15 @@ class sale_order(osv.osv):
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
-            'note': line.notes
+            'note': '\n'.join(line.name.split('\n')[1:]),
+            'property_ids': [(6, 0, [x.id for x in line.property_ids])]
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
-            'name': line.name[:250],
+            'name': line.name.split('\n')[0][:250],
             'picking_id': picking_id,
             'product_id': line.product_id.id,
             'date': date_planned,
@@ -870,7 +871,7 @@ class sale_order(osv.osv):
             'tracking_id': False,
             'state': 'draft',
             #'state': 'waiting',
-            'note': line.notes,
+            'note': '\n'.join(line.name.split('\n')[1:]),
             'company_id': order.company_id.id,
             'price_unit': line.product_id.standard_price or 0.0
         }
@@ -1016,16 +1017,16 @@ class sale_order(osv.osv):
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     return True
         return False
-    
+
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if (obj.state == 'manual' or obj.state == 'progress'):
-                result[obj.id] = [obj.user_id.id]
+                result[obj.id].append(obj.user_id.id)
         return result
  
     def create_send_note(self, cr, uid, ids, context=None):
@@ -1106,7 +1107,7 @@ class sale_order_line(osv.osv):
     _description = 'Sales Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.text('Product Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
@@ -1126,9 +1127,8 @@ class sale_order_line(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
-        'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft': [('readonly', False)]}),
+        'discount': fields.float('Discount', digits=(16, 2), readonly=True, states={'draft': [('readonly', False)]}),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
-        'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', required=True, readonly=True,
                 help='* The \'Draft\' state is set when the related sales order in draft state. \
@@ -1221,7 +1221,6 @@ class sale_order_line(osv.osv):
                 'uos_id': uos_id,
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                'note': line.notes,
                 'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
             }
 
@@ -1381,8 +1380,6 @@ class sale_order_line(osv.osv):
                     uos = False
             else:
                 uos = False
-        if product_obj.description_sale:
-            result['notes'] = product_obj.description_sale
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
@@ -1391,6 +1388,8 @@ class sale_order_line(osv.osv):
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
+            if product_obj.description_sale:
+                result['name'] += '\n'+product_obj.description_sale
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id

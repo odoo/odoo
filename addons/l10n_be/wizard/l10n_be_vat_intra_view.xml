@@ -8,12 +8,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner VAT intra" version="7.0">
-                    <header>
-                        <button name="create_xml" string="Create _XML" type="object" icon="gtk-execute"/>
-                        <button name="preview" string="_Preview" type="object" icon="gtk-print"/>
-                        <button special="cancel" string="_Close" icon="gtk-cancel"/>
-                    </header>
-                    <separator string="Intracom VAT Declaration"/>
+                    <group>
+                        <separator string="Intracom VAT Declaration"/>
+                    </group>   
                     <notebook colspan="4">
                         <page string="General Information">
                             <group>
@@ -30,6 +27,12 @@
                             <field name="country_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
+                    <footer>
+                        <button name="create_xml" string="Create _XML" type="object" class="oe_highlight"/>
+                        <button name="preview" string="_Preview" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -40,9 +43,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Save XML" version="7.0">
-                    <header>
-                        <button special="cancel" string="Close" icon="gtk-cancel" colspan="4"/>
-                    </header>
                     <separator string="Note: "/>
                     <label string="Save the File with '.xml' extension."/>
                     <field name="name"/>

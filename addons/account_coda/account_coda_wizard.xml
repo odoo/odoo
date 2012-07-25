@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
 
     <record id="account_coda_import_view" model="ir.ui.view">
       <field name="name">Import CODA File</field>
@@ -10,10 +10,11 @@
       <field name="arch" type="xml">
         <form string="Import CODA File" version="7.0">
             <header>
-                <button name="coda_parsing" string="_Import" type="object" icon="gtk-ok"/>
-                <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                <button name="coda_parsing" string="_Import" type="object" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel"/>
             </header>
-            <group col="2" string="Select Your File :">
+            <group col="2">
                 <field name="coda_data" filename="coda_fname"/>
                 <field name="coda_fname"/>
             </group>
@@ -29,9 +30,10 @@
       <field name="arch" type="xml">
         <form string="Import CODA File" version="7.0">
           <header>
-              <button name="action_open_coda_statements" string="View CODA Bank Statement(s)" type="object" icon="gtk-apply"/>
-              <button name="action_open_bank_statements" string="View Bank Statement(s)" type="object" icon="gtk-apply"/>
-              <button special="cancel" string="Close" icon="gtk-cancel"/>
+              <button name="action_open_coda_statements" string="View CODA Bank Statement(s)" type="object" class="oe_highlight"/>
+              <button name="action_open_bank_statements" string="View Bank Statement(s)" type="object" class="oe_highlight"/>
+              or
+              <button string="Cancel" class="oe_link" special="cancel"/>
           </header>
           <group string="Results :">
               <field name="note" nolabel="1" colspan="2"/>

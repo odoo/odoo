@@ -2,14 +2,13 @@
 <openerp>
     <data>
 
-
     <record model="ir.ui.view" id="purchase_order_form_inherit">
         <field name="name">purchase.order.form.inherit</field>
         <field name="type">form</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
-            <field name="shipped" position="after">
+            <field name="validator" position="before">
                 <field name="requisition_id"/>
             </field>
         </field>
@@ -34,39 +33,44 @@
         <field name="arch" type="xml">
             <form string="Purchase Requisition" version="7.0">
             <header>
-                <button name="tender_in_progress" states="draft" string="Start" type="object" />
+                <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" class="oe_highlight"/>
                 <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
-                <button name="tender_done" states="in_progress" string="Done" type="object" />
+                <button name="tender_done" states="in_progress" string="Purchase Done" type="object" class="oe_highlight"/>
                 <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" />
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
-                <label for="name" class="oe_form_readonly_hidden"/>
+                <div class="oe_edit_only">
+                    <label for="name" class="oe_inline"/>
+                    <label for="origin" class="oe_inline"/>
+                </div>
                 <h1>
-                    <field name="name" class="oe_form_inline"/>, 
-                    <field name="origin" class="oe_form_inline"/>
+                    <field name="name" class="oe_inline"/>
+                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
+                    <field name="origin" class="oe_inline" placeholder="PO0025"/>
                 </h1>
                 <group>
                     <group>
                         <field name="user_id"/>
                         <field name="exclusive"/>
-                    </group><group>
+                    </group>
+                    <group>
                         <field name="date_start"/>
                         <field name="date_end"/>
-                        <field name="warehouse_id" widget="selection"/>
+                        <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </group>
-                <notebook colspan="4">
+                <notebook>
                     <page string="Products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
                                 <field name="product_qty"/>
-                                <field name="product_uom_id"/>
+                                <field name="product_uom_id" groups="product.group_uom"/>
                             </tree>
                             <form string="Products" version="7.0">
-                                <group col="4">
+                                <group>
                                     <field name="product_id" />
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" />
@@ -74,30 +78,35 @@
                                 </group>
                             </form>
                         </field>
-                        <separator string="Terms and Conditions"/>
-                        <field name="description"/>
-                    </page>
-                    <page string="Quotations">
-                        <field name="purchase_ids">
+                        <div class="oe_right oe_button_box" style="margin-top: 10px">
+                            <button name="%(action_purchase_requisition_partner)d" type="action"
+                                string="Request a Quotation" icon="gtk-execute"
+                                attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
+                        </div>
+                        <separator string="Quotations"/>
+                        <field name="purchase_ids" readonly="1">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>
                                 <field name="partner_id"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="location_id"/>
+                                <field name="location_id" groups="stock.group_locations"/>
                                 <field name="minimum_planned_date"/>
                                 <field name="origin"/>
                                 <field name="state"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>                                
+                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
                                 <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
                             </tree>
-                         </field>
-                         <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
-                           attrs="{'readonly': [('state', '=', 'done')]}" />
-                   </page>
+                        </field>
+                        <separator string="Terms and Conditions"/>
+                        <field name="description"/>
+                    </page>
                 </notebook>
             </sheet>
+            <div class="oe_chatter">
+                  <field name="message_ids" widget="mail_thread"/>
+            </div> 
             </form>
         </field>
     </record>
@@ -106,15 +115,17 @@
         <field name="type">tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree colors="grey:state == 'done';red:date_end&lt;current_date and state not in ('done','cancel');black:date_end&gt;=current_date;" string="Purchase Requisition">
+            <tree fonts="bold:needaction_pending==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Purchase Requisition">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="name"/>
-                <field name="user_id"/>
                 <field name="date_start"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 <field name="date_end"/>
                 <field name="origin"/>
                 <field name="state"/>
             </tree>
-        </field>
+      </field>
     </record>
 
     <record id="view_purchase_requisition_filter" model="ir.ui.view">
@@ -123,19 +134,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
-                 <group>
+                <group>
+                    <field name="name" string="Purchase Requisition"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
-                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
-                    <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
+                    <filter icon="terp-camera_test" string="Sent to Suppliers" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
+                    <filter icon="terp-dialog-close" string="Purchase Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="user_id" />
                     <field name="exclusive" />
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By...">
+                <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -144,7 +156,7 @@
                     <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
                     <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
                 </group>
-              </search>
+                </search>
             </field>
         </record>
 
@@ -186,7 +198,7 @@
         <field name="model">procurement.order</field>
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">
-             <xpath expr="//field[@name='close_move']" position="after">
+            <xpath expr="//field[@name='close_move']" position="after">
                 <field name="requisition_id"/>
             </xpath>
         </field>

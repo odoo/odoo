@@ -25,6 +25,7 @@ import logging
 from osv import fields, osv
 from PIL import Image
 import StringIO
+_logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
 
@@ -107,7 +108,7 @@ class hr_job(osv.osv):
             },
             multi='no_of_employee'),
         'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
-        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
+        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
@@ -190,7 +191,7 @@ class hr_employee(osv.osv):
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
-        'work_email': fields.char('Work E-mail', size=240),
+        'work_email': fields.char('Work Email', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
@@ -210,6 +211,16 @@ class hr_employee(osv.osv):
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
+
+    def create(self, cr, uid, data, context=None):
+        employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
+        try:
+            (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
+            employee = self.browse(cr, uid, employee_id, context=context)
+            self.pool.get('mail.group').message_append_note(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
+        except:
+            pass # group deleted: do not push a message
+        return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
         resource_obj = self.pool.get('resource.resource')
@@ -249,13 +260,13 @@ class hr_employee(osv.osv):
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
-    def _get_photo(self, cr, uid, context=None):
+    def _default_get_photo(self, cr, uid, context=None):
         photo_path = addons.get_module_resource('hr','images','photo.png')
         return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
 
     _defaults = {
         'active': 1,
-        'photo': _get_photo,
+        'photo': _default_get_photo,
         'marital': 'single',
         'color': 0,
     }
@@ -304,9 +315,13 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
 
         return user_id
+
+    _columns = {
+        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
+        }
 
 res_users()
 

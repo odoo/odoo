@@ -8,27 +8,27 @@
             <field name="arch" type="xml">
                 <form string="Configure Purchases" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                    <group col="4">
-                        <separator string="Invoicing" colspan="4"/>
-                        <field name="default_invoice_method"/>
-                        <field name="decimal_precision"/>
-
-                        <separator string="Purchase Order" colspan="4"/>
-                        <field name="group_purchase_pricelist"/>
-                        <field name="group_uom"/>
-                        <field name="module_purchase_double_validation"/>
-                        <field name="module_purchase_requisition"/>
-                        <field name="module_warning"/>
-                        <field name="module_purchase_analytic_plans"/>
-
-                        <separator string="Products" colspan="4"/>
-                        <field name="module_product_manufacturer"/>
+                    <group>
+                        <group>
+                            <separator string="Purchase Order" colspan="2"/>
+                            <field name="group_purchase_pricelist"/>
+                            <field name="group_uom"/>
+                            <field name="group_purchase_delivery_address"/>
+                            <field name="module_purchase_double_validation"/>
+                            <field name="module_purchase_requisition"/>
+                            <field name="module_warning"/>
+                            <field name="module_purchase_analytic_plans"/>
+                        </group>
+			<group>
+                            <separator string="Invoicing" colspan="2"/>
+                            <field name="default_invoice_method" class="oe_inline"/>
+                            <field name="decimal_precision" class="oe_inline"/>
+                        </group>
                     </group>
-                    </sheet>
                 </form>
             </field>
         </record>
@@ -51,13 +51,14 @@
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="priority" eval="18"/>
             <field name="arch" type="xml">
-                <group name="analytic_accounting" position="attributes">
+                <separator name="analytic_accounting" position="attributes">
                     <attribute name="invisible">0</attribute>
-                </group>
-                <group name="analytic_accounting" position="inside">
+                    <attribute name="colspan">2</attribute>
+                </separator>
+                <separator name="analytic_accounting" position="after">
                     <field name="group_analytic_account_for_purchases"/>
-                    <field name="module_purchase_analytic_plans"/>
-                </group>
+                    <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans)"/>
+                </separator>
             </field>
         </record>
 

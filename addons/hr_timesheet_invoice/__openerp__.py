@@ -24,12 +24,14 @@
     'name': 'Invoice on Timesheets',
     'version': '1.0',
     'category': 'Sales Management',
-    'description': """Generate your Invoices from Expenses, Timesheet Entries, ...
+    'description': """
+Generate your Invoices from Expenses, Timesheet Entries.
+========================================================
+
 Module to generate invoices based on costs (human resources, expenses, ...).
-============================================================================
 
 You can define price lists in analytic account, make some theoretical revenue
-reports, etc.""",
+reports.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_bill_task_work.jpeg','images/hr_type_of_invoicing.jpeg'],
@@ -45,7 +47,6 @@ reports, etc.""",
         'wizard/hr_timesheet_analytic_profit_view.xml',
         'wizard/hr_timesheet_invoice_create_view.xml',
         'wizard/hr_timesheet_invoice_create_final_view.xml',
-        'board_hr_timesheet_invoice.xml',
     ],
     'demo': [
         'hr_timesheet_invoice_demo.xml',

@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-<!--
-        It's easier for new users to not activate this (ex: they misconfigure
-        header and footer.)
-
-        <record model="ir.actions.report.xml" id="account.account_invoices">
-            <field name="attachment_use">1</field>
+        <!-- rename root menu "Accounting" -->
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="name">Accounting</field>
         </record>
--->
+    </data>
 
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Accounting and Finance has been installed</value>
+            <value>From the top menu Accounting, manage all of your accounting:
+                general accounting, cost/analytic accounting, third party
+                accounting, taxes, budgets, customer and supplier invoices,
+                bank statements, reconciliation process.
+            </value>
+        </function>
     </data>
 </openerp>

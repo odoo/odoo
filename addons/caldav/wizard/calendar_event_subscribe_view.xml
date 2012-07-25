@@ -6,16 +6,16 @@
             <field name="model">calendar.event.subscribe</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscribe to Remote Calendar">
+                <form string="Subscribe to Remote Calendar" version="7.0">
                     <group colspan="4" >
                          <separator string="Provide Path for Remote Calendar"/>
                           <field name="url_path" colspan="4" width="300" nolabel="1" widget="url"/>
                     </group>
-                        <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                        <button  icon="gtk-ok"  name="process_imp_ics"  string="_Subscribe" type="object"/>
-                   </group>
+                    <footer>
+                        <button name="process_imp_ics"  string="_Subscribe" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
@@ -29,10 +29,6 @@
                     <group colspan="4" >
                           <field name="msg" colspan="4" width="300" nolabel="1"/>
                     </group>
-                        <separator string="" colspan="4" />
-                    <group colspan="4">
-                        <button  icon="gtk-ok" special="cancel" string="Ok"/>
-                   </group>
                </form>
             </field>
         </record>

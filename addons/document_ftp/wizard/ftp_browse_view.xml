@@ -7,14 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Browse Document" version="7.0">
-                    <header>
-                        <button name="browse_ftp" string="_Browse" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                    </header>
-                    <separator string="Browse Document"/>
                     <group>
                         <field name="url" widget="url"/>
                     </group>
+                    <footer>
+                        <button name="browse_ftp" string="_Browse" type="object" icon="gtk-ok" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

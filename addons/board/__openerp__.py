@@ -39,12 +39,13 @@ The user can also publish notes.
         'board_view.xml',
         'board_data_admin.xml',
         'board_data_home.xml',
+        'board_mydashboard_view.xml'
     ],
     'demo_xml': [
         'board_demo.xml'
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'certificate': '0076912305725',
     'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }

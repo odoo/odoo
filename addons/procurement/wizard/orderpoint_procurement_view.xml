@@ -10,14 +10,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters" version="7.0">
-                    <header>
-                        <button name="procure_calculation" string="Compute Stock" type="object" icon="gtk-ok" />
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                    </header>
-                    <label string="Wizard checks all the stock minimum rules and generate procurement order."/>
+                    <group>
+                        <label string="Wizard checks all the stock minimum rules and generate procurement order."/>
+                    </group>
                     <group col="2">
                         <field name="automatic"/>
                     </group>
+                    <footer>
+                        <button name="procure_calculation" string="Compute Stock" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

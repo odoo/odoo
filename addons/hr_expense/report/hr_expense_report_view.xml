@@ -8,7 +8,6 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'" string="Expenses Analysis">
-                <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -53,23 +52,10 @@
         <field name="arch" type="xml">
             <search string="Expenses Analysis">
               <group>
-                <filter icon="terp-go-year" string="Year" name="year"
-                      domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                      help="Expenses during current year"/>
-                    <separator orientation="vertical"/>					  
-                  <filter icon="terp-go-month" string="Month"
-                      name="month"
-                      domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                      help="Expenses during current month"/>
-                <filter icon="terp-go-month" string="    Month-1    " 
-                      domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                      help="Expenses during last month"/>
-                  <separator orientation="vertical"/>
                     <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
-                    help = "Confirm Expenses"/>
+                      help = "Confirm Expenses"/>
                     <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
                       help = "Approved Expenses"/>
-                    <separator orientation="vertical"/>
                     <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]"
                       help = "Invoiced Expenses"/>
                     <separator orientation="vertical"/>
@@ -118,7 +104,7 @@
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
-    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="2"/>
+    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="1"/>
 
 </data>
 </openerp>

@@ -68,7 +68,13 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">This tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form to trace every contact you have with a partner. From the phone call form, you can trigger a request for another call, a meeting or an opportunity.</field>
+        <field name="help">
+            Click on "Create" to log a new call.
+            &lt;p&gt;
+            This tool allows you to log your calls on the fly.
+            &lt;p&gt;
+            From this feature, you can trigger a request for another call, a meeting or an opportunity.
+        </field>
 
     </record>
 
@@ -105,8 +111,14 @@
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain">[('state','!=','done')]</field>
         <field name="context" eval="'{\'default_state\':\'open\'}'"/>
-        <field name="search_view_id" ref="crm.view_crm_case_scheduled_phonecalls_filter"/>
-        <field name="help">Scheduled calls list all the calls to be done by your sales team. A salesman can record the information about the call in the form view. This information will be stored in the partner form to trace every contact you have with a customer. You can also import a .CSV file with a list of calls to be done by your sales team.</field>
+        <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+        <field name="help">
+            Click here to schedule a new call.
+            &lt;p&gt;
+            Scheduled calls list all the calls to be done by your sales team.
+            &lt;p&gt;
+            This information will be stored in the partner form to trace every contact you have with a customer.
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">

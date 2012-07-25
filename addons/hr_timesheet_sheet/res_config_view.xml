@@ -8,9 +8,8 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <field name="module_hr_timesheet_sheet" position="after">
-                    <newline/>
-                    <field name="timesheet_range" attrs="{'invisible':[('module_hr_timesheet_sheet','=',False)],'required': [('module_hr_timesheet_sheet','=',True)]}"/>
-                    <field name="timesheet_max_difference" attrs="{'invisible':[('module_hr_timesheet_sheet','=',False)],'required': [('module_hr_timesheet_sheet','=',True)]}"/>
+                    <field name="timesheet_range" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}"/>
+                    <field name="timesheet_max_difference" attrs="{'invisible': [('module_hr_timesheet_sheet','=',False)], 'required': [('module_hr_timesheet_sheet','=',True)]}"/>
                 </field>
             </field>
         </record>
