@@ -80,6 +80,7 @@ class report_event_registration(osv.osv):
 
                 LEFT JOIN
                     event_registration r ON (e.id=r.event_id)
+                    where r.id is not null
 
                GROUP BY
                 event_id,
