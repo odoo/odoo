@@ -94,8 +94,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.on("change:mode", this, this._check_mode);
         this.set({mode: "view"});
         this.has_been_loaded.then(function() {
-            self.switch_mode();
-            self.on("change:actual_mode", self, self.switch_mode);
+            self.check_actual_mode();
+            self.on("change:actual_mode", self, self.check_actual_mode);
             self.set({mode: self.options.initial_mode});
         });
     },
@@ -112,7 +112,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     _check_mode: function() {
         var mode = this.get("mode");
-        if (mode === "edit" && ! this.datarecord.id)
+        if (! this.datarecord.id)
             mode = "create";
         this.set({actual_mode: mode});
     },
@@ -600,7 +600,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
-    switch_mode: function(source, options) {
+    check_actual_mode: function(source, options) {
         var self = this;
         if(this.get("actual_mode") === "view") {
             self.$element.removeClass('oe_form_editable').addClass('oe_form_readonly');
@@ -3563,12 +3563,13 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     render_value: function() {
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+        var values = self.get("value")
         var handle_names = function(data) {
             var indexed = {};
             _.each(data, function(el) {
                 indexed[el[0]] = el;
             });
-            data = _.map(self.get("value"), function(el) { return indexed[el]; });
+            data = _.map(values, function(el) { return indexed[el]; });
             if (! self.get("effective_readonly")) {
                 self.tags.containerElement().children().remove();
                 $("textarea", self.$element).css("padding-left", "3px");
@@ -3577,8 +3578,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 self.$element.html(QWeb.render("FieldMany2ManyTag", {elements: data}));
             }
         };
-        if (! self.get('values') || self.get('values').length > 0) {
-            this._display_orderer.add(dataset.name_get(self.get("value"))).then(handle_names);
+        if (! values || values.length > 0) {
+            this._display_orderer.add(dataset.name_get(values)).then(handle_names);
         } else {
             handle_names([]);
         }
