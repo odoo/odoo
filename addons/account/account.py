@@ -624,7 +624,7 @@ class account_account(osv.osv):
         value = 'account.account,' + str(ids[0])
         partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
         if partner_prop_acc:
-            raise osv.except_osv(_('Warning !'), _('You can not remove/desactivate an account which is set on a customer or supplier.'))
+            raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
@@ -913,7 +913,7 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop'])
+        (_check_duration, 'Error! The start date of the fiscal year must be less than the end date.', ['date_start','date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
@@ -1031,7 +1031,7 @@ class account_period(osv.osv):
 
     _constraints = [
         (_check_duration, 'Error ! The duration of the Period(s) is/are invalid. ', ['date_stop']),
-        (_check_year_limit, 'Invalid period ! Some periods overlap or the date period is not in the scope of the fiscal year. ', ['date_stop'])
+        (_check_year_limit, 'Invalid period ! Some periods overlap or the date period which is not in the scope of the fiscal year. ', ['date_stop'])
     ]
 
     def next(self, cr, uid, period, step, context=None):
@@ -1078,7 +1078,7 @@ class account_period(osv.osv):
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You can not modify company of this period as some journal items exists.'))
+                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this period as some journal items exist.'))
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
@@ -1091,9 +1091,9 @@ class account_period(osv.osv):
         period_date_stop = period_to.date_stop
         company2_id = period_to.company_id.id
         if company1_id != company2_id:
-            raise osv.except_osv(_('Error'), _('You should have chosen periods that belongs to the same company'))
+            raise osv.except_osv(_('Error'), _('You should choose the periods that belong to the same company.'))
         if period_date_start > period_date_stop:
-            raise osv.except_osv(_('Error'), _('Start period should be smaller then End period'))
+            raise osv.except_osv(_('Error'), _('Start period should be smaller than End period.'))
         #for period from = january, we want to exclude the opening period (but it has same date_from, so we have to check if period_from is special or not to include that clause or not in the search).
         if period_from.special:
             return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id)])
@@ -1473,14 +1473,14 @@ class account_move(osv.osv):
             mode2 = 'debit'
             if not account_id:
                 raise osv.except_osv(_('UserError'),
-                        _('There is no default default debit account defined \n' \
+                        _('No default debit account is defined \n' \
                                 'on journal "%s"') % move.journal_id.name)
         else:
             account_id = move.journal_id.default_credit_account_id.id
             mode2 = 'credit'
             if not account_id:
                 raise osv.except_osv(_('UserError'),
-                        _('There is no default default credit account defined \n' \
+                        _('No default credit account is defined \n' \
                                 'on journal "%s"') % move.journal_id.name)
 
         # find the first line of this move with the current mode
@@ -1575,11 +1575,11 @@ class account_move(osv.osv):
                 if not company_id:
                     company_id = line.account_id.company_id.id
                 if not company_id == line.account_id.company_id.id:
-                    raise osv.except_osv(_('Error'), _("Couldn't create move between different companies"))
+                    raise osv.except_osv(_('Error'), _("Cannot create moves for different companies"))
 
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""") % (line.account_id.code, line.account_id.name))
+                        raise osv.except_osv(_('Error'), _("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
 
             if abs(amount) < 10 ** -4:
                 # If the move is balanced
@@ -2520,7 +2520,7 @@ class account_account_template(osv.osv):
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error!\nYou can not define children to an account with internal type different of "View"! ', ['type']),
+        (_check_type, 'Configuration Error!\nYou can not define children to an account that has internal type other than  "View"!', ['type']),
 
     ]
 
