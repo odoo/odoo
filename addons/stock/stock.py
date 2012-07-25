@@ -2172,16 +2172,16 @@ class stock_move(osv.osv):
             raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
 
         if not acc_src:
-            raise osv.except_osv(_('Error!'),  _('Define stock input account for this product or its category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not acc_dest:
-            raise osv.except_osv(_('Error!'),  _('Define stock output account for this product or its category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('Please define stock output account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not journal_id:
-            raise osv.except_osv(_('Error!'), _('Define journal on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('Please define journal on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         if not acc_valuation:
-            raise osv.except_osv(_('Error!'), _('Define inventory valuation account on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('Please define inventory valuation account on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         return journal_id, acc_src, acc_dest, acc_valuation
 
