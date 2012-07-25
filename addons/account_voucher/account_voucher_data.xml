@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module eInvoicing &amp; Payments has been installed</value>
+            <value>From the top menu Invoicing, manage your customer and supplier
+                invoices.  You can also manage refunds, receipts and register
+                payments.
+
+                In order to manage all accounting features (journal items,
+                chart of accounts, etc), you should install the module
+                Accounting and Finance.
+            </value>
+        </function>
+    </data>
+</openerp>
