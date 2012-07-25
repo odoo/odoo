@@ -364,15 +364,15 @@ class account_invoice(osv.osv):
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
                 raise orm.except_orm(_('Configuration Error!'),
-                     _('No Sale/Purchase Journal(s) is defined !'))
+                     _('No Sale/Purchase Journal(s) is defined!'))
             else:
-                raise orm.except_orm(_('Unknown Error'), str(e))
+                raise orm.except_orm(_('Unknown Error!'), str(e))
 
     def invoice_print(self, cr, uid, ids, context=None):
         '''
         This function prints the invoice and mark it as sent, so that we can see more easily the next step of the workflow
         '''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.write(cr, uid, ids, {'sent': True}, context=context)
         datas = {
              'ids': ids,
@@ -425,7 +425,7 @@ class account_invoice(osv.osv):
             if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('You can not delete an invoice which is open or paid. We suggest you to refund it instead.'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot delete an invoice which is open or paid. We suggest you to refund it instead.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -866,7 +866,7 @@ class account_invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("Can not create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. The latest line of your payment term must be of type 'balance' to avoid rounding issues."))
+                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. The latest line of your payment term must be of type 'balance' to avoid rounding issues."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
@@ -948,7 +948,7 @@ class account_invoice(osv.osv):
             journal = journal_obj.browse(cr, uid, journal_id, context=ctx)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
-                        _('You cannot create an invoice on a centralised journal. Uncheck the centralised counterpart box in the related journal from the configuration menu.'))
+                        _('You cannot create an invoice on a centralized journal. Uncheck the centralized counterpart box in the related journal from the configuration menu.'))
 
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
@@ -1061,7 +1061,7 @@ class account_invoice(osv.osv):
                 pay_ids = account_move_line_obj.browse(cr, uid, i['payment_ids'])
                 for move_line in pay_ids:
                     if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
-                        raise osv.except_osv(_('Error !'), _('You can not cancel an invoice which is partially paid! You need to unreconcile related payment entries first!'))
+                        raise osv.except_osv(_('Error !'), _('You cannot cancel an invoice which is partially paid! You need to unreconcile related payment entries first!'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
@@ -1187,7 +1187,7 @@ class account_invoice(osv.osv):
         if context is None:
             context = {}
         #TODO check if we can use different period for payment and the writeoff line
-        assert len(ids)==1, "Can only pay one invoice at a time"
+        assert len(ids)==1, "Can only pay one invoice at a time."
         invoice = self.browse(cr, uid, ids[0], context=context)
         src_account_id = invoice.account_id.id
         # Take the seq as name for move
@@ -1273,7 +1273,7 @@ class account_invoice(osv.osv):
         else:
             code = invoice.currency_id.symbol
             # TODO: use currency's formatting function
-            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
+            msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining).") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)
             self.message_append_note(cr, uid, [inv_id], body=msg, context=context)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
@@ -1475,7 +1475,7 @@ class account_invoice_line(osv.osv):
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
                  warning = {
                     'title': _('Warning!'),
-                    'message': _('Selected a Unit of Measure is not compatible with the Unit of Measure of the product.')
+                    'message': _('Selected Unit of Measure is not compatible with the Unit of Measure of the product.')
             }
             return {'value': res['value'], 'warning': warning}
         return res

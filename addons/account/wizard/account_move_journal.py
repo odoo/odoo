@@ -158,7 +158,7 @@ class account_move_journal(osv.osv_memory):
                 state = period.state
 
                 if state == 'done':
-                    raise osv.except_osv(_('UserError'), _('This period is already closed !'))
+                    raise osv.except_osv(_('UserError!'), _('This period is already closed !'))
 
                 company = period.company_id.id
                 res = {
