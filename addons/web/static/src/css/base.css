@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1408,20 +1408,31 @@
   filter: alpha(opacity=50);
   opacity: 0.5;
 }
+.openerp .oe_searchview .oe_searchview_search {
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+.openerp .oe_searchview .oe_searchview_search:before {
+  font: 21px "mnmliconsRegular";
+  content: "r";
+  color: #a3a3a3;
+}
 .openerp .oe_searchview .oe_searchview_facets {
   min-height: 22px;
-}
-.openerp .oe_searchview .oe_searchview_facets:before {
-  color: #cccccc;
-  font-family: "mnmliconsRegular";
-  content: "r";
-  font-size: 130%;
-  display: inline;
-  position: relative;
-  left: 6px;
-  top: 2px;
-  color: #a3a3a3;
-  padding-right: 4px;
+  margin-left: 15px;
 }
 .openerp .oe_searchview .oe_searchview_facets * {
   vertical-align: top;
@@ -2180,7 +2191,7 @@
   height: auto;
   line-height: 16px;
 }
-.openerp .oe_form_field_one2many .oe_list_buttons.oe_editing .oe_list_save {
+.openerp .oe_form_field_one2many .oe_list_buttons.oe_editing .oe_list_save, .openerp .oe_form_field_many2many .oe_list_buttons.oe_editing .oe_list_save {
   visibility: hidden;
 }
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
@@ -2265,9 +2276,6 @@
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {
   padding: 3px 6px;
   white-space: pre-line;
-}
-.openerp .oe_list_content > tbody > tr > td.oe_list_field_cell progress {
-  width: 100%;
 }
 .openerp .oe_list_content > tbody > tr > td > button, .openerp .oe_list_content > tbody > tr > th > button {
   border: none;
@@ -2440,19 +2448,6 @@
 }
 .kitten-mode-activated > * {
   opacity: 0.7;
-}
-.kitten-mode-activated .oe_footer a {
-  background-image: url(http://www.risacher.com/la-rache/zfiles/la-rache.png);
-  font-size: 1px;
-  letter-spacing: -1px;
-  color: transparent;
-  display: inline-block;
-  height: 15px;
-  width: 80px;
-  vertical-align: top;
-}
-.kitten-mode-activated .oe_footer a span {
-  display: none;
 }
 
 div.ui-widget-overlay {

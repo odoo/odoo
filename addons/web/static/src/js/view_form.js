@@ -3027,8 +3027,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             controller.o2m = self;
             if (view_type == "list") {
-                if (self.get("effective_readonly"))
-                    controller.set_editable(false);
+                if (self.get("effective_readonly")) {
+                    controller.on('edit:before', self, function (e) {
+                        e.cancel = true;
+                    });
+                }
             } else if (view_type === "form") {
                 if (self.get("effective_readonly")) {
                     $(".oe_form_buttons", controller.$element).children().remove();
@@ -3301,7 +3304,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             .value();
     },
     do_add_record: function () {
-        if (this.options.editable) {
+        if (this.editable()) {
             this._super.apply(this, arguments);
         } else {
             var self = this;
@@ -4108,10 +4111,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.dataset, false,
                     _.extend({'deletable': false,
                         'selectable': !self.options.disable_multiple_selection,
-                        'read_only': true,
                         'import_enabled': false,
                         '$buttons': self.$buttonpane,
                     }, self.options.list_view_options || {}));
+            self.view_list.on('edit:before', self, function (e) {
+                e.cancel = true;
+            });
             self.view_list.popup = self;
             self.view_list.appendTo($(".oe_popup_list", self.$element)).pipe(function() {
                 self.view_list.do_show();
@@ -4343,7 +4348,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             //link.target = '_blank';
             link.href = "data:application/octet-stream;base64," + value;
         } else {
-            $.blockUI();
+            instance.web.blockUI();
             this.session.get_file({
                 url: '/web/binary/saveas_ajax',
                 data: {data: JSON.stringify({
@@ -4353,7 +4358,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
                     filename_field: (this.node.attrs.filename || ''),
                     context: this.view.dataset.get_context()
                 })},
-                complete: $.unblockUI,
+                complete: instance.web.unblockUI,
                 error: instance.webclient.crashmanager.on_rpc_error
             });
             ev.stopPropagation();

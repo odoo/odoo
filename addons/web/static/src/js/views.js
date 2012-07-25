@@ -274,7 +274,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
-        $.blockUI();
+        instance.web.blockUI();
         self.rpc("/web/session/eval_domain_and_context", {
             contexts: [action.context],
             domains: []
@@ -284,7 +284,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
-                complete: $.unblockUI,
+                complete: instance.web.unblockUI,
                 success: function(){
                     if (!self.dialog && on_closed) {
                         on_closed();
@@ -841,7 +841,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else {
                 self.do_attachement_update(self.dataset, self.model_id);
             }
-            $.unblockUI();
+            instance.web.unblockUI();
         });
     },
     start: function() {
@@ -980,7 +980,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
-            $.blockUI();
+            instance.web.blockUI();
         }
     },
     on_attachment_delete: function(e) {
