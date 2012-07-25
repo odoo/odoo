@@ -706,13 +706,24 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             if (this.className) { attrs['class'] = this.className; }
             $el = $(this.make(this.tagName, attrs));
         }
+        this.replaceElement($el);
+    },
+
+    /**
+     * Re-sets the widget's root element and replaces the old root element
+     * (if any) by the new one in the DOM.
+     *
+     * @param {HTMLElement | jQuery} $el
+     * @returns {*} this
+     */
+    replaceElement: function ($el) {
         var $oldel = this.$el;
         this.setElement($el);
         if ($oldel && !$oldel.is(this.$el)) {
             $oldel.replaceWith(this.$el);
         }
+        return this;
     },
-
     /**
      * Re-sets the widget's root element (el/$el/$element).
      *
@@ -723,7 +734,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      *   element in the DOM
      *
      * @param {HTMLElement | jQuery} element new root element for the widget
-     * @return {*}
+     * @return {*} this
      */
     setElement: function (element) {
         if (this.$el) {

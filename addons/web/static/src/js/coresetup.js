@@ -26,8 +26,7 @@ instance.web.OldWidget = instance.web.Widget.extend({
     renderElement: function() {
         var rendered = this.render();
         if (rendered) {
-            var $el = $(rendered);
-            this.setElement($el);
+            this.replaceElement($(rendered));
         }
         return this;
     },
