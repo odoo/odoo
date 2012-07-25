@@ -2,6 +2,7 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- Add a 'public' flag to the events and only show these ones to portal users -->
         <record id="portal_event_rule" model="ir.rule">
             <field name="name">Personal Events</field>
             <field ref="event.model_event_event" name="model_id"/>

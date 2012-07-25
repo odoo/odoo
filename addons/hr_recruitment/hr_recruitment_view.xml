@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem
+        <menuitem name="Recruitment"
             id="menu_hr_recruitment_recruitment"
-            name="Recruitment"
             parent="hr.menu_hr_configuration"
-            sequence="40" />
+            sequence="40"/>
 
         <act_window
             id="act_hr_applicant_to_meeting"
@@ -44,9 +43,9 @@
     <record id="action_applicant_unread" model="ir.values">
         <field name="name">action_project_unread</field>
         <field name="action_id" ref="actions_server_applicant_unread"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))"/>
         <field name="key">action</field>
-        <field name="model_id" ref="model_hr_applicant" />
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="model">hr.applicant</field>
         <field name="key2">client_action_multi</field>
     </record>
@@ -62,9 +61,9 @@
     <record id="action_applicant_read" model="ir.values">
         <field name="name">action_project_read</field>
         <field name="action_id" ref="actions_server_applicant_read"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))"/>
         <field name="key">action</field>
-        <field name="model_id" ref="model_hr_applicant" />
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="model">hr.applicant</field>
         <field name="key2">client_action_multi</field>
     </record>
@@ -173,12 +172,12 @@
                     <group string="Contract">
                         <label for="salary_expected"/>
                         <div>
-                            <field name="salary_expected" class="oe_inline"/>, 
+                            <field name="salary_expected" class="oe_inline"/>,
                             <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
                         <label for="salary_proposed"/>
                         <div>
-                            <field name="salary_proposed" class="oe_inline"/>, 
+                            <field name="salary_proposed" class="oe_inline"/>,
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
                     </group>
@@ -224,10 +223,10 @@
                <filter icon="terp-document-new" string="New" name="filter_new"/>
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-document-new" string="New" 
+               <filter icon="terp-document-new" string="New"
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"/>
-               <filter icon="terp-camera_test" string="In Progress" 
+               <filter icon="terp-camera_test" string="In Progress"
                    domain="[('state','=','open')]"
                    help="Open Jobs"/>
                <filter icon="terp-gtk-media-pause" string="Pending"
@@ -262,7 +261,6 @@
     </record>
 
     <!-- CRM Lead Calendar View -->
-
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
@@ -271,15 +269,14 @@
         <field name="arch" type="xml">
             <calendar string="Applicants"
                 date_start="date_action" color="user_id">
-                <field name="name" />
-                <field name="partner_name" />
+                <field name="name"/>
+                <field name="partner_name"/>
                 <field name="title_action"/>
             </calendar>
         </field>
     </record>
 
-    <!-- hr Applicant Kanban View -->
-
+    <!-- Hr Applicant Kanban View -->
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
@@ -359,20 +356,19 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="no_of_recruitment" version="7.0" position="after">
-            <label for="survey_id" />
-            <div>
-                <field name="survey_id" class="oe_inline"/>
-                <button class="oe_inline"
-                    string="Interview" icon="gtk-print"
-                    name="action_print_survey" type="object"
-                    attrs="{'invisible':[('survey_id','=',False)]}"/>
-            </div>
+                <label for="survey_id" groups="base.group_user"/>
+                <div groups="base.group_user">
+                    <field name="survey_id" class="oe_inline"/>
+                    <button class="oe_inline"
+                        string="Interview" icon="gtk-print"
+                        name="action_print_survey" type="object"
+                        attrs="{'invisible':[('survey_id','=',False)]}"/>
+                </div>
             </field>
         </field>
     </record>
 
-<!-- Stage Tree View -->
-
+    <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
         <field name="name">hr.recruitment.stage.tree</field>
         <field name="model">hr.recruitment.stage</field>
@@ -387,8 +383,7 @@
         </field>
     </record>
 
-<!-- Stage Form View -->
-
+    <!-- Stage Form View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_form">
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
@@ -407,8 +402,7 @@
         </field>
     </record>
 
-<!-- Stage Action -->
-
+    <!-- Stage Action -->
     <record id="hr_recruitment_stage_act" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
@@ -424,8 +418,7 @@
         action="hr_recruitment_stage_act"
         sequence="1" groups="base.group_no_one"/>
 
-<!-- Degree Tree View -->
-
+    <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
         <field name="name">hr.recruitment.degree.tree</field>
         <field name="model">hr.recruitment.degree</field>
@@ -438,8 +431,7 @@
         </field>
     </record>
 
-<!-- Degree Form View -->
-
+    <!-- Degree Form View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_form">
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
@@ -454,8 +446,7 @@
         </field>
     </record>
 
-<!-- Degree Action -->
-
+    <!-- Degree Action -->
     <record id="hr_recruitment_degree_action" model="ir.actions.act_window">
         <field name="name">Degree</field>
         <field name="res_model">hr.recruitment.degree</field>
@@ -470,8 +461,7 @@
             action="hr_recruitment_degree_action"
             sequence="5" groups="base.group_no_one"/>
 
-<!-- Source Tree View -->
-
+    <!-- Source Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
@@ -498,11 +488,12 @@
         <field name="view_type">form</field>
     </record>
 
-     <menuitem
-            id="menu_hr_recruitment_source"
-            parent="menu_hr_recruitment_recruitment"
-            action="hr_recruitment_source_action"
-            sequence="10" groups="base.group_no_one"/>
+    <menuitem
+        id="menu_hr_recruitment_source"
+        parent="menu_hr_recruitment_recruitment"
+        action="hr_recruitment_source_action"
+        groups="base.group_no_one"
+        sequence="10"/>
 
     </data>
 </openerp>
