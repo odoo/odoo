@@ -63,6 +63,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
      */
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
@@ -92,6 +93,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
         this.on("change:mode", this, this._check_mode);
         this.set({mode: "view"});
+        this.has_been_loaded.then(function() {
+            self.switch_mode();
+            self.on("change:actual_mode", self, self.switch_mode);
+            self.set({mode: self.options.initial_mode});
+        });
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -104,12 +110,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     /**
      * Reactualize actual_mode.
      */
-    _check_mode: function(options) {
-        options = options || {};
+    _check_mode: function() {
         var mode = this.get("mode");
         if (mode === "edit" && ! this.datarecord.id)
             mode = "create";
-        this.set({actual_mode: mode}, options);
+        this.set({actual_mode: mode});
     },
     on_loaded: function(data) {
         var self = this;
@@ -169,10 +174,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
             ]);
         }
-        this.on("change:actual_mode", this, this.switch_mode);
-        this.set({mode: this.options.initial_mode}, {silent: true});
-        this._check_mode({silent: true});
-        this.switch_mode();
         this.has_been_loaded.resolve();
         return $.when();
     },
