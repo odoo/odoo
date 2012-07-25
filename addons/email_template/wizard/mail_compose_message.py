@@ -81,14 +81,26 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         values = {}
         if template_id:
-            res_id = context.get('mail.compose.target.id') or context.get('active_id') or False
+            res_ids = context.get('mail.compose.target.id') or context.get('active_ids') or False
+            for id in res_ids:
+                res_id = id
+            values = self.pool.get('email.template').read(cr, uid, template_id, self.fields_get_keys(cr, uid), context)
+            template = self.pool.get('email.template').get_email_template(cr, uid, template_id, res_id, context)  
+            if len(res_ids) > 1:
+                res_id = res_ids[0]
+            else:
+                values['email_from'] = self.render_template(cr, uid, template.email_from, template.model, res_id, context)
+                values['email_to'] = self.render_template(cr, uid, template.email_to, template.model, res_id, context)
+                values['email_cc'] = self.render_template(cr, uid, template.email_cc, template.model, res_id, context)
+                values['email_bcc'] = self.render_template(cr, uid, template.email_bcc, template.model, res_id, context)
+                values['reply_to'] = self.render_template(cr, uid, template.reply_to, template.model, res_id, context)
+                values['subject'] = self.render_template(cr, uid, template.subject, template.model, res_id, context)
+                values['body_text'] = self.render_template(cr, uid, template.body_text, template.model, res_id, context) or ''
+
             if context.get('mail.compose.message.mode') == 'mass_mail':
                 # use the original template values - to be rendered when actually sent
                 # by super.send_mail()
-                values = self.pool.get('email.template').read(cr, uid, template_id, self.fields_get_keys(cr, uid), context)
                 report_xml_pool = self.pool.get('ir.actions.report.xml')
-                template = self.pool.get('email.template').get_email_template(cr, uid, template_id, res_id, context)
-                
                 values['attachments'] = False
                 attachments = {}
                 if template.report_template:
