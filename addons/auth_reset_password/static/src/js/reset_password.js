@@ -21,7 +21,6 @@ openerp.reset_password = function(instance) {
                 this.do_warn(_t("Login"), _t("No database selected !"));
                 return false;
             }
-            
             var $m = $e.find('form input[name=is_reset_pw]');
             if ($m.is(':checked')) {
                 var email = $e.find('form input[name=email]').val()
@@ -30,7 +29,6 @@ openerp.reset_password = function(instance) {
                 return this._super(ev);
             }
         },
-
         do_reset_password: function(db, email) {
             var self = this;
             instance.connection.session_authenticate(db, 'anonymous', 'anonymous', true).pipe(function () {
