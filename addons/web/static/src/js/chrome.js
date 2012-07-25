@@ -58,7 +58,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         var self = this;
         this._super(parent);
         if (content) {
-            this.$element = content instanceof $ ? content : $(content);
+            this.setElement(content);
         }
         this.dialog_options = {
             modal: true,
@@ -879,8 +879,7 @@ instance.web.Client = instance.web.Widget.extend({
         var self = this;
         return instance.connection.session_bind(this.origin).then(function() {
             var $e = $(QWeb.render(self._template, {}));
-            self.$element.replaceWith($e);
-            self.$element = $e;
+            self.replaceElement($e);
             self.bind_events();
             self.show_common();
         });
