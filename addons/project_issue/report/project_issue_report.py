@@ -55,7 +55,7 @@ class project_issue_report(osv.osv):
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True),
         'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True),
         'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to close the project issue"),
+                                       help="Number of Days to open the project issue."),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
         'company_id' : fields.many2one('res.company', 'Company'),

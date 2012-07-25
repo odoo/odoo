@@ -26,7 +26,6 @@
     'category': 'Hidden',
     'description': """
 This module is for modifying account analytic view to show some data related to the hr_expense module.
-======================================================================================================
 
 """,
     "author": "OpenERP S.A.",
