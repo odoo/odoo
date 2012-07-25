@@ -120,7 +120,7 @@ class pos_box_entries(osv.osv_memory):
             product = product_obj.browse(cr, uid, int(data['product_id']))
             acc_id = product.property_account_income or product.categ_id.property_account_income_categ
             if not acc_id:
-                raise osv.except_osv(_('Error !'), _('Please check that income account is set to %s')%(product_obj.browse(cr, uid, data['product_id']).name))
+                raise osv.except_osv(_('Error !'), _('Please check that income account is set to %s.')%(product_obj.browse(cr, uid, data['product_id']).name))
             if statement_id:
                 statement_id = statement_id[0]
             if not statement_id:

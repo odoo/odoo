@@ -674,9 +674,9 @@ class pos_order(osv.osv):
 
         if not args['account_id']:
             if not args['partner_id']:
-                msg = _('There is no receivable account defined to make payment')
+                msg = _('There is no receivable account defined to make payment.')
             else:
-                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d)') % (order.partner_id.name, order.partner_id.id,)
+                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (order.partner_id.name, order.partner_id.id,)
             raise osv.except_osv(_('Configuration Error !'), msg)
 
         context.pop('pos_session_id', False)
@@ -759,7 +759,7 @@ class pos_order(osv.osv):
                 continue
 
             if not order.partner_id:
-                raise osv.except_osv(_('Error'), _('Please provide a partner for the sale.'))
+                raise osv.except_osv(_('Error!'), _('Please provide a partner for the sale.'))
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
@@ -945,7 +945,7 @@ class pos_order(osv.osv):
                     income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
                     raise osv.except_osv(_('Error !'), _('There is no income '\
-                        'account defined for this product: "%s" (id:%d)') \
+                        'account defined for this product: "%s" (id:%d).') \
                         % (line.product_id.name, line.product_id.id, ))
 
                 # Empty the tax list as long as there is no tax code:
