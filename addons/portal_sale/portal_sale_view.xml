@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="action_picking_tree" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('type','=','out')]</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
+            <field name="search_view_id" ref="stock.view_picking_out_search"/>
+            <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
+        </record>
+
+        <record id="product_normal_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="product.product_kanban_view"/>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+        </record>
+
+        <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders" 
+            action="sale.action_order_tree5" sequence="10"/>
+        <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal.portal_orders" 
+            action="sale.action_order_form" sequence="20"/>
+        <menuitem name="Delivery Orders" id="portal_delivery" parent="portal.portal_orders" 
+            action="action_picking_tree" sequence="30"/>
+        <menuitem name="Products" id="portal_products" parent="portal.portal_orders" 
+            action="product_normal_action" sequence="40"/>
+
+        <menuitem name="Invoice" id="portal_invoices" parent="portal.portal_invoices_payements" 
+            action="account.action_invoice_tree1" sequence="10"/>
+        <menuitem name="Refund/Payments" id="portal_payments" parent="portal.portal_invoices_payements" 
+            action="account_voucher.action_vendor_receipt" sequence="20"/>
+
+    </data>
+</openerp>

@@ -327,7 +327,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
-                    _("No E-Mail ID Found for your Company address!"))
+                    _("No Email ID Found for your Company address!"))
         return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
 
 

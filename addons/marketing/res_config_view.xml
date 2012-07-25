@@ -8,10 +8,12 @@
             <field name="arch" type="xml">
                 <form string="Configure Marketing" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+
                     </header>
-                    <group col="4" string="Campaigns">
+                    <group string="Campaigns">
                         <field name="module_marketing_campaign"/>
                         <field name="module_marketing_campaign_crm_demo"/>
                         <field name="module_crm_profiling"/>

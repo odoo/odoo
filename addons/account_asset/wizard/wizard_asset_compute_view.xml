@@ -7,15 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Compute Asset" version="7.0">
-                    <header>
-                        <button icon="gtk-execute" string="Compute" name="asset_compute" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    </header>
-                    <separator string="Post Depreciation Lines"/>
-                    <label string="This wizard will post the depreciation lines of running assets that belong to the selected period."/>
                     <group>
                         <field name="period_id"/>
                     </group>
+                    <footer>
+                        <button string="Compute" name="asset_compute" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
              </field>
         </record>

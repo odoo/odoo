@@ -286,14 +286,12 @@
         
 
         <record id="project_project_9" model="project.project">
-            <field name="warn_manager">1</field>
             <field name="name">OpenERP Integration</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge')])]" name="type_ids"/>
         </record>
         <record id="project_project_21" model="project.project">
-            <field name="warn_manager">1</field>
             <field name="priority">10</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="name">Study + Prototype</field>

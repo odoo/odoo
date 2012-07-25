@@ -515,7 +515,7 @@ property or property parameter."),
                         sub,
                         body,
                         attachments=attach and {'invitation.ics': attach} or None,
-                        subtype='html',
+                        content_subtype='html',
                         reply_to=email_from,
                         context=context
                     )
@@ -941,16 +941,19 @@ class calendar_event(osv.osv):
             duration = 1.00
             value['duration'] = duration
 
-        if allday: # For all day event
-            value = {'duration': 24.0}
-            duration = 24.0
-            if start_date:
-                start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
-                start_date = datetime.strftime(datetime(start.year, start.month, start.day, 0,0,0), "%Y-%m-%d %H:%M:%S")
-                value['date'] = start_date
-
-
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+        if allday: # For all day event
+            duration = 24.0
+            value['duration'] = duration
+            # change start_date's time to 00:00:00 in the user's timezone
+            user = self.pool.get('res.users').browse(cr, uid, uid)
+            tz = pytz.timezone(user.context_tz) if user.context_tz else pytz.utc
+            start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
+            start = start.replace(hour=0, minute=0, second=0)   # change start's time to 00:00:00
+            start = start.astimezone(pytz.utc)                  # convert start back to utc
+            start_date = start.strftime("%Y-%m-%d %H:%M:%S")
+            value['date'] = start_date
+
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
             diff = end - start
@@ -1031,10 +1034,10 @@ class calendar_event(osv.osv):
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-             ('confidential', 'Public for Employees')], 'Mark as', states={'done': [('readonly', True)]}),
+             ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
-                                                'Show as', states={'done': [('readonly', True)]}),
+                                                'Show Time as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([('tentative', 'Tentative'),
                         ('cancelled', 'Cancelled'),
@@ -1051,7 +1054,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                             ('yearly', 'Yearly'),],
                             'Recurrency', states={'done': [('readonly', True)]},
                             help="Let the event automatically repeat at that interval"),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
+        'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
                         help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
@@ -1060,8 +1063,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
-        'end_type' : fields.selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence termination'),
-        'interval': fields.integer('Repeat every', help="Repeat every (Days/Week/Month/Year)"),
+        'end_type' : fields.selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence Termination'),
+        'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),

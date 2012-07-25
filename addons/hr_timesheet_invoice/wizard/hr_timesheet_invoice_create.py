@@ -159,7 +159,7 @@ class account_analytic_line(osv.osv):
                         details.append(line['name'])
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
-                curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
+                curr_line['name'] += "\n".join(map(lambda x: unicode(x) or '',note))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
                 cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
 
@@ -179,7 +179,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
         'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
         'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
-        'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
+        'product': fields.many2one('product.product', 'Product', help='Fill this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
     }
 
     _defaults = {

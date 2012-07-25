@@ -9,17 +9,18 @@
             <field name="model">mrp.workcenter.load</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Select time unit">
-                    <field name="time_unit"/>
-                    <newline/>
-                    <field name="measure_unit"/>
-                    <newline/>
-                    <group col="2" colspan="4">
-                        <button icon='gtk-stop' special="cancel"
-                            string="Cancel" />
-                        <button name="print_report" string="Print"
-                            colspan="1" type="object" icon="gtk-print" />
-                    </group>
+                <form string="Select time unit" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="time_unit"/>
+                            <field name="measure_unit"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

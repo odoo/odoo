@@ -32,7 +32,7 @@ class purchase_config_settings(osv.osv_memory):
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
              ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
-            ], 'Invoicing Method', required=True, default_model='purchase.order'),
+            ], 'Default Invoicing Control Method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist':fields.boolean("Pricelist per Supplier",
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
@@ -48,24 +48,18 @@ class purchase_config_settings(osv.osv_memory):
                 lines on a purchase order between several accounts and analytic plans.
                 This installs the module purchase_analytic_plans."""),
         'module_warning': fields.boolean("Alerts by Products or Supplier",
-            help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier. 
+            help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier.
             Example: Product: this product is deprecated, do not purchase more than 5.
                     Supplier: don't forget to ask for an express delivery."""),
-        'module_product_manufacturer': fields.boolean("Define Manufacturers on Products",
-            help="""This allows you to define the following for a product:
-                    * Manufacturer
-                    * Manufacturer Product Name
-                    * Manufacturer Product Code
-                    * Product Attributes.
-                This installs the module product_manufacturer."""),
+
         'module_purchase_double_validation': fields.boolean("Two Levels of Approval",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),
-        'module_purchase_requisition': fields.boolean("Use Purchase Requisition",
-            help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products. 
-            You can configure per product if you directly do a Request for Quotation 
+        'module_purchase_requisition': fields.boolean("Manage Purchase Requisitions",
+            help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.
+            You can configure per product if you directly do a Request for Quotation
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
-        'decimal_precision': fields.integer('Decimal Precision on Price'),                
+        'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
     }
 
     _defaults = {
@@ -87,10 +81,14 @@ class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
         'module_purchase_analytic_plans': fields.boolean('Several Analytic Accounts on Purchases',
-            help="""This allows install module purchase_analytic_plans."""),                 
+            help="""This allows install module purchase_analytic_plans."""),
         'group_analytic_account_for_purchases': fields.boolean('Analytic Accounting for Purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
     }
+
+    def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
+        """ change group_analytic_account_for_purchases following module_purchase_analytic_plans """
+        return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

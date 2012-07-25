@@ -9,14 +9,13 @@
             <field name="model">wizard.wiki.history.show_diff</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Difference">
-                 <separator colspan="4" string="Notes"/>
-                  <field name="file_path" colspan="4" width="300"/>
-                <label string="" colspan="2" />
-                <group>
-                <button special="cancel" string="Close" icon="gtk-close" />
-                </group>
-            </form>
+                <form string="Difference" version="7.0">
+                    <separator string="Notes"/>
+                    <field name="file_path" width="300"/>
+                    <footer>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
             </field>
         </record>
 

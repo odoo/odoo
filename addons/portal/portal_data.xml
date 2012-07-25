@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="portal" model="res.portal">
+            <field name="name">Portal</field>
+            <field name="group_id" ref="group_portal_member"/>
+            <field name="override_menu" eval="True"/>
+            <field name="parent_menu_id" ref="portal_members_root_menu"/>
+        </record>
+
+    </data>
+</openerp>

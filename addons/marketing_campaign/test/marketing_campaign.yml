@@ -42,37 +42,37 @@
     record = self.browse(cr, uid, ids[0])
     assert record.state == 'todo' or record.state == 'done' , 'Marketing Workitem shoud be in draft state.'
 -
-  I check followup detail of first activity.
+  I check follow-up detail of first activity.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_0'))])
-    assert ids, 'Followup item is not created for first activity.'
+    assert ids, 'Follow-up item is not created for first activity.'
     work_item_id = self.browse(cr ,uid ,ids[0] ,context)
     assert work_item_id.res_name, 'Resource Name is not defined.'
 -
-  I process followup of first activity.
+  I process follow-up of first activity.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_0'))])
     self.process(cr, uid, ids)
     record = self.browse(cr, uid, ids)[0]
-    assert record.state == "done", "Followup item should be closed after process."
+    assert record.state == "done", "Follow-up item should be closed after process."
 -
-  I check followup detail of second activity after process of first activity.
+  I check follow-up detail of second activity after process of first activity.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
-    assert ids, 'Followup item is not created for second activity.'
+    assert ids, 'Follow-up item is not created for second activity.'
 -
   Now I increase credit limit of customer
 -
   !python {model: res.partner}: |
     self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':41000}, context=context)
 -
-  I process followup of second activity after set draft.
+  I process follow-up of second activity after set draft.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
@@ -80,21 +80,21 @@
     self.button_draft(cr, uid, ids, context=context)
     self.process(cr, uid, ids, context=context)
     record = self.browse(cr, uid, ids[0], context=context)
-    assert record.state == "done", "Followup item should be closed after process."
+    assert record.state == "done", "Follow-up item should be closed after process."
 -
-  I check followup detail of third activity after process of second activity.
+  I check follow-up detail of third activity after process of second activity.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_2'))])
-    assert ids, 'Followup item is not created for third activity.'
+    assert ids, 'Follow-up item is not created for third activity.'
 -
   Now I increase credit limit of customer
 -
   !python {model: res.partner}: |
     self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':151000}, context=context)
 -
-  I process followup of third activity after set draft.
+  I process follow-up of third activity after set draft.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
@@ -102,7 +102,7 @@
     self.button_draft(cr, uid, ids, context=context)
     self.process(cr, uid, ids, context=context)
     record = self.browse(cr, uid, ids[0], context=context)
-    assert record.state == "done", "Followup item should be closed after process."
+    assert record.state == "done", "Follow-up item should be closed after process."
 -
   I print workitem report.
 -

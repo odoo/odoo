@@ -7,10 +7,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Files">
-                    <field name="name" select="1"/>
-                    <field name="user" select="1"/>
-                    <field name="directory" select="1"/>
-                    <field name="datas_fname" select="1"/>
+                    <field name="name"/>
+                    <field name="user"/>
+                    <field name="directory"/>
+                    <field name="datas_fname"/>
                     <field name="file_size"/>
                     <field name="create_date"/>
                 </form>
@@ -24,10 +24,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Files">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user" select="1" invisible="1"/>
-                    <field name="directory" select="1" invisible="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user" invisible="1"/>
+                    <field name="directory" invisible="1"/>
                     <field name="file_size" invisible="1"/>
                     <field name="create_date" invisible="1"/>
                     <field name="nbr"/>

@@ -36,7 +36,6 @@ SALE_ORDER_LINE_EDI_STRUCT = {
     'price_unit': True,
     #custom: 'product_qty'
     'discount': True,
-    'notes': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,

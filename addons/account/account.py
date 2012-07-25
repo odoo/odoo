@@ -24,11 +24,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-import netsvc
+import logging
 import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
+_logger = logging.getLogger(__name__)
 
 def check_cycle(self, cr, uid, ids, context=None):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
@@ -100,7 +101,7 @@ class account_payment_term_line(osv.osv):
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
                                    ('fixed', 'Fixed Amount')], 'Valuation',
-                                   required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be threated."""),
+                                   required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
         'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
@@ -212,7 +213,6 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
-    logger = netsvc.Logger()
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -295,8 +295,7 @@ class account_account(osv.osv):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                      'Filters: %s'%filters)
+            _logger.debug('Filters: %s',(filters))
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -312,8 +311,7 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                      'Status: %s'%cr.statusmessage)
+            _logger.debug('Status: %s',(cr.statusmessage))
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
@@ -476,7 +474,7 @@ class account_account(osv.osv):
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id', 'tax_id', 'Default Taxes'),
-        'note': fields.text('Note'),
+        'note': fields.text('Internal Notes'),
         'company_currency_id': fields.function(_get_company_currency, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
@@ -716,6 +714,7 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
+        'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
@@ -732,16 +731,21 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the informatin related to the numbering of the journal entries of this journal.", required=True),
+        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Manual Entries', help='Check this box if you don\'t want new journal entries to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation. \nNote that journal entries that are automatically created by the system are always skipping that state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
+
+        'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
+        'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
+        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
     }
 
     _defaults = {
+        'with_last_closing_balance' : False,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
@@ -1265,7 +1269,7 @@ class account_move(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', required=True, readonly=True,
-            help='All manually created new journal entries are usually in the state \'Unposted\', but you can set the option to skip that state on the related journal. In that case, they will be behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' state.'),
+            help='All manually created new journal entries are usually in the state \'Unposted\', but you can set the option to skip that state on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' state.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
@@ -1784,7 +1788,7 @@ class account_tax_code(osv.osv):
         'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.'),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax code to appear on invoices"),
         'sequence': fields.integer('Sequence', help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
     }
 
@@ -1864,8 +1868,10 @@ class account_tax(osv.osv):
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
             help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-        'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account'),
-        'account_paid_id':fields.many2one('account.account', 'Refund Tax Account'),
+        'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account', help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."),
+        'account_paid_id':fields.many2one('account.account', 'Refund Tax Account', help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."),
+        'account_analytic_collected_id':fields.many2one('account.analytic.account', 'Invoice Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
+        'account_analytic_paid_id':fields.many2one('account.analytic.account', 'Refund Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
         'parent_id':fields.many2one('account.tax', 'Parent Tax Account', select=True),
         'child_ids':fields.one2many('account.tax', 'parent_id', 'Child Tax Accounts'),
         'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
@@ -1874,17 +1880,17 @@ class account_tax(osv.osv):
         'python_applicable':fields.text('Python Code'),
 
         #
-        # Fields used for the VAT declaration
+        # Fields used for the Tax declaration
         #
-        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the VAT declaration."),
-        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the VAT declaration."),
+        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
+        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
         'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
@@ -2003,6 +2009,8 @@ class account_tax(osv.osv):
                     'name':tax.description and tax.description + " - " + tax.name or tax.name,
                     'account_collected_id':tax.account_collected_id.id,
                     'account_paid_id':tax.account_paid_id.id,
+                    'account_analytic_collected_id': tax.account_analytic_collected_id.id,
+                    'account_analytic_paid_id': tax.account_analytic_paid_id.id,
                     'base_code_id': tax.base_code_id.id,
                     'ref_base_code_id': tax.ref_base_code_id.id,
                     'sequence': tax.sequence,
@@ -2068,7 +2076,20 @@ class account_tax(osv.osv):
                 'taxes': []                  # List of taxes, see compute for the format
             }
         """
+
+        # By default, for each tax, tax amount will first be computed
+        # and rounded at the 'Account' decimal precision for each
+        # PO/SO/invoice line and then these rounded amounts will be
+        # summed, leading to the total amount for that tax. But, if the
+        # company has tax_calculation_rounding_method = round_globally,
+        # we still follow the same method, but we use a much larger
+        # precision when we round the tax amount for each line (we use
+        # the 'Account' decimal precision + 5), and that way it's like
+        # rounding after the sum of the tax amounts of each line
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        tax_compute_precision = precision
+        if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
+            tax_compute_precision += 5
         totalin = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
@@ -2077,7 +2098,7 @@ class account_tax(osv.osv):
                 tex.append(tax)
             else:
                 tin.append(tax)
-        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner)
+        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
         for r in tin:
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
@@ -2085,7 +2106,7 @@ class account_tax(osv.osv):
             totlex_qty = totalex/quantity
         except:
             pass
-        tex = self._compute(cr, uid, tex, totlex_qty, quantity,product=product, partner=partner)
+        tex = self._compute(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision)
         for r in tex:
             totalin += r.get('amount', 0.0)
         return {
@@ -2095,12 +2116,10 @@ class account_tax(osv.osv):
         }
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
-        logger = netsvc.Logger()
-        logger.notifyChannel("warning", netsvc.LOG_WARNING,
-            "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
+        _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
-    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
+    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 
@@ -2109,14 +2128,15 @@ class account_tax(osv.osv):
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their children
         """
+        if not precision:
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         res = self._unit_compute(cr, uid, taxes, price_unit, product, partner, quantity)
         total = 0.0
-        precision_pool = self.pool.get('decimal.precision')
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r.get('balance', 0.0) * quantity, precision_pool.precision_get(cr, uid, 'Account')) - total
+                r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
             else:
-                r['amount'] = round(r.get('amount', 0.0) * quantity, precision_pool.precision_get(cr, uid, 'Account'))
+                r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
                 total += r['amount']
         return res
 
@@ -2164,6 +2184,8 @@ class account_tax(osv.osv):
                 'amount': amount,
                 'account_collected_id': tax.account_collected_id.id,
                 'account_paid_id': tax.account_paid_id.id,
+                'account_analytic_collected_id': tax.account_analytic_collected_id.id,
+                'account_analytic_paid_id': tax.account_analytic_paid_id.id,
                 'base_code_id': tax.base_code_id.id,
                 'ref_base_code_id': tax.ref_base_code_id.id,
                 'sequence': tax.sequence,
@@ -2192,25 +2214,25 @@ class account_tax(osv.osv):
             r['todo'] = 0
         return res
 
-    def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
+    def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
-        Price Unit is a VAT included price
+        Price Unit is a Tax included price
 
         RETURN:
             [ tax ]
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their children
         """
+        if not precision:
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         res = self._unit_compute_inv(cr, uid, taxes, price_unit, product, partner=None)
         total = 0.0
-        obj_precision = self.pool.get('decimal.precision')
         for r in res:
-            prec = obj_precision.precision_get(cr, uid, 'Account')
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, prec) - total
+                r['amount'] = round(r['balance'] * quantity, precision) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, prec)
+                r['amount'] = round(r['amount'] * quantity, precision)
                 total += r['amount']
         return res
 
@@ -2651,7 +2673,7 @@ class account_tax_code_template(osv.osv):
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign For Parent', required=True),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
     }
 
     _defaults = {
@@ -2766,17 +2788,17 @@ class account_tax_template(osv.osv):
         'python_applicable':fields.text('Python Code'),
 
         #
-        # Fields used for the VAT declaration
+        # Fields used for the Tax declaration
         #
-        'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the VAT declaration."),
-        'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the VAT declaration."),
+        'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the tax declaration."),
+        'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the tax declaration."),
         'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
@@ -3329,15 +3351,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
-        action = {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'board.board',
-            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'board_account_form')[1],
-            'menu_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'menu_finance')[1]
-        }
-        return action
+        return {}
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
         '''

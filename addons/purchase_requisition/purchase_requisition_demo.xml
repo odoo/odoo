@@ -12,12 +12,12 @@
 
     <!--Resource: purchase.requisition-->
 
-		<record id="requisition1" model="purchase.requisition">
-            <field name="user_id" model="res.users"/>
+        <record id="requisition1" model="purchase.requisition">
+            <field name="user_id" ref="base.user_root"/>
             <field name="exclusive">exclusive</field>
             <field name="date_start" eval="time.strftime('%Y/%m/%d %H:%M:%S')"/>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
-		</record>
+        </record>
 
         <record id="requisition_line1" model="purchase.requisition.line">
             <field name="requisition_id" ref="requisition1"/>

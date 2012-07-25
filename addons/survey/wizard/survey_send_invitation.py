@@ -191,7 +191,7 @@ class survey_send_invitation(osv.osv_memory):
         if skipped:
             note += "%d contacts where ignored (an email address is missing).\n\n" % (skipped)
         if error:
-            note += 'E-Mail not send successfully:\n====================\n%s\n' % (error)
+            note += 'Email not send successfully:\n====================\n%s\n' % (error)
         context.update({'note' : note})
         return {
             'view_type': 'form',

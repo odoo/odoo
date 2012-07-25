@@ -30,13 +30,17 @@
                                     <field name="flow_start"/>
                                 </tree>
                                 <form string="Process Node" version="7.0">
-                                    <group colspan="4" col="4">
-                                        <field name="name"/>
-                                        <field name="flow_start"/>
-                                        <field name="kind"/>
-                                        <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
-    
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="flow_start"/>
+                                        </group>
+                                        <group>
+                                            <field name="kind"/>
+                                            <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
+                                        </group>
                                     </group>
+                                    
                                     <notebook colspan="4">
                                         <page string="Properties">
                                             <group colspan="4" col="6">
@@ -157,12 +161,16 @@
         <field name="arch" type="xml">
             <form string="Process Node" version="7.0">
                 <sheet layout="auto">
-                    <group colspan="4" col="6">
-                        <field name="name"/>
-                        <field name="process_id"/>
-                        <field name="flow_start"/>
-                        <field name="kind"/>
-                        <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="process_id"/>
+                            <field name="flow_start"/>
+                        </group>
+                        <group>
+                            <field name="kind"/>
+                            <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Properties">
@@ -258,7 +266,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition" version="7.0">
-                <sheet layout="auto">
+                <sheet >
                     <group col="4">
                         <field name="name"/>
                         <field name="source_node_id"/>

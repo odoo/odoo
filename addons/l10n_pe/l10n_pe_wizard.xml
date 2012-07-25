@@ -2,14 +2,14 @@
 <openerp>
     <data>
 
-		<record id="config_call_account_template_pe" model="ir.actions.todo">
-	        <field name="name">Generate Chart of Accounts from a Chart Template</field>
-	        <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
-	This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
-	        <field name="action_id" ref="account.action_wizard_multi_chart"/>
+        <record id="config_call_account_template_pe" model="ir.actions.todo">
+            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
+    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
+            <field name="action_id" ref="account.action_wizard_multi_chart"/>
                 <field name="category_id" ref="account.category_accounting_configuration"/>
                 <field name="type">automatic</field>
-    	</record>
+        </record>
 
     </data>
 </openerp>

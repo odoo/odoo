@@ -156,7 +156,8 @@ class contrib_register(osv.osv):
     _description = 'Contribution Register'
 
     _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'company_id':fields.many2one('res.company', 'Company'),
+        'partner_id':fields.many2one('res.partner', 'Partner'),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'register_line_ids':fields.one2many('hr.payslip.line', 'register_id', 'Register Line', readonly=True),
         'note': fields.text('Description'),
@@ -768,12 +769,12 @@ class hr_salary_rule(osv.osv):
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
-        'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
+        'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used to display the salary rule on payslip."),
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'condition_select': fields.selection([('none', 'Always True'),('range', 'Range'), ('python', 'Python Expression')], "Condition Based on", required=True),
         'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will be used to compute the % fields values; in general it is on basic, but you can also use categories code fields in lowercase as a variable names (hra, ma, lta, etc.) and the variable basic.'),
-        'condition_python':fields.text('Python Condition', required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),#old name = conditions
+        'condition_python':fields.text('Python Condition', required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
         'amount_select':fields.selection([

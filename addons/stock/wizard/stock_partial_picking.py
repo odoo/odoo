@@ -70,7 +70,7 @@ class stock_partial_picking(osv.osv_memory):
         'date': fields.datetime('Date', required=True),
         'move_ids' : fields.one2many('stock.partial.picking.line', 'wizard_id', 'Product Moves'),
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
-        'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
+        'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
      }
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -98,6 +98,9 @@ class stock_partial_picking(osv.osv_memory):
         if context is None: context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
+        if context['active_model'] == 'purchase.order':
+            for purchase_order in self.pool.get('purchase.order').browse(cr, uid, picking_ids, context=context):
+                picking_ids = [picking_id.id for picking_id in purchase_order.picking_ids]
         if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
@@ -105,7 +108,7 @@ class stock_partial_picking(osv.osv_memory):
         # (already seen in previous bug where context passed was containing ir.ui.menu as active_model and the menu 
         # ID as active_id). Though this should be fixed in clients now, this place is sensitive enough to ensure the
         # consistancy of the context.
-        assert context.get('active_model') in ('stock.picking', 'stock.picking.in', 'stock.picking.out'), 'Bad context propagation'
+        assert context.get('active_model') in ('stock.picking', 'stock.picking.in', 'stock.picking.out', 'purchase.order'), 'Bad context propagation'
         picking_id, = picking_ids
         if 'picking_id' in fields:
             res.update(picking_id=picking_id)

@@ -77,7 +77,7 @@ class modify(unohelper.Base, XJobExecutor ):
             ErrorDialog(
 		"Please insert user define field Field-1",
 		"Just go to File->Properties->User Define \n"
-		"Field-1 Eg. http://localhost:8069"
+		"Field-1 E.g. http://localhost:8069"
 	    )
             exit(1)
 
@@ -108,9 +108,9 @@ class modify(unohelper.Base, XJobExecutor ):
             ErrorDialog(
 		"Please insert user define field Field-1 or Field-4",
 		"Just go to File->Properties->User Define \n"
-		"Field-1 Eg. http://localhost:8069 \n"
+		"Field-1 E.g. http://localhost:8069 \n"
 		"OR \n"
-		"Field-4 Eg. account.invoice"
+		"Field-4 E.g. account.invoice"
 	    )
             exit(1)
 

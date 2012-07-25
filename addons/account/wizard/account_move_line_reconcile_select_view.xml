@@ -7,13 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reconciliation" version="7.0">
-                    <header>
-                        <button icon="terp-gtk-go-back-rtl" string="Open for Reconciliation" name="action_open_window" type="object" />
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                    </header>
                     <group>
                          <field name="account_id"/>
                     </group>
+                    <footer>
+                        <button string="Open for Reconciliation" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

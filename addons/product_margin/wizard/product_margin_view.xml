@@ -7,15 +7,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties categories" version="7.0">
-                    <header>
-                        <button name="action_open_window" string="Open Margins" type="object" icon="gtk-execute"/>
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                    </header>
                     <group col="4" string="General Information">
                         <field name="from_date" />
                         <field name="to_date" />
                         <field name="invoice_state" />
                     </group>
+                    <footer>
+                        <button name="action_open_window" string="Open Margins" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

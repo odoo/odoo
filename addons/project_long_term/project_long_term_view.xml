@@ -97,6 +97,13 @@
     # ------------------------------------------------------
     # Project Phase
     # ------------------------------------------------------
+        <act_window id="act_project_phases"
+            name="Phases"
+            src_model="project.project"
+            res_model="project.phase"
+            view_type="form"
+            view_mode="tree,form"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
 
         <record id="project_phase_form" model="ir.ui.view">
             <field name="name">Inherit project form : Phase</field>
@@ -104,20 +111,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="use_phases"/>
-                </field>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr>
+                        <td><group><field name="use_phases"/></group></td>
+                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
             </field>
         </record>
-
-        <act_window id="act_project_phases"
-            name="Phases"
-            src_model="project.project"
-            res_model="project.phase"
-            view_type="form"
-            view_mode="tree,form"
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-        />
 
         <record id="view_project_kanban_phase" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
@@ -135,7 +136,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
             <field name="model">project.phase</field>
@@ -143,7 +144,7 @@
             <field name="arch" type="xml">
                 <form string="Project Phase" version="7.0">
                 <header>
-                    <button string="Start Phase" name="set_open" states="pending,draft"/>
+                    <button string="Start Phase" name="set_open" states="pending,draft" class="oe_highlight"/>
                     <button string="Done" name="set_done" states="pending,open"/>
                     <button string="Pending" name="set_pending" states="open"/>
                     <button string="Draft" name="set_draft" states="open"/>
@@ -151,22 +152,23 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet>
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
-                    <label for="project_id" class="oe_edit_only"/>
-                    <h2>
-                        <field name="project_id" on_change="onchange_project(project_id)" colspan="3"/>
-                    </h2>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-                        </group><group>
-                            <label for="duration"/>
+                            <label for="date_start" string="Duration"/>
                             <div>
-                                <field name="duration" class="oe_inline"/>
-                                <field name="product_uom"/>
+                                <div>
+                                    <field name="duration" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline"/>
+                                </div>
+                                <field name="date_start" class="oe_inline"/><label string=" - " class="oe_inline"/><field name="date_end" class="oe_inline"/>
                             </div>
+                        </group>
+                        <group>
+                            <field name="project_id" on_change="onchange_project(project_id)"/>
                         </group>
                     </group>
                     <notebook>
@@ -210,10 +212,9 @@
                                 </group>
                                 <group>
                                     <field name="sequence"/>
+                                     <field name="user_force_ids" widget="many2many_tags"/>
                                 </group>
                             </group>
-                           <separator string="Force Assigned Users"/>
-                           <field name="user_force_ids" widget="many2many_tags" />
                            <separator string="Previous Phases"/>
                            <field name="previous_phase_ids"/>
                            <separator string="Next Phases"/>
@@ -326,7 +327,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='effective_hours']" position="after">
+                <xpath expr="//field[@name='user_id']" position="after">
                     <field name="phase_id" context="{'default_project_id' : project_id}"/>
                 </xpath>
             </field>
@@ -376,6 +377,22 @@
         view_mode="tree,form"
         />
 
+    <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.phase.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
+                </xpath>
+                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                    <field name="use_phases"/>
+                </xpath>
+            </field>
+        </record>
+
     # ------------------------------------------------------
     # Menu Items
     # ------------------------------------------------------
@@ -392,7 +409,7 @@
             parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_users_project1"
-            name="Resources" parent="project.menu_definitions" sequence="3"/>
+            name="Resources" parent="base.menu_definitions" sequence="3"/>
 
         <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_users_project1" sequence="2"/>

@@ -18,6 +18,9 @@ openerp.anonymous = function(instance) {
                 }
             });
         },
+        restart: function() {
+            return this.start();
+        }
     });
 
 
@@ -35,8 +38,9 @@ openerp.anonymous = function(instance) {
             this.$element.find('.oe_topbar_anonymous_login').click(function() {
                 var p = self.getParent();
                 var am = p.action_manager;
+                p.$element.find('.oe_leftbar').hide();
                 am.do_action({type:'ir.actions.client', tag:'login'});
-                am.inner_widget.on('login', p, p.show_application);
+                am.inner_widget.on('login', p, p.restart);
             });
         }
     });

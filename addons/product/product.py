@@ -286,7 +286,7 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager',help="This is use as task responsible"),
+        'product_manager': fields.many2one('res.users','Product Manager',help="Responsible for product."),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
@@ -298,7 +298,7 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
+        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
@@ -559,8 +559,8 @@ class product_product(osv.osv):
         return False
 
     def _check_ean_key(self, cr, uid, ids, context=None):
-        for product in self.browse(cr, uid, ids, context=context):
-            res = check_ean(product.ean13)
+        for product in self.read(cr, uid, ids, ['ean13'], context=context):
+            res = check_ean(product['ean13'])
         return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]

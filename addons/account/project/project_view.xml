@@ -19,6 +19,7 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -59,7 +60,7 @@
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="code"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -71,50 +72,11 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_account_analytic_account_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.form</field>
-            <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Analytic Account" version="7.0">
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name" colspan="4"/>
-                            <field name="parent_id" on_change="on_change_parent(parent_id)"/>
-                            <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
-                        </group>
-                        <group>
-                            <field name="type"/>
-                            <field name="code"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Account Data">
-                            <group>
-                                <group string="Contacts">
-                                    <field name="partner_id"/>
-                                    <field name="user_id"/>
-                                </group>
-                                <group name="contract" string="Contract Data">
-                                    <field name="date_start"/>
-                                    <field name="date"/>
-                                    <field name="quantity_max"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Description">
-                            <field name="description"/>
-                        </page>
-                    </notebook>
-                </sheet>
-                </form>
-            </field>
-        </record>
 
         <record id="action_account_analytic_account_form" model="ir.actions.act_window">
             <field name="name">Analytic Accounts</field>
@@ -156,6 +118,7 @@
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
             <field name="type">form</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry" version="7.0">
                     <group>
@@ -210,6 +173,7 @@
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
                     <field name="user_id" invisible="1" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -278,19 +242,33 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project line" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="account_id"/>
-                        <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field name="journal_id"/>
-                        <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
-                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field invisible="True" name="general_account_id"/>
-                        <field name="amount"/>
-                        <field name="currency_id" />
-                        <field name="amount_currency" />
-                        <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <group>
+                       <group>
+                          <field name="name"/>
+                          <field name="account_id"/>
+                          <field name="journal_id"/>
+                       </group>
+                       <group>
+                          <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                          <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                        </group>
+                        <group string="Amount">
+                            <field name="amount"/>
+                            <label for="amount_currency"/>
+                            <div>
+                                <field name="amount_currency" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+                            <field invisible="1" name="general_account_id"/>
+                        </group>
+                        <group string="Product Information">
+                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
+                            <label for="unit_amount"/>
+                            <div>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                            </div>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -408,7 +386,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="currency" position="after">
+                <field name="type" position="after">
                     <field name="analytic_journal_id"/>
                 </field>
             </field>

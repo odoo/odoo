@@ -24,24 +24,26 @@ from tools.translate import _
 
 class res_users(osv.osv):
     """ Update of res.users class
-        - add a preference about sending emails about notificatoins
+        - add a preference about sending emails about notifications
         - make a new user follow itself
+        - add a welcome message
     """
     _name = 'res.users'
     _inherit = ['res.users', 'mail.thread']
     
     _columns = {
         'notification_email_pref': fields.selection([
-                        ('all', 'All feeds'),
-                        ('comments', 'Only comments'),
-                        ('to_me', 'Only when sent directly to me'),
-                        ('none', 'Never')
-                        ], 'Receive Feeds by E-mail', required=True,
-                        help="Choose in which case you want to receive an email when you receive new feeds."),
+            ('all', 'All feeds'),
+            ('comments', 'Only comments'),
+            ('to_me', 'Only when sent directly to me'),
+            ('none', 'Never')
+            ], 'Receive Feeds by Email', required=True,
+            help="Choose in which case you want to receive an email when you "\
+                  "receive new feeds."),
     }
     
     _defaults = {
-        'notification_email_pref': 'none',
+        'notification_email_pref': 'to_me',
     }
     
     def __init__(self, pool, cr):
@@ -60,25 +62,61 @@ class res_users(osv.osv):
         user = self.browse(cr, uid, [user_id], context=context)[0]
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
-        # create a welcome message to broadcast
+        # create a welcome message
         company_name = user.company_id.name if user.company_id else 'the company'
-        message = _('%s has joined %s! You may leave him/her a message to celebrate a new arrival in the company ! You can help him/her doing its first steps on OpenERP.') % (user.name, company_name)
-        # TODO: clean the broadcast feature. As this is not cleany specified, temporarily remove the message broadcasting that is not buggy but not very nice.
-        #self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
+        message = _('%s has joined %s! Welcome in OpenERP !') % (user.name, company_name)
+        self.message_append_note(cr, uid, [user_id], subject='Welcom to OpenERP', body=message, type='comment', context=context)
         return user_id
 
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
-        """ Override of message_load_ids
-            User discussion page :
-            - messages posted on res.users, res_id = user.id
-            - messages directly sent to user with @user_login
+    def message_search_get_domain(self, cr, uid, ids, context=None):
+        """ Override of message_search_get_domain for partner discussion page.
+            The purpose is to add messages directly sent to user using
+            @user_login.
         """
-        if context is None:
-            context = {}
-        msg_obj = self.pool.get('mail.message')
-        msg_ids = []
+        initial_domain = super(res_users, self).message_search_get_domain(cr, uid, ids, context=context)
+        custom_domain = []
         for user in self.browse(cr, uid, ids, context=context):
-            msg_ids += msg_obj.search(cr, uid, ['|', '|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login)), '&', ('res_id', '=', user.id), ('model', '=', self._name)] + domain,
-            limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_ids
+            if custom_domain:
+                custom_domain += ['|']
+            custom_domain += ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
+        return ['|'] + initial_domain + custom_domain
+
+class res_users_mail_group(osv.osv):
+    """ Update of res.groups class
+        - if adding/removing users from a group, check mail.groups linked to
+          this user group, and subscribe / unsubscribe them from the discussion
+          group. This is done by overriding the write method.
+    """
+    _name = 'res.users'
+    _inherit = ['res.users', 'mail.thread']
+
+    def write(self, cr, uid, ids, vals, context=None):
+        write_res = super(res_users_mail_group, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('groups_id'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
+            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
+            mail_group_obj = self.pool.get('mail.group')
+            mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', user_group_ids)], context=context)
+            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, ids, context=context)
+        return write_res
+        
+
+class res_groups_mail_group(osv.osv):
+    """ Update of res.groups class
+        - if adding/removing users from a group, check mail.groups linked to
+          this user group, and subscribe / unsubscribe them from the discussion
+          group. This is done by overriding the write method.
+    """
+    _name = 'res.groups'
+    _inherit = 'res.groups'
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('users'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_ids = [command[1] for command in vals['users'] if command[0] == 4]
+            user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
+            mail_group_obj = self.pool.get('mail.group')
+            mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', ids)], context=context)
+            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, user_ids, context=context)
+        return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)

@@ -29,18 +29,15 @@ import logging
 import shutil
 from StringIO import StringIO
 import psycopg2
-
 from tools.misc import ustr
 from tools.translate import _
-
 from osv.orm import except_orm
-
 import random
 import string
 import pooler
 import nodes
 from content_index import cntIndex
-
+_logger = logging.getLogger(__name__)
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config.get('root_path'), 'filestore'))
 
 
@@ -130,7 +127,7 @@ class nodefd_file(nodes.node_descriptor):
                 mime, icont = cntIndex.doIndex(None, filename=filename,
                         content_type=None, realfname=fname)
             except Exception:
-                logging.getLogger('document.storage').debug('Cannot index file:', exc_info=True)
+                _logger.debug('Cannot index file:', exc_info=True)
                 pass
 
             try:
@@ -150,7 +147,7 @@ class nodefd_file(nodes.node_descriptor):
                 cr.commit()
                 cr.close()
             except Exception:
-                logging.getLogger('document.storage').warning('Cannot save file indexed content:', exc_info=True)
+                _logger.warning('Cannot save file indexed content:', exc_info=True)
 
         elif self.mode in ('a', 'a+' ):
             try:
@@ -164,7 +161,7 @@ class nodefd_file(nodes.node_descriptor):
                 cr.commit()
                 cr.close()
             except Exception:
-                logging.getLogger('document.storage').warning('Cannot save file appended content:', exc_info=True)
+                _logger.warning('Cannot save file appended content:', exc_info=True)
 
 
 
@@ -191,7 +188,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -217,7 +214,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
                     mime, icont = cntIndex.doIndex(data, filename=filename,
                             content_type=None, realfname=None)
                 except Exception:
-                    logging.getLogger('document.storage').debug('Cannot index file:', exc_info=True)
+                    _logger.debug('Cannot index file:', exc_info=True)
                     pass
 
                 try:
@@ -241,7 +238,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
                     (out, len(data), par.file_id))
             cr.commit()
         except Exception:
-            logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
+            _logger.exception('Cannot update db file #%d for close:', par.file_id)
             raise
         finally:
             cr.close()
@@ -271,7 +268,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -297,7 +294,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
                     mime, icont = cntIndex.doIndex(data, filename=filename,
                             content_type=None, realfname=None)
                 except Exception:
-                    logging.getLogger('document.storage').debug('Cannot index file:', exc_info=True)
+                    self.logger.debug('Cannot index file:', exc_info=True)
                     pass
 
                 try:
@@ -320,7 +317,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
                     (base64.encodestring(data), len(data), par.file_id))
             cr.commit()
         except Exception:
-            logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
+            _logger.exception('Cannot update db file #%d for close:', par.file_id)
             raise
         finally:
             cr.close()
@@ -339,7 +336,6 @@ class document_storage(osv.osv):
     """
     _name = 'document.storage'
     _description = 'Storage Media'
-    _doclog = logging.getLogger('document')
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
@@ -402,7 +398,7 @@ class document_storage(osv.osv):
         npath = filter(lambda x: x is not None, npath)
 
         # if self._debug:
-        #     self._doclog.debug('Npath: %s', npath)
+        #     self._logger.debug('Npath: %s', npath)
         for n in npath:
             if n == '..':
                 raise ValueError("Invalid '..' element in path")
@@ -413,7 +409,7 @@ class document_storage(osv.osv):
         dpath += npath[:-1]
         path = os.path.join(*dpath)
         if not os.path.isdir(path):
-            self._doclog.debug("Create dirs: %s", path)
+            _logger.debug("Create dirs: %s", path)
             os.makedirs(path)
         return path, npath
 
@@ -451,7 +447,7 @@ class document_storage(osv.osv):
                 # try to fix their directory.
                 if mode in ('r','r+'):
                     if ira.file_size:
-                        self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
+                        _logger.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
                     raise IOError(errno.ENOENT, 'No file can be located')
                 else:
                     store_fname = self.__get_random_fname(boo.path)
@@ -493,7 +489,7 @@ class document_storage(osv.osv):
                 # On a migrated db, some files may have the wrong storage type
                 # try to fix their directory.
                 if ira.file_size:
-                    self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
+                    _logger.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
                 return None
             fpath = os.path.join(boo.path, ira.store_fname)
             return file(fpath, 'rb').read()
@@ -517,7 +513,7 @@ class document_storage(osv.osv):
                 # On a migrated db, some files may have the wrong storage type
                 # try to fix their directory.
                 if ira.file_size:
-                    self._doclog.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
+                    _logger.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
                 # sfname = ira.name
             fpath = os.path.join(boo.path,ira.store_fname or ira.name)
             if os.path.exists(fpath):
@@ -550,7 +546,7 @@ class document_storage(osv.osv):
         if boo.readonly:
             raise IOError(errno.EPERM, "Readonly medium")
 
-        self._doclog.debug( "Store data for ir.attachment #%d" % ira.id)
+        _logger.debug( "Store data for ir.attachment #%d" % ira.id)
         store_fname = None
         fname = None
         if boo.type == 'filestore':
@@ -563,13 +559,13 @@ class document_storage(osv.osv):
                     fp.write(data)
                 finally:    
                     fp.close()
-                self._doclog.debug( "Saved data to %s" % fname)
+                _logger.debug( "Saved data to %s" % fname)
                 filesize = len(data) # os.stat(fname).st_size
                 
                 # TODO Here, an old file would be left hanging.
 
             except Exception, e:
-                self._doclog.warning( "Couldn't save data to %s", path, exc_info=True)
+                _logger.warning( "Couldn't save data to %s", path, exc_info=True)
                 raise except_orm(_('Error!'), str(e))
         elif boo.type == 'db':
             filesize = len(data)
@@ -592,12 +588,12 @@ class document_storage(osv.osv):
                     fp.write(data)
                 finally:    
                     fp.close()
-                self._doclog.debug("Saved data to %s", fname)
+                _logger.debug("Saved data to %s", fname)
                 filesize = len(data) # os.stat(fname).st_size
                 store_fname = os.path.join(*npath)
                 # TODO Here, an old file would be left hanging.
             except Exception,e :
-                self._doclog.warning("Couldn't save data:", exc_info=True)
+                _logger.warning("Couldn't save data:", exc_info=True)
                 raise except_orm(_('Error!'), str(e))
 
         elif boo.type == 'virtual':
@@ -616,7 +612,7 @@ class document_storage(osv.osv):
                 mime, icont = cntIndex.doIndex(data, ira.datas_fname,
                 ira.file_type or None, fname)
             except Exception:
-                self._doclog.debug('Cannot index file:', exc_info=True)
+                _logger.debug('Cannot index file:', exc_info=True)
                 pass
 
             try:
@@ -633,7 +629,7 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            self._doclog.warning("Couldn't save data:", exc_info=True)
+            self._logger.warning("Couldn't save data:", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
@@ -671,9 +667,9 @@ class document_storage(osv.osv):
                 try:
                     os.unlink(fname)
                 except Exception:
-                    self._doclog.warning("Could not remove file %s, please remove manually.", fname, exc_info=True)
+                    _logger.warning("Could not remove file %s, please remove manually.", fname, exc_info=True)
             else:
-                self._doclog.warning("Unknown unlink key %s" % ktype)
+                _logger.warning("Unknown unlink key %s" % ktype)
 
         return True
 
@@ -703,9 +699,9 @@ class document_storage(osv.osv):
             fname = ira.store_fname
 
             if not fname:
-                self._doclog.warning("Trying to rename a non-stored file")
+                _logger.warning("Trying to rename a non-stored file")
             if fname != os.path.join(*npath):
-                self._doclog.warning("inconsistency in realstore: %s != %s" , fname, repr(npath))
+                _logger.warning("inconsistency in realstore: %s != %s" , fname, repr(npath))
 
             oldpath = os.path.join(path, npath[-1])
             newpath = os.path.join(path, new_name)
@@ -743,7 +739,7 @@ class document_storage(osv.osv):
                 break
             par = par.parent_id
         if file_node.storage_id != psto:
-            self._doclog.debug('Cannot move file %r from %r to %r', file_node, file_node.parent, ndir_bro.name)
+            _logger.debug('Cannot move file %r from %r to %r', file_node, file_node.parent, ndir_bro.name)
             raise NotImplementedError('Cannot move files between storage media')
 
         if sbro.type in ('filestore', 'db', 'db64'):
@@ -756,9 +752,9 @@ class document_storage(osv.osv):
             fname = ira.store_fname
 
             if not fname:
-                self._doclog.warning("Trying to rename a non-stored file")
+                _logger.warning("Trying to rename a non-stored file")
             if fname != os.path.join(*opath):
-                self._doclog.warning("inconsistency in realstore: %s != %s" , fname, repr(opath))
+                _logger.warning("inconsistency in realstore: %s != %s" , fname, repr(opath))
 
             oldpath = os.path.join(path, opath[-1])
             
@@ -766,12 +762,12 @@ class document_storage(osv.osv):
             npath = filter(lambda x: x is not None, npath)
             newdir = os.path.join(*npath)
             if not os.path.isdir(newdir):
-                self._doclog.debug("Must create dir %s", newdir)
+                _logger.debug("Must create dir %s", newdir)
                 os.makedirs(newdir)
             npath.append(opath[-1])
             newpath = os.path.join(*npath)
             
-            self._doclog.debug("Going to move %s from %s to %s", opath[-1], oldpath, newpath)
+            _logger.debug("Going to move %s from %s to %s", opath[-1], oldpath, newpath)
             shutil.move(oldpath, newpath)
             
             store_path = npath[1:] + [opath[-1],]

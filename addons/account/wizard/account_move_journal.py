@@ -102,24 +102,20 @@ class account_move_journal(osv.osv_memory):
                 period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
                 period_string = _("Period: %s") % tools.ustr(period)
     
-            separator_string = _("Open Journal Items !")
-            cancel_string = _("Cancel")
             open_string = _("Open")
             view = """<?xml version="1.0" encoding="utf-8"?>
-            <form string="Standard entries">
-                <header>
-                    <button icon="terp-gtk-go-back-rtl" string="%s" name="action_open_window" default_focus="1" type="object"/>
-                    <button icon="gtk-cancel" special="cancel" string="%s"/>
-                </header>
-                <group string="%s" colspan="4">
-                    <field name="target_move" />
+            <form string="Standard entries" version="7.0">
+                <group>
+                    <field name="target_move"/>
                 </group>
-                <group colspan="4" >
-                    <label width="300" string="%s"/>
-                    <newline/>
-                    <label width="300" string="%s"/>
-                </group>
-            </form>""" % (open_string, cancel_string, separator_string, journal_string, period_string)
+                %s: <label string="%s"/>
+                %s: <label string="%s"/>
+                <footer>
+                    <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>""" % (_('Journal'), journal_string, _('Period'), period_string, open_string)
     
             view = etree.fromstring(view.encode('utf8'))
             xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)

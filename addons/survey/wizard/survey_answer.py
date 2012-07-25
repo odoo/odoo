@@ -435,7 +435,7 @@ class survey_question_wiz(osv.osv_memory):
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
         """
-        If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Answer' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
+        If any user give answer of survey then last create report of this answer and if 'Email Notification on Answer' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
         """
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))

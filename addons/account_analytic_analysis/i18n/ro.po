@@ -13,23 +13,23 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:03+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "Venit pe Ora (real)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr "Calculat folosind formula: Preţ maxim factură - Valoare facturată"
+msgstr "Calculat folosind formula: Pretul maxim factura - Valoarea facturata"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr "Data când  s-a lucrat ultima dată în acest cont."
+msgstr "Data cand  s-a lucrat ultima data la acest cont."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -37,11 +37,13 @@ msgid ""
 "The contracts to be renewed because the deadline is passed or the working "
 "hours are higher than the allocated hours"
 msgstr ""
+"Contractele vor fi reinnoite deoarece termenul limita a fost depasit sau "
+"programul de lucru este mai mare decat orele alocate"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts to renew with your customer"
-msgstr ""
+msgstr "Contracte in asteptare care vor fi reiinoite cu clientul d-voastra"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -49,26 +51,28 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
+"Timpul (numarul de ore/zile) (din registrul de tip 'general') care poate fi "
+"facturat daca facturati pe baza contului analitic."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic Accounts with a past deadline in one month."
-msgstr ""
+msgstr "Conturile Analitice cu un termen limita depasit intr-o luna."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupeaza dupa..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "Data de sfarsit"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Creeaza Factura"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -86,16 +90,18 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
+"Numarul de ore pe care le-ati petrecut la contul analitic (din fisa de "
+"pontaj). Calculeaza cantitatile in toare registrele de tipul 'general'."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress"
-msgstr ""
+msgstr "Contracte in desfasurare"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "Cantitate restanta"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -107,6 +113,12 @@ msgid ""
 "pending accounts and reopen or close the according to the negotiation with "
 "the customer."
 msgstr ""
+"Aici veti gasi contractele care vor fi reinnoite datorita depasirii "
+"termenului limita sau pentru ca programul de lucru este mai mare decat orele "
+"alocate. OpenERP seteaza automat aceste conturi analitice in starea de "
+"asteptare pentru a avertiza asupra inregistrarii fiselor de pontaj. Agentii "
+"de vanzari ar trebui sa verifice toare conturile in asteptare si sa le "
+"redeschida sau sa le inchida in functie de negocierea cu clientul."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -116,7 +128,7 @@ msgstr "Venituri teoretice"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "Ore nefacturate"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -124,13 +136,13 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Dacă se facturează din costuri, aceasta este data ultimelor lucrări sau "
+"Daca se factureaza din costuri, aceasta este data ultimelor lucrari sau "
 "costuri care au fost facturate."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Renew"
-msgstr ""
+msgstr "Va fi reinnoit"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -140,24 +152,25 @@ msgstr "Data ultimului cost/lucrare"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "Ora facturata"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
+"Un contract in OpenERP este un cont analitic care are setat un partener."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "Ore ramase"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Contracte de reinnoit"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -167,7 +180,7 @@ msgstr "Marja teoretica"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid " +1 Month"
-msgstr ""
+msgstr " +1 Luna"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -176,29 +189,29 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
-"Bazat pe costurile avute în proiect, care ar fi fost veniturile dacă toate "
-"aceste costuri ar fi fost facturate la preţul de vânzare uzual din lista de "
-"preţuri."
+"Bazat pe costurile avute in proiect, care ar fi reprezentat veniturile daca "
+"toate aceste costuri ar fi fost facturate la pretul obisnuit de vanzare din "
+"lista de preturi."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "In asteptare"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Valoarea nefacturată"
+msgstr "Suma nefacturata"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Calculat folosind formula: Valoare facturată - Total costuri."
+msgstr "Calculat folosind formula: Valoare facturata - Total costuri."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "Parinte"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -209,7 +222,7 @@ msgstr "Utilizator"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Calculează folosind formula: (Marja reală/Total costuri) * 100"
+msgstr "Calculeaza folosind formula: (Marja reala / Total costuri) * 100"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -219,7 +232,7 @@ msgstr "Rezumat ore dupa Utilizator"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Suma facturată"
+msgstr "Suma facturata"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
@@ -229,42 +242,42 @@ msgstr "Data ultimului cost facturat"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "Contract"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Rată marjă reală (%)"
+msgstr "Rata marjei reale (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Marja reală"
+msgstr "Marja reala"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Valoarea totală facturată către clienţi pentru acest cont."
+msgstr "Valoarea totala facturata catre clienti pentru acest cont."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Rezumat lunar ore"
+msgstr "Rezumat ore dupa luna"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "Eroare! Nu puteti crea conturi analitice recursive"
+msgstr "Eroare! Nu puteti crea conturi analitice recursive."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr "Venit rămas"
+msgstr "Venit ramas"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Time"
-msgstr ""
+msgstr "Calculat folosind formula: Maxim Ore - Total Ore"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -272,6 +285,8 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
+"Timpul (numarul de ore/zile) care poate fi facturat plus cel care a fost "
+"facturat deja."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -279,13 +294,13 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Dacă facturaţi din contul analitic, valoarea rămasă ce poate fi facturată "
+"Daca facturati din contul analitic, suma ramasa ce poate fi facturata "
 "clientului pe baza costurilor totale."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "Calculat folosind formula: Suma Facturata / Total Ore"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -296,7 +311,7 @@ msgstr "Total costuri"
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
-msgstr "Lună"
+msgstr "Luna"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -304,51 +319,51 @@ msgstr "Lună"
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Cont analitic"
+msgstr "Cont Analitic"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "Contracte"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Manager"
-msgstr ""
+msgstr "Director"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr "Toate înregistrările nefacturate"
+msgstr "Toate Inregistrarile Nefacturate"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
+msgstr "Daca facturati din costuri, aceasta este data ultimei facturari."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Partener Asociat"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
-msgstr ""
+msgstr "Deschideti"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "Contracte care nu sunt atribuite unui manager de cont."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr "Timp total"
+msgstr "Total Ore"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -356,8 +371,8 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
-"Total costuri pentru acest cont. Include costurile reale (din facturi) şi "
-"costurile indirecte, cum ar fi timpul consumat conform pontajelor."
+"Total costuri pentru acest cont. Include costurile reale (din facturi) si "
+"costurile indirecte, cum ar fi timpul petrecut conform fiselor de pontaj."
 
 #~ msgid ""
 #~ "Number of hours that can be invoiced plus those that already have been "

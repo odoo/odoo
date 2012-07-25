@@ -7,11 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='tracking_id']" position="before">
-                    <field name="purchase_line_id" colspan="2" />
+                 <xpath expr="//group[@name='destination_grp']" position="inside">
+                    <field name="purchase_line_id"/>
                 </xpath>
             </field>
-        </record>      
+        </record>
         <record id="stock_picking_inherit_purchase" model="ir.ui.view">
             <field name="name">Picking list</field>
             <field name="model">stock.picking</field>
@@ -24,39 +24,21 @@
             </field>
         </record>
 
-        <act_window
-            domain="[('purchase_id', '=', active_id)]"
-            id="act_purchase_order_2_stock_picking"
-            name="Incoming Shipments"
-            res_model="stock.picking.in"
-            src_model="purchase.order"
-            context="{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}" />
-       
-        <record id="action_picking_in_tree_view" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="stock.view_picking_in_tree"/>
-            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
-        </record>
-        <record id="action_picking_in_form_view" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="stock.view_picking_in_form"/>
-            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
-        </record>
-        
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
             <field name="model">stock.picking.in</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="/form/sheet/group/group/field[@name='date']" position="before">
+                <xpath expr="//field[@name='date']" position="before">
                     <field name="purchase_id"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="warehouse_id"/>
                 </xpath>
             </field>
         </record>
-        
+
         <!-- Picking to Invoice -->
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
@@ -78,6 +60,7 @@
                         <separator orientation="vertical"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="purchase_id" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
@@ -96,7 +79,33 @@
                 </search>
             </field>
         </record>
- 
+        <record id="act_purchase_order_2_stock_picking" model="ir.actions.act_window">
+            <field name="name">Incoming Shipments</field>
+            <field name="res_model">stock.picking.in</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('type','=','in')]</field>
+            <field name="context">{'search_default_purchase_id': active_id,'default_type': 'in'}</field>
+            <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
+        </record>
+
+        <record id="purchase_order_2_stock_picking" model="ir.ui.view">
+            <field name="name">Purchase Picking Inherited</field>
+            <field name="model">purchase.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//div[contains(@class, 'oe_title')]" position="before">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button type="action"
+                            name="%(act_purchase_order_2_stock_picking)d"
+                            string="Incoming Shipments" states="approved"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">Based on Incoming Shipments</field>
             <field name="res_model">stock.picking</field>

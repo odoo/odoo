@@ -8,12 +8,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Create Invoice" version="7.0">
-                <header>
-                    <button name="do_create" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl"/>
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                </header>
                 <notebook>
                     <page string="Billing Data">
+                       <group>
                        <group string="Do you want to show details of work in invoice?">
                            <field name="date"/>
                            <field name="time"/>
@@ -23,8 +20,14 @@
                        <group  string="Force to use a specific product">
                            <field name="product"/>
                        </group>
+                       </group>
                     </page>
                 </notebook>
+                <footer>
+                    <button name="do_create" string="Create Invoices" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

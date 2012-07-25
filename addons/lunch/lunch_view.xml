@@ -25,19 +25,23 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
-                    <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
+                    <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" states="draft" class="oe_highlight"/>
+                    <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" states="confirmed" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
                 <sheet string="Order">
-                    <group col="4">
-                        <field name="user_id"/>
-                        <field name="date"/>
-                        <field name="product" on_change="onchange_product(product)"/>
-                        <field name="category"/>
-                        <field name="descript"/>
-                        <field name="price"/>
-                        <field name="cashmove"/>
+                    <group>
+                        <group>
+                            <field name="product" on_change="onchange_product(product)"/>
+                            <field name="descript"/>
+                            <field name="price"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="cashmove"/>
+                            <field name="date"/>
+                        </group>
                     </group>
                 </sheet>
                 </form>
@@ -105,8 +109,10 @@
             <field name="model">lunch.cashbox</field>
             <field name="arch" type="xml">
                 <form string="Cashboxes" version="7.0">
-                    <field name="name"/>
-                    <field name="manager"/>
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="manager"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -145,14 +151,16 @@
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
                 <form string="CashMove" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="user_cashmove"/>
-                        <field name="amount"/>
-                        <field name="box"/>
-                        <field name="create_date"/>
-                        <field name="active"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="user_cashmove"/>
+                            <field name="amount"/>
+                            <field name="box"/>
+                            <field name="create_date"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -216,8 +224,9 @@
             <field name="model">lunch.category</field>
             <field name="arch" type="xml">
                 <form string="Category" version="7.0">
-                    <separator string="Category Related to Products" colspan="4"/>
-                    <field name="name"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -250,18 +259,19 @@
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
                 <form string="Products" version="7.0">
-                     <group col="6">
-                          <field name="name"/>
-                          <field name="category_id"/>
-                          <field name="price" />
-                     </group>
-                     <notebook colspan="4">
-                         <page string="General Information">
-                              <field name="active"/>
-                              <separator string="Description" colspan="4" />
-                              <field name="description" nolabel="1" colspan="4" />
-                          </page>
-                     </notebook>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="category_id"/>
+                                <field name="price" />
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                            <field name="description" placeholder="Add a description" nolabel="1" colspan="4"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

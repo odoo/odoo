@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-06-19 05:58+0000\n"
+"PO-Revision-Date: 2012-06-28 04:08+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-21 05:16+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-07-14 05:41+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr "受注"
+msgstr "オーダー参照"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -41,18 +41,18 @@ msgstr "正味重量"
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr "配送発注"
+msgstr "配達オーダー"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "配送グリッド線"
+msgstr "配達グリッドライン"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr "配送グリッド"
+msgstr "配達グリッド"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -64,37 +64,37 @@ msgstr "容積"
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "グリッド線"
+msgstr "グリッドライン"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr "配送サービス・パートナ"
+msgstr "配達サービスを行うパートナです。"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr "配送の注文"
+msgstr "配達オーダー"
 
 #. module: delivery
 #: view:res.partner:0
 msgid "Deliveries Properties"
-msgstr "配送の特性"
+msgstr "配達の属性"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr "請求のための出庫"
+msgstr "請求のための集荷"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr "事前確認価格"
+msgstr "前払価格"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "配送グリッド一覧の順序番号を指定します。"
+msgstr "配達グリッド一覧の順序番号を指定します。"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -106,7 +106,7 @@ msgstr "国"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr "配送発注"
+msgstr "配達オーダー："
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -121,8 +121,8 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
-"製品の重量などの基準に基づいて配送の原価と請求額を計算するために配送料一覧を使います。１つの配送方式について、国別、郵便番号に応じた地域別といった複数の価"
-"格リストを定義することができます。"
+"製品の重量や他の基準に基づいて配送の原価と販売価格を計算するために配達価格リストを使います。１つの配達方法について、国別、郵便番号に応じた地域別といった複"
+"数の価格リストを定義することができます。"
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
@@ -143,7 +143,7 @@ msgstr "固定"
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
-msgstr "配送方式"
+msgstr "配達方法"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:213
@@ -159,7 +159,7 @@ msgstr "ストック移動"
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr "配送記録"
+msgstr "運搬会社追跡の参照"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -169,7 +169,7 @@ msgstr "正味重量"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr "グリッド線"
+msgstr "グリッドライン"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -202,7 +202,7 @@ msgstr "受注"
 msgid ""
 "Define your delivery methods and their pricing. The delivery costs can be "
 "added on the sale order form or in the invoice, based on the delivery orders."
-msgstr "配送方式とその価格を定義して下さい。配送注文に応じて、配送料を受注伝票あるいは請求書の中に追加することができます。"
+msgstr "配達方法とその価格を定義して下さい。配達オーダーに応じて、配達料金は受注オーダーあるいは請求書の中に追加することができます。"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -217,13 +217,13 @@ msgstr "配送会社"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "配送グリッド"
+msgstr "配達グリッド"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:213
 #, python-format
 msgid "No line matched this product or order in the choosed delivery grid."
-msgstr "指定した配送グリッドの中に、このプロダクトあるいは発注に合致した線がありません。"
+msgstr "指定した配達グリッドの中に、この製品あるいはオーダーに合致したラインがありません。"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -233,17 +233,17 @@ msgstr "請求先"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "出庫票"
+msgstr "集荷リスト"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "配送グリッド"
+msgstr "配達グリッド"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr "配送する"
+msgstr "配達する"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -260,7 +260,7 @@ msgstr "出発点の郵便番号"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "配達無料、会社通貨による速達を適用する配送の金額"
+msgstr "配達無料、会社負担の速達の適用を受けるためのオーダー金額"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -278,7 +278,7 @@ msgstr "グリッド"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr "この項目を無しに設定すると、配送グリッドを消さずに、隠すことができます。"
+msgstr "このアクティブ項目を無しに設定すると、配達グリッドを削除することなく非表示にできます。"
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -335,13 +335,13 @@ msgstr "重量"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr "目的地、重量、受注金額などに応じて配送料を決めるのであれば、このボックスをチェックします。"
+msgstr "到着地、重量、オーダー金額合計などに応じて配達料を管理したいのであれば、このボックスをチェックします。"
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr "目的地ごとに事前確認価格が決まっているのであれば、空白にします。"
+msgstr "到着地ごとに前払い価格が決まっているのであれば、空白にします。"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -369,7 +369,7 @@ msgstr "発注が予定状態ではありません。"
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Choose Your Default Picking Policy"
-msgstr "デフォルトの出庫方策を選んで下さい。"
+msgstr "デフォルトの集荷方針を選んで下さい。"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -390,7 +390,7 @@ msgstr "出荷日"
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "配送製品"
+msgstr "配達製品"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -416,7 +416,7 @@ msgstr "変数"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "出庫の請求をするときに、この配送方式が使われます。"
+msgstr "集荷から請求をするときに、この配達方法が使われます。"
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
@@ -437,25 +437,25 @@ msgstr "数量"
 #: view:delivery.define.delivery.steps.wizard:0
 #: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
 msgid "Setup Your Picking Policy"
-msgstr "出庫方策を定義します。"
+msgstr "集荷方針を定義します。"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
 msgid "Define Delivery Methods"
-msgstr "配送方式を定義します。"
+msgstr "配達方法の定義"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr "受注額が特定の金額以上の場合には、顧客は配送無料の特典を受けることができます。"
+msgstr "オーダーが特定金額以上の場合は、顧客は配達無料の特典を受けることができます。"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr "出庫量に応じて配送料を請求するのであれば、この項目を指定して下さい。"
+msgstr "集荷を基本として出荷を請求する予定ならば、この項目を完成させて下さい。"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -479,7 +479,7 @@ msgid ""
 "Define the delivery methods you are using and their pricing in order to "
 "reinvoice the delivery costs when you are doing invoicing based on delivery "
 "orders"
-msgstr "配送方式と注文に応じて請求する配送料を定義します。"
+msgstr "配達オーダーを基本とする請求を行う場合は、あなたが使用している配達方法と、配達料を再請求するための価格を定義して下さい。"
 
 #. module: delivery
 #: view:res.partner:0
@@ -504,7 +504,7 @@ msgstr "これ以上であれば無料"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr "配送を手配する"
+msgstr "配達の作成"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -523,13 +523,13 @@ msgstr "詳細"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr "この項目を無しに設定すると、配送会社を取り除くことなく、隠すことができます。"
+msgstr "このアクティブ項目を無しに設定すると、運搬会社を削除することなく、非表示にできます。"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "配送価格表"
+msgstr "配達価格リスト"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
@@ -542,12 +542,12 @@ msgstr "価格"
 #: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr "この配送会社の合致するグリッドがありません。"
+msgstr "この運搬会社に合致するグリッドがありません。"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "配送"
+msgstr "配達"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -564,7 +564,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "配送会社 %s (ID: %d) の配送グリッドはありません。"
+msgstr "運搬会社 %s（ID：%d）の配達グリッドがありません。"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -588,7 +588,7 @@ msgstr "目的地ごとの事前確認価格"
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr "配送会社"
+msgstr "運搬会社"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -605,7 +605,7 @@ msgstr "ID"
 #: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr "配送行が決まるまでは、発注状態は「予定」でなければいけません。"
+msgstr "配達ラインがを追加するために、オーダー状態はドラフトである必要があります。"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -626,7 +626,7 @@ msgstr "販売価格"
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
 #: view:sale.order:0
 msgid "Delivery Costs"
-msgstr "配送コスト"
+msgstr "配達コスト"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0

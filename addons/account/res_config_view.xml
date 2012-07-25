@@ -17,102 +17,109 @@
             <field name="arch" type="xml">
                 <form string="Configure Accounting" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group col="4">
-                        <field name="has_default_company" invisible="1" />
-                        <field name="has_chart_of_accounts" invisible="1"/>
-                        <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
+                    <field name="has_default_company" invisible="1" />
+                    <field name="has_chart_of_accounts" invisible="1"/>
+                    <field name="complete_tax_set" invisible="1"/>
+                    <field name="has_fiscal_year" invisible="1"/>
+
+                    <group groups="base.group_multi_company">
+                        <field name="company_id" string="Select Company" widget="selection"
+                            on_change="onchange_company_id(company_id)"
                             attrs="{'invisible': [('has_default_company', '=', True)]}"/>
                         <field name="expects_chart_of_accounts"/>
                     </group>
 
-                    <group string="Select a Chart of Accounts to Install" col="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
-                        <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
+                    <group string="Select a Chart of Accounts to Install"
+                        attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
+                        <group>
+                            <field name="chart_template_id" widget="selection" domain="[('visible','=', True)]"
+                                on_change="onchange_chart_template_id(chart_template_id)"/>
+                            <field name="code_digits" groups="account.group_account_user"/>
+                            <field name="sale_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
+                                domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                            <field name="purchase_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
+                                domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                            <field name="sale_tax_rate" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
+                            <field name="purchase_tax_rate" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}"/>
+                        </group>
                         <button string="Install More Chart Templates" icon="gtk-go-forward"
                             name="%(open_account_charts_modules)d" type="action"/>
-                        <newline/>
-                        <field name="code_digits" groups="account.group_account_user"/>
-                        <newline/>
-                        <field name="complete_tax_set" invisible="1"/>
-                        <field name="sale_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
-                            domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                        <field name="purchase_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
-                            domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                        <field name="sale_tax_rate" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
-                        <field name="purchase_tax_rate" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}"/>
                     </group>
 
-                    <field name="has_fiscal_year" invisible="1"/>
-                    <group string="No Fiscal Year Defined for this Company" col="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
-                        <field name="date_start" on_change="onchange_start_date(date_start)"/>
-                        <field name="date_stop"/>
-                        <field name="period" colspan="4"/>
+                    <group string="No Fiscal Year Defined for This Company"
+                        attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
+                        <label for="date_start" string="Date Range"/>
+                        <div>
+                            <field name="date_start" on_change="onchange_start_date(date_start)" class="oe_inline"/> -
+                            <field name="date_stop" class="oe_inline"/>
+                        </div>
+                        <field name="period"/>
                     </group>
 
-                    <field name="complete_tax_set" invisible="1"/>
-                    <group string="Accounting Configuration">
-                        <group>
-                            <field name="default_sale_tax" domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]" attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
-                            <field name="module_account_accountant"/>
-                            <field name="module_account_asset"/>
-                        </group>
-                        <group>
-                            <field name="default_purchase_tax" domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]" attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
-                            <field name="currency_id"/>
-                            <field name="module_account_budget"/>
-                            <field name="decimal_precision"/>
-                        </group>
-                    </group>
-
-                    <field name="sale_journal_id" invisible="1"/>
-                    <field name="sale_refund_journal_id" invisible="1"/>
-                    <field name="purchase_journal_id" invisible="1"/>
-                    <field name="purchase_refund_journal_id" invisible="1"/>
                     <group>
-                        <group string="Customer Invoices">
-                            <label string="Invoice Sequence" for="sale_sequence_prefix"/>
-                            <div>
-                                <field name="sale_sequence_prefix" class="oe_inline"/>
-                                <field name="sale_sequence_next" class="oe_inline" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
-                            </div>
-
-                            <label string="Credit Note Sequence" for="sale_refund_sequence_prefix"/>
-                            <div>
-                                <field name="sale_refund_sequence_prefix" class="oe_inline"/>
-                                <field name="sale_refund_sequence_next" class="oe_inline" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
-                            </div>
-                            <field name="module_account_invoice_layout"/>
+                        <group name="account_config">
+                            <separator string="Accounting Configuration" colspan="2"/>
+                            <field name="default_sale_tax" domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
+                                attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
+                            <field name="module_account_accountant"/>
+                            <field name="currency_id"/>
+                            <field name="decimal_precision"/>
+                            <field name="default_purchase_tax" domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
+                                attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
+                            <field name="tax_calculation_rounding_method"/>
+                            <field name="module_account_asset"/>
+                            <field name="module_account_budget"/>
+                            <separator string="Customer Invoices" colspan="2"/>
+                            <label for="sale_sequence_next"/>
+                            <group>
+                                <field name="sale_sequence_prefix" class="oe_inline" nolabel="1"
+                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
+                                <field name="sale_sequence_next" class="oe_inline" nolabel="1"  attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
+                            </group>
+                            <label for="sale_refund_sequence_next"/>
+                            <group>
+                                <field name="sale_refund_sequence_prefix" class="oe_inline" nolabel="1" 
+                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
+                                <field name="sale_refund_sequence_next" nolabel="1" class="oe_inline" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
+                            </group>
                             <field name="module_account_voucher"/>
                             <field name="module_account_followup"/>
                             <field name="group_proforma_invoices"/>
+                            <separator name="analytic_accounting" invisible="1" string="Analytic Accounting"/>
                         </group>
-                        <group string="Supplier Invoices">
-                            <label string="Supplier Invoice Sequence" for="purchase_sequence_prefix"/>
-                            <div>
-                                <field name="purchase_sequence_prefix" class="oe_inline"/>
-                                <field name="purchase_sequence_next" class="oe_inline" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
-                            </div>
-                            <label string="Supplier Credit Note Sequence" for="purchase_refund_sequence_prefix"/>
-                            <div>
-                                <field name="purchase_refund_sequence_prefix" class="oe_inline"/>
+                        <group name="other_cofing">
+                            <separator string="Supplier Invoices" colspan="2"/>
+                             <label for="purchase_sequence_next"/>
+                            <group>
+                                <field name="purchase_sequence_prefix" class="oe_inline" nolabel="1"
+                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
+                                <field name="purchase_sequence_next" nolabel="1" class="oe_inline" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
+                            </group>
+                            <label for="purchase_refund_sequence_next"/>
+                            <group>
+                                <field name="purchase_refund_sequence_prefix" class="oe_inline" nolabel="1" 
+                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
                                 <field name="purchase_refund_sequence_next" class="oe_inline"
-                                  attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
-                            </div>
+                                  attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}" nolabel="1"/>
+                            </group>
                             <field name="module_account_payment"/>
-                        </group>
-                        <group string="Electronic Payments">
-                            <field name="paypal_account"/>
-                        </group>
-                        <group string="Bank &amp; Cash">
-                            <label string="Configure Bank Accounts :"/>
+                            <separator string="Electronic Payments" colspan="2"/>
+                            <field name="paypal_account" placeholder="sales@openerp.com"/>
+                            <separator string="Bank &amp; Cash" colspan="2"/>
+                            <label for="id" string="Configure Bank Accounts"/>
                             <button name="%(action_bank_tree)d" string="Configure Bank Accounts" icon="gtk-go-forward" type="action"/>
                             <field name="company_footer"/>
                             <field name="module_account_check_writing"/>
                         </group>
-                        <group name="analytic_accounting" invisible="1" string="Analytic Accounting"/>
                     </group>
+                    <field name="sale_journal_id" invisible="1"/>
+                    <field name="sale_refund_journal_id" invisible="1"/>
+                    <field name="purchase_journal_id" invisible="1"/>
+                    <field name="purchase_refund_journal_id" invisible="1"/>
                 </form>
             </field>
         </record>

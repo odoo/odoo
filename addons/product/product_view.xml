@@ -13,24 +13,24 @@
                    <separator orientation="vertical"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
-                   <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
+                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <separator orientation="vertical"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
-                       <separator orientation="vertical" groups="base.group_multi_company" />
-                       <field name="company_id" widget="selection" groups="base.group_multi_company" />
+                       <separator orientation="vertical" groups="base.group_multi_company"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...'>
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                        <separator orientation="vertical" groups="base.group_multi_company"/>
-                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
+                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
 
                 </search>
@@ -60,42 +60,43 @@
                 </tree>
             </field>
         </record>
+
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Product" layout="auto" version="7.0">
+                <form string="Product" version="7.0">
                     <sheet>
-                        <field name="product_image" widget="image" class="oe_avatar oe_right" />
+                        <field name="product_image" widget="image" class="oe_avatar oe_right"/>
 
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" string="Product Name" /> 
+                                <label for="name" string="Product Name"/> 
                             </div>
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <label for="categ_id" class="oe_edit_only" />
-                            <h2><field name="categ_id" /></h2>
+                            <label for="categ_id" class="oe_edit_only"/>
+                            <h2><field name="categ_id"/></h2>
                         </div>
                         <notebook>
                             <page string="Information">
                                 <group>
                                     <group>
                                         <field name="default_code"/>
-                                        <field name="ean13" placeholder="5901234123457" />
-                                        <field groups="product.group_product_variant" name="variants" />
+                                        <field name="ean13" placeholder="5901234123457"/>
+                                        <field groups="product.group_product_variant" name="variants"/>
                                     </group>
-                                    <group>
+                                    <group groups="base.group_user">
                                         <field name="sale_ok"/>
                                         <field name="purchase_ok"/>
                                     </group>
                                     <group string="Procurement">
                                         <field name="type"/>
                                         <field name="procure_method"/>
-                                        <field name="supply_method"/>
+                                        <field name="supply_method" groups="base.group_user"/>
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
@@ -126,7 +127,7 @@
 
                                 </group>
                             </page>
-                            <page string="Procurement &amp; Locations">
+                            <page string="Procurement &amp; Locations" groups="base.group_user">
                                 <group>
                                     <group name="delay" string="Delays">
                                         <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -134,7 +135,7 @@
                                         <field name="warranty"/>
                                     </group>
                                     <group name="store" string="Storage Localisation">
-                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
+                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                                     </group>
@@ -145,10 +146,10 @@
                                 </group>
 
                             </page>
-                            <page string="Suppliers">
+                            <page string="Suppliers" groups="base.group_user">
                                 <field name="seller_ids" context="{'uom_id': uom_id}"/>
                             </page>
-                            <page string="Descriptions">
+                            <page string="Descriptions" groups="base.group_user">
                                 <separator string="Description"/>
                                 <field name="description"/>
                                 <separator string="Sale Description"/>
@@ -182,9 +183,9 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <footer>
-                        <field name="message_ids" widget="ThreadView"/>
-                    </footer>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -215,7 +216,8 @@
                                         <t t-if="record.type.raw_value != 'service'">
                                             <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
                                             <div t-if="record.list_price.raw_value != 0">Public Price: <field name="lst_price"/></div>
-                                            <div>Cost : <field name="standard_price"/></div>
+                                            <!-- TODO would deserve to be hidden at the field level -->
+                                            <div groups="base.group_user">Cost : <field name="standard_price"/></div>
                                         </t>
                                         <div class="oe_kanban_clear"/>
                                     </div>
@@ -310,12 +312,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Categories" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="sequence" invisible="1"/>
-                        <field name="type"/>
-                    </group>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                        <group name="basic">
+                            <group name="account_property" string="Account Properties"/>
+                            <group name="account_stock_property" string="Account Stock Properties"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -407,12 +423,12 @@
             <field name="arch" type="xml">
                 <form string="Units of Measure" version="7.0">
                     <group>
-                        <group string="Unit of Measure Properties">
+                        <group>
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="active"/>
                         </group>
-                        <group string="Ratio &amp; Precision">
+                        <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
@@ -464,8 +480,8 @@
             <field name="arch" type="xml">
                 <form string="Packaging" version="7.0">
                     <group>
-                        <field name="name" />
-                        <field name="type" />
+                        <field name="name"/>
+                        <field name="type"/>
                     </group>
                 </form>
             </field>
@@ -543,12 +559,12 @@
             <field name="arch" type="xml">
                 <form string="Supplier Information" version="7.0">
                     <group col="4">
-                        <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
+                        <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                         <field name="sequence"/>
                         <field name="product_name"/>
                         <field name="product_code"/>
                         <field name="min_qty"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="product.group_uom"/>
                         <field name="delay"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
@@ -702,7 +718,7 @@
                             <field name="seller_ids"/>
                         </page>
                         <page string="Descriptions">
-                            <separator string="Description"/>
+                            <separator string="Internal Description"/>
                             <field name="description"/>
                             <separator string="Sale Description"/>
                             <field name="description_sale"/>

@@ -8,23 +8,26 @@
             <field name="arch" type="xml">
                 <form string="Configure Manufacturing" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <newline/>
-                    <group col="4" string="Manufacturing Order">
-                        <field name="module_mrp_operations"/>
-                        <field name="module_stock_planning"/>
-                        <field name="module_mrp_subproduct"/>
-                        <field name="module_mrp_repair"/>
-                    </group>
-                    <group string="Logistics" col="4">
-                        <field name="module_mrp_jit"/>
-                        <field name="module_stock_no_autopicking"/>
-                    </group>
-                    <group string="Bill Of Material" col="4">
-                        <field name="group_mrp_routings"/>
-                        <field name="group_mrp_properties"/>
+                    <group>
+                        <group string="Manufacturing Order">
+                            <field name="module_mrp_operations"/>
+                            <field name="module_stock_planning"/>
+                            <field name="module_mrp_subproduct"/>
+                            <field name="module_mrp_repair"/>
+                            <separator string="Logistics" colspan="2"/>
+                            <field name="module_mrp_jit"/>
+                            <field name="module_stock_no_autopicking"/>
+                        </group>
+                        <group string="Products">
+                            <field name="module_product_manufacturer"/>
+                            <separator string="Bill Of Material" colspan="2"/>
+                            <field name="group_mrp_routings"/>
+                            <field name="group_mrp_properties"/>
+                        </group>
                     </group>
                 </form>
             </field>
